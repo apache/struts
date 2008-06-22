@@ -33,29 +33,36 @@ dojo.widget.defineWidget(
 
   inputName: "",
   name: "",
-  
+
   valueNotifyTopics : "",
   valueNotifyTopicsArray : null,
-  
+
+  tabIndex : "",
+
   postCreate: function() {
     struts.widget.StrutsTimePicker.superclass.postCreate.apply(this, arguments);
-  
+
     //set cssClass
     if(this.extraArgs["class"]) {
       dojo.html.setClass(this.inputNode, this.extraArgs["class"]);
-    }  
-    
+    }
+
     //set cssStyle
     if(this.extraArgs.style) {
       dojo.html.setStyleText(this.inputNode, this.extraArgs.style);
-    }  
-    
+    }
+
     //value topics
     if(!dojo.string.isBlank(this.valueNotifyTopics)) {
       this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
     }
+
+    //tabindex
+    if(!dojo.string.isBlank(this.tabIndex)) {
+      this.inputNode.tabIndex = this.tabIndex;
+    }
   },
-  
+
   _syncValueNode:function () {
     var time = this.timePicker.time;
     var value;
@@ -75,7 +82,7 @@ dojo.widget.defineWidget(
     }
     this.valueNode.value = value;
   },
-  
+
   _updateText : function() {
     struts.widget.StrutsTimePicker.superclass._updateText.apply(this, arguments);
     if(this.valueNotifyTopicsArray != null) {

@@ -30,7 +30,7 @@ var dependencies = [
 ];
 
 dependencies.prefixes = [
-   ["struts", "../struts/2_1/plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts"]
+   ["struts", "../struts/plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts"]
 ];
 
 load("getDependencyList.js");

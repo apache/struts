@@ -1,13 +1,3 @@
-/*
-	Copyright (c) 2004-2006, The Dojo Foundation
-	All Rights Reserved.
-
-	Licensed under the Academic Free License version 2.1 or above OR the
-	modified BSD license. For more information on Dojo licensing, see:
-
-		http://dojotoolkit.org/community/licensing.shtml
-*/
-
 if(typeof dojo == "undefined"){
 
 // TODOC: HOW TO DOC THE BELOW?
@@ -921,7 +911,7 @@ dojo.hostenv.searchLocalePath = function(/*String*/locale, /*Boolean*/down, /*Fu
 
 //These two functions are placed outside of preloadLocalizations
 //So that the xd loading can use/override them.
-dojo.hostenv.localesGenerated /***BUILD:localesGenerated***/; // value will be inserted here at build time, if necessary
+dojo.hostenv.localesGenerated =["ROOT","es-es","es","it-it","pt-br","de","fr-fr","zh-cn","pt","en-us","zh","fr","zh-tw","it","en-gb","xx","de-de","ko-kr","ja-jp","ko","en","ja"]; // value will be inserted here at build time, if necessary
 
 dojo.hostenv.registerNlsPrefix = function(){
 // summary:
@@ -22086,4 +22076,9278 @@ dojo.widget.defineWidget(
 		}*/
 	}
 );
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.Bind");
+
+
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.Bind",
+  dojo.widget.HtmlWidget, {
+  widgetType : "Bind",
+  executeScripts : false,
+  scriptSeparation : false,
+  targets : "",
+  targetsArray : null,
+  href : "",
+  handler : "",
+
+  //messages
+  loadingText : "Loading...",
+  errorText : "",
+  showError : true,
+  showLoading : false,
+
+  //pub/sub events
+  listenTopics : "",
+  notifyTopics : "",
+  notifyTopicsArray : null,
+  beforeNotifyTopics : "",
+  beforeNotifyTopicsArray : null,
+  afterNotifyTopics : "",
+  afterNotifyTopicsArray : null,
+  errorNotifyTopics : "",
+  errorNotifyTopicsArray : null,
+
+  formId : "",
+  formFilter : "",
+  formNode : null,
+
+  events : "",
+  indicator : "",
+
+  parseContent : true,
+  
+  highlightColor : "",
+  highlightDuration : 2000,
+  
+  validate : false,
+  ajaxAfterValidation : false,
+  
+  //used for scripts downloading & caching
+  cacheContent : true,
+  //run script on its own scope
+  scriptSeparation : true,
+  //scope for the cript separation
+  scriptScope : null,
+  transport : "",
+   
+  postCreate : function() {
+    var self = this;
+
+    //attach listeners
+    if(!dojo.string.isBlank(this.listenTopics)) {
+      this.log("Listening to " + this.listenTopics + " to refresh");
+      var topics = this.listenTopics.split(",");
+      if(topics) {
+        dojo.lang.forEach(topics, function(topic){
+          dojo.event.topic.subscribe(topic, self, "reloadContents");
+        });
+      }
+    }
+
+    //topics
+    if(!dojo.string.isBlank(this.notifyTopics)) {
+      this.notifyTopicsArray = this.notifyTopics.split(",");
+    }
+    
+    //before topics
+    if(!dojo.string.isBlank(this.beforeNotifyTopics)) {
+      this.beforeNotifyTopicsArray = this.beforeNotifyTopics.split(",");
+    }
+    
+    //after topics
+    if(!dojo.string.isBlank(this.afterNotifyTopics)) {
+      this.afterNotifyTopicsArray = this.afterNotifyTopics.split(",");
+    }
+    
+    //error topics
+    if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+      this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
+    }
+
+    if(!dojo.string.isBlank(this.targets)) {
+      //split targets
+      this.targetsArray = this.targets.split(",");
+    }
+
+    if(!dojo.string.isBlank(this.events)) {
+      var eventsArray = this.events.split(",");
+      if(eventsArray && this.domNode) {
+        dojo.lang.forEach(eventsArray, function(event){
+           dojo.event.connect(self.domNode, event, function(evt) {
+             evt.preventDefault();
+             evt.stopPropagation();
+             self.reloadContents();
+           });
+        });
+      }
+    }
+
+    if(dojo.string.isBlank(this.formId)) {
+      //no formId, see if we are inside a form
+      this.formNode = dojo.dom.getFirstAncestorByTag(this.domNode, "form");
+    } else {
+      this.formNode = dojo.byId(this.formId);
+    }
+
+    if(this.formNode && dojo.string.isBlank(this.href)) {
+      this.href = this.formNode.action;
+    }
+  },
+
+  highlight : function() {
+    if(!dojo.string.isBlank(this.highlightColor)) {
+      var nodes = [];
+      //add nodes to array
+      dojo.lang.forEach(this.targetsArray, function(target) {
+        var node = dojo.byId(target);
+        if(node) {
+          nodes.push(node);
+        }
+      });
+      var effect = dojo.lfx.html.highlight(nodes, this.highlightColor, this.highlightDuration);
+      effect.play();    
+    }
+  },
+  
+  log : function(text) {
+    dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
+  },
+
+  setContent : function(text) {
+    if(this.targetsArray) {
+      var self = this;
+	  var xmlParser = new dojo.xml.Parse();
+      dojo.lang.forEach(this.targetsArray, function(target) {
+        var node = dojo.byId(target);
+        if(node) {
+          node.innerHTML = text;
+  
+          if(self.parseContent && text != self.loadingText){
+            var frag  = xmlParser.parseElement(node, null, true);
+            dojo.widget.getParser().createSubComponents(frag, dojo.widget.byId(target));
+          }
+        } else {
+          self.log("Unable to find target: " + node);
+        }
+      });
+    }
+  },
+  
+  bindHandler : function(type, data, e) {
+    //hide indicator
+    dojo.html.hide(this.indicator);
+    
+    //publish topics
+    this.notify(data, type, e);
+    
+    if(type == "load") {
+      if(this.validate) {
+        StrutsUtils.clearValidationErrors(this.formNode);
+        //validation is active for this action
+        var errors = StrutsUtils.getValidationErrors(data);
+        if(errors && errors.fieldErrors) {
+          //validation failed
+          StrutsUtils.showValidationErrors(this.formNode, errors);
+          return;
+        } else {
+          //validation passed
+          if(!this.ajaxAfterValidation && this.formNode) {
+            //regular submit
+            this.formNode.submit();
+            return;
+          }
+        }
+      } 
+      
+      // no validation or validation passed
+      if(this.executeScripts) {
+        //parse text to extract content and javascript
+        var parsed = this.parse(data);
+         
+        //update targets content
+        this.setContent(parsed.text);
+        
+        //execute scripts
+        this._executeScripts(parsed.scripts);
+      }
+      else {
+        this.setContent(data);
+      }
+      this.highlight();
+    } else {
+      if(this.showError) {
+        var message = dojo.string.isBlank(this.errorText) ? e.message : this.errorText;
+        this.setContent(message);
+      }
+    }
+  },
+
+  notify : function(data, type, e) {
+    var self = this;
+    //general topics
+    if(this.notifyTopicsArray) {
+      dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
+        try {
+          dojo.event.topic.publish(topic, data, type, e, self);
+        } catch(ex){
+		  self.log(ex);
+        }
+      });
+    }
+    
+    //before, after and error topics
+    var topicsArray = null;
+    switch(type) {
+      case "before":
+        this.notifyTo(this.beforeNotifyTopicsArray, null, e);
+        break;
+      case "load":
+        this.notifyTo(this.afterNotifyTopicsArray, data, e);
+        break;
+      case "error":
+        this.notifyTo(this.errorNotifyTopicsArray, data, e);
+        break;
+    }
+  },
+  
+  notifyTo : function(topicsArray, data, e) {
+    var self = this;
+    if(topicsArray) {
+      dojo.lang.forEach(topicsArray, function(topic) {
+      try {
+        if(data != null) {
+          dojo.event.topic.publish(topic, data, e, self);
+        } else {
+          dojo.event.topic.publish(topic, e, self);
+        }
+      } catch(ex){
+        self.log(ex);
+      }
+      });
+    }
+  },
+
+  onDownloadStart : function(event) {
+    if(this.showLoading && !dojo.string.isBlank(this.loadingText)) {
+      event.text = this.loadingText;
+    }
+  },
+
+  reloadContents : function(evt) {
+    if(!dojo.string.isBlank(this.handler)) {
+      //use custom handler
+      this.log("Invoking handler: " + this.handler);
+      window[this.handler](this, this.domNode);
+    }
+    else {
+      try {
+          var self = this;
+          var request = {cancel: false};
+          this.notify(this.widgetId, "before", request);
+          if(request.cancel) {
+            this.log("Request canceled");
+            return;
+          }
+
+          //if the href is null, we still publish the notify topics
+          if(dojo.string.isBlank(this.href)) {
+            return;
+          }
+
+          //if there is a parent form, and it has a "onsubmit"
+          //execute it, validation is usually there, except is validation == true
+          //on which case it is ajax validation, instead of client side
+          if(!this.validate && this.formNode && this.formNode.onsubmit != null) {
+            var makeRequest = this.formNode.onsubmit.call(evt);
+            if(makeRequest != null && !makeRequest) {
+              this.log("Request canceled by 'onsubmit' of the form");
+              return;
+            }
+          }
+
+          //show indicator
+          dojo.html.show(this.indicator);
+		  if(this.showLoading) {
+            this.setContent(this.loadingText);
+          }
+          
+          var tmpHref = this.href;
+          tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "struts.enableJSONValidation=true";
+          if(!this.ajaxAfterValidation && this.validate) {
+            tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "struts.validateOnly=true";
+          }  
+          
+          if(dojo.dom.isTag(this.domNode, "INPUT", "input") 
+             && this.events == "onclick" 
+             && this.domNode.type == "submit"
+             && !dojo.string.isBlank(this.domNode.name)
+             && !dojo.string.isBlank(this.domNode.value)) {
+             var enc = /utf/i.test("") ? encodeURIComponent : dojo.string.encodeAscii
+             tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + enc(this.domNode.name) + "=" + enc(this.domNode.value);
+          }
+
+          dojo.io.bind({
+            url: tmpHref,
+            useCache: false,
+            preventCache: true,
+            formNode: self.formNode,
+            formFilter: window[self.formFilter],
+            transport: self.transport,
+            handler: function(type, data, e) {
+              dojo.lang.hitch(self, "bindHandler")(type, data, e);
+            },
+            mimetype: "text/html"
+         });
+      }
+      catch(ex) {
+        if(this.showError) {
+          var message = dojo.string.isBlank(this.errorText) ? ex : this.errorText;
+          this.setContent(message);
+        }  
+      }
+    }
+  },
+
+  //from Dojo's ContentPane
+  parse : function(s) {
+    this.log("Parsing: " + s);
+    var match = [];
+    var tmp = [];
+    var scripts = [];
+    while(match){
+      match = s.match(/<script([^>]*)>([\s\S]*?)<\/script>/i);
+      if(!match){ break; }
+      if(match[1]){
+        attr = match[1].match(/src=(['"]?)([^"']*)\1/i);
+        if(attr){
+          // remove a dojo.js or dojo.js.uncompressed.js from remoteScripts
+          // we declare all files with dojo.js as bad, regardless of folder
+          var tmp2 = attr[2].search(/.*(\bdojo\b(?:\.uncompressed)?\.js)$/);
+          if(tmp2 > -1){
+            this.log("Security note! inhibit:"+attr[2]+" from  beeing loaded again.");
+          }
+        }
+      }
+      if(match[2]){
+        // strip out all djConfig variables from script tags nodeValue
+        // this is ABSOLUTLY needed as reinitialize djConfig after dojo is initialised
+        // makes a dissaster greater than Titanic, update remove writeIncludes() to
+        var sc = match[2].replace(/(?:var )?\bdjConfig\b(?:[\s]*=[\s]*\{[^}]+\}|\.[\w]*[\s]*=[\s]*[^;\n]*)?;?|dojo\.hostenv\.writeIncludes\(\s*\);?/g, "");
+        if(!sc){ continue; }
+
+        // cut out all dojo.require (...) calls, if we have execute
+        // scripts false widgets dont get there require calls
+        // does suck out possible widgetpackage registration as well
+        tmp = [];
+        while(tmp){
+          tmp = sc.match(/dojo\.(?:(?:require(?:After)?(?:If)?)|(?:widget\.(?:manager\.)?registerWidgetPackage)|(?:(?:hostenv\.)?setModulePrefix))\((['"]).*?\1\)\s*;?/);
+          if(!tmp){ break;}
+          sc = sc.replace(tmp[0], "");
+        }
+        scripts.push(sc);
+      }
+      s = s.replace(/<script[^>]*>[\s\S]*?<\/script>/i, "");
+    }
+
+    return {
+      text: s,
+      scripts: scripts
+    };
+  }, 
+  
+  //from Dojo content pane
+  _executeScripts : function (scripts) {
+    var self = this;
+    var tmp = "", code = "";
+    for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].path) {
+            dojo.io.bind(this._cacheSetting({"url":scripts[i].path, "load":function (type, scriptStr) {
+                dojo.lang.hitch(self, tmp = ";" + scriptStr);
+            }, "error":function (type, error) {
+                error.text = type + " downloading remote script";
+                self._handleDefaults.call(self, error, "onExecError", "debug");
+            }, "mimetype":"text/plain", "sync":true}, this.cacheContent));
+            code += tmp;
+        } else {
+            code += scripts[i];
+        }
+    }
+    try {
+        if (this.scriptSeparation) {
+            delete this.scriptScope;
+            this.scriptScope = new (new Function("_container_", code + "; return this;"))(self);
+        } else {
+            var djg = dojo.global();
+            if (djg.execScript) {
+                djg.execScript(code);
+            } else {
+                var djd = dojo.doc();
+                var sc = djd.createElement("script");
+                sc.appendChild(djd.createTextNode(code));
+                (this.containerNode || this.domNode).appendChild(sc);
+            }
+        }
+    }
+    catch (e) {
+        e.text = "Error running scripts from content:\n" + e.description;
+        this.log(e);
+    }
+ },
+ 
+ _cacheSetting : function (bindObj, useCache) {
+    for (var x in this.bindArgs) {
+        if (dojo.lang.isUndefined(bindObj[x])) {
+            bindObj[x] = this.bindArgs[x];
+        }
+    }
+    if (dojo.lang.isUndefined(bindObj.useCache)) {
+        bindObj.useCache = useCache;
+    }
+    if (dojo.lang.isUndefined(bindObj.preventCache)) {
+        bindObj.preventCache = !useCache;
+    }
+    if (dojo.lang.isUndefined(bindObj.mimetype)) {
+        bindObj.mimetype = "text/html";
+    }
+    return bindObj;
+ }
+ 
+});
+
+
+
+
+dojo.provide("dojo.lang.timing.Timer");
+
+
+dojo.lang.timing.Timer = function(/*int*/ interval){
+	// summary: Timer object executes an "onTick()" method repeatedly at a specified interval. 
+	//			repeatedly at a given interval.
+	// interval: Interval between function calls, in milliseconds.
+	this.timer = null;
+	this.isRunning = false;
+	this.interval = interval;
+
+	this.onStart = null;
+	this.onStop = null;
+};
+
+dojo.extend(dojo.lang.timing.Timer, {
+	onTick : function(){
+		// summary: Method called every time the interval passes.  Override to do something useful.
+	},
+		
+	setInterval : function(interval){
+		// summary: Reset the interval of a timer, whether running or not.
+		// interval: New interval, in milliseconds.
+		if (this.isRunning){
+			dj_global.clearInterval(this.timer);
+		}
+		this.interval = interval;
+		if (this.isRunning){
+			this.timer = dj_global.setInterval(dojo.lang.hitch(this, "onTick"), this.interval);
+		}
+	},
+	
+	start : function(){
+		// summary: Start the timer ticking.
+		// description: Calls the "onStart()" handler, if defined.
+		// 				Note that the onTick() function is not called right away, 
+		//				only after first interval passes.
+		if (typeof this.onStart == "function"){
+			this.onStart();
+		}
+		this.isRunning = true;
+		this.timer = dj_global.setInterval(dojo.lang.hitch(this, "onTick"), this.interval);
+	},
+	
+	stop : function(){
+		// summary: Stop the timer.
+		// description: Calls the "onStop()" handler, if defined.
+		if (typeof this.onStop == "function"){
+			this.onStop();
+		}
+		this.isRunning = false;
+		dj_global.clearInterval(this.timer);
+	}
+});
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.BindDiv");
+
+
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.BindDiv",
+  dojo.widget.ContentPane, {
+    widgetType : "BindDiv",
+
+    //from ContentPane
+    href : "",
+    extractContent : false,
+    parseContent : false,
+    cacheContent : false,
+    refreshOnShow : false,
+    executeScripts : false,
+    preload : true,
+    
+    //update times
+    updateFreq : 0,
+    delay : 0,
+    autoStart : true,
+    timer : null,
+
+    //messages
+    loadingText : "Loading...",
+    showLoading : false,
+    errorText : "",
+    showError : true,
+
+    //pub/sub events
+    listenTopics : "",
+    notifyTopics : "",
+    notifyTopicsArray : null,
+    stopTimerListenTopics : "",
+    startTimerListenTopics : "",
+    beforeNotifyTopics : "",
+    beforeNotifyTopicsArray : null,
+    afterNotifyTopics : "",
+    afterNotifyTopicsArray : null,
+    errorNotifyTopics : "",
+    errorNotifyTopicsArray : null,
+    
+
+    //callbacks
+    beforeLoading : "",
+    afterLoading : "",
+
+    formId : "",
+    formFilter : "",
+
+    indicator: "",
+
+	//make dojo process the content
+	parseContent : true,
+
+    highlightColor : "",
+    highlightDuration : 2000,
+    
+    //only used when inside a tabbedpanel
+    disabled : false,
+    
+    transport : "",
+    
+    onDownloadStart : function(event) {
+      if(!this.showLoading) {
+        event.returnValue = false;
+        return;
+      }
+      if(this.showLoading && !dojo.string.isBlank(this.loadingText)) {
+        event.text = this.loadingText;
+      }
+    },
+    
+    highlight : function() {
+      if(!dojo.string.isBlank(this.highlightColor)) {
+        var effect = dojo.lfx.html.highlight([this.domNode], this.highlightColor, this.highlightDuration);
+        effect.play();    
+      }        
+    },
+
+    onDownloadError : function(event) {
+      this.onError(event);
+    },
+
+    onContentError : function(event) {
+      this.onError(event);
+    },
+
+    onExecError : function(event) {
+      this.onError(event);
+    },
+
+    onError : function(event) {
+      if(this.showError) {
+        if(!dojo.string.isBlank(this.errorText)) {
+          event.text = this.errorText;
+        }
+      } else {
+        event.text = "";
+      }
+    },
+
+    notify : function(data, type, e) {
+      if(this.notifyTopicsArray) {
+        var self = this;
+        dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
+          try {
+            dojo.event.topic.publish(topic, data, type, e, self);
+          } catch(ex) {
+            self.log(ex);
+          }
+        });
+      }
+      
+      //before, after and error topics
+      var topicsArray = null;
+      switch(type) {
+        case "before":
+          this.notifyTo(this.beforeNotifyTopicsArray, null, e);
+          break;
+        case "load":
+          this.notifyTo(this.afterNotifyTopicsArray, data, e);
+          break;
+        case "error":
+          this.notifyTo(this.errorNotifyTopicsArray, data, e);
+          break;
+      }
+    },
+    
+    notifyTo : function(topicsArray, data, e) {
+      var self = this;
+      if(topicsArray) {
+        dojo.lang.forEach(topicsArray, function(topic) {
+        try {
+          if(data != null) {
+            dojo.event.topic.publish(topic, data, e, self);
+          } else {
+            dojo.event.topic.publish(topic, e, self);
+          }
+        } catch(ex){
+          self.log(ex);
+        }
+        });
+      }
+    },
+
+    postCreate : function(args, frag) {
+      if (this.handler !== "") {
+          this.setHandler(this.handler);
+      }
+
+      var self = this;
+      var hitchedRefresh = function() {
+        dojo.lang.hitch(self, "refresh")();
+      };
+      var hitchedStartTimer = function() {
+        dojo.lang.hitch(self, "startTimer")();
+      };
+
+      if(this.updateFreq > 0) {
+        //there is a timer
+        this.timer = new dojo.lang.timing.Timer(this.updateFreq);
+        this.timer.onTick = hitchedRefresh;
+
+        if(this.autoStart) {
+          //start the timer
+          if(this.delay > 0) {
+            //start time after delay
+            dojo.lang.setTimeout(hitchedStartTimer, this.delay);
+          } else {
+            //start timer now
+            this.startTimer();
+          }
+        }
+      } else {
+        //no timer
+        if(this.delay > 0) {
+          //load after delay
+          dojo.lang.setTimeout(hitchedRefresh, this.delay);
+        }
+      }
+
+      //attach listeners
+      if(!dojo.string.isBlank(this.listenTopics)) {
+        this.log("Listening to " + this.listenTopics + " to refresh");
+        var topics = this.listenTopics.split(",");
+        if(topics) {
+          dojo.lang.forEach(topics, function(topic){
+            dojo.event.topic.subscribe(topic, self, "refresh");
+          });
+        }
+      }
+
+      if(!dojo.string.isBlank(this.stopTimerListenTopics)) {
+        this.log("Listening to " + this.stopTimerListenTopics + " to stop timer");
+        var stopTopics = this.stopTimerListenTopics.split(",");
+        if(stopTopics) {
+          dojo.lang.forEach(stopTopics, function(topic){
+            dojo.event.topic.subscribe(topic, self, "stopTimer");
+          });
+        }
+      }
+
+      if(!dojo.string.isBlank(this.startTimerListenTopics)) {
+        this.log("Listening to " + this.stopTimerListenTopics + " to start timer");
+        var startTopics = this.startTimerListenTopics.split(",");
+        if(startTopics) {
+          dojo.lang.forEach(startTopics, function(topic){
+            dojo.event.topic.subscribe(topic, self, "startTimer");
+          });
+        }
+      }
+     
+      //notify topics
+      if(!dojo.string.isBlank(this.notifyTopics)) {
+        this.notifyTopicsArray = this.notifyTopics.split(",");
+      }
+      
+      //before topics
+      if(!dojo.string.isBlank(this.beforeNotifyTopics)) {
+        this.beforeNotifyTopicsArray = this.beforeNotifyTopics.split(",");
+      }
+      
+      //after topics
+      if(!dojo.string.isBlank(this.afterNotifyTopics)) {
+        this.afterNotifyTopicsArray = this.afterNotifyTopics.split(",");
+      }
+      
+      //error topics
+      if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+        this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
+      }
+      
+      if(this.isShowing() && this.preload && this.updateFreq <= 0 && this.delay <= 0) {
+        this.refresh();
+      }
+    },
+
+    _downloadExternalContent: function(url, useCache) {
+      
+      var request = {cancel: false};
+      this.notify(this.widgetId, "before", request);
+      if(request.cancel) {
+        return;
+      }
+
+      //show indicator
+      dojo.html.show(this.indicator);
+
+      this._handleDefaults("Loading...", "onDownloadStart");
+      var self = this;
+      dojo.io.bind({
+        url: url,
+        useCache: useCache,
+        preventCache: !useCache,
+        mimetype: "text/html",
+        formNode: dojo.byId(self.formId),
+        formFilter: window[self.formFilter],
+        transport: self.transport,
+        handler: function(type, data, e) {
+          //hide indicator
+          dojo.html.hide(self.indicator);
+
+          self.notify(data, type, e);
+
+          if(type == "load") {
+            self.onDownloadEnd.call(self, url, data);
+            self.highlight();
+          } else {
+            // works best when from a live server instead of from file system
+            self._handleDefaults.call(self, "Error loading '" + url + "' (" + e.status + " "+  e.statusText + ")", "onDownloadError");
+            self.onLoad();
+          }
+        }
+      });
+     },
+
+    log : function(text) {
+      dojo.debug("[" + this.widgetId + "] " + text);
+    },
+
+    stopTimer : function() {
+      if(this.timer && this.timer.isRunning) {
+        this.log("stopping timer");
+        this.timer.stop();
+      }
+    },
+
+    startTimer : function() {
+      if(this.timer && !this.timer.isRunning) {
+        this.log("starting timer with update interval " + this.updateFreq);
+        this.timer.start();
+      }
+    },
+    
+    //from Dojo's ContentPane
+    //TODO: remove when fixed on Dojo (WW-1869)
+    splitAndFixPaths:function (s, url) {
+      var titles = [], scripts = [], tmp = [];
+      var match = [], requires = [], attr = [], styles = [];
+      var str = "", path = "", fix = "", tagFix = "", tag = "", origPath = "";
+      if (!url) {
+        url = "./";
+      }
+      if (s) {
+        var regex = /<title[^>]*>([\s\S]*?)<\/title>/i;
+        while (match = regex.exec(s)) {
+          titles.push(match[1]);
+          s = s.substring(0, match.index) + s.substr(match.index + match[0].length);
+        }
+        if (this.adjustPaths) {
+          var regexFindTag = /<[a-z][a-z0-9]*[^>]*\s(?:(?:src|href|style)=[^>])+[^>]*>/i;
+          var regexFindAttr = /\s(src|href|style)=(['"]?)([\w()\[\]\/.,\\'"-:;#=&?\s@!]+?)\2/i;
+          var regexProtocols = /^(?:[#]|(?:(?:https?|ftps?|file|javascript|mailto|news):))/;
+          while (tag = regexFindTag.exec(s)) {
+            str += s.substring(0, tag.index);
+            s = s.substring((tag.index + tag[0].length), s.length);
+            tag = tag[0];
+            tagFix = "";
+            while (attr = regexFindAttr.exec(tag)) {
+              path = "";
+              origPath = attr[3];
+              switch (attr[1].toLowerCase()) {
+                case "src":
+                case "href":
+                if (regexProtocols.exec(origPath)) {
+                  path = origPath;
+                } else {
+                  path = (new dojo.uri.Uri(url, origPath).toString());
+                }
+                break;
+                case "style":
+                path = dojo.html.fixPathsInCssText(origPath, url);
+                break;
+                default:
+                path = origPath;
+              }
+              fix = " " + attr[1] + "=" + attr[2] + path + attr[2];
+              tagFix += tag.substring(0, attr.index) + fix;
+              tag = tag.substring((attr.index + attr[0].length), tag.length);
+            }
+            str += tagFix + tag;
+          }
+          s = str + s;
+        }
+        regex = /(?:<(style)[^>]*>([\s\S]*?)<\/style>|<link ([^>]*rel=['"]?stylesheet['"]?[^>]*)>)/i;
+        while (match = regex.exec(s)) {
+          if (match[1] && match[1].toLowerCase() == "style") {
+            styles.push(dojo.html.fixPathsInCssText(match[2], url));
+          } else {
+            if (attr = match[3].match(/href=(['"]?)([^'">]*)\1/i)) {
+              styles.push({path:attr[2]});
+            }
+          }
+          s = s.substring(0, match.index) + s.substr(match.index + match[0].length);
+        }
+        var regex = /<script([^>]*)>([\s\S]*?)<\/script>/i;
+        var regexSrc = /src=(['"]?)([^"']*)\1/i;
+        var regexDojoJs = /.*(\bdojo\b\.js(?:\.uncompressed\.js)?)$/;
+        var regexInvalid = /(?:var )?\bdjConfig\b(?:[\s]*=[\s]*\{[^}]+\}|\.[\w]*[\s]*=[\s]*[^;\n]*)?;?|dojo\.hostenv\.writeIncludes\(\s*\);?/g;
+        var regexRequires = /dojo\.(?:(?:require(?:After)?(?:If)?)|(?:widget\.(?:manager\.)?registerWidgetPackage)|(?:(?:hostenv\.)?setModulePrefix|registerModulePath)|defineNamespace)\((['"]).*?\1\)\s*;?/;
+        while (match = regex.exec(s)) {
+          if (this.executeScripts && match[1]) {
+            if (attr = regexSrc.exec(match[1])) {
+              if (regexDojoJs.exec(attr[2])) {
+                dojo.debug("Security note! inhibit:" + attr[2] + " from  being loaded again.");
+              } else {
+                scripts.push({path:attr[2]});
+              }
+            }
+          }
+          if (match[2]) {
+            var sc = match[2].replace(regexInvalid, "");
+            if (!sc) {
+              continue;
+            }
+            while (tmp = regexRequires.exec(sc)) {
+              requires.push(tmp[0]);
+              sc = sc.substring(0, tmp.index) + sc.substr(tmp.index + tmp[0].length);
+            }
+            if (this.executeScripts) {
+              scripts.push(sc);
+            }
+          }
+          s = s.substr(0, match.index) + s.substr(match.index + match[0].length);
+        }
+        if (this.extractContent) {
+          match = s.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
+          if (match) {
+            s = match[1];
+          }
+        }
+        if (this.executeScripts && this.scriptSeparation) {
+          var regex = /(<[a-zA-Z][a-zA-Z0-9]*\s[^>]*?\S=)((['"])[^>]*scriptScope[^>]*>)/;
+          var regexAttr = /([\s'";:\(])scriptScope(.*)/;
+          str = "";
+          while (tag = regex.exec(s)) {
+            tmp = ((tag[3] == "'") ? "\"" : "'");
+            fix = "";
+            str += s.substring(0, tag.index) + tag[1];
+            while (attr = regexAttr.exec(tag[2])) {
+              tag[2] = tag[2].substring(0, attr.index) + attr[1] + "dojo.widget.byId(" + tmp + this.widgetId + tmp + ").scriptScope" + attr[2];
+            }
+            str += tag[2];
+            s = s.substr(tag.index + tag[0].length);
+          }
+          s = str + s;
+        }
+      }
+      return {"xml":s, "styles":styles, "titles":titles, "requires":requires, "scripts":scripts, "url":url};
+    }
+});
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.BindAnchor");
+
+
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.BindAnchor",
+  struts.widget.Bind, {
+  widgetType : "BindAnchor",
+
+  events: "onclick",
+
+  postCreate : function() {
+     struts.widget.BindAnchor.superclass.postCreate.apply(this);
+     this.domNode.href = "#";
+  }
+});
+
+
+
+
+dojo.provide("dojo.widget.html.stabile");
+
+dojo.widget.html.stabile = {
+	// summary: Maintain state of widgets when user hits back/forward button
+
+	// Characters to quote in single-quoted regexprs
+	_sqQuotables: new RegExp("([\\\\'])", "g"),
+
+	// Current depth.
+	_depth: 0,
+
+	// Set to true when calling v.toString, to sniff for infinite
+	// recursion.
+	_recur: false,
+
+	// Levels of nesting of Array and object displays.
+	// If when >= depth, no display or array or object internals.
+	depthLimit: 2
+};
+
+//// PUBLIC METHODS
+
+dojo.widget.html.stabile.getState = function(id){
+	// summary
+	//	Get the state stored for the widget with the given ID, or undefined
+	//	if none.
+
+	dojo.widget.html.stabile.setup();
+	return dojo.widget.html.stabile.widgetState[id];
+}
+
+dojo.widget.html.stabile.setState = function(id, state, isCommit){
+	// summary
+	//		Set the state stored for the widget with the given ID.  If isCommit
+	//		is true, commits all widget state to more stable storage.
+
+	dojo.widget.html.stabile.setup();
+	dojo.widget.html.stabile.widgetState[id] = state;
+	if(isCommit){
+		dojo.widget.html.stabile.commit(dojo.widget.html.stabile.widgetState);
+	}
+}
+
+dojo.widget.html.stabile.setup = function(){
+	// summary
+	//		Sets up widgetState: a hash keyed by widgetId, maps to an object
+	//		or array writable with "describe".  If there is data in the widget
+	//		storage area, use it, otherwise initialize an empty object.
+
+	if(!dojo.widget.html.stabile.widgetState){
+		var text = dojo.widget.html.stabile._getStorage().value;
+		dojo.widget.html.stabile.widgetState = text ? dj_eval("("+text+")") : {};
+	}
+}
+
+dojo.widget.html.stabile.commit = function(state){
+	// summary
+	//		Commits all widget state to more stable storage, so if the user
+	//		navigates away and returns, it can be restored.
+
+	dojo.widget.html.stabile._getStorage().value = dojo.widget.html.stabile.description(state);
+}
+
+dojo.widget.html.stabile.description = function(v, showAll){
+	// summary
+	//		Return a JSON "description string" for the given value.
+	//		Supports only core JavaScript types with literals, plus Date,
+	//		and cyclic structures are unsupported.
+	//		showAll defaults to false -- if true, this becomes a simple symbolic
+	//		object dumper, but you cannot "eval" the output.
+
+	// Save and later restore dojo.widget.html.stabile._depth;
+	var depth = dojo.widget.html.stabile._depth;
+
+	var describeThis = function() {
+		 return this.description(this, true);
+	} 
+	
+	try {
+
+		if(v===void(0)){
+			return "undefined";
+		}
+		if(v===null){
+			return "null";
+		}
+		if(typeof(v)=="boolean" || typeof(v)=="number"
+		    || v instanceof Boolean || v instanceof Number){
+			return v.toString();
+		}
+
+		if(typeof(v)=="string" || v instanceof String){
+			// Quote strings and their contents as required.
+			// Replacing by $& fails in IE 5.0
+			var v1 = v.replace(dojo.widget.html.stabile._sqQuotables, "\\$1"); 
+			v1 = v1.replace(/\n/g, "\\n");
+			v1 = v1.replace(/\r/g, "\\r");
+			// Any other important special cases?
+			return "'"+v1+"'";
+		}
+
+		if(v instanceof Date){
+			// Create a data constructor.
+			return "new Date("+d.getFullYear+","+d.getMonth()+","+d.getDate()+")";
+		}
+
+		var d;
+		if(v instanceof Array || v.push){
+			// "push" test needed for KHTML/Safari, don't know why -cp
+
+			if(depth>=dojo.widget.html.stabile.depthLimit)
+			  return "[ ... ]";
+
+			d = "[";
+			var first = true;
+			dojo.widget.html.stabile._depth++;
+			for(var i=0; i<v.length; i++){
+				// Skip functions and undefined values
+				// if(v[i]==undef || typeof(v[i])=="function")
+				//   continue;
+				if(first){
+					first = false;
+				}else{
+					d += ",";
+				}
+				d+=arguments.callee(v[i], showAll);
+			}
+			return d+"]";
+		}
+
+		if(v.constructor==Object
+		    || v.toString==describeThis){
+			if(depth>=dojo.widget.html.stabile.depthLimit)
+			  return "{ ... }";
+
+			// Instanceof Hash is good, or if we just use Objects,
+			// we can say v.constructor==Object.
+			// IE (5?) lacks hasOwnProperty, but perhaps objects do not always
+			// have prototypes??
+			if(typeof(v.hasOwnProperty)!="function" && v.prototype){
+				throw new Error("description: "+v+" not supported by script engine");
+			}
+			var first = true;
+			d = "{";
+			dojo.widget.html.stabile._depth++;
+			for(var key in v){
+				// Skip values that are functions or undefined.
+				if(v[key]==void(0) || typeof(v[key])=="function")
+					continue;
+				if(first){
+					first = false;
+				}else{
+					d += ", ";
+				}
+				var kd = key;
+				// If the key is not a legal identifier, use its description.
+				// For strings this will quote the stirng.
+				if(!kd.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)){
+					kd = arguments.callee(key, showAll);
+				}
+				d += kd+": "+arguments.callee(v[key], showAll);
+			}
+			return d+"}";
+		}
+
+		if(showAll){
+			if(dojo.widget.html.stabile._recur){
+				// Save the original definitions of toString;
+				var objectToString = Object.prototype.toString;
+				return objectToString.apply(v, []);
+			}else{
+				dojo.widget.html.stabile._recur = true;
+				return v.toString();
+			}
+		}else{
+			// log("Description? "+v.toString()+", "+typeof(v));
+			throw new Error("Unknown type: "+v);
+			return "'unknown'";
+		}
+
+	} finally {
+		// Always restore the global current depth.
+		dojo.widget.html.stabile._depth = depth;
+	}
+
+}
+
+
+
+//// PRIVATE TO MODULE
+
+dojo.widget.html.stabile._getStorage = function(){
+	// summary
+	//	Gets an object (form field) with a read/write "value" property.
+
+	if (dojo.widget.html.stabile.dataField) {
+		return dojo.widget.html.stabile.dataField;
+	}
+	var form = document.forms._dojo_form;
+	return dojo.widget.html.stabile.dataField = form ? form.stabile : {value: ""};
+}
+
+
+dojo.provide("dojo.widget.ComboBox");
+
+
+
+
+
+
+
+
+
+dojo.declare(
+	"dojo.widget.incrementalComboBoxDataProvider",
+	null,
+	function(options){
+		// summary:
+		//		Reference implementation / interface for Combobox incremental data provider.
+		//		This class takes a search string and returns values that match
+		//		that search string.  The filtering of values (to find values matching given
+		//		search string) is done on the server.
+		//
+		// options:
+		//		Structure containing {dataUrl: "foo.js?search={searchString}"} or similar data.
+		//		dataUrl is a URL that is passed the search string a returns a JSON structure
+		//		showing the matching values, like [ ["Alabama","AL"], ["Alaska","AK"], ["American Samoa","AS"] ]
+
+		this.searchUrl = options.dataUrl;
+
+		// TODO: cache doesn't work
+		this._cache = {};
+
+		this._inFlight = false;
+		this._lastRequest = null;
+
+		// allowCache: Boolean
+		//	Setting to use/not use cache for previously seen values
+		//	TODO: caching doesn't work.
+		//	TODO: read the setting for this value from the widget parameters
+		this.allowCache = false;
+	},
+	{
+		_addToCache: function(/*String*/ keyword, /*Array*/ data){
+			if(this.allowCache){
+				this._cache[keyword] = data;
+			}
+		},
+
+		startSearch: function(/*String*/ searchStr, /*Function*/ callback){
+			// summary:
+			//		Start the search for patterns that match searchStr, and call
+			//		specified callback functions with the results
+			// searchStr:
+			//		The characters the user has typed into the <input>.
+			// callback:
+			//		This function will be called with the result, as an
+			//		array of label/value pairs (the value is used for the Select widget).  Example:
+			//		[ ["Alabama","AL"], ["Alaska","AK"], ["American Samoa","AS"] ]
+
+			if(this._inFlight){
+				// FIXME: implement backoff!
+			}
+			var tss = encodeURIComponent(searchStr);
+			var realUrl = dojo.string.substituteParams(this.searchUrl, {"searchString": tss});
+			var _this = this;
+			var request = this._lastRequest = dojo.io.bind({
+				url: realUrl,
+				method: "get",
+				mimetype: "text/json",
+				load: function(type, data, evt){
+					_this._inFlight = false;
+					if(!dojo.lang.isArray(data)){
+						var arrData = [];
+						for(var key in data){
+							arrData.push([data[key], key]);
+						}
+						data = arrData;
+					}
+					_this._addToCache(searchStr, data);
+					if (request == _this._lastRequest){
+						callback(data);
+					}
+				}
+			});
+			this._inFlight = true;
+		}
+	}
+);
+
+dojo.declare(
+	"dojo.widget.basicComboBoxDataProvider",
+	null,
+	function(/*Object*/ options, /*DomNode*/ node){
+		// summary:
+		//		Reference implementation / interface for Combobox data provider.
+		//		This class takes a search string and returns values that match
+		//		that search string.    All possible values for the combobox are downloaded
+		//		on initialization, and then startSearch() runs locally,
+		//		merely filting that downloaded list, to find values matching search string
+		//
+		//		NOTE: this data provider is designed as a naive reference
+		//		implementation, and as such it is written more for readability than
+		//		speed. A deployable data provider would implement lookups, search
+		//		caching (and invalidation), and a significantly less naive data
+		//		structure for storage of items.
+		//
+		//	options: Object
+		//		Options object.  Example:
+		//		{
+		//			dataUrl: String (URL to query to get list of possible drop down values),
+		//			setAllValues: Function (callback for setting initially selected value)
+		//		}
+		//		The return format for dataURL is (for example)
+		//			[ ["Alabama","AL"], ["Alaska","AK"], ["American Samoa","AS"] ... ]
+		//
+		// node:
+		//		Pointer to the domNode in the original markup.
+		//		This is needed in the case when the list of values is embedded
+		//		in the html like <select> <option>Alabama</option> <option>Arkansas</option> ...
+		//		rather than specified as a URL.
+
+		// _data: Array
+		//		List of every possible value for the drop down list
+		//		startSearch() simply searches this array and returns matching values.
+		this._data = [];
+
+		// searchLimit: Integer
+		//		Maximum number of results to return.
+		//		TODO: need to read this value from the widget parameters
+		this.searchLimit = 30;
+
+		// searchType: String
+		//		Defines what values match the search string; see searchType parameter
+		//		of ComboBox for details
+		//		TODO: need to read this value from the widget parameters; the setting in ComboBox is being ignored.
+		this.searchType = "STARTSTRING";
+
+		// caseSensitive: Boolean
+		//		Should search be case sensitive?
+		//		TODO: this should be a parameter to combobox?
+		this.caseSensitive = false;
+
+		if(!dj_undef("dataUrl", options) && !dojo.string.isBlank(options.dataUrl)){
+			this._getData(options.dataUrl);
+		}else{
+			// check to see if we can populate the list from <option> elements
+			if((node)&&(node.nodeName.toLowerCase() == "select")){
+				// NOTE: we're not handling <optgroup> here yet
+				var opts = node.getElementsByTagName("option");
+				var ol = opts.length;
+				var data = [];
+				for(var x=0; x<ol; x++){
+					var text = opts[x].textContent || opts[x].innerText || opts[x].innerHTML;
+					var keyValArr = [String(text), String(opts[x].value)];
+					data.push(keyValArr);
+					if(opts[x].selected){
+						options.setAllValues(keyValArr[0], keyValArr[1]);
+					}
+				}
+				this.setData(data);
+			}
+		}
+	},
+	{
+		_getData: function(/*String*/ url){
+			dojo.io.bind({
+				url: url,
+				load: dojo.lang.hitch(this, function(type, data, evt){
+					if(!dojo.lang.isArray(data)){
+						var arrData = [];
+						for(var key in data){
+							arrData.push([data[key], key]);
+						}
+						data = arrData;
+					}
+					this.setData(data);
+				}),
+				mimetype: "text/json"
+			});
+		},
+
+		startSearch: function(/*String*/ searchStr, /*Function*/ callback){
+			// summary:
+			//		Start the search for patterns that match searchStr.
+			// searchStr:
+			//		The characters the user has typed into the <input>.
+			// callback:
+			//		This function will be called with the result, as an
+			//		array of label/value pairs (the value is used for the Select widget).  Example:
+			//		[ ["Alabama","AL"], ["Alaska","AK"], ["American Samoa","AS"] ]
+
+			// FIXME: need to add timeout handling here!!
+			this._performSearch(searchStr, callback);
+		},
+
+		_performSearch: function(/*String*/ searchStr, /*Function*/ callback){
+			//
+			//	NOTE: this search is LINEAR, which means that it exhibits perhaps
+			//	the worst possible speed characteristics of any search type. It's
+			//	written this way to outline the responsibilities and interfaces for
+			//	a search.
+			//
+			var st = this.searchType;
+			// FIXME: this is just an example search, which means that we implement
+			// only a linear search without any of the attendant (useful!) optimizations
+			var ret = [];
+			if(!this.caseSensitive){
+				searchStr = searchStr.toLowerCase();
+			}
+			for(var x=0; x<this._data.length; x++){
+				if((this.searchLimit > 0)&&(ret.length >= this.searchLimit)){
+					break;
+				}
+				// FIXME: we should avoid copies if possible!
+				var dataLabel = new String((!this.caseSensitive) ? this._data[x][0].toLowerCase() : this._data[x][0]);
+				if(dataLabel.length < searchStr.length){
+					// this won't ever be a good search, will it? What if we start
+					// to support regex search?
+					continue;
+				}
+
+				if(st == "STARTSTRING"){
+					if(searchStr == dataLabel.substr(0, searchStr.length)){
+						ret.push(this._data[x]);
+					}
+				}else if(st == "SUBSTRING"){
+					// this one is a gimmie
+					if(dataLabel.indexOf(searchStr) >= 0){
+						ret.push(this._data[x]);
+					}
+				}else if(st == "STARTWORD"){
+					// do a substring search and then attempt to determine if the
+					// preceeding char was the beginning of the string or a
+					// whitespace char.
+					var idx = dataLabel.indexOf(searchStr);
+					if(idx == 0){
+						// implicit match
+						ret.push(this._data[x]);
+					}
+					if(idx <= 0){
+						// if we didn't match or implicily matched, march onward
+						continue;
+					}
+					// otherwise, we have to go figure out if the match was at the
+					// start of a word...
+					// this code is taken almost directy from nWidgets
+					var matches = false;
+					while(idx!=-1){
+						// make sure the match either starts whole string, or
+						// follows a space, or follows some punctuation
+						if(" ,/(".indexOf(dataLabel.charAt(idx-1)) != -1){
+							// FIXME: what about tab chars?
+							matches = true; break;
+						}
+						idx = dataLabel.indexOf(searchStr, idx+1);
+					}
+					if(!matches){
+						continue;
+					}else{
+						ret.push(this._data[x]);
+					}
+				}
+			}
+			callback(ret);
+		},
+
+		setData: function(/*Array*/ pdata){
+			// summary: set (or reset) the data and initialize lookup structures
+			this._data = pdata;
+		}
+	}
+);
+
+dojo.widget.defineWidget(
+	"dojo.widget.ComboBox",
+	dojo.widget.HtmlWidget,
+	{
+		// summary:
+		//		Auto-completing text box, and base class for Select widget.
+		//
+		//		The drop down box's values are populated from an class called
+		//		a data provider, which returns a list of values based on the characters
+		//		that the user has typed into the input box.
+		//
+		//		Some of the options to the ComboBox are actually arguments to the data
+		//		provider.
+
+		// forceValidOption: Boolean
+		//		If true, only allow selection of strings in drop down list.
+		//		If false, user can select a value from the drop down, or just type in
+		//		any random value.
+		forceValidOption: false,
+
+		// searchType: String
+		//		Argument to data provider.
+		//		Specifies rule for matching typed in string w/list of available auto-completions.
+		//			startString - look for auto-completions that start w/the specified string.
+		//			subString - look for auto-completions containing the typed in string.
+		//			startWord - look for auto-completions where any word starts w/the typed in string.
+		searchType: "stringstart",
+
+		// dataProvider: Object
+		//		(Read only) reference to data provider object created for this combobox
+		//		according to "dataProviderClass" argument.
+		dataProvider: null,
+
+		// autoComplete: Boolean
+		//		If you type in a partial string, and then tab out of the <input> box,
+		//		automatically copy the first entry displayed in the drop down list to
+		//		the <input> field
+		autoComplete: true,
+
+		// searchDelay: Integer
+		//		Delay in milliseconds between when user types something and we start
+		//		searching based on that value
+		searchDelay: 100,
+
+		// dataUrl: String
+		//		URL argument passed to data provider object (class name specified in "dataProviderClass")
+		//		An example of the URL format for the default data provider is
+		//		"remoteComboBoxData.js?search=%{searchString}"
+		dataUrl: "",
+
+		// fadeTime: Integer
+		//		Milliseconds duration of fadeout for drop down box
+		fadeTime: 200,
+
+		// maxListLength: Integer
+		//		 Limits list to X visible rows, scroll on rest
+		maxListLength: 8,
+
+		// mode: String
+		//		Mode must be specified unless dataProviderClass is specified.
+		//		"local" to inline search string, "remote" for JSON-returning live search
+		//		or "html" for dumber live search.
+		mode: "local",
+
+		// selectedResult: Array
+		//		(Read only) array specifying the value/label that the user selected
+		selectedResult: null,
+
+		// dataProviderClass: String
+		//		Name of data provider class (code that maps a search string to a list of values)
+		//		The class must match the interface demonstrated by dojo.widget.incrementalComboBoxDataProvider
+		dataProviderClass: "",
+
+		// buttonSrc: URI
+		//		URI for the down arrow icon to the right of the input box.
+		buttonSrc: dojo.uri.moduleUri("dojo.widget", "templates/images/combo_box_arrow.png"),
+
+		// dropdownToggle: String
+		//		Animation effect for showing/displaying drop down box
+		dropdownToggle: "fade",
+
+		templateString:"<span _=\"whitespace and CR's between tags adds &nbsp; in FF\"\r\n\tclass=\"dojoComboBoxOuter\"\r\n\t><input style=\"display:none\"  tabindex=\"-1\" name=\"\" value=\"\" \r\n\t\tdojoAttachPoint=\"comboBoxValue\"\r\n\t><input style=\"display:none\"  tabindex=\"-1\" name=\"\" value=\"\" \r\n\t\tdojoAttachPoint=\"comboBoxSelectionValue\"\r\n\t><input type=\"text\" autocomplete=\"off\" class=\"dojoComboBox\"\r\n\t\tdojoAttachEvent=\"key:_handleKeyEvents; keyUp: onKeyUp; compositionEnd; onResize;\"\r\n\t\tdojoAttachPoint=\"textInputNode\"\r\n\t><img hspace=\"0\"\r\n\t\tvspace=\"0\"\r\n\t\tclass=\"dojoComboBox\"\r\n\t\tdojoAttachPoint=\"downArrowNode\"\r\n\t\tdojoAttachEvent=\"onMouseUp: handleArrowClick; onResize;\"\r\n\t\tsrc=\"${this.buttonSrc}\"\r\n></span>\r\n",
+		templateCssString:".dojoComboBoxOuter {\r\n\tborder: 0px !important;\r\n\tmargin: 0px !important;\r\n\tpadding: 0px !important;\r\n\tbackground: transparent !important;\r\n\twhite-space: nowrap !important;\r\n}\r\n\r\n.dojoComboBox {\r\n\tborder: 1px inset #afafaf;\r\n\tmargin: 0px;\r\n\tpadding: 0px;\r\n\tvertical-align: middle !important;\r\n\tfloat: none !important;\r\n\tposition: static !important;\r\n\tdisplay: inline !important;\r\n}\r\n\r\n/* the input box */\r\ninput.dojoComboBox {\r\n\tborder-right-width: 0px !important; \r\n\tmargin-right: 0px !important;\r\n\tpadding-right: 0px !important;\r\n}\r\n\r\n/* the down arrow */\r\nimg.dojoComboBox {\r\n\tborder-left-width: 0px !important;\r\n\tpadding-left: 0px !important;\r\n\tmargin-left: 0px !important;\r\n}\r\n\r\n/* IE vertical-alignment calculations can be off by +-1 but these margins are collapsed away */\r\n.dj_ie img.dojoComboBox {\r\n\tmargin-top: 1px; \r\n\tmargin-bottom: 1px; \r\n}\r\n\r\n/* the drop down */\r\n.dojoComboBoxOptions {\r\n\tfont-family: Verdana, Helvetica, Garamond, sans-serif;\r\n\t/* font-size: 0.7em; */\r\n\tbackground-color: white;\r\n\tborder: 1px solid #afafaf;\r\n\tposition: absolute;\r\n\tz-index: 1000; \r\n\toverflow: auto;\r\n\tcursor: default;\r\n}\r\n\r\n.dojoComboBoxItem {\r\n\tpadding-left: 2px;\r\n\tpadding-top: 2px;\r\n\tmargin: 0px;\r\n}\r\n\r\n.dojoComboBoxItemEven {\r\n\tbackground-color: #f4f4f4;\r\n}\r\n\r\n.dojoComboBoxItemOdd {\r\n\tbackground-color: white;\r\n}\r\n\r\n.dojoComboBoxItemHighlight {\r\n\tbackground-color: #63709A;\r\n\tcolor: white;\r\n}\r\n",templateCssPath: dojo.uri.moduleUri("dojo.widget", "templates/ComboBox.css"),
+
+		setValue: function(/*String*/ value){
+			// summary: Sets the value of the combobox
+			this.comboBoxValue.value = value;
+			if (this.textInputNode.value != value){ // prevent mucking up of selection
+				this.textInputNode.value = value;
+				// only change state and value if a new value is set
+				dojo.widget.html.stabile.setState(this.widgetId, this.getState(), true);
+				this.onValueChanged(value);
+			}
+		},
+
+		onValueChanged: function(/*String*/ value){
+			// summary: callback when value changes, for user to attach to
+		},
+
+		getValue: function(){
+			// summary: Rerturns combo box value
+			return this.comboBoxValue.value;
+		},
+
+		getState: function(){
+			// summary:
+			//	Used for saving state of ComboBox when navigates to a new
+			//	page, in case they then hit the browser's "Back" button.
+			return {value: this.getValue()};
+		},
+
+		setState: function(/*Object*/ state){
+			// summary:
+			//	Used for restoring state of ComboBox when has navigated to a new
+			//	page but then hits browser's "Back" button.
+			this.setValue(state.value);
+		},
+
+		enable:function(){
+			this.disabled=false;
+			this.textInputNode.removeAttribute("disabled");
+		},
+
+		disable: function(){
+			this.disabled = true;
+			this.textInputNode.setAttribute("disabled",true);
+		},
+
+		_getCaretPos: function(/*DomNode*/ element){
+			// khtml 3.5.2 has selection* methods as does webkit nightlies from 2005-06-22
+			if(dojo.lang.isNumber(element.selectionStart)){
+				// FIXME: this is totally borked on Moz < 1.3. Any recourse?
+				return element.selectionStart;
+			}else if(dojo.render.html.ie){
+				// in the case of a mouse click in a popup being handled,
+				// then the document.selection is not the textarea, but the popup
+				// var r = document.selection.createRange();
+				// hack to get IE 6 to play nice. What a POS browser.
+				var tr = document.selection.createRange().duplicate();
+				var ntr = element.createTextRange();
+				tr.move("character",0);
+				ntr.move("character",0);
+				try {
+					// If control doesnt have focus, you get an exception.
+					// Seems to happen on reverse-tab, but can also happen on tab (seems to be a race condition - only happens sometimes).
+					// There appears to be no workaround for this - googled for quite a while.
+					ntr.setEndPoint("EndToEnd", tr);
+					return String(ntr.text).replace(/\r/g,"").length;
+				} catch (e){
+					return 0; // If focus has shifted, 0 is fine for caret pos.
+				}
+
+			}
+		},
+
+		_setCaretPos: function(/*DomNode*/ element, /*Number*/ location){
+			location = parseInt(location);
+			this._setSelectedRange(element, location, location);
+		},
+
+		_setSelectedRange: function(/*DomNode*/ element, /*Number*/ start, /*Number*/ end){
+			if(!end){ end = element.value.length; }  // NOTE: Strange - should be able to put caret at start of text?
+			// Mozilla
+			// parts borrowed from http://www.faqts.com/knowledge_base/view.phtml/aid/13562/fid/130
+			if(element.setSelectionRange){
+				element.focus();
+				element.setSelectionRange(start, end);
+			}else if(element.createTextRange){ // IE
+				var range = element.createTextRange();
+				with(range){
+					collapse(true);
+					moveEnd('character', end);
+					moveStart('character', start);
+					select();
+				}
+			}else{ //otherwise try the event-creation hack (our own invention)
+				// do we need these?
+				element.value = element.value;
+				element.blur();
+				element.focus();
+				// figure out how far back to go
+				var dist = parseInt(element.value.length)-end;
+				var tchar = String.fromCharCode(37);
+				var tcc = tchar.charCodeAt(0);
+				for(var x = 0; x < dist; x++){
+					var te = document.createEvent("KeyEvents");
+					te.initKeyEvent("keypress", true, true, null, false, false, false, false, tcc, tcc);
+					element.dispatchEvent(te);
+				}
+			}
+		},
+
+		_handleKeyEvents: function(/*Event*/ evt){
+			// summary: handles keyboard events
+			if(evt.ctrlKey || evt.altKey || !evt.key){ return; }
+
+			// reset these
+			this._prev_key_backspace = false;
+			this._prev_key_esc = false;
+
+			var k = dojo.event.browser.keys;
+			var doSearch = true;
+
+			switch(evt.key){
+	 			case k.KEY_DOWN_ARROW:
+					if(!this.popupWidget.isShowingNow){
+						this._startSearchFromInput();
+					}
+					this._highlightNextOption();
+					dojo.event.browser.stopEvent(evt);
+					return;
+				case k.KEY_UP_ARROW:
+					this._highlightPrevOption();
+					dojo.event.browser.stopEvent(evt);
+					return;
+				case k.KEY_TAB:
+					// using linux alike tab for autocomplete
+					if(!this.autoComplete && this.popupWidget.isShowingNow && this._highlighted_option){
+						dojo.event.browser.stopEvent(evt);
+						this._selectOption({ 'target': this._highlighted_option, 'noHide': false});
+
+						// put caret last
+						this._setSelectedRange(this.textInputNode, this.textInputNode.value.length, null);
+					}else{
+						this._selectOption();
+						return;
+					}
+					break;
+				case k.KEY_ENTER:
+					// prevent submitting form if we press enter with list open
+					if(this.popupWidget.isShowingNow){
+						dojo.event.browser.stopEvent(evt);
+					}
+					if(this.autoComplete){
+						this._selectOption();
+						return;
+					}
+					// fallthrough
+				case " ":
+					if(this.popupWidget.isShowingNow && this._highlighted_option){
+						dojo.event.browser.stopEvent(evt);
+						this._selectOption();
+						this._hideResultList();
+						return;
+					}
+					break;
+				case k.KEY_ESCAPE:
+					this._hideResultList();
+					this._prev_key_esc = true;
+					return;
+				case k.KEY_BACKSPACE:
+					this._prev_key_backspace = true;
+					if(!this.textInputNode.value.length){
+						this.setAllValues("", "");
+						this._hideResultList();
+						doSearch = false;
+					}
+					break;
+				case k.KEY_RIGHT_ARROW: // fall through
+				case k.KEY_LEFT_ARROW: // fall through
+					doSearch = false;
+					break;
+				default:// non char keys (F1-F12 etc..)  shouldn't open list
+					if(evt.charCode==0){
+						doSearch = false;
+					}
+			}
+
+			if(this.searchTimer){
+				clearTimeout(this.searchTimer);
+			}
+			if(doSearch){
+				// if we have gotten this far we dont want to keep our highlight
+				this._blurOptionNode();
+
+				// need to wait a tad before start search so that the event bubbles through DOM and we have value visible
+				this.searchTimer = setTimeout(dojo.lang.hitch(this, this._startSearchFromInput), this.searchDelay);
+			}
+		},
+
+		compositionEnd: function(/*Event*/ evt){
+			// summary: When inputting characters using an input method, such as Asian
+			// languages, it will generate this event instead of onKeyDown event
+			evt.key = evt.keyCode;
+			this._handleKeyEvents(evt);
+		},
+
+		onKeyUp: function(/*Event*/ evt){
+			// summary: callback on key up event
+			this.setValue(this.textInputNode.value);
+		},
+
+		setSelectedValue: function(/*String*/ value){
+			// summary:
+			//		This sets a hidden value associated w/the displayed value.
+			//		The hidden value (and this function) shouldn't be used; if
+			//		you need a hidden value then use Select widget instead of ComboBox.
+			// TODO: remove?
+			// FIXME, not sure what to do here!
+			this.comboBoxSelectionValue.value = value;
+		},
+
+		setAllValues: function(/*String*/ value1, /*String*/ value2){
+			// summary:
+			//		This sets the displayed value and hidden value.
+			//		The hidden value (and this function) shouldn't be used; if
+			//		you need a hidden value then use Select widget instead of ComboBox.
+			this.setSelectedValue(value2);
+			this.setValue(value1);
+		},
+
+		_focusOptionNode: function(/*DomNode*/ node){
+			// summary: does the actual highlight
+			if(this._highlighted_option != node){
+				this._blurOptionNode();
+				this._highlighted_option = node;
+				dojo.html.addClass(this._highlighted_option, "dojoComboBoxItemHighlight");
+			}
+		},
+
+		_blurOptionNode: function(){
+			// sumary: removes highlight on highlighted
+			if(this._highlighted_option){
+				dojo.html.removeClass(this._highlighted_option, "dojoComboBoxItemHighlight");
+				this._highlighted_option = null;
+			}
+		},
+
+		_highlightNextOption: function(){
+			if((!this._highlighted_option) || !this._highlighted_option.parentNode){
+				this._focusOptionNode(this.optionsListNode.firstChild);
+			}else if(this._highlighted_option.nextSibling){
+				this._focusOptionNode(this._highlighted_option.nextSibling);
+			}
+			dojo.html.scrollIntoView(this._highlighted_option);
+		},
+
+		_highlightPrevOption: function(){
+			if(this._highlighted_option && this._highlighted_option.previousSibling){
+				this._focusOptionNode(this._highlighted_option.previousSibling);
+			}else{
+				this._highlighted_option = null;
+				this._hideResultList();
+				return;
+			}
+			dojo.html.scrollIntoView(this._highlighted_option);
+		},
+
+		_itemMouseOver: function(/*Event*/ evt){
+			if (evt.target === this.optionsListNode){ return; }
+			this._focusOptionNode(evt.target);
+			dojo.html.addClass(this._highlighted_option, "dojoComboBoxItemHighlight");
+		},
+
+		_itemMouseOut: function(/*Event*/ evt){
+			if (evt.target === this.optionsListNode){ return; }
+			this._blurOptionNode();
+		},
+
+		onResize: function(){
+			// summary: this function is called when the input area has changed size
+			var inputSize = dojo.html.getContentBox(this.textInputNode);
+			if( inputSize.height <= 0 ){
+				// need more time to calculate size
+				dojo.lang.setTimeout(this, "onResize", 100);
+				return;
+			}
+			var buttonSize = { width: inputSize.height, height: inputSize.height};
+			dojo.html.setContentBox(this.downArrowNode, buttonSize);
+		},
+
+		fillInTemplate: function(/*Object*/ args, /*Object*/ frag){
+			// there's some browser specific CSS in ComboBox.css
+			dojo.html.applyBrowserClass(this.domNode);
+
+			var source = this.getFragNodeRef(frag);
+			if (! this.name && source.name){ this.name = source.name; }
+			this.comboBoxValue.name = this.name;
+			this.comboBoxSelectionValue.name = this.name+"_selected";
+
+			/* different nodes get different parts of the style */
+			dojo.html.copyStyle(this.domNode, source);
+			dojo.html.copyStyle(this.textInputNode, source);
+			dojo.html.copyStyle(this.downArrowNode, source);
+			with (this.downArrowNode.style){ // calculate these later
+				width = "0px";
+				height = "0px";
+			}
+
+			// Use specified data provider class; if no class is specified
+			// then use comboboxDataProvider or incrmentalComboBoxDataProvider
+			// depending on setting of mode
+			var dpClass;
+			if(this.dataProviderClass){
+				if(typeof this.dataProviderClass == "string"){
+					dpClass = dojo.evalObjPath(this.dataProviderClass)
+				}else{
+					dpClass = this.dataProviderClass;
+				}
+			}else{
+				if(this.mode == "remote"){
+					dpClass = dojo.widget.incrementalComboBoxDataProvider;
+				}else{
+					dpClass = dojo.widget.basicComboBoxDataProvider;
+				}
+			}
+			this.dataProvider = new dpClass(this, this.getFragNodeRef(frag));
+
+			this.popupWidget = new dojo.widget.createWidget("PopupContainer",
+				{toggle: this.dropdownToggle, toggleDuration: this.toggleDuration});
+			dojo.event.connect(this, 'destroy', this.popupWidget, 'destroy');
+			this.optionsListNode = this.popupWidget.domNode;
+			this.domNode.appendChild(this.optionsListNode);
+			dojo.html.addClass(this.optionsListNode, 'dojoComboBoxOptions');
+			dojo.event.connect(this.optionsListNode, 'onclick', this, '_selectOption');
+			dojo.event.connect(this.optionsListNode, 'onmouseover', this, '_onMouseOver');
+			dojo.event.connect(this.optionsListNode, 'onmouseout', this, '_onMouseOut');
+
+			// TODO: why does onmouseover and onmouseout connect to two separate handlers???
+			dojo.event.connect(this.optionsListNode, "onmouseover", this, "_itemMouseOver");
+			dojo.event.connect(this.optionsListNode, "onmouseout", this, "_itemMouseOut");
+		},
+
+		_openResultList: function(/*Array*/ results){
+			if (this.disabled){
+				return;
+			}
+			this._clearResultList();
+			if(!results.length){
+				this._hideResultList();
+			}
+
+			if(	(this.autoComplete)&&
+				(results.length)&&
+				(!this._prev_key_backspace)&&
+				(this.textInputNode.value.length > 0)){
+				var cpos = this._getCaretPos(this.textInputNode);
+				// only try to extend if we added the last character at the end of the input
+				if((cpos+1) > this.textInputNode.value.length){
+					// only add to input node as we would overwrite Capitalisation of chars
+					this.textInputNode.value += results[0][0].substr(cpos);
+					// build a new range that has the distance from the earlier
+					// caret position to the end of the first string selected
+					this._setSelectedRange(this.textInputNode, cpos, this.textInputNode.value.length);
+				}
+			}
+
+			var even = true;
+			while(results.length){
+				var tr = results.shift();
+				if(tr){
+					var td = document.createElement("div");
+					td.appendChild(document.createTextNode(tr[0]));
+					td.setAttribute("resultName", tr[0]);
+					td.setAttribute("resultValue", tr[1]);
+					td.className = "dojoComboBoxItem "+((even) ? "dojoComboBoxItemEven" : "dojoComboBoxItemOdd");
+					even = (!even);
+					this.optionsListNode.appendChild(td);
+				}
+			}
+
+			// show our list (only if we have content, else nothing)
+			this._showResultList();
+		},
+
+		_onFocusInput: function(){
+			this._hasFocus = true;
+		},
+
+		_onBlurInput: function(){
+			this._hasFocus = false;
+			this._handleBlurTimer(true, 500);
+		},
+
+		_handleBlurTimer: function(/*Boolean*/clear, /*Number*/ millisec){
+			// summary: collect all blur timers issues here
+			if(this.blurTimer && (clear || millisec)){
+				clearTimeout(this.blurTimer);
+			}
+			if(millisec){ // we ignore that zero is false and never sets as that never happens in this widget
+				this.blurTimer = dojo.lang.setTimeout(this, "_checkBlurred", millisec);
+			}
+		},
+
+		_onMouseOver: function(/*Event*/ evt){
+			// summary: needed in IE and Safari as inputTextNode loses focus when scrolling optionslist
+			if(!this._mouseover_list){
+				this._handleBlurTimer(true, 0);
+				this._mouseover_list = true;
+			}
+		},
+
+		_onMouseOut:function(/*Event*/ evt){
+			// summary: needed in IE and Safari as inputTextNode loses focus when scrolling optionslist
+			var relTarget = evt.relatedTarget;
+			try { // fixes #1807
+				if(!relTarget || relTarget.parentNode != this.optionsListNode){
+					this._mouseover_list = false;
+					this._handleBlurTimer(true, 100);
+					this._tryFocus();
+				}
+			}catch(e){}
+		},
+
+		_isInputEqualToResult: function(/*String*/ result){
+			var input = this.textInputNode.value;
+			if(!this.dataProvider.caseSensitive){
+				input = input.toLowerCase();
+				result = result.toLowerCase();
+			}
+			return (input == result);
+		},
+
+		_isValidOption: function(){
+			var tgt = dojo.html.firstElement(this.optionsListNode);
+			var isValidOption = false;
+			while(!isValidOption && tgt){
+				if(this._isInputEqualToResult(tgt.getAttribute("resultName"))){
+					isValidOption = true;
+				}else{
+					tgt = dojo.html.nextElement(tgt);
+				}
+			}
+			return isValidOption;
+		},
+
+		_checkBlurred: function(){
+			if(!this._hasFocus && !this._mouseover_list){
+				this._hideResultList();
+				// clear the list if the user empties field and moves away.
+				if(!this.textInputNode.value.length){
+					this.setAllValues("", "");
+					return;
+				}
+
+				var isValidOption = this._isValidOption();
+				// enforce selection from option list
+				if(this.forceValidOption && !isValidOption){
+					this.setAllValues("", "");
+					return;
+				}
+				if(!isValidOption){// clear
+					this.setSelectedValue("");
+				}
+			}
+		},
+
+		_selectOption: function(/*Event*/ evt){
+			var tgt = null;
+			if(!evt){
+				evt = { target: this._highlighted_option };
+			}
+
+			if(!dojo.html.isDescendantOf(evt.target, this.optionsListNode)){
+				// handle autocompletion where the the user has hit ENTER or TAB
+
+				// if the input is empty do nothing
+				if(!this.textInputNode.value.length){
+					return;
+				}
+				tgt = dojo.html.firstElement(this.optionsListNode);
+
+				// user has input value not in option list
+				if(!tgt || !this._isInputEqualToResult(tgt.getAttribute("resultName"))){
+					return;
+				}
+				// otherwise the user has accepted the autocompleted value
+			}else{
+				tgt = evt.target;
+			}
+
+			while((tgt.nodeType!=1)||(!tgt.getAttribute("resultName"))){
+				tgt = tgt.parentNode;
+				if(tgt === dojo.body()){
+					return false;
+				}
+			}
+
+			this.selectedResult = [tgt.getAttribute("resultName"), tgt.getAttribute("resultValue")];
+			this.setAllValues(tgt.getAttribute("resultName"), tgt.getAttribute("resultValue"));
+			if(!evt.noHide){
+				this._hideResultList();
+				this._setSelectedRange(this.textInputNode, 0, null);
+			}
+			this._tryFocus();
+		},
+
+		_clearResultList: function(){
+			if(this.optionsListNode.innerHTML){
+				this.optionsListNode.innerHTML = "";  // browser natively knows how to collect this memory
+			}
+		},
+
+		_hideResultList: function(){
+			this.popupWidget.close();
+		},
+
+		_showResultList: function(){
+			// Our dear friend IE doesnt take max-height so we need to calculate that on our own every time
+			var childs = this.optionsListNode.childNodes;
+			if(childs.length){
+				var visibleCount = Math.min(childs.length,this.maxListLength);
+
+				with(this.optionsListNode.style)
+				{
+					display = "";
+					if(visibleCount == childs.length){
+						//no scrollbar is required, so unset height to let browser calcuate it,
+						//as in css, overflow is already set to auto
+						height = "";
+					}else{
+						//show it first to get the correct dojo.style.getOuterHeight(childs[0])
+						//FIXME: shall we cache the height of the item?
+						height = visibleCount * dojo.html.getMarginBox(childs[0]).height +"px";
+					}
+					width = (dojo.html.getMarginBox(this.domNode).width-2)+"px";
+				}
+				this.popupWidget.open(this.domNode, this, this.downArrowNode);
+			}else{
+				this._hideResultList();
+			}
+		},
+
+		handleArrowClick: function(){
+			// summary: callback when arrow is clicked
+			this._handleBlurTimer(true, 0);
+			this._tryFocus();
+			if(this.popupWidget.isShowingNow){
+				this._hideResultList();
+			}else{
+				// forces full population of results, if they click
+				// on the arrow it means they want to see more options
+				this._startSearch("");
+			}
+		},
+
+		_tryFocus: function(){
+			try {
+				this.textInputNode.focus();
+			} catch (e){
+				// element isn't focusable if disabled, or not visible etc - not easy to test for.
+	 		};
+		},
+
+		_startSearchFromInput: function(){
+			this._startSearch(this.textInputNode.value);
+		},
+
+		_startSearch: function(/*String*/ key){
+			this.dataProvider.startSearch(key, dojo.lang.hitch(this, "_openResultList"));
+		},
+
+		postCreate: function(){
+			this.onResize();
+
+			// TODO: add these attach events to template
+			dojo.event.connect(this.textInputNode, "onblur", this, "_onBlurInput");
+			dojo.event.connect(this.textInputNode, "onfocus", this, "_onFocusInput");
+
+			if (this.disabled){
+				this.disable();
+			}
+			var s = dojo.widget.html.stabile.getState(this.widgetId);
+			if (s){
+				this.setState(s);
+			}
+		}
+	}
+);
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.ComboBox");
+
+
+
+
+struts.widget.ComboBoxDataProvider = function(combobox, node){
+  this.data = [];
+  this.searchLimit = combobox.searchLimit;
+  this.searchType = "STARTSTRING"; // may also be "STARTWORD" or "SUBSTRING"
+  this.caseSensitive = false;
+  // for caching optimizations
+  this._lastSearch = "";
+  this._lastSearchResults = null;
+
+  this.firstRequest = true;
+
+  this.cbox = combobox;
+  this.formId = this.cbox.formId;
+  this.formFilter = this.cbox.formFilter;
+  this.transport = this.cbox.transport;
+
+  this.getData = function(/*String*/ url){
+    //show indicator
+    dojo.html.show(this.cbox.indicator);
+
+    dojo.io.bind({
+      url: url,
+      formNode: dojo.byId(this.formId),
+      formFilter: window[this.formFilter],
+      transport: this.transport,
+      handler: dojo.lang.hitch(this, function(type, data, evt) {
+        //hide indicator
+        dojo.html.hide(this.cbox.indicator);
+
+        //if notifyTopics is published on the first request (onload)
+        //the value of listeners will be reset
+        if(!this.firstRequest || type == "error") {
+          this.cbox.notify.apply(this.cbox, [data, type, evt]);
+        }
+
+        this.firstRequest = false;
+        var arrData = null;
+        var dataByName = data[dojo.string.isBlank(this.cbox.dataFieldName) ? this.cbox.name : this.cbox.dataFieldName];
+        if(!dojo.lang.isArray(data)) {
+           //if there is a dataFieldName, take it
+           if(dataByName) {
+             if(dojo.lang.isArray(dataByName)) {
+                //ok, it is an array
+                arrData = dataByName;
+             } else if(dojo.lang.isObject(dataByName)) {
+                //it is an object, treat it like a map
+                arrData = [];
+                for(var key in dataByName){
+                    arrData.push([key, dataByName[key]]);
+                }
+             }
+           } else {
+             //try to find a match
+             var tmpArrData = [];
+             for(var key in data){
+               //does it start with the field name? take it
+               if(dojo.string.startsWith(key, this.cbox.name)) {
+                 arrData = data[key];
+                 break;
+               } else {
+                 //if nathing else is found, we will use values in this
+                 //object as the data
+                 tmpArrData.push([key, data[key]]);
+               }
+               //grab the first array found, we will use it if nothing else
+               //is found
+               if(!arrData && dojo.lang.isArray(data[key]) && !dojo.lang.isString(data[key])) {
+                 arrData = data[key];
+               }
+             }
+             if(!arrData) {
+               arrData = tmpArrData;
+             }
+           }
+
+           data = arrData;
+        }
+        this.setData(data);
+      }),
+      mimetype: "text/json"
+    });
+  };
+
+  this.startSearch = function (searchStr, callback) {
+    // FIXME: need to add timeout handling here!!
+    this._preformSearch(searchStr, callback);
+  };
+
+  this._preformSearch = function(/*String*/ searchStr, callback){
+    //
+    //  NOTE: this search is LINEAR, which means that it exhibits perhaps
+    //  the worst possible speed characteristics of any search type. It's
+    //  written this way to outline the responsibilities and interfaces for
+    //  a search.
+    //
+    var st = this.searchType;
+    // FIXME: this is just an example search, which means that we implement
+    // only a linear search without any of the attendant (useful!) optimizations
+    var ret = [];
+    if(!this.caseSensitive){
+      searchStr = searchStr.toLowerCase();
+    }
+    for(var x=0; x<this.data.length; x++){
+      if(!this.data[x] || !this.data[x][0]) {
+        //needed for IE
+        continue;
+      }
+      if((this.searchLimit > 0) && (ret.length >= this.searchLimit)) {
+			break;
+      }
+      // FIXME: we should avoid copies if possible!
+      var dataLabel = new String((!this.caseSensitive) ? this.data[x][0].toLowerCase() : this.data[x][0]);
+      if(dataLabel.length < searchStr.length){
+        // this won't ever be a good search, will it? What if we start
+        // to support regex search?
+        continue;
+      }
+
+      if(st == "STARTSTRING"){
+        if(searchStr == dataLabel.substr(0, searchStr.length)){
+          ret.push(this.data[x]);
+        }
+      }else if(st == "SUBSTRING"){
+        // this one is a gimmie
+        if(dataLabel.indexOf(searchStr) >= 0){
+          ret.push(this.data[x]);
+        }
+      }else if(st == "STARTWORD"){
+        // do a substring search and then attempt to determine if the
+        // preceeding char was the beginning of the string or a
+        // whitespace char.
+        var idx = dataLabel.indexOf(searchStr);
+        if(idx == 0){
+          // implicit match
+          ret.push(this.data[x]);
+        }
+        if(idx <= 0){
+          // if we didn't match or implicily matched, march onward
+          continue;
+        }
+        // otherwise, we have to go figure out if the match was at the
+        // start of a word...
+        // this code is taken almost directy from nWidgets
+        var matches = false;
+        while(idx!=-1){
+          // make sure the match either starts whole string, or
+          // follows a space, or follows some punctuation
+          if(" ,/(".indexOf(dataLabel.charAt(idx-1)) != -1){
+            // FIXME: what about tab chars?
+            matches = true; break;
+          }
+          idx = dataLabel.indexOf(searchStr, idx+1);
+        }
+        if(!matches){
+          continue;
+        }else{
+          ret.push(this.data[x]);
+        }
+      }
+    }
+    callback(ret);
+  };
+
+  this.addData = function(/*Array*/ pairs){
+    // FIXME: incredibly naive and slow!
+    this.data = this.data.concat(pairs);
+  };
+
+  this.setData = function(/*Array*/ pdata){
+    // populate this.data and initialize lookup structures
+    this.data = pdata;
+    //all ellements must be a key and value pair
+    for(var i = 0; i < this.data.length; i++) {
+      var element = this.data[i];
+      if(!dojo.lang.isArray(element)) {
+        this.data[i] = [element, element];
+      }
+    }
+  };
+
+
+  if(!dojo.string.isBlank(this.cbox.dataUrl) && this.cbox.preload){
+    this.getData(this.cbox.dataUrl);
+  } else {
+    // check to see if we can populate the list from <option> elements
+    if((node)&&(node.nodeName.toLowerCase() == "select")){
+      // NOTE: we're not handling <optgroup> here yet
+      var opts = node.getElementsByTagName("option");
+      var ol = opts.length;
+      var data = [];
+      for(var x=0; x<ol; x++){
+        var text = opts[x].textContent || opts[x].innerText || opts[x].innerHTML;
+        var keyValArr = [String(text), String(opts[x].value)];
+        data.push(keyValArr);
+        if(opts[x].selected){
+          this.cbox.setAllValues(keyValArr[0], keyValArr[1]);
+        }
+      }
+      this.setData(data);
+    }
+  }
+};
+
+dojo.widget.defineWidget(
+  "struts.widget.ComboBox",
+  dojo.widget.ComboBox, {
+  widgetType : "ComboBox",
+
+  dropdownHeight: 120,
+  dropdownWidth: 0,
+  itemHeight: 0,
+
+  listenTopics : "",
+  notifyTopics : "",
+  notifyTopicsArray : null,
+  beforeNotifyTopics : "",
+  beforeNotifyTopicsArray : null,
+  afterNotifyTopics : "",
+  afterNotifyTopicsArray : null,
+  errorNotifyTopics : "",
+  errorNotifyTopicsArray : null,
+  valueNotifyTopics : "",
+  valueNotifyTopicsArray : null,
+  indicator : "",
+
+  formId : "",
+  formFilter : "",
+  dataProviderClass: "struts.widget.ComboBoxDataProvider",
+
+  loadOnType : false,
+  loadMinimum : 3,
+
+  initialValue : "",
+  initialKey : "",
+
+  visibleDownArrow : true,
+  fadeTime : 100,
+
+  //dojo has "stringstart" which is invalid
+  searchType: "STARTSTRING",
+
+  dataFieldName : "",
+  keyName: "",
+  //embedded the style in the template string in 0.4.2 release, not good
+  templateCssString: null,
+  templateCssString:"/*\r\n * $Id$\r\n *\r\n * Licensed to the Apache Software Foundation (ASF) under one\r\n * or more contributor license agreements.  See the NOTICE file\r\n * distributed with this work for additional information\r\n * regarding copyright ownership.  The ASF licenses this file\r\n * to you under the Apache License, Version 2.0 (the\r\n * \"License\"); you may not use this file except in compliance\r\n * with the License.  You may obtain a copy of the License at\r\n *\r\n *  http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n * Unless required by applicable law or agreed to in writing,\r\n * software distributed under the License is distributed on an\r\n * \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\r\n * KIND, either express or implied.  See the License for the\r\n * specific language governing permissions and limitations\r\n * under the License.\r\n */\r\n\r\n.dojoComboBoxOuter {\r\n\tborder: 0px !important;\r\n\tmargin: 0px !important;\r\n\tpadding: 0px !important;\r\n\tbackground: transparent !important;\r\n\twhite-space: nowrap !important;\r\n}\r\n\r\n.dojoComboBox {\r\n\tborder: 1px inset #afafaf;\r\n\tmargin: 0px;\r\n\tpadding: 0px;\r\n\tvertical-align: middle !important;\r\n\tfloat: none !important;\r\n\tposition: static !important;\r\n\tdisplay: inline;\r\n}\r\n\r\n/* the input box */\r\ninput.dojoComboBox {\r\n\tborder-right-width: 1px !important;\r\n\tmargin-right: 0px !important;\r\n\tpadding-right: 0px !important;\r\n}\r\n\r\n/* the down arrow */\r\nimg.dojoComboBox {\r\n\tborder-left-width: 0px !important;\r\n\tpadding-left: 0px !important;\r\n\tmargin-left: 0px !important;\r\n}\r\n\r\n/* IE vertical-alignment calculations can be off by +-1 but these margins are collapsed away */\r\n.dj_ie img.dojoComboBox {\r\n\tmargin-top: 1px;\r\n\tmargin-bottom: 1px;\r\n}\r\n\r\n/* the drop down */\r\n.dojoComboBoxOptions {\r\n\tfont-family: Verdana, Helvetica, Garamond, sans-serif;\r\n\t/* font-size: 0.7em; */\r\n\tbackground-color: white;\r\n\tborder: 1px solid #afafaf;\r\n\tposition: absolute;\r\n\tz-index: 1000;\r\n\toverflow: auto;\r\n\tcursor: default;\r\n}\r\n\r\n.dojoComboBoxItem {\r\n\tpadding-left: 2px;\r\n\tpadding-top: 2px;\r\n\tmargin: 0px;\r\n}\r\n\r\n.dojoComboBoxItemEven {\r\n\tbackground-color: #f4f4f4;\r\n}\r\n\r\n.dojoComboBoxItemOdd {\r\n\tbackground-color: white;\r\n}\r\n\r\n.dojoComboBoxItemHighlight {\r\n\tbackground-color: #63709A;\r\n\tcolor: white;\r\n}\r\n",templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
+
+  //how many results are shown
+  searchLimit : 30,
+
+  transport : "",
+
+  //load options when page loads
+  preload : true,
+
+  tabIndex: "",
+
+  //from Dojo's  ComboBox
+  showResultList: function() {
+  // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time
+    var childs = this.optionsListNode.childNodes;
+    if(childs.length){
+
+      this.optionsListNode.style.width = this.dropdownWidth === 0 ? (dojo.html.getMarginBox(this.domNode).width-2)+"px" : this.dropdownWidth + "px";
+
+      if(this.itemHeight === 0 || dojo.string.isBlank(this.textInputNode.value)) {
+        this.optionsListNode.style.height = this.dropdownHeight + "px";
+        this.optionsListNode.style.display = "";
+        this.itemHeight = dojo.html.getMarginBox(childs[0]).height;
+      }
+
+      //if there is extra space, adjust height
+      var totalHeight = this.itemHeight * childs.length;
+      if(totalHeight < this.dropdownHeight) {
+        this.optionsListNode.style.height = totalHeight + 2 + "px";
+      } else {
+        this.optionsListNode.style.height = this.dropdownHeight + "px";
+      }
+
+      this.popupWidget.open(this.domNode, this, this.downArrowNode);
+    } else {
+        this._hideResultList();
+    }
+  },
+
+  _openResultList: function(/*Array*/ results){
+    if (this.disabled) {
+		return;
+	}
+    this._clearResultList();
+    if(!results.length){
+        this._hideResultList();
+    }
+
+    if( (this.autoComplete)&&
+        (results.length)&&
+        (!this._prev_key_backspace)&&
+        (this.textInputNode.value.length > 0)){
+        var cpos = this._getCaretPos(this.textInputNode);
+        // only try to extend if we added the last character at the end of the input
+        if((cpos+1) > this.textInputNode.value.length){
+            // only add to input node as we would overwrite Capitalisation of chars
+            this.textInputNode.value += results[0][0].substr(cpos);
+            // build a new range that has the distance from the earlier
+            // caret position to the end of the first string selected
+            this._setSelectedRange(this.textInputNode, cpos, this.textInputNode.value.length);
+        }
+    }
+    var typedText = this.textInputNode.value;
+    var even = true;
+    while(results.length){
+        var tr = results.shift();
+        if(tr){
+            var td = document.createElement("div");
+            var text = tr[0];
+            var i = text.toLowerCase().indexOf(typedText.toLowerCase());
+            if(i >= 0) {
+                var pre = text.substring(0, i);
+                var matched = text.substring(i, i + typedText.length);
+                var post = text.substring(i + typedText.length);
+
+                if(!dojo.string.isBlank(pre)) {
+                  td.appendChild(document.createTextNode(pre));
+                }
+                var boldNode = document.createElement("b");
+                td.appendChild(boldNode);
+                boldNode.appendChild(document.createTextNode(matched));
+                td.appendChild(document.createTextNode(post));
+            } else {
+                td.appendChild(document.createTextNode(tr[0]));
+            }
+
+            td.setAttribute("resultName", tr[0]);
+            td.setAttribute("resultValue", tr[1]);
+            td.className = "dojoComboBoxItem "+((even) ? "dojoComboBoxItemEven" : "dojoComboBoxItemOdd");
+            even = (!even);
+            this.optionsListNode.appendChild(td);
+        }
+    }
+
+    // show our list (only if we have content, else nothing)
+    this.showResultList();
+  },
+
+  postCreate : function() {
+    struts.widget.ComboBox.superclass.postCreate.apply(this);
+    var self = this;
+    //events
+    if(!dojo.string.isBlank(this.listenTopics)) {
+      var topics = this.listenTopics.split(",");
+      for(var i = 0; i < topics.length; i++) {
+        dojo.event.topic.subscribe(topics[i], function() {
+          var request = {cancel: false};
+	      self.notify(this.widgetId, "before", request);
+	      if(request.cancel) {
+	        return;
+	      }
+          self.clearValues();
+          self.dataProvider.getData(self.dataUrl);
+        });
+      }
+    }
+
+    //notify topics
+    if(!dojo.string.isBlank(this.notifyTopics)) {
+      this.notifyTopicsArray = this.notifyTopics.split(",");
+    }
+
+    //before topics
+    if(!dojo.string.isBlank(this.beforeNotifyTopics)) {
+      this.beforeNotifyTopicsArray = this.beforeNotifyTopics.split(",");
+    }
+
+    //after topics
+    if(!dojo.string.isBlank(this.afterNotifyTopics)) {
+      this.afterNotifyTopicsArray = this.afterNotifyTopics.split(",");
+    }
+
+    //error topics
+    if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+      this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
+    }
+
+    //value topics
+    if(!dojo.string.isBlank(this.valueNotifyTopics)) {
+      this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
+    }
+
+    //better name
+    this.comboBoxSelectionValue.name = dojo.string.isBlank(this.keyName) ? this.name + "Key" : this.keyName;
+
+    //init values
+    this.comboBoxValue.value = this.initialValue;
+    this.comboBoxSelectionValue.value = this.initialKey;
+    this.textInputNode.value = this.initialValue;
+
+    //tabindex
+    if(!dojo.string.isBlank(this.tabIndex)) {
+      this.textInputNode.tabIndex = this.tabIndex;
+    }
+
+    //hide arrow?
+    if(!this.visibleDownArrow) {
+      dojo.html.hide(this.downArrowNode);
+    }
+
+    //search type
+    if(!dojo.string.isBlank(this.searchType)) {
+      this.dataProvider.searchType = this.searchType.toUpperCase();
+    }
+  },
+
+  clearValues : function() {
+  	this.comboBoxValue.value = "";
+    this.comboBoxSelectionValue.value = "";
+    this.textInputNode.value = "";
+  },
+
+  onValueChanged : function(data) {
+    this.notify(data, "valuechanged", null);
+  },
+
+  notify : function(data, type, e) {
+    var self = this;
+    //general topics
+    if(this.notifyTopicsArray) {
+      dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
+        try {
+          dojo.event.topic.publish(topic, data, type, e, self);
+        } catch(ex){
+          self.log(ex);
+        }
+      });
+    }
+
+    //before, after and error topics
+    var topicsArray = null;
+    switch(type) {
+      case "before":
+        this.notifyTo(this.beforeNotifyTopicsArray, [e, this]);
+        break;
+      case "load":
+        this.notifyTo(this.afterNotifyTopicsArray, [data, e, this]);
+        break;
+      case "error":
+        this.notifyTo(this.errorNotifyTopicsArray, [data, e, this]);
+        break;
+       case "valuechanged":
+        this.notifyTo(this.valueNotifyTopicsArray, [this.getSelectedValue(), this.getSelectedKey(), this.getText(), this]);
+        break;
+    }
+  },
+
+  notifyTo : function(topicsArray, params) {
+    var self = this;
+    if(topicsArray) {
+      dojo.lang.forEach(topicsArray, function(topic) {
+        try {
+          dojo.event.topic.publishApply(topic, params);
+        } catch(ex){
+          self.log(ex);
+        }
+      });
+    }
+  },
+
+  log : function(text) {
+    dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
+  },
+
+  _startSearchFromInput: function() {
+    var searchStr = this.textInputNode.value;
+    if(this.loadOnType) {
+      if(searchStr.length >= this.loadMinimum) {
+          var nuHref = this.dataUrl + (this.dataUrl.indexOf("?") > -1 ? "&" : "?");
+      nuHref += this.name + '=' +  encodeURIComponent(searchStr);
+      this.dataProvider.getData(nuHref);
+      this._startSearch(searchStr);
+      } else {
+        this._hideResultList();
+      }
+    }
+    else {
+	  this._startSearch(searchStr);
+	}
+  },
+
+  setSelectedKey : function(key) {
+    var data = this.dataProvider.data;
+    for(element in data) {
+       var obj = data[element];
+       if(obj[1].toString() == key) {
+         this.setValue(obj[0].toString());
+         this.comboBoxSelectionValue.value = obj[1].toString();
+       }
+    }
+  },
+
+  getSelectedKey : function() {
+    return this.comboBoxSelectionValue.value;
+  },
+
+  getSelectedValue : function() {
+    return this.comboBoxValue.value;
+  },
+
+  getText : function() {
+    return this.textInputNode.value;
+  }
+});
+
+dojo.provide("dojo.widget.DropdownContainer");
+
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget(
+	"dojo.widget.DropdownContainer",
+	dojo.widget.HtmlWidget,
+	{
+		// summary:
+		//		provides an input box and a button for a dropdown.
+		//		In subclass, the dropdown can be specified.
+
+		// inputWidth: String: width of the input box
+		inputWidth: "7em",
+
+		// id: String: id of this widget
+		id: "",
+
+		// inputId: String: id of the input box
+		inputId: "",
+
+		// inputName: String: name of the input box
+		inputName: "",
+
+		// iconURL: dojo.uri.Uri: icon for the dropdown button
+		iconURL: dojo.uri.moduleUri("dojo.widget", "templates/images/combo_box_arrow.png"),
+
+		// copyClass:
+		//		should we use the class properties on the source node instead
+		//		of our own styles?
+		copyClasses: false,
+
+		// iconAlt: dojo.uri.Uri: alt text for the dropdown button icon
+		iconAlt: "",
+
+		// containerToggle: String: toggle property of the dropdown
+		containerToggle: "plain",
+
+		// containerToggleDuration: Integer: toggle duration property of the dropdown
+		containerToggleDuration: 150,
+
+		templateString: '<span style="white-space:nowrap"><input type="hidden" name="" value="" dojoAttachPoint="valueNode" /><input name="" type="text" value="" style="vertical-align:middle;" dojoAttachPoint="inputNode" autocomplete="off" /> <img src="${this.iconURL}" alt="${this.iconAlt}" dojoAttachEvent="onclick:onIconClick" dojoAttachPoint="buttonNode" style="vertical-align:middle; cursor:pointer; cursor:hand" /></span>',
+		templateCssPath: "",
+		isContainer: true,
+
+		attachTemplateNodes: function(){
+			// summary: use attachTemplateNodes to specify containerNode, as fillInTemplate is too late for this
+			dojo.widget.DropdownContainer.superclass.attachTemplateNodes.apply(this, arguments);
+			this.popup = dojo.widget.createWidget("PopupContainer", {toggle: this.containerToggle, toggleDuration: this.containerToggleDuration});
+			this.containerNode = this.popup.domNode;
+		},
+
+		fillInTemplate: function(args, frag){
+			this.domNode.appendChild(this.popup.domNode);
+			if(this.id) { this.domNode.id = this.id; }
+			if(this.inputId){ this.inputNode.id = this.inputId; }
+			if(this.inputName){ this.inputNode.name = this.inputName; }
+			this.inputNode.style.width = this.inputWidth;
+			this.inputNode.disabled = this.disabled;
+
+			if(this.copyClasses){
+				this.inputNode.style = "";
+				this.inputNode.className = this.getFragNodeRef(frag).className;
+			}
+
+
+			dojo.event.connect(this.inputNode, "onchange", this, "onInputChange");
+		},
+
+		onIconClick: function(/*Event*/ evt){
+			if(this.disabled) return;
+			if(!this.popup.isShowingNow){
+				this.popup.open(this.inputNode, this, this.buttonNode);
+			}else{
+				this.popup.close();
+			}
+		},
+
+		hideContainer: function(){
+			// summary: hide the dropdown
+			if(this.popup.isShowingNow){
+				this.popup.close();
+			}
+		},
+
+		onInputChange: function(){
+			// summary: signal for changes in the input box
+		},
+		
+		enable: function() {
+			// summary: enable this widget to accept user input
+			this.inputNode.disabled = false;
+			dojo.widget.DropdownContainer.superclass.enable.apply(this, arguments);
+		},
+		
+		disable: function() {
+			// summary: lock this widget so that the user can't change the value
+			this.inputNode.disabled = true;
+			dojo.widget.DropdownContainer.superclass.disable.apply(this, arguments);
+		}
+	}
+);
+
+dojo.provide("dojo.date.serialize");
+
+
+
+/* ISO 8601 Functions
+ *********************/
+
+dojo.date.setIso8601 = function(/*Date*/dateObject, /*String*/formattedString){
+	// summary: sets a Date object based on an ISO 8601 formatted string (uses date and time)
+	var comps = (formattedString.indexOf("T") == -1) ? formattedString.split(" ") : formattedString.split("T");
+	dateObject = dojo.date.setIso8601Date(dateObject, comps[0]);
+	if(comps.length == 2){ dateObject = dojo.date.setIso8601Time(dateObject, comps[1]); }
+	return dateObject; /* Date or null */
+};
+
+dojo.date.fromIso8601 = function(/*String*/formattedString){
+	// summary: returns a Date object based on an ISO 8601 formatted string (uses date and time)
+	return dojo.date.setIso8601(new Date(0, 0), formattedString);
+};
+
+dojo.date.setIso8601Date = function(/*String*/dateObject, /*String*/formattedString){
+	// summary: sets a Date object based on an ISO 8601 formatted string (date only)
+	var regexp = "^([0-9]{4})((-?([0-9]{2})(-?([0-9]{2}))?)|" +
+			"(-?([0-9]{3}))|(-?W([0-9]{2})(-?([1-7]))?))?$";
+	var d = formattedString.match(new RegExp(regexp));
+	if(!d){
+		dojo.debug("invalid date string: " + formattedString);
+		return null; // null
+	}
+	var year = d[1];
+	var month = d[4];
+	var date = d[6];
+	var dayofyear = d[8];
+	var week = d[10];
+	var dayofweek = d[12] ? d[12] : 1;
+
+	dateObject.setFullYear(year);
+
+	if(dayofyear){
+		dateObject.setMonth(0);
+		dateObject.setDate(Number(dayofyear));
+	}
+	else if(week){
+		dateObject.setMonth(0);
+		dateObject.setDate(1);
+		var gd = dateObject.getDay();
+		var day =  gd ? gd : 7;
+		var offset = Number(dayofweek) + (7 * Number(week));
+		
+		if(day <= 4){ dateObject.setDate(offset + 1 - day); }
+		else{ dateObject.setDate(offset + 8 - day); }
+	} else{
+		if(month){
+			dateObject.setDate(1);
+			dateObject.setMonth(month - 1); 
+		}
+		if(date){ dateObject.setDate(date); }
+	}
+	
+	return dateObject; // Date
+};
+
+dojo.date.fromIso8601Date = function(/*String*/formattedString){
+	// summary: returns a Date object based on an ISO 8601 formatted string (date only)
+	return dojo.date.setIso8601Date(new Date(0, 0), formattedString);
+};
+
+dojo.date.setIso8601Time = function(/*Date*/dateObject, /*String*/formattedString){
+	// summary: sets a Date object based on an ISO 8601 formatted string (time only)
+
+	// first strip timezone info from the end
+	var timezone = "Z|(([-+])([0-9]{2})(:?([0-9]{2}))?)$";
+	var d = formattedString.match(new RegExp(timezone));
+
+	var offset = 0; // local time if no tz info
+	if(d){
+		if(d[0] != 'Z'){
+			offset = (Number(d[3]) * 60) + Number(d[5]);
+			offset *= ((d[2] == '-') ? 1 : -1);
+		}
+		offset -= dateObject.getTimezoneOffset();
+		formattedString = formattedString.substr(0, formattedString.length - d[0].length);
+	}
+
+	// then work out the time
+	var regexp = "^([0-9]{2})(:?([0-9]{2})(:?([0-9]{2})(\.([0-9]+))?)?)?$";
+	d = formattedString.match(new RegExp(regexp));
+	if(!d){
+		dojo.debug("invalid time string: " + formattedString);
+		return null; // null
+	}
+	var hours = d[1];
+	var mins = Number((d[3]) ? d[3] : 0);
+	var secs = (d[5]) ? d[5] : 0;
+	var ms = d[7] ? (Number("0." + d[7]) * 1000) : 0;
+
+	dateObject.setHours(hours);
+	dateObject.setMinutes(mins);
+	dateObject.setSeconds(secs);
+	dateObject.setMilliseconds(ms);
+
+	if(offset !== 0){
+		dateObject.setTime(dateObject.getTime() + offset * 60000);
+	}	
+	return dateObject; // Date
+};
+
+dojo.date.fromIso8601Time = function(/*String*/formattedString){
+	// summary: returns a Date object based on an ISO 8601 formatted string (date only)
+	return dojo.date.setIso8601Time(new Date(0, 0), formattedString);
+};
+
+
+/* RFC-3339 Date Functions
+ *************************/
+
+dojo.date.toRfc3339 = function(/*Date?*/dateObject, /*String?*/selector){
+//	summary:
+//		Format a JavaScript Date object as a string according to RFC 3339
+//
+//	dateObject:
+//		A JavaScript date, or the current date and time, by default
+//
+//	selector:
+//		"dateOnly" or "timeOnly" to format selected portions of the Date object.
+//		Date and time will be formatted by default.
+
+//FIXME: tolerate Number, string input?
+	if(!dateObject){
+		dateObject = new Date();
+	}
+
+	var _ = dojo.string.pad;
+	var formattedDate = [];
+	if(selector != "timeOnly"){
+		var date = [_(dateObject.getFullYear(),4), _(dateObject.getMonth()+1,2), _(dateObject.getDate(),2)].join('-');
+		formattedDate.push(date);
+	}
+	if(selector != "dateOnly"){
+		var time = [_(dateObject.getHours(),2), _(dateObject.getMinutes(),2), _(dateObject.getSeconds(),2)].join(':');
+		var timezoneOffset = dateObject.getTimezoneOffset();
+		time += (timezoneOffset > 0 ? "-" : "+") + 
+					_(Math.floor(Math.abs(timezoneOffset)/60),2) + ":" +
+					_(Math.abs(timezoneOffset)%60,2);
+		formattedDate.push(time);
+	}
+	return formattedDate.join('T'); // String
+};
+
+dojo.date.fromRfc3339 = function(/*String*/rfcDate){
+//	summary:
+//		Create a JavaScript Date object from a string formatted according to RFC 3339
+//
+//	rfcDate:
+//		A string such as 2005-06-30T08:05:00-07:00
+//		"any" is also supported in place of a time.
+
+	// backwards compatible support for use of "any" instead of just not 
+	// including the time
+	if(rfcDate.indexOf("Tany")!=-1){
+		rfcDate = rfcDate.replace("Tany","");
+	}
+	var dateObject = new Date();
+	return dojo.date.setIso8601(dateObject, rfcDate); // Date or null
+};
+
+dojo.provide("dojo.date.common");
+
+
+/* Supplementary Date Functions
+ *******************************/
+
+dojo.date.setDayOfYear = function(/*Date*/dateObject, /*Number*/dayOfYear){
+	// summary: sets dateObject according to day of the year (1..366)
+	dateObject.setMonth(0);
+	dateObject.setDate(dayOfYear);
+	return dateObject; // Date
+}
+
+dojo.date.getDayOfYear = function(/*Date*/dateObject){
+	// summary: gets the day of the year as represented by dateObject
+	var fullYear = dateObject.getFullYear();
+	var lastDayOfPrevYear = new Date(fullYear-1, 11, 31);
+	return Math.floor((dateObject.getTime() -
+		lastDayOfPrevYear.getTime()) / 86400000); // Number
+}
+
+
+dojo.date.setWeekOfYear = function(/*Date*/dateObject, /*Number*/week, /*Number*/firstDay){
+	if(arguments.length == 1){ firstDay = 0; } // Sunday
+	dojo.unimplemented("dojo.date.setWeekOfYear");
+}
+
+dojo.date.getWeekOfYear = function(/*Date*/dateObject, /*Number*/firstDay){
+	if(arguments.length == 1){ firstDay = 0; } // Sunday
+
+	// work out the first day of the year corresponding to the week
+	var firstDayOfYear = new Date(dateObject.getFullYear(), 0, 1);
+	var day = firstDayOfYear.getDay();
+	firstDayOfYear.setDate(firstDayOfYear.getDate() -
+			day + firstDay - (day > firstDay ? 7 : 0));
+
+	return Math.floor((dateObject.getTime() -
+		firstDayOfYear.getTime()) / 604800000);
+}
+
+dojo.date.setIsoWeekOfYear = function(/*Date*/dateObject, /*Number*/week, /*Number*/firstDay){
+	// summary: unimplemented
+	if (arguments.length == 1) { firstDay = 1; } // Monday
+	dojo.unimplemented("dojo.date.setIsoWeekOfYear");
+}
+
+dojo.date.getIsoWeekOfYear = function(/*Date*/dateObject, /*Number*/firstDay) {
+	// summary: unimplemented
+	if (arguments.length == 1) { firstDay = 1; } // Monday
+	dojo.unimplemented("dojo.date.getIsoWeekOfYear");
+}
+
+
+/* Informational Functions
+ **************************/
+
+//DEPRECATED: These timezone arrays will be deprecated in 0.5
+dojo.date.shortTimezones = ["IDLW", "BET", "HST", "MART", "AKST", "PST", "MST",
+	"CST", "EST", "AST", "NFT", "BST", "FST", "AT", "GMT", "CET", "EET", "MSK",
+	"IRT", "GST", "AFT", "AGTT", "IST", "NPT", "ALMT", "MMT", "JT", "AWST",
+	"JST", "ACST", "AEST", "LHST", "VUT", "NFT", "NZT", "CHAST", "PHOT",
+	"LINT"];
+dojo.date.timezoneOffsets = [-720, -660, -600, -570, -540, -480, -420, -360,
+	-300, -240, -210, -180, -120, -60, 0, 60, 120, 180, 210, 240, 270, 300,
+	330, 345, 360, 390, 420, 480, 540, 570, 600, 630, 660, 690, 720, 765, 780,
+	840];
+/*
+dojo.date.timezones = ["International Date Line West", "Bering Standard Time",
+	"Hawaiian Standard Time", "Marquesas Time", "Alaska Standard Time",
+	"Pacific Standard Time (USA)", "Mountain Standard Time",
+	"Central Standard Time (USA)", "Eastern Standard Time (USA)",
+	"Atlantic Standard Time", "Newfoundland Time", "Brazil Standard Time",
+	"Fernando de Noronha Standard Time (Brazil)", "Azores Time",
+	"Greenwich Mean Time", "Central Europe Time", "Eastern Europe Time",
+	"Moscow Time", "Iran Standard Time", "Gulf Standard Time",
+	"Afghanistan Time", "Aqtobe Time", "Indian Standard Time", "Nepal Time",
+	"Almaty Time", "Myanmar Time", "Java Time",
+	"Australian Western Standard Time", "Japan Standard Time",
+	"Australian Central Standard Time", "Lord Hove Standard Time (Australia)",
+	"Vanuata Time", "Norfolk Time (Australia)", "New Zealand Standard Time",
+	"Chatham Standard Time (New Zealand)", "Phoenix Islands Time (Kribati)",
+	"Line Islands Time (Kribati)"];
+*/
+
+dojo.date.getDaysInMonth = function(/*Date*/dateObject){
+	// summary: returns the number of days in the month used by dateObject
+	var month = dateObject.getMonth();
+	var days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	if (month == 1 && dojo.date.isLeapYear(dateObject)) { return 29; } // Number
+	else { return days[month]; } // Number
+}
+
+dojo.date.isLeapYear = function(/*Date*/dateObject){
+// summary:
+//	Determines if the year of the dateObject is a leap year
+//
+// description:
+//	Leap years are years with an additional day YYYY-02-29, where the year
+//	number is a multiple of four with the following exception: If a year
+//	is a multiple of 100, then it is only a leap year if it is also a
+//	multiple of 400. For example, 1900 was not a leap year, but 2000 is one.
+
+	var year = dateObject.getFullYear();
+	return (year%400 == 0) ? true : (year%100 == 0) ? false : (year%4 == 0) ? true : false; // Boolean
+}
+
+// FIXME: This is not localized
+dojo.date.getTimezoneName = function(/*Date*/dateObject){
+// summary:
+//	Get the user's time zone as provided by the browser
+//
+// dateObject: needed because the timezone may vary with time (daylight savings)
+//
+// description:
+//	Try to get time zone info from toString or toLocaleString
+//	method of the Date object -- UTC offset is not a time zone.
+//	See http://www.twinsun.com/tz/tz-link.htm
+//	Note: results may be inconsistent across browsers.
+
+	var str = dateObject.toString(); // Start looking in toString
+	var tz = ''; // The result -- return empty string if nothing found
+	var match;
+
+	// First look for something in parentheses -- fast lookup, no regex
+	var pos = str.indexOf('(');
+	if (pos > -1) {
+		pos++;
+		tz = str.substring(pos, str.indexOf(')'));
+	}
+	// If at first you don't succeed ...
+	else{
+		// If IE knows about the TZ, it appears before the year
+		// Capital letters or slash before a 4-digit year 
+		// at the end of string
+		var pat = /([A-Z\/]+) \d{4}$/;
+		if((match = str.match(pat))) {
+			tz = match[1];
+		}
+		// Some browsers (e.g. Safari) glue the TZ on the end
+		// of toLocaleString instead of putting it in toString
+		else{
+			str = dateObject.toLocaleString();
+			// Capital letters or slash -- end of string, 
+			// after space
+			pat = / ([A-Z\/]+)$/;
+			if((match = str.match(pat))) {
+				tz = match[1];
+			}
+		}
+	}
+
+	// Make sure it doesn't somehow end up return AM or PM
+	return tz == 'AM' || tz == 'PM' ? '' : tz; //String
+}
+
+
+//FIXME: not localized
+dojo.date.getOrdinal = function(dateObject){
+	// summary: returns the appropriate suffix (English only) for the day of the month, e.g. 'st' for 1, 'nd' for 2, etc.)
+	var date = dateObject.getDate();
+
+	if(date%100 != 11 && date%10 == 1){ return "st"; } // String
+	else if(date%100 != 12 && date%10 == 2){ return "nd"; } // String
+	else if(date%100 != 13 && date%10 == 3){ return "rd"; } // String
+	else{ return "th"; } // String
+}
+
+
+/* compare and add
+ ******************/
+dojo.date.compareTypes={
+	// 	summary
+	//	bitmask for comparison operations.
+	DATE:1, TIME:2 
+};
+dojo.date.compare=function(/* Date */ dateA, /* Date */ dateB, /* dojo.date.compareTypes */ options){
+	//	summary
+	//	Compare two date objects by date, time, or both.  Returns 0 if equal, positive if a > b, else negative.
+	var dA=dateA;
+	var dB=dateB||new Date();
+	var now=new Date();
+	//FIXME: shorten this code
+	with(dojo.date.compareTypes){
+		var opt=options||(DATE|TIME);
+		var d1=new Date(
+			(opt&DATE)?dA.getFullYear():now.getFullYear(), 
+			(opt&DATE)?dA.getMonth():now.getMonth(),
+			(opt&DATE)?dA.getDate():now.getDate(),
+			(opt&TIME)?dA.getHours():0,
+			(opt&TIME)?dA.getMinutes():0,
+			(opt&TIME)?dA.getSeconds():0
+		);
+		var d2=new Date(
+			(opt&DATE)?dB.getFullYear():now.getFullYear(),
+			(opt&DATE)?dB.getMonth():now.getMonth(),
+			(opt&DATE)?dB.getDate():now.getDate(),
+			(opt&TIME)?dB.getHours():0,
+			(opt&TIME)?dB.getMinutes():0,
+			(opt&TIME)?dB.getSeconds():0
+		);
+	}
+	if(d1.valueOf()>d2.valueOf()){
+		return 1;	//	int
+	}
+	if(d1.valueOf()<d2.valueOf()){
+		return -1;	//	int
+	}
+	return 0;	//	int
+}
+
+dojo.date.dateParts={ 
+	//	summary
+	//	constants for use in dojo.date.add
+	YEAR:0, MONTH:1, DAY:2, HOUR:3, MINUTE:4, SECOND:5, MILLISECOND:6, QUARTER:7, WEEK:8, WEEKDAY:9
+};
+
+dojo.date.add = function(/* Date */ dt, /* dojo.date.dateParts */ interv, /* int */ incr){
+//	summary:
+//		Add to a Date in intervals of different size, from milliseconds to years
+//
+//	dt:
+//		A Javascript Date object to start with
+//
+//	interv:
+//		A constant representing the interval, e.g. YEAR, MONTH, DAY.  See dojo.date.dateParts.
+//
+//	incr:
+//		How much to add to the date
+
+	if(typeof dt == 'number'){dt = new Date(dt);} // Allow timestamps
+//FIXME: what's the reason behind this?	incr = incr || 1;
+
+	function fixOvershoot(){
+		if (sum.getDate() < dt.getDate()){
+			sum.setDate(0);
+		}
+	}
+	
+	var sum = new Date(dt);
+
+	with(dojo.date.dateParts){
+		switch(interv){
+			case YEAR:
+				sum.setFullYear(dt.getFullYear()+incr);
+				// Keep increment/decrement from 2/29 out of March
+				fixOvershoot();
+				break;
+			case QUARTER:
+				// Naive quarter is just three months
+				incr*=3;
+				// fallthrough...
+			case MONTH:
+				sum.setMonth(dt.getMonth()+incr);
+				// Reset to last day of month if you overshoot
+				fixOvershoot();
+				break;
+			case WEEK:
+				incr*=7;
+				// fallthrough...
+			case DAY:
+				sum.setDate(dt.getDate() + incr);
+				break;
+			case WEEKDAY:
+				//FIXME: assumes Saturday/Sunday weekend, but even this is not fixed.  There are CLDR entries to localize this.
+				var dat = dt.getDate();
+				var weeks = 0;
+				var days = 0;
+				var strt = 0;
+				var trgt = 0;
+				var adj = 0;
+				// Divide the increment time span into weekspans plus leftover days
+				// e.g., 8 days is one 5-day weekspan / and two leftover days
+				// Can't have zero leftover days, so numbers divisible by 5 get
+				// a days value of 5, and the remaining days make up the number of weeks
+				var mod = incr % 5;
+				if (mod == 0) {
+					days = (incr > 0) ? 5 : -5;
+					weeks = (incr > 0) ? ((incr-5)/5) : ((incr+5)/5);
+				}
+				else {
+					days = mod;
+					weeks = parseInt(incr/5);
+				}
+				// Get weekday value for orig date param
+				strt = dt.getDay();
+				// Orig date is Sat / positive incrementer
+				// Jump over Sun
+				if (strt == 6 && incr > 0) {
+					adj = 1;
+				}
+				// Orig date is Sun / negative incrementer
+				// Jump back over Sat
+				else if (strt == 0 && incr < 0) {
+					adj = -1;
+				}
+				// Get weekday val for the new date
+				trgt = (strt + days);
+				// New date is on Sat or Sun
+				if (trgt == 0 || trgt == 6) {
+					adj = (incr > 0) ? 2 : -2;
+				}
+				// Increment by number of weeks plus leftover days plus
+				// weekend adjustments
+				sum.setDate(dat + (7*weeks) + days + adj);
+				break;
+			case HOUR:
+				sum.setHours(sum.getHours()+incr);
+				break;
+			case MINUTE:
+				sum.setMinutes(sum.getMinutes()+incr);
+				break;
+			case SECOND:
+				sum.setSeconds(sum.getSeconds()+incr);
+				break;
+			case MILLISECOND:
+				sum.setMilliseconds(sum.getMilliseconds()+incr);
+				break;
+			default:
+				// Do nothing
+				break;
+		}
+	}
+
+	return sum; // Date
+};
+
+dojo.date.diff = function(/* Date */ dtA, /* Date */ dtB, /* dojo.date.dateParts */ interv){
+//	summary:
+//		Get the difference in a specific unit of time (e.g., number of months, weeks,
+//		days, etc.) between two dates.
+//
+//	dtA:
+//		A Javascript Date object
+//
+//	dtB:
+//		A Javascript Date object
+//
+//	interv:
+//		A constant representing the interval, e.g. YEAR, MONTH, DAY.  See dojo.date.dateParts.
+
+	// Accept timestamp input
+	if(typeof dtA == 'number'){dtA = new Date(dtA);}
+	if(typeof dtB == 'number'){dtB = new Date(dtB);}
+	var yeaDiff = dtB.getFullYear() - dtA.getFullYear();
+	var monDiff = (dtB.getMonth() - dtA.getMonth()) + (yeaDiff * 12);
+	var msDiff = dtB.getTime() - dtA.getTime(); // Millisecs
+	var secDiff = msDiff/1000;
+	var minDiff = secDiff/60;
+	var houDiff = minDiff/60;
+	var dayDiff = houDiff/24;
+	var weeDiff = dayDiff/7;
+	var delta = 0; // Integer return value
+
+	with(dojo.date.dateParts){
+		switch(interv){
+			case YEAR:
+				delta = yeaDiff;
+				break;
+			case QUARTER:
+				var mA = dtA.getMonth();
+				var mB = dtB.getMonth();
+				// Figure out which quarter the months are in
+				var qA = Math.floor(mA/3) + 1;
+				var qB = Math.floor(mB/3) + 1;
+				// Add quarters for any year difference between the dates
+				qB += (yeaDiff * 4);
+				delta = qB - qA;
+				break;
+			case MONTH:
+				delta = monDiff;
+				break;
+			case WEEK:
+				// Truncate instead of rounding
+				// Don't use Math.floor -- value may be negative
+				delta = parseInt(weeDiff);
+				break;
+			case DAY:
+				delta = dayDiff;
+				break;
+			case WEEKDAY:
+				var days = Math.round(dayDiff);
+				var weeks = parseInt(days/7);
+				var mod = days % 7;
+
+				// Even number of weeks
+				if (mod == 0) {
+					days = weeks*5;
+				}
+				// Weeks plus spare change (< 7 days)
+				else {
+					var adj = 0;
+					var aDay = dtA.getDay();
+					var bDay = dtB.getDay();
+	
+					weeks = parseInt(days/7);
+					mod = days % 7;
+					// Mark the date advanced by the number of
+					// round weeks (may be zero)
+					var dtMark = new Date(dtA);
+					dtMark.setDate(dtMark.getDate()+(weeks*7));
+					var dayMark = dtMark.getDay();
+					// Spare change days -- 6 or less
+					// ----------
+					// Positive diff
+					if (dayDiff > 0) {
+						switch (true) {
+							// Range starts on Sat
+							case aDay == 6:
+								adj = -1;
+								break;
+							// Range starts on Sun
+							case aDay == 0:
+								adj = 0;
+								break;
+							// Range ends on Sat
+							case bDay == 6:
+								adj = -1;
+								break;
+							// Range ends on Sun
+							case bDay == 0:
+								adj = -2;
+								break;
+							// Range contains weekend
+							case (dayMark + mod) > 5:
+								adj = -2;
+								break;
+							default:
+								// Do nothing
+								break;
+						}
+					}
+					// Negative diff
+					else if (dayDiff < 0) {
+						switch (true) {
+							// Range starts on Sat
+							case aDay == 6:
+								adj = 0;
+								break;
+							// Range starts on Sun
+							case aDay == 0:
+								adj = 1;
+								break;
+							// Range ends on Sat
+							case bDay == 6:
+								adj = 2;
+								break;
+							// Range ends on Sun
+							case bDay == 0:
+								adj = 1;
+								break;
+							// Range contains weekend
+							case (dayMark + mod) < 0:
+								adj = 2;
+								break;
+							default:
+								// Do nothing
+								break;
+						}
+					}
+					days += adj;
+					days -= (weeks*2);
+				}
+				delta = days;
+
+				break;
+			case HOUR:
+				delta = houDiff;
+				break;
+			case MINUTE:
+				delta = minDiff;
+				break;
+			case SECOND:
+				delta = secDiff;
+				break;
+			case MILLISECOND:
+				delta = msDiff;
+				break;
+			default:
+				// Do nothing
+				break;
+		}
+	}
+
+	// Round for fractional values and DST leaps
+	return Math.round(delta); // Number (integer)
+};
+
+dojo.provide("dojo.date.supplemental");
+
+dojo.date.getFirstDayOfWeek = function(/*String?*/locale){
+// summary: Returns a zero-based index for first day of the week
+// description:
+//		Returns a zero-based index for first day of the week, as used by the local (Gregorian) calendar.
+//		e.g. Sunday (returns 0), or Monday (returns 1)
+
+	// from http://www.unicode.org/cldr/data/common/supplemental/supplementalData.xml:supplementalData/weekData/firstDay
+	var firstDay = {/*default is 1=Monday*/
+		mv:5,
+		ae:6,af:6,bh:6,dj:6,dz:6,eg:6,er:6,et:6,iq:6,ir:6,jo:6,ke:6,kw:6,lb:6,ly:6,ma:6,om:6,qa:6,sa:6,
+		sd:6,so:6,tn:6,ye:6,
+		as:0,au:0,az:0,bw:0,ca:0,cn:0,fo:0,ge:0,gl:0,gu:0,hk:0,ie:0,il:0,is:0,jm:0,jp:0,kg:0,kr:0,la:0,
+		mh:0,mo:0,mp:0,mt:0,nz:0,ph:0,pk:0,sg:0,th:0,tt:0,tw:0,um:0,us:0,uz:0,vi:0,za:0,zw:0,
+		et:0,mw:0,ng:0,tj:0,
+		gb:0,
+		sy:4
+	};
+
+	locale = dojo.hostenv.normalizeLocale(locale);
+	var country = locale.split("-")[1];
+	var dow = firstDay[country];
+	return (typeof dow == 'undefined') ? 1 : dow; /*Number*/
+};
+
+dojo.date.getWeekend = function(/*String?*/locale){
+// summary: Returns a hash containing the start and end days of the weekend
+// description:
+//		Returns a hash containing the start and end days of the weekend according to local custom using locale,
+//		or by default in the user's locale.
+//		e.g. {start:6, end:0}
+
+	// from http://www.unicode.org/cldr/data/common/supplemental/supplementalData.xml:supplementalData/weekData/weekend{Start,End}
+	var weekendStart = {/*default is 6=Saturday*/
+		eg:5,il:5,sy:5,
+		'in':0,
+		ae:4,bh:4,dz:4,iq:4,jo:4,kw:4,lb:4,ly:4,ma:4,om:4,qa:4,sa:4,sd:4,tn:4,ye:4		
+	};
+
+	var weekendEnd = {/*default is 0=Sunday*/
+		ae:5,bh:5,dz:5,iq:5,jo:5,kw:5,lb:5,ly:5,ma:5,om:5,qa:5,sa:5,sd:5,tn:5,ye:5,af:5,ir:5,
+		eg:6,il:6,sy:6
+	};
+
+	locale = dojo.hostenv.normalizeLocale(locale);
+	var country = locale.split("-")[1];
+	var start = weekendStart[country];
+	var end = weekendEnd[country];
+	if(typeof start == 'undefined'){start=6;}
+	if(typeof end == 'undefined'){end=0;}
+	return {start:start, end:end}; /*Object {start,end}*/
+};
+
+dojo.date.isWeekend = function(/*Date?*/dateObj, /*String?*/locale){
+// summary:
+//	Determines if the date falls on a weekend, according to local custom.
+
+	var weekend = dojo.date.getWeekend(locale);
+	var day = (dateObj || new Date()).getDay();
+	if(weekend.end<weekend.start){
+		weekend.end+=7;
+		if(day<weekend.start){ day+=7; }
+	}
+	return day >= weekend.start && day <= weekend.end; // Boolean
+};
+
+dojo.provide("dojo.i18n.common");
+
+dojo.i18n.getLocalization = function(/*String*/packageName, /*String*/bundleName, /*String?*/locale){
+//	summary:
+//		Returns an Object containing the localization for a given resource bundle
+//		in a package, matching the specified locale.
+//
+//	description:
+//		Returns a hash containing name/value pairs in its prototypesuch that values can be easily overridden.
+//		Throws an exception if the bundle is not found.
+//		Bundle must have already been loaded by dojo.requireLocalization() or by a build optimization step.
+//
+//	packageName: package which is associated with this resource
+//	bundleName: the base filename of the resource bundle (without the ".js" suffix)
+//	locale: the variant to load (optional).  By default, the locale defined by the
+//		host environment: dojo.locale
+
+	dojo.hostenv.preloadLocalizations();
+	locale = dojo.hostenv.normalizeLocale(locale);
+
+	// look for nearest locale match
+	var elements = locale.split('-');
+	var module = [packageName,"nls",bundleName].join('.');
+	var bundle = dojo.hostenv.findModule(module, true);
+
+	var localization;
+	for(var i = elements.length; i > 0; i--){
+		var loc = elements.slice(0, i).join('_');
+		if(bundle[loc]){
+			localization = bundle[loc];
+			break;
+		}
+	}
+	if(!localization){
+		localization = bundle.ROOT;
+	}
+
+	// make a singleton prototype so that the caller won't accidentally change the values globally
+	if(localization){
+		var clazz = function(){};
+		clazz.prototype = localization;
+		return new clazz(); // Object
+	}
+
+	dojo.raise("Bundle not found: " + bundleName + " in " + packageName+" , locale=" + locale);
+};
+
+dojo.i18n.isLTR = function(/*String?*/locale){
+//	summary:
+//		Is the language read left-to-right?  Most exceptions are for middle eastern languages.
+//
+//	locale: a string representing the locale.  By default, the locale defined by the
+//		host environment: dojo.locale
+
+	var lang = dojo.hostenv.normalizeLocale(locale).split('-')[0];
+	var RTL = {ar:true,fa:true,he:true,ur:true,yi:true};
+	return !RTL[lang]; // Boolean
+};
+
+dojo.provide("dojo.date.format");
+
+
+
+
+
+
+
+
+
+// Load the bundles containing localization information for
+// names and formats
+
+
+
+//NOTE: Everything in this module assumes Gregorian calendars.
+// Other calendars will be implemented in separate modules.
+
+(function(){
+dojo.date.format = function(/*Date*/dateObject, /*Object?*/options){
+//
+// summary:
+//		Format a Date object as a String, using locale-specific settings.
+//
+// description:
+//		Create a string from a Date object using a known localized pattern.
+//		By default, this method formats both date and time from dateObject.
+//		Formatting patterns are chosen appropriate to the locale.  Different
+//		formatting lengths may be chosen, with "full" used by default.
+//		Custom patterns may be used or registered with translations using
+//		the addCustomBundle method.
+//		Formatting patterns are implemented using the syntax described at
+//		http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns
+//
+// dateObject:
+//		the date and/or time to be formatted.  If a time only is formatted,
+//		the values in the year, month, and day fields are irrelevant.  The
+//		opposite is true when formatting only dates.
+//
+// options: object {selector: string, formatLength: string, datePattern: string, timePattern: string, locale: string}
+//		selector- choice of timeOnly,dateOnly (default: date and time)
+//		formatLength- choice of long, short, medium or full (plus any custom additions).  Defaults to 'full'
+//		datePattern,timePattern- override pattern with this string
+//		am,pm- override strings for am/pm in times
+//		locale- override the locale used to determine formatting rules
+//
+
+	if(typeof options == "string"){
+		dojo.deprecated("dojo.date.format", "To format dates with POSIX-style strings, please use dojo.date.strftime instead", "0.5");
+		return dojo.date.strftime(dateObject, options);
+	}
+
+	// Format a pattern without literals
+	function formatPattern(dateObject, pattern){
+		return pattern.replace(/([a-z])\1*/ig, function(match){
+			var s;
+			var c = match.charAt(0);
+			var l = match.length;
+			var pad;
+			var widthList = ["abbr", "wide", "narrow"];
+			switch(c){
+				case 'G':
+					if(l>3){dojo.unimplemented("Era format not implemented");}
+					s = info.eras[dateObject.getFullYear() < 0 ? 1 : 0];
+					break;
+				case 'y':
+					s = dateObject.getFullYear();
+					switch(l){
+						case 1:
+							break;
+						case 2:
+							s = String(s).substr(-2);
+							break;
+						default:
+							pad = true;
+					}
+					break;
+				case 'Q':
+				case 'q':
+					s = Math.ceil((dateObject.getMonth()+1)/3);
+					switch(l){
+						case 1: case 2:
+							pad = true;
+							break;
+						case 3:
+						case 4:
+							dojo.unimplemented("Quarter format not implemented");
+					}
+					break;
+				case 'M':
+				case 'L':
+					var m = dateObject.getMonth();
+					var width;
+					switch(l){
+						case 1: case 2:
+							s = m+1; pad = true;
+							break;
+						case 3: case 4: case 5:
+							width = widthList[l-3];
+							break;
+					}
+					if(width){
+						var type = (c == "L") ? "standalone" : "format";
+						var prop = ["months",type,width].join("-");
+						s = info[prop][m];
+					}
+					break;
+				case 'w':
+					var firstDay = 0;
+					s = dojo.date.getWeekOfYear(dateObject, firstDay); pad = true;
+					break;
+				case 'd':
+					s = dateObject.getDate(); pad = true;
+					break;
+				case 'D':
+					s = dojo.date.getDayOfYear(dateObject); pad = true;
+					break;
+				case 'E':
+				case 'e':
+				case 'c': // REVIEW: don't see this in the spec?
+					var d = dateObject.getDay();
+					var width;
+					switch(l){
+						case 1: case 2:
+							if(c == 'e'){
+								var first = dojo.date.getFirstDayOfWeek(options.locale);
+								d = (d-first+7)%7;
+							}
+							if(c != 'c'){
+								s = d+1; pad = true;
+								break;
+							}
+							// else fallthrough...
+						case 3: case 4: case 5:
+							width = widthList[l-3];
+							break;
+					}
+					if(width){
+						var type = (c == "c") ? "standalone" : "format";
+						var prop = ["days",type,width].join("-");
+						s = info[prop][d];
+					}
+					break;
+				case 'a':
+					var timePeriod = (dateObject.getHours() < 12) ? 'am' : 'pm';
+					s = info[timePeriod];
+					break;
+				case 'h':
+				case 'H':
+				case 'K':
+				case 'k':
+					var h = dateObject.getHours();
+					// strange choices in the date format make it impossible to write this succinctly
+					switch (c) {
+						case 'h': // 1-12
+							s = (h % 12) || 12;
+							break;
+						case 'H': // 0-23
+							s = h;
+							break;
+						case 'K': // 0-11
+							s = (h % 12);
+							break;
+						case 'k': // 1-24
+							s = h || 24;
+							break;
+					}
+					pad = true;
+					break;
+				case 'm':
+					s = dateObject.getMinutes(); pad = true;
+					break;
+				case 's':
+					s = dateObject.getSeconds(); pad = true;
+					break;
+				case 'S':
+					s = Math.round(dateObject.getMilliseconds() * Math.pow(10, l-3));
+					break;
+				case 'v': // FIXME: don't know what this is. seems to be same as z?
+				case 'z':
+					// We only have one timezone to offer; the one from the browser
+					s = dojo.date.getTimezoneName(dateObject);
+					if(s){break;}
+					l=4;
+					// fallthrough... use GMT if tz not available
+				case 'Z':
+					var offset = dateObject.getTimezoneOffset();
+					var tz = [
+						(offset<=0 ? "+" : "-"),
+						dojo.string.pad(Math.floor(Math.abs(offset)/60), 2),
+						dojo.string.pad(Math.abs(offset)% 60, 2)
+					];
+					if(l==4){
+						tz.splice(0, 0, "GMT");
+						tz.splice(3, 0, ":");
+					}
+					s = tz.join("");
+					break;
+				case 'Y':
+				case 'u':
+				case 'W':
+				case 'F':
+				case 'g':
+				case 'A':
+					dojo.debug(match+" modifier not yet implemented");
+					s = "?";
+					break;
+				default:
+					dojo.raise("dojo.date.format: invalid pattern char: "+pattern);
+			}
+			if(pad){ s = dojo.string.pad(s, l); }
+			return s;
+		});
+	}
+
+	options = options || {};
+
+	var locale = dojo.hostenv.normalizeLocale(options.locale);
+	var formatLength = options.formatLength || 'full';
+	var info = dojo.date._getGregorianBundle(locale);
+	var str = [];
+	var sauce = dojo.lang.curry(this, formatPattern, dateObject);
+	if(options.selector != "timeOnly"){
+		var datePattern = options.datePattern || info["dateFormat-"+formatLength];
+		if(datePattern){str.push(_processPattern(datePattern, sauce));}
+	}
+	if(options.selector != "dateOnly"){
+		var timePattern = options.timePattern || info["timeFormat-"+formatLength];
+		if(timePattern){str.push(_processPattern(timePattern, sauce));}
+	}
+	var result = str.join(" "); //TODO: use locale-specific pattern to assemble date + time
+	return result; /*String*/
+};
+
+dojo.date.parse = function(/*String*/value, /*Object?*/options){
+//
+// summary:
+//		Convert a properly formatted string to a primitive Date object,
+//		using locale-specific settings.
+//
+// description:
+//		Create a Date object from a string using a known localized pattern.
+//		By default, this method parses looking for both date and time in the string.
+//		Formatting patterns are chosen appropriate to the locale.  Different
+//		formatting lengths may be chosen, with "full" used by default.
+//		Custom patterns may be used or registered with translations using
+//		the addCustomBundle method.
+//		Formatting patterns are implemented using the syntax described at
+//		http://www.unicode.org/reports/tr35/#Date_Format_Patterns
+//
+// value:
+//		A string representation of a date
+//
+// options: object {selector: string, formatLength: string, datePattern: string, timePattern: string, locale: string, strict: boolean}
+//		selector- choice of timeOnly, dateOnly, dateTime (default: dateOnly)
+//		formatLength- choice of long, short, medium or full (plus any custom additions).  Defaults to 'full'
+//		datePattern,timePattern- override pattern with this string
+//		am,pm- override strings for am/pm in times
+//		locale- override the locale used to determine formatting rules
+//		strict- strict parsing, off by default
+//
+
+	options = options || {};
+	var locale = dojo.hostenv.normalizeLocale(options.locale);
+	var info = dojo.date._getGregorianBundle(locale);
+	var formatLength = options.formatLength || 'full';
+	if(!options.selector){ options.selector = 'dateOnly'; }
+	var datePattern = options.datePattern || info["dateFormat-" + formatLength];
+	var timePattern = options.timePattern || info["timeFormat-" + formatLength];
+
+	var pattern;
+	if(options.selector == 'dateOnly'){
+		pattern = datePattern;
+	}
+	else if(options.selector == 'timeOnly'){
+		pattern = timePattern;
+	}else if(options.selector == 'dateTime'){
+		pattern = datePattern + ' ' + timePattern; //TODO: use locale-specific pattern to assemble date + time
+	}else{
+		var msg = "dojo.date.parse: Unknown selector param passed: '" + options.selector + "'.";
+		msg += " Defaulting to date pattern.";
+		dojo.debug(msg);
+		pattern = datePattern;
+	}
+
+	var groups = [];
+	var dateREString = _processPattern(pattern, dojo.lang.curry(this, _buildDateTimeRE, groups, info, options));
+	var dateRE = new RegExp("^" + dateREString + "$");
+
+	var match = dateRE.exec(value);
+	if(!match){
+		return null;
+	}
+
+	var widthList = ['abbr', 'wide', 'narrow'];
+	//1972 is a leap year.  We want to avoid Feb 29 rolling over into Mar 1,
+	//in the cases where the year is parsed after the month and day.
+	var result = new Date(1972, 0);
+	var expected = {};
+	for(var i=1; i<match.length; i++){
+		var grp=groups[i-1];
+		var l=grp.length;
+		var v=match[i];
+		switch(grp.charAt(0)){
+			case 'y':
+				if(l != 2){
+					//interpret year literally, so '5' would be 5 A.D.
+					result.setFullYear(v);
+					expected.year = v;
+				}else{
+					if(v<100){
+						v = Number(v);
+						//choose century to apply, according to a sliding window
+						//of 80 years before and 20 years after present year
+						var year = '' + new Date().getFullYear();
+						var century = year.substring(0, 2) * 100;
+						var yearPart = Number(year.substring(2, 4));
+						var cutoff = Math.min(yearPart + 20, 99);
+						var num = (v < cutoff) ? century + v : century - 100 + v;
+						result.setFullYear(num);
+						expected.year = num;
+					}else{
+						//we expected 2 digits and got more...
+						if(options.strict){
+							return null;
+						}
+						//interpret literally, so '150' would be 150 A.D.
+						//also tolerate '1950', if 'yyyy' input passed to 'yy' format
+						result.setFullYear(v);
+						expected.year = v;
+					}
+				}
+				break;
+			case 'M':
+				if (l>2) {
+					if(!options.strict){
+						//Tolerate abbreviating period in month part
+						v = v.replace(/\./g,'');
+						//Case-insensitive
+						v = v.toLowerCase();
+					}
+					var months = info['months-format-' + widthList[l-3]].concat();
+					for (var j=0; j<months.length; j++){
+						if(!options.strict){
+							//Case-insensitive
+							months[j] = months[j].toLowerCase();
+						}
+						if(v == months[j]){
+							result.setMonth(j);
+							expected.month = j;
+							break;
+						}
+					}
+					if(j==months.length){
+						dojo.debug("dojo.date.parse: Could not parse month name: '" + v + "'.");
+						return null;
+					}
+				}else{
+					result.setMonth(v-1);
+					expected.month = v-1;
+				}
+				break;
+			case 'E':
+			case 'e':
+				if(!options.strict){
+					//Case-insensitive
+					v = v.toLowerCase();
+				}
+				var days = info['days-format-' + widthList[l-3]].concat();
+				for (var j=0; j<days.length; j++){
+					if(!options.strict){
+						//Case-insensitive
+						days[j] = days[j].toLowerCase();
+					}
+					if(v == days[j]){
+						//TODO: not sure what to actually do with this input,
+						//in terms of setting something on the Date obj...?
+						//without more context, can't affect the actual date
+						break;
+					}
+				}
+				if(j==days.length){
+					dojo.debug("dojo.date.parse: Could not parse weekday name: '" + v + "'.");
+					return null;
+				}
+				break;	
+			case 'd':
+				result.setDate(v);
+				expected.date = v;
+				break;
+			case 'a': //am/pm
+				var am = options.am || info.am;
+				var pm = options.pm || info.pm;
+				if(!options.strict){
+					v = v.replace(/\./g,'').toLowerCase();
+					am = am.replace(/\./g,'').toLowerCase();
+					pm = pm.replace(/\./g,'').toLowerCase();
+				}
+				if(options.strict && v != am && v != pm){
+					dojo.debug("dojo.date.parse: Could not parse am/pm part.");
+					return null;
+				}
+				var hours = result.getHours();
+				if(v == pm && hours < 12){
+					result.setHours(hours + 12); //e.g., 3pm -> 15
+				} else if(v == am && hours == 12){
+					result.setHours(0); //12am -> 0
+				}
+				break;
+			case 'K': //hour (1-24)
+				if(v==24){v=0;}
+				// fallthrough...
+			case 'h': //hour (1-12)
+			case 'H': //hour (0-23)
+			case 'k': //hour (0-11)
+				//TODO: strict bounds checking, padding
+				if(v>23){
+					dojo.debug("dojo.date.parse: Illegal hours value");
+					return null;
+				}
+
+				//in the 12-hour case, adjusting for am/pm requires the 'a' part
+				//which for now we will assume always comes after the 'h' part
+				result.setHours(v);
+				break;
+			case 'm': //minutes
+				result.setMinutes(v);
+				break;
+			case 's': //seconds
+				result.setSeconds(v);
+				break;
+			case 'S': //milliseconds
+				result.setMilliseconds(v);
+				break;
+			default:
+				dojo.unimplemented("dojo.date.parse: unsupported pattern char=" + grp.charAt(0));
+		}
+	}
+
+	//validate parse date fields versus input date fields
+	if(expected.year && result.getFullYear() != expected.year){
+		dojo.debug("Parsed year: '" + result.getFullYear() + "' did not match input year: '" + expected.year + "'.");
+		return null;
+	}
+	if(expected.month && result.getMonth() != expected.month){
+		dojo.debug("Parsed month: '" + result.getMonth() + "' did not match input month: '" + expected.month + "'.");
+		return null;
+	}
+	if(expected.date && result.getDate() != expected.date){
+		dojo.debug("Parsed day of month: '" + result.getDate() + "' did not match input day of month: '" + expected.date + "'.");
+		return null;
+	}
+
+	//TODO: implement a getWeekday() method in order to test 
+	//validity of input strings containing 'EEE' or 'EEEE'...
+
+	return result; /*Date*/
+};
+
+function _processPattern(pattern, applyPattern, applyLiteral, applyAll){
+	// Process a pattern with literals in it
+	// Break up on single quotes, treat every other one as a literal, except '' which becomes '
+	var identity = function(x){return x;};
+	applyPattern = applyPattern || identity;
+	applyLiteral = applyLiteral || identity;
+	applyAll = applyAll || identity;
+
+	//split on single quotes (which escape literals in date format strings) 
+	//but preserve escaped single quotes (e.g., o''clock)
+	var chunks = pattern.match(/(''|[^'])+/g); 
+	var literal = false;
+
+	for(var i=0; i<chunks.length; i++){
+		if(!chunks[i]){
+			chunks[i]='';
+		} else {
+			chunks[i]=(literal ? applyLiteral : applyPattern)(chunks[i]);
+			literal = !literal;
+		}
+	}
+	return applyAll(chunks.join(''));
+}
+
+function _buildDateTimeRE(groups, info, options, pattern){
+	return pattern.replace(/([a-z])\1*/ig, function(match){
+		// Build a simple regexp without parenthesis, which would ruin the match list
+		var s;
+		var c = match.charAt(0);
+		var l = match.length;
+		switch(c){
+			case 'y':
+				s = '\\d' + ((l==2) ? '{2,4}' : '+');
+				break;
+			case 'M':
+				s = (l>2) ? '\\S+' : '\\d{1,2}';
+				break;
+			case 'd':
+				s = '\\d{1,2}';
+				break;
+		    case 'E':
+				s = '\\S+';
+				break;
+			case 'h': 
+			case 'H': 
+			case 'K': 
+			case 'k':
+				s = '\\d{1,2}';
+				break;
+			case 'm':
+			case 's':
+				s = '[0-5]\\d';
+				break;
+			case 'S':
+				s = '\\d{1,3}';
+				break;
+			case 'a':
+				var am = options.am || info.am || 'AM';
+				var pm = options.pm || info.pm || 'PM';
+				if(options.strict){
+					s = am + '|' + pm;
+				}else{
+					s = am;
+					s += (am != am.toLowerCase()) ? '|' + am.toLowerCase() : '';
+					s += '|';
+					s += (pm != pm.toLowerCase()) ? pm + '|' + pm.toLowerCase() : pm;
+				}
+				break;
+			default:
+				dojo.unimplemented("parse of date format, pattern=" + pattern);
+		}
+
+		if(groups){ groups.push(match); }
+
+//FIXME: replace whitespace within final regexp with more flexible whitespace match instead?
+		//tolerate whitespace
+		return '\\s*(' + s + ')\\s*';
+	});
+}
+})();
+
+//TODO: try to common strftime and format code somehow?
+
+dojo.date.strftime = function(/*Date*/dateObject, /*String*/format, /*String?*/locale){
+//
+// summary:
+//		Formats the date object using the specifications of the POSIX strftime function
+//
+// description:
+//		see <http://www.opengroup.org/onlinepubs/007908799/xsh/strftime.html>
+
+	// zero pad
+	var padChar = null;
+	function _(s, n){
+		return dojo.string.pad(s, n || 2, padChar || "0");
+	}
+
+	var info = dojo.date._getGregorianBundle(locale);
+
+	function $(property){
+		switch (property){
+			case "a": // abbreviated weekday name according to the current locale
+				return dojo.date.getDayShortName(dateObject, locale);
+
+			case "A": // full weekday name according to the current locale
+				return dojo.date.getDayName(dateObject, locale);
+
+			case "b":
+			case "h": // abbreviated month name according to the current locale
+				return dojo.date.getMonthShortName(dateObject, locale);
+				
+			case "B": // full month name according to the current locale
+				return dojo.date.getMonthName(dateObject, locale);
+				
+			case "c": // preferred date and time representation for the current
+				      // locale
+				return dojo.date.format(dateObject, {locale: locale});
+
+			case "C": // century number (the year divided by 100 and truncated
+				      // to an integer, range 00 to 99)
+				return _(Math.floor(dateObject.getFullYear()/100));
+				
+			case "d": // day of the month as a decimal number (range 01 to 31)
+				return _(dateObject.getDate());
+				
+			case "D": // same as %m/%d/%y
+				return $("m") + "/" + $("d") + "/" + $("y");
+					
+			case "e": // day of the month as a decimal number, a single digit is
+				      // preceded by a space (range ' 1' to '31')
+				if(padChar == null){ padChar = " "; }
+				return _(dateObject.getDate());
+			
+			case "f": // month as a decimal number, a single digit is
+							// preceded by a space (range ' 1' to '12')
+				if(padChar == null){ padChar = " "; }
+				return _(dateObject.getMonth()+1);				
+			
+			case "g": // like %G, but without the century.
+				break;
+			
+			case "G": // The 4-digit year corresponding to the ISO week number
+				      // (see %V).  This has the same format and value as %Y,
+				      // except that if the ISO week number belongs to the
+				      // previous or next year, that year is used instead.
+				dojo.unimplemented("unimplemented modifier 'G'");
+				break;
+			
+			case "F": // same as %Y-%m-%d
+				return $("Y") + "-" + $("m") + "-" + $("d");
+				
+			case "H": // hour as a decimal number using a 24-hour clock (range
+				      // 00 to 23)
+				return _(dateObject.getHours());
+				
+			case "I": // hour as a decimal number using a 12-hour clock (range
+				      // 01 to 12)
+				return _(dateObject.getHours() % 12 || 12);
+				
+			case "j": // day of the year as a decimal number (range 001 to 366)
+				return _(dojo.date.getDayOfYear(dateObject), 3);
+				
+			case "k": // Hour as a decimal number using a 24-hour clock (range
+					  // 0 to 23 (space-padded))
+				if (padChar == null) { padChar = " "; }
+				return _(dateObject.getHours());
+
+			case "l": // Hour as a decimal number using a 12-hour clock (range
+					  // 1 to 12 (space-padded))
+				if (padChar == null) { padChar = " "; }
+				return _(dateObject.getHours() % 12 || 12);
+			
+			case "m": // month as a decimal number (range 01 to 12)
+				return _(dateObject.getMonth() + 1);
+				
+			case "M": // minute as a decimal number
+				return _(dateObject.getMinutes());
+			
+			case "n":
+				return "\n";
+
+			case "p": // either `am' or `pm' according to the given time value,
+				      // or the corresponding strings for the current locale
+				return info[dateObject.getHours() < 12 ? "am" : "pm"];
+				
+			case "r": // time in a.m. and p.m. notation
+				return $("I") + ":" + $("M") + ":" + $("S") + " " + $("p");
+				
+			case "R": // time in 24 hour notation
+				return $("H") + ":" + $("M");
+				
+			case "S": // second as a decimal number
+				return _(dateObject.getSeconds());
+
+			case "t":
+				return "\t";
+
+			case "T": // current time, equal to %H:%M:%S
+				return $("H") + ":" + $("M") + ":" + $("S");
+				
+			case "u": // weekday as a decimal number [1,7], with 1 representing
+				      // Monday
+				return String(dateObject.getDay() || 7);
+				
+			case "U": // week number of the current year as a decimal number,
+				      // starting with the first Sunday as the first day of the
+				      // first week
+				return _(dojo.date.getWeekOfYear(dateObject));
+
+			case "V": // week number of the year (Monday as the first day of the
+				      // week) as a decimal number [01,53]. If the week containing
+				      // 1 January has four or more days in the new year, then it 
+				      // is considered week 1. Otherwise, it is the last week of 
+				      // the previous year, and the next week is week 1.
+				return _(dojo.date.getIsoWeekOfYear(dateObject));
+				
+			case "W": // week number of the current year as a decimal number,
+				      // starting with the first Monday as the first day of the
+				      // first week
+				return _(dojo.date.getWeekOfYear(dateObject, 1));
+				
+			case "w": // day of the week as a decimal, Sunday being 0
+				return String(dateObject.getDay());
+
+			case "x": // preferred date representation for the current locale
+				      // without the time
+				return dojo.date.format(dateObject, {selector:'dateOnly', locale:locale});
+
+			case "X": // preferred time representation for the current locale
+				      // without the date
+				return dojo.date.format(dateObject, {selector:'timeOnly', locale:locale});
+
+			case "y": // year as a decimal number without a century (range 00 to
+				      // 99)
+				return _(dateObject.getFullYear()%100);
+				
+			case "Y": // year as a decimal number including the century
+				return String(dateObject.getFullYear());
+			
+			case "z": // time zone or name or abbreviation
+				var timezoneOffset = dateObject.getTimezoneOffset();
+				return (timezoneOffset > 0 ? "-" : "+") + 
+					_(Math.floor(Math.abs(timezoneOffset)/60)) + ":" +
+					_(Math.abs(timezoneOffset)%60);
+
+			case "Z": // time zone or name or abbreviation
+				return dojo.date.getTimezoneName(dateObject);
+			
+			case "%":
+				return "%";
+		}
+	}
+
+	// parse the formatting string and construct the resulting string
+	var string = "";
+	var i = 0;
+	var index = 0;
+	var switchCase = null;
+	while ((index = format.indexOf("%", i)) != -1){
+		string += format.substring(i, index++);
+		
+		// inspect modifier flag
+		switch (format.charAt(index++)) {
+			case "_": // Pad a numeric result string with spaces.
+				padChar = " "; break;
+			case "-": // Do not pad a numeric result string.
+				padChar = ""; break;
+			case "0": // Pad a numeric result string with zeros.
+				padChar = "0"; break;
+			case "^": // Convert characters in result string to uppercase.
+				switchCase = "upper"; break;
+			case "*": // Convert characters in result string to lowercase
+				switchCase = "lower"; break;
+			case "#": // Swap the case of the result string.
+				switchCase = "swap"; break;
+			default: // no modifier flag so decrement the index
+				padChar = null; index--; break;
+		}
+
+		// toggle case if a flag is set
+		var property = $(format.charAt(index++));
+		switch (switchCase){
+			case "upper":
+				property = property.toUpperCase();
+				break;
+			case "lower":
+				property = property.toLowerCase();
+				break;
+			case "swap": // Upper to lower, and versey-vicea
+				var compareString = property.toLowerCase();
+				var swapString = '';
+				var j = 0;
+				var ch = '';
+				while (j < property.length){
+					ch = property.charAt(j);
+					swapString += (ch == compareString.charAt(j)) ?
+						ch.toUpperCase() : ch.toLowerCase();
+					j++;
+				}
+				property = swapString;
+				break;
+			default:
+				break;
+		}
+		switchCase = null;
+		
+		string += property;
+		i = index;
+	}
+	string += format.substring(i);
+	
+	return string; // String
+};
+
+(function(){
+var _customFormats = [];
+dojo.date.addCustomFormats = function(/*String*/packageName, /*String*/bundleName){
+//
+// summary:
+//		Add a reference to a bundle containing localized custom formats to be
+//		used by date/time formatting and parsing routines.
+//
+// description:
+//		The user may add custom localized formats where the bundle has properties following the
+//		same naming convention used by dojo for the CLDR data: dateFormat-xxxx / timeFormat-xxxx
+//		The pattern string should match the format used by the CLDR.
+//		See dojo.date.format for details.
+//		The resources must be loaded by dojo.requireLocalization() prior to use
+
+	_customFormats.push({pkg:packageName,name:bundleName});
+};
+
+dojo.date._getGregorianBundle = function(/*String*/locale){
+	var gregorian = {};
+	dojo.lang.forEach(_customFormats, function(desc){
+		var bundle = dojo.i18n.getLocalization(desc.pkg, desc.name, locale);
+		gregorian = dojo.lang.mixin(gregorian, bundle);
+	}, this);
+	return gregorian; /*Object*/
+};
+})();
+
+dojo.date.addCustomFormats("dojo.i18n.calendar","gregorian");
+dojo.date.addCustomFormats("dojo.i18n.calendar","gregorianExtras");
+
+dojo.date.getNames = function(/*String*/item, /*String*/type, /*String?*/use, /*String?*/locale){
+//
+// summary:
+//		Used to get localized strings for day or month names.
+//
+// item: 'months' || 'days'
+// type: 'wide' || 'narrow' || 'abbr' (e.g. "Monday", "Mon", or "M" respectively, in English)
+// use: 'standAlone' || 'format' (default)
+// locale: override locale used to find the names
+
+	var label;
+	var lookup = dojo.date._getGregorianBundle(locale);
+	var props = [item, use, type];
+	if(use == 'standAlone'){
+		label = lookup[props.join('-')];
+	}
+	props[1] = 'format';
+
+	// return by copy so changes won't be made accidentally to the in-memory model
+	return (label || lookup[props.join('-')]).concat(); /*Array*/
+};
+
+// Convenience methods
+
+dojo.date.getDayName = function(/*Date*/dateObject, /*String?*/locale){
+// summary: gets the full localized day of the week corresponding to the date object
+	return dojo.date.getNames('days', 'wide', 'format', locale)[dateObject.getDay()]; /*String*/
+};
+
+dojo.date.getDayShortName = function(/*Date*/dateObject, /*String?*/locale){
+// summary: gets the abbreviated localized day of the week corresponding to the date object
+	return dojo.date.getNames('days', 'abbr', 'format', locale)[dateObject.getDay()]; /*String*/
+};
+
+dojo.date.getMonthName = function(/*Date*/dateObject, /*String?*/locale){
+// summary: gets the full localized month name corresponding to the date object
+	return dojo.date.getNames('months', 'wide', 'format', locale)[dateObject.getMonth()]; /*String*/
+};
+
+dojo.date.getMonthShortName = function(/*Date*/dateObject, /*String?*/locale){
+// summary: gets the abbreviated localized month name corresponding to the date object
+	return dojo.date.getNames('months', 'abbr', 'format', locale)[dateObject.getMonth()]; /*String*/
+};
+
+//FIXME: not localized
+dojo.date.toRelativeString = function(/*Date*/dateObject){
+// summary:
+//	Returns an description in English of the date relative to the current date.  Note: this is not localized yet.  English only.
+//
+// description: Example returns:
+//	 - "1 minute ago"
+//	 - "4 minutes ago"
+//	 - "Yesterday"
+//	 - "2 days ago"
+
+	var now = new Date();
+	var diff = (now - dateObject) / 1000;
+	var end = " ago";
+	var future = false;
+	if(diff < 0){
+		future = true;
+		end = " from now";
+		diff = -diff;
+	}
+
+	if(diff < 60){
+		diff = Math.round(diff);
+		return diff + " second" + (diff == 1 ? "" : "s") + end;
+	}
+	if(diff < 60*60){
+		diff = Math.round(diff/60);
+		return diff + " minute" + (diff == 1 ? "" : "s") + end;
+	}
+	if(diff < 60*60*24){
+		diff = Math.round(diff/3600);
+		return diff + " hour" + (diff == 1 ? "" : "s") + end;
+	}
+	if(diff < 60*60*24*7){
+		diff = Math.round(diff/(3600*24));
+		if(diff == 1){
+			return future ? "Tomorrow" : "Yesterday";
+		}else{
+			return diff + " days" + end;
+		}
+	}
+	return dojo.date.format(dateObject); // String
+};
+
+//FIXME: SQL methods can probably be moved to a different module without i18n deps
+
+dojo.date.toSql = function(/*Date*/dateObject, /*Boolean?*/noTime){
+// summary:
+//	Convert a Date to a SQL string
+// noTime: whether to ignore the time portion of the Date.  Defaults to false.
+
+	return dojo.date.strftime(dateObject, "%F" + !noTime ? " %T" : ""); // String
+};
+
+dojo.date.fromSql = function(/*String*/sqlDate){
+// summary:
+//	Convert a SQL date string to a JavaScript Date object
+
+	var parts = sqlDate.split(/[\- :]/g);
+	while(parts.length < 6){
+		parts.push(0);
+	}
+	return new Date(parts[0], (parseInt(parts[1],10)-1), parts[2], parts[3], parts[4], parts[5]); // Date
+};
+
+dojo.provide("dojo.widget.TimePicker");
+
+
+
+
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget(
+	"dojo.widget.TimePicker",
+	dojo.widget.HtmlWidget,
+	function(){
+
+		/*
+		summary: 
+			Base class for a stand-alone TimePicker widget 
+			which makes it easy to select a time. 
+		description: 
+			A stand-alone TimePicker widget that makes it easy to select a time. 
+			It is designed to be used on its own, or inside of other widgets
+			(see dojo.widget.DropdownTimePicker) or other similar combination widgets. 
+		 	              
+			Times attributes passed in the `RFC 3339` format:
+			http://www.faqs.org/rfcs/rfc3339.html (2005-06-30T08:05:00-07:00)
+			so that they are serializable and locale-independent.
+		
+		usage: 
+			var timePicker = dojo.widget.createWidget("TimePicker", {},   
+			dojo.byId("timePickerNode")); 
+		 	 
+			<div dojoType="TimePicker"></div> 
+		*/
+	
+		// time: Date
+		//	selected time
+		this.time = "";
+		
+		// useDefaultTime: Boolean
+		//	set following flag to true if a default time should be set
+		this.useDefaultTime = false;
+		
+		// useDefaultMinutes: Boolean
+		//	set the following to true to set default minutes to current time, false to // use zero
+		this.useDefaultMinutes = false;
+		
+		// storedTime: String
+		//	rfc 3339 time
+		this.storedTime = "";
+		
+		// currentTime: Object
+		//	time currently selected in the UI, stored in hours, minutes, seconds in the format that will be actually displayed
+		this.currentTime = {};
+		
+		this.classNames = {
+		// summary:
+		//	stores a list of class names that may be overriden
+			selectedTime: "selectedItem"
+		};
+		
+		this.any = "any"; //FIXME: never used?
+		
+		// dom node indecies for selected hour, minute, amPm, and "any time option"
+		this.selectedTime = {
+			hour: "",
+			minute: "",
+			amPm: "",
+			anyTime: false
+		};
+
+		// minutes are ordered as follows: ["12", "6", "1", "7", "2", "8", "3", "9", "4", "10", "5", "11"]
+		this.hourIndexMap = ["", 2, 4, 6, 8, 10, 1, 3, 5, 7, 9, 11, 0];
+		
+		// minutes are ordered as follows: ["00", "30", "05", "35", "10", "40", "15", "45", "20", "50", "25", "55"]
+		this.minuteIndexMap = [0, 2, 4, 6, 8, 10, 1, 3, 5, 7, 9, 11];
+	},
+{
+	isContainer: false,
+	templateString:"<div class=\"timePickerContainer\" dojoAttachPoint=\"timePickerContainerNode\">\r\n\t<table class=\"timeContainer\" cellspacing=\"0\" >\r\n\t\t<thead>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"timeCorner cornerTopLeft\" valign=\"top\">&nbsp;</td>\r\n\t\t\t\t<td class=\"timeLabelContainer hourSelector\">${this.calendar.field-hour}</td>\r\n\t\t\t\t<td class=\"timeLabelContainer minutesHeading\">${this.calendar.field-minute}</td>\r\n\t\t\t\t<td class=\"timeCorner cornerTopRight\" valign=\"top\">&nbsp;</td>\r\n\t\t\t</tr>\r\n\t\t</thead>\r\n\t\t<tbody>\r\n\t\t\t<tr>\r\n\t\t\t\t<td valign=\"top\" colspan=\"2\" class=\"hours\">\r\n\t\t\t\t\t<table align=\"center\">\r\n\t\t\t\t\t\t<tbody dojoAttachPoint=\"hourContainerNode\"  \r\n\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onSetSelectedHour;\">\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>12</td>\r\n\t\t\t\t\t\t\t\t<td>6</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>1</td>\r\n\t\t\t\t\t\t\t\t<td>7</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>2</td>\r\n\t\t\t\t\t\t\t\t<td>8</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>3</td>\r\n\t\t\t\t\t\t\t\t<td>9</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>4</td>\r\n\t\t\t\t\t\t\t\t<td>10</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>5</td>\r\n\t\t\t\t\t\t\t\t<td>11</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t</table>\r\n\t\t\t\t</td>\r\n\t\t\t\t<td valign=\"top\" class=\"minutes\" colspan=\"2\">\r\n\t\t\t\t\t<table align=\"center\">\r\n\t\t\t\t\t\t<tbody dojoAttachPoint=\"minuteContainerNode\" \r\n\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onSetSelectedMinute;\">\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>00</td>\r\n\t\t\t\t\t\t\t\t<td>30</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>05</td>\r\n\t\t\t\t\t\t\t\t<td>35</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>10</td>\r\n\t\t\t\t\t\t\t\t<td>40</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>15</td>\r\n\t\t\t\t\t\t\t\t<td>45</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>20</td>\r\n\t\t\t\t\t\t\t\t<td>50</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td>25</td>\r\n\t\t\t\t\t\t\t\t<td>55</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t</table>\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"cornerBottomLeft\">&nbsp;</td>\r\n\t\t\t\t<td valign=\"top\" class=\"timeOptions\">\r\n\t\t\t\t\t<table class=\"amPmContainer\">\r\n\t\t\t\t\t\t<tbody dojoAttachPoint=\"amPmContainerNode\" \r\n\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onSetSelectedAmPm;\">\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td id=\"am\">${this.calendar.am}</td>\r\n\t\t\t\t\t\t\t\t<td id=\"pm\">${this.calendar.pm}</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t</table>\r\n\t\t\t\t</td>\r\n\t\t\t\t<td class=\"timeOptions\">\r\n\t\t\t\t\t<div dojoAttachPoint=\"anyTimeContainerNode\" \r\n\t\t\t\t\t\tdojoAttachEvent=\"onClick: onSetSelectedAnyTime;\" \r\n\t\t\t\t\t\tclass=\"anyTimeContainer\">${this.widgetStrings.any}</div>\r\n\t\t\t\t</td>\r\n\t\t\t\t<td class=\"cornerBottomRight\">&nbsp;</td>\r\n\t\t\t</tr>\r\n\t\t</tbody>\r\n\t</table>\r\n</div>\r\n",
+	templateCssString:"/*Time Picker */\r\n.timePickerContainer {\r\n\twidth:122px;\r\n\tfont-family:Tahoma, Myriad, Helvetica, Arial, Verdana, sans-serif;\r\n\tfont-size:16px;\r\n}\r\n\r\n.timeContainer {\r\n\tborder-collapse:collapse;\r\n\tborder-spacing:0;\r\n}\r\n\r\n.timeContainer thead {\r\n\tcolor:#293a4b;\r\n\tfont-size:0.9em;\r\n\tfont-weight:700;\r\n}\r\n\r\n.timeContainer thead td {\r\n\tpadding:0.25em;\r\n\tfont-size:0.80em;\r\n\tborder-bottom:1px solid #6782A8;\r\n}\r\n\r\n.timeCorner {\r\n\twidth:10px;\r\n}\r\n\r\n.cornerTopLeft {\r\n\tbackground: url(\"images/dpCurveTL.png\") top left no-repeat;\r\n}\r\n\r\n.cornerTopRight {\r\n\tbackground: url(\"images/dpCurveTR.png\") top right no-repeat;\r\n}\r\n\r\n.timeLabelContainer {\r\n\tbackground: url(\"images/dpMonthBg.png\") top left repeat-x;\r\n}\r\n\r\n.hours, .minutes, .timeBorder {\r\n\tbackground: #7591bc url(\"images/dpBg.gif\") top left repeat-x;\r\n\r\n}\r\n\r\n.hours td, .minutes td {\r\n\tpadding:0.2em;\r\n\ttext-align:center;\r\n\tfont-size:0.7em;\r\n\tfont-weight:bold;\r\n\tcursor:pointer;\r\n\tcursor:hand;\r\n\tcolor:#fff;\r\n}\r\n\r\n.minutes {\r\n\tborder-left:1px solid #f5d1db;\r\n}\r\n\r\n.hours {\r\n\tborder-right:1px solid #6782A8;\r\n}\r\n\r\n.hourSelector {\r\n\tborder-right:1px solid #6782A8;\r\n\tpadding:5px;\r\n\tpadding-right:10px;\r\n}\r\n\r\n.minutesSelector {\r\n\tpadding:5px;\r\n\tborder-left:1px solid #f5c7d4;\r\n\ttext-align:center;\r\n}\r\n\r\n.minutesHeading {\r\n\tpadding-left:9px !important;\r\n}\r\n\r\n.timeOptions {\r\n\tbackground-color:#F9C9D7;\r\n}\r\n\r\n.timeContainer .cornerBottomLeft, .timeContainer .cornerBottomRight, .timeContainer .timeOptions {\r\n\tborder-top:1px solid #6782A8;\r\n}\r\n\r\n.timeContainer .cornerBottomLeft {\r\n\tbackground: url(\"images/dpCurveBL.png\") bottom left no-repeat !important;\r\n\twidth:9px !important;\r\n\tpadding:0;\r\n\tmargin:0;\r\n}\r\n\r\n.timeContainer .cornerBottomRight {\r\n\tbackground: url(\"images/dpCurveBR.png\") bottom right no-repeat !important;\r\n\twidth:9px !important;\r\n\tpadding:0;\r\n\tmargin:0;\r\n}\r\n\r\n.timeOptions {\r\n\tcolor:#fff;\r\n\tbackground:url(\"images/dpYearBg.png\") top left repeat-x;\r\n\r\n}\r\n\r\n.selectedItem {\r\n\tbackground-color:#fff;\r\n\tcolor:#6782a8 !important;\r\n}\r\n\r\n.timeOptions .selectedItem {\r\n\tcolor:#fff !important;\r\n\tbackground-color:#9ec3fb !important;\r\n}\r\n\r\n.anyTimeContainer {\r\n\ttext-align:center;\r\n\tfont-weight:bold;\r\n\tfont-size:0.7em;\r\n\tpadding:0.1em;\r\n\tcursor:pointer;\r\n\tcursor:hand;\r\n\tcolor:#fff !important;\r\n}\r\n\r\n.amPmContainer {\r\n\twidth:100%;\r\n}\r\n\r\n.amPmContainer td {\r\n\ttext-align:center;\r\n\tfont-size:0.7em;\r\n\tfont-weight:bold;\r\n\tcursor:pointer;\r\n\tcursor:hand;\r\n\tcolor:#fff;\r\n}\r\n\r\n\r\n\r\n/*.timePickerContainer {\r\n\tmargin:1.75em 0 0.5em 0;\r\n\twidth:10em;\r\n\tfloat:left;\r\n}\r\n\r\n.timeContainer {\r\n\tborder-collapse:collapse;\r\n\tborder-spacing:0;\r\n}\r\n\r\n.timeContainer thead td{\r\n\tborder-bottom:1px solid #e6e6e6;\r\n\tpadding:0 0.4em 0.2em 0.4em;\r\n}\r\n\r\n.timeContainer td {\r\n\tfont-size:0.9em;\r\n\tpadding:0 0.25em 0 0.25em;\r\n\ttext-align:left;\r\n\tcursor:pointer;cursor:hand;\r\n}\r\n\r\n.timeContainer td.minutesHeading {\r\n\tborder-left:1px solid #e6e6e6;\r\n\tborder-right:1px solid #e6e6e6;\t\r\n}\r\n\r\n.timeContainer .minutes {\r\n\tborder-left:1px solid #e6e6e6;\r\n\tborder-right:1px solid #e6e6e6;\r\n}\r\n\r\n.selectedItem {\r\n\tbackground-color:#3a3a3a;\r\n\tcolor:#ffffff;\r\n}*/\r\n",templateCssPath: dojo.uri.moduleUri("dojo.widget", "templates/TimePicker.css"),
+
+	postMixInProperties: function(localProperties, frag) {
+		// summary: see dojo.widget.DomWidget
+		dojo.widget.TimePicker.superclass.postMixInProperties.apply(this, arguments);
+		this.calendar = dojo.i18n.getLocalization("dojo.i18n.calendar", "gregorian", this.lang); // "am","pm"
+		this.widgetStrings = dojo.i18n.getLocalization("dojo.widget", "TimePicker", this.lang); // "any"
+	},
+
+	fillInTemplate: function(args, frag){
+		// summary: see dojo.widget.DomWidget
+
+		// Copy style info from input node to output node
+		var source = this.getFragNodeRef(frag);
+		dojo.html.copyStyle(this.domNode, source);
+
+		if(args.value){
+			if(args.value instanceof Date){
+				this.storedTime = dojo.date.toRfc3339(args.value);
+			}else{
+				this.storedTime = args.value;
+			}
+		}		
+		
+		this.initData();
+		this.initUI();
+	},
+
+	initData: function() {
+		// FIXME: doesn't currently validate the time before trying to set it
+		// Determine the date/time from stored info, or by default don't 
+		//  have a set time
+		// FIXME: should normalize against whitespace on storedTime... for now 
+		// just a lame hack
+		if(this.storedTime.indexOf("T")!=-1 && this.storedTime.split("T")[1] && this.storedTime!=" " && this.storedTime.split("T")[1]!="any"){
+			this.time = dojo.widget.TimePicker.util.fromRfcDateTime(this.storedTime, this.useDefaultMinutes, this.selectedTime.anyTime);
+		}else if(this.useDefaultTime){
+			this.time = dojo.widget.TimePicker.util.fromRfcDateTime("", this.useDefaultMinutes, this.selectedTime.anyTime);
+		}else{
+			this.selectedTime.anyTime = true;
+			this.time = dojo.widget.TimePicker.util.fromRfcDateTime("", 0, 1);
+		}
+	},
+
+	initUI: function() {
+		// set UI to match the currently selected time
+		if(!this.selectedTime.anyTime && this.time) {
+			var amPmHour = dojo.widget.TimePicker.util.toAmPmHour(this.time.getHours());
+			var hour = amPmHour[0];
+			var isAm = amPmHour[1];
+			var minute = this.time.getMinutes();
+			var minuteIndex = parseInt(minute/5);
+			this.onSetSelectedHour(this.hourIndexMap[hour]);
+			this.onSetSelectedMinute(this.minuteIndexMap[minuteIndex]);
+			this.onSetSelectedAmPm(isAm);
+		} else {
+			this.onSetSelectedAnyTime();
+		}
+	},
+	
+	setTime: function(date) {
+		//summary: set the current date and update the UI
+		if(date) {
+			this.selectedTime.anyTime = false;
+			this.setDateTime(dojo.date.toRfc3339(date));
+		} else {
+			this.selectedTime.anyTime = true;
+		}
+		this.initData();
+		this.initUI();
+	},
+
+	setDateTime: function(rfcDate) {
+		this.storedTime = rfcDate;
+	},
+	
+	onClearSelectedHour: function(evt) {
+		this.clearSelectedHour();
+	},
+
+	onClearSelectedMinute: function(evt) {
+		this.clearSelectedMinute();
+	},
+
+	onClearSelectedAmPm: function(evt) {
+		this.clearSelectedAmPm();
+	},
+
+	onClearSelectedAnyTime: function(evt) {
+		this.clearSelectedAnyTime();
+		if(this.selectedTime.anyTime) {
+			this.selectedTime.anyTime = false;
+			this.time = dojo.widget.TimePicker.util.fromRfcDateTime("", this.useDefaultMinutes);
+			this.initUI();
+		}
+	},
+
+	clearSelectedHour: function() {
+		var hourNodes = this.hourContainerNode.getElementsByTagName("td");
+		for (var i=0; i<hourNodes.length; i++) {
+			dojo.html.setClass(hourNodes.item(i), "");
+		}
+	},
+
+	clearSelectedMinute: function() {
+		var minuteNodes = this.minuteContainerNode.getElementsByTagName("td");
+		for (var i=0; i<minuteNodes.length; i++) {
+			dojo.html.setClass(minuteNodes.item(i), "");
+		}
+	},
+
+	clearSelectedAmPm: function() {
+		var amPmNodes = this.amPmContainerNode.getElementsByTagName("td");
+		for (var i=0; i<amPmNodes.length; i++) {
+			dojo.html.setClass(amPmNodes.item(i), "");
+		}
+	},
+
+	clearSelectedAnyTime: function() {
+		dojo.html.setClass(this.anyTimeContainerNode, "anyTimeContainer");
+	},
+
+	onSetSelectedHour: function(evt) {
+		this.onClearSelectedAnyTime();
+		this.onClearSelectedHour();
+		this.setSelectedHour(evt);
+		this.onSetTime();
+	},
+
+	setSelectedHour: function(evt) {
+		if(evt && evt.target) {
+			if(evt.target.nodeType == dojo.dom.ELEMENT_NODE) {
+				var eventTarget = evt.target;
+			} else {
+				var eventTarget = evt.target.parentNode;
+			}
+			dojo.event.browser.stopEvent(evt);
+			dojo.html.setClass(eventTarget, this.classNames.selectedTime);
+			this.selectedTime["hour"] = eventTarget.innerHTML;
+		} else if (!isNaN(evt)) {
+			var hourNodes = this.hourContainerNode.getElementsByTagName("td");
+			if(hourNodes.item(evt)) {
+				dojo.html.setClass(hourNodes.item(evt), this.classNames.selectedTime);
+				this.selectedTime["hour"] = hourNodes.item(evt).innerHTML;
+			}
+		}
+		this.selectedTime.anyTime = false;
+	},
+
+	onSetSelectedMinute: function(evt) {
+		this.onClearSelectedAnyTime();
+		this.onClearSelectedMinute();
+		this.setSelectedMinute(evt);
+		this.selectedTime.anyTime = false;
+		this.onSetTime();
+	},
+
+	setSelectedMinute: function(evt) {
+		if(evt && evt.target) {
+			if(evt.target.nodeType == dojo.dom.ELEMENT_NODE) {
+				var eventTarget = evt.target;
+			} else {
+				var eventTarget = evt.target.parentNode;
+			}
+			dojo.event.browser.stopEvent(evt);
+			dojo.html.setClass(eventTarget, this.classNames.selectedTime);
+			this.selectedTime["minute"] = eventTarget.innerHTML;
+		} else if (!isNaN(evt)) {
+			var minuteNodes = this.minuteContainerNode.getElementsByTagName("td");
+			if(minuteNodes.item(evt)) {
+				dojo.html.setClass(minuteNodes.item(evt), this.classNames.selectedTime);
+				this.selectedTime["minute"] = minuteNodes.item(evt).innerHTML;
+			}
+		}
+	},
+
+	onSetSelectedAmPm: function(evt) {
+		this.onClearSelectedAnyTime();
+		this.onClearSelectedAmPm();
+		this.setSelectedAmPm(evt);
+		this.selectedTime.anyTime = false;
+		this.onSetTime();
+	},
+
+	setSelectedAmPm: function(evt) {
+		var eventTarget = evt.target;
+		if(evt && eventTarget) {
+			if(eventTarget.nodeType != dojo.dom.ELEMENT_NODE) {
+				eventTarget = eventTarget.parentNode;
+			}
+			dojo.event.browser.stopEvent(evt);
+			this.selectedTime.amPm = eventTarget.id;
+			dojo.html.setClass(eventTarget, this.classNames.selectedTime);
+		} else {
+			evt = evt ? 0 : 1;
+			var amPmNodes = this.amPmContainerNode.getElementsByTagName("td");
+			if(amPmNodes.item(evt)) {
+				this.selectedTime.amPm = amPmNodes.item(evt).id;
+				dojo.html.setClass(amPmNodes.item(evt), this.classNames.selectedTime);
+			}
+		}
+	},
+
+	onSetSelectedAnyTime: function(evt) {
+		this.onClearSelectedHour();
+		this.onClearSelectedMinute();
+		this.onClearSelectedAmPm();
+		this.setSelectedAnyTime();
+		this.onSetTime();
+	},
+
+	setSelectedAnyTime: function(evt) {
+		this.selectedTime.anyTime = true;
+		dojo.html.setClass(this.anyTimeContainerNode, this.classNames.selectedTime + " " + "anyTimeContainer");
+	},
+
+	onClick: function(evt) {
+		dojo.event.browser.stopEvent(evt);
+	},
+
+	onSetTime: function() {
+		if(this.selectedTime.anyTime) {
+			this.time = new Date();
+			var tempDateTime = dojo.widget.TimePicker.util.toRfcDateTime(this.time);
+			this.setDateTime(tempDateTime.split("T")[0]);
+		} else {
+			var hour = 12;
+			var minute = 0;
+			var isAm = false;
+			if(this.selectedTime["hour"]) {
+				hour = parseInt(this.selectedTime["hour"], 10);
+			}
+			if(this.selectedTime["minute"]) {
+				minute = parseInt(this.selectedTime["minute"], 10);
+			}
+			if(this.selectedTime["amPm"]) {
+				isAm = (this.selectedTime["amPm"].toLowerCase() == "am");
+			}
+			this.time = new Date();
+			this.time.setHours(dojo.widget.TimePicker.util.fromAmPmHour(hour, isAm));
+			this.time.setMinutes(minute);
+			this.setDateTime(dojo.widget.TimePicker.util.toRfcDateTime(this.time));
+		}
+		this.onValueChanged(this.time);
+	},
+	
+	onValueChanged: function(/*Date*/date) {
+		//summary: the set date event handler
+	}
+});
+
+dojo.widget.TimePicker.util = new function() {
+	//summary: utility functions
+	
+	this.toRfcDateTime = function(jsDate) {
+		//summary: formats a Date object to RFC 3339 string
+		if(!jsDate) {
+			jsDate = new Date();
+		}
+		jsDate.setSeconds(0);
+		return dojo.date.strftime(jsDate, "%Y-%m-%dT%H:%M:00%z"); //FIXME: use dojo.date.toRfc3339 instead
+	}
+
+	this.fromRfcDateTime = function(rfcDate, useDefaultMinutes, isAnyTime) {
+		//summary: constructs a Date object from RFC 3339 string
+		var tempDate = new Date();
+		if(!rfcDate || rfcDate.indexOf("T")==-1) {
+			if(useDefaultMinutes) {
+				tempDate.setMinutes(Math.floor(tempDate.getMinutes()/5)*5);
+			} else {
+				tempDate.setMinutes(0);
+			}
+		} else {
+			var tempTime = rfcDate.split("T")[1].split(":");
+			// fullYear, month, date
+			var tempDate = new Date();
+			tempDate.setHours(tempTime[0]);
+			tempDate.setMinutes(tempTime[1]);
+		}
+		return tempDate;
+	}
+
+	this.toAmPmHour = function(hour) {
+		//summary: converts a 24-hour-based hour value to a 12-hour-based hour value, and an AM/PM flag
+		var amPmHour = hour;
+		var isAm = true;
+		if (amPmHour == 0) {
+			amPmHour = 12;
+		} else if (amPmHour>12) {
+			amPmHour = amPmHour - 12;
+			isAm = false;
+		} else if (amPmHour == 12) {
+			isAm = false;
+		}
+		return [amPmHour, isAm];
+	}
+
+	this.fromAmPmHour = function(amPmHour, isAm) {
+		//summary: converts a 12-hour-based hour value and an AM/PM flag to a 24-hour-based hour value
+		var hour = parseInt(amPmHour, 10);
+		if(isAm && hour == 12) {
+			hour = 0;
+		} else if (!isAm && hour<12) {
+			hour = hour + 12;
+		}
+		return hour;
+	}
+}
+
+dojo.provide("dojo.widget.DropdownTimePicker");
+
+
+
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget(
+	"dojo.widget.DropdownTimePicker",
+	dojo.widget.DropdownContainer,
+	{
+		/*
+		summary: 
+			A form input for entering times with a pop-up dojo.widget.TimePicker to aid in selection
+		
+			description: 
+				This is TimePicker in a DropdownContainer, it supports all features of TimeePicker.
+		
+				It is possible to customize the user-visible formatting with either the formatLength or 
+				displayFormat attributes.  The value sent to the server is typically a locale-independent 
+				value in a hidden field as defined by the name attribute. RFC3339 representation is used 
+				by default, but other options are available with saveFormat.
+		
+			usage: 
+				var dtp = dojo.widget.createWidget("DropdownTimePicker", {},   
+				dojo.byId("DropdownTimePickerNode")); 
+		 	 
+				<input dojoType="DropdownTimePicker">
+		*/
+
+		// iconURL: URL
+		//	path of icon for button to display time picker widget
+		iconURL: dojo.uri.moduleUri("dojo.widget", "templates/images/timeIcon.gif"),
+		
+		// formatLength: String
+		//	Type of formatting used for visual display, appropriate to locale (choice of long, short, medium or full)
+		//	See dojo.date.format for details.
+		formatLength: "short",
+
+		// displayFormat: String
+		//	A pattern used for the visual display of the formatted date.
+		//	Setting this overrides the default locale-specific settings as well as the formatLength
+		//	attribute.  See dojo.date.format for a reference which defines the formatting patterns.
+		displayFormat: "",
+
+		timeFormat: "", // deprecated, will be removed for 0.5
+
+//FIXME: need saveFormat attribute support
+		// saveFormat: String
+		//	Formatting scheme used when submitting the form element.  This formatting is used in a hidden
+		//  field (name) intended for server use, and is therefore typically locale-independent.
+		//  By default, uses rfc3339 style date formatting (rfc)
+		//	Use a pattern string like displayFormat or one of the following:
+		//	rfc|iso|posix|unix
+		saveFormat: "",
+
+		// value: String|Date
+		//	form value property in rfc3339 format. ex: 12:00
+		value: "",
+
+		// name: String
+		// 	name of the form element, used to create a hidden field by this name for form element submission.
+		name: "",
+
+		postMixInProperties: function() {
+			// summary: see dojo.widget.DomWidget
+			dojo.widget.DropdownTimePicker.superclass.postMixInProperties.apply(this, arguments);
+			var messages = dojo.i18n.getLocalization("dojo.widget", "DropdownTimePicker", this.lang);
+			this.iconAlt = messages.selectTime;
+
+			//FIXME: should this be if/else/else?
+			if(typeof(this.value)=='string'&&this.value.toLowerCase()=='today'){
+				this.value = new Date();
+			}
+			if(this.value && isNaN(this.value)){
+				var orig = this.value;
+				this.value = dojo.date.fromRfc3339(this.value);
+				if(!this.value){
+					var d = dojo.date.format(new Date(), { selector: "dateOnly", datePattern: "yyyy-MM-dd" });
+					var c = orig.split(":");
+					for(var i = 0; i < c.length; ++i){
+						if(c[i].length == 1) c[i] = "0" + c[i];
+					}
+					orig = c.join(":");
+					this.value = dojo.date.fromRfc3339(d + "T" + orig);
+					dojo.deprecated("dojo.widget.DropdownTimePicker", "time attributes must be passed in Rfc3339 format", "0.5");
+				}
+			}
+			if(this.value && !isNaN(this.value)){
+				this.value = new Date(this.value);
+			}
+		},
+
+		fillInTemplate: function(){
+			// summary: see dojo.widget.DomWidget
+
+			dojo.widget.DropdownTimePicker.superclass.fillInTemplate.apply(this, arguments);
+
+			var value = "";
+			if(this.value instanceof Date) {
+				value = this.value;
+			} else if(this.value) {
+				var orig = this.value;
+				var d = dojo.date.format(new Date(), { selector: "dateOnly", datePattern: "yyyy-MM-dd" });
+				var c = orig.split(":");
+				for(var i = 0; i < c.length; ++i){
+					if(c[i].length == 1) c[i] = "0" + c[i];
+				}
+				orig = c.join(":");
+				value = dojo.date.fromRfc3339(d + "T" + orig);
+			}
+			
+			var tpArgs = { widgetContainerId: this.widgetId, lang: this.lang, value: value };
+			this.timePicker = dojo.widget.createWidget("TimePicker", tpArgs, this.containerNode, "child");
+			
+			dojo.event.connect(this.timePicker, "onValueChanged", this, "_updateText");
+			
+			if(this.value){
+				this._updateText();
+			}
+			this.containerNode.style.zIndex = this.zIndex;
+			this.containerNode.explodeClassName = "timeContainer";
+			this.valueNode.name = this.name;
+		},
+		
+		getValue: function(){
+			// summary: return current time in time-only portion of RFC 3339 format
+			return this.valueNode.value; /*String*/
+		},
+
+		getTime: function(){
+			// summary: return current time as a Date object
+			return this.timePicker.storedTime; /*Date*/
+		},
+
+		setValue: function(/*Date|String*/rfcDate){
+			//summary: set the current time from RFC 3339 formatted string or a date object, synonymous with setTime
+			this.setTime(rfcDate);
+		},
+
+		setTime: function(/*Date|String*/dateObj){
+			// summary: set the current time and update the UI
+			var value = "";
+			if(dateObj instanceof Date) {
+				value = dateObj;
+			} else if(this.value) {
+				var orig = this.value;
+				var d = dojo.date.format(new Date(), { selector: "dateOnly", datePattern: "yyyy-MM-dd" });
+				var c = orig.split(":");
+				for(var i = 0; i < c.length; ++i){
+					if(c[i].length == 1) c[i] = "0" + c[i];
+				}
+				orig = c.join(":");
+				value = dojo.date.fromRfc3339(d + "T" + orig);
+			}
+
+			this.timePicker.setTime(value);
+			this._syncValueNode();
+		},
+	
+		_updateText: function(){
+			// summary: updates the <input> field according to the current value (ie, displays the formatted date)
+			if(this.timePicker.selectedTime.anyTime){
+				this.inputNode.value = "";
+			}else if(this.timeFormat){
+				dojo.deprecated("dojo.widget.DropdownTimePicker",
+				"Must use displayFormat attribute instead of timeFormat.  See dojo.date.format for specification.", "0.5");
+				this.inputNode.value = dojo.date.strftime(this.timePicker.time, this.timeFormat, this.lang);
+			}else{
+				this.inputNode.value = dojo.date.format(this.timePicker.time,
+					{formatLength:this.formatLength, timePattern:this.displayFormat, selector:'timeOnly', locale:this.lang});
+			}
+			this._syncValueNode();
+			this.onValueChanged(this.getTime());
+			this.hideContainer();
+		},
+
+		onValueChanged: function(/*Date*/dateObj){
+			// summary: triggered when this.value is changed
+		},
+		
+		onInputChange: function(){
+			// summary: callback when user manually types a time into the <input> field
+			if(this.dateFormat){
+				dojo.deprecated("dojo.widget.DropdownTimePicker",
+				"Cannot parse user input.  Must use displayFormat attribute instead of dateFormat.  See dojo.date.format for specification.", "0.5");
+			}else{
+				var input = dojo.string.trim(this.inputNode.value);
+				if(input){
+					var inputTime = dojo.date.parse(input,
+							{formatLength:this.formatLength, timePattern:this.displayFormat, selector:'timeOnly', locale:this.lang});			
+					if(inputTime){
+						this.setTime(inputTime);
+					}
+				} else {
+					this.valueNode.value = input;
+				}
+			}
+			// If the time entered didn't parse, reset to the old time.  KISS, for now.
+			//TODO: usability?  should we provide more feedback somehow? an error notice?
+			// seems redundant to do this if the parse failed, but at least until we have validation,
+			// this will fix up the display of entries like 01/32/2006
+			if(input){ this._updateText(); }
+		},
+
+		_syncValueNode: function(){
+			var time = this.timePicker.time;
+			var value;
+			switch(this.saveFormat.toLowerCase()){
+				case "rfc": case "iso": case "":
+					value = dojo.date.toRfc3339(time, 'timeOnly');
+					break;
+				case "posix": case "unix":
+					value = Number(time);
+					break;
+				default:
+					value = dojo.date.format(time, {datePattern:this.saveFormat, selector:'timeOnly', locale:this.lang});
+			}
+			this.valueNode.value = value;
+		},
+		
+		destroy: function(/*Boolean*/finalize){
+			this.timePicker.destroy(finalize);
+			dojo.widget.DropdownTimePicker.superclass.destroy.apply(this, arguments);
+		}
+	}
+);
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+//If we use "TimePicker" for the name, Dojo get's confused and breaks
+//TODO remove this file on next Dojo release
+
+dojo.provide("struts.widget.StrutsTimePicker");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsTimePicker",
+  dojo.widget.DropdownTimePicker, {
+  widgetType : "StrutsTimePicker",
+
+  inputName: "",
+  name: "",
+
+  valueNotifyTopics : "",
+  valueNotifyTopicsArray : null,
+
+  tabIndex : "",
+
+  postCreate: function() {
+    struts.widget.StrutsTimePicker.superclass.postCreate.apply(this, arguments);
+
+    //set cssClass
+    if(this.extraArgs["class"]) {
+      dojo.html.setClass(this.inputNode, this.extraArgs["class"]);
+    }
+
+    //set cssStyle
+    if(this.extraArgs.style) {
+      dojo.html.setStyleText(this.inputNode, this.extraArgs.style);
+    }
+
+    //value topics
+    if(!dojo.string.isBlank(this.valueNotifyTopics)) {
+      this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
+    }
+
+    //tabindex
+    if(!dojo.string.isBlank(this.tabIndex)) {
+      this.inputNode.tabIndex = this.tabIndex;
+    }
+  },
+
+  _syncValueNode:function () {
+    var time = this.timePicker.time;
+    var value;
+    switch (this.saveFormat.toLowerCase()) {
+      case "rfc":
+      case "iso":
+      case "":
+      //originally, Dojo only saves the time part
+      value = dojo.date.toRfc3339(time);
+      break;
+      case "posix":
+      case "unix":
+      value = Number(time);
+      break;
+      default:
+      value = dojo.date.format(time, {datePattern:this.saveFormat, selector:"timeOnly", locale:this.lang});
+    }
+    this.valueNode.value = value;
+  },
+
+  _updateText : function() {
+    struts.widget.StrutsTimePicker.superclass._updateText.apply(this, arguments);
+    if(this.valueNotifyTopicsArray != null) {
+      for(var i = 0; i < this.valueNotifyTopicsArray.length; i++) {
+        var topic = this.valueNotifyTopicsArray[i];
+        if(!dojo.string.isBlank(topic)) {
+          try {
+            dojo.event.topic.publish(topic, this.inputNode.value, this.getValue(), this);
+          } catch(ex) {
+            dojo.debug(ex);
+          }
+        }
+      }
+    }
+  }
+});
+
+dojo.provide("dojo.widget.DatePicker");
+
+
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget(
+	"dojo.widget.DatePicker",
+	dojo.widget.HtmlWidget,
+	{	
+
+		/*
+		summary: 
+			Base class for a stand-alone DatePicker widget 
+			which makes it easy to select a date, or switch by month and/or year. 
+		description: 
+			A stand-alone DatePicker widget that makes it  
+			easy to select a date, or increment by week, month, and/or year. 
+			It is designed to be used on its own, or inside of other widgets to  
+			(see dojo.widget.DropdownDatePicker) or other similar combination widgets. 
+		 	              
+			Dates attributes passed in the `RFC 3339` format:
+			http://www.faqs.org/rfcs/rfc3339.html (2005-06-30T08:05:00-07:00)
+			so that they are serializable and locale-independent.
+		
+		usage: 
+			var datePicker = dojo.widget.createWidget("DatePicker", {},   
+			dojo.byId("datePickerNode")); 
+		 	 
+			<div dojoType="DatePicker"></div> 
+		*/
+
+		//start attributes
+		
+		// value: String|Date
+		//	form value property if =='today' will be today's date
+		value: "", 
+
+		// name: String
+		// 	name of the form element
+		name: "",
+
+		// displayWeeks: Integer
+		//	total weeks to display default 
+		displayWeeks: 6, 
+
+		// adjustWeeks: Boolean
+		//	if true, weekly size of calendar changes to acomodate the month if false, 42 day format is used
+		adjustWeeks: false,
+
+		// startDate: String|Date
+		//	first available date in the calendar set
+		startDate: "1492-10-12",
+
+		// endDate: String|Date
+		//	last available date in the calendar set
+		endDate: "2941-10-12",
+
+		// weekStartsOn: Integer
+		//	adjusts the first day of the week 0==Sunday..6==Saturday
+		weekStartsOn: "",
+
+		// staticDisplay: Boolean
+		//	disable all incremental controls, must pick a date in the current display
+		staticDisplay: false,
+		
+		// dayWidth: String
+		//	how to render the names of the days in the header. see dojo.date.getDayNames
+		dayWidth: 'narrow',
+
+		classNames: {
+		// summary:
+		//	stores a list of class names that may be overriden
+		//	TODO: this is not good; can't be adjusted via markup, etc. since it's an array
+			previous: "previousMonth",
+			disabledPrevious: "previousMonthDisabled",
+			current: "currentMonth",
+			disabledCurrent: "currentMonthDisabled",
+			next: "nextMonth",
+			disabledNext: "nextMonthDisabled",
+			currentDate: "currentDate",
+			selectedDate: "selectedDate"
+		},
+		templateString:"<div class=\"datePickerContainer\" dojoAttachPoint=\"datePickerContainerNode\">\r\n\t<table cellspacing=\"0\" cellpadding=\"0\" class=\"calendarContainer\">\r\n\t\t<thead>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"monthWrapper\" valign=\"top\">\r\n\t\t\t\t\t<table class=\"monthContainer\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\r\n\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t<td class=\"monthCurve monthCurveTL\" valign=\"top\"></td>\r\n\t\t\t\t\t\t\t<td class=\"monthLabelContainer\" valign=\"top\">\r\n\t\t\t\t\t\t\t\t<span dojoAttachPoint=\"increaseWeekNode\" \r\n\t\t\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onIncrementWeek;\" \r\n\t\t\t\t\t\t\t\t\tclass=\"incrementControl increase\">\r\n\t\t\t\t\t\t\t\t\t<img src=\"${dojoWidgetModuleUri}templates/images/incrementMonth.png\" \r\n\t\t\t\t\t\t\t\t\talt=\"&darr;\" style=\"width:7px;height:5px;\" />\r\n\t\t\t\t\t\t\t\t</span>\r\n\t\t\t\t\t\t\t\t<span \r\n\t\t\t\t\t\t\t\t\tdojoAttachPoint=\"increaseMonthNode\" \r\n\t\t\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onIncrementMonth;\" class=\"incrementControl increase\">\r\n\t\t\t\t\t\t\t\t\t<img src=\"${dojoWidgetModuleUri}templates/images/incrementMonth.png\" \r\n\t\t\t\t\t\t\t\t\t\talt=\"&darr;\"  dojoAttachPoint=\"incrementMonthImageNode\">\r\n\t\t\t\t\t\t\t\t</span>\r\n\t\t\t\t\t\t\t\t<span \r\n\t\t\t\t\t\t\t\t\tdojoAttachPoint=\"decreaseWeekNode\" \r\n\t\t\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onIncrementWeek;\" \r\n\t\t\t\t\t\t\t\t\tclass=\"incrementControl decrease\">\r\n\t\t\t\t\t\t\t\t\t<img src=\"${dojoWidgetModuleUri}templates/images/decrementMonth.png\" alt=\"&uarr;\" style=\"width:7px;height:5px;\" />\r\n\t\t\t\t\t\t\t\t</span>\r\n\t\t\t\t\t\t\t\t<span \r\n\t\t\t\t\t\t\t\t\tdojoAttachPoint=\"decreaseMonthNode\" \r\n\t\t\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onIncrementMonth;\" class=\"incrementControl decrease\">\r\n\t\t\t\t\t\t\t\t\t<img src=\"${dojoWidgetModuleUri}templates/images/decrementMonth.png\" \r\n\t\t\t\t\t\t\t\t\t\talt=\"&uarr;\" dojoAttachPoint=\"decrementMonthImageNode\">\r\n\t\t\t\t\t\t\t\t</span>\r\n\t\t\t\t\t\t\t\t<span dojoAttachPoint=\"monthLabelNode\" class=\"month\"></span>\r\n\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t<td class=\"monthCurve monthCurveTR\" valign=\"top\"></td>\r\n\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t</table>\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</thead>\r\n\t\t<tbody>\r\n\t\t\t<tr>\r\n\t\t\t\t<td colspan=\"3\">\r\n\t\t\t\t\t<table class=\"calendarBodyContainer\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\r\n\t\t\t\t\t\t<thead>\r\n\t\t\t\t\t\t\t<tr dojoAttachPoint=\"dayLabelsRow\">\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t</thead>\r\n\t\t\t\t\t\t<tbody dojoAttachPoint=\"calendarDatesContainerNode\" \r\n\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: _handleUiClick;\">\r\n\t\t\t\t\t\t\t<tr dojoAttachPoint=\"calendarWeekTemplate\">\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t\t<td></td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t</table>\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</tbody>\r\n\t\t<tfoot>\r\n\t\t\t<tr>\r\n\t\t\t\t<td colspan=\"3\" class=\"yearWrapper\">\r\n\t\t\t\t\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"yearContainer\">\r\n\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t<td class=\"curveBL\" valign=\"top\"></td>\r\n\t\t\t\t\t\t\t<td valign=\"top\">\r\n\t\t\t\t\t\t\t\t<h3 class=\"yearLabel\">\r\n\t\t\t\t\t\t\t\t\t<span dojoAttachPoint=\"previousYearLabelNode\"\r\n\t\t\t\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onIncrementYear;\" class=\"previousYear\"></span>\r\n\t\t\t\t\t\t\t\t\t<span class=\"selectedYear\" dojoAttachPoint=\"currentYearLabelNode\"></span>\r\n\t\t\t\t\t\t\t\t\t<span dojoAttachPoint=\"nextYearLabelNode\" \r\n\t\t\t\t\t\t\t\t\t\tdojoAttachEvent=\"onClick: onIncrementYear;\" class=\"nextYear\"></span>\r\n\t\t\t\t\t\t\t\t</h3>\r\n\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t<td class=\"curveBR\" valign=\"top\"></td>\r\n\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t</table>\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</tfoot>\r\n\t</table>\r\n</div>\r\n",
+		templateCssString:".datePickerContainer {\r\n\twidth:164px; /* needed for proper user styling */\r\n}\r\n\r\n.calendarContainer {\r\n/*\tborder:1px solid #566f8f;*/\r\n}\r\n\r\n.calendarBodyContainer {\r\n\twidth:100%; /* needed for the explode effect (explain?) */\r\n\tbackground: #7591bc url(\"images/dpBg.gif\") top left repeat-x;\r\n}\r\n\r\n.calendarBodyContainer thead tr td {\r\n\tcolor:#293a4b;\r\n\tfont:bold 0.75em Helvetica, Arial, Verdana, sans-serif;\r\n\ttext-align:center;\r\n\tpadding:0.25em;\r\n\tbackground: url(\"images/dpHorizLine.gif\") bottom left repeat-x;\r\n}\r\n\r\n.calendarBodyContainer tbody tr td {\r\n\tcolor:#fff;\r\n\tfont:bold 0.7em Helvetica, Arial, Verdana, sans-serif;\r\n\ttext-align:center;\r\n\tpadding:0.4em;\r\n\tbackground: url(\"images/dpVertLine.gif\") top right repeat-y;\r\n\tcursor:pointer;\r\n\tcursor:hand;\r\n}\r\n\r\n\r\n.monthWrapper {\r\n\tpadding-bottom:2px;\r\n\tbackground: url(\"images/dpHorizLine.gif\") bottom left repeat-x;\r\n}\r\n\r\n.monthContainer {\r\n\twidth:100%;\r\n}\r\n\r\n.monthLabelContainer {\r\n\ttext-align:center;\r\n\tfont:bold 0.75em Helvetica, Arial, Verdana, sans-serif;\r\n\tbackground: url(\"images/dpMonthBg.png\") repeat-x top left !important;\r\n\tcolor:#293a4b;\r\n\tpadding:0.25em;\r\n}\r\n\r\n.monthCurve {\r\n\twidth:12px;\r\n}\r\n\r\n.monthCurveTL {\r\n\tbackground: url(\"images/dpCurveTL.png\") no-repeat top left !important;\r\n}\r\n\r\n.monthCurveTR {\r\n\t\tbackground: url(\"images/dpCurveTR.png\") no-repeat top right !important;\r\n}\r\n\r\n\r\n.yearWrapper {\r\n\tbackground: url(\"images/dpHorizLineFoot.gif\") top left repeat-x;\r\n\tpadding-top:2px;\r\n}\r\n\r\n.yearContainer {\r\n\twidth:100%;\r\n}\r\n\r\n.yearContainer td {\r\n\tbackground:url(\"images/dpYearBg.png\") top left repeat-x;\r\n}\r\n\r\n.yearContainer .yearLabel {\r\n\tmargin:0;\r\n\tpadding:0.45em 0 0.45em 0;\r\n\tcolor:#fff;\r\n\tfont:bold 0.75em Helvetica, Arial, Verdana, sans-serif;\r\n\ttext-align:center;\r\n}\r\n\r\n.curveBL {\r\n\tbackground: url(\"images/dpCurveBL.png\") bottom left no-repeat !important;\r\n\twidth:9px !important;\r\n\tpadding:0;\r\n\tmargin:0;\r\n}\r\n\r\n.curveBR {\r\n\tbackground: url(\"images/dpCurveBR.png\") bottom right no-repeat !important;\r\n\twidth:9px !important;\r\n\tpadding:0;\r\n\tmargin:0;\r\n}\r\n\r\n\r\n.previousMonth {\r\n\tbackground-color:#6782a8 !important;\r\n}\r\n\r\n.previousMonthDisabled {\r\n\tbackground-color:#a4a5a6 !important;\r\n\tcursor:default !important\r\n}\r\n.currentMonth {\r\n}\r\n\r\n.currentMonthDisabled {\r\n\tbackground-color:#bbbbbc !important;\r\n\tcursor:default !important\r\n}\r\n.nextMonth {\r\n\tbackground-color:#6782a8 !important;\r\n}\r\n.nextMonthDisabled {\r\n\tbackground-color:#a4a5a6 !important;\r\n\tcursor:default !important;\r\n}\r\n\r\n.currentDate {\r\n\ttext-decoration:underline;\r\n\tfont-style:italic;\r\n}\r\n\r\n.selectedDate {\r\n\tbackground-color:#fff !important;\r\n\tcolor:#6782a8 !important;\r\n}\r\n\r\n.yearLabel .selectedYear {\r\n\tpadding:0.2em;\r\n\tbackground-color:#9ec3fb !important;\r\n}\r\n\r\n.nextYear, .previousYear {\r\n\tcursor:pointer;cursor:hand;\r\n\tpadding:0;\r\n}\r\n\r\n.nextYear {\r\n\tmargin:0 0 0 0.55em;\r\n}\r\n\r\n.previousYear {\r\n\tmargin:0 0.55em 0 0;\r\n}\r\n\r\n.incrementControl {\r\n\tcursor:pointer;cursor:hand;\r\n\twidth:1em;\r\n}\r\n\r\n.increase {\r\n\tfloat:right;\r\n}\r\n\r\n.decrease {\r\n\tfloat:left;\r\n}\r\n\r\n.lastColumn {\r\n\tbackground-image:none !important;\r\n}\r\n\r\n\r\n",templateCssPath:  dojo.uri.moduleUri("dojo.widget", "templates/DatePicker.css"),
+
+		postMixInProperties: function(){
+			// summary: see dojo.widget.DomWidget
+
+			dojo.widget.DatePicker.superclass.postMixInProperties.apply(this, arguments);
+			if(!this.weekStartsOn){
+				this.weekStartsOn=dojo.date.getFirstDayOfWeek(this.lang);
+			}
+			this.today = new Date();
+			this.today.setHours(0,0,0,0);
+			if(typeof(this.value)=='string'&&this.value.toLowerCase()=='today'){
+				this.value = new Date();
+			}else if(this.value && (typeof this.value=="string") && (this.value.split("-").length > 2)) {
+				this.value = dojo.date.fromRfc3339(this.value);
+				this.value.setHours(0,0,0,0);
+			}
+		},
+
+		fillInTemplate: function(args, frag) {
+			// summary: see dojo.widget.DomWidget
+
+			dojo.widget.DatePicker.superclass.fillInTemplate.apply(this, arguments);
+
+			// Copy style info from input node to output node
+			var source = this.getFragNodeRef(frag);
+			dojo.html.copyStyle(this.domNode, source);
+
+			this.weekTemplate = dojo.dom.removeNode(this.calendarWeekTemplate);
+			this._preInitUI(this.value ? this.value : this.today, false, true); //init UI with date selected ONLY if user supplies one
+
+			// Insert localized day names in the template
+			var dayLabels = dojo.lang.unnest(dojo.date.getNames('days', this.dayWidth, 'standAlone', this.lang)); //if we dont use unnest, we risk modifying the dayLabels array inside of dojo.date and screwing up other calendars on the page
+			if(this.weekStartsOn>0){
+				//adjust dayLabels for different first day of week. ie: Monday or Thursday instead of Sunday
+				for(var i=0;i<this.weekStartsOn;i++){
+					dayLabels.push(dayLabels.shift());
+				}
+			}
+			var dayLabelNodes = this.dayLabelsRow.getElementsByTagName("td");
+ 			for(i=0; i<7; i++) {
+				dayLabelNodes.item(i).innerHTML = dayLabels[i];
+			}
+
+			if(this.value){
+				this.setValue(this.value);
+			}
+
+		},
+		
+		getValue: function() {
+			// summary: return current date in RFC 3339 format
+			return dojo.date.toRfc3339(new Date(this.value),'dateOnly'); /*String*/
+		},
+
+		getDate: function() {
+			// summary: return current date as a Date object
+			return this.value; /*Date*/
+		},
+
+		setValue: function(/*Date|String*/rfcDate) {
+			//summary: set the current date from RFC 3339 formatted string or a date object, synonymous with setDate
+			this.setDate(rfcDate);
+		},			
+
+		setDate: function(/*Date|String*/dateObj) {
+			//summary: set the current date and update the UI
+			if(dateObj == ""){
+				this.value = "";
+				this._preInitUI(this.curMonth,false,true);
+			}else if(typeof dateObj=="string"){
+				this.value = dojo.date.fromRfc3339(dateObj);
+				this.value.setHours(0,0,0,0);
+			}else{
+				this.value = new Date(dateObj);
+				this.value.setHours(0,0,0,0);
+			}
+			if(this.selectedNode!=null){
+				dojo.html.removeClass(this.selectedNode,this.classNames.selectedDate);
+			}
+			if(this.clickedNode!=null){
+				dojo.debug('adding selectedDate');
+				dojo.html.addClass(this.clickedNode,this.classNames.selectedDate);
+				this.selectedNode = this.clickedNode;
+			}else{
+				//only call this if setDate was called by means other than clicking a date
+				this._preInitUI(this.value,false,true);
+			}
+			this.clickedNode=null;
+			this.onValueChanged(this.value);
+		},
+
+		_preInitUI: function(dateObj,initFirst,initUI) {
+			/*
+	 	              To get a sense of what month to highlight, we initialize on 
+	 	              the first Saturday of each month, since that will be either the first  
+	 	              of two or the second of three months being partially displayed, and  
+	 	              then work forwards and backwards from that point.
+			*/
+
+			//initFirst is to tell _initFirstDay if you want first day of the displayed calendar, or first day of the week for dateObj
+			//initUI tells preInitUI to go ahead and run initUI if set to true
+			if(typeof(this.startDate) == "string"){
+				this.startDate = dojo.date.fromRfc3339(this.startDate);
+			}
+			if(typeof(this.endDate) == "string"){
+				this.endDate = dojo.date.fromRfc3339(this.endDate);
+			}
+			this.startDate.setHours(0,0,0,0); //adjust startDate to be exactly midnight
+			this.endDate.setHours(24,0,0,-1); //adjusting endDate to be a fraction of a second before  midnight
+
+			if(dateObj<this.startDate||dateObj>this.endDate){
+				dateObj = new Date((dateObj<this.startDate)?this.startDate:this.endDate);
+			}
+			this.firstDay = this._initFirstDay(dateObj,initFirst);
+			this.selectedIsUsed = false;
+			this.currentIsUsed = false;
+			var nextDate = new Date(this.firstDay);
+			var tmpMonth = nextDate.getMonth();
+			this.curMonth = new Date(nextDate);
+			this.curMonth.setDate(nextDate.getDate()+6); //first saturday gives us the current Month
+			this.curMonth.setDate(1);
+			if(this.displayWeeks=="" || this.adjustWeeks){
+				this.adjustWeeks = true;
+				this.displayWeeks = Math.ceil((dojo.date.getDaysInMonth(this.curMonth) + this._getAdjustedDay(this.curMonth))/7);
+			}
+			var days = this.displayWeeks*7; //init total days to display
+			if(dojo.date.diff(this.startDate,this.endDate, dojo.date.dateParts.DAY) < days){
+				this.staticDisplay = true;
+				if(dojo.date.diff(nextDate,this.endDate, dojo.date.dateParts.DAY) > days){
+					this._preInitUI(this.startDate,true,false);
+					nextDate = new Date(this.firstDay);
+				}
+				this.curMonth = new Date(nextDate);
+				this.curMonth.setDate(nextDate.getDate()+6);
+				this.curMonth.setDate(1);
+				var curClass = (nextDate.getMonth() == this.curMonth.getMonth())?'current':'previous';
+			}
+			if(initUI){
+				this._initUI(days);
+			}
+		},
+		_initUI: function(days) {
+			dojo.dom.removeChildren(this.calendarDatesContainerNode);
+			for(var i=0;i<this.displayWeeks;i++){
+				this.calendarDatesContainerNode.appendChild(this.weekTemplate.cloneNode(true));
+			}
+
+			var nextDate = new Date(this.firstDay);
+			this._setMonthLabel(this.curMonth.getMonth());
+			this._setYearLabels(this.curMonth.getFullYear());
+			var calendarNodes = this.calendarDatesContainerNode.getElementsByTagName("td");
+			var calendarRows = this.calendarDatesContainerNode.getElementsByTagName("tr");
+			var currentCalendarNode;
+			for(i=0;i<days;i++){
+				//this is our new UI loop... one loop to rule them all, and in the datepicker bind them
+				currentCalendarNode = calendarNodes.item(i);
+				currentCalendarNode.innerHTML = nextDate.getDate();
+				currentCalendarNode.setAttribute("djDateValue",nextDate.valueOf());
+				var curClass = (nextDate.getMonth() != this.curMonth.getMonth() && Number(nextDate) < Number(this.curMonth))?'previous':(nextDate.getMonth()==this.curMonth.getMonth())?'current':'next';
+				var mappedClass = curClass;
+				if(this._isDisabledDate(nextDate)){
+					var classMap={previous:"disabledPrevious",current:"disabledCurrent",next:"disabledNext"};
+					mappedClass=classMap[curClass];
+				}
+				dojo.html.setClass(currentCalendarNode, this._getDateClassName(nextDate, mappedClass));
+				if(dojo.html.hasClass(currentCalendarNode,this.classNames.selectedDate)){
+					this.selectedNode = currentCalendarNode;
+				}
+				nextDate = dojo.date.add(nextDate, dojo.date.dateParts.DAY, 1);
+			}
+			this.lastDay = dojo.date.add(nextDate,dojo.date.dateParts.DAY,-1);
+			this._initControls();
+		},
+		_initControls: function(){
+			var d = this.firstDay;
+			var d2 = this.lastDay;
+			var decWeek, incWeek, decMonth, incMonth, decYear, incYear;
+			decWeek = incWeek = decMonth = incMonth = decYear = incYear = !this.staticDisplay;
+			with(dojo.date.dateParts){
+				var add = dojo.date.add;
+				if(decWeek && add(d,DAY,(-1*(this._getAdjustedDay(d)+1)))<this.startDate){
+					decWeek = decMonth = decYear = false;
+				}
+				if(incWeek && d2>this.endDate){
+					incWeek = incMonth = incYear = false;
+				}
+				if(decMonth && add(d,DAY,-1)<this.startDate){
+					decMonth = decYear = false;
+				}
+				if(incMonth && add(d2,DAY,1)>this.endDate){
+					incMonth = incYear = false;
+				}
+				if(decYear && add(d2,YEAR,-1)<this.startDate){
+					decYear = false;
+				}
+				if(incYear && add(d,YEAR,1)>this.endDate){
+					incYear = false;
+				}
+			}
+
+			function enableControl(node, enabled){
+				dojo.html.setVisibility(node, enabled ? '' : 'hidden');
+			}
+			enableControl(this.decreaseWeekNode,decWeek);
+			enableControl(this.increaseWeekNode,incWeek);
+			enableControl(this.decreaseMonthNode,decMonth);
+			enableControl(this.increaseMonthNode,incMonth);
+			enableControl(this.previousYearLabelNode,decYear);
+			enableControl(this.nextYearLabelNode,incYear);
+		},
+		
+		_incrementWeek: function(evt) {
+			var d = new Date(this.firstDay);
+			switch(evt.target) {
+				case this.increaseWeekNode.getElementsByTagName("img").item(0): 
+				case this.increaseWeekNode:
+					var tmpDate = dojo.date.add(d, dojo.date.dateParts.WEEK, 1);
+					if(tmpDate < this.endDate){
+						d = dojo.date.add(d, dojo.date.dateParts.WEEK, 1);
+					}
+					break;
+				case this.decreaseWeekNode.getElementsByTagName("img").item(0):
+				case this.decreaseWeekNode:
+					if(d >= this.startDate){
+						d = dojo.date.add(d, dojo.date.dateParts.WEEK, -1);
+					}
+					break;
+			}
+			this._preInitUI(d,true,true);
+		},
+	
+		_incrementMonth: function(evt) {
+			var d = new Date(this.curMonth);
+			var tmpDate = new Date(this.firstDay);
+			switch(evt.currentTarget) {
+				case this.increaseMonthNode.getElementsByTagName("img").item(0):
+				case this.increaseMonthNode:
+					tmpDate = dojo.date.add(tmpDate, dojo.date.dateParts.DAY, this.displayWeeks*7);
+					if(tmpDate < this.endDate){
+						d = dojo.date.add(d, dojo.date.dateParts.MONTH, 1);
+					}else{
+						var revertToEndDate = true;
+					}
+					break;
+				case this.decreaseMonthNode.getElementsByTagName("img").item(0):
+				case this.decreaseMonthNode:
+					if(tmpDate > this.startDate){
+						d = dojo.date.add(d, dojo.date.dateParts.MONTH, -1);
+					}else{
+						var revertToStartDate = true;
+					}
+					break;
+			}
+			if(revertToStartDate){
+				d = new Date(this.startDate);
+			}else if(revertToEndDate){
+				d = new Date(this.endDate);
+			}
+			this._preInitUI(d,false,true);
+		},
+	
+		_incrementYear: function(evt) {
+			var year = this.curMonth.getFullYear();
+			var tmpDate = new Date(this.firstDay);
+			switch(evt.target) {
+				case this.nextYearLabelNode:
+					tmpDate = dojo.date.add(tmpDate, dojo.date.dateParts.YEAR, 1);
+					if(tmpDate<this.endDate){
+						year++;
+					}else{
+						var revertToEndDate = true;
+					}
+					break;
+				case this.previousYearLabelNode:
+					tmpDate = dojo.date.add(tmpDate, dojo.date.dateParts.YEAR, -1);
+					if(tmpDate>this.startDate){
+						year--;
+					}else{
+						var revertToStartDate = true;
+					}
+					break;
+			}
+			var d;
+			if(revertToStartDate){
+				d = new Date(this.startDate);
+			}else if(revertToEndDate){
+				d = new Date(this.endDate);
+			}else{
+				d = new Date(year, this.curMonth.getMonth(), 1);
+			}
+			this._preInitUI(d,false,true);
+		},
+	
+		onIncrementWeek: function(/*Event*/evt) {
+			// summary: handler for increment week event
+			evt.stopPropagation();
+			if(!this.staticDisplay){
+				this._incrementWeek(evt);
+			}
+		},
+	
+		onIncrementMonth: function(/*Event*/evt) {
+			// summary: handler for increment month event
+			evt.stopPropagation();
+			if(!this.staticDisplay){
+				this._incrementMonth(evt);
+			}
+		},
+		
+		onIncrementYear: function(/*Event*/evt) {
+			// summary: handler for increment year event
+			evt.stopPropagation();
+			if(!this.staticDisplay){
+				this._incrementYear(evt);
+			}
+		},
+	
+		_setMonthLabel: function(monthIndex) {
+			this.monthLabelNode.innerHTML = dojo.date.getNames('months', 'wide', 'standAlone', this.lang)[monthIndex];
+		},
+		
+		_setYearLabels: function(year) {
+			var y = year - 1;
+			var that = this;
+			function f(n){
+				that[n+"YearLabelNode"].innerHTML =
+					dojo.date.format(new Date(y++, 0), {formatLength:'yearOnly', locale:that.lang});
+			}
+			f("previous");
+			f("current");
+			f("next");
+		},
+		
+		_getDateClassName: function(date, monthState) {
+			var currentClassName = this.classNames[monthState];
+			//we use Number comparisons because 2 dateObjects never seem to equal each other otherwise
+			if ((!this.selectedIsUsed && this.value) && (Number(date) == Number(this.value))) {
+				currentClassName = this.classNames.selectedDate + " " + currentClassName;
+				this.selectedIsUsed = true;
+			}
+			if((!this.currentIsUsed) && (Number(date) == Number(this.today))) {
+				currentClassName = currentClassName + " "  + this.classNames.currentDate;
+				this.currentIsUsed = true;
+			}
+			return currentClassName;
+		},
+	
+		onClick: function(/*Event*/evt) {
+			//summary: the click event handler
+			dojo.event.browser.stopEvent(evt);
+		},
+
+		_handleUiClick: function(/*Event*/evt) {
+			var eventTarget = evt.target;
+			if(eventTarget.nodeType != dojo.dom.ELEMENT_NODE){eventTarget = eventTarget.parentNode;}
+			dojo.event.browser.stopEvent(evt);
+			this.selectedIsUsed = this.todayIsUsed = false;
+			if(dojo.html.hasClass(eventTarget, this.classNames["disabledPrevious"])||dojo.html.hasClass(eventTarget, this.classNames["disabledCurrent"])||dojo.html.hasClass(eventTarget, this.classNames["disabledNext"])){
+				return; //this date is disabled... ignore it
+			}
+			this.clickedNode = eventTarget;
+			this.setDate(new Date(Number(dojo.html.getAttribute(eventTarget,'djDateValue'))));
+		},
+		
+		onValueChanged: function(/*Date*/date) {
+			//summary: the set date event handler
+		},
+		
+		_isDisabledDate: function(dateObj){
+			if(dateObj<this.startDate||dateObj>this.endDate){
+				return true;
+			}
+
+			return this.isDisabledDate(dateObj, this.lang);
+		},
+
+		isDisabledDate: function(/*Date*/dateObj, /*String?*/locale){
+		// summary:
+		//	May be overridden to disable certain dates in the calendar e.g. isDisabledDate=dojo.date.isWeekend
+
+			return false; // Boolean
+		},
+
+		_initFirstDay: function(/*Date*/dateObj, /*Boolean*/adj){
+			//adj: false for first day of month, true for first day of week adjusted by startOfWeek
+			var d = new Date(dateObj);
+			if(!adj){d.setDate(1);}
+			d.setDate(d.getDate()-this._getAdjustedDay(d,this.weekStartsOn));
+			d.setHours(0,0,0,0);
+			return d; // Date
+		},
+
+		_getAdjustedDay: function(/*Date*/dateObj){
+			//summary: used to adjust date.getDay() values to the new values based on the current first day of the week value
+			var days = [0,1,2,3,4,5,6];
+			if(this.weekStartsOn>0){
+				for(var i=0;i<this.weekStartsOn;i++){
+					days.unshift(days.pop());
+				}
+			}
+			return days[dateObj.getDay()]; // Number: 0..6 where 0=Sunday
+		},
+
+		destroy: function(){
+			dojo.widget.DatePicker.superclass.destroy.apply(this, arguments);
+			dojo.html.destroyNode(this.weekTemplate);
+		}
+	}
+);
+
+dojo.provide("dojo.widget.DropdownDatePicker");
+
+
+
+
+
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget(
+	"dojo.widget.DropdownDatePicker",
+	dojo.widget.DropdownContainer,
+	{
+		/*
+		summary: 
+			A form input for entering dates with a pop-up dojo.widget.DatePicker to aid in selection
+		
+			description: 
+				This is DatePicker in a DropdownContainer, it supports all features of DatePicker.
+		
+				The value displayed in the widget is localized according to the default algorithm provided
+				in dojo.date.format and dojo.date.parse.  It is possible to customize the user-visible formatting
+				with either the formatLength or displayFormat attributes.  The value sent to the server is
+				typically a locale-independent value in a hidden field as defined by the name attribute.
+				RFC3339 representation is used by default, but other options are available with saveFormat.
+		
+			usage: 
+				var ddp = dojo.widget.createWidget("DropdownDatePicker", {},   
+				dojo.byId("DropdownDatePickerNode")); 
+		 	 
+				<input dojoType="DropdownDatePicker">
+		*/
+
+		iconURL: dojo.uri.moduleUri("dojo.widget", "templates/images/dateIcon.gif"),
+
+		// formatLength: String
+		// 	Type of formatting used for visual display, appropriate to locale (choice of long, short, medium or full)
+		//  See dojo.date.format for details.
+		formatLength: "short",
+
+		// displayFormat: String
+		//	A pattern used for the visual display of the formatted date, e.g. dd/MM/yyyy.
+		//	Setting this overrides the default locale-specific settings as well as the formatLength
+		//	attribute.  See dojo.date.format for a reference which defines the formatting patterns.
+		displayFormat: "",
+
+		// saveFormat: String
+		//	Formatting scheme used when submitting the form element.  This formatting is used in a hidden
+		//  field (name) intended for server use, and is therefore typically locale-independent.
+		//  By default, uses rfc3339 style date formatting (rfc)
+		//	Use a pattern string like displayFormat or one of the following:
+		//	rfc|iso|posix|unix
+		saveFormat: "",
+
+		// value: String|Date
+		//	form value property in rfc3339 format. If =='today', will use today's date
+		value: "",
+
+		// name: String
+		// 	name of the form element, used to create a hidden field by this name for form element submission.
+		name: "",
+
+		// Implement various attributes from DatePicker
+
+		// displayWeeks: Integer
+		//	number of weeks to display 
+		displayWeeks: 6,
+
+		// adjustWeeks: Boolean
+		//	if true, weekly size of calendar changes to accomodate the month if false, 42 day format is used
+		adjustWeeks: false,
+
+		// startDate: String|Date
+		//	first available date in the calendar set
+		startDate: "1492-10-12",
+
+		// endDate: String|Date
+		//	last available date in the calendar set
+		endDate: "2941-10-12",
+
+		// weekStartsOn: Integer
+		//	adjusts the first day of the week 0==Sunday..6==Saturday
+		weekStartsOn: "",
+
+		// staticDisplay: Boolean
+		//	disable all incremental controls, must pick a date in the current display
+		staticDisplay: false,
+		
+		postMixInProperties: function(localProperties, frag){
+			// summary: see dojo.widget.DomWidget
+
+			dojo.widget.DropdownDatePicker.superclass.postMixInProperties.apply(this, arguments);
+			var messages = dojo.i18n.getLocalization("dojo.widget", "DropdownDatePicker", this.lang);
+			this.iconAlt = messages.selectDate;
+
+			//FIXME: should this be if/else/else?
+			if(typeof(this.value)=='string'&&this.value.toLowerCase()=='today'){
+				this.value = new Date();
+			}
+			if(this.value && isNaN(this.value)){
+				var orig = this.value;
+				this.value = dojo.date.fromRfc3339(this.value);
+				if(!this.value){this.value = new Date(orig); dojo.deprecated("dojo.widget.DropdownDatePicker", "date attributes must be passed in Rfc3339 format", "0.5");}
+			}
+			if(this.value && !isNaN(this.value)){
+				this.value = new Date(this.value);
+			}
+		},
+
+		fillInTemplate: function(args, frag){
+			// summary: see dojo.widget.DomWidget
+			dojo.widget.DropdownDatePicker.superclass.fillInTemplate.call(this, args, frag);
+			//attributes to be passed on to DatePicker
+			var dpArgs = {widgetContainerId: this.widgetId, lang: this.lang, value: this.value,
+				startDate: this.startDate, endDate: this.endDate, displayWeeks: this.displayWeeks,
+				weekStartsOn: this.weekStartsOn, adjustWeeks: this.adjustWeeks, staticDisplay: this.staticDisplay};
+
+			//build the args for DatePicker based on the public attributes of DropdownDatePicker
+			this.datePicker = dojo.widget.createWidget("DatePicker", dpArgs, this.containerNode, "child");
+			dojo.event.connect(this.datePicker, "onValueChanged", this, "_updateText");
+			dojo.event.connect(this.inputNode, "onChange", this, "_updateText");
+
+			if(this.value){
+				this._updateText();
+			}
+			this.containerNode.explodeClassName = "calendarBodyContainer";
+			this.valueNode.name=this.name;
+		},
+
+		getValue: function(){
+			// summary: return current date in RFC 3339 format
+			return this.valueNode.value; /*String*/
+		},
+
+		getDate: function(){
+			// summary: return current date as a Date object
+			return this.datePicker.value; /*Date*/
+		},
+
+		setValue: function(/*Date|String*/rfcDate){
+			//summary: set the current date from RFC 3339 formatted string or a date object, synonymous with setDate
+			this.setDate(rfcDate);
+		},
+
+		setDate: function(/*Date|String*/dateObj){
+			// summary: set the current date and update the UI
+			this.datePicker.setDate(dateObj);
+			this._syncValueNode();
+		},
+	
+		_updateText: function(){
+			// summary: updates the <input> field according to the current value (ie, displays the formatted date)
+			this.inputNode.value = this.datePicker.value ?
+				dojo.date.format(this.datePicker.value,
+					{formatLength:this.formatLength, datePattern:this.displayFormat, selector:'dateOnly', locale:this.lang}) :
+				"";
+
+			if(this.value < this.datePicker.startDate||this.value>this.datePicker.endDate){
+				this.inputNode.value = "";
+			}
+			this._syncValueNode();
+			this.onValueChanged(this.getDate());
+			this.hideContainer();
+		},
+
+		onValueChanged: function(/*Date*/dateObj){
+			//summary: triggered when this.value is changed
+		},
+		
+		onInputChange: function(){
+			// summary: callback when user manually types a date into the <input> field
+			var input = dojo.string.trim(this.inputNode.value);
+			if(input){
+				var inputDate = dojo.date.parse(input,
+						{formatLength:this.formatLength, datePattern:this.displayFormat, selector:'dateOnly', locale:this.lang});			
+				// if inputDate is in a valid range, we call setDate
+				if(!this.datePicker._isDisabledDate(inputDate)){
+					this.setDate(inputDate);
+				}
+			} else {
+				if(input=="") { this.datePicker.setDate(""); }
+				this.valueNode.value = input;
+			}
+
+			// If the date entered didn't parse, reset to the old date.  KISS, for now.
+			//TODO: usability?  should we provide more feedback somehow? an error notice?
+			// seems redundant to do this if the parse failed, but at least until we have validation,
+			// this will fix up the display of entries like 01/32/2006
+			if(input){ this._updateText(); }
+		},
+
+		_syncValueNode: function(){
+			var date = this.datePicker.value;
+			var value = "";
+			switch(this.saveFormat.toLowerCase()){
+				case "rfc": case "iso": case "":
+					value = dojo.date.toRfc3339(date, 'dateOnly');
+					break;
+				case "posix": case "unix":
+					value = Number(date);
+					break;
+				default:
+					if(date){
+						value = dojo.date.format(date, {datePattern:this.saveFormat, selector:'dateOnly', locale:this.lang});
+					}
+			}
+			this.valueNode.value = value;
+		},
+		
+		destroy: function(/*Boolean*/finalize){
+			this.datePicker.destroy(finalize);
+			dojo.widget.DropdownDatePicker.superclass.destroy.apply(this, arguments);
+		}
+	}
+);
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.StrutsDatePicker");
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsDatePicker",
+  dojo.widget.DropdownDatePicker, {
+  widgetType : "StrutsDatePicker",
+
+  valueNotifyTopics : "",
+  valueNotifyTopicsArray : null,
+  tabIndex : "",
+
+  postCreate: function() {
+    struts.widget.StrutsDatePicker.superclass.postCreate.apply(this, arguments);
+
+    //set cssClass
+    if(this.extraArgs["class"]) {
+      dojo.html.setClass(this.inputNode, this.extraArgs["class"]);
+    }
+
+    //set cssStyle
+    if(this.extraArgs.style) {
+      dojo.html.setStyleText(this.inputNode, this.extraArgs.style);
+    }
+
+    //value topics
+    if(!dojo.string.isBlank(this.valueNotifyTopics)) {
+      this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
+    }
+
+    //tabindex
+    if(!dojo.string.isBlank(this.tabIndex)) {
+      this.inputNode.tabIndex = this.tabIndex;
+    }
+  },
+
+  _syncValueNode:function () {
+    var date = this.datePicker.value;
+    var value = "";
+    switch (this.saveFormat.toLowerCase()) {
+      case "rfc":
+      case "iso":
+      case "":
+        value = dojo.date.toRfc3339(date);
+        break;
+      case "posix":
+      case "unix":
+        value = Number(date);
+        break;
+      default:
+        if (date) {
+            value = dojo.date.format(date, {datePattern:this.saveFormat, selector:"dateOnly", locale:this.lang});
+        }
+    }
+    this.valueNode.value = value;
+  },
+
+  _updateText : function() {
+    struts.widget.StrutsDatePicker.superclass._updateText.apply(this, arguments);
+    if(this.valueNotifyTopicsArray != null) {
+      for(var i = 0; i < this.valueNotifyTopicsArray.length; i++) {
+        var topic = this.valueNotifyTopicsArray[i];
+        if(!dojo.string.isBlank(topic)) {
+          try {
+            dojo.event.topic.publish(topic, this.inputNode.value, this.getValue(), this);
+          } catch(ex) {
+            dojo.debug(ex);
+          }
+        }
+      }
+    }
+  }
+});
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.BindEvent");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.BindEvent",
+  struts.widget.Bind, {
+  widgetType : "BindEvent",
+
+  sources: "",
+
+  postCreate : function() {
+    struts.widget.BindEvent.superclass.postCreate.apply(this);
+    var self = this;
+
+    if(!dojo.string.isBlank(this.events) && !dojo.string.isBlank(this.sources)) {
+      var eventsArray = this.events.split(",");
+      var sourcesArray = this.sources.split(",");
+
+      if(eventsArray && this.domNode) {
+        //events
+        dojo.lang.forEach(eventsArray, function(event) {
+          //sources
+          dojo.lang.forEach(sourcesArray, function(source) {
+            var sourceObject = dojo.byId(source);
+            if(sourceObject) {
+              dojo.event.connect(sourceObject, event, function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                self.reloadContents();
+              });
+            }
+          });
+        });
+      }
+    }
+  }
+});
+
+
+dojo.provide("dojo.widget.TreeSelector");
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.TreeSelector", dojo.widget.HtmlWidget, function() {
+	this.eventNames = {};
+
+	this.listenedTrees = [];
+
+},
+{
+	widgetType: "TreeSelector",
+	selectedNode: null,
+
+	dieWithTree: false,
+
+	eventNamesDefault: {
+		select : "select",
+		destroy : "destroy",
+		deselect : "deselect",
+		dblselect: "dblselect" // select already selected node.. Edit or whatever
+	},
+
+	initialize: function() {
+
+		for(var name in this.eventNamesDefault) {
+			if (dojo.lang.isUndefined(this.eventNames[name])) {
+				this.eventNames[name] = this.widgetId+"/"+this.eventNamesDefault[name];
+			}
+		}
+
+	},
+
+
+	destroy: function() {
+		dojo.event.topic.publish(this.eventNames.destroy, { source: this } );
+
+		return dojo.widget.HtmlWidget.prototype.destroy.apply(this, arguments);
+	},
+
+
+	listenTree: function(tree) {
+		dojo.event.topic.subscribe(tree.eventNames.titleClick, this, "select");
+		dojo.event.topic.subscribe(tree.eventNames.iconClick, this, "select");
+		dojo.event.topic.subscribe(tree.eventNames.collapse, this, "onCollapse");
+		dojo.event.topic.subscribe(tree.eventNames.moveFrom, this, "onMoveFrom");
+		dojo.event.topic.subscribe(tree.eventNames.removeNode, this, "onRemoveNode");
+		dojo.event.topic.subscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+
+		/* remember all my trees to deselect when element is movedFrom them */
+		this.listenedTrees.push(tree);
+	},
+
+
+	unlistenTree: function(tree) {
+
+		dojo.event.topic.unsubscribe(tree.eventNames.titleClick, this, "select");
+		dojo.event.topic.unsubscribe(tree.eventNames.iconClick, this, "select");
+		dojo.event.topic.unsubscribe(tree.eventNames.collapse, this, "onCollapse");
+		dojo.event.topic.unsubscribe(tree.eventNames.moveFrom, this, "onMoveFrom");
+		dojo.event.topic.unsubscribe(tree.eventNames.removeNode, this, "onRemoveNode");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+
+
+		for(var i=0; i<this.listenedTrees.length; i++){
+           if(this.listenedTrees[i] === tree){
+                   this.listenedTrees.splice(i, 1);
+                   break;
+           }
+		}
+	},
+
+
+	onTreeDestroy: function(message) {
+
+		this.unlistenTree(message.source);
+
+		if (this.dieWithTree) {
+			//dojo.debug("Killing myself "+this.widgetId);
+			this.destroy();
+			//dojo.debug("done");
+		}
+	},
+
+
+	// deselect node if parent is collapsed
+	onCollapse: function(message) {
+		if (!this.selectedNode) return;
+
+		var node = message.source;
+		var parent = this.selectedNode.parent;
+		while (parent !== node && parent.isTreeNode) {
+			parent = parent.parent;
+		}
+		if (parent.isTreeNode) {
+			this.deselect();
+		}
+	},
+
+
+
+	select: function(message) {
+		var node = message.source;
+		var e = message.event;
+
+		if (this.selectedNode === node) {
+			if(e.ctrlKey || e.shiftKey || e.metaKey){
+				// If the node is currently selected, and they select it again while holding
+				// down a meta key, it deselects it
+				this.deselect();
+				return;
+			}
+			dojo.event.topic.publish(this.eventNames.dblselect, { node: node });
+			return;
+		}
+
+		if (this.selectedNode) {
+			this.deselect();
+		}
+
+		this.doSelect(node);
+
+		dojo.event.topic.publish(this.eventNames.select, {node: node} );
+	},
+
+	/**
+	 * Deselect node if target tree is out of our concern
+	 */
+	onMoveFrom: function(message) {
+		if (message.child !== this.selectedNode) {
+			return;
+		}
+
+		if (!dojo.lang.inArray(this.listenedTrees, message.newTree)) {
+			this.deselect();
+		}
+	},
+
+	onRemoveNode: function(message) {
+		if (message.child !== this.selectedNode) {
+			return;
+		}
+
+		this.deselect();
+	},
+
+	doSelect: function(node){
+
+		node.markSelected();
+
+		this.selectedNode = node;
+	},
+
+	deselect: function(){
+
+		var node = this.selectedNode;
+
+		this.selectedNode = null;
+		node.unMarkSelected();
+		dojo.event.topic.publish(this.eventNames.deselect, {node: node} );
+
+	}
+
+});
+
+
+
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.StrutsTreeSelector");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsTreeSelector",
+  dojo.widget.TreeSelector, {
+  widgetType : "StrutsTreeSelector",
+  
+  selectedNotifyTopics : "",
+  collapsedNotifyTopics : "",
+  expandedNotifyTopics : "",
+  
+  selectedNotifyTopicsArray : null,
+  collapsedNotifyTopicsArray : null,
+  expandedNotifyTopicsArray : null,
+  
+  eventNamesDefault: {
+    select : "select",
+    destroy : "destroy",
+    deselect : "deselect",
+    dblselect: "dblselect", // select already selected node.. Edit or whatever
+    expand: "expand",
+    collapse: "collapse"
+  },
+  
+  initialize: function () {
+    struts.widget.StrutsTreeSelector.superclass.initialize.apply(this);
+    
+    if(!dojo.string.isBlank(this.selectedNotifyTopics)) {
+      this.selectedNotifyTopicsArray = this.selectedNotifyTopics.split(",");
+    }
+
+    if(!dojo.string.isBlank(this.selectedNotifyTopics)) {
+      this.collapsedNotifyTopicsArray = this.collapsedNotifyTopics.split(",");
+    }
+    
+    if(!dojo.string.isBlank(this.selectedNotifyTopics)) {
+      this.expandedNotifyTopicsArray = this.expandedNotifyTopics.split(",");
+    }
+  },
+  
+  listenTree: function(tree) {
+    dojo.event.topic.subscribe(tree.eventNames.collapse, this, "collapse");
+    dojo.event.topic.subscribe(tree.eventNames.expand, this, "expand");
+    struts.widget.StrutsTreeSelector.superclass.listenTree.apply(this, [tree]);
+  },
+  
+  unlistenTree: function(tree) {
+    dojo.event.topic.unsubscribe(tree.eventNames.collapse, this, "collapse");
+    dojo.event.topic.unsubscribe(tree.eventNames.expand, this, "expand");
+    struts.widget.StrutsTreeSelector.superclass.unlistenTree.apply(this, [tree]);
+  },
+
+  publishTopics : function(topics, node) {
+    if(topics != null) {
+      for(var i = 0; i < topics.length; i++) {
+        var topic = topics[i];
+        if(!dojo.string.isBlank(topic)) {
+          try {
+            dojo.event.topic.publish(topic, node);
+          } catch(ex) {
+            dojo.debug(ex);
+          }
+        }
+      }
+    }
+  },
+  
+  select:function (message) {
+    var node = message.source;
+    var e = message.event;
+    if (this.selectedNode === node) {
+      if (e.ctrlKey || e.shiftKey || e.metaKey) {
+        this.deselect();
+        return;
+      }
+      dojo.event.topic.publish(this.eventNames.dblselect, {node:node});
+      return;
+    }
+    if (this.selectedNode) {
+      this.deselect();
+    }
+    this.doSelect(node);
+    
+    this.publishTopics(this.selectedNotifyTopicsArray, {node: node});
+  },
+  
+  expand: function(message) {
+    var node = message.source;
+    this.publishTopics(this.expandedNotifyTopicsArray, {node: node});
+  },
+  
+  collapse: function(message) {
+    var node = message.source;
+    this.publishTopics(this.collapsedNotifyTopicsArray, {node: node});
+  }
+});
+
+dojo.provide("dojo.widget.PageContainer");
+
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.PageContainer", dojo.widget.HtmlWidget, {
+	// summary
+	//	A container that has multiple children, but shows only
+	//	one child at a time (like looking at the pages in a book one by one).
+	//
+	//	Publishes topics <widgetId>-addChild, <widgetId>-removeChild, and <widgetId>-selectChild
+	//
+	//	Can be base class for container, Wizard, Show, etc.
+
+	isContainer: true,
+
+	// doLayout: Boolean
+	//  if true, change the size of my currently displayed child to match my size
+	doLayout: true,
+
+	templateString: "<div dojoAttachPoint='containerNode'></div>",
+
+	// selectedChild: String
+	//   id of the currently shown page
+	selectedChild: "",
+
+	fillInTemplate: function(args, frag) {
+		// Copy style info from input node to output node
+		var source = this.getFragNodeRef(frag);
+		dojo.html.copyStyle(this.domNode, source);
+		dojo.widget.PageContainer.superclass.fillInTemplate.apply(this, arguments);
+	},
+
+	postCreate: function(args, frag) {
+		if(this.children.length){
+			// Setup each page panel
+			dojo.lang.forEach(this.children, this._setupChild, this);
+
+			// Figure out which child to initially display
+			var initialChild;
+			if(this.selectedChild){
+				this.selectChild(this.selectedChild);
+			}else{
+				for(var i=0; i<this.children.length; i++){
+					if(this.children[i].selected){
+						this.selectChild(this.children[i]);
+						break;
+					}
+				}
+				if(!this.selectedChildWidget){
+					this.selectChild(this.children[0]);
+				}
+			}
+		}
+	},
+
+	addChild: function(child){
+		dojo.widget.PageContainer.superclass.addChild.apply(this, arguments);
+		this._setupChild(child);
+
+		// in case the tab labels have overflowed from one line to two lines
+		this.onResized();
+
+		// if this is the first child, then select it
+		if(!this.selectedChildWidget){
+			this.selectChild(child);
+		}
+	},
+
+	_setupChild: function(/*Widget*/ page){
+		// Summary: Add the given child to this page container
+
+		page.hide();
+		
+		// since we are setting the width/height of the child elements, they need
+		// to be position:relative, or IE has problems (See bug #2033)
+		page.domNode.style.position="relative";
+
+		// publish the addChild event for panes added via addChild(), and the original panes too
+		dojo.event.topic.publish(this.widgetId+"-addChild", page);
+	},
+
+	removeChild: function(/*Widget*/ page){
+		dojo.widget.PageContainer.superclass.removeChild.apply(this, arguments);
+
+		// If we are being destroyed than don't run the code below (to select another page), because we are deleting
+		// every page one by one
+		if(this._beingDestroyed){ return; }
+
+		// this will notify any tablists to remove a button; do this first because it may affect sizing
+		dojo.event.topic.publish(this.widgetId+"-removeChild", page);
+
+		// in case the tab labels now take up one line instead of two lines
+		this.onResized();
+
+		if (this.selectedChildWidget === page) {
+			this.selectedChildWidget = undefined;
+			if (this.children.length > 0) {
+				this.selectChild(this.children[0], true);
+			}
+		}
+	},
+
+	selectChild: function(/*Widget*/ page, /*Widget*/ callingWidget){
+		// summary
+		//	Show the given widget (which must be one of my children)
+		page = dojo.widget.byId(page);
+		this.correspondingPageButton = callingWidget;
+
+		// Deselect old page and select new one
+		if(this.selectedChildWidget){
+			this._hideChild(this.selectedChildWidget);
+		}
+		this.selectedChildWidget = page;
+		this.selectedChild = page.widgetId;
+		this._showChild(page);
+		page.isFirstChild = (page == this.children[0]);
+		page.isLastChild = (page == this.children[this.children.length-1]);
+		dojo.event.topic.publish(this.widgetId+"-selectChild", page);
+	},
+
+	forward: function(){
+		// Summary: advance to next page
+		var index = dojo.lang.find(this.children, this.selectedChildWidget);
+		this.selectChild(this.children[index+1]);
+	},
+
+	back: function(){
+		// Summary: go back to previous page
+		var index = dojo.lang.find(this.children, this.selectedChildWidget);
+		this.selectChild(this.children[index-1]);
+	},
+
+	onResized: function(){
+		// Summary: called when any page is shown, to make it fit the container correctly
+		if(this.doLayout && this.selectedChildWidget){
+			with(this.selectedChildWidget.domNode.style){
+				top = dojo.html.getPixelValue(this.containerNode, "padding-top", true);
+				left = dojo.html.getPixelValue(this.containerNode, "padding-left", true);
+			}
+			var content = dojo.html.getContentBox(this.containerNode);
+			this.selectedChildWidget.resizeTo(content.width, content.height);
+		}
+	},
+
+	_showChild: function(/*Widget*/ page) {
+		// size the current page (in case this is the first time it's being shown, or I have been resized)
+		if(this.doLayout){
+			var content = dojo.html.getContentBox(this.containerNode);
+			page.resizeTo(content.width, content.height);
+		}
+
+		page.selected=true;
+		page.show();
+	},
+
+	_hideChild: function(/*Widget*/ page) {
+		page.selected=false;
+		page.hide();
+	},
+
+	closeChild: function(/*Widget*/ page) {
+		// summary
+		//	callback when user clicks the [X] to remove a page
+		//	if onClose() returns true then remove and destroy the childd
+		var remove = page.onClose(this, page);
+		if(remove) {
+			this.removeChild(page);
+			// makes sure we can clean up executeScripts in ContentPane onUnLoad
+			page.destroy();
+		}
+	},
+
+	destroy: function(){
+		this._beingDestroyed = true;
+		dojo.event.topic.destroy(this.widgetId+"-addChild");
+		dojo.event.topic.destroy(this.widgetId+"-removeChild");
+		dojo.event.topic.destroy(this.widgetId+"-selectChild");
+		dojo.widget.PageContainer.superclass.destroy.apply(this, arguments);
+	}
+});
+
+
+dojo.widget.defineWidget(
+    "dojo.widget.PageController",
+    dojo.widget.HtmlWidget,
+	{
+		// summary
+		//	Set of buttons to select a page in a page list.
+		//	Monitors the specified PageContaine, and whenever a page is
+		//	added, deleted, or selected, updates itself accordingly.
+
+		templateString: "<span wairole='tablist' dojoAttachEvent='onKey'></span>",
+		isContainer: true,
+
+		// containerId: String
+		//	the id of the page container that I point to
+		containerId: "",
+
+		// buttonWidget: String
+		//	the name of the button widget to create to correspond to each page
+		buttonWidget: "PageButton",
+
+		// class: String
+		//	Class name to apply to the top dom node
+		"class": "dojoPageController",
+
+		fillInTemplate: function() {
+			dojo.html.addClass(this.domNode, this["class"]);  // "class" is a reserved word in JS
+			dojo.widget.wai.setAttr(this.domNode, "waiRole", "role", "tablist");
+		},
+
+		postCreate: function(){
+			this.pane2button = {};		// mapping from panes to buttons
+
+			// If children have already been added to the page container then create buttons for them
+			var container = dojo.widget.byId(this.containerId);
+			if(container){
+				dojo.lang.forEach(container.children, this.onAddChild, this);
+			}
+
+			dojo.event.topic.subscribe(this.containerId+"-addChild", this, "onAddChild");
+			dojo.event.topic.subscribe(this.containerId+"-removeChild", this, "onRemoveChild");
+			dojo.event.topic.subscribe(this.containerId+"-selectChild", this, "onSelectChild");
+		},
+
+		destroy: function(){
+			dojo.event.topic.unsubscribe(this.containerId+"-addChild", this, "onAddChild");
+			dojo.event.topic.unsubscribe(this.containerId+"-removeChild", this, "onRemoveChild");
+			dojo.event.topic.unsubscribe(this.containerId+"-selectChild", this, "onSelectChild");
+			dojo.widget.PageController.superclass.destroy.apply(this, arguments);
+		},
+
+		onAddChild: function(/*Widget*/ page){
+			// summary
+			//   Called whenever a page is added to the container.
+			//   Create button corresponding to the page.
+			var button = dojo.widget.createWidget(this.buttonWidget,
+				{
+					label: page.label,
+					closeButton: page.closable
+				});
+			this.addChild(button);
+			this.domNode.appendChild(button.domNode);
+			this.pane2button[page]=button;
+			page.controlButton = button;	// this value might be overwritten if two tabs point to same container
+
+			var _this = this;
+			dojo.event.connect(button, "onClick", function(){ _this.onButtonClick(page); });
+			dojo.event.connect(button, "onCloseButtonClick", function(){ _this.onCloseButtonClick(page); });
+		},
+
+		onRemoveChild: function(/*Widget*/ page){
+			// summary
+			//   Called whenever a page is removed from the container.
+			//   Remove the button corresponding to the page.
+			if(this._currentChild == page){ this._currentChild = null; }
+			var button = this.pane2button[page];
+			if(button){
+				button.destroy();
+			}
+			this.pane2button[page] = null;
+		},
+
+		onSelectChild: function(/*Widget*/ page){
+			// Summary
+			//	Called when a page has been selected in the PageContainer, either by me or by another PageController
+			if(this._currentChild){
+				var oldButton=this.pane2button[this._currentChild];
+				oldButton.clearSelected();
+			}
+			var newButton=this.pane2button[page];
+			newButton.setSelected();
+			this._currentChild=page;
+		},
+
+		onButtonClick: function(/*Widget*/ page){
+			// summary
+			//   Called whenever one of my child buttons is pressed in an attempt to select a page
+			var container = dojo.widget.byId(this.containerId);	// TODO: do this via topics?
+			container.selectChild(page, false, this);
+		},
+
+		onCloseButtonClick: function(/*Widget*/ page){
+			// summary
+			//   Called whenever one of my child buttons [X] is pressed in an attempt to close a page
+			var container = dojo.widget.byId(this.containerId);
+			container.closeChild(page);
+		},
+
+		onKey: function(/*Event*/ evt){
+			// summary:
+			//   Handle keystrokes on the page list, for advancing to next/previous button
+
+			if( (evt.keyCode == evt.KEY_RIGHT_ARROW)||
+				(evt.keyCode == evt.KEY_LEFT_ARROW) ){
+				var current = 0;
+				var next = null;	// the next button to focus on
+				
+				// find currently focused button in children array
+				var current = dojo.lang.find(this.children, this.pane2button[this._currentChild]);
+				
+				// pick next button to focus on
+				if(evt.keyCode == evt.KEY_RIGHT_ARROW){
+					next = this.children[ (current+1) % this.children.length ]; 
+				}else{ // is LEFT_ARROW
+					next = this.children[ (current+ (this.children.length-1)) % this.children.length ];
+				}
+				
+				dojo.event.browser.stopEvent(evt);
+				next.onClick();
+			}
+		}
+	}
+);
+
+dojo.widget.defineWidget("dojo.widget.PageButton", dojo.widget.HtmlWidget,
+{
+	// summary
+	//	Internal widget used by PageList.
+	//	The button-like or tab-like object you click to select or delete a page
+
+	templateString: "<span class='item'>" +
+						"<span dojoAttachEvent='onClick' dojoAttachPoint='titleNode' class='selectButton'>${this.label}</span>" +
+						"<span dojoAttachEvent='onClick:onCloseButtonClick' class='closeButton'>[X]</span>" +
+					"</span>",
+
+	// label: String
+	//  Name to print on the button
+	label: "foo",
+	
+	// closeButton: Boolean
+	//	true iff we should also print a close icon to destroy corresponding page
+	closeButton: false,
+
+	onClick: function(){
+		// summary
+		//  Basically this is the attach point PageController listens to, to select the page
+		this.focus();
+	},
+
+	onCloseButtonMouseOver: function(){
+		// summary
+		//	The close button changes color a bit when you mouse over	
+		dojo.html.addClass(this.closeButtonNode, "closeHover");
+	},
+
+	onCloseButtonMouseOut: function(){
+		// summary
+		// 	Revert close button to normal color on mouse out
+		dojo.html.removeClass(this.closeButtonNode, "closeHover");
+	},
+
+	onCloseButtonClick: function(/*Event*/ evt){
+		// summary
+		//	Handle clicking the close button for this tab
+	},
+	
+	setSelected: function(){
+		// summary
+		//	This is run whenever the page corresponding to this button has been selected
+		dojo.html.addClass(this.domNode, "current");
+		this.titleNode.setAttribute("tabIndex","0");
+	},
+	
+	clearSelected: function(){
+		// summary
+		//	This function is run whenever the page corresponding to this button has been deselected (and another page has been shown)
+		dojo.html.removeClass(this.domNode, "current");
+		this.titleNode.setAttribute("tabIndex","-1");
+	},
+
+	focus: function(){
+		// summary
+		//	This will focus on the this button (for accessibility you need to do this when the button is selected)
+		if(this.titleNode.focus){	// mozilla 1.7 doesn't have focus() func
+			this.titleNode.focus();
+		}
+	}
+});
+
+// These arguments can be specified for the children of a PageContainer.
+// Since any widget can be specified as a PageContainer child, mix them
+// into the base widget class.  (This is a hack, but it's effective.)
+dojo.lang.extend(dojo.widget.Widget, {
+	// label: String
+	//		Label or title of this widget.  Used by TabContainer to the name the tab, etc.
+	label: "",
+	
+	// selected: Boolean
+	//		Is this child currently selected?
+	selected: false,
+	
+	// closable: Boolean
+	//		True if user can close (destroy) this child, such as (for example) clicking the X on the tab.
+	closable: false,	// true if user can close this tab pane
+	
+	onClose: function(){
+		// summary: Callback if someone tries to close the child, child will be closed if func returns true
+		return true;
+	}
+});
+
+dojo.provide("dojo.widget.TabContainer");
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.TabContainer", dojo.widget.PageContainer, {
+
+	// summary
+	//	A TabContainer is a container that has multiple panes, but shows only
+	//	one pane at a time.  There are a set of tabs corresponding to each pane,
+	//	where each tab has the title (aka label) of the pane, and optionally a close button.
+	//
+	//	Publishes topics <widgetId>-addChild, <widgetId>-removeChild, and <widgetId>-selectChild
+	//	(where <widgetId> is the id of the TabContainer itself.
+
+	// labelPosition: String
+	//   Defines where tab labels go relative to tab content.
+	//   "top", "bottom", "left-h", "right-h"
+	labelPosition: "top",
+	
+	// closeButton: String
+	//   If closebutton=="tab", then every tab gets a close button.
+	//   DEPRECATED:  Should just say closable=true on each
+	//   pane you want to be closable.
+	closeButton: "none",
+
+	templateString: null,	// override setting in PageContainer
+	templateString:"<div id=\"${this.widgetId}\" class=\"dojoTabContainer\">\r\n\t<div dojoAttachPoint=\"tablistNode\"></div>\r\n\t<div class=\"dojoTabPaneWrapper\" dojoAttachPoint=\"containerNode\" dojoAttachEvent=\"onKey\" waiRole=\"tabpanel\"></div>\r\n</div>\r\n",
+	templateCssString:".dojoTabContainer {\r\n\tposition : relative;\r\n}\r\n\r\n.dojoTabPaneWrapper {\r\n\tborder : 1px solid #6290d2;\r\n\t_zoom: 1; /* force IE6 layout mode so top border doesnt disappear */\r\n\tdisplay: block;\r\n\tclear: both;\r\n\toverflow: hidden;\r\n}\r\n\r\n.dojoTabLabels-top {\r\n\tposition : relative;\r\n\ttop : 0px;\r\n\tleft : 0px;\r\n\toverflow : visible;\r\n\tmargin-bottom : -1px;\r\n\twidth : 100%;\r\n\tz-index: 2;\t/* so the bottom of the tab label will cover up the border of dojoTabPaneWrapper */\r\n}\r\n\r\n.dojoTabNoLayout.dojoTabLabels-top .dojoTab {\r\n\tmargin-bottom: -1px;\r\n\t_margin-bottom: 0px; /* IE filter so top border lines up correctly */\r\n}\r\n\r\n.dojoTab {\r\n\tposition : relative;\r\n\tfloat : left;\r\n\tpadding-left : 9px;\r\n\tborder-bottom : 1px solid #6290d2;\r\n\tbackground : url(images/tab_left.gif) no-repeat left top;\r\n\tcursor: pointer;\r\n\twhite-space: nowrap;\r\n\tz-index: 3;\r\n}\r\n\r\n.dojoTab div {\r\n\tdisplay : block;\r\n\tpadding : 4px 15px 4px 6px;\r\n\tbackground : url(images/tab_top_right.gif) no-repeat right top;\r\n\tcolor : #333;\r\n\tfont-size : 90%;\r\n}\r\n\r\n.dojoTab .close {\r\n\tdisplay : inline-block;\r\n\theight : 12px;\r\n\twidth : 12px;\r\n\tpadding : 0 12px 0 0;\r\n\tmargin : 0 -10px 0 10px;\r\n\tcursor : default;\r\n\tfont-size: small;\r\n}\r\n\r\n.dojoTab .closeImage {\r\n\tbackground : url(images/tab_close.gif) no-repeat right top;\r\n}\r\n\r\n.dojoTab .closeHover {\r\n\tbackground-image : url(images/tab_close_h.gif);\r\n}\r\n\r\n.dojoTab.current {\r\n\tpadding-bottom : 1px;\r\n\tborder-bottom : 0;\r\n\tbackground-position : 0 -150px;\r\n}\r\n\r\n.dojoTab.current div {\r\n\tpadding-bottom : 5px;\r\n\tmargin-bottom : -1px;\r\n\tbackground-position : 100% -150px;\r\n}\r\n\r\n/* bottom tabs */\r\n\r\n.dojoTabLabels-bottom {\r\n\tposition : relative;\r\n\tbottom : 0px;\r\n\tleft : 0px;\r\n\toverflow : visible;\r\n\tmargin-top : -1px;\r\n\twidth : 100%;\r\n\tz-index: 2;\r\n}\r\n\r\n.dojoTabNoLayout.dojoTabLabels-bottom {\r\n\tposition : relative;\r\n}\r\n\r\n.dojoTabLabels-bottom .dojoTab {\r\n\tborder-top :  1px solid #6290d2;\r\n\tborder-bottom : 0;\r\n\tbackground : url(images/tab_bot_left.gif) no-repeat left bottom;\r\n}\r\n\r\n.dojoTabLabels-bottom .dojoTab div {\r\n\tbackground : url(images/tab_bot_right.gif) no-repeat right bottom;\r\n}\r\n\r\n.dojoTabLabels-bottom .dojoTab.current {\r\n\tborder-top : 0;\r\n\tbackground : url(images/tab_bot_left_curr.gif) no-repeat left bottom;\r\n}\r\n\r\n.dojoTabLabels-bottom .dojoTab.current div {\r\n\tpadding-top : 4px;\r\n\tbackground : url(images/tab_bot_right_curr.gif) no-repeat right bottom;\r\n}\r\n\r\n/* right-h tabs */\r\n\r\n.dojoTabLabels-right-h {\r\n\toverflow : visible;\r\n\tmargin-left : -1px;\r\n\tz-index: 2;\r\n}\r\n\r\n.dojoTabLabels-right-h .dojoTab {\r\n\tpadding-left : 0;\r\n\tborder-left :  1px solid #6290d2;\r\n\tborder-bottom : 0;\r\n\tbackground : url(images/tab_bot_right.gif) no-repeat right bottom;\r\n\tfloat : none;\r\n}\r\n\r\n.dojoTabLabels-right-h .dojoTab div {\r\n\tpadding : 4px 15px 4px 15px;\r\n}\r\n\r\n.dojoTabLabels-right-h .dojoTab.current {\r\n\tborder-left :  0;\r\n\tborder-bottom :  1px solid #6290d2;\r\n}\r\n\r\n/* left-h tabs */\r\n\r\n.dojoTabLabels-left-h {\r\n\toverflow : visible;\r\n\tmargin-right : -1px;\r\n\tz-index: 2;\r\n}\r\n\r\n.dojoTabLabels-left-h .dojoTab {\r\n\tborder-right :  1px solid #6290d2;\r\n\tborder-bottom : 0;\r\n\tfloat : none;\r\n\tbackground : url(images/tab_top_left.gif) no-repeat left top;\r\n}\r\n\r\n.dojoTabLabels-left-h .dojoTab.current {\r\n\tborder-right : 0;\r\n\tborder-bottom :  1px solid #6290d2;\r\n\tpadding-bottom : 0;\r\n\tbackground : url(images/tab_top_left.gif) no-repeat 0 -150px;\r\n}\r\n\r\n.dojoTabLabels-left-h .dojoTab div {\r\n\tbackground : 0;\r\n\tborder-bottom :  1px solid #6290d2;\r\n}\r\n",templateCssPath: dojo.uri.moduleUri("dojo.widget", "templates/TabContainer.css"),
+
+	// selectedTab: String
+	//	initially selected tab (widgetId)
+	//	DEPRECATED: use selectedChild instead.
+	selectedTab: "",
+
+	postMixInProperties: function() {
+		if(this.selectedTab){
+			dojo.deprecated("selectedTab deprecated, use selectedChild instead, will be removed in", "0.5");
+			this.selectedChild=this.selectedTab;
+		}
+		if(this.closeButton!="none"){
+			dojo.deprecated("closeButton deprecated, use closable='true' on each child instead, will be removed in", "0.5");
+		}
+		dojo.widget.TabContainer.superclass.postMixInProperties.apply(this, arguments);
+	},
+
+	fillInTemplate: function() {
+		// create the tab list that will have a tab (a.k.a. tab button) for each tab panel
+		this.tablist = dojo.widget.createWidget("TabController",
+			{
+				id: this.widgetId + "_tablist",
+				labelPosition: this.labelPosition,
+				doLayout: this.doLayout,
+				containerId: this.widgetId
+			}, this.tablistNode);
+		dojo.widget.TabContainer.superclass.fillInTemplate.apply(this, arguments);
+	},
+
+	postCreate: function(args, frag) {	
+		dojo.widget.TabContainer.superclass.postCreate.apply(this, arguments);
+
+		// size the container pane to take up the space not used by the tabs themselves
+		this.onResized();
+	},
+
+	_setupChild: function(tab){
+		if(this.closeButton=="tab" || this.closeButton=="pane"){
+			// TODO: remove in 0.5
+			tab.closable=true;
+		}
+		dojo.html.addClass(tab.domNode, "dojoTabPane");
+		dojo.widget.TabContainer.superclass._setupChild.apply(this, arguments);
+	},
+
+	onResized: function(){
+		// Summary: Configure the content pane to take up all the space except for where the tabs are
+		if(!this.doLayout){ return; }
+
+		// position the labels and the container node
+		var labelAlign=this.labelPosition.replace(/-h/,"");
+		var children = [
+			{domNode: this.tablist.domNode, layoutAlign: labelAlign},
+			{domNode: this.containerNode, layoutAlign: "client"}
+		];
+		dojo.widget.html.layout(this.domNode, children);
+
+		if(this.selectedChildWidget){
+			var containerSize = dojo.html.getContentBox(this.containerNode);
+			this.selectedChildWidget.resizeTo(containerSize.width, containerSize.height);
+		}
+	},
+
+	selectTab: function(tab, callingWidget){
+		dojo.deprecated("use selectChild() rather than selectTab(), selectTab() will be removed in", "0.5");
+		this.selectChild(tab, callingWidget);
+	},
+
+	onKey: function(e){
+		// summary
+		//	Keystroke handling for keystrokes on the tab panel itself (that were bubbled up to me)
+		//	Ctrl-up: focus is returned from the pane to the tab button
+		//	Alt-del: close tab
+		if(e.keyCode == e.KEY_UP_ARROW && e.ctrlKey){
+			// set focus to current tab
+			var button = this.correspondingTabButton || this.selectedTabWidget.tabButton;
+			button.focus();
+			dojo.event.browser.stopEvent(e);
+		}else if(e.keyCode == e.KEY_DELETE && e.altKey){
+			if (this.selectedChildWidget.closable){
+				this.closeChild(this.selectedChildWidget);
+				dojo.event.browser.stopEvent(e);
+			}
+		}
+	},
+
+	destroy: function(){
+		this.tablist.destroy();
+		dojo.widget.TabContainer.superclass.destroy.apply(this, arguments);
+	}
+});
+
+dojo.widget.defineWidget(
+    "dojo.widget.TabController",
+    dojo.widget.PageController,
+	{
+		// summary
+		// 	Set of tabs (the things with labels and a close button, that you click to show a tab panel).
+		//	Lets the user select the currently shown pane in a TabContainer or PageContainer.
+		//	TabController also monitors the TabContainer, and whenever a pane is
+		//	added or deleted updates itself accordingly.
+
+		templateString: "<div wairole='tablist' dojoAttachEvent='onKey'></div>",
+
+		// labelPosition: String
+		//   Defines where tab labels go relative to tab content.
+		//   "top", "bottom", "left-h", "right-h"
+		labelPosition: "top",
+
+		doLayout: true,
+
+		// class: String
+		//	Class name to apply to the top dom node
+		"class": "",
+
+		// buttonWidget: String
+		//	the name of the tab widget to create to correspond to each page
+		buttonWidget: "TabButton",
+
+		postMixInProperties: function() {
+			if(!this["class"]){
+				this["class"] = "dojoTabLabels-" + this.labelPosition + (this.doLayout ? "" : " dojoTabNoLayout");
+			}
+			dojo.widget.TabController.superclass.postMixInProperties.apply(this, arguments);
+		}
+	}
+);
+
+dojo.widget.defineWidget("dojo.widget.TabButton", dojo.widget.PageButton,
+{
+	// summary
+	//	A tab (the thing you click to select a pane).
+	//	Contains the title (aka label) of the pane, and optionally a close-button to destroy the pane.
+	//	This is an internal widget and should not be instantiated directly.
+
+	templateString: "<div class='dojoTab' dojoAttachEvent='onClick'>"
+						+"<div dojoAttachPoint='innerDiv'>"
+							+"<span dojoAttachPoint='titleNode' tabIndex='-1' waiRole='tab'>${this.label}</span>"
+							+"<span dojoAttachPoint='closeButtonNode' class='close closeImage' style='${this.closeButtonStyle}'"
+							+"    dojoAttachEvent='onMouseOver:onCloseButtonMouseOver; onMouseOut:onCloseButtonMouseOut; onClick:onCloseButtonClick'></span>"
+						+"</div>"
+					+"</div>",
+
+	postMixInProperties: function(){
+		this.closeButtonStyle = this.closeButton ? "" : "display: none";
+		dojo.widget.TabButton.superclass.postMixInProperties.apply(this, arguments);
+	},
+
+	fillInTemplate: function(){
+		dojo.html.disableSelection(this.titleNode);
+		dojo.widget.TabButton.superclass.fillInTemplate.apply(this, arguments);
+	},
+	
+	onCloseButtonClick: function(/*Event*/ evt){
+		// since the close button is located inside the select button, make sure that the select
+		// button doesn't inadvertently get an onClick event
+		evt.stopPropagation();
+		dojo.widget.TabButton.superclass.onCloseButtonClick.apply(this, arguments);
+	}
+});
+
+
+dojo.widget.defineWidget(
+	"dojo.widget.a11y.TabButton",
+	dojo.widget.TabButton,
+	{
+		// summary
+		//	Tab for display in high-contrast mode (where background images don't show up).
+		//	This is an internal widget and shouldn't be instantiated directly.
+
+		imgPath: dojo.uri.moduleUri("dojo.widget", "templates/images/tab_close.gif"),
+		
+		templateString: "<div class='dojoTab' dojoAttachEvent='onClick;onKey'>"
+							+"<div dojoAttachPoint='innerDiv'>"
+								+"<span dojoAttachPoint='titleNode' tabIndex='-1' waiRole='tab'>${this.label}</span>"
+								+"<img class='close' src='${this.imgPath}' alt='[x]' style='${this.closeButtonStyle}'"
+								+"    dojoAttachEvent='onClick:onCloseButtonClick'>"
+							+"</div>"
+						+"</div>"
+	}
+);
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.StrutsTabContainer");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsTabContainer",
+  dojo.widget.TabContainer, {
+  widgetType : "StrutsTabContainer",
+
+  afterSelectTabNotifyTopics : "",
+  afterSelectTabNotifyTopicsArray : null,
+  beforeSelectTabNotifyTopics : "",
+  beforeSelectTabNotifyTopicsArray : null,
+
+  disabledTabCssClass : "strutsDisabledTab",
+  
+  postCreate : function() {
+    struts.widget.StrutsTabContainer.superclass.postCreate.apply(this);
+    
+    //before topics
+    if(!dojo.string.isBlank(this.beforeSelectTabNotifyTopics)) {
+      this.beforeSelectTabNotifyTopicsArray = this.beforeSelectTabNotifyTopics.split(",");
+    }
+    
+    //after topics
+    if(!dojo.string.isBlank(this.afterSelectTabNotifyTopics)) {
+      this.afterSelectTabNotifyTopicsArray = this.afterSelectTabNotifyTopics.split(",");
+    }
+    
+    // add disabled class to disabled tabs
+    if(this.disabledTabCssClass) {
+      dojo.lang.forEach(this.children, function(div){
+        if(div.disabled) {
+          this.disableTab(div);
+        }
+      });
+    }
+  },
+   
+  selectChild: function (tab, callingWidget)  {
+    if(!tab.disabled) {
+      var cancel = {"cancel" : false};
+      
+      if(this.beforeSelectTabNotifyTopicsArray) {
+        var self = this;
+        dojo.lang.forEach(this.beforeSelectTabNotifyTopicsArray, function(topic) {
+          try {
+            dojo.event.topic.publish(topic, cancel, tab, self);
+          } catch(ex){
+            dojo.debug(ex);
+          }
+        });   
+      }
+      
+      if(!cancel.cancel) {
+        struts.widget.StrutsTabContainer.superclass.selectChild.apply(this, [tab, callingWidget]);
+        
+        if(this.afterSelectTabNotifyTopicsArray) {
+          var self = this;
+          dojo.lang.forEach(this.afterSelectTabNotifyTopicsArray, function(topic) {
+            try {
+              dojo.event.topic.publish(topic, tab, self);
+            } catch(ex){
+              dojo.debug(ex);
+            }
+          });   
+        }
+      } 
+    } 
+  },
+  
+  disableTab : function(t) {
+    var tabWidget = this.getTabWidget(t);
+    tabWidget.disabled = true;
+    dojo.html.addClass(tabWidget.controlButton.domNode, this.disabledTabCssClass);
+  },
+  
+  enableTab : function(t) {
+    var tabWidget = this.getTabWidget(t);
+    tabWidget.disabled = false;
+    dojo.html.removeClass(tabWidget.controlButton.domNode, this.disabledTabCssClass);
+  },
+  
+  getTabWidget : function(t) {
+    if(dojo.lang.isNumber(t)) {
+      //tab index
+      return this.children[t];
+    } else if(dojo.lang.isString(t)) {
+      //tab id
+      return dojo.widget.byId(t);
+    } else {
+      //tab widget?
+      return t;
+    }
+  }
+});
+
+dojo.provide("dojo.widget.TreeNode");
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.TreeNode", dojo.widget.HtmlWidget, function() {
+	this.actionsDisabled = [];
+},
+{
+	widgetType: "TreeNode",
+
+	loadStates: {
+		UNCHECKED: "UNCHECKED",
+    	LOADING: "LOADING",
+    	LOADED: "LOADED"
+	},
+
+
+	actions: {
+		MOVE: "MOVE",
+    	REMOVE: "REMOVE",
+    	EDIT: "EDIT",
+    	ADDCHILD: "ADDCHILD"
+	},
+
+	isContainer: true,
+
+	lockLevel: 0, // lock ++ unlock --, so nested locking works fine
+
+
+	templateString: ('<div class="dojoTreeNode"> '
+		+ '<span treeNode="${this.widgetId}" class="dojoTreeNodeLabel" dojoAttachPoint="labelNode"> '
+		+ '		<span dojoAttachPoint="titleNode" dojoAttachEvent="onClick: onTitleClick" class="dojoTreeNodeLabelTitle">${this.title}</span> '
+		+ '</span> '
+		+ '<span class="dojoTreeNodeAfterLabel" dojoAttachPoint="afterLabelNode">${this.afterLabel}</span> '
+		+ '<div dojoAttachPoint="containerNode" style="display:none"></div> '
+		+ '</div>').replace(/(>|<)\s+/g, '$1'), // strip whitespaces between nodes
+
+
+	childIconSrc: "",
+	childIconFolderSrc: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/closed.gif"), // for under root parent item child icon,
+	childIconDocumentSrc: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/document.gif"), // for under root parent item child icon,
+
+	childIcon: null,
+	isTreeNode: true,
+
+	objectId: "", // the widget represents an object
+
+	afterLabel: "",
+	afterLabelNode: null, // node to the left of labelNode
+
+	// an icon left from childIcon: imgs[-2].
+	// if +/- for folders, blank for leaves
+	expandIcon: null,
+
+	title: "",
+	object: "", // node may have object attached, settable from HTML
+	isFolder: false,
+
+	labelNode: null, // the item label
+	titleNode: null, // the item title
+	imgs: null, // an array of icons imgs
+
+	expandLevel: "", // expand to level
+
+	tree: null,
+
+	depth: 0,
+
+	isExpanded: false,
+
+	state: null,  // after creation will change to loadStates: "loaded/loading/unchecked"
+	domNodeInitialized: false,  // domnode is initialized with icons etc
+
+
+	isFirstChild: function() {
+		return this.getParentIndex() == 0 ? true: false;
+	},
+
+	isLastChild: function() {
+		return this.getParentIndex() == this.parent.children.length-1 ? true : false;
+	},
+
+	lock: function(){ return this.tree.lock.apply(this, arguments) },
+	unlock: function(){ return this.tree.unlock.apply(this, arguments) },
+	isLocked: function(){ return this.tree.isLocked.apply(this, arguments) },
+	cleanLock: function(){ return this.tree.cleanLock.apply(this, arguments) },
+
+	actionIsDisabled: function(action) {
+		var _this = this;
+
+		var disabled = false;
+
+		if (this.tree.strictFolders && action == this.actions.ADDCHILD && !this.isFolder) {
+			disabled = true;
+		}
+
+		if (dojo.lang.inArray(_this.actionsDisabled, action)) {
+			disabled = true;
+		}
+
+		if (this.isLocked()) {
+			disabled = true;
+		}
+
+		return disabled;
+	},
+
+	getInfo: function() {
+		// No title here (title may be widget)
+		var info = {
+			widgetId: this.widgetId,
+			objectId: this.objectId,
+			index: this.getParentIndex(),
+			isFolder: this.isFolder
+		}
+
+		return info;
+	},
+
+	initialize: function(args, frag){
+
+		//dojo.debug(this.title)
+
+		this.state = this.loadStates.UNCHECKED;
+
+		for(var i=0; i<this.actionsDisabled.length; i++) {
+			this.actionsDisabled[i] = this.actionsDisabled[i].toUpperCase();
+		}
+
+		this.expandLevel = parseInt(this.expandLevel);
+
+	},
+
+
+	/**
+	 * Change visible node depth by appending/prepending with blankImgs
+	 * @param depthDiff Integer positive => move right, negative => move left
+	*/
+	adjustDepth: function(depthDiff) {
+
+		for(var i=0; i<this.children.length; i++) {
+			this.children[i].adjustDepth(depthDiff);
+		}
+
+		this.depth += depthDiff;
+
+		if (depthDiff>0) {
+			for(var i=0; i<depthDiff; i++) {
+				var img = this.tree.makeBlankImg();
+				this.imgs.unshift(img);
+				//dojo.debugShallow(this.domNode);
+				dojo.html.insertBefore(this.imgs[0], this.domNode.firstChild);
+
+			}
+		}
+		if (depthDiff<0) {
+			for(var i=0; i<-depthDiff;i++) {
+				this.imgs.shift();
+				dojo.html.removeNode(this.domNode.firstChild);
+			}
+		}
+
+	},
+
+
+	markLoading: function() {
+		this._markLoadingSavedIcon = this.expandIcon.src;
+		this.expandIcon.src = this.tree.expandIconSrcLoading;
+	},
+
+	// if icon is "Loading" then
+	unMarkLoading: function() {
+		if (!this._markLoadingSavedIcon) return;
+
+		var im = new Image();
+		im.src = this.tree.expandIconSrcLoading;
+
+		//dojo.debug("Unmark "+this.expandIcon.src+" : "+im.src);
+		if (this.expandIcon.src == im.src) {
+			this.expandIcon.src = this._markLoadingSavedIcon;
+		}
+		this._markLoadingSavedIcon = null;
+	},
+
+
+	setFolder: function() {
+		dojo.event.connect(this.expandIcon, 'onclick', this, 'onTreeClick');
+		this.expandIcon.src = this.isExpanded ? this.tree.expandIconSrcMinus : this.tree.expandIconSrcPlus;
+		this.isFolder = true;
+	},
+
+
+	createDOMNode: function(tree, depth){
+
+		this.tree = tree;
+		this.depth = depth;
+
+
+		//
+		// add the tree icons
+		//
+
+		this.imgs = [];
+
+		for(var i=0; i<this.depth+1; i++){
+
+			var img = this.tree.makeBlankImg();
+
+			this.domNode.insertBefore(img, this.labelNode);
+
+			this.imgs.push(img);
+		}
+
+
+		this.expandIcon = this.imgs[this.imgs.length-1];
+
+
+		this.childIcon = this.tree.makeBlankImg();
+
+		// add to images before the title
+		this.imgs.push(this.childIcon);
+
+		dojo.html.insertBefore(this.childIcon, this.titleNode);
+
+		// node with children(from source html) becomes folder on build stage.
+		if (this.children.length || this.isFolder) {
+			this.setFolder();
+		}
+		else {
+			// leaves are always loaded
+			//dojo.debug("Set "+this+" state to loaded");
+			this.state = this.loadStates.LOADED;
+		}
+
+		dojo.event.connect(this.childIcon, 'onclick', this, 'onIconClick');
+
+
+		//
+		// create the child rows
+		//
+
+
+		for(var i=0; i<this.children.length; i++){
+			this.children[i].parent = this;
+
+			var node = this.children[i].createDOMNode(this.tree, this.depth+1);
+
+			this.containerNode.appendChild(node);
+		}
+
+
+		if (this.children.length) {
+			this.state = this.loadStates.LOADED;
+		}
+
+		this.updateIcons();
+
+		this.domNodeInitialized = true;
+
+		dojo.event.topic.publish(this.tree.eventNames.createDOMNode, { source: this } );
+
+		return this.domNode;
+	},
+
+	onTreeClick: function(e){
+		dojo.event.topic.publish(this.tree.eventNames.treeClick, { source: this, event: e });
+	},
+
+	onIconClick: function(e){
+		dojo.event.topic.publish(this.tree.eventNames.iconClick, { source: this, event: e });
+	},
+
+	onTitleClick: function(e){
+		dojo.event.topic.publish(this.tree.eventNames.titleClick, { source: this, event: e });
+	},
+
+	markSelected: function() {
+		dojo.html.addClass(this.titleNode, 'dojoTreeNodeLabelSelected');
+	},
+
+
+	unMarkSelected: function() {
+		//dojo.debug('unmark')
+		dojo.html.removeClass(this.titleNode, 'dojoTreeNodeLabelSelected');
+	},
+
+	updateExpandIcon: function() {
+		if (this.isFolder){
+			this.expandIcon.src = this.isExpanded ? this.tree.expandIconSrcMinus : this.tree.expandIconSrcPlus;
+		} else {
+			this.expandIcon.src = this.tree.blankIconSrc;
+		}
+	},
+
+	/* set the grid under the expand icon */
+	updateExpandGrid: function() {
+
+		if (this.tree.showGrid){
+			if (this.depth){
+				this.setGridImage(-2, this.isLastChild() ? this.tree.gridIconSrcL : this.tree.gridIconSrcT);
+			}else{
+				if (this.isFirstChild()){
+					this.setGridImage(-2, this.isLastChild() ? this.tree.gridIconSrcX : this.tree.gridIconSrcY);
+				}else{
+					this.setGridImage(-2, this.isLastChild() ? this.tree.gridIconSrcL : this.tree.gridIconSrcT);
+				}
+			}
+		}else{
+			this.setGridImage(-2, this.tree.blankIconSrc);
+		}
+
+	},
+
+	/* set the grid under the child icon */
+	updateChildGrid: function() {
+
+		if ((this.depth || this.tree.showRootGrid) && this.tree.showGrid){
+			this.setGridImage(-1, (this.children.length && this.isExpanded) ? this.tree.gridIconSrcP : this.tree.gridIconSrcC);
+		}else{
+			if (this.tree.showGrid && !this.tree.showRootGrid){
+				this.setGridImage(-1, (this.children.length && this.isExpanded) ? this.tree.gridIconSrcZ : this.tree.blankIconSrc);
+			}else{
+				this.setGridImage(-1, this.tree.blankIconSrc);
+			}
+		}
+
+
+	},
+
+	updateParentGrid: function() {
+		var parent = this.parent;
+
+		//dojo.debug("updateParentGrid "+this);
+
+		for(var i=0; i<this.depth; i++){
+
+			//dojo.debug("Parent "+parent);
+
+			var idx = this.imgs.length-(3+i);
+			var img = (this.tree.showGrid && !parent.isLastChild()) ? this.tree.gridIconSrcV : this.tree.blankIconSrc;
+
+			//dojo.debug("Image "+img+" for "+idx);
+
+			this.setGridImage(idx, img);
+
+			parent = parent.parent;
+		}
+	},
+
+	updateExpandGridColumn: function() {
+		if (!this.tree.showGrid) return;
+
+		var _this = this;
+
+		var icon = this.isLastChild() ? this.tree.blankIconSrc : this.tree.gridIconSrcV;
+
+		dojo.lang.forEach(_this.getDescendants(),
+			function(node) { node.setGridImage(_this.depth, icon); }
+		);
+
+		this.updateExpandGrid();
+	},
+
+	updateIcons: function(){
+
+
+		//dojo.profile.start("updateIcons")
+
+		//dojo.debug("Update icons for "+this)
+		//dojo.debug(this.isFolder)
+
+		this.imgs[0].style.display = this.tree.showRootGrid ? 'inline' : 'none';
+
+
+		//
+		// set the expand icon
+		//
+
+
+		//
+		// set the child icon
+		//
+		this.buildChildIcon();
+
+		this.updateExpandGrid();
+		this.updateChildGrid();
+		this.updateParentGrid();
+
+
+
+		dojo.profile.stop("updateIcons")
+
+	},
+
+	buildChildIcon: function() {
+		// IE (others?) tries to download whatever is on src attribute so setting "url()" like before isnt a good idea
+		// Only results in a 404
+		if(this.childIconSrc){
+			this.childIcon.src = this.childIconSrc;
+		}
+		this.childIcon.style.display = this.childIconSrc ? 'inline' : 'none';
+	},
+
+	setGridImage: function(idx, src){
+
+		if (idx < 0){
+			idx = this.imgs.length + idx;
+		}
+
+		//if (idx >= this.imgs.length-2) return;
+		this.imgs[idx].style.backgroundImage = 'url(' + src + ')';
+	},
+
+
+	updateIconTree: function(){
+		this.tree.updateIconTree.call(this);
+	},
+
+
+
+
+	expand: function(){
+		if (this.isExpanded) return;
+
+		if (this.children.length) {
+			this.showChildren();
+		}
+
+		this.isExpanded = true;
+
+		this.updateExpandIcon();
+
+		dojo.event.topic.publish(this.tree.eventNames.expand, {source: this} );
+	},
+
+	collapse: function(){
+		if (!this.isExpanded) return;
+
+		this.hideChildren();
+		this.isExpanded = false;
+
+		this.updateExpandIcon();
+
+		dojo.event.topic.publish(this.tree.eventNames.collapse, {source: this} );
+	},
+
+	hideChildren: function(){
+		this.tree.toggleObj.hide(
+			this.containerNode, this.toggleDuration, this.explodeSrc, dojo.lang.hitch(this, "onHide")
+		);
+
+		/* if dnd is in action, recalculate changed coordinates */
+		if(dojo.exists(dojo, 'dnd.dragManager.dragObjects') && dojo.dnd.dragManager.dragObjects.length) {
+			dojo.dnd.dragManager.cacheTargetLocations();
+		}
+	},
+
+	showChildren: function(){
+		this.tree.toggleObj.show(
+			this.containerNode, this.toggleDuration, this.explodeSrc, dojo.lang.hitch(this, "onShow")
+		);
+
+		/* if dnd is in action, recalculate changed coordinates */
+		if(dojo.exists(dojo, 'dnd.dragManager.dragObjects') && dojo.dnd.dragManager.dragObjects.length) {
+			dojo.dnd.dragManager.cacheTargetLocations();
+		}
+	},
+
+	addChild: function(){
+		return this.tree.addChild.apply(this, arguments);
+	},
+
+	doAddChild: function(){
+		return this.tree.doAddChild.apply(this, arguments);
+	},
+
+
+
+	/* Edit current node : change properties and update contents */
+	edit: function(props) {
+		dojo.lang.mixin(this, props);
+		if (props.title) {
+			this.titleNode.innerHTML = this.title;
+		}
+
+		if (props.afterLabel) {
+			this.afterLabelNode.innerHTML = this.afterLabel;
+		}
+
+		if (props.childIconSrc) {
+			this.buildChildIcon();
+		}
+
+
+	},
+
+
+	removeNode: function(){ return this.tree.removeNode.apply(this, arguments) },
+	doRemoveNode: function(){ return this.tree.doRemoveNode.apply(this, arguments) },
+
+
+	toString: function() {
+		return "["+this.widgetType+" Tree:"+this.tree+" ID:"+this.widgetId+" Title:"+this.title+"]";
+
+	}
+
+});
+
+
+
+
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.StrutsTreeNode");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsTreeNode",
+  dojo.widget.TreeNode, {
+  widgetType : "StrutsTreeNode",
+  
+  loaded : false,
+  
+  expand : function() {
+    if(!this.loaded) {
+      this.reload();
+    }  
+    struts.widget.StrutsTreeNode.superclass.expand.apply(this);
+  },
+  
+  removeChildren : function() {
+    var self = this;
+    var childrenCopy = dojo.lang.toArray(this.children);
+    dojo.lang.forEach(childrenCopy, function(node) {
+      self.removeNode(node);
+    });
+  },
+  
+  reload : function() {
+    var href = this.tree.href;
+    this.loaded = true;
+    
+    if(!dojo.string.isBlank(href)) {
+      //clear children list
+      this.removeChildren();
+      //pass widgetId as parameter
+      var tmpHref = href + (href.indexOf("?") > -1 ? "&" : "?") + "nodeId=" + this.widgetId;
+
+      var self = this;
+      this.markLoading();
+                
+      dojo.io.bind({
+        url: tmpHref,
+        useCache: false,
+        preventCache: true,
+        handler: function(type, data, e) {
+          if(type == 'load') {
+            //data should be an array
+            if(data) {
+              dojo.lang.forEach(data, function(descr) {
+                //create node for eachd descriptor
+                var newNode = dojo.widget.createWidget("struts:StrutsTreeNode",{
+                  title   : descr.label,
+                  isFolder: descr.hasChildren,
+                  widgetId: descr.id   
+                });
+                self.addChild(newNode);
+              }); 
+            }
+          }
+          
+          self.unMarkLoading();    
+        },
+        mimetype: "text/json"
+      });
+    }
+  }
+});
+
+dojo.provide("dojo.json");
+
+
+
+
+dojo.json = {
+	// jsonRegistry: AdapterRegistry a registry of type-based serializers
+	jsonRegistry: new dojo.AdapterRegistry(),
+
+	register: function(	/*String*/		name, 
+						/*function*/	check, 
+						/*function*/	wrap, 
+						/*optional, boolean*/ override){
+		// summary:
+		//		Register a JSON serialization function. JSON serialization
+		//		functions should take one argument and return an object
+		//		suitable for JSON serialization:
+		//			- string
+		//			- number
+		//			- boolean
+		//			- undefined
+		//			- object
+		//				- null
+		//				- Array-like (length property that is a number)
+		//				- Objects with a "json" method will have this method called
+		//				- Any other object will be used as {key:value, ...} pairs
+		//			
+		//		If override is given, it is used as the highest priority JSON
+		//		serialization, otherwise it will be used as the lowest.
+		// name:
+		//		a descriptive type for this serializer
+		// check:
+		//		a unary function that will be passed an object to determine
+		//		whether or not wrap will be used to serialize the object
+		// wrap:
+		//		the serialization function
+		// override:
+		//		optional, determines if the this serialization function will be
+		//		given priority in the test order
+
+		dojo.json.jsonRegistry.register(name, check, wrap, override);
+	},
+
+	evalJson: function(/*String*/ json){
+		// summary:
+		// 		evaluates the passed string-form of a JSON object
+		// json: 
+		//		a string literal of a JSON item, for instance:
+		//			'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'
+		// return:
+		//		the result of the evaluation
+
+		// FIXME: should this accept mozilla's optional second arg?
+		try {
+			return eval("(" + json + ")");
+		}catch(e){
+			dojo.debug(e);
+			return json;
+		}
+	},
+
+	serialize: function(/*Object*/ o){
+		// summary:
+		//		Create a JSON serialization of an object, note that this
+		//		doesn't check for infinite recursion, so don't do that!
+		// o:
+		//		an object to be serialized. Objects may define their own
+		//		serialization via a special "__json__" or "json" function
+		//		property. If a specialized serializer has been defined, it will
+		//		be used as a fallback.
+		// return:
+		//		a String representing the serialized version of the passed
+		//		object
+
+		var objtype = typeof(o);
+		if(objtype == "undefined"){
+			return "undefined";
+		}else if((objtype == "number")||(objtype == "boolean")){
+			return o + "";
+		}else if(o === null){
+			return "null";
+		}
+		if (objtype == "string") { return dojo.string.escapeString(o); }
+		// recurse
+		var me = arguments.callee;
+		// short-circuit for objects that support "json" serialization
+		// if they return "self" then just pass-through...
+		var newObj;
+		if(typeof(o.__json__) == "function"){
+			newObj = o.__json__();
+			if(o !== newObj){
+				return me(newObj);
+			}
+		}
+		if(typeof(o.json) == "function"){
+			newObj = o.json();
+			if (o !== newObj) {
+				return me(newObj);
+			}
+		}
+		// array
+		if(objtype != "function" && typeof(o.length) == "number"){
+			var res = [];
+			for(var i = 0; i < o.length; i++){
+				var val = me(o[i]);
+				if(typeof(val) != "string"){
+					val = "undefined";
+				}
+				res.push(val);
+			}
+			return "[" + res.join(",") + "]";
+		}
+		// look in the registry
+		try {
+			window.o = o;
+			newObj = dojo.json.jsonRegistry.match(o);
+			return me(newObj);
+		}catch(e){
+			// dojo.debug(e);
+		}
+		// it's a function with no adapter, bad
+		if(objtype == "function"){
+			return null;
+		}
+		// generic object code path
+		res = [];
+		for (var k in o){
+			var useKey;
+			if (typeof(k) == "number"){
+				useKey = '"' + k + '"';
+			}else if (typeof(k) == "string"){
+				useKey = dojo.string.escapeString(k);
+			}else{
+				// skip non-string or number keys
+				continue;
+			}
+			val = me(o[k]);
+			if(typeof(val) != "string"){
+				// skip non-serializable values
+				continue;
+			}
+			res.push(useKey + ":" + val);
+		}
+		return "{" + res.join(",") + "}";
+	}
+};
+
+/**
+ * TreeDrag* specialized on managing subtree drags
+ * It selects nodes and visualises what's going on,
+ * but delegates real actions upon tree to the controller
+ *
+ * This code is considered a part of controller
+*/
+
+dojo.provide("dojo.dnd.TreeDragAndDrop");
+
+
+
+
+
+
+
+dojo.dnd.TreeDragSource = function(node, syncController, type, treeNode){
+	this.controller = syncController;
+	this.treeNode = treeNode;
+
+	dojo.dnd.HtmlDragSource.call(this, node, type);
+}
+
+dojo.inherits(dojo.dnd.TreeDragSource, dojo.dnd.HtmlDragSource);
+
+dojo.lang.extend(dojo.dnd.TreeDragSource, {
+	onDragStart: function(){
+		/* extend adds functions to prototype */
+		var dragObject = dojo.dnd.HtmlDragSource.prototype.onDragStart.call(this);
+		//dojo.debugShallow(dragObject)
+
+		dragObject.treeNode = this.treeNode;
+
+		dragObject.onDragStart = dojo.lang.hitch(dragObject, function(e) {
+
+			/* save selection */
+			this.savedSelectedNode = this.treeNode.tree.selector.selectedNode;
+			if (this.savedSelectedNode) {
+				this.savedSelectedNode.unMarkSelected();
+			}
+
+			var result = dojo.dnd.HtmlDragObject.prototype.onDragStart.apply(this, arguments);
+
+
+			/* remove background grid from cloned object */
+			var cloneGrid = this.dragClone.getElementsByTagName('img');
+			for(var i=0; i<cloneGrid.length; i++) {
+				cloneGrid.item(i).style.backgroundImage='url()';
+			}
+
+			return result;
+
+
+		});
+
+		dragObject.onDragEnd = function(e) {
+
+			/* restore selection */
+			if (this.savedSelectedNode) {
+				this.savedSelectedNode.markSelected();
+			}
+			//dojo.debug(e.dragStatus);
+
+			return dojo.dnd.HtmlDragObject.prototype.onDragEnd.apply(this, arguments);
+		}
+		//dojo.debug(dragObject.domNode.outerHTML)
+
+
+		return dragObject;
+	},
+
+	onDragEnd: function(e){
+
+
+		 var res = dojo.dnd.HtmlDragSource.prototype.onDragEnd.call(this, e);
+
+
+		 return res;
+	}
+});
+
+// .......................................
+
+dojo.dnd.TreeDropTarget = function(domNode, controller, type, treeNode){
+
+	this.treeNode = treeNode;
+	this.controller = controller; // I will sync-ly process drops
+	
+	dojo.dnd.HtmlDropTarget.apply(this, [domNode, type]);
+}
+
+dojo.inherits(dojo.dnd.TreeDropTarget, dojo.dnd.HtmlDropTarget);
+
+dojo.lang.extend(dojo.dnd.TreeDropTarget, {
+
+	autoExpandDelay: 1500,
+	autoExpandTimer: null,
+
+
+	position: null,
+
+	indicatorStyle: "2px black solid",
+
+	showIndicator: function(position) {
+
+		// do not change style too often, cause of blinking possible
+		if (this.position == position) {
+			return;
+		}
+
+		//dojo.debug(position)
+
+		this.hideIndicator();
+
+		this.position = position;
+
+		if (position == "before") {
+			this.treeNode.labelNode.style.borderTop = this.indicatorStyle;
+		} else if (position == "after") {
+			this.treeNode.labelNode.style.borderBottom = this.indicatorStyle;
+		} else if (position == "onto") {
+			this.treeNode.markSelected();
+		}
+
+
+	},
+
+	hideIndicator: function() {
+		this.treeNode.labelNode.style.borderBottom="";
+		this.treeNode.labelNode.style.borderTop="";
+		this.treeNode.unMarkSelected();
+		this.position = null;
+	},
+
+
+
+	// is the target possibly ok ?
+	// This function is run on dragOver, but drop possibility is also determined by position over node
+	// that's why acceptsWithPosition is called
+	// doesnt take index into account ( can change while moving mouse w/o changing target )
+
+
+	/**
+	 * Coarse (tree-level) access check.
+	 * We can't determine real accepts status w/o position
+	*/
+	onDragOver: function(e){
+//dojo.debug("onDragOver for "+e);
+
+
+		var accepts = dojo.dnd.HtmlDropTarget.prototype.onDragOver.apply(this, arguments);
+
+		//dojo.debug("TreeDropTarget.onDragOver accepts:"+accepts)
+
+		if (accepts && this.treeNode.isFolder && !this.treeNode.isExpanded) {
+			this.setAutoExpandTimer();
+		}
+
+		return accepts;
+	},
+
+	/* Parent.onDragOver calls this function to get accepts status */
+	accepts: function(dragObjects) {
+
+		var accepts = dojo.dnd.HtmlDropTarget.prototype.accepts.apply(this, arguments);
+
+		if (!accepts) return false;
+
+		var sourceTreeNode = dragObjects[0].treeNode;
+
+		if (dojo.lang.isUndefined(sourceTreeNode) || !sourceTreeNode || !sourceTreeNode.isTreeNode) {
+			dojo.raise("Source is not TreeNode or not found");
+		}
+
+		if (sourceTreeNode === this.treeNode) return false;
+
+		return true;
+	},
+
+
+
+	setAutoExpandTimer: function() {
+		// set up autoexpand timer
+		var _this = this;
+
+		var autoExpand = function () {
+			if (dojo.dnd.dragManager.currentDropTarget === _this) {
+				_this.controller.expand(_this.treeNode);
+			}
+		}
+
+		this.autoExpandTimer = dojo.lang.setTimeout(autoExpand, _this.autoExpandDelay);
+	},
+
+
+	getDNDMode: function() {
+		return this.treeNode.tree.DNDMode;
+	},
+		
+
+	getAcceptPosition: function(e, sourceTreeNode) {
+
+		var DNDMode = this.getDNDMode();
+
+		if (DNDMode & dojo.widget.Tree.prototype.DNDModes.ONTO &&
+			// check if ONTO is allowed localy
+			!(
+			  !this.treeNode.actionIsDisabled(dojo.widget.TreeNode.prototype.actions.ADDCHILD) // check dynamically cause may change w/o regeneration of dropTarget
+			  && sourceTreeNode.parent !== this.treeNode
+			  && this.controller.canMove(sourceTreeNode, this.treeNode)
+			 )
+		) {
+			// disable ONTO if can't move
+			DNDMode &= ~dojo.widget.Tree.prototype.DNDModes.ONTO;
+		}
+
+
+		var position = this.getPosition(e, DNDMode);
+
+		//dojo.debug(DNDMode & +" : "+position);
+
+
+		// if onto is here => it was allowed before, no accept check is needed
+		if (position=="onto" ||
+			(!this.isAdjacentNode(sourceTreeNode, position)
+			 && this.controller.canMove(sourceTreeNode, this.treeNode.parent)
+			)
+		) {
+			return position;
+		} else {
+			return false;
+		}
+
+	},
+
+	onDragOut: function(e) {
+		this.clearAutoExpandTimer();
+
+		this.hideIndicator();
+	},
+
+
+	clearAutoExpandTimer: function() {
+		if (this.autoExpandTimer) {
+			clearTimeout(this.autoExpandTimer);
+			this.autoExpandTimer = null;
+		}
+	},
+
+
+
+	onDragMove: function(e, dragObjects){
+
+		var sourceTreeNode = dragObjects[0].treeNode;
+
+		var position = this.getAcceptPosition(e, sourceTreeNode);
+
+		if (position) {
+			this.showIndicator(position);
+		}
+
+	},
+
+	isAdjacentNode: function(sourceNode, position) {
+
+		if (sourceNode === this.treeNode) return true;
+		if (sourceNode.getNextSibling() === this.treeNode && position=="before") return true;
+		if (sourceNode.getPreviousSibling() === this.treeNode && position=="after") return true;
+
+		return false;
+	},
+
+
+	/* get DNDMode and see which position e fits */
+	getPosition: function(e, DNDMode) {
+		var node = dojo.byId(this.treeNode.labelNode);
+		var mousey = e.pageY || e.clientY + dojo.body().scrollTop;
+		var nodey = dojo.html.getAbsolutePosition(node).y;
+		var height = dojo.html.getBorderBox(node).height;
+
+		var relY = mousey - nodey;
+		var p = relY / height;
+
+		var position = ""; // "" <=> forbidden
+		if (DNDMode & dojo.widget.Tree.prototype.DNDModes.ONTO
+		  && DNDMode & dojo.widget.Tree.prototype.DNDModes.BETWEEN) {
+			if (p<=0.3) {
+				position = "before";
+			} else if (p<=0.7) {
+				position = "onto";
+			} else {
+				position = "after";
+			}
+		} else if (DNDMode & dojo.widget.Tree.prototype.DNDModes.BETWEEN) {
+			if (p<=0.5) {
+				position = "before";
+			} else {
+				position = "after";
+			}
+		}
+		else if (DNDMode & dojo.widget.Tree.prototype.DNDModes.ONTO) {
+			position = "onto";
+		}
+
+
+		return position;
+	},
+
+
+
+	getTargetParentIndex: function(sourceTreeNode, position) {
+
+		var index = position == "before" ? this.treeNode.getParentIndex() : this.treeNode.getParentIndex()+1;
+		if (this.treeNode.parent === sourceTreeNode.parent
+		  && this.treeNode.getParentIndex() > sourceTreeNode.getParentIndex()) {
+		  	index--;  // dragging a node is different for simple move bacause of before-after issues
+		}
+
+		return index;
+	},
+
+
+	onDrop: function(e){
+		// onDragOut will clean position
+
+
+		var position = this.position;
+
+//dojo.debug(position);
+
+		this.onDragOut(e);
+
+		var sourceTreeNode = e.dragObject.treeNode;
+
+		if (!dojo.lang.isObject(sourceTreeNode)) {
+			dojo.raise("TreeNode not found in dragObject")
+		}
+
+		if (position == "onto") {
+			return this.controller.move(sourceTreeNode, this.treeNode, 0);
+		} else {
+			var index = this.getTargetParentIndex(sourceTreeNode, position);
+			return this.controller.move(sourceTreeNode, this.treeNode.parent, index);
+		}
+
+		//dojo.debug('drop2');
+
+
+
+	}
+
+
+});
+
+
+
+dojo.dnd.TreeDNDController = function(treeController) {
+
+	// I use this controller to perform actions
+	this.treeController = treeController;
+
+	this.dragSources = {};
+
+	this.dropTargets = {};
+
+}
+
+dojo.lang.extend(dojo.dnd.TreeDNDController, {
+
+
+	listenTree: function(tree) {
+		//dojo.debug("Listen tree "+tree);
+		dojo.event.topic.subscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.subscribe(tree.eventNames.moveFrom, this, "onMoveFrom");
+		dojo.event.topic.subscribe(tree.eventNames.moveTo, this, "onMoveTo");
+		dojo.event.topic.subscribe(tree.eventNames.addChild, this, "onAddChild");
+		dojo.event.topic.subscribe(tree.eventNames.removeNode, this, "onRemoveNode");
+		dojo.event.topic.subscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+	},
+
+
+	unlistenTree: function(tree) {
+		//dojo.debug("Listen tree "+tree);
+		dojo.event.topic.unsubscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.unsubscribe(tree.eventNames.moveFrom, this, "onMoveFrom");
+		dojo.event.topic.unsubscribe(tree.eventNames.moveTo, this, "onMoveTo");
+		dojo.event.topic.unsubscribe(tree.eventNames.addChild, this, "onAddChild");
+		dojo.event.topic.unsubscribe(tree.eventNames.removeNode, this, "onRemoveNode");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+	},
+
+	onTreeDestroy: function(message) {
+		this.unlistenTree(message.source);
+		// I'm not widget so don't use destroy() call and dieWithTree
+	},
+
+	onCreateDOMNode: function(message) {
+		this.registerDNDNode(message.source);
+	},
+
+	onAddChild: function(message) {
+		this.registerDNDNode(message.child);
+	},
+
+	onMoveFrom: function(message) {
+		var _this = this;
+		dojo.lang.forEach(
+			message.child.getDescendants(),
+			function(node) { _this.unregisterDNDNode(node); }
+		);
+	},
+
+	onMoveTo: function(message) {
+		var _this = this;
+		dojo.lang.forEach(
+			message.child.getDescendants(),
+			function(node) { _this.registerDNDNode(node); }
+		);
+	},
+
+	/**
+	 * Controller(node model) creates DNDNodes because it passes itself to node for synchroneous drops processing
+	 * I can't process DnD with events cause an event can't return result success/false
+	*/
+	registerDNDNode: function(node) {
+		if (!node.tree.DNDMode) return;
+
+//dojo.debug("registerDNDNode "+node);
+
+		/* I drag label, not domNode, because large domNodes are very slow to copy and large to drag */
+
+		var source = null;
+		var target = null;
+
+		if (!node.actionIsDisabled(node.actions.MOVE)) {
+			//dojo.debug("reg source")
+			var source = new dojo.dnd.TreeDragSource(node.labelNode, this, node.tree.widgetId, node);
+			this.dragSources[node.widgetId] = source;
+		}
+
+		var target = new dojo.dnd.TreeDropTarget(node.labelNode, this.treeController, node.tree.DNDAcceptTypes, node);
+
+		this.dropTargets[node.widgetId] = target;
+
+	},
+
+
+	unregisterDNDNode: function(node) {
+
+		if (this.dragSources[node.widgetId]) {
+			dojo.dnd.dragManager.unregisterDragSource(this.dragSources[node.widgetId]);
+			delete this.dragSources[node.widgetId];
+		}
+
+		if (this.dropTargets[node.widgetId]) {
+			dojo.dnd.dragManager.unregisterDropTarget(this.dropTargets[node.widgetId]);
+			delete this.dropTargets[node.widgetId];
+		}
+	}
+
+
+
+
+
+});
+
+
+dojo.provide("dojo.widget.TreeBasicController");
+
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.TreeBasicController", dojo.widget.HtmlWidget, {
+	widgetType: "TreeBasicController",
+
+	DNDController: "",
+
+	dieWithTree: false,
+
+	initialize: function(args, frag){
+
+		/* no DND by default for compatibility */
+		if (this.DNDController == "create") {
+			
+			this.DNDController = new dojo.dnd.TreeDNDController(this);
+		}
+
+
+
+	},
+
+
+	/**
+	 * Binds controller to all tree events
+	*/
+	listenTree: function(tree) {
+		//dojo.debug("Event "+tree.eventNames.treeClick);
+		dojo.event.topic.subscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.subscribe(tree.eventNames.treeClick, this, "onTreeClick");
+		dojo.event.topic.subscribe(tree.eventNames.treeCreate, this, "onTreeCreate");
+		dojo.event.topic.subscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+
+		if (this.DNDController) {
+			this.DNDController.listenTree(tree);
+		}
+	},
+
+	unlistenTree: function(tree) {
+		dojo.event.topic.unsubscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeClick, this, "onTreeClick");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeCreate, this, "onTreeCreate");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+	},
+
+	onTreeDestroy: function(message) {
+		var tree = message.source;
+
+		this.unlistenTree(tree);
+
+		if (this.dieWithTree) {
+			//alert("Killing myself "+this.widgetId);
+			this.destroy();
+			//dojo.debug("done");
+		}
+	},
+
+	onCreateDOMNode: function(message) {
+
+		var node = message.source;
+
+
+		if (node.expandLevel > 0) {
+			this.expandToLevel(node, node.expandLevel);
+		}
+	},
+
+	// perform actions-initializers for tree
+	onTreeCreate: function(message) {
+		var tree = message.source;
+		var _this = this;
+		if (tree.expandLevel) {
+			dojo.lang.forEach(tree.children,
+				function(child) {
+					_this.expandToLevel(child, tree.expandLevel-1)
+				}
+			);
+		}
+	},
+
+	expandToLevel: function(node, level) {
+		if (level == 0) return;
+
+		var children = node.children;
+		var _this = this;
+
+		var handler = function(node, expandLevel) {
+			this.node = node;
+			this.expandLevel = expandLevel;
+			// recursively expand opened node
+			this.process = function() {
+				//dojo.debug("Process "+node+" level "+level);
+				for(var i=0; i<this.node.children.length; i++) {
+					var child = node.children[i];
+
+					_this.expandToLevel(child, this.expandLevel);
+				}
+			};
+		}
+
+		var h = new handler(node, level-1);
+
+
+		this.expand(node, false, h, h.process);
+
+	},
+
+
+
+
+	onTreeClick: function(message){
+		var node = message.source;
+
+		if(node.isLocked()) {
+			return false;
+		}
+
+		if (node.isExpanded){
+			this.collapse(node);
+		} else {
+			this.expand(node);
+		}
+	},
+
+	expand: function(node, sync, callObj, callFunc) {
+		node.expand();
+		if (callFunc) callFunc.apply(callObj, [node]);
+	},
+
+	collapse: function(node) {
+
+		node.collapse();
+	},
+
+// =============================== move ============================
+
+	/**
+	 * Checks whether it is ok to change parent of child to newParent
+	 * May incur type checks etc
+	 *
+	 * It should check only hierarchical possibility w/o index, etc
+	 * because in onDragOver event for Between DND mode we can't calculate index at once on onDragOVer.
+	 * index changes as client moves mouse up-down over the node
+	 */
+	canMove: function(child, newParent){
+
+		if (child.actionIsDisabled(child.actions.MOVE)) {
+			return false;
+		}
+
+		// if we move under same parent then no matter if ADDCHILD disabled for him
+		// but if we move to NEW parent then check if action is disabled for him
+		// also covers case for newParent being a non-folder in strict mode etc
+		if (child.parent !== newParent && newParent.actionIsDisabled(newParent.actions.ADDCHILD)) {
+			return false;
+		}
+
+		// Can't move parent under child. check whether new parent is child of "child".
+		var node = newParent;
+		while(node.isTreeNode) {
+			//dojo.debugShallow(node.title)
+			if (node === child) {
+				// parent of newParent is child
+				return false;
+			}
+			node = node.parent;
+		}
+
+		return true;
+	},
+
+
+	move: function(child, newParent, index) {
+
+		/* move sourceTreeNode to new parent */
+		if (!this.canMove(child, newParent)) {
+			return false;
+		}
+
+		var result = this.doMove(child, newParent, index);
+
+		if (!result) return result;
+
+		if (newParent.isTreeNode) {
+			this.expand(newParent);
+		}
+
+		return result;
+	},
+
+	doMove: function(child, newParent, index) {
+		child.tree.move(child, newParent, index);
+
+		return true;
+	},
+
+// =============================== removeNode ============================
+
+
+	canRemoveNode: function(child) {
+		if (child.actionIsDisabled(child.actions.REMOVE)) {
+			return false;
+		}
+
+		return true;
+	},
+
+
+	removeNode: function(node, callObj, callFunc) {
+		if (!this.canRemoveNode(node)) {
+			return false;
+		}
+
+		return this.doRemoveNode(node, callObj, callFunc);
+	},
+
+
+	doRemoveNode: function(node, callObj, callFunc) {
+		node.tree.removeNode(node);
+
+		if (callFunc) {
+			callFunc.apply(dojo.lang.isUndefined(callObj) ? this : callObj, [node]);
+		}
+	},
+
+
+	// -----------------------------------------------------------------------------
+	//                             Create node stuff
+	// -----------------------------------------------------------------------------
+
+
+	canCreateChild: function(parent, index, data) {
+		if (parent.actionIsDisabled(parent.actions.ADDCHILD)) return false;
+
+		return true;
+	},
+
+
+	/* send data to server and add child from server */
+	/* data may contain an almost ready child, or anything else, suggested to server */
+	/*in RPC controllers server responds with child data to be inserted */
+	createChild: function(parent, index, data, callObj, callFunc) {
+		if (!this.canCreateChild(parent, index, data)) {
+			return false;
+		}
+
+		return this.doCreateChild.apply(this, arguments);
+	},
+
+	doCreateChild: function(parent, index, data, callObj, callFunc) {
+
+		var widgetType = data.widgetType ? data.widgetType : "TreeNode";
+
+		var newChild = dojo.widget.createWidget(widgetType, data);
+
+		parent.addChild(newChild, index);
+
+		this.expand(parent);
+
+		if (callFunc) {
+			callFunc.apply(callObj, [newChild]);
+		}
+
+		return newChild;
+	}
+
+
+
+});
+
+/**
+ * Tree model does all the drawing, visual node management etc.
+ * Throws events about clicks on it, so someone may catch them and process
+ * Tree knows nothing about DnD stuff, covered in TreeDragAndDrop and (if enabled) attached by controller
+*/
+
+/**
+ * TODO: use domNode.cloneNode instead of createElement for grid
+ * Should be faster (lyxsus)
+ */
+dojo.provide("dojo.widget.Tree");
+
+
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.Tree", dojo.widget.HtmlWidget, function() {
+	this.eventNames = {};
+
+	this.tree = this;
+	this.DNDAcceptTypes = [];
+	this.actionsDisabled = [];
+
+},
+{
+	widgetType: "Tree",
+
+	eventNamesDefault: {
+		// new child does not get domNode filled in (only template draft)
+		// until addChild->createDOMNode is called(program way) OR createDOMNode (html-way)
+		// hook events to operate on new DOMNode, create dropTargets etc
+		createDOMNode: "createDOMNode",
+		// tree created.. Perform tree-wide actions if needed
+		treeCreate: "treeCreate",
+		treeDestroy: "treeDestroy",
+		// expand icon clicked
+		treeClick: "treeClick",
+		// node icon clicked
+		iconClick: "iconClick",
+		// node title clicked
+		titleClick: "titleClick",
+
+		moveFrom: "moveFrom",
+		moveTo: "moveTo",
+		addChild: "addChild",
+		removeNode: "removeNode",
+		expand: "expand",
+		collapse: "collapse"
+	},
+
+	isContainer: true,
+
+	DNDMode: "off",
+
+	lockLevel: 0, // lock ++ unlock --, so nested locking works fine
+
+	strictFolders: true,
+
+	DNDModes: {
+		BETWEEN: 1,
+		ONTO: 2
+	},
+
+	DNDAcceptTypes: "",
+
+	templateCssString:"\r\n.dojoTree {\r\n\tfont: caption;\r\n\tfont-size: 11px;\r\n\tfont-weight: normal;\r\n\toverflow: auto;\r\n}\r\n\r\n\r\n.dojoTreeNodeLabelTitle {\r\n\tpadding-left: 2px;\r\n\tcolor: WindowText;\r\n}\r\n\r\n.dojoTreeNodeLabel {\r\n\tcursor:hand;\r\n\tcursor:pointer;\r\n}\r\n\r\n.dojoTreeNodeLabelTitle:hover {\r\n\ttext-decoration: underline;\r\n}\r\n\r\n.dojoTreeNodeLabelSelected {\r\n\tbackground-color: Highlight;\r\n\tcolor: HighlightText;\r\n}\r\n\r\n.dojoTree div {\r\n\twhite-space: nowrap;\r\n}\r\n\r\n.dojoTree img, .dojoTreeNodeLabel img {\r\n\tvertical-align: middle;\r\n}\r\n\r\n",templateCssPath: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/Tree.css"),
+
+	templateString: '<div class="dojoTree"></div>',
+
+	isExpanded: true, // consider this "root node" to be always expanded
+
+	isTree: true,
+
+	objectId: "",
+
+	// autoCreate if not "off"
+	// used to get the autocreated controller ONLY.
+	// generally, tree DOES NOT KNOW about its CONTROLLER, it just doesn't care
+	// controller gets messages via dojo.event
+	controller: "",
+
+	// autoCreate if not "off"
+	// used to get the autocreated selector ONLY.
+	// generally, tree DOES NOT KNOW its SELECTOR
+	// binding is made with dojo.event
+	selector: "",
+
+	// used ONLY at initialization time
+	menu: "", // autobind menu if menu's widgetId is set here
+
+	expandLevel: "", // expand to level automatically
+
+	//
+	// these icons control the grid and expando buttons for the whole tree
+	//
+
+	blankIconSrc: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_blank.gif"),
+
+	gridIconSrcT: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_t.gif"), // for non-last child grid
+	gridIconSrcL: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_l.gif"), // for last child grid
+	gridIconSrcV: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_v.gif"), // vertical line
+	gridIconSrcP: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_p.gif"), // for under parent item child icons
+	gridIconSrcC: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_c.gif"), // for under child item child icons
+	gridIconSrcX: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_x.gif"), // grid for sole root item
+	gridIconSrcY: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_y.gif"), // grid for last rrot item
+	gridIconSrcZ: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_z.gif"), // for under root parent item child icon
+
+	expandIconSrcPlus: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_expand_plus.gif"),
+	expandIconSrcMinus: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_expand_minus.gif"),
+	expandIconSrcLoading: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_loading.gif"),
+
+
+	iconWidth: 18,
+	iconHeight: 18,
+
+
+	//
+	// tree options
+	//
+
+	showGrid: true,
+	showRootGrid: true,
+
+	actionIsDisabled: function(action) {
+		var _this = this;
+		return dojo.lang.inArray(_this.actionsDisabled, action)
+	},
+
+
+	actions: {
+    	ADDCHILD: "ADDCHILD"
+	},
+
+
+	getInfo: function() {
+		var info = {
+			widgetId: this.widgetId,
+			objectId: this.objectId
+		}
+
+		return info;
+	},
+
+	initializeController: function() {
+		if (this.controller != "off") {
+			if (this.controller) {
+				this.controller = dojo.widget.byId(this.controller);
+			}
+			else {
+				// create default controller here
+				
+				this.controller = dojo.widget.createWidget("TreeBasicController",
+					{ DNDController: (this.DNDMode ? "create" : ""), dieWithTree: true }
+				 );
+
+			}
+			this.controller.listenTree(this); // controller listens to my events
+
+		} else {
+			this.controller = null;
+		}
+	},
+
+	initializeSelector: function() {
+
+		if (this.selector != "off") {
+			if (this.selector) {
+				this.selector = dojo.widget.byId(this.selector);
+			}
+			else {
+				// create default controller here
+				
+				this.selector = dojo.widget.createWidget("TreeSelector", {dieWithTree: true});
+			}
+
+			this.selector.listenTree(this);
+
+		} else {
+			this.selector = null;
+		}
+	},
+
+	initialize: function(args, frag){
+
+		var _this = this;
+
+		for(name in this.eventNamesDefault) {
+			if (dojo.lang.isUndefined(this.eventNames[name])) {
+				this.eventNames[name] = this.widgetId+"/"+this.eventNamesDefault[name];
+			}
+		}
+
+		for(var i=0; i<this.actionsDisabled.length; i++) {
+			this.actionsDisabled[i] = this.actionsDisabled[i].toUpperCase();
+		}
+
+		if (this.DNDMode == "off") {
+			this.DNDMode = 0;
+		} else if (this.DNDMode == "between") {
+			this.DNDMode = this.DNDModes.ONTO | this.DNDModes.BETWEEN;
+		} else if (this.DNDMode == "onto") {
+			this.DNDMode = this.DNDModes.ONTO;
+		}
+
+		this.expandLevel = parseInt(this.expandLevel);
+
+		this.initializeSelector();
+		this.initializeController();
+
+		if (this.menu) {
+			this.menu = dojo.widget.byId(this.menu);
+			this.menu.listenTree(this);
+		}
+
+
+		this.containerNode = this.domNode;
+
+	},
+
+
+	postCreate: function() {
+		this.createDOMNode();
+	},
+
+
+	createDOMNode: function() {
+
+		dojo.html.disableSelection(this.domNode);
+
+		for(var i=0; i<this.children.length; i++){
+			this.children[i].parent = this; // root nodes have tree as parent
+
+			var node = this.children[i].createDOMNode(this, 0);
+
+
+			this.domNode.appendChild(node);
+		}
+
+
+		if (!this.showRootGrid){
+			for(var i=0; i<this.children.length; i++){
+				this.children[i].expand();
+			}
+		}
+
+		dojo.event.topic.publish(this.eventNames.treeCreate, { source: this } );
+
+	},
+
+
+	destroy: function() {
+		dojo.event.topic.publish(this.tree.eventNames.treeDestroy, { source: this } );
+
+		return dojo.widget.HtmlWidget.prototype.destroy.apply(this, arguments);
+	},
+
+
+	addChild: function(child, index) {
+
+//		dojo.debug("doAddChild "+index+" called for "+child);
+
+		var message = {
+			child: child,
+			index: index,
+			parent: this,
+			// remember if dom was already initialized
+			// initialized => no createDOMNode => no createDOMNode event
+			domNodeInitialized: child.domNodeInitialized
+		}
+
+		this.doAddChild.apply(this, arguments);
+
+		dojo.event.topic.publish(this.tree.eventNames.addChild, message);
+	},
+
+
+	// not called for initial tree building. See createDOMNode instead.
+	// builds child html node if needed
+	// index is "last node" by default
+	/**
+	 * FIXME: Is it possible that removeNode from the tree will cause leaks cause of attached events ?
+	 * if yes, then only attach events in addChild and detach in remove.. Seems all ok yet.
+	*/
+	doAddChild: function(child, index){
+
+		if (dojo.lang.isUndefined(index)) {
+			index = this.children.length;
+		}
+
+		if (!child.isTreeNode){
+			dojo.raise("You can only add TreeNode widgets to a "+this.widgetType+" widget!");
+			return;
+		}
+
+		// usually it is impossible to change "isFolder" state, but if anyone wants to add a child to leaf,
+		// it is possible program-way.
+		if (this.isTreeNode){
+			if (!this.isFolder) { // just became a folder.
+				//dojo.debug("becoming folder "+this);
+				this.setFolder();
+			}
+		}
+
+		// adjust tree
+		var _this = this;
+		dojo.lang.forEach(child.getDescendants(), function(elem) { elem.tree = _this.tree; });
+
+		// fix parent
+		child.parent = this;
+
+
+		// no dynamic loading for those who become parents
+		if (this.isTreeNode) {
+			this.state = this.loadStates.LOADED;
+		}
+
+		// add new child into DOM after it was added into children
+		if (index < this.children.length) { // children[] already has child
+			//dojo.debug("Inserting before "+this.children[index].title);
+			dojo.html.insertBefore(child.domNode, this.children[index].domNode);
+		} else {
+			this.containerNode.appendChild(child.domNode);
+			if (this.isExpanded && this.isTreeNode) {
+				/* When I add children to hidden containerNode => show container w/ them */
+				this.showChildren();
+			}
+		}
+
+
+		this.children.splice(index, 0, child);
+
+		//dojo.debugShallow(this.children);
+
+
+		// if node exists - adjust its depth, otherwise build it
+		if (child.domNodeInitialized) {
+			var d = this.isTreeNode ? this.depth : -1;
+			child.adjustDepth( d - child.depth + 1 );
+
+
+			// update icons to link generated dom with Tree => updateParentGrid
+			// if I moved child from LastNode inside the tree => need to link it up'n'down =>
+			// updateExpandGridColumn
+			// if I change depth => need to update all grid..
+			child.updateIconTree();
+		} else {
+			//dojo.debug("Create domnode ");
+			child.depth = this.isTreeNode ? this.depth+1 : 0;
+			child.createDOMNode(child.tree, child.depth);
+		}
+
+
+
+		// Use-case:
+		// When previous sibling was created => it was last, no children after it
+		// so it did not create link down => let's add it for all descendants
+		// Use-case:
+		// a child was moved down under the last node so last node should be updated
+		var prevSibling = child.getPreviousSibling();
+		if (child.isLastChild() && prevSibling) {
+			prevSibling.updateExpandGridColumn();
+		}
+
+
+		//dojo.debug("Added child "+child);
+
+
+
+	},
+
+
+
+
+	makeBlankImg: function() {
+		var img = document.createElement('img');
+
+		img.style.width = this.iconWidth + 'px';
+		img.style.height = this.iconHeight + 'px';
+		img.src = this.blankIconSrc;
+		img.style.verticalAlign = 'middle';
+
+		return img;
+	},
+
+
+	updateIconTree: function(){
+
+		//dojo.debug("Update icons for "+this)
+		if (!this.isTree) {
+			this.updateIcons();
+		}
+
+		for(var i=0; i<this.children.length; i++){
+			this.children[i].updateIconTree();
+		}
+
+	},
+
+	toString: function() {
+		return "["+this.widgetType+" ID:"+this.widgetId+"]"
+	},
+
+
+
+
+	/**
+	 * Move child to newParent as last child
+	 * redraw tree and update icons.
+	 *
+	 * Called by target, saves source in event.
+	 * events are published for BOTH trees AFTER update.
+	*/
+	move: function(child, newParent, index) {
+
+		//dojo.debug(child+" "+newParent+" at "+index);
+
+		var oldParent = child.parent;
+		var oldTree = child.tree;
+
+		this.doMove.apply(this, arguments);
+
+		var newParent = child.parent;
+		var newTree = child.tree;
+
+		var message = {
+				oldParent: oldParent, oldTree: oldTree,
+				newParent: newParent, newTree: newTree,
+				child: child
+		};
+
+		/* publish events here about structural changes for both source and target trees */
+		dojo.event.topic.publish(oldTree.eventNames.moveFrom, message);
+		dojo.event.topic.publish(newTree.eventNames.moveTo, message);
+
+	},
+
+
+	/* do actual parent change here. Write remove child first */
+	doMove: function(child, newParent, index) {
+		//var parent = child.parent;
+		child.parent.doRemoveNode(child);
+
+		newParent.doAddChild(child, index);
+	},
+
+
+
+// ================================ removeNode ===================================
+
+	removeNode: function(child) {
+		if (!child.parent) return;
+
+		var oldTree = child.tree;
+		var oldParent = child.parent;
+
+		var removedChild = this.doRemoveNode.apply(this, arguments);
+
+
+		dojo.event.topic.publish(this.tree.eventNames.removeNode,
+			{ child: removedChild, tree: oldTree, parent: oldParent }
+		);
+
+		return removedChild;
+	},
+
+
+	doRemoveNode: function(child) {
+		if (!child.parent) return;
+
+		var parent = child.parent;
+
+		var children = parent.children;
+
+
+		var index = child.getParentIndex();
+		if (index < 0) {
+			dojo.raise("Couldn't find node "+child+" for removal");
+		}
+
+
+		children.splice(index,1);
+		dojo.html.removeNode(child.domNode);
+
+		if (parent.children.length == 0 && !parent.isTree) {
+			parent.containerNode.style.display = "none";
+		}
+
+		// if WAS last node (children.length decreased already) and has prevSibling
+		if (index == children.length && index>0) {
+			children[index-1].updateExpandGridColumn();
+		}
+		// if it WAS first node in WHOLE TREE -
+		// update link up of its former lower neighbour(if exists still)
+		if (parent instanceof dojo.widget.Tree && index == 0 && children.length>0) {
+			children[0].updateExpandGrid();
+		}
+
+		//parent.updateIconTree();
+
+
+		child.parent = child.tree = null;
+
+		return child;
+	},
+
+	markLoading: function() {
+		// no way to mark tree loading
+	},
+
+	unMarkLoading: function() {
+		// no way to show that tree finished loading
+	},
+
+
+	lock: function() {
+		!this.lockLevel && this.markLoading();
+		this.lockLevel++;
+	},
+	unlock: function() {
+		if (!this.lockLevel) {
+			dojo.raise("unlock: not locked");
+		}
+		this.lockLevel--;
+		!this.lockLevel && this.unMarkLoading();
+	},
+
+	isLocked: function() {
+		var node = this;
+		while (true) {
+			if (node.lockLevel) {
+				return true;
+			}
+			if (node instanceof dojo.widget.Tree) {
+				break;
+			}
+			node = node.parent;
+		}
+
+		return false;
+	},
+
+	flushLock: function() {
+		this.lockLevel = 0;
+		this.unMarkLoading();
+	}
+});
+
+
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.provide("struts.widget.StrutsTree");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsTree",
+  dojo.widget.Tree, {
+  widgetType : "StrutsTree",
+
+  href : "",
+  errorNotifyTopics : "",
+  errorNotifyTopicsArray : null,
+  
+  postCreate : function() {
+     struts.widget.StrutsTree.superclass.postCreate.apply(this);
+     
+     //error topics
+     if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+       this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
+     }
+     
+     var self = this;
+     if(!dojo.string.isBlank(this.href)) {
+       dojo.io.bind({
+        url: this.href,
+        useCache: false,
+        preventCache: true,
+        handler: function(type, data, e) {
+          if(type == 'load') {
+            //data should be an array
+            if(data) {
+              dojo.lang.forEach(data, function(descr) {
+                //create node for eachd descriptor
+                var newNode = dojo.widget.createWidget("struts:StrutsTreeNode",{
+                  title   : descr.label,
+                  isFolder: descr.hasChildren,
+                  widgetId: descr.id   
+                });
+                self.addChild(newNode);
+              }); 
+            }
+          } else {
+            //publish error topics
+            if(self.errorNotifyTopicsArray) {
+              dojo.lang.forEach(self.errorNotifyTopicsArray, function(topic) {
+                try {
+                  dojo.event.topic.publish(topic, data, e, self);
+                } catch(ex){
+                  dojo.debug(ex);
+                }
+              });
+            }
+          }
+        },
+        mimetype: "text/json"
+       });
+     }   
+  }
+});
+
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+dojo.kwCompoundRequire({
+	common: ["struts.widget.Bind",
+	         "struts.widget.BindDiv",
+	         "struts.widget.BindAnchor",
+	         "struts.widget.ComboBox",
+             "struts.widget.StrutsTimePicker",
+             "struts.widget.StrutsDatePicker",
+             "struts.widget.BindEvent",
+             "struts.widget.StrutsTreeSelector",
+             "struts.widget.StrutsTabContainer",
+             "struts.widget.StrutsTreeNode",
+             "struts.widget.StrutsTree"]
+});
+dojo.provide("struts.widget.*");
 

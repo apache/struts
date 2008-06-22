@@ -279,6 +279,8 @@ dojo.widget.defineWidget(
   //load options when page loads
   preload : true,
 
+  tabIndex: "",
+
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time
@@ -417,6 +419,11 @@ dojo.widget.defineWidget(
     this.comboBoxValue.value = this.initialValue;
     this.comboBoxSelectionValue.value = this.initialKey;
     this.textInputNode.value = this.initialValue;
+
+    //tabindex
+    if(!dojo.string.isBlank(this.tabIndex)) {
+      this.textInputNode.tabIndex = this.tabIndex;
+    }
 
     //hide arrow?
     if(!this.visibleDownArrow) {

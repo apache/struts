@@ -7,7 +7,7 @@
     <filter>
         <filter-name>Struts2</filter-name>
         <filter-class>
-            org.apache.struts2.dispatcher.FilterDispatcher
+            org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter
         </filter-class>
     </filter>
 

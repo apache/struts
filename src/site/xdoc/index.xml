@@ -42,7 +42,7 @@
           </div>
         </a>
         </td><td>
-        <a href="http://struts.apache.org/2.0.11.2/docs/home.html" style="margin:10px">
+        <a href="http://struts.apache.org/2.x/docs/home.html" style="margin:10px">
           <div style="background:url(images/help.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
             <span style="top:15px;position:absolute;color:white;padding-left:10px">
               <span style="font-weight: bold; font-size:140%">Get Started</span>

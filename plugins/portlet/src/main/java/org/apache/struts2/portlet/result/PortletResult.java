@@ -142,7 +142,7 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 			// View is rendered outside an action...uh oh...
             String namespace = invocation.getProxy().getNamespace();
             if ( namespace != null && namespace.length() > 0 && !namespace.endsWith("/")) {
-                namespace += namespace + "/";
+                namespace += "/";
                 
             }
             res.setRenderParameter(ACTION_PARAM, namespace + "renderDirect");

@@ -204,5 +204,14 @@ public class PortletActionContext implements PortletActionConstants {
     public static PortletContext getPortletContext() {
     	return (PortletContext)getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
     }
+    
+    /**
+     * Gets the action mapping for this context
+     *
+     * @return The action mapping
+     */
+    public static ActionMapping getActionMapping() {
+        return (ActionMapping) getContext().get(ACTION_MAPPING);
+    }
 
 }

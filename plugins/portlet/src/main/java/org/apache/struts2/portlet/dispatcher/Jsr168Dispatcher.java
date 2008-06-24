@@ -180,6 +180,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     private Dispatcher dispatcherUtils;
     
     private ActionMapper actionMapper;
+    
+    private Container container;
 
     /**
      * Initialize the portlet with the init parameters from <tt>portlet.xml</tt>
@@ -226,7 +228,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         LocalizedTextUtil
                 .addDefaultResourceBundle("org/apache/struts2/struts-messages");
 
-        Container container = dispatcherUtils.getContainer();
+        container = dispatcherUtils.getContainer();
         //check for configuration reloading
         if ("true".equalsIgnoreCase(container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
             FileManager.setReloadingConfigs(true);
@@ -351,13 +353,14 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      *        {@link PortletActionConstants})
      * @return a HashMap representing the <tt>Action</tt> context.
      */
-    public HashMap createContextMap(Map requestMap, Map parameterMap,
-            Map sessionMap, Map applicationMap, PortletRequest request,
+    public HashMap<String, Object> createContextMap(Map<String, Object> requestMap, Map<String, String[]> parameterMap,
+            Map<String, Object> sessionMap, Map<String, Object> applicationMap, PortletRequest request,
             PortletResponse response, PortletConfig portletConfig, Integer phase) throws IOException {
 
         // TODO Must put http request/response objects into map for use with
     	HttpServletResponse dummyResponse = new PortletServletResponse(response);
     	HttpServletRequest dummyRequest = new PortletServletRequest(request, getPortletContext());
+    	container.inject(dummyRequest);
     	ServletContext dummyServletContext = new PortletServletContext(getPortletContext());
     	if(EVENT_PHASE.equals(phase)) {
     		dummyRequest = dispatcherUtils.wrapRequest(dummyRequest, dummyServletContext);
@@ -368,7 +371,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     		}
     	}
         // ServletActionContext
-        HashMap<String,Object> extraContext = new HashMap<String,Object>();
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
         // The dummy servlet objects. Eases reuse of existing interceptors that uses the servlet objects.
         extraContext.put(StrutsStatics.HTTP_REQUEST, dummyRequest);
         extraContext.put(StrutsStatics.HTTP_RESPONSE, dummyResponse);
@@ -426,17 +429,18 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      *        {@link PortletActionConstants})
      */
     public void serviceAction(PortletRequest request, PortletResponse response,
-            ActionMapping mapping, Map requestMap, Map parameterMap,
-            Map sessionMap, Map applicationMap, String portletNamespace,
+            ActionMapping mapping, Map<String, Object> requestMap, Map<String, String[]> parameterMap,
+            Map<String, Object> sessionMap, Map<String, Object> applicationMap, String portletNamespace,
             Integer phase) throws PortletException {
         LOG.debug("serviceAction");
         String actionName = mapping.getName();
         String namespace = mapping.getNamespace();
         Dispatcher.setInstance(dispatcherUtils);
         try {
-            HashMap extraContext = createContextMap(requestMap, parameterMap,
+            HashMap<String, Object> extraContext = createContextMap(requestMap, parameterMap,
                     sessionMap, applicationMap, request, response,
                     getPortletConfig(), phase);
+            extraContext.put(PortletActionConstants.ACTION_MAPPING, mapping);
             LOG.debug("Creating action proxy for name = " + actionName
                     + ", namespace = " + namespace);
             ActionProxy proxy = factory.createActionProxy(namespace,
@@ -539,8 +543,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * @throws IOException if an exception occurs while retrieving the parameter
      *         map.
      */
-    protected Map getParameterMap(PortletRequest request) throws IOException {
-        return new HashMap(request.getParameterMap());
+    protected Map<String, String[]> getParameterMap(PortletRequest request) throws IOException {
+        return new HashMap<String, String[]>(request.getParameterMap());
     }
 
     /**

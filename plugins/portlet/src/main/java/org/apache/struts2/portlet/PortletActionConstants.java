@@ -21,6 +21,7 @@
 
 package org.apache.struts2.portlet;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.portlet.dispatcher.DispatcherServlet;
 
 /**
@@ -131,4 +132,9 @@ public interface PortletActionConstants {
 	 * Default name of dispatcher servlet in web.xml
 	 */
 	String DEFAULT_DISPATCHER_SERVLET_NAME = "Struts2PortletDispatcherServlet";
+	
+	/**
+	 * Key for the action mapping in the context
+    */
+	String ACTION_MAPPING = ServletActionContext.ACTION_MAPPING;
 }

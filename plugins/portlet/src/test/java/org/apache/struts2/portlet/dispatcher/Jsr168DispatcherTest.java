@@ -52,6 +52,7 @@ import org.springframework.mock.web.portlet.MockPortletConfig;
 import org.springframework.mock.web.portlet.MockPortletContext;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
@@ -59,272 +60,283 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Jsr168DispatcherTest. Insert description.
- *
+ * 
  */
 public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletActionConstants {
 
-	private final String MULTIPART_REQUEST = "-----------------------------4827543632391\r\n" 
-		+ "Content-Disposition: form-data; name=\"upload\"; filename=\"test.txt\"\r\n"
-		+ "Content-Type: text/plain\r\n"
-		+ "\r\n"
-		+ "This is a test file\r\n"
-		+ "-----------------------------4827543632391\r\n"
-		+ "Content-Disposition: form-data; name=\"caption\"\r\n"
-		+ "\r\n"
-		+ "TestCaption\r\n"
-		+ "-----------------------------4827543632391--";
-	
-    Jsr168Dispatcher dispatcher = null;
-    Mock mockConfig = null;
-    Mock mockCtx = null;
-    Mock mockRequest = null;
-    Mock mockSession = null;
-    Mock mockActionFactory = null;
-    Mock mockActionProxy = null;
-    Mock mockAction = null;
-    Mock mockInvocation = null;
+	private final String MULTIPART_REQUEST = "-----------------------------4827543632391\r\n"
+			+ "Content-Disposition: form-data; name=\"upload\"; filename=\"test.txt\"\r\n"
+			+ "Content-Type: text/plain\r\n" 
+			+ "\r\n" 
+			+ "This is a test file\r\n"
+			+ "-----------------------------4827543632391\r\n" 
+			+ "Content-Disposition: form-data; name=\"caption\"\r\n"
+			+ "\r\n" 
+			+ "TestCaption\r\n" + "-----------------------------4827543632391--";
 
-    public void setUp() {
-        dispatcher = new Jsr168Dispatcher();
-    }
+	Jsr168Dispatcher dispatcher = null;
 
-    private void initPortletConfig(final Map initParams, final Map attributes) {
-        mockConfig = mock(PortletConfig.class);
-        mockCtx = mock(PortletContext.class);
-        mockConfig.stubs().method(ANYTHING);
-        mockCtx.stubs().method(ANYTHING);
-        setupStub(initParams, mockConfig, "getInitParameter");
-        mockCtx.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(attributes.keySet())));
-        setupStub(attributes, mockCtx, "getAttribute");
-        mockConfig.stubs().method("getPortletContext").will(returnValue(mockCtx.proxy()));
-        mockCtx.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
-        setupStub(initParams, mockCtx, "getInitParameter");
-        mockConfig.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
-        setupStub(initParams, mockConfig, "getInitParameter");
-        mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
-            protected Object[][] getContents() {
-                return new String[][]{{"javax.portlet.title", "MyTitle"}};
-            }
-        }));
-    }
+	Mock mockConfig = null;
 
-    private void setupActionFactory(String namespace, String actionName, String result, ValueStack stack) {
-        if(mockActionFactory == null) {
-            mockActionFactory = mock(ActionProxyFactory.class);
-        }
-        mockAction = mock(Action.class);
-        mockActionProxy = mock(ActionProxy.class);
-        mockInvocation = mock(ActionInvocation.class);
+	Mock mockCtx = null;
 
-        mockActionFactory.expects(once()).method("createActionProxy").with(new Constraint[]{eq(namespace), eq(actionName), NULL, isA(Map.class)}).will(returnValue(mockActionProxy.proxy()));
-        mockActionProxy.stubs().method("getAction").will(returnValue(mockAction.proxy()));
-        mockActionProxy.expects(once()).method("execute").will(returnValue(result));
-        mockActionProxy.expects(once()).method("getInvocation").will(returnValue(mockInvocation.proxy()));
-        mockInvocation.stubs().method("getStack").will(returnValue(stack));
+	Mock mockRequest = null;
 
-    }
-    
-    public void testParseConfigWithBang() {
-    	MockPortletContext portletContext = new MockPortletContext();
-    	MockPortletConfig portletConfig = new MockPortletConfig(portletContext);
+	Mock mockSession = null;
 
-    	portletConfig.addInitParameter("viewNamespace", "/view");
-    	portletConfig.addInitParameter("defaultViewAction", "index!input");
-    	
-    	Map<PortletMode, ActionMapping> actionMap = new HashMap<PortletMode, ActionMapping>();
-    	
-    	dispatcher.parseModeConfig(actionMap, portletConfig, PortletMode.VIEW, "viewNamespace", "defaultViewAction");
-    	
-    	ActionMapping mapping = actionMap.get(PortletMode.VIEW);
-    	assertEquals("index", mapping.getName());
-    	assertEquals("/view", mapping.getNamespace());
-    	assertEquals("input", mapping.getMethod());
-    }
+	Mock mockActionFactory = null;
 
-    public void testRender_ok() {
-        final Mock mockResponse = mock(RenderResponse.class);
-        mockResponse.stubs().method(ANYTHING);
+	Mock mockActionProxy = null;
 
-        PortletMode mode = PortletMode.VIEW;
+	Mock mockAction = null;
 
-        Map requestParams = new HashMap();
-        requestParams.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        requestParams.put(EVENT_ACTION, new String[]{"true"});
-        requestParams.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
+	Mock mockInvocation = null;
 
-        Map sessionMap = new HashMap();
+	public void setUp() throws Exception {
+		super.setUp();
+		dispatcher = new Jsr168Dispatcher();
+	}
 
+	private void initPortletConfig(final Map<String, String> initParams, final Map<String, Object> attributes) {
+		mockConfig = mock(PortletConfig.class);
+		mockCtx = mock(PortletContext.class);
+		mockConfig.stubs().method(ANYTHING);
+		mockCtx.stubs().method(ANYTHING);
+		setupStub(initParams, mockConfig, "getInitParameter");
+		mockCtx.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(attributes.keySet())));
+		setupStub(attributes, mockCtx, "getAttribute");
+		mockConfig.stubs().method("getPortletContext").will(returnValue(mockCtx.proxy()));
+		mockCtx.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
+		setupStub(initParams, mockCtx, "getInitParameter");
+		mockConfig.stubs().method("getInitParameterNames").will(
+				returnValue(Collections.enumeration(initParams.keySet())));
+		setupStub(initParams, mockConfig, "getInitParameter");
+		mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
+			protected Object[][] getContents() {
+				return new String[][] { { "javax.portlet.title", "MyTitle" } };
+			}
+		}));
+	}
 
+	private void setupActionFactory(String namespace, String actionName, String result, ValueStack stack) {
+		if (mockActionFactory == null) {
+			mockActionFactory = mock(ActionProxyFactory.class);
+		}
+		mockAction = mock(Action.class);
+		mockActionProxy = mock(ActionProxy.class);
+		mockInvocation = mock(ActionInvocation.class);
 
-        Map initParams = new HashMap();
-        initParams.put("viewNamespace", "/view");
-        initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
+		mockActionFactory.expects(once()).method("createActionProxy").with(
+				new Constraint[] { eq(namespace), eq(actionName), NULL, isA(Map.class) }).will(
+				returnValue(mockActionProxy.proxy()));
+		mockActionProxy.stubs().method("getAction").will(returnValue(mockAction.proxy()));
+		mockActionProxy.expects(once()).method("execute").will(returnValue(result));
+		mockActionProxy.expects(once()).method("getInvocation").will(returnValue(mockInvocation.proxy()));
+		mockInvocation.stubs().method("getStack").will(returnValue(stack));
 
-        initPortletConfig(initParams, new HashMap());
-        initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), PortletMode.VIEW, WindowState.NORMAL, false, null);
-        setupActionFactory("/view", "testAction", "success", EasyMock.createNiceMock(ValueStack.class));
+	}
 
-        mockInvocation.expects(once()).method("getStack").will(
-                returnValue(null));
-        //mockSession.expects(once()).method("setAttribute").with(new Constraint[]{eq(PortletActionConstants.LAST_MODE), eq(PortletMode.VIEW)});
-        try {
-            dispatcher
-                    .setActionProxyFactory((ActionProxyFactory) mockActionFactory
-                            .proxy());
-            dispatcher.init((PortletConfig) mockConfig.proxy());
-            dispatcher.render((RenderRequest) mockRequest.proxy(),
-                    (RenderResponse) mockResponse.proxy());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Error occured");
-        }
-    }
+	public void testParseConfigWithBang() {
+		MockPortletContext portletContext = new MockPortletContext();
+		MockPortletConfig portletConfig = new MockPortletConfig(portletContext);
 
-    public void testProcessAction_ok() {
-        final Mock mockResponse = mock(ActionResponse.class);
+		portletConfig.addInitParameter("viewNamespace", "/view");
+		portletConfig.addInitParameter("defaultViewAction", "index!input");
 
-        PortletMode mode = PortletMode.VIEW;
-        Map initParams = new HashMap();
-        initParams.put("viewNamespace", "/view");
+		Map<PortletMode, ActionMapping> actionMap = new HashMap<PortletMode, ActionMapping>();
 
-        Map requestParams = new HashMap();
-        requestParams.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        requestParams.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
+		dispatcher.parseModeConfig(actionMap, portletConfig, PortletMode.VIEW, "viewNamespace", "defaultViewAction");
 
-        initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
-        initPortletConfig(initParams, new HashMap());
-        initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
-        setupActionFactory("/view", "testAction", "success", EasyMock.createNiceMock(ValueStack.class));
-        //mockSession.expects(once()).method("setAttribute").with(new Constraint[]{eq(PortletActionConstants.LAST_MODE), eq(PortletMode.VIEW)});
-        try {
-            dispatcher
-                    .setActionProxyFactory((ActionProxyFactory) mockActionFactory
-                            .proxy());
-            dispatcher.init((PortletConfig) mockConfig.proxy());
-            dispatcher.processAction((ActionRequest) mockRequest.proxy(),
-                    (ActionResponse) mockResponse.proxy());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Error occured");
-        }
-    }
+		ActionMapping mapping = actionMap.get(PortletMode.VIEW);
+		assertEquals("index", mapping.getName());
+		assertEquals("/view", mapping.getNamespace());
+		assertEquals("input", mapping.getMethod());
+	}
 
-    /**
-     * Initialize the mock request (and as a result, the mock session)
-     * @param requestParams The request parameters
-     * @param requestAttributes The request attributes
-     * @param sessionParams The session attributes
-     * @param renderParams The render parameters. Will only be set if <code>isEvent</code> is <code>true</code>
-     * @param mode The portlet mode
-     * @param state The portlet window state
-     * @param isEvent <code>true</code> when the request is an ActionRequest.
-     * @param locale The locale. If <code>null</code>, the request will return <code>Locale.getDefault()</code>
-     */
-    private void initRequest(Map requestParams, Map requestAttributes, Map sessionParams, Map renderParams, PortletMode mode, WindowState state, boolean isEvent, Locale locale) {
-        mockRequest = isEvent ? mock(ActionRequest.class) : mock(RenderRequest.class);
-        mockSession = mock(PortletSession.class);
-        mockSession.stubs().method(ANYTHING);
-        mockRequest.stubs().method(ANYTHING);
-        setupStub(sessionParams, mockSession, "getAttribute");
-        mockSession.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(sessionParams.keySet())));
-        setupParamStub(requestParams, mockRequest, "getParameter");
-        setupStub(requestAttributes, mockRequest, "getAttribute");
-        mockRequest.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(requestAttributes.keySet())));
-        mockRequest.stubs().method("getParameterMap").will(returnValue(requestParams));
-        mockRequest.stubs().method("getParameterNames").will(returnValue(Collections.enumeration(requestParams.keySet())));
-        mockRequest.stubs().method("getPortletSession").will(returnValue(mockSession.proxy()));
-        if(locale != null) {
-            mockRequest.stubs().method("getLocale").will(returnValue(locale));
-        }
-        else {
-            mockRequest.stubs().method("getLocale").will(returnValue(Locale.getDefault()));
-        }
-        mockRequest.stubs().method("getPortletMode").will(returnValue(mode));
-        mockRequest.stubs().method("getWindowState").will(returnValue(state));
-    }
+	public void testRender_ok() throws Exception {
+		final Mock mockResponse = mock(RenderResponse.class);
+		mockResponse.stubs().method(ANYTHING);
 
-    private void setupParamStub(Map requestParams, Mock mockRequest, String method) {
-        Map newMap = new HashMap();
-        Iterator it = requestParams.keySet().iterator();
-        while(it.hasNext()) {
-            Object key = it.next();
-            String[] val = (String[])requestParams.get(key);
-            newMap.put(key, val[0]);
-        }
-        setupStub(newMap, mockRequest, method);
+		PortletMode mode = PortletMode.VIEW;
 
-    }
+		Map<String, String[]> requestParams = new HashMap<String, String[]>();
+		requestParams.put(PortletActionConstants.ACTION_PARAM, new String[] { "/view/testAction" });
+		requestParams.put(EVENT_ACTION, new String[] { "true" });
+		requestParams.put(PortletActionConstants.MODE_PARAM, new String[] { mode.toString() });
 
-    /**
-     * Set up stubs for the mock.
-     * @param map The map containing the <code>key</code> and <code>values</code>. The key is the
-     * expected parameter to <code>method</code>, and value is the value that should be returned from
-     * the stub.
-     * @param mock The mock to initialize.
-     * @param method The name of the method to stub.
-     */
-    private void setupStub(Map map, Mock mock, String method) {
-        Iterator it = map.keySet().iterator();
-        while(it.hasNext()) {
-            Object key = it.next();
-            Object val = map.get(key);
-            mock.stubs().method(method).with(eq(key)).will(returnValue(val));
-        }
-    }
+		Map sessionMap = new HashMap();
 
-    public void testModeChangeUsingPortletWidgets() {
-        final Mock mockResponse = mock(RenderResponse.class);
-        mockResponse.stubs().method(ANYTHING);
-        PortletMode mode = PortletMode.EDIT;
+		Map<String, String> initParams = new HashMap<String, String>();
+		initParams.put("viewNamespace", "/view");
+		initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
 
-        Map requestParams = new HashMap();
-        requestParams.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        requestParams.put(EVENT_ACTION, new String[]{"false"});
-        requestParams.put(PortletActionConstants.MODE_PARAM, new String[]{PortletMode.VIEW.toString()});
+		initPortletConfig(initParams, new HashMap<String, Object>());
+		initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), PortletMode.VIEW, WindowState.NORMAL,
+				false, null);
+		setupActionFactory("/view", "testAction", "success", EasyMock.createNiceMock(ValueStack.class));
 
-        Map sessionMap = new HashMap();
+		mockInvocation.expects(once()).method("getStack").will(returnValue(null));
+		// mockSession.expects(once()).method("setAttribute").with(new
+		// Constraint[]{eq(PortletActionConstants.LAST_MODE),
+		// eq(PortletMode.VIEW)});
+		dispatcher.setActionProxyFactory((ActionProxyFactory) mockActionFactory.proxy());
+		dispatcher.init((PortletConfig) mockConfig.proxy());
+		dispatcher.render((RenderRequest) mockRequest.proxy(), (RenderResponse) mockResponse.proxy());
+	}
 
-        Map initParams = new HashMap();
-        initParams.put("viewNamespace", "/view");
-        initParams.put("editNamespace", "/edit");
+	public void testProcessAction_ok() throws Exception {
+		final Mock mockResponse = mock(ActionResponse.class);
 
-        initPortletConfig(initParams, new HashMap());
-        initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), mode, WindowState.NORMAL, false, null);
-        setupActionFactory("/edit", "default", "success", EasyMock.createNiceMock(ValueStack.class));
+		PortletMode mode = PortletMode.VIEW;
+		Map<String, String> initParams = new HashMap<String, String>();
+		initParams.put("viewNamespace", "/view");
 
-        mockInvocation.expects(once()).method("getStack").will(
-                returnValue(null));
-        //mockSession.expects(once()).method("setAttribute").with(new Constraint[]{eq(PortletActionConstants.LAST_MODE), eq(PortletMode.VIEW)});
-        try {
-            dispatcher
-                    .setActionProxyFactory((ActionProxyFactory) mockActionFactory
-                            .proxy());
-            dispatcher.init((PortletConfig) mockConfig.proxy());
-            dispatcher.render((RenderRequest) mockRequest.proxy(),
-                    (RenderResponse) mockResponse.proxy());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Error occured");
-        }
-    }
-    
-    public void testMultipartRequest_parametersAreCopiedToActionInvocation() throws Exception {
-    	MockPortletContext ctx = new MockPortletContext();
-    	ctx.setAttribute("javax.servlet.context.tempdir", new File("target").getAbsoluteFile());
-    	MockActionRequest request = new MockActionRequest(ctx);
-    	request.setContent(MULTIPART_REQUEST.getBytes("US-ASCII"));
-    	request.setContentType("multipart/form-data; boundary=---------------------------4827543632391");
-    	request.setProperty("Content-Length", "" + MULTIPART_REQUEST.length());
-    	MockActionResponse response = new MockActionResponse();
-    	Map<String, Object> requestMap = new HashMap<String, Object>();
-    	Map<String, String[]> paramMap = new HashMap<String, String[]>();
-    	Map<String, Object> sessionMap = new HashMap<String, Object>();
-    	Map<String, Object> applicationMap = new HashMap<String, Object>();
-    	initPortletConfig(new HashMap(), new HashMap());
-    	MockPortletConfig config = new MockPortletConfig(ctx);
-    	dispatcher.init(config);
-    	dispatcher.createContextMap(requestMap, paramMap, sessionMap, applicationMap, request, response, config, PortletActionConstants.EVENT_PHASE);
-    	assertNotNull("Caption was not found in parameter map!", paramMap.get("caption"));
-    	assertEquals("TestCaption", paramMap.get("caption")[0]);
-    }
+		Map<String, String[]> requestParams = new HashMap<String, String[]>();
+		requestParams.put(PortletActionConstants.ACTION_PARAM, new String[] { "/view/testAction" });
+		requestParams.put(PortletActionConstants.MODE_PARAM, new String[] { mode.toString() });
+
+		initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
+		initPortletConfig(initParams, new HashMap<String, Object>());
+		initRequest(requestParams, new HashMap<String, Object>(), new HashMap<String, Object>(), new HashMap<String, String[]>(), PortletMode.VIEW, WindowState.NORMAL,
+				true, null);
+		setupActionFactory("/view", "testAction", "success", EasyMock.createNiceMock(ValueStack.class));
+		// mockSession.expects(once()).method("setAttribute").with(new
+		// Constraint[]{eq(PortletActionConstants.LAST_MODE),
+		// eq(PortletMode.VIEW)});
+		dispatcher.setActionProxyFactory((ActionProxyFactory) mockActionFactory.proxy());
+		dispatcher.init((PortletConfig) mockConfig.proxy());
+		dispatcher.processAction((ActionRequest) mockRequest.proxy(), (ActionResponse) mockResponse.proxy());
+	}
+
+	/**
+	 * Initialize the mock request (and as a result, the mock session)
+	 * 
+	 * @param requestParams
+	 *            The request parameters
+	 * @param requestAttributes
+	 *            The request attributes
+	 * @param sessionParams
+	 *            The session attributes
+	 * @param renderParams
+	 *            The render parameters. Will only be set if
+	 *            <code>isEvent</code> is <code>true</code>
+	 * @param mode
+	 *            The portlet mode
+	 * @param state
+	 *            The portlet window state
+	 * @param isEvent
+	 *            <code>true</code> when the request is an ActionRequest.
+	 * @param locale
+	 *            The locale. If <code>null</code>, the request will return
+	 *            <code>Locale.getDefault()</code>
+	 */
+	private void initRequest(Map<String, String[]> requestParams, Map<String, Object> requestAttributes, Map<String, Object> sessionParams, Map<String, String[]> renderParams,
+			PortletMode mode, WindowState state, boolean isEvent, Locale locale) {
+		mockRequest = isEvent ? mock(ActionRequest.class) : mock(RenderRequest.class);
+		mockSession = mock(PortletSession.class);
+		mockSession.stubs().method(ANYTHING);
+		mockRequest.stubs().method(ANYTHING);
+		setupStub(sessionParams, mockSession, "getAttribute");
+		mockSession.stubs().method("getAttributeNames").will(
+				returnValue(Collections.enumeration(sessionParams.keySet())));
+		setupParamStub(requestParams, mockRequest, "getParameter");
+		setupStub(requestAttributes, mockRequest, "getAttribute");
+		mockRequest.stubs().method("getAttributeNames").will(
+				returnValue(Collections.enumeration(requestAttributes.keySet())));
+		mockRequest.stubs().method("getParameterMap").will(returnValue(requestParams));
+		mockRequest.stubs().method("getParameterNames").will(
+				returnValue(Collections.enumeration(requestParams.keySet())));
+		mockRequest.stubs().method("getPortletSession").will(returnValue(mockSession.proxy()));
+		if (locale != null) {
+			mockRequest.stubs().method("getLocale").will(returnValue(locale));
+		} else {
+			mockRequest.stubs().method("getLocale").will(returnValue(Locale.getDefault()));
+		}
+		mockRequest.stubs().method("getPortletMode").will(returnValue(mode));
+		mockRequest.stubs().method("getWindowState").will(returnValue(state));
+	}
+
+	private void setupParamStub(Map<String, String[]> requestParams, Mock mockRequest, String method) {
+		Map<String, String> newMap = new HashMap<String, String>();
+		Iterator<String> it = requestParams.keySet().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			String[] val = (String[]) requestParams.get(key);
+			newMap.put(key, val[0]);
+		}
+		setupStub(newMap, mockRequest, method);
+
+	}
+
+	/**
+	 * Set up stubs for the mock.
+	 * 
+	 * @param map
+	 *            The map containing the <code>key</code> and
+	 *            <code>values</code>. The key is the expected parameter to
+	 *            <code>method</code>, and value is the value that should be
+	 *            returned from the stub.
+	 * @param mock
+	 *            The mock to initialize.
+	 * @param method
+	 *            The name of the method to stub.
+	 */
+	private void setupStub(Map map, Mock mock, String method) {
+		Iterator it = map.keySet().iterator();
+		while (it.hasNext()) {
+			Object key = it.next();
+			Object val = map.get(key);
+			mock.stubs().method(method).with(eq(key)).will(returnValue(val));
+		}
+	}
+
+	public void testModeChangeUsingPortletWidgets() throws Exception {
+		final Mock mockResponse = mock(RenderResponse.class);
+		mockResponse.stubs().method(ANYTHING);
+		PortletMode mode = PortletMode.EDIT;
+
+		Map<String, String[]> requestParams = new HashMap<String, String[]>();
+		requestParams.put(PortletActionConstants.ACTION_PARAM, new String[] { "/view/testAction" });
+		requestParams.put(EVENT_ACTION, new String[] { "false" });
+		requestParams.put(PortletActionConstants.MODE_PARAM, new String[] { PortletMode.VIEW.toString() });
+
+		Map<String, Object> sessionMap = new HashMap<String, Object>();
+
+		Map<String, String> initParams = new HashMap<String, String>();
+		initParams.put("viewNamespace", "/view");
+		initParams.put("editNamespace", "/edit");
+
+		initPortletConfig(initParams, new HashMap<String, Object>());
+		initRequest(requestParams, new HashMap<String, Object>(), sessionMap, new HashMap<String, String[]>(), mode, WindowState.NORMAL, false, null);
+		setupActionFactory("/edit", "default", "success", EasyMock.createNiceMock(ValueStack.class));
+
+		mockInvocation.expects(once()).method("getStack").will(returnValue(null));
+		// mockSession.expects(once()).method("setAttribute").with(new
+		// Constraint[]{eq(PortletActionConstants.LAST_MODE),
+		// eq(PortletMode.VIEW)});
+		dispatcher.setActionProxyFactory((ActionProxyFactory) mockActionFactory.proxy());
+		dispatcher.init((PortletConfig) mockConfig.proxy());
+		dispatcher.render((RenderRequest) mockRequest.proxy(), (RenderResponse) mockResponse.proxy());
+	}
+
+	public void testMultipartRequest_parametersAreCopiedToActionInvocation() throws Exception {
+		MockPortletContext ctx = new MockPortletContext();
+		ctx.setAttribute("javax.servlet.context.tempdir", new File("target").getAbsoluteFile());
+		MockActionRequest request = new MockActionRequest(ctx);
+		request.setContent(MULTIPART_REQUEST.getBytes("US-ASCII"));
+		request.setContentType("multipart/form-data; boundary=---------------------------4827543632391");
+		request.setProperty("Content-Length", "" + MULTIPART_REQUEST.length());
+		MockActionResponse response = new MockActionResponse();
+		Map<String, Object> requestMap = new HashMap<String, Object>();
+		Map<String, String[]> paramMap = new HashMap<String, String[]>();
+		Map<String, Object> sessionMap = new HashMap<String, Object>();
+		Map<String, Object> applicationMap = new HashMap<String, Object>();
+		initPortletConfig(new HashMap<String, String>(), new HashMap<String, Object>());
+		MockPortletConfig config = new MockPortletConfig(ctx);
+		dispatcher.init(config);
+		dispatcher.createContextMap(requestMap, paramMap, sessionMap, applicationMap, request, response, config,
+				PortletActionConstants.EVENT_PHASE);
+		assertNotNull("Caption was not found in parameter map!", paramMap.get("caption"));
+		assertEquals("TestCaption", paramMap.get("caption")[0]);
+	}
 }

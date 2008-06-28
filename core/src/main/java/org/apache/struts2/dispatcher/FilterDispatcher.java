@@ -146,8 +146,15 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  * the subclass.
  *
  * @version $Date$ $Id$
+ * @deprecated Since Struts 2.1.3, use {@link org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter} instead or
+ * {@link org.apache.struts2.dispatcher.filter.StrutsPrepareFilter} and {@link org.apache.struts2.dispatcher.filter.StrutsExecuteFilter}
+ * if needing using the {@link ActionContextCleanUp} filter in addition to this one
+ *
  * @see ActionMapper
  * @see ActionContextCleanUp
+ * @see org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter
+ * @see org.apache.struts2.dispatcher.filter.StrutsPrepareFilter
+ * @see org.apache.struts2.dispatcher.filter.StrutsExecuteFilter
  */
 public class FilterDispatcher implements StrutsStatics, Filter {
 

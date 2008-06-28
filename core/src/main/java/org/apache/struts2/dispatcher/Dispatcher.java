@@ -418,6 +418,12 @@ public class Dispatcher {
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
         ValueStack stack = (ValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
+        if (stack == null) {
+            ActionContext ctx = ActionContext.getContext();
+            if (ctx != null) {
+                stack = ctx.getValueStack();
+            }
+        }
         if (stack != null) {
             extraContext.put(ActionContext.VALUE_STACK, valueStackFactory.createValueStack(stack));
         }

@@ -47,6 +47,8 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * must "swallow" the exception.  This it does by logging the
  * exception as an error.
  *
+ * @deprecated Since Struts 2.1.3 as it probably isn't used anymore
+ *
  */
 public class FilterDispatcherCompatWeblogic61 extends FilterDispatcher {
 

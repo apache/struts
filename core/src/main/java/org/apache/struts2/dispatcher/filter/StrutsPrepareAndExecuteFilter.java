@@ -35,7 +35,6 @@ import java.io.IOException;
  */
 public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     private PrepareOperations prepare;
-    private CleanupOperations cleanup;
     private ExecuteOperations execute;
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -46,12 +45,9 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             init.initStaticContentLoader(filterConfig, dispatcher);
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
-            cleanup = new CleanupOperations(dispatcher);
             execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
         } finally {
-            if (cleanup != null) {
-                cleanup.cleanupInit();
-            }
+            init.cleanup();
         }
 
     }
@@ -62,7 +58,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         try {
-            prepare.createActionContext();
+            prepare.createActionContext(request);
             prepare.assignDispatcherToThread();
             prepare.setEncodingAndLocale(request, response);
             request = prepare.wrapRequest(request);
@@ -76,11 +72,11 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
                 execute.executeAction(request, response, mapping);
             }
         } finally {
-            cleanup.cleanupRequest();
+            prepare.cleanupRequest(request);
         }
     }
 
     public void destroy() {
-        cleanup.cleanupDispatcher();
+        prepare.cleanupDispatcher();
     }
 }

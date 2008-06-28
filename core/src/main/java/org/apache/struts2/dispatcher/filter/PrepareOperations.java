@@ -23,8 +23,8 @@ package org.apache.struts2.dispatcher.filter;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.StrutsException;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -33,8 +33,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Contains preparation operations for a request before execution
@@ -44,6 +47,8 @@ public class PrepareOperations {
     private ServletContext servletContext;
     private Dispatcher dispatcher;
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
+    public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
+    private Logger log = LoggerFactory.getLogger(PrepareOperations.class);
 
     public PrepareOperations(ServletContext servletContext, Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
@@ -53,11 +58,46 @@ public class PrepareOperations {
     /**
      * Creates the action context and initializes the thread local
      */
-    public ActionContext createActionContext() {
-        ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-        ActionContext ctx = new ActionContext(stack.getContext());
+    public ActionContext createActionContext(HttpServletRequest request) {
+        ActionContext ctx;
+        Integer counter = 1;
+        Integer oldCounter = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
+        if (oldCounter != null) {
+            counter = oldCounter + 1;
+        }
+        
+        ActionContext oldContext = ActionContext.getContext();
+        if (oldContext != null) {
+            // detected existing context, so we are probably in a forward
+            ctx = new ActionContext(new HashMap<String, Object>(oldContext.getContextMap()));
+        } else {
+            ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+            ctx = new ActionContext(stack.getContext());
+        }
+        request.setAttribute(CLEANUP_RECURSION_COUNTER, counter);
         ActionContext.setContext(ctx);
         return ctx;
+    }
+
+    /**
+     * Cleans up a request of thread locals
+     */
+    public void cleanupRequest(HttpServletRequest request) {
+        Integer counterVal = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
+        if (counterVal != null) {
+            counterVal -= 1;
+            request.setAttribute(CLEANUP_RECURSION_COUNTER, counterVal);
+            if (counterVal > 0 ) {
+                if (log.isDebugEnabled()) {
+                    log.debug("skipping cleanup counter="+counterVal);
+                }
+                return;
+            }
+        }
+
+        // always clean up the thread request, even if an action hasn't been executed
+        ActionContext.setContext(null);
+        Dispatcher.setInstance(null);
     }
 
     /**
@@ -113,5 +153,18 @@ public class PrepareOperations {
         return mapping;
     }
 
-
+    /**
+     * Cleans up the dispatcher instance
+     */
+    public void cleanupDispatcher() {
+        if (dispatcher == null) {
+            throw new StrutsException("something is seriously wrong, Dispatcher is not initialized (null) ");
+        } else {
+            try {
+                dispatcher.cleanup();
+            } finally {
+                ActionContext.setContext(null);
+            }
+        }
+    }
 }

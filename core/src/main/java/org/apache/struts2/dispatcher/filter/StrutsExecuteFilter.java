@@ -35,7 +35,6 @@ import java.io.IOException;
  */
 public class StrutsExecuteFilter implements StrutsStatics, Filter {
     private PrepareOperations prepare;
-    private CleanupOperations cleanup;
     private ExecuteOperations execute;
 
     private FilterConfig filterConfig;
@@ -47,16 +46,11 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
     protected synchronized void lazyInit() {
         if (execute == null) {
             InitOperations init = new InitOperations();
-            try {
-                Dispatcher dispatcher = init.findDispatcherOnThread();
-                init.initStaticContentLoader(filterConfig, dispatcher);
+            Dispatcher dispatcher = init.findDispatcherOnThread();
+            init.initStaticContentLoader(filterConfig, dispatcher);
 
-                prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
-                cleanup = new CleanupOperations(dispatcher);
-                execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
-            } finally {
-                cleanup.cleanupInit();
-            }
+            prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
+            execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
         }
 
     }
@@ -83,7 +77,6 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
     public void destroy() {
         prepare = null;
         execute = null;
-        cleanup = null;
         filterConfig = null;
     }
 }

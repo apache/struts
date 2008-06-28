@@ -21,6 +21,7 @@
 package org.apache.struts2.dispatcher.filter;
 
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.util.ClassLoaderUtils;
@@ -102,5 +103,9 @@ public class InitOperations {
             params.put(name, value);
         }
         return new Dispatcher(filterConfig.getServletContext(), params);
+    }
+
+    public void cleanup() {
+        ActionContext.setContext(null);
     }
 }

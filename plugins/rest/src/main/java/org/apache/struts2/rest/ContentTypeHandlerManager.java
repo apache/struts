@@ -44,7 +44,11 @@ import java.util.Set;
  */
 public class ContentTypeHandlerManager {
 
-    Map<String,ContentTypeHandler> handlers = new HashMap<String,ContentTypeHandler>();
+    /** ContentTypeHandlers keyed by the extension */
+    Map<String,ContentTypeHandler> handlersByExtension = new HashMap<String,ContentTypeHandler>();
+    /** ContentTypeHandlers keyed by the content-type */
+    Map<String,ContentTypeHandler> handlersByContentType = new HashMap<String,ContentTypeHandler>();
+
     String defaultExtension;
     public static final String STRUTS_REST_HANDLER_OVERRIDE_PREFIX = "struts.rest.handlerOverride.";
 
@@ -59,33 +63,60 @@ public class ContentTypeHandlerManager {
         for (String name : names) {
             ContentTypeHandler handler = container.getInstance(ContentTypeHandler.class, name);
 
-            // Check for overriding handlers for the current extension
-            String overrideName = container.getInstance(String.class, STRUTS_REST_HANDLER_OVERRIDE_PREFIX +handler.getExtension());
-            if (overrideName != null) {
-                if (!handlers.containsKey(handler.getExtension())) {
-                    handler = container.getInstance(ContentTypeHandler.class, overrideName);
-                } else {
-                    // overriding handler has already been registered
-                    continue;
+            if (handler.getExtension() != null) {
+                // Check for overriding handlers for the current extension
+                String overrideName = container.getInstance(String.class, STRUTS_REST_HANDLER_OVERRIDE_PREFIX +handler.getExtension());
+                if (overrideName != null) {
+                    if (!handlersByExtension.containsKey(handler.getExtension())) {
+                        handler = container.getInstance(ContentTypeHandler.class, overrideName);
+                    } else {
+                        // overriding handler has already been registered
+                        continue;
+                    }
                 }
+                this.handlersByExtension.put(handler.getExtension(), handler);
             }
-            this.handlers.put(handler.getExtension(), handler);
+
+            if (handler.getContentType() != null) {
+                this.handlersByContentType.put(handler.getContentType(), handler);
+            }
         }
     }
     
     /**
-     * Gets the handler for the request by looking at the extension
+     * Gets the handler for the request by looking at the request content type and extension
      * @param req The request
      * @return The appropriate handler
      */
     public ContentTypeHandler getHandlerForRequest(HttpServletRequest req) {
+        ContentTypeHandler handler = null;
+        String contentType = req.getContentType();
+        if (contentType != null) {
+            handler = handlersByContentType.get(contentType);
+        }
+        if (handler == null) {
+            String extension = findExtension(req.getRequestURI());
+            if (extension == null) {
+                extension = defaultExtension;
+            }
+            handler = handlersByExtension.get(extension);
+        }
+        return handler;
+    }
+
+    /**
+     * Gets the handler for the response by looking at the extension of the request
+     * @param req The request
+     * @return The appropriate handler
+     */
+    public ContentTypeHandler getHandlerForResponse(HttpServletRequest req, HttpServletResponse res) {
         String extension = findExtension(req.getRequestURI());
         if (extension == null) {
             extension = defaultExtension;
         }
-        return handlers.get(extension);
+        return handlersByExtension.get(extension);
     }
-    
+
     /**
      * Handles the result using handlers to generate content type-specific content
      * 
@@ -127,7 +158,7 @@ public class ContentTypeHandlerManager {
             target = null;
         }
 
-        ContentTypeHandler handler = getHandlerForRequest(req);
+        ContentTypeHandler handler = getHandlerForResponse(req, res);
         if (handler != null) {
             String extCode = resultCode+"-"+handler.getExtension();
             if (actionConfig.getResults().get(extCode) != null) {

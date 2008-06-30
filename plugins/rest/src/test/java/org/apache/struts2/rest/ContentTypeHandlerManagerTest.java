@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
+import org.apache.struts2.rest.handler.FormUrlEncodedHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -78,7 +79,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
             public String getContentType() { return "foo"; }
             public String getExtension() { return "foo"; }
         };
-        mgr.handlers.put("xml", handler);
+        mgr.handlersByExtension.put("xml", handler);
         mgr.defaultExtension = "xml";
         mgr.handleResult(new ActionConfig.Builder("", "", "").build(), new DefaultHttpHeaders().withStatus(SC_OK), obj);
 
@@ -89,7 +90,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
 
         Mock mockHandlerXml = new Mock(ContentTypeHandler.class);
         mockHandlerXml.matchAndReturn("getExtension", "xml");
-        mgr.handlers.put("xml", (ContentTypeHandler) mockHandlerXml.proxy());
+        mgr.handlersByExtension.put("xml", (ContentTypeHandler) mockHandlerXml.proxy());
         mgr.handleResult(null, new DefaultHttpHeaders().withStatus(SC_NOT_MODIFIED), new Object());
 
         assertEquals(0, mockResponse.getContentLength());
@@ -98,13 +99,16 @@ public class ContentTypeHandlerManagerTest extends TestCase {
     public void testHandlerOverride() {
         Mock mockHandlerXml = new Mock(ContentTypeHandler.class);
         mockHandlerXml.matchAndReturn("getExtension", "xml");
+        mockHandlerXml.matchAndReturn("getContentType", "application/xml");
         mockHandlerXml.matchAndReturn("toString", "xml");
         Mock mockHandlerJson = new Mock(ContentTypeHandler.class);
         mockHandlerJson.matchAndReturn("getExtension", "json");
+        mockHandlerJson.matchAndReturn("getContentType", "application/javascript");
         mockHandlerJson.matchAndReturn("toString", "json");
         Mock mockHandlerXmlOverride = new Mock(ContentTypeHandler.class);
         mockHandlerXmlOverride.matchAndReturn("getExtension", "xml");
         mockHandlerXmlOverride.matchAndReturn("toString", "xmlOverride");
+        mockHandlerXmlOverride.matchAndReturn("getContentType", "application/xml");
 
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ContentTypeHandler.class), C.eq("xmlOverride")), mockHandlerXmlOverride.proxy());
@@ -120,10 +124,34 @@ public class ContentTypeHandlerManagerTest extends TestCase {
         ContentTypeHandlerManager mgr = new ContentTypeHandlerManager();
         mgr.setContainer((Container) mockContainer.proxy());
 
-        Map<String,ContentTypeHandler> handlers = mgr.handlers;
+        Map<String,ContentTypeHandler> handlers = mgr.handlersByExtension;
         assertNotNull(handlers);
         assertEquals(2, handlers.size());
         assertEquals(mockHandlerXmlOverride.proxy(), handlers.get("xml"));
         assertEquals(mockHandlerJson.proxy(), handlers.get("json"));
+    }
+
+    /** Assert that the request content-type and differ from the response content type */
+    public void HandleRequestContentType() throws IOException {
+
+        Mock mockHandlerForm = new Mock(ContentTypeHandler.class);
+        mockHandlerForm.matchAndReturn("getExtension", null);
+        mockHandlerForm.matchAndReturn("getContentType", "application/x-www-form-urlencoded");
+        mockHandlerForm.matchAndReturn("toString", "x-www-form-urlencoded");
+
+        Mock mockHandlerJson = new Mock(ContentTypeHandler.class);
+        mockHandlerJson.matchAndReturn("getExtension", "json");
+        mockHandlerJson.matchAndReturn("getContentType", "application/javascript");
+        mockHandlerJson.matchAndReturn("toString", "json");
+
+        Mock mockContainer = new Mock(Container.class);
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(ContentTypeHandler.class), C.eq("x-www-form-urlencoded")), mockHandlerForm.proxy());
+        mockContainer.expectAndReturn("getInstanceNames", C.args(C.eq(ContentTypeHandler.class)), new HashSet(Arrays.asList("x-www-form-urlencoded", "json")));
+
+        mockRequest.setContentType(FormUrlEncodedHandler.CONTENT_TYPE);
+        mockRequest.setContent("a=1&b=2".getBytes("UTF-8"));
+        ContentTypeHandler handler = mgr.getHandlerForRequest(mockRequest);
+
+        assertEquals("x-www-form-urlencoded", toString());
     }
 }

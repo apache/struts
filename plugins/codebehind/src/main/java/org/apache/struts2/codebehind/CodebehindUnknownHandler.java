@@ -75,7 +75,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     public void setPathPrefix(String prefix) {
         this.templatePathPrefix=prefix;
     }
-    
+
     @Inject
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
@@ -110,7 +110,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     /** Create a new ActionConfig in the default package, with the default interceptor stack and a single result */
     protected ActionConfig buildActionConfig(String path, String namespace, String actionName, ResultTypeConfig resultTypeConfig) {
         final PackageConfig pkg = configuration.getPackageConfig(defaultPackageName);
-        return new ActionConfig.Builder(defaultPackageName, "execute", ActionSupport.class.getName())
+        return new ActionConfig.Builder(defaultPackageName, "execute", pkg.getDefaultClassRef())
                 .addInterceptors(InterceptorBuilder.constructInterceptorReference(new InterceptorLocator() {
                     public Object getInterceptorConfig(String name) {
                         return pkg.getAllInterceptorConfigs().get(name); // recurse package hiearchy

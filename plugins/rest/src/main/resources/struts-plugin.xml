@@ -47,6 +47,7 @@
     <constant name="struts.codebehind.classSuffix" value="Controller"/>
     <constant name="struts.codebehind.action.checkImplementsAction" value="false"/>
     <constant name="struts.codebehind.action.checkAnnotation" value="false"/>
+    <constant name="struts.codebehind.action.defaultMethodName" value="index"/>
 
     <constant name="struts.configuration.classpath.defaultParentPackage" value="rest-default" />
 
@@ -112,6 +113,9 @@
         </interceptors>
 
         <default-interceptor-ref name="restDefaultStack"/>
+
+        <default-class-ref class="org.apache.struts2.rest.RestActionSupport"/>
+
     </package>
 
 </struts>

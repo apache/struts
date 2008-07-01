@@ -179,22 +179,73 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         }
         return sb.toString();
     }
-    
-    protected String determinePath(String prefix, String ns) {
-        if (ns == null || "/".equals(ns)) {
-            ns = "";
+
+    protected String joinPaths(boolean leadingSlash, boolean trailingSlash, String... parts) {
+        StringBuilder sb = new StringBuilder();
+        if (leadingSlash) {
+            sb.append("/");
         }
-        if (ns.length() > 0) {
-            if (ns.charAt(0) == '/') {
-                ns = ns.substring(1);
+        for (String part : parts) {
+            if (sb.length() > 0 && sb.charAt(sb.length()-1) != '/') {
+                sb.append("/");
             }
-            if (ns.charAt(ns.length() - 1) != '/') {
-                ns += "/";
+            sb.append(stripSlashes(part));
+        }
+        if (trailingSlash) {
+            if (sb.length() > 0 && sb.charAt(sb.length()-1) != '/') {
+                sb.append("/");
             }
         }
-        return prefix + ns;
+        return sb.toString();
     }
-    
+
+    protected String determinePath(String prefix, String ns) {        
+        return joinPaths(true, true, prefix, ns);
+    }
+
+    protected String stripLeadingSlash(String path) {
+        String result;
+        if (path != null) {
+            if (path.length() > 0) {
+                if (path.charAt(0) == '/') {
+                    result = path.substring(1);
+                } else {
+                    result = path;
+                }
+            } else {
+                result = path;
+            }
+        } else {
+            result = "";
+        }
+
+        return result;
+    }
+
+    protected String stripTrailingSlash(String path) {
+        String result;
+
+        if (path != null) {
+            if (path.length() > 0) {
+                if (path.charAt(path.length() - 1) == '/') {
+                    result = path.substring(0, path.length()-1);
+                } else {
+                    result = path;
+                }
+            } else {
+                result = path;
+            }
+        } else {
+            result = "";
+        }
+
+        return result;
+    }
+
+    protected String stripSlashes(String path) {
+        return stripLeadingSlash(stripTrailingSlash(path));
+    }
+
     URL locateTemplate(String path) throws MalformedURLException {
         URL template = servletContext.getResource(path);
         if (template != null) {
@@ -202,9 +253,9 @@ public class CodebehindUnknownHandler implements UnknownHandler {
                 LOG.debug("Loaded template '" + path + "' from servlet context.");
             }
         } else {
-            template = ClassLoaderUtils.getResource(path, getClass());
+            template = ClassLoaderUtils.getResource(stripLeadingSlash(path), getClass());
             if (template != null && LOG.isDebugEnabled()) {
-                LOG.debug("Loaded template '" + path + "' from class path.");                
+                LOG.debug("Loaded template '" + stripLeadingSlash(path) + "' from class path.");
             }
         }
         return template;

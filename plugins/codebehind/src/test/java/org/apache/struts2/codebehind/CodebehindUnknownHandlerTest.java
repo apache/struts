@@ -76,6 +76,9 @@ public class CodebehindUnknownHandlerTest extends StrutsTestCase {
         assertEquals("/foo/", handler.determinePath("/", "/foo"));
         assertEquals("/foo/", handler.determinePath("/", "/foo/"));
         assertEquals("/foo/", handler.determinePath("/", "foo"));
+        assertEquals("/", handler.determinePath("", ""));
+        assertEquals("/foo/", handler.determinePath("", "foo"));
+        assertEquals("/foo/", handler.determinePath("", "/foo/"));
     }
     
     public void testLocateTemplate() throws MalformedURLException {

@@ -497,7 +497,9 @@ public class ClasspathPackageProvider implements PackageProvider {
             packageLoader.registerChildToParent(pkgConfig, parent);
         }
 
-        System.out.println("class:"+actionClass+" parent:"+parent+" current:"+(pkgConfig != null ? pkgConfig.getName() : ""));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("class:"+actionClass+" parent:"+parent+" current:"+(pkgConfig != null ? pkgConfig.getName() : ""));
+        }
 
         return pkgConfig;
     }

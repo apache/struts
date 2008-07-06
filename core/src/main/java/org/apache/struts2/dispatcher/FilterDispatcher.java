@@ -22,16 +22,9 @@
 package org.apache.struts2.dispatcher;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -44,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.RequestUtils;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -52,10 +44,8 @@ import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -146,15 +136,15 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  * the subclass.
  *
  * @version $Date$ $Id$
- * @deprecated Since Struts 2.1.3, use {@link org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter} instead or
- * {@link org.apache.struts2.dispatcher.filter.StrutsPrepareFilter} and {@link org.apache.struts2.dispatcher.filter.StrutsExecuteFilter}
+ * @deprecated Since Struts 2.1.3, use {@link org.apache.struts2.dispatcher.ng.StrutsPrepareAndExecuteFilter} instead or
+ * {@link org.apache.struts2.dispatcher.ng.StrutsPrepareFilter} and {@link org.apache.struts2.dispatcher.ng.StrutsExecuteFilter}
  * if needing using the {@link ActionContextCleanUp} filter in addition to this one
  *
  * @see ActionMapper
  * @see ActionContextCleanUp
- * @see org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter
- * @see org.apache.struts2.dispatcher.filter.StrutsPrepareFilter
- * @see org.apache.struts2.dispatcher.filter.StrutsExecuteFilter
+ * @see org.apache.struts2.dispatcher.ng.StrutsPrepareAndExecuteFilter
+ * @see org.apache.struts2.dispatcher.ng.StrutsPrepareFilter
+ * @see org.apache.struts2.dispatcher.ng.StrutsExecuteFilter
  */
 public class FilterDispatcher implements StrutsStatics, Filter {
 

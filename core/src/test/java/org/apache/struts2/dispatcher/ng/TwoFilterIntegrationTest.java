@@ -18,11 +18,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.filter;
+package org.apache.struts2.dispatcher.ng;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.mock.web.*;
@@ -31,8 +29,6 @@ import javax.servlet.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Collections;
 
 /**
  * Integration tests for the filter

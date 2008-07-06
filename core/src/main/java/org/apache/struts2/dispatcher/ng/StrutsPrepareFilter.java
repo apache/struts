@@ -18,11 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.filter;
+package org.apache.struts2.dispatcher.ng;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -30,22 +29,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Handles both the preparation and execution phases of the Struts dispatching process.  This filter is better to use
- * when you don't have another filter that needs access to action context information, such as Sitemesh.
+ * Prepares the request for execution by a later {@link StrutsExecuteFilter} filter instance.
  */
-public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
+public class StrutsPrepareFilter implements StrutsStatics, Filter {
     private PrepareOperations prepare;
-    private ExecuteOperations execute;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
         try {
             init.initLogging(filterConfig);
             Dispatcher dispatcher = init.initDispatcher(filterConfig);
-            init.initStaticContentLoader(filterConfig, dispatcher);
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
-            execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
         } finally {
             init.cleanup();
         }
@@ -62,15 +57,9 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             prepare.assignDispatcherToThread();
             prepare.setEncodingAndLocale(request, response);
             request = prepare.wrapRequest(request);
-            ActionMapping mapping = prepare.findActionMapping(request, response);
-            if (mapping == null) {
-                boolean handled = execute.executeStaticResourceRequest(request, response);
-                if (!handled) {
-                    chain.doFilter(request, response);
-                }
-            } else {
-                execute.executeAction(request, response, mapping);
-            }
+            prepare.findActionMapping(request, response);
+
+            chain.doFilter(request, response);
         } finally {
             prepare.cleanupRequest(request);
         }

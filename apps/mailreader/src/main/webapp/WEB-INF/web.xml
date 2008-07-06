@@ -7,7 +7,7 @@
     <filter>
         <filter-name>Struts2</filter-name>
         <filter-class>
-            org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter
+            org.apache.struts2.dispatcher.ng.StrutsPrepareAndExecuteFilter
         </filter-class>
     </filter>
 

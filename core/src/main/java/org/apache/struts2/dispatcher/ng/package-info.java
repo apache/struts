@@ -67,4 +67,4 @@
  * </pre>
  * 
  */
-package org.apache.struts2.dispatcher.filter;
+package org.apache.struts2.dispatcher.ng;

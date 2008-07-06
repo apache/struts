@@ -18,7 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.filter;
+package org.apache.struts2.dispatcher.ng;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -30,27 +30,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Executes the discovered request information.  This filter requires the {@link StrutsPrepareFilter} to have already
- * been executed in the current chain.
+ * Handles both the preparation and execution phases of the Struts dispatching process.  This filter is better to use
+ * when you don't have another filter that needs access to action context information, such as Sitemesh.
  */
-public class StrutsExecuteFilter implements StrutsStatics, Filter {
+public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     private PrepareOperations prepare;
     private ExecuteOperations execute;
 
-    private FilterConfig filterConfig;
-
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
-    }
-
-    protected synchronized void lazyInit() {
-        if (execute == null) {
-            InitOperations init = new InitOperations();
-            Dispatcher dispatcher = init.findDispatcherOnThread();
+        InitOperations init = new InitOperations();
+        try {
+            init.initLogging(filterConfig);
+            Dispatcher dispatcher = init.initDispatcher(filterConfig);
             init.initStaticContentLoader(filterConfig, dispatcher);
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
             execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
+        } finally {
+            init.cleanup();
         }
 
     }
@@ -60,23 +57,26 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        // This is necessary since we need the dispatcher instance, which was created by the prepare filter
-        lazyInit();
-
-        ActionMapping mapping = prepare.findActionMapping(request, response);
-        if (mapping == null) {
-            boolean handled = execute.executeStaticResourceRequest(request, response);
-            if (!handled) {
-                chain.doFilter(request, response);
+        try {
+            prepare.createActionContext(request);
+            prepare.assignDispatcherToThread();
+            prepare.setEncodingAndLocale(request, response);
+            request = prepare.wrapRequest(request);
+            ActionMapping mapping = prepare.findActionMapping(request, response);
+            if (mapping == null) {
+                boolean handled = execute.executeStaticResourceRequest(request, response);
+                if (!handled) {
+                    chain.doFilter(request, response);
+                }
+            } else {
+                execute.executeAction(request, response, mapping);
             }
-        } else {
-            execute.executeAction(request, response, mapping);
+        } finally {
+            prepare.cleanupRequest(request);
         }
     }
 
     public void destroy() {
-        prepare = null;
-        execute = null;
-        filterConfig = null;
+        prepare.cleanupDispatcher();
     }
 }

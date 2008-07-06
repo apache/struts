@@ -18,7 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.filter;
+package org.apache.struts2.dispatcher.ng;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StaticContentLoader;

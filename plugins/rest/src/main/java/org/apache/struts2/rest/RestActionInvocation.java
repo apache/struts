@@ -125,6 +125,8 @@ public class RestActionInvocation extends DefaultActionInvocation {
     protected String processResult(ActionConfig actionConfig, Object methodResult) throws IOException {
         if (methodResult instanceof Result) {
             this.explicitResult = (Result) methodResult;
+            // Wire the result automatically
+            container.inject(explicitResult);
             return null;
         } else if (methodResult != null) {
             resultCode = handlerSelector.handleResult(actionConfig, methodResult, action);

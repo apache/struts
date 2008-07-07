@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.ng.HostConfig;
 import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.inject.Inject;
@@ -109,9 +110,9 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.struts2.dispatcher.StaticResourceLoader#setFilterConfig(javax.servlet.FilterConfig)
+     * @see org.apache.struts2.dispatcher.StaticResourceLoader#setHostConfig(javax.servlet.FilterConfig)
      */
-    public void setFilterConfig(FilterConfig filterConfig) {
+    public void setHostConfig(HostConfig filterConfig) {
         String param = filterConfig.getInitParameter("packages");
         String packages = getAdditionalPackages();
         if (param != null) {
@@ -227,7 +228,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
         }
     }
 
-    private void initLogging(FilterConfig filterConfig) {
+    private void initLogging(HostConfig filterConfig) {
         String factoryName = filterConfig.getInitParameter("loggerFactory");
         if (factoryName != null) {
             try {

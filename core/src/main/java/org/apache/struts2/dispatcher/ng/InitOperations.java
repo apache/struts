@@ -26,10 +26,9 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.util.ClassLoaderUtils;
 
-import javax.servlet.FilterConfig;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 
 /**
  * Contains initialization operations
@@ -42,7 +41,7 @@ public class InitOperations {
     /**
      * Initializes the internal Struts logging
      */
-    public void initLogging(FilterConfig filterConfig) {
+    public void initLogging(HostConfig filterConfig) {
         String factoryName = filterConfig.getInitParameter("loggerFactory");
         if (factoryName != null) {
             try {
@@ -65,7 +64,7 @@ public class InitOperations {
     /**
      * Creates and initializes the dispatcher
      */
-    public Dispatcher initDispatcher(FilterConfig filterConfig) {
+    public Dispatcher initDispatcher(HostConfig filterConfig) {
         Dispatcher dispatcher = createDispatcher(filterConfig);
         dispatcher.init();
         return dispatcher;
@@ -74,9 +73,9 @@ public class InitOperations {
     /**
      * Initializes the static content loader with the filter configuration
      */
-    public StaticContentLoader initStaticContentLoader(FilterConfig filterConfig, Dispatcher dispatcher) {
+    public StaticContentLoader initStaticContentLoader(HostConfig filterConfig, Dispatcher dispatcher) {
         StaticContentLoader loader = dispatcher.getContainer().getInstance(StaticContentLoader.class);
-        loader.setFilterConfig(filterConfig);
+        loader.setHostConfig(filterConfig);
         return loader;
     }
 
@@ -95,10 +94,10 @@ public class InitOperations {
     /**
      * Create a {@link Dispatcher} 
      */
-    private Dispatcher createDispatcher(FilterConfig filterConfig) {
+    private Dispatcher createDispatcher(HostConfig filterConfig) {
         Map<String, String> params = new HashMap<String, String>();
-        for (Enumeration e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
-            String name = (String) e.nextElement();
+        for (Iterator e = filterConfig.getInitParameterNames(); e.hasNext();) {
+            String name = (String) e.next();
             String value = filterConfig.getInitParameter(name);
             params.put(name, value);
         }

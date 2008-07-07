@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.dispatcher;
 
+import org.apache.struts2.dispatcher.ng.HostConfig;
+
 import java.io.IOException;
 
 import javax.servlet.FilterConfig;
@@ -43,7 +45,7 @@ public interface StaticContentLoader {
      * @param filterConfig
      *            The filter configuration
      */
-    public abstract void setFilterConfig(FilterConfig filterConfig);
+    public abstract void setHostConfig(HostConfig filterConfig);
 
     /**
      * Locate a static resource and copy directly to the response, setting the

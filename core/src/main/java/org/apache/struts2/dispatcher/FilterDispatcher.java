@@ -40,6 +40,7 @@ import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.ng.filter.FilterHostConfig;
 import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -136,15 +137,15 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  * the subclass.
  *
  * @version $Date$ $Id$
- * @deprecated Since Struts 2.1.3, use {@link org.apache.struts2.dispatcher.ng.StrutsPrepareAndExecuteFilter} instead or
- * {@link org.apache.struts2.dispatcher.ng.StrutsPrepareFilter} and {@link org.apache.struts2.dispatcher.ng.StrutsExecuteFilter}
+ * @deprecated Since Struts 2.1.3, use {@link org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter} instead or
+ * {@link org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter} and {@link org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter}
  * if needing using the {@link ActionContextCleanUp} filter in addition to this one
  *
  * @see ActionMapper
  * @see ActionContextCleanUp
- * @see org.apache.struts2.dispatcher.ng.StrutsPrepareAndExecuteFilter
- * @see org.apache.struts2.dispatcher.ng.StrutsPrepareFilter
- * @see org.apache.struts2.dispatcher.ng.StrutsExecuteFilter
+ * @see org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter
+ * @see org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter
+ * @see org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter
  */
 public class FilterDispatcher implements StrutsStatics, Filter {
 
@@ -189,7 +190,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             dispatcher.init();
             dispatcher.getContainer().inject(this);
 
-            staticResourceLoader.setFilterConfig(filterConfig);
+            staticResourceLoader.setHostConfig(new FilterHostConfig(filterConfig));
         } finally {
             ActionContext.setContext(null);
         }

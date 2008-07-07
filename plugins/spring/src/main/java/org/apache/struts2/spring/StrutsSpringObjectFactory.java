@@ -27,6 +27,7 @@ import org.apache.struts2.StrutsConstants;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
@@ -72,7 +73,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
         boolean useClassCache = "true".equals(useClassCacheStr);
         LOG.info("Initializing Struts-Spring integration...");
 
-        ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         if (appContext == null) {
             // uh oh! looks like the lifecycle listener wasn't installed. Let's inform the user
             String message = "********** FATAL ERROR STARTING UP STRUTS-SPRING INTEGRATION **********\n" +

@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher.ng;
 import com.opensymphony.xwork2.ActionContext;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;

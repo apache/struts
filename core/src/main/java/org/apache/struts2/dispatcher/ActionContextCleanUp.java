@@ -59,13 +59,13 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  * <!-- SNIPPET END: description -->
  *
  *
- * @deprecated Since Struts 2.1.3, use {@link org.apache.struts2.dispatcher.ng.StrutsPrepareFilter} and
- * {@link org.apache.struts2.dispatcher.ng.StrutsExecuteFilter} to use other Servlet filters that need access to
+ * @deprecated Since Struts 2.1.3, use {@link org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter} and
+ * {@link org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter} to use other Servlet filters that need access to
  * the ActionContext
  * @see FilterDispatcher
  * @see Dispatcher
- * @see org.apache.struts2.dispatcher.ng.StrutsPrepareFilter
- * @see org.apache.struts2.dispatcher.ng.StrutsExecuteFilter
+ * @see org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter
+ * @see org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter
  *
  * @version $Date$ $Id$
  */

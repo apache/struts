@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.dispatcher.ng.servlet;
 
-import com.opensymphony.xwork2.util.EnumerationIterator;
+import org.apache.struts2.util.MakeIterator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -42,7 +42,7 @@ public class ServletHostConfig implements HostConfig {
     }
 
     public Iterator<String> getInitParameterNames() {
-        return new EnumerationIterator(config.getInitParameterNames());
+        return MakeIterator.convert(config.getInitParameterNames());
     }
 
     public ServletContext getServletContext() {

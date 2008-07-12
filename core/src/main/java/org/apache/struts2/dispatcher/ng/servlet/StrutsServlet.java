@@ -63,7 +63,7 @@ public class StrutsServlet extends HttpServlet {
     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         try {
-            prepare.createActionContext(request);
+            prepare.createActionContext(request, response);
             prepare.assignDispatcherToThread();
             prepare.setEncodingAndLocale(request, response);
             request = prepare.wrapRequest(request);

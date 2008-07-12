@@ -58,7 +58,7 @@ public class PrepareOperations {
     /**
      * Creates the action context and initializes the thread local
      */
-    public ActionContext createActionContext(HttpServletRequest request) {
+    public ActionContext createActionContext(HttpServletRequest request, HttpServletResponse response) {
         ActionContext ctx;
         Integer counter = 1;
         Integer oldCounter = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
@@ -72,6 +72,7 @@ public class PrepareOperations {
             ctx = new ActionContext(new HashMap<String, Object>(oldContext.getContextMap()));
         } else {
             ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+            stack.getContext().putAll(dispatcher.createContextMap(request, response, null, servletContext));
             ctx = new ActionContext(stack.getContext());
         }
         request.setAttribute(CLEANUP_RECURSION_COUNTER, counter);

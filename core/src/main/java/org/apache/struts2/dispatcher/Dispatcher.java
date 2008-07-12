@@ -488,7 +488,10 @@ public class Dispatcher {
         Map application = new ApplicationMap(context);
 
         Map<String,Object> extraContext = createContextMap(requestMap, params, session, application, request, response, context);
-        extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
+
+        if (mapping != null) {
+            extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
+        }
         return extraContext;
     }
 

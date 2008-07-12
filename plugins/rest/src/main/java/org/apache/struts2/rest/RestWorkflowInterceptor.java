@@ -145,6 +145,8 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
     private String newMethodName = "editNew";
     private String putMethodName = "update";
 
+    private int validationFailureStatusCode = SC_BAD_REQUEST;
+
     @Inject(required=false,value="struts.mapper.postMethodName")
     public void setPostMethodName(String postMethodName) {
         this.postMethodName = postMethodName;
@@ -163,6 +165,11 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
     @Inject(required=false,value="struts.mapper.putMethodName")
     public void setPutMethodName(String putMethodName) {
         this.putMethodName = putMethodName;
+    }
+
+    @Inject(required=false,value="struts.rest.validationFailureStatusCode")
+    public void setValidationFailureStatusCode(String code) {
+        this.validationFailureStatusCode = Integer.parseInt(code);
     }
 
     @Inject
@@ -208,7 +215,7 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
             	HttpHeaders info = new DefaultHttpHeaders()
             	    .disableCaching()
             	    .renderResult(method)
-            	    .withStatus(SC_BAD_REQUEST);
+            	    .withStatus(validationFailureStatusCode);
             	
             	Map errors = new HashMap();
             	

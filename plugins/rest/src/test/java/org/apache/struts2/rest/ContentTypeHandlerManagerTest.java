@@ -45,13 +45,13 @@ import java.util.Map;
 
 public class ContentTypeHandlerManagerTest extends TestCase {
 
-    private ContentTypeHandlerManager mgr;
+    private DefaultContentTypeHandlerManager mgr;
     private MockHttpServletResponse mockResponse;
     private MockHttpServletRequest mockRequest;
 
     @Override
     public void setUp() {
-        mgr = new ContentTypeHandlerManager();
+        mgr = new DefaultContentTypeHandlerManager();
         mockResponse = new MockHttpServletResponse();
         mockRequest = new MockHttpServletRequest();
         mockRequest.setMethod("GET");
@@ -121,7 +121,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class),
                 C.eq(ContentTypeHandlerManager.STRUTS_REST_HANDLER_OVERRIDE_PREFIX+"json")), null);
         
-        ContentTypeHandlerManager mgr = new ContentTypeHandlerManager();
+        DefaultContentTypeHandlerManager mgr = new DefaultContentTypeHandlerManager();
         mgr.setContainer((Container) mockContainer.proxy());
 
         Map<String,ContentTypeHandler> handlers = mgr.handlersByExtension;

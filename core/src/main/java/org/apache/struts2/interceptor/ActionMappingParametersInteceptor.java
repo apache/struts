@@ -78,6 +78,7 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
      * @return the parameters from the action mapping in the context.  If none found, returns
      *         an empty map.
      */
+    @Override
     protected Map retrieveParameters(ActionContext ac) {
         ActionMapping mapping = (ActionMapping) ac.get(ServletActionContext.ACTION_MAPPING);
         if (mapping != null) {
@@ -96,6 +97,7 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
      *                  In this class this is a no-op, since the parameters were fetched from the same location.
      *                  In subclasses both retrieveParameters() and addParametersToContext() should be overridden.
      */
+    @Override
     protected void addParametersToContext(ActionContext ac, Map newParams) {
         Map previousParams = ac.getParameters();
         Map combinedParams = null;

@@ -93,6 +93,7 @@ public class Form extends ClosingUIBean {
     private int sequence = 0;
 
     protected String onsubmit;
+    protected String onreset;
     protected String action;
     protected String target;
     protected String enctype;
@@ -103,7 +104,7 @@ public class Form extends ClosingUIBean {
     protected String windowState;
     protected String acceptcharset;
     protected String focusElement;
-    
+
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
     protected UrlRenderer urlRenderer;
@@ -134,12 +135,12 @@ public class Form extends ClosingUIBean {
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
     }
-    
+
     @Inject
     public void setUrlRenderer(UrlRenderer urlRenderer) {
     	this.urlRenderer = urlRenderer;
     }
-    
+
     @Inject
     public void setActionValidatorManager(ActionValidatorManager mgr) {
         this.actionValidatorManager = mgr;
@@ -178,6 +179,10 @@ public class Form extends ClosingUIBean {
             addParameter("onsubmit", findString(onsubmit));
         }
 
+        if (onreset != null) {
+            addParameter("onreset", findString(onreset));
+        }
+
         if (target != null) {
             addParameter("target", findString(target));
         }
@@ -200,7 +205,7 @@ public class Form extends ClosingUIBean {
             // we have this if check so we don't do this twice (on open and close of the template)
             addParameter("tagNames", new ArrayList());
         }
-        
+
         if (focusElement != null) {
             addParameter("focusElement", findString(focusElement));
         }
@@ -293,6 +298,11 @@ public class Form extends ClosingUIBean {
     @StrutsTagAttribute(description="HTML onsubmit attribute")
     public void setOnsubmit(String onsubmit) {
         this.onsubmit = onsubmit;
+    }
+
+    @StrutsTagAttribute(description="HTML onreset attribute")
+    public void setOnreset(String onreset) {
+        this.onreset = onreset;
     }
 
     @StrutsTagAttribute(description="Set action name to submit to, without .action suffix", defaultValue="current action")

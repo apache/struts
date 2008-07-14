@@ -3,9 +3,9 @@
 		<tr>
 			<td class="tdLabel">
 				<labelfor="myId"class="label">
-					MyLabel:<img 
+					MyLabel:<img
 								src='/struts/tooltip/myTooltip.gif'
-								alt="myTooltip" onmouseover="domTT_activate(this,event,'content','myTooltip','delay','500','styleClass','StrutsTTClassic')"/>
+								onmouseover="domTT_activate(this,event,'content','myTooltip','delay','500','styleClass','StrutsTTClassic')"/>
 				</label>
 			</td>
 			<td>

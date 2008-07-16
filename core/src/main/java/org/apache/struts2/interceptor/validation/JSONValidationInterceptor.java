@@ -34,6 +34,7 @@ import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -43,7 +44,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <p>Serializes validation and action errors into JSON. This interceptor does not
  * perform any validation, so it must follow the 'validation' interceptor on the stack.
  * </p>
- * 
+ *
  * <p>This stack (defined in struts-default.xml) shows how to use this interceptor with the
  * 'validation' interceptor</p>
  * <pre>
@@ -58,19 +59,19 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * </pre>
  * <p>If 'validationFailedStatus' is set it will be used as the Response status
  * when validation fails.</p>
- * 
- * <p>If the request has a parameter 'struts.validateOnly' execution will return after 
+ *
+ * <p>If the request has a parameter 'struts.validateOnly' execution will return after
  * validation (action won't be executed).</p>
- * 
+ *
  * <p>A request parameter named 'enableJSONValidation' must be set to 'true' to
  * use this interceptor</p>
  */
 public class JSONValidationInterceptor extends MethodFilterInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(JSONValidationInterceptor.class);
-    
+
     private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
     private static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
-    
+
     static char[] hex = "0123456789ABCDEF".toCharArray();
 
     private int validationFailedStatus = -1;
@@ -90,7 +91,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
         Object action = invocation.getAction();
         String jsonEnabled = request.getParameter(VALIDATE_JSON_PARAM);
-        
+
         if (jsonEnabled != null && "true".equals(jsonEnabled)) {
             if (action instanceof ValidationAware) {
                 // generate json
@@ -130,7 +131,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             //action errors
             if (validationAware.hasActionErrors()) {
                 sb.append("\"errors\":");
-                sb.append(buildArray(validationAware.getActionErrors()));                
+                sb.append(buildArray(validationAware.getActionErrors()));
             }
 
             //field errors
@@ -143,7 +144,9 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
                 for (Map.Entry<String, List<String>> fieldError : fieldErrors
                     .entrySet()) {
                     sb.append("\"");
-                    sb.append(fieldError.getKey());
+                    //if it is model driven, remove "model." see WW-2721
+                    sb.append(validationAware instanceof ModelDriven ? fieldError.getKey().substring(6)
+                            : fieldError.getKey());
                     sb.append("\":");
                     sb.append(buildArray(fieldError.getValue()));
                     sb.append(",");

@@ -495,6 +495,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                 // on the uri, so we add the default one, which should be ok as the
                 // portlet is a portlet first, a servlet second
                 PortletServletRequest httpRequest = new PortletServletRequest(request, getPortletContext());
+                container.inject(httpRequest);
                 mapping = actionMapper.getMapping(httpRequest, dispatcherUtils.getConfigurationManager());
             }
         }

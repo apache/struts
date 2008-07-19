@@ -54,7 +54,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <!-- START SNIPPET: example1 -->
  * &lt;sx:submit value="%{'Submit'}" /&gt;
  * <!-- END SNIPPET: example1 -->
- * 
+ *
  * <!-- START SNIPPET: example2 -->
  * &lt;sx:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
@@ -66,25 +66,25 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <!-- START SNIPPET: example4 -->
  * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
  * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
- * 
+ *
  * &lt;sx:submit id="link1" href="%{ajaxTest}" target="div1" /&gt;
  * <!-- END SNIPPET: example4 -->
- * 
+ *
  * <!-- START SNIPPET: example5 -->
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;
- *      &lt;sx:submit /&gt;          
+ *      &lt;sx:submit /&gt;
  * &lt;/s:form&gt;
  * <!-- END SNIPPET: example5 -->
- * 
+ *
  * <!-- START SNIPPET: example6 -->
  * &lt;s:form id="form" action="AjaxTest"&gt;
- *      &lt;input type="textbox" name="data"&gt;   
+ *      &lt;input type="textbox" name="data"&gt;
  * &lt;/s:form&gt;
- * 
+ *
  * &lt;sx:submit formId="form" /&gt;
  * <!-- END SNIPPET: example6 -->
- * 
+ *
  * <!-- START SNIPPET: example7 -->
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/before", function(event, widget){
@@ -92,11 +92,11 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *     //event: set event.cancel = true, to cancel request
  *     //widget: widget that published the topic
  * });
- * &lt;/script&gt;         
- * 
+ * &lt;/script&gt;
+ *
  * &lt;sx:submit beforeNotifyTopics="/before" /&gt;
  * <!-- END SNIPPET: example7 -->
- * 
+ *
  * <!-- START SNIPPET: example8 -->
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/after", function(data, request, widget){
@@ -105,11 +105,11 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *     //request: XMLHttpRequest object
  *     //widget: widget that published the topic
  * });
- * &lt;/script&gt;        
- * 
+ * &lt;/script&gt;
+ *
  * &lt;sx:submit afterNotifyTopics="/after" highlightColor="red" href="%{#ajaxTest}" /&gt;
  * <!-- END SNIPPET: example8 -->
- * 
+ *
  * <!-- START SNIPPET: example9 -->
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/error", function(error, request, widget){
@@ -118,19 +118,20 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *     //request: XMLHttpRequest object
  *     //widget: widget that published the topic
  * });
- * &lt;/script&gt;         
- * 
+ * &lt;/script&gt;
+ *
  * &lt;img id="ind1" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
  * &lt;sx:submit errorNotifyTopics="/error" indicator="ind1" href="%{#ajaxTest}" /&gt;
  * <!-- END SNIPPET: example9 -->
  */
 @StrutsTag(name="submit", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.SubmitTag", description="Render a submit button")
 public class Submit extends FormButton implements RemoteBean {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(Submit.class);
-    private final static transient Random RANDOM = new Random();    
-    
-    final public static String TEMPLATE = "submit";
+    private final static transient Random RANDOM = new Random();
+
+    final public static String OPEN_TEMPLATE = "submit";
+    final public static String TEMPLATE = "submit-close";
 
     protected String href;
     protected String errorText;
@@ -156,13 +157,18 @@ public class Submit extends FormButton implements RemoteBean {
     protected String separateScripts;
     protected String transport;
     protected String parseContent;
-    
+
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 
     protected String getDefaultTemplate() {
         return TEMPLATE;
+    }
+
+    @Override
+    public String getDefaultOpenTemplate() {
+        return OPEN_TEMPLATE;
     }
 
     public void evaluateParams() {
@@ -224,30 +230,30 @@ public class Submit extends FormButton implements RemoteBean {
             addParameter("transport", findString(transport));
         if (parseContent != null)
             addParameter("parseContent", findValue(parseContent, Boolean.class));
-        
+
         Boolean validateValue = false;
         if (validate != null) {
             validateValue = (Boolean) findValue(validate, Boolean.class);
             addParameter("validate", validateValue);
-        } 
-        
+        }
+
         Form form = (Form) findAncestor(Form.class);
-        if (form != null) 
+        if (form != null)
             addParameter("parentTheme", form.getTheme());
-        
+
         if (ajaxAfterValidation != null)
             addParameter("ajaxAfterValidation", findValue(ajaxAfterValidation, Boolean.class));
 
-        // generate a random ID if not explicitly set and not parsing the content 
+        // generate a random ID if not explicitly set and not parsing the content
         Boolean parseContent = (Boolean)stack.getContext().get(Head.PARSE_CONTENT);
         boolean generateId = (parseContent != null ? !parseContent : true);
 
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
-            // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 
+            // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs
             // http://findbugs.sourceforge.net/bugDescriptions.html#RV_ABSOLUTE_VALUE_OF_RANDOM_INT
             int nextInt = RANDOM.nextInt();
-            nextInt = nextInt == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(nextInt);  
+            nextInt = nextInt == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(nextInt);
             this.id = "widget_" + String.valueOf(nextInt);
             addParameter("id", this.id);
         }
@@ -258,12 +264,12 @@ public class Submit extends FormButton implements RemoteBean {
     public void setTheme(String theme) {
         super.setTheme(theme);
     }
-    
+
     @Override
     public String getTheme() {
         return "ajax";
     }
-    
+
     /**
      * Indicate whether the concrete button supports the type "image".
      *
@@ -272,7 +278,7 @@ public class Submit extends FormButton implements RemoteBean {
     protected boolean supportsImageType() {
         return true;
     }
-    
+
     /**
      * Overrides to be able to render body in a template rather than always before the template
      */
@@ -280,7 +286,7 @@ public class Submit extends FormButton implements RemoteBean {
         evaluateParams();
         try {
             addParameter("body", body);
-            
+
             mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
         } catch (Exception e) {
             LOG.error("error when rendering", e);
@@ -361,7 +367,7 @@ public class Submit extends FormButton implements RemoteBean {
     public void setShowLoadingText(String showLoadingText) {
         this.showLoadingText = showLoadingText;
     }
-    
+
     @StrutsTagAttribute(description="The css class to use for element")
     public void setCssClass(String cssClass) {
         super.setCssClass(cssClass);
@@ -397,7 +403,7 @@ public class Submit extends FormButton implements RemoteBean {
     public void setLabel(String label) {
         super.setLabel(label);
     }
-    
+
     @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request succeeds)")
     public void setAfterNotifyTopics(String afterNotifyTopics) {
         this.afterNotifyTopics = afterNotifyTopics;
@@ -412,26 +418,26 @@ public class Submit extends FormButton implements RemoteBean {
     public void setErrorNotifyTopics(String errorNotifyTopics) {
         this.errorNotifyTopics = errorNotifyTopics;
     }
-    
-    @StrutsTagAttribute(description = "Color used to perform a highlight effect on the elements specified in the 'targets' attribute", 
+
+    @StrutsTagAttribute(description = "Color used to perform a highlight effect on the elements specified in the 'targets' attribute",
         defaultValue = "none")
     public void setHighlightColor(String highlightColor) {
         this.highlightColor = highlightColor;
     }
 
-    @StrutsTagAttribute(description = "Duration of highlight effect in milliseconds. Only valid if 'highlightColor' attribute is set", 
+    @StrutsTagAttribute(description = "Duration of highlight effect in milliseconds. Only valid if 'highlightColor' attribute is set",
         defaultValue = "1000")
     public void setHighlightDuration(String highlightDuration) {
         this.highlightDuration = highlightDuration;
     }
 
-    @StrutsTagAttribute(description = "Perform Ajax validation. 'ajaxValidation' interceptor must be applied to action", type="Boolean", 
+    @StrutsTagAttribute(description = "Perform Ajax validation. 'ajaxValidation' interceptor must be applied to action", type="Boolean",
         defaultValue = "false")
     public void setValidate(String validate) {
         this.validate = validate;
     }
 
-    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid if 'validate' is 'true'", type="Boolean", 
+    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid if 'validate' is 'true'", type="Boolean",
         defaultValue = "false")
     public void setAjaxAfterValidation(String ajaxAfterValidation) {
         this.ajaxAfterValidation = ajaxAfterValidation;
@@ -441,17 +447,17 @@ public class Submit extends FormButton implements RemoteBean {
     public void setAction(String action) {
         super.setAction(action);
     }
-    
+
     @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each tag", defaultValue="true")
     public void setSeparateScripts(String separateScripts) {
         this.separateScripts = separateScripts;
     }
-    
+
     @StrutsTagAttribute(description="Transport used by Dojo to make the request", defaultValue="XMLHTTPTransport")
     public void setTransport(String transport) {
         this.transport = transport;
     }
-    
+
     @StrutsTagAttribute(description="Parse returned HTML for Dojo widgets", defaultValue="true", type="Boolean")
     public void setParseContent(String parseContent) {
         this.parseContent = parseContent;

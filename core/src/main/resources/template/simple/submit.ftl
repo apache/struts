@@ -49,7 +49,7 @@
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
-><#if parameters.body?length gt 0><@s.property value="parameters.body"/><#elseif parameters.label?exists><@s.property value="parameters.label"/><#rt/></#if></button>
+>
 <#else>
 <#if parameters.type?exists && parameters.type=="image">
 <@s.property value="parameters.body"/>

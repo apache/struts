@@ -27,5 +27,3 @@
 </#if>
 ><#t/>
 <#include "/${parameters.templateDir}/simple/submit.ftl" />
-</div><#t/>
-<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />

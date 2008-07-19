@@ -52,13 +52,18 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
     description="Render a submit button",
     allowDynamicAttributes=true)
 public class Submit extends FormButton {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(Submit.class);
-    final public static String TEMPLATE = "submit";
+    final public static String OPEN_TEMPLATE = "submit";
+    final public static String TEMPLATE = "submit-close";
     protected String src;
 
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
+    }
+
+    public String getDefaultOpenTemplate() {
+        return OPEN_TEMPLATE;
     }
 
     protected String getDefaultTemplate() {
@@ -76,10 +81,10 @@ public class Submit extends FormButton {
 
         super.evaluateParams();
     }
-    
+
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
-        
+
         if (src != null)
             addParameter("src", findString(src));
     }
@@ -92,12 +97,18 @@ public class Submit extends FormButton {
     protected boolean supportsImageType() {
         return true;
     }
-    
+
     @StrutsTagAttribute(description="Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.")
     public void setSrc(String src) {
         this.src = src;
     }
-    
+
+
+    @Override
+    public boolean usesBody() {
+        return true;
+    }
+
     /**
      * Overrides to be able to render body in a template rather than always before the template
      */
@@ -105,7 +116,7 @@ public class Submit extends FormButton {
         evaluateParams();
         try {
             addParameter("body", body);
-            
+
             mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
         } catch (Exception e) {
             LOG.error("error when rendering", e);

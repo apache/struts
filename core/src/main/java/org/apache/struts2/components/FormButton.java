@@ -34,7 +34,7 @@ import com.opensymphony.xwork2.inject.Inject;
 /**
  * FormButton.
  */
-public abstract class FormButton extends UIBean {
+public abstract class FormButton extends ClosingUIBean {
 
     static final String BUTTONTYPE_INPUT = "input";
     static final String BUTTONTYPE_BUTTON = "button";

@@ -34,6 +34,27 @@ import java.util.Map;
  */
 public class SubmitTest extends AbstractUITagTest {
 
+    public void testButtonSimpleWithBody() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("yoyoyoyoy");
+        tag.setValue("%{foo}");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("foo");
+        tag.setBodyContent(body);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-10.txt"));
+    }
+
     public void testDefaultValues() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -62,7 +83,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.setValue("%{foo}");
         tag.setDisabled("true");
         tag.setTabindex("1");
-        
+
         tag.doStartTag();
         tag.doEndTag();
 
@@ -80,30 +101,11 @@ public class SubmitTest extends AbstractUITagTest {
         tag.setValue("%{foo}");
         tag.setDisabled("true");
         tag.setTabindex("1");
-        
+
         tag.doStartTag();
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-3.txt"));
-    }
-
-    public void testButtonSimpleWithBody() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("bar");
-
-        SubmitTag tag = new SubmitTag();
-        tag.setPageContext(pageContext);
-        tag.setType("button");
-        tag.setName("myname");
-        tag.setValue("%{foo}");
-
-        tag.doStartTag();
-        StrutsBodyContent body = new StrutsBodyContent(null);
-        body.append("foo");
-        tag.setBodyContent(body);
-        tag.doEndTag();
-
-        verify(TextFieldTag.class.getResource("Submit-7.txt"));
     }
 
     public void testButtonWithLabel() throws Exception {
@@ -176,7 +178,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<button type=\"submit\" id=\"myname\" name=\"action:manager!update\" value=\"Submit\">mylabel</button>", writer.toString().trim());
+        verify(TextFieldTag.class.getResource("Submit-7.txt"));
     }
 
     public void testSimpleThemeImageUsingActionOnly() throws Exception {
@@ -196,7 +198,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<button type=\"submit\" id=\"myname\" name=\"action:manager\" value=\"Submit\">mylabel</button>", writer.toString().trim());
+        verify(TextFieldTag.class.getResource("Submit-8.txt"));
     }
 
     public void testSimpleThemeImageUsingMethodOnly() throws Exception {
@@ -216,7 +218,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<button type=\"submit\" id=\"myname\" name=\"method:update\" value=\"Submit\">mylabel</button>", writer.toString().trim());
+        verify(TextFieldTag.class.getResource("Submit-9.txt"));
     }
 
     public void testSimpleThemeInput() throws Exception {

@@ -1,0 +1,2 @@
+<button type="submit" id="myname" name="method:update" value="Submit">mylabel
+</button>

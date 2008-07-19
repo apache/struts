@@ -74,6 +74,9 @@ public class Reset extends FormButton {
         super(stack, request, response);
     }
 
+    public String getDefaultOpenTemplate() {
+        return "empty";
+    }
     protected String getDefaultTemplate() {
         return Reset.TEMPLATE;
     }

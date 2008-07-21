@@ -98,11 +98,14 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * </ul>
  *
- * <li>sessionReset - boolean value causing all session values to be reset to action's default values or application
- * scope values, note that it is similliar to type="start" and in fact it does the same, but in our team it is sometimes
- * semantically preferred. We use session scope in two patterns - sometimes there are wizzard-like action sequences that
+ * <li>sessionReset - name of a parameter (defaults to 'session.reset') which if set, causes all session values to be reset to action's default values or application
+ * scope values, note that it is similar to type="start" and in fact it does the same, but in our team it is sometimes
+ * semantically preferred. We use session scope in two patterns - sometimes there are wizard-like action sequences that
  * have start and end, and sometimes we just want simply reset current session values.</li>
  *
+ * <li>reset - boolean, defaults to false, if set, it has the same effect as setting all session values to be reset to action's default values or application.</li>
+ *
+ * <li>autoCreateSession - boolean value, sets if the session should be automatically created.</li>
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->

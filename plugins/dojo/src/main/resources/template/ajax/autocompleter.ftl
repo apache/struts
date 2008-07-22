@@ -48,8 +48,8 @@
 <#if parameters.delay?exists>
  searchDelay="${parameters.delay?c}"<#rt/>
 </#if>
-<#if parameters.disabled?exists>
- disabled="${parameters.disabled?string?html}"<#rt/>
+<#if parameters.disabled?default(false)>
+ disabled="disabled"<#rt/>
 </#if>
 <#if parameters.dropdownWidth?exists>
  dropdownWidth="${parameters.dropdownWidth?c}"<#rt/>
@@ -168,11 +168,11 @@
             ${tmpListValue?html}<#t/>
     </option><#lt/>
     </@s.iterator>
-  </select>    
+  </select>
 </#if>
 <#if parameters.label?if_exists != "">
 	<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />
-</#if>	
+</#if>
 <#if parameters.pushId>
 <script language="JavaScript" type="text/javascript">djConfig.searchIds.push("${parameters.id?html}");</script>
 </#if>

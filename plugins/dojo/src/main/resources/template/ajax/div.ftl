@@ -45,8 +45,8 @@
   <#if parameters.preload?exists>
     preload="${parameters.preload?string?html}"<#rt/>
   </#if>
-  <#if parameters.disabled?exists>
-    disabled="${parameters.disabled?string?html}"<#rt/>
+  <#if parameters.disabled?default(false)>
+    disabled="disabled"<#rt/>
   </#if>
   <#include "/${parameters.templateDir}/ajax/ajax-common.ftl" />
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />

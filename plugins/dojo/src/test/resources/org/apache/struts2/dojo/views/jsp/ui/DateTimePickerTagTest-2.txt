@@ -1,4 +1,4 @@
-<div dojoType="struts:StrutsDatePicker" 
+<div dojoType="struts:StrutsDatePicker"
      id="id"
      value="2008-03-03"
      lang="i"
@@ -12,7 +12,7 @@
      staticDisplay="false"
      templateCssPath="j"
      valueNotifyTopics="k"
-     disabled="true"
+     disabled="disabled"
      saveFormat="rfc">
 </div>
 <script language="JavaScript" type="text/javascript">djConfig.searchIds.push("id");</script>

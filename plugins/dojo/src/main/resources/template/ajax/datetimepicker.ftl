@@ -91,15 +91,15 @@
   <#if parameters.valueNotifyTopics?if_exists != "">
 	valueNotifyTopics="${parameters.valueNotifyTopics?html}"<#rt/>
   </#if>
-  <#if parameters.disabled?exists>
-    disabled="${parameters.disabled?string?html}"<#rt/>
+  <#if parameters.disabled?default(false)>
+    disabled="disabled"<#rt/>
   </#if>
   saveFormat="rfc"<#rt/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 ></div>
 <#if parameters.label?if_exists != "">
 	<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />
-</#if>	
+</#if>
 <#if parameters.pushId>
 <script language="JavaScript" type="text/javascript">djConfig.searchIds.push("${parameters.id?html}");</script>
 </#if>

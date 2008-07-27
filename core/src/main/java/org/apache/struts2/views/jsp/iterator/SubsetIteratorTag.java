@@ -214,7 +214,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                 count = ((Long)countObj).intValue();
             }
             else if (countObj instanceof Double) {
-                count = ((Long)countObj).intValue();
+                count = ((Double)countObj).intValue();
             }
             else if (countObj instanceof String) {
                 try {
@@ -240,7 +240,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                 start = ((Long)startObj).intValue();
             }
             else if (startObj instanceof Double) {
-                start = ((Long)startObj).intValue();
+                start = ((Double)startObj).intValue();
             }
             else if (startObj instanceof String) {
                 try {

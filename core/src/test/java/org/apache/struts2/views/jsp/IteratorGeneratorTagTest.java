@@ -190,6 +190,14 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
         assertNotSame(topOfStack, afterTopOfStack);
     }
 
+    public void testGeneratorWithDoubleCount() throws Exception {
+        IteratorGeneratorTag tag = new IteratorGeneratorTag();
+        tag.setPageContext(pageContext);
+        tag.setVal("%{'not used'}");
+        tag.setCount("3.0");
+        tag.doStartTag();
+        tag.doEndTag();
+    }
 
     public Action getAction() {
         return new ActionSupport() {

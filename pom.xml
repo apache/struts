@@ -53,7 +53,7 @@
         </snapshotRepository>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.x/</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.0.x/</url>
         </site>
     </distributionManagement>
 

@@ -156,6 +156,19 @@ public class RestActionMapperTest extends TestCase {
         assertEquals("edit", mapping.getMethod());
     }
 
+    public void testGetJsessionIdSemicolonMapping() throws Exception {
+        req.setRequestURI("/myapp/animals/dog/fido;jsessionid=29fefpv23do1g");
+        req.setServletPath("/animals/dog/fido");
+        req.setMethod("GET");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/animals", mapping.getNamespace());
+        assertEquals("dog", mapping.getName());
+        assertEquals("fido", ((String[])mapping.getParams().get("id"))[0]);
+        assertEquals("show", mapping.getMethod());
+    }
+
     public void testParseNameAndNamespace() {
         tryUri("/foo/23", "", "foo/23");
         tryUri("/foo/", "", "foo/");

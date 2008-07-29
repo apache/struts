@@ -183,6 +183,13 @@ public class RestActionMapper extends DefaultActionMapper {
         String fullName = mapping.getName();
         // Only try something if the action name is specified
         if (fullName != null && fullName.length() > 0) {
+
+            // cut off any ;jsessionid= type appendix but allow the rails-like ;edit
+            int scPos = fullName.indexOf(';');
+            if (scPos > -1 && !"edit".equals(fullName.substring(scPos+1))) {
+                fullName = fullName.substring(0, scPos);
+            }
+
             int lastSlashPos = fullName.lastIndexOf('/');
             String id = null;
             if (lastSlashPos > -1) {
@@ -240,7 +247,7 @@ public class RestActionMapper extends DefaultActionMapper {
                     }
                 }
             }
-            
+
             // cut off the id parameter, even if a method is specified
             if (id != null) {
                 if (!"new".equals(id)) {

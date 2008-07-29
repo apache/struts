@@ -169,22 +169,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>0.3.1</version>
-                <configuration>
-                    <container>
-                        <containerId>tomcat5x</containerId>
-                        <home>${cargo.tomcat5x.home}</home>
-                        <log>${project.build.directory}/tomcat5x.log</log>
-                        <output>${project.build.directory}/tomcat5x.out</output>
-                    </container>
-                    <configuration>
-                        <home>${project.build.directory}/tomcat5x</home>
-                    </configuration>
-                </configuration>
-            </plugin>
             <!-- Include source code under WEB-INF/src/java -->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>

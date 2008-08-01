@@ -12,7 +12,7 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 public class PostOrderTest extends WebTestCase {
 
     public void setUp() throws Exception {
-        getTestContext().setBaseUrl("http://localhost:8080/struts2-rest-showcase");
+        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
     }
 
 
@@ -57,14 +57,14 @@ public class PostOrderTest extends WebTestCase {
         HttpClient client = new HttpClient();
         PostMethod method = null;
         try {
-            method = new PostMethod("http://localhost:8080/struts2-rest-showcase/orders.xml");
+            method = new PostMethod(ParameterUtils.getBaseUrl()+"/orders.xml");
             method.setRequestEntity(new StringRequestEntity("<org.apache.struts2.rest.example.Order>\n" +
                     "<clientName>Test3</clientName>\n" +
                     "<amount>3342</amount>\n" +
                     "</org.apache.struts2.rest.example.Order>"));
             client.executeMethod(method);
             assertEquals(201, method.getStatusCode());
-            assertTrue(method.getResponseHeader("Location").getValue().startsWith("http://localhost:8080/struts2-rest-showcase/orders/"));
+            assertTrue(method.getResponseHeader("Location").getValue().startsWith(ParameterUtils.getBaseUrl()+"/orders/"));
         } finally {
             method.releaseConnection();
         }
@@ -74,7 +74,7 @@ public class PostOrderTest extends WebTestCase {
         HttpClient client = new HttpClient();
         PostMethod method = null;
         try {
-            method = new PostMethod("http://localhost:8080/struts2-rest-showcase/orders.xml");
+            method = new PostMethod(ParameterUtils.getBaseUrl()+"/orders.xml");
             method.setRequestEntity(new StringRequestEntity("<org.apache.struts2.rest.example.Order>\n" +
                     "<amount>3342</amount>\n" +
                     "</org.apache.struts2.rest.example.Order>"));
@@ -92,11 +92,11 @@ public class PostOrderTest extends WebTestCase {
         HttpClient client = new HttpClient();
         PostMethod method = null;
         try {
-            method = new PostMethod("http://localhost:8080/struts2-rest-showcase/orders.json");
+            method = new PostMethod(ParameterUtils.getBaseUrl()+"/orders.json");
             method.setRequestEntity(new StringRequestEntity("{\"amount\":33,\"clientName\":\"Test4\"}"));
             client.executeMethod(method);
             assertEquals(201, method.getStatusCode());
-            assertTrue(method.getResponseHeader("Location").getValue().startsWith("http://localhost:8080/struts2-rest-showcase/orders/"));
+            assertTrue(method.getResponseHeader("Location").getValue().startsWith(ParameterUtils.getBaseUrl()+"/orders/"));
         } finally {
             method.releaseConnection();
         }
@@ -106,7 +106,7 @@ public class PostOrderTest extends WebTestCase {
         HttpClient client = new HttpClient();
         PostMethod method = null;
         try {
-            method = new PostMethod("http://localhost:8080/struts2-rest-showcase/orders.json");
+            method = new PostMethod(ParameterUtils.getBaseUrl()+"/orders.json");
             method.setRequestEntity(new StringRequestEntity("{\"amount\":33}"));
             client.executeMethod(method);
             String response = method.getResponseBodyAsString();

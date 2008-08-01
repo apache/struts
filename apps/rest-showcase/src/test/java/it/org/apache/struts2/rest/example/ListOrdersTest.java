@@ -5,7 +5,7 @@ import net.sourceforge.jwebunit.junit.WebTestCase;
 public class ListOrdersTest extends WebTestCase {
 
     public void setUp() throws Exception {
-        getTestContext().setBaseUrl("http://localhost:8080/struts2-rest-showcase");
+        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
     }
 
 

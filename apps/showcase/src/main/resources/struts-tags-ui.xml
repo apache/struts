@@ -3,7 +3,7 @@
 <!DOCTYPE struts PUBLIC
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
-	
+
 <struts>
     <package name="ui-tags" extends="struts-default" namespace="/tags/ui">
         <action name="example" class="org.apache.struts2.showcase.UITagExample">
@@ -40,26 +40,30 @@
         </action>
 
         <!--  START SNIPPET: treeExampleDynamicXWorkXml -->
-        
+
         <action name="showDynamicTreeAction" class="org.apache.struts2.showcase.ShowDynamicTreeAction">
         	<result>/tags/ui/treeExampleDynamic.jsp</result>
         </action>
-        
+
         <!--  END SNIPPET: treeExampleDynamicXWorkXml -->
-        
+
         <action name="showDynamicAjaxTreeAction">
             <result>/tags/ui/treeExampleAjaxDynamic.jsp</result>
         </action>
-        
+
         <action name="showComponentTagExampleCode">
         	<result type="plainText">/tags/ui/componentTagExample.jsp</result>
         </action>
-        
+
+        <action name="actionTagExample">
+            <result>/tags/ui/actionTagExampleCalled.jsp</result>
+            <result name="input">/tags/ui/actionTagExampleCalling.jsp</result>
+        </action>
 	</package>
-	
+
 	<!--  START SNIPPET: treeExampleXWorkXml -->
-	
-	<package name="ui-tags-ajax" namespace="/tags/ui/ajax" extends="struts-default">        
+
+	<package name="ui-tags-ajax" namespace="/tags/ui/ajax" extends="struts-default">
         <!-- Actions dealing with Tree Example  -->
         <action name="staticTreeSelectAction">
         	<result>/tags/ui/staticTreeSelect.jsp</result>
@@ -68,6 +72,6 @@
         	<result>/tags/ui/dynamicTreeSelect.jsp</result>
         </action>
     </package>
-    
+
     <!--  END SNIPPET: treeExampleXWorkXml -->
 </struts>

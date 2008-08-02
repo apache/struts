@@ -16,8 +16,8 @@
 
 
 <s:form action="exampleSubmit" enctype="multipart/form-data" javascriptTooltip="true">
-    <s:textfield 
-            label="Name" 
+    <s:textfield
+            label="Name"
             name="name"
             tooltip="Enter your Name here"/>
 
@@ -25,13 +25,13 @@
             tooltip="Select Your Birthday"
             label="Birthday"
             name="birthday" />
-            
+
     <sx:datetimepicker
             tooltip="Enter the time you wake up"
             label="Wake up time"
-            name="wakeup" 
+            name="wakeup"
             type="time"/>
-            
+
     <s:textarea
             tooltip="Enter your Biography"
             label="Biography"
@@ -76,7 +76,7 @@
             name="region" list="{'North', 'South'}"
             value="'South'"
             doubleValue="'Florida'"
-            doubleList="top == 'North' ? {'Oregon', 'Washington'} : {'Texas', 'Florida'}" 
+            doubleList="top == 'North' ? {'Oregon', 'Washington'} : {'Texas', 'Florida'}"
             doubleName="state"
             headerKey="-1"
             headerValue="---------- Please Select ----------"
@@ -100,35 +100,35 @@
 
     <s:file
             tooltip="Upload Your Picture"
-            label="Picture" 
+            label="Picture"
             name="picture" />
-            
+
     <s:optiontransferselect
             tooltip="Select Your Favourite Cartoon Characters"
             label="Favourite Cartoons Characters"
-            name="leftSideCartoonCharacters" 
+            name="leftSideCartoonCharacters"
             leftTitle="Left Title"
             rightTitle="Right Title"
-            list="{'Popeye', 'He-Man', 'Spiderman'}" 
+            list="{'Popeye', 'He-Man', 'Spiderman'}"
             multiple="true"
             headerKey="headerKey"
             headerValue="--- Please Select ---"
             emptyOption="true"
-            doubleList="{'Superman', 'Mickey Mouse', 'Donald Duck'}" 
+            doubleList="{'Superman', 'Mickey Mouse', 'Donald Duck'}"
             doubleName="rightSideCartoonCharacters"
             doubleHeaderKey="doubleHeaderKey"
-            doubleHeaderValue="--- Please Select ---" 
+            doubleHeaderValue="--- Please Select ---"
             doubleEmptyOption="true"
             doubleMultiple="true" />
-    
+
     <s:textarea
             label="Your Thougths"
-            name="thoughts" 
+            name="thoughts"
             tooltip="Enter your thoughts here" />
-            
-    <s:submit onclick="alert('Custom onclick event triggered before submitting form... Press OK to continue!');" />
+
+    <s:submit />
     <s:reset onclick="alert('Resetting form now... Press OK to continue!');" />
 </s:form>
-    
+
 </body>
 </html>

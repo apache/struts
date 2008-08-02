@@ -181,6 +181,32 @@
          <version>1.1.1</version>
      </dependency>
 
+     <dependency>
+         <groupId>net.sourceforge.jwebunit</groupId>
+         <artifactId>jwebunit-core</artifactId>
+         <version>1.4.1</version>
+         <scope>test</scope>
+     </dependency>
+
+     <dependency>
+         <groupId>commons-httpclient</groupId>
+         <artifactId>commons-httpclient</artifactId>
+         <version>3.1</version>
+         <scope>test</scope>
+     </dependency>
+
+     <dependency>
+         <groupId>net.sourceforge.jwebunit</groupId>
+         <artifactId>jwebunit-htmlunit-plugin</artifactId>
+         <version>1.4.1</version>
+         <scope>test</scope>
+         <exclusions>
+             <exclusion>
+                 <groupId>xom</groupId>
+                 <artifactId>xom</artifactId>
+             </exclusion>
+         </exclusions>
+     </dependency>
 
     </dependencies>
 
@@ -211,19 +237,52 @@
                    </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.twdata.maven</groupId>
+                <artifactId>maven-itblast-plugin</artifactId>
+                <version>0.3</version>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <containers>tomcat5x,jetty6x,jboss42x,resin3x</containers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>it/**</exclude>
+                        <exclude>**/*$*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
-                <resources>
-                    <!-- Include resources under src/main/java in WEB-INF/classes -->
-                    <resource>
-                        <directory>src/main/resources</directory>
-                    </resource>
-                    <resource>
-                        <directory>src/main/java</directory>
-                            <includes>
-                                <include>**/*.java</include>
-                             </includes>
-                     </resource>
-                </resources>
+
+        <resources>
+            <!-- Include resources under src/main/java in WEB-INF/classes -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.java</include>
+                </includes>
+            </resource>
+        </resources>
 
     </build>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>twdata-m2-repository</id>
+            <name>twdata.org Maven Repository</name>
+            <url>http://twdata-m2-repository.googlecode.com/svn/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

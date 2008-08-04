@@ -33,15 +33,12 @@ import org.apache.struts2.TestActionTagResult;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.components.ActionComponent;
 
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.mockobjects.dynamic.Mock;
 
 
 /**

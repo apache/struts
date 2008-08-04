@@ -8,7 +8,7 @@
   <b>Example 1:</b>
   This example calls an action and includes the output on the page
   <p id="example1" style="background-color:yellow;">
-    <s:action name="/tags/ui" name="actionTagExample" executeResult="true"/>
+    <s:action namespace="/tags/ui" name="actionTagExample" executeResult="true"/>
   </p>
 </body>
 </html>

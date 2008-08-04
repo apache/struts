@@ -37,6 +37,8 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.mockobjects.dynamic.Mock;
@@ -74,6 +76,9 @@ public class ActionTagTest extends AbstractTagTest {
     public void testSimple() {
         request.setupGetServletPath("/foo.action");
 
+        ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
+        container.inject(config.getInterceptors().get(0).getInterceptor());
+
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);
         tag.setName("testAction");
@@ -108,6 +113,9 @@ public class ActionTagTest extends AbstractTagTest {
 
     public void testSimpleWithctionMethodInOriginalURI() {
         request.setupGetServletPath("/foo!foo.action");
+
+        ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
+        container.inject(config.getInterceptors().get(0).getInterceptor());
 
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);

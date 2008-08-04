@@ -64,6 +64,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     private Map params;
     private Map session;
     private ExecuteAndWaitInterceptor waitInterceptor;
+    private ParametersInterceptor parametersInterceptor;
 
     public void testOneWait() throws Exception {
         waitInterceptor.setDelay(0);
@@ -188,6 +189,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         request.setSession(httpSession);
         request.setParameterMap(params);
         context.put(ServletActionContext.HTTP_REQUEST, request);
+        container.inject(parametersInterceptor);
     }
 
     protected void tearDown() throws Exception {
@@ -206,7 +208,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         public boolean needsReload() {
             return false;
         }
-        
+
         public void init(Configuration configuration) throws ConfigurationException {
             this.configuration = configuration;
         }
@@ -216,12 +218,12 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
 
             // interceptors
             waitInterceptor = new ExecuteAndWaitInterceptor();
-
+            parametersInterceptor = new ParametersInterceptor();
             PackageConfig wait = new PackageConfig.Builder("")
                 .addActionConfig("action1", new ActionConfig.Builder("", "action1", ExecuteAndWaitDelayAction.class.getName())
                     .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
                     .addResultConfig(new ResultConfig.Builder(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName()).build())
-                    .addInterceptor(new InterceptorMapping("params", new ParametersInterceptor()))
+                    .addInterceptor(new InterceptorMapping("params", parametersInterceptor))
                     .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
                 .build())
             .build();

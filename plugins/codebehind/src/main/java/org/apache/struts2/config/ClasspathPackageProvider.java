@@ -249,7 +249,7 @@ public class ClasspathPackageProvider implements PackageProvider {
     /**
      * Default suffix that can be used to indicate POJO "Action" classes.
      *
-     * @param defaultPagePrefix the defaultPagePrefix to set
+     * @param classSuffix the classSuffix to set
      */
     @Inject(value=CLASS_SUFFIX, required=false)
     public void setClassSuffix(String classSuffix) {

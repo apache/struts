@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -45,10 +46,14 @@ import com.mockobjects.servlet.MockFilterChain;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -159,6 +164,7 @@ public class DispatcherTest extends StrutsTestCase {
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
         mockConfiguration.expect("destroy");
+        mockConfiguration.matchAndReturn("getPackageConfigs", new HashMap<String, PackageConfig>());
         
         du.setConfigurationManager(cm);
         assertFalse(destroyedObjectFactory.destroyed);
@@ -166,6 +172,40 @@ public class DispatcherTest extends StrutsTestCase {
         assertTrue(destroyedObjectFactory.destroyed);
         mockConfiguration.verify();
         mockContainer.verify();
+    }
+    
+    public void testInterceptorDestroy() throws Exception {           
+        Mock mockInterceptor = new Mock(Interceptor.class);
+        mockInterceptor.matchAndReturn("hashCode", 0);
+        mockInterceptor.expect("destroy");
+        
+        InterceptorMapping interceptorMapping = new InterceptorMapping("test", (Interceptor) mockInterceptor.proxy());
+        
+        InterceptorStackConfig isc = new InterceptorStackConfig.Builder("test").addInterceptor(interceptorMapping).build();
+        
+        PackageConfig packageConfig = new PackageConfig.Builder("test").addInterceptorStackConfig(isc).build();
+        
+        Map<String, PackageConfig> packageConfigs = new HashMap<String, PackageConfig>();
+        packageConfigs.put("test", packageConfig);
+        
+        Mock mockContainer = new Mock(Container.class);
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
+        
+        Mock mockConfiguration = new Mock(Configuration.class);
+        mockConfiguration.matchAndReturn("getPackageConfigs", packageConfigs);
+        mockConfiguration.matchAndReturn("getContainer", mockContainer.proxy());
+        mockConfiguration.expect("destroy");
+        
+        ConfigurationManager configurationManager = new ConfigurationManager();
+        configurationManager.setConfiguration((Configuration) mockConfiguration.proxy());
+        
+        Dispatcher dispatcher = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
+        dispatcher.setConfigurationManager(configurationManager);
+        dispatcher.cleanup();
+        
+        mockInterceptor.verify();
+        mockContainer.verify();
+        mockConfiguration.verify();
     }
     
     class InternalConfigurationManager extends ConfigurationManager {

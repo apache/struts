@@ -24,10 +24,13 @@ package org.apache.struts2.dispatcher;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -58,10 +61,14 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -263,6 +270,22 @@ public class Dispatcher {
                     l.dispatcherDestroyed(this);
                 }
             }
+        }
+
+        // clean up all interceptors by calling their destroy() method
+        Set<Interceptor> interceptors = new HashSet<Interceptor>();
+        Collection<PackageConfig> packageConfigs = configurationManager.getConfiguration().getPackageConfigs().values();
+        for (PackageConfig packageConfig : packageConfigs) {
+            for (Object config : packageConfig.getAllInterceptorConfigs().values()) {
+                if (config instanceof InterceptorStackConfig) {
+                    for (InterceptorMapping interceptorMapping : ((InterceptorStackConfig) config).getInterceptors()) {
+                	    interceptors.add(interceptorMapping.getInterceptor());
+                    }
+                }
+            }
+        }
+        for (Interceptor interceptor : interceptors) {
+        	interceptor.destroy();
         }
 
         // clean up configuration

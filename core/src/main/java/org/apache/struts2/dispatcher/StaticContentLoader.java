@@ -20,13 +20,12 @@
  */
 package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.dispatcher.ng.HostConfig;
-
 import java.io.IOException;
 
-import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.dispatcher.ng.HostConfig;
 
 /**
  * Interface for loading static resources, based on a path

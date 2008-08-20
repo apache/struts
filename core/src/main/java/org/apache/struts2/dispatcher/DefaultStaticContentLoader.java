@@ -24,13 +24,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -161,9 +161,21 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String name = cleanupPath(path);
-        if (!name.endsWith(".class")) {
-            for (String pathPrefix : pathPrefixes) {
-                InputStream is = findInputStream(buildPath(name, pathPrefix));
+        for (String pathPrefix : pathPrefixes) {
+            URL resourceUrl = findResource(buildPath(name, pathPrefix));
+            if (resourceUrl != null) {
+                InputStream is = null;
+                try {
+                    //check that the resource path is under the pathPrefix path
+                    String pathEnding = buildPath(name, pathPrefix);
+                    if (resourceUrl.getFile().endsWith(pathEnding))
+                        is = resourceUrl.openStream();
+                } catch (Exception ex) {
+                    // just ignore it
+                    continue;
+                }
+
+                //not inside the try block, as this could throw IOExceptions also
                 if (is != null) {
                     process(is, path, request, response);
                     return;
@@ -258,8 +270,8 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * @return The inputstream of the resource
      * @throws IOException If there is a problem locating the resource
      */
-    protected InputStream findInputStream(String path) throws IOException {
-        return ClassLoaderUtil.getResourceAsStream(path, getClass());
+    protected URL findResource(String path) throws IOException {
+        return ClassLoaderUtil.getResource(path, getClass());
     }
 
     /**

@@ -23,7 +23,9 @@ package org.apache.struts2.dispatcher;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -431,68 +433,119 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * Locate a static resource and copy directly to the response,
      * setting the appropriate caching headers. 
      *
-     * @param name The resource name
+     * @param path The resource path
      * @param request The request
      * @param response The response
      * @throws IOException If anything goes wrong
      */
-    protected void findStaticResource(String name, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (!name.endsWith(".class")) {
-            for (String pathPrefix : pathPrefixes) {
-                InputStream is = findInputStream(name, pathPrefix);
+    public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String name = cleanupPath(path);
+        for (String pathPrefix : pathPrefixes) {
+            URL resourceUrl = findResource(buildPath(name, pathPrefix));
+            if (resourceUrl != null) {
+                InputStream is = null;
+                try {
+                    //check that the resource path is under the pathPrefix path
+                    String pathEnding = buildPath(name, pathPrefix);
+                    if (resourceUrl.getFile().endsWith(pathEnding))
+                        is = resourceUrl.openStream();
+                } catch (Exception ex) {
+                    // just ignore it
+                    continue;
+                }
+
+                //not inside the try block, as this could throw IOExceptions also
                 if (is != null) {
-                    Calendar cal = Calendar.getInstance();
-                    
-                    // check for if-modified-since, prior to any other headers
-                    long ifModifiedSince = 0;
-                    try {
-                    	ifModifiedSince = request.getDateHeader("If-Modified-Since");
-                    } catch (Exception e) {
-                    	LOG.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
-                    }
-    				long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
-    				long now = cal.getTimeInMillis();
-                    cal.add(Calendar.DAY_OF_MONTH, 1);
-                    long expires = cal.getTimeInMillis();
-                    
-    				if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
-    					// not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
-                        response.setDateHeader("Expires", expires);
-    					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-    					is.close();
-    					return;
-    				}
-                	
-                	// set the content-type header
-                    String contentType = getContentType(name);
-                    if (contentType != null) {
-                        response.setContentType(contentType);
-                    }
-
-                    if (serveStaticBrowserCache) {
-                    	// set heading information for caching static content
-                        response.setDateHeader("Date", now);
-                        response.setDateHeader("Expires", expires);
-                        response.setDateHeader("Retry-After", expires);
-                        response.setHeader("Cache-Control", "public");
-                        response.setDateHeader("Last-Modified", lastModifiedMillis);
-                    } else {
-                        response.setHeader("Cache-Control", "no-cache");
-                        response.setHeader("Pragma", "no-cache");
-                        response.setHeader("Expires", "-1");
-                    }
-
-                    try {
-                        copy(is, response.getOutputStream());
-                    } finally {
-                        is.close();
-                    }
+                    process(is, path, request, response);
                     return;
                 }
             }
         }
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    /**
+     * Look for a static resource in the classpath.
+     *
+     * @param path The resource path
+     * @return The inputstream of the resource
+     * @throws IOException If there is a problem locating the resource
+     */
+    protected URL findResource(String path) throws IOException {
+        return ClassLoaderUtil.getResource(path, getClass());
+    }
+
+    /**
+     * @param name resource name
+     * @param packagePrefix The package prefix to use to locate the resource
+     * @return full path
+     * @throws java.io.UnsupportedEncodingException
+     * @throws IOException
+     */
+    protected String buildPath(String name, String packagePrefix) throws UnsupportedEncodingException {
+        String resourcePath;
+        if (packagePrefix.endsWith("/") && name.startsWith("/")) {
+            resourcePath = packagePrefix + name.substring(1);
+        } else {
+            resourcePath = packagePrefix + name;
+        }
+
+        return URLDecoder.decode(resourcePath, encoding);
+    }
+
+    protected void process(InputStream is, String path, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (is != null) {
+            Calendar cal = Calendar.getInstance();
+
+            // check for if-modified-since, prior to any other headers
+            long ifModifiedSince = 0;
+            try {
+                ifModifiedSince = request.getDateHeader("If-Modified-Since");
+            } catch (Exception e) {
+                LOG.warn("Invalid If-Modified-Since header value: '"
+                        + request.getHeader("If-Modified-Since") + "', ignoring");
+            }
+            long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
+            long now = cal.getTimeInMillis();
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            long expires = cal.getTimeInMillis();
+
+            if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
+                // not modified, content is not sent - only basic
+                // headers and status SC_NOT_MODIFIED
+                response.setDateHeader("Expires", expires);
+                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                is.close();
+                return;
+            }
+
+            // set the content-type header
+            String contentType = getContentType(path);
+            if (contentType != null) {
+                response.setContentType(contentType);
+            }
+
+            if (serveStaticBrowserCache) {
+                // set heading information for caching static content
+                response.setDateHeader("Date", now);
+                response.setDateHeader("Expires", expires);
+                response.setDateHeader("Retry-After", expires);
+                response.setHeader("Cache-Control", "public");
+                response.setDateHeader("Last-Modified", lastModifiedMillis);
+            } else {
+                response.setHeader("Cache-Control", "no-cache");
+                response.setHeader("Pragma", "no-cache");
+                response.setHeader("Expires", "-1");
+            }
+
+            try {
+                copy(is, response.getOutputStream());
+            } finally {
+                is.close();
+            }
+        }
     }
 
     /**
@@ -558,5 +611,14 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         resourcePath = URLDecoder.decode(resourcePath, encoding);
 
         return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());
+    }
+
+    /**
+     * @param path requested path
+     * @return path without leading "/struts" or "/static"
+     */
+    protected String cleanupPath(String path) {
+        //path will start with "/struts" or "/static", remove them
+        return path.substring(7);
     }
 }

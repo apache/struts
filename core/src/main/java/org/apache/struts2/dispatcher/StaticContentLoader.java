@@ -29,20 +29,17 @@ import org.apache.struts2.dispatcher.ng.HostConfig;
 
 /**
  * Interface for loading static resources, based on a path
- *
  */
 public interface StaticContentLoader {
 
     /**
-     * @param path
-     *            Requested resource path
+     * @param path Requested resource path
      * @return true if this loader is able to load this type of resource, false otherwise
      */
     public boolean canHandle(String path);
 
     /**
-     * @param filterConfig
-     *            The filter configuration
+     * @param filterConfig The filter configuration
      */
     public abstract void setHostConfig(HostConfig filterConfig);
 
@@ -50,14 +47,10 @@ public interface StaticContentLoader {
      * Locate a static resource and copy directly to the response, setting the
      * appropriate caching headers.
      *
-     * @param name
-     *            The resource name
-     * @param request
-     *            The request
-     * @param response
-     *            The response
-     * @throws IOException
-     *             If anything goes wrong
+     * @param path     The resource name
+     * @param request  The request
+     * @param response The response
+     * @throws IOException If anything goes wrong
      */
     public abstract void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
             throws IOException;

@@ -69,6 +69,30 @@ public class StaticContentLoaderTest extends TestCase {
         assertEquals(0, res.getContentLength());
     }
 
+    public void testInvalidRersources2() throws IOException {
+        contentLoader.findStaticResource("/struts/..", req, res);
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
+        assertEquals(0, res.getContentLength());
+    }
+
+    public void testInvalidRersources3() throws IOException {
+        contentLoader.findStaticResource("/struts/../othertest.properties", req, res);
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
+        assertEquals(0, res.getContentLength());
+    }
+
+    public void testInvalidRersources4() throws IOException {
+        contentLoader.findStaticResource("/struts/..%252f", req, res);
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
+        assertEquals(0, res.getContentLength());
+    }
+
+    public void testInvalidRersources5() throws IOException {
+        contentLoader.findStaticResource("/struts/..%252fothertest.properties", req, res);
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
+        assertEquals(0, res.getContentLength());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

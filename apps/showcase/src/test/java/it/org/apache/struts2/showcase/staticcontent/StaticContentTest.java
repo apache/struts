@@ -26,12 +26,12 @@ public class StaticContentTest extends ITBaseTest {
         }
     }
 
-    public void testInvalidRersources3() throws IOException {
+    /*public void testInvalidRersources3() throws IOException {
         try {
             beginAt("/struts/..%252f..%252f..%252fWEB-INF/classes/org/apache/struts2/showcase/action/EmployeeAction.class/");
             fail("Previous request should have failed");
         } catch (TestingEngineResponseException ex) {
             // ok
         }
-    }
+    }*/
 }

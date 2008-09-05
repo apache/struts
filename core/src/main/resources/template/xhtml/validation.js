@@ -128,8 +128,10 @@ function addErrorXHTML(e, errorText) {
         //if labelposition is 'top' the label is on the row above
         var labelRow = row.cells.length > 1 ? row : StrutsUtils.previousElement(tr, "tr");
         var label = labelRow.cells[0].getElementsByTagName("label")[0];
-        label.setAttribute("class", "errorLabel");
-        label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
+        if (label) {
+            label.setAttribute("class", "errorLabel");
+            label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
+        }
     } catch (e) {
         alert(e);
     }

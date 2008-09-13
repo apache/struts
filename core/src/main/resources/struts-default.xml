@@ -64,6 +64,7 @@
     <bean class="com.opensymphony.xwork2.ObjectFactory" static="true" />
     <bean class="com.opensymphony.xwork2.util.XWorkConverter" static="true" />
     <bean class="com.opensymphony.xwork2.util.OgnlValueStack" static="true" />
+    <bean class="com.opensymphony.xwork2.validator.ValidatorFileParser" static="true" />
     <bean class="org.apache.struts2.dispatcher.Dispatcher" static="true" />
     <bean class="org.apache.struts2.components.Include" static="true" />
     <bean class="org.apache.struts2.dispatcher.FilterDispatcher" static="true" />

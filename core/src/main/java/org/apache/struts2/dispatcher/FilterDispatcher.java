@@ -408,8 +408,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 }
 
                 if (serveStatic && resourcePath.startsWith("/struts")) {
-                    String name = resourcePath.substring("/struts".length());
-                    findStaticResource(name, request, response);
+                    findStaticResource(resourcePath, request, response);
                 } else {
                     // this is a normal request, let it pass through
                     chain.doFilter(request, response);

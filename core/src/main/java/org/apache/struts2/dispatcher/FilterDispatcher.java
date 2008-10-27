@@ -150,10 +150,12 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
 
+    static final String DEFAULT_STATIC_PACKAGES = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
+
     /**
      * Store set of path prefixes to use with static resources.
      */
-    private String[] pathPrefixes;
+    String[] pathPrefixes;
 
     /**
      * Provide a formatted date for setting heading information when caching static content.
@@ -203,7 +205,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         dispatcher.init();
        
         String param = filterConfig.getInitParameter("packages");
-        String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
+        String packages = DEFAULT_STATIC_PACKAGES;
         if (param != null) {
             packages = param + " " + packages;
         }
@@ -408,7 +410,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 }
 
                 if (serveStatic && resourcePath.startsWith("/struts")) {
-                    findStaticResource(resourcePath, request, response);
+                    findStaticResource(resourcePath, findAndCheckResources(resourcePath), request, response);
                 } else {
                     // this is a normal request, let it pass through
                     chain.doFilter(request, response);
@@ -430,39 +432,54 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
     /**
      * Locate a static resource and copy directly to the response,
-     * setting the appropriate caching headers. 
+     * setting the appropriate caching headers.
      *
      * @param path The resource path
+     * @param resourceUrls List of matching resource URLs
      * @param request The request
      * @param response The response
      * @throws IOException If anything goes wrong
      */
-    public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
+    public void findStaticResource(String path, List<URL> resourceUrls, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String name = cleanupPath(path);
-        for (String pathPrefix : pathPrefixes) {
-            URL resourceUrl = findResource(buildPath(name, pathPrefix));
-            if (resourceUrl != null) {
-                InputStream is = null;
-                try {
-                    //check that the resource path is under the pathPrefix path
-                    String pathEnding = buildPath(name, pathPrefix);
-                    if (resourceUrl.getFile().endsWith(pathEnding))
-                        is = resourceUrl.openStream();
-                } catch (Exception ex) {
-                    // just ignore it
-                    continue;
-                }
+        for (URL resourceUrl : resourceUrls) {
+            InputStream is;
+            try {
+                is = resourceUrl.openStream();
+            } catch (Exception ex) {
+                // just ignore it
+                continue;
+            }
 
-                //not inside the try block, as this could throw IOExceptions also
-                if (is != null) {
-                    process(is, path, request, response);
-                    return;
-                }
+            //not inside the try block, as this could throw IOExceptions also
+            if (is != null) {
+                process(is, path, request, response);
+                return;
             }
         }
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    /**
+     * Locate a static classpath resource and check for safety constraints.
+     *
+     * @param path The resource path to check for available resources
+     * @return verified classpath resource URLs
+     * @throws IOException If anything goes wrong
+     */
+    protected List<URL> findAndCheckResources(String path) throws IOException {
+        String name = cleanupPath(path);
+        List<URL> resourceUrls = new ArrayList<URL>(pathPrefixes.length);
+        for (String pathPrefix : pathPrefixes) {
+            URL resourceUrl = findResource(buildPath(name, pathPrefix));
+            String pathEnding = buildPath(name, pathPrefix);
+            //check that the resource path is under the pathPrefix path
+            if (resourceUrl != null && resourceUrl.getFile().endsWith(pathEnding)) {
+                resourceUrls.add(resourceUrl);
+            }
+        }
+        return resourceUrls;
     }
 
     /**

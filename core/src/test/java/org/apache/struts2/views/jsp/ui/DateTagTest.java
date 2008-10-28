@@ -225,7 +225,8 @@ public class DateTagTest extends AbstractTagTest {
 
         // hmmm the Date component isn't the best to calculate the excat difference so we'll just check
         // that it starts with in 2 years
-        assertTrue(writer.toString().startsWith("in 2 years"));
+        String s = writer.toString();
+        assertTrue(s.startsWith("in 2 years"));
     }
 
     public void testNoDateObjectInContext() throws Exception {

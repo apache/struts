@@ -440,6 +440,7 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts-annotations</artifactId>
             <scope>compile</scope>
+            <version>1.0.2</version>
             <optional>true</optional>
         </dependency>
 

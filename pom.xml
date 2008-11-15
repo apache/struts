@@ -352,18 +352,6 @@
         </plugins>
     </reporting>
 
-    <dependencyManagement>
-      <dependencies>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts-annotations</artifactId>
-            <version>1.0.4-20080729.133507-4</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-      </dependencies>
-    </dependencyManagement>
-
     <repositories>
         <repository>
             <id>snapshots-maven-codehaus</id>

@@ -27,6 +27,12 @@
     <dependencySet>
       <outputDirectory>lib</outputDirectory>
       <scope>runtime</scope>
+      <excludes>
+        <exclude>net.sf.retrotranslator:retrotranslator-runtime</exclude>
+        <exclude>backport-util-concurrent:backport-util-concurrent</exclude>
+        <exclude>junit:junit</exclude>
+        <exclude>*:jdk14</exclude>
+      </excludes>
     </dependencySet>
   </dependencySets>
   <fileSets>
@@ -81,6 +87,10 @@
       </fileSet>
       -->
       <fileSet>
+        <directory>../plugins/codebehind/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
         <directory>../plugins/config-browser/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-config-browser-plugin</outputDirectory>
       </fileSet>
@@ -111,6 +121,10 @@
       <fileSet>
         <directory>../plugins/sitegraph/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-sitegraph-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/spring/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-spring-plugin</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/sitemesh/target/site</directory>
@@ -186,5 +200,13 @@
         <include>src/</include>
       </includes>
    </fileSet>
+    <fileSet>
+      <directory>../plugins</directory>
+      <outputDirectory>src/plugins</outputDirectory>
+      <excludes>
+        <exclude>*/target/**</exclude>
+        <exclude>target/**</exclude>
+      </excludes>
+    </fileSet>
   </fileSets>
 </assembly>

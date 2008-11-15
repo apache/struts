@@ -135,13 +135,24 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.0.1</version>
+                <version>2.2-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                             <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
+                        <descriptor>src/main/assembly/lib-jdk14.xml</descriptor>
                         <descriptor>src/main/assembly/apps.xml</descriptor>
                         <descriptor>src/main/assembly/src.xml</descriptor>
+                        <descriptor>src/main/assembly/docs.xml</descriptor>
                     </descriptors>
                     <finalName>struts-${version}</finalName>
                     <outputDirectory>target/assembly/out</outputDirectory>

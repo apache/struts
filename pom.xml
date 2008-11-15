@@ -59,8 +59,9 @@
 
     <modules>
         <module>core</module>
-        <!--<module>assembly</module>-->
-        <!-- <module>api</module> -->
+        <module>apps</module>
+        <module>plugins</module>
+        <module>assembly</module>
     </modules>
 
     <licenses>
@@ -79,30 +80,6 @@
 
     <profiles>
         <profile>
-            <id>apps</id>
-            <activation>
-                <property>
-                    <name>apps</name>
-                </property>
-            </activation>
-            <modules>
-                <module>apps</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>plugins</id>
-            <modules>
-                <module>plugins</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>all</id>
-            <modules>
-                <module>plugins</module>
-                <module>apps</module>
-            </modules>
-        </profile>
-        <profile>
             <id>xwork</id>
             <modules>
                 <module>../xwork</module>
@@ -113,77 +90,6 @@
             <modules>
                 <module>../maven/struts-annotations</module>
             </modules>
-        </profile>
-        <profile>
-            <id>1.4-backport</id>
-            <activation>
-                <jdk>1.4</jdk>
-            </activation>
-            <dependencies>
-                <!-- should have the org.w3c.dom dependency here -->
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>alljars</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.2</version>
-                        <!--
-                        <configuration>
-                            <aggregate>true</aggregate>
-                        </configuration>
-                        -->
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
@@ -233,48 +139,161 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>retrotranslator-maven-plugin</artifactId>
-                  <version>1.0-alpha-2</version>
-                  <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>translate</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>
-                                    <directory>${pom.basedir}/target/classes</directory>
-                                </include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                  </executions>
-                </plugin>
-                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-release-plugin</artifactId>
                   <configuration>
                     <useReleaseProfile>false</useReleaseProfile>
                   </configuration>
                 </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+              <artifactId>maven-jar-plugin</artifactId>
+              <configuration>
+                <archive>
+                  <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                </archive>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>maven-bundle-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>bundle-manifest</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                    <goal>manifest</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--
+            <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rat-maven-plugin</artifactId>
+                  <version>1.0-alpha-2</version>
+                  <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
+                            <licenseMatchers>
+                                <classNames>
+                                    <className>rat.analysis.license.ApacheSoftwareLicense20</className>
+                                </classNames>
+                            </licenseMatchers>
+                            <includes>
+                                <include>pom.xml</include>
+                                <include>src/**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                  </executions>
+                </plugin>
+            -->
+                <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.2</version>
+                <!--
+                  <configuration>
+                    <aggregate>true</aggregate>
+                  </configuration>
+                -->
+                <executions>
+                    <execution>
+                        <id>attach-source</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
+                <artifactId>maven-source-plugin</artifactId>
                     <executions>
                         <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
+                        <id>attach-source</id>
                             <goals>
-                                <goal>sign</goal>
+                            <goal>jar</goal>
                             </goals>
                         </execution>
                     </executions>
                 </plugin>
-            </plugins>
-        </pluginManagement>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>retrotranslator-maven-plugin</artifactId>
+                <version>1.0-alpha-3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>translate-project</goal>
+                        </goals>
+                        <configuration>
+                            <verify>false</verify>
+                            <failonwarning>true</failonwarning>
+                            <lazy>true</lazy>
+                            <advanced>true</advanced>
+                            <verbose>false</verbose>
+                            <destdir>${project.build.directory}/classes-retro</destdir>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Commenting out the license plugin, until it works like we want.
+            To use the "license:format" goal, remove the "core" module before running,
+            otherwise it will ignore the file exclusions.
 
+            <plugin>
+	            <groupId>com.google.code.maven-license-plugin</groupId>
+	            <artifactId>maven-license-plugin</artifactId>
+	            <version>1.2.7-SNAPSHOT</version>
+	            <configuration>
+	            	<header>src/etc/header.txt</header>
+	            	<includes>
+	            		<include>pom.xml</include>
+	            		<include>src/**</include>
+	            		<include>core/pom.xml</include>
+	            		<include>core/src/**</include>
+	            		<include>plugins/**/pom.xml</include>
+	            		<include>plugins/**/src/**</include>
+	            		<include>apps/**/pom.xml</include>
+	            	</includes>
+	            	<excludes>
+	            		<exclude>**/*.txt</exclude>
+                        <exclude>core/src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
+                        <exclude>core/src/main/resources/org/apache/struts2/static/domTT.js</exclude>
+                        <exclude>core/src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
+                        <exclude>core/src/site/resources/tags/**</exclude>
+                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/nls/**</exclude>
+                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/src/**</exclude>
+                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/*</exclude>
+                        <exclude>plugins/dojo/src/test/resources/org/apache/struts2/dojo/views/jsp/ui/**</exclude>
+	                    <exclude>apps/**/src/**</exclude>
+	            	</excludes>
+	            </configuration>
+	        </plugin> -->
+
+            </plugins>
         <defaultGoal>install</defaultGoal>
 
     </build>
@@ -314,6 +333,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
             -->
+            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>rat-maven-plugin</artifactId>
@@ -323,10 +343,26 @@
                         <include>pom.xml</include>
                         <include>src/**</include>
                     </includes>
+                    <excludes>
+                        <exclude>assembly/src/main/resources/backport/RETROTRANSLATOR-LICENSE.txt</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
+            -->
         </plugins>
     </reporting>
+
+    <dependencyManagement>
+      <dependencies>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts-annotations</artifactId>
+            <version>1.0.4-20080729.133507-4</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
@@ -363,20 +399,6 @@
                 <enabled>true</enabled>
             </releases>
             <url>http://maven2.opensymphony.com</url>
-        </repository>
-        <repository>
-            <id>opensymphony</id>
-            <name>opensymphony</name>
-            <layout>legacy</layout>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <url>http://maven.opensymphony.com</url>
         </repository>
         <repository>
             <id>Maven Snapshots</id>

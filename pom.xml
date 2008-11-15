@@ -175,7 +175,7 @@
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
-                        <phase>verify</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
@@ -250,6 +250,8 @@
                         </goals>
                         <configuration>
                             <verify>false</verify>
+                            <classifier>jdk14</classifier>
+                            <attach>true</attach>
                             <failonwarning>true</failonwarning>
                             <lazy>true</lazy>
                             <advanced>true</advanced>

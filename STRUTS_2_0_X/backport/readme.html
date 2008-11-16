@@ -1,0 +1,656 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Retrotranslator</title>
+</head>
+
+<body>
+<table border="0" width="98%">
+    <tr>
+        <td><h2>Retrotranslator</h2></td>
+        <td width="125" align="left"><a href="http://sourceforge.net"><img
+                src="http://sflogo.sourceforge.net/sflogo.php?group_id=153566&amp;type=2"
+                width="125" height="37" border="0" alt="SourceForge.net Logo"/></a>
+        </td>
+    </tr>
+</table>
+
+<h4>Contents</h4>
+<ol>
+    <li><a href="#what">What is Retrotranslator?</a></li>
+    <li><a href="#features">What Java 5 features are supported?</a></li>
+    <li><a href="#commandline">How to use Retrotranslator from a command line?</a></li>
+    <li><a href="#ant">How to use Retrotranslator from Apache Ant or Maven?</a></li>
+    <li><a href="#idea">How to use Retrotranslator from IntelliJ IDEA?</a></li>
+    <li><a href="#jit">How to use Just-in-Time Retrotranslator?</a></li>
+    <li><a href="#supported">What Java 5 classes and methods are supported?</a></li>
+    <li><a href="#extension">How to write an extension for Retrotranslator?</a></li>
+    <li><a href="#limitations">What are the limitations?</a></li>
+    <li><a href="#alternative">Alternative tools</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#license">License</a></li>
+</ol>
+
+<h4><a name="what">What is Retrotranslator?</a></h4>
+<a href="http://sourceforge.net/projects/retrotranslator">Retrotranslator</a> is a Java bytecode transformer
+that translates Java classes compiled with JDK 5.0 into classes that can be run on JVM 1.4.
+It is a free, open-source tool based on the <a href="http://asm.objectweb.org/">ASM bytecode manipulation framework</a>
+and concurrency utilities
+<a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php">backported to Java 1.4</a>.
+
+<h4><a name="features">What Java 5 features are supported?</a></h4>
+<ul>
+    <li>Generics (generic types)</li>
+    <li>Annotations (metadata)</li>
+    <li>Reflection on generics and annotations</li>
+    <li>Typesafe enums (enumerated types)</li>
+    <li>Autoboxing/unboxing</li>
+    <li>Enhanced for loop (for-each loop)</li>
+    <li>Varargs (variable arguments)</li>
+    <li>Covariant return types</li>
+    <li>Formatted output</li>
+    <li>Static import</li>
+    <li>Concurrency utilities</li>
+    <li>Collections framework enhancements</li>
+</ul>
+
+<h4><a name="commandline">How to use Retrotranslator from a command line?</a></h4>
+<ol>
+    <li><a href="http://sourceforge.net/project/showfiles.php?group_id=153566">Download</a>
+        and unzip the binary distribution file <code>Retrotranslator-<i>n.n.n</i>-bin.zip</code>,
+        where <i>n.n.n</i> is the latest Retrotranslator release number.
+    </li>
+    <li>
+        Compile your classes with JDK 5.0 and put them into some directory, e.g. <code>myclasses</code>.
+    </li>
+    <li>
+        Go to the unzipped directory and execute:<br>
+        <code>java -jar retrotranslator-transformer-<i>n.n.n</i>.jar -srcdir myclasses</code>
+    </li>
+    <li>
+        If you use Java 5 API put <code>retrotranslator-runtime-<i>n.n.n</i>.jar</code> and
+        <code>backport-util-concurrent-<i>n.n</i>.jar</code> into the classpath of your application.
+    </li>
+    <li>
+        Run or debug the application as usual on J2SE 1.4.x, preferably 1.4.2.
+    </li>
+</ol>
+
+<p><a name="syntax">The full command line syntax:</a><br>
+    <code>java -jar retrotranslator-transformer-<i>n.n.n</i>.jar &lt;options&gt;</code>
+    <br>or<br>
+    <code>java -cp retrotranslator-transformer-<i>n.n.n</i>.jar net.sf.retrotranslator.transformer.Retrotranslator &lt;options&gt;</code></p>
+<table border="1" cellspacing="0" cellpadding="5">
+    <tr><th>Option</th><th>Description</th><th>Default</th></tr>
+    <tr>
+        <td nowrap><code>-srcdir</code></td>
+        <td>The directory with classes that should be translated (may be specified several times).</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-srcjar</code></td>
+        <td>The directory with classes that should be translated (may be specified several times).</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-destdir</code></td>
+        <td>The directory to place translated classes.</td>
+        <td>Location of sources</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-destjar</code></td>
+        <td>The JAR file to place translated classes.</td>
+        <td>Location of sources</td>
+    </tr>
+    <tr>
+        <td nowrap><a name="option_advanced"><code>-advanced</code></a></td>
+        <td>Whether to use alternative implementations of Java 1.4 classes and methods for better Java 5 compatibility.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-verify</code></td>
+        <td>Asks the translator to examine translated bytecode for references to classes, methods, or fields
+            that cannot be found in the provided classpath.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-classpath</code></td>
+        <td>The classpath for verification including <code>rt.jar</code>, <code>jce.jar</code>,
+            <code>jsse.jar</code> (from JRE 1.4), <code>retrotranslator-runtime-<i>n.n.n</i>.jar</code>,
+            and <code>backport-util-concurrent-<i>n.n</i>.jar</code>.</td>
+        <td>Current classpath</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-srcmask</code></td>
+        <td>The wildcard pattern specifying files that should be translated (either bytecode or UTF-8 text),
+            e.g. "<code>*.class;*.tld</code>". There are three special characters: "<code>*?;</code>".
+        </td>
+        <td>*.class</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-embed</code></td>
+        <td>Package name for a private copy of <code>retrotranslator-runtime-<i>n.n.n</i>.jar</code> and
+            <code>backport-util-concurrent-<i>n.n</i>.jar</code> to be put into <code>-destdir</code> or <code>-destjar</code>.
+            This makes your application independent of other versions of Retrotranslator present in the classpath.
+            </td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td nowrap><a name="option_backport"><code>-backport</code></a></td>
+        <td>Informs the translator about <a href="#extension">user-defined</a> backport packages.
+            Package names should be separated by semicolons.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-target</code></td>
+        <td>To make Java 6 classes compatible with Java 5 set this option to 1.5 and supply
+            <a href="#extension">user-defined</a> backport packages via the <code>backport</code> option.</td>
+        <td>1.4</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-lazy</code></td>
+        <td>Asks the translator to only transform classes compiled with a <code>target</code> greater than the current one.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-stripsign</code></td>
+        <td>Asks the translator to strip signature (generics) information.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-verbose</code></td>
+        <td>Asks the translator for verbose output.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-retainapi</code></td>
+        <td>Asks the translator to modify classes for JVM 1.4 compatibility but keep use of Java 5 API.
+            References introduced by a compiler will also remain unchanged,
+            like the use of <code>java.lang.StringBuilder</code> for string concatenation
+            or the implicit <code>valueOf</code> method call for autoboxing.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-retainflags</code></td>
+        <td>Asks the translator to keep Java 5 specific access modifiers.</td>
+        <td>Off</td>
+    </tr>
+</table>
+<p>
+    For example, if you have a Java 5 application <code>myapplication5.jar</code> you can use the following command
+    to produce <code>myapplication4.jar</code> that will run on J2SE 1.4 and is independent of Retrotranslator,
+    since required classes are added to the translated application with a different package name:
+</p>
+<p>
+    <code>java -jar retrotranslator-transformer-<i>n.n.n</i>.jar
+    -srcjar myapplication5.jar -destjar myapplication4.jar -embed com.mycompany.internal</code><br>
+</p>
+
+<h4><a name="ant">How to use Retrotranslator from Apache Ant or Maven?</a></h4>
+
+<p>The distribution contains an integrated <a href="http://ant.apache.org/">Apache Ant</a> task
+    <code>net.sf.retrotranslator.transformer.RetrotranslatorTask</code>. It has the following syntax:</p>
+<table border="1" cellspacing="0" cellpadding="5">
+    <tr><th>Attribute</th><th>Description</th><th>Default</th></tr>
+    <tr>
+        <td><code>srcdir</code></td>
+        <td>The directory with classes that should be translated.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><code>srcjar</code></td>
+        <td>The directory with classes that should be translated.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><code>destdir</code></td>
+        <td>The directory to place translated classes.</td>
+        <td>Location of sources</td>
+    </tr>
+    <tr>
+        <td><code>destjar</code></td>
+        <td>The JAR file to place translated classes.</td>
+        <td>Location of sources</td>
+    </tr>
+    <tr>
+        <td><code>advanced</code></td>
+        <td>Whether to use alternative implementations of Java 1.4 classes and methods for better Java 5 compatibility.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>verify</code></td>
+        <td>Asks the translator to examine translated bytecode for references to classes, methods, or fields
+            that cannot be found in the provided classpath.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>classpath</code></td>
+        <td>The classpath for the verification, including <code>rt.jar</code>, <code>jce.jar</code>,
+            <code>jsse.jar</code> (from JRE 1.4), <code>retrotranslator-runtime-<i>n.n.n</i>.jar</code>,
+            and <code>backport-util-concurrent-<i>n.n</i>.jar</code>.
+        </td>
+        <td>Current classpath</td>
+    </tr>
+    <tr>
+        <td><code>classpathref</code></td>
+        <td>The classpath for the verification, given as a reference to a path defined elsewhere.
+        </td>
+        <td>Current classpath</td>
+    </tr>
+    <tr>
+        <td><code>srcmask</code></td>
+        <td>The wildcard pattern specifying files that should be translated (either bytecode or UTF-8 text),
+            e.g. "<code>*.class;*.tld</code>". There are three special characters: "<code>*?;</code>".
+        </td>
+        <td>*.class</td>
+    </tr>
+    <tr>
+        <td><code>embed</code></td>
+        <td>Package name for a private copy of <code>retrotranslator-runtime-<i>n.n.n</i>.jar</code> and
+            <code>backport-util-concurrent-<i>n.n</i>.jar</code> to be put into <code>-destdir</code> or <code>-destjar</code>.
+            This makes your application independent of other versions of Retrotranslator present in the classpath.
+            </td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><code>backport</code></td>
+        <td>Informs the translator about <a href="#extension">user-defined</a> backport packages.
+            Package names should be separated by semicolons.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><code>target</code></td>
+        <td>Set this option to 1.5 and supply <a href="#extension">user-defined</a> backport packages via
+            the <code>backport</code> option to make Java 6 classes compatible with Java 5.</td>
+        <td>1.4</td>
+    </tr>
+    <tr>
+        <td><code>lazy</code></td>
+        <td>Asks the translator to only transform classes compiled with a <code>target</code> greater than the current one.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>stripsign</code></td>
+        <td>Asks the translator to strip signature (generics) information.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>verbose</code></td>
+        <td>Asks the translator for verbose output.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>retainapi</code></td>
+        <td>Asks the translator to modify classes for JVM 1.4 compatibility but keep use of Java 5 API.
+            References introduced by a compiler will also remain unchanged,
+            like the use of <code>java.lang.StringBuilder</code> for string concatenation
+            or the implicit <code>valueOf</code> method call for autoboxing.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>retainflags</code></td>
+        <td>Asks the translator to keep Java 5 specific access modifiers.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>failonwarning</code></td>
+        <td>Indicates whether the build will fail when there are verification warnings.</td>
+        <td>On</td>
+    </tr>
+</table>
+<p>
+    You may use nested <code>fileset</code>, <code>jarfileset</code>, and <code>dirset</code> elements to specify
+    source files and <code>classpath</code> elements to specify classpath. For example:
+</p>
+<pre>
+    &lt;path id="classpath"&gt;
+        &lt;fileset dir="lib" includes="**/*.jar"/&gt;
+    &lt;/path&gt;
+    &lt;taskdef name="retrotranslator" classpathref="classpath"
+             classname="net.sf.retrotranslator.transformer.RetrotranslatorTask" /&gt;
+    &lt;retrotranslator destdir="build/classes14" verify="true"&gt;
+        &lt;fileset dir="build/classes15" includes="**/*.class"&gt;
+        &lt;jarfileset dir="build/lib15" includes="**/*.jar"&gt;
+        &lt;classpath location="${java14_home}/jre/lib/rt.jar"/&gt;
+        &lt;classpath refid="classpath"/&gt;
+    &lt;/retrotranslator&gt;
+</pre>
+<p>
+    For <a href="http://maven.apache.org/">Maven</a> there is a
+    <a href="http://mojo.codehaus.org/retrotranslator-maven-plugin/">Retrotranslator plugin</a>
+    from the <a href="http://mojo.codehaus.org/">Mojo Project</a>.
+</p>
+<h4><a name="idea">How to use Retrotranslator from IntelliJ IDEA?</a></h4>
+<p>
+    There is a <a href="http://plugins.intellij.net/plugin/?id=145">plugin</a> to automatically translate and verify
+    classes compiled by <a href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a>, so you can develop in Java 5 but
+    run and debug on JRE 1.4.
+</p>
+
+<h4><a name="jit">How to use Just-in-Time Retrotranslator?</a></h4>
+
+<p>
+    JIT Retrotranslator is able to translate at runtime Java classes loaded with any classloader.
+    It works on J2SE 1.4 from most JVM vendors like Sun, IBM, BEA, and Apple, but does nothing on J2SE 5.0.
+    However translation at runtime consumes additional memory and processing resources and it will not
+	work if your classes make use of Java 5 API but were compiled with "<code>-target 1.4</code>".
+</p>
+<ul>
+    <li>
+        If you want to run a JAR file with the JIT, execute:<br>
+        <code>java -cp retrotranslator-transformer-<i>n.n.n</i>.jar
+            net.sf.retrotranslator.transformer.JITRetrotranslator &lt;options&gt; -jar &lt;jarfile&gt; [&lt;args...&gt;]</code>
+    </li>
+    <li>
+        When the first option does not work or if you just want to run a class from your classpath, execute:<br>
+        <code>java -cp retrotranslator-transformer-<i>n.n.n</i>.jar:&lt;classpath&gt;
+            net.sf.retrotranslator.transformer.JITRetrotranslator &lt;options&gt; &lt;class&gt; [&lt;args...&gt;]</code>
+    </li>
+    <li>
+        Alternatively you may simply call <code>JITRetrotranslator.run()</code> from some JVM 1.4 compatible class
+        before Java 5 classes are loaded.
+    </li>
+</ul>
+<p>
+    JIT Retrotranslator can accept the <code><a href="#option_advanced">advanced</a></code>
+    and <code><a href="#option_backport">backport</a></code> options.
+</p>
+
+<h4><a name="supported">What Java 5 classes and methods are supported?</a></h4>
+<table border="1" cellspacing="0" cellpadding="5">
+    <tr><th>Package</th><th>Class</th><th>Methods and fields</th><th>Compatibility notes</th></tr>
+    <tr><td><code>java.lang.annotation</code></td><td>* (all classes)</td><td>* (all methods)</td><td>&nbsp;</td></tr>
+    <tr><td><code>java.lang.instrument</code></td><td>* (all classes)</td><td>* (all methods)</td><td>
+        Bytecode instrumentation is not implemented.</td></tr>
+    <tr><td><code>java.util.concurrent,<br>java.util.concurrent.atomic,<br>java.util.concurrent.locks</code></td>
+        <td>almost all classes<sup><a href="#1">1</a></sup></td><td>almost all methods</td>
+        <td>The <code>LockSupport</code> class may be unusable due to poor efficiency.
+            The <code>Condition.awaitNanos(long)</code> method has
+        <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/doc/api/edu/emory/mathcs/backport/java/util/concurrent/helpers/Utils.html#awaitNanos(edu.emory.mathcs.backport.java.util.concurrent.locks.Condition, long)">
+        little</a> accuracy guarantees.</td></tr>
+    <tr><td rowspan="6"><code>java.io</code></td><td><code>Closeable<sup><a href="#2">2</a></sup></code>
+    </td><td><code>*</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Flushable<sup><a href="#2">2</a></sup></code></td><td><code>*</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>PrintStream</code></td><td>
+        * (11 new methods and constructors)
+        </td><td>&nbsp;</td></tr>
+    <tr><td><code>PrintWriter</code></td><td>
+        * (11 new methods and constructors)
+        </td><td>
+        The <code>PrintWriter.format</code> and <code>PrintWriter.printf</code> methods always flush the output buffer.
+        </td></tr>
+    <tr><td><code>Reader</code></td><td><code>read(CharBuffer)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Writer</code></td><td>
+        <code>append(CharSequence),<br>
+            append(CharSequence, int, int),<br>
+            append(char)</code>
+        </td><td>&nbsp;</td></tr>
+    <tr><td rowspan="26"><code>java.lang</code></td><td><code>Appendable<sup><a href="#2">2</a></sup></code></td><td>*
+    </td><td>&nbsp;</td></tr>
+    <tr><td><code>Boolean</code></td><td><code>parseBoolean(String),<br>
+        compareTo(Boolean)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Byte</code></td><td><code>valueOf(byte)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Character</code></td><td><code>valueOf(char)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Class</code></td><td>* (21 new methods)</td><td>
+        <code>Class.getMethod(String, Class...)</code> and <code>Class.getDeclaredMethod(String, Class...)</code>
+        are intercepted to better support generics and covariant return types
+        on several platforms<sup><a href="#3">3</a></sup>.
+    </td></tr>
+    <tr><td><code>Deprecated</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Double</code></td><td><code>valueOf(double)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Enum</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Float</code></td><td><code>valueOf(float)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>IllegalArgumentException</code></td><td><code>IllegalArgumentException(String, Throwable),<br>
+        IllegalArgumentException(Throwable)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>IllegalStateException</code></td><td><code>IllegalStateException(String, Throwable),<br>
+        IllegalStateException(Throwable)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Integer</code></td><td><code>valueOf(int), signum(int)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Iterable<sup><a href="#2">2</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Long</code></td><td><code>valueOf(long), signum(long)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Package</code></td><td>* (4 new methods)</td><td>&nbsp;</td></tr>
+    <tr><td><code>Readable<sup><a href="#2">2</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Short</code></td><td><code>valueOf(short)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>String</code></td><td><code>contains(CharSequence),<br>
+        contentEquals(CharSequence),<br>
+        format(Locale, String, Object...),<br>
+        format(String, Object...),<br>
+        replace(CharSequence, CharSequence),<br>
+        isEmpty()<sup><a href="#4">4</a></sup>
+    </code></td><td>&nbsp;</td></tr>
+    <tr><td><code>StringBuffer</code></td><td><code>
+        StringBuffer(CharSequence),<br>
+        append(CharSequence),<br>
+        append(CharSequence, int, int),<br>
+        insert(int, CharSequence),<br>
+        insert(int, CharSequence, int, int)
+    </code></td><td>&nbsp;</td></tr>
+    <tr><td><code>StringBuilder</code></td><td>
+        All methods supported in <code>StringBuffer</code>
+    </td><td><code>StringBuilder</code> is replaced with <code>StringBuffer</code>.</td></tr>
+    <tr><td><code>SuppressWarnings</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>System</code></td><td><code>nanoTime()<sup><a href="#1">1</a></sup>,<br> clearProperty(String)</code></td><td>
+        The <code>System.nanoTime()</code> method precision
+        <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/doc/api/edu/emory/mathcs/backport/java/util/concurrent/helpers/Utils.html#nanoTime()">
+            may vary</a> on different platforms.
+    </td></tr>
+    <tr><td><code>Thread</code></td><td><code>getStackTrace(),<br> getId()
+    </code></td><td>The <code>Thread.getStackTrace()</code>
+        method returns non-empty stack trace only for the current thread.<br>
+        The <code>Thread.getId()</code> method does not reflect the order in which threads are created.</td></tr>
+    <tr><td><code>Thread.State</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>ThreadLocal</code></td><td><code>remove()<sup><a href="#3">3</a></sup></code></td>
+        <td><code>ThreadLocal</code> and <code>InheritableThreadLocal</code>
+            are replaced by corresponding classes from the runtime library.<sup><a href="#3">3</a></sup>.</td></tr>
+    <tr><td><code>TypeNotPresentException</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td rowspan="2"><code>java.lang.ref</code></td>
+        <td><code>SoftReference</code></td><td>*</td><td>
+        <code>SoftReference(Object,ReferenceQueue)</code>
+        supports <code>null</code> for the second parameter
+        on all platforms<sup><a href="#3">3</a></sup>.
+        </td></tr>
+    <tr><td><code>WeakReference</code></td><td>*</td><td>
+        <code>WeakReference(Object,ReferenceQueue)</code>
+        supports <code>null</code> for the second parameter
+        on all platforms<sup><a href="#3">3</a></sup>.
+        </td></tr>
+
+    <tr><td rowspan="13"><code>java.lang.reflect</code></td>
+        <td><code>AccessibleObject</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>AnnotatedElement<sup><a href="#2">2</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Constructor</code></td><td>* (11 new methods)</td><td>&nbsp;</td></tr>
+    <tr><td><code>Field</code></td><td>* (8 new methods)</td><td>&nbsp;</td></tr>
+    <tr><td><code>GenericArrayType</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>GenericDeclaration<sup><a href="#2">2</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>GenericSignatureFormatError</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>MalformedParameterizedTypeException</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Method</code></td><td>* (14 new methods)</td><td>&nbsp;</td></tr>
+    <tr><td><code>ParameterizedType</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Type<sup><a href="#2">2</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>TypeVariable</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>WildcardType</code></td><td>*</td><td>&nbsp;</td></tr>
+
+    <tr><td ><code>java.math</code></td><td><code>BigDecimal</code></td><td>
+        <code>BigDecimal(int),<br> BigDecimal(long),<br> ZERO, ONE, TEN,<br> divideAndRemainder(BigDecimal),<br>
+            divideToIntegralValue(BigDecimal),<br> pow(int),<br> remainder(BigDecimal),<br>
+            toPlainString(),<br> valueOf(double),<br>
+            valueOf(long)</code></td><td>The <code>BigDecimal.setScale(int, int)</code>
+        method supports negative scales<sup><a href="#3">3</a></sup>.</td></tr>
+
+    <tr><td rowspan="3"><code>java.net</code></td><td><code>URL</code></td>
+        <td><code>openConnection(Proxy)</code>,<br>
+            <code>toURI()</code>
+        </td><td>The <code>Proxy</code> is ignored by the <code>openConnection(Proxy)</code> method.</td></tr>
+    <tr><td><code>Proxy</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>ProxySelector</code></td><td>*</td><td>&nbsp;</td></tr>
+
+    <tr><td ><code>java.rmi.server</code></td><td><code>RemoteObjectInvocationHandler</code></td>
+        <td>*</td><td>&nbsp;</td></tr>
+
+    <tr><td ><code>java.text</code></td><td><code>DecimalFormat</code></td>
+        <td><code>isParseBigDecimal()<sup><a href="#3">3</a></sup>,<br>
+            setParseBigDecimal(boolean)<sup><a href="#3">3</a></sup></code></td><td>
+        <code>BigDecimal</code> parsing and formatting precision is limited by
+        <code>java.lang.Double</code> or <code>java.lang.Long</code> precision.
+        </td></tr>
+
+    <tr><td><code>java.util.nio</code></td><td><code>CharBuffer</code></td><td>
+        <code>append(CharSequence),<br> append(CharSequence, int, int),<br> append(char),<br> read(CharBuffer)</code>
+        </td><td>&nbsp;</td></tr>
+
+    <tr><td rowspan="10"><code>java.util</code></td><td><code>AbstractQueue<sup><a href="#1">1</a></sup></code></td>
+        <td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Arrays</code></td><td>* (21 new methods)</td><td>&nbsp;</td></tr>
+    <tr><td><code>Collections<sup><a href="#1">1</a></sup></code></td><td>* (13 new methods)<br>
+        newSetFromMap(Map)<sup><a href="#4">4</a></sup>
+
+    </td><td>&nbsp;</td></tr>
+    <tr><td><code>EnumMap</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>EnumSet</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Formatter</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>LinkedList</code></td><td>* (5 new methods)</td><td>&nbsp;</td></tr>
+    <tr><td><code>PriorityQueue<sup><a href="#1">1</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Queue<sup><a href="#1">1</a>,<a href="#2">2</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>UUID</code></td><td>*</td><td>&nbsp;</td></tr>
+
+    <tr><td rowspan="3"><code>java.util.regex</code></td><td><code>Matcher</code></td><td>
+        <code>quoteReplacement(String),<br> toMatchResult()</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>MatchResult<sup><a href="#2">2</a></sup></code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Pattern</code></td><td><code>quote(String)</code></td><td>&nbsp;</td></tr>
+</table>
+<p>
+    <a name="1"><sup>1</sup></a> Supported via the
+        <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php"> Backport of JSR 166</a>.<br>
+    <a name="2"><sup>2</sup></a> In most cases this type is being replaced with it's base type.<br>
+    <a name="3"><sup>3</sup></a> Supported only in advanced mode, i.e. when
+    the <code><a href="#option_advanced">advanced</a></code> option is specified.<br>
+    <a name="4"><sup>4</sup></a> Introduced in Java 6, but available only for 1.4 target.<br>
+</p>
+
+<h4><a name="extension">How to write an extension for Retrotranslator?</a></h4>
+
+<p>
+    Since most backported classes are discovered by Retrotranslator at translation time,
+    you may write an extension and simply put it into the Retrotranslator classpath to make it work.
+    For example, all references to
+    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/EnumSet.html"><code>java.util.EnumSet</code></a>
+    are replaced with references to
+    <a href="http://retrotranslator.cvs.sourceforge.net/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/util/EnumSet_.java?view=markup">
+    <code>net.sf.retrotranslator.runtime.java.util.EnumSet<b>_</b></code></a> (optional trailing underscore) if the latter can be found.
+    But if you replace a whole class that exists in J2SE 1.4 you may encounter interoperability issues with other libraries.
+    So, for example, support for Java 5 fields, methods, and constructors of
+    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/math/BigDecimal.html"><code>java.math.BigDecimal</code></a> is placed into
+
+    <a href="http://retrotranslator.cvs.sourceforge.net/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/math/_BigDecimal.java?view=markup">
+    <code>net.sf.retrotranslator.runtime.java.math.<b>_</b>BigDecimal</code></a> (leading underscore):
+</p>
+    <ul>
+        <li>For a static field there is a public static field with the same name and type.</li>
+        <li>For a static method there is a public static method with the same signature.</li>
+        <li>For an instance method there is a public static method with the same signature
+            but with an additional first parameter representing the instance.</li>
+        <li>For a constructor there is a public static <code>convertConstructorArguments</code> method that
+            accepts constructor's arguments an returns an argument for a Java 1.4 constuctor.</li>
+   </ul>
+<p>
+    Another approach for constructor backporting is used by
+    <a href="http://retrotranslator.cvs.sourceforge.net/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/io/_PrintStream.java?view=markup">
+    <code>net.sf.retrotranslator.runtime.java.io.<b>_</b>PrintStream</code></a>. There is a public static
+    <code>createInstanceBuilder</code> method that accepts constructor's arguments an returns an object with public
+    <code>argument1</code>...<code>argumentN</code> methods and optional public void <code>initialize</code> method.
+    All <code>argumentX</code> methods provide arguments for a Java 1.4 constuctor and should not have any parameters.
+    The <code>initialize</code> method has a single parameter for the created instance and may be used for postprocessing.
+
+</p>
+<p>
+    However, if the backported methods require access
+    to non-public methods or fields of the instance, they cannot be fully handled by Retrotranslator.
+    While you can use reflection to access any data, translated code generally should not depend on security settings.
+    For example, it is impossible to write an implementation for methods <code>getSource()</code>
+    and <code>setSource()</code> of <code>java.beans.PropertyEditorSupport</code> that will work in any environment.
+    Also this approach cannot be used to replace instance field references.
+</p>
+<p>
+    You can put your extensions into packages other than <code>net.sf.retrotranslator.runtime</code>.
+    For example, specify the following at the command line to make Retrotranslator use
+    <code>com.mycompany.internal.java.lang._String</code> and to rewrite all references to
+    <code>com.sun.org.apache.xerces.internal.*</code> with <code>org.apache.xerces.*</code>:<br>
+    <code>-backport&nbsp;com.mycompany.internal;com.sun.org.apache.xerces.internal:org.apache.xerces</code>
+</p>
+<p>
+    If you have written an extension that does not contain copyrighted code, you may send
+    a <a href="http://sourceforge.net/tracker/?group_id=153566&atid=788281">patch</a>
+    under the <a href="#license">Retrotranslator license</a>.
+</p>
+
+<h4><a name="limitations">What are the limitations?</a></h4>
+
+<p>
+    Basically, only classes, methods, and fields listed <a href="#supported">above</a> should work, and other features,
+    like formatted input, are not supported. Known issues:
+</p>
+<ul>
+    <li>Reflection-based tools may be unable to discover additional classes and methods introduced in Java 5 when running on JRE 1.4.</li>
+    <li>Some applications enable all features only if they detect Java 5, so you may need to override system properties:<br>
+        <code>&nbsp;java -Djava.version=1.5.0 -Djava.specification.version=1.5 -Djava.class.version=49.0 ...</code></li>
+    <li>Translated code running on JRE 5.0 may be incompatible with other Java 5 code when Java 5 API is used.</li>
+    <li>Reflection on generics and metadata may return incomplete information for dynamically generated classes.</li>
+    <li>Constants inlined by a compiler and access modifiers are ignored during the verification.</li>
+    <li>Inherited methods introduced in Java 5 may not work, however upcasting may help in some cases:<br>
+        <code>&nbsp;((Writer) new FileWriter("file.tmp")).append("Hello").close();</code></li>
+    <li>Serialized objects produced by translated code may be incompatible with JRE 5.0.</li>
+</ul>
+
+<h4><a name="alternative">Alternative tools</a></h4>
+<ul>
+    <li><a href="http://retroweaver.sourceforge.net/">Retroweaver</a>
+        - a Java bytecode weaver that enables you to take advantage
+        of the new 1.5 language features in your source code,
+        while still retaining compatibility with 1.4 virtual machines.</li>
+    <li><a href="http://tinyurl.com/r8xba">Declawer</a>
+        - a customized Java compiler which reduces 1.5 Generics to equivalent 1.4 syntax.</li>
+</ul>
+
+<h4><a name="contact">Contact</a></h4>
+<ul>
+    <li><a href="http://retrotranslator.sourceforge.net/">Latest documentation</a></li>
+    <li><a href="http://sourceforge.net/forum/forum.php?forum_id=513539">Open discussion</a></li>
+    <li><a href="http://sourceforge.net/forum/forum.php?forum_id=513540">Help</a></li>
+    <li><a href="http://sourceforge.net/tracker/?group_id=153566&atid=788279">Bugs</a></li>
+    <li><a href="http://sourceforge.net/tracker/?group_id=153566&atid=788282">Feature requests</a></li>
+    <li><a href="http://sourceforge.net/users/tarasp/">Author</a></li>
+</ul>
+
+<h4><a name="license">License</a></h4>
+<pre>
+    Retrotranslator: a Java bytecode transformer that translates Java classes
+    compiled with JDK 5.0 into classes that can be run on JVM 1.4.
+
+    Copyright (c) 2005 - 2007 Taras Puchko
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in the
+       documentation and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holders nor the names of its
+       contributors may be used to endorse or promote products derived from
+       this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+    THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+</body>
+</html>

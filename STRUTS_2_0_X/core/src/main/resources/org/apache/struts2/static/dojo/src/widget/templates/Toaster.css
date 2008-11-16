@@ -1,0 +1,42 @@
+.dojoToasterClip {
+	position: absolute;
+	overflow: hidden;
+}
+
+.dojoToasterContainer {
+	display: block;
+	position: absolute;
+	width: 17.5em;
+	z-index: 5000;
+	margin: 0px;
+	font:0.75em Tahoma, Helvetica, Verdana, Arial;
+}
+
+.dojoToasterContent{
+	padding:1em;
+	padding-top:0.25em;
+	background:#73c74a;
+}
+
+.dojoToasterMessage{ 
+	color:#fff;
+}
+.dojoToasterWarning{ }
+.dojoToasterError,
+.dojoToasterFatal{
+	font-weight:bold;
+	color:#fff;
+}
+
+
+.dojoToasterWarning .dojoToasterContent{
+	padding:1em;
+	padding-top:0.25em;
+	background:#d4d943;
+} 
+
+.dojoToasterError .dojoToasterContent{
+	padding:1em;
+	padding-top:0.25em;
+	background:#c46600;
+} 

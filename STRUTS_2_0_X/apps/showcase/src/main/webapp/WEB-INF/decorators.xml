@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<decorators defaultdir="/WEB-INF/decorators">
+    <!-- Any urls that are excluded will never be decorated by Sitemesh -->
+    <excludes>
+        <pattern>/debug.jsp</pattern>
+        <pattern>/styles/*</pattern>
+        <pattern>/scripts/*</pattern>
+        <pattern>/images/*</pattern>
+        <pattern>/dojo/*</pattern>
+        <pattern>/struts/*</pattern>
+        <pattern>/ajax/AjaxResult*</pattern>
+        <pattern>/AjaxTest.action</pattern>
+        <pattern>/ajax/remoteforms/AjaxRemoteForm.action</pattern>
+        <pattern>/tags/ui/ajax/*</pattern>
+        <pattern>/chat/ajax/*</pattern>
+        <pattern>/hangman/ajax/*</pattern>
+        <pattern>/nodecorate/*</pattern>
+    </excludes>
+
+    <decorator name="main" page="main.jsp">
+        <pattern>/*</pattern>
+    </decorator>
+    <!--<decorator name="panel" page="panel.jsp"/>-->
+    <!--<decorator name="dashedBox" page="dashedBox.jsp"/>-->
+    <!--<decorator name="printable" page="printable.jsp"/>-->
+</decorators>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+	
+<struts>
+    <package name="ui-tags" extends="struts-default" namespace="/tags/ui">
+        <action name="example" class="org.apache.struts2.showcase.UITagExample">
+            <result>example.jsp</result>
+            <result name="input">example.jsp</result>
+        </action>
+        <action name="exampleSubmit" class="org.apache.struts2.showcase.UITagExample" method="doSubmit">
+        	<result>exampleSubmited.jsp</result>
+        	<result name="input">example.jsp</result>
+        </action>
+        <action name="exampleVelocity" class="org.apache.struts2.showcase.UITagExample">
+            <result type="velocity">example.vm</result>
+            <result name="input" type="velocity">example.vm</result>
+        </action>
+        <action name="exampleSubmitVelocity" class="org.apache.struts2.showcase.UITagExample" method="doSubmit">
+        	<result type="velocity">exampleSubmited.vm</result>
+        	<result name="input" type="velocity">example.vm</result>
+        </action>
+
+        <action name="lotsOfOptiontransferselect" class="org.apache.struts2.showcase.LotsOfOptiontransferselectAction" method="input">
+        	<result>lotsOfOptiontransferselect.jsp</result>
+        </action>
+        <action name="lotsOfOptiontransferselectSubmit" class="org.apache.struts2.showcase.LotsOfOptiontransferselectAction" method="submit">
+        	<result name="input">lotsOfOptiontransferselect.jsp</result>
+        	<result>lotsOfOptiontransferselectSubmit.jsp</result>
+        </action>
+
+         <action name="moreSelects" class="org.apache.struts2.showcase.MoreSelectsAction" method="input">
+        	<result>moreSelects.jsp</result>
+        </action>
+        <action name="moreSelectsSubmit" class="org.apache.struts2.showcase.MoreSelectsAction" method="submit">
+        	<result name="input">moreSelects.jsp</result>
+        	<result>moreSelectsSubmit.jsp</result>
+        </action>
+
+        <!--  START SNIPPET: treeExampleDynamicXWorkXml -->
+        
+        <action name="showDynamicTreeAction" class="org.apache.struts2.showcase.ShowDynamicTreeAction">
+        	<result>/tags/ui/treeExampleDynamic.jsp</result>
+        </action>
+        
+        <!--  END SNIPPET: treeExampleDynamicXWorkXml -->
+        
+        
+        <action name="showComponentTagExampleCode">
+        	<result type="plaintext">/tags/ui/componentTagExample.jsp</result>
+        </action>
+        
+	</package>
+	
+	<!--  START SNIPPET: treeExampleXWorkXml -->
+	
+	<package name="ui-tags-ajax" namespace="/tags/ui/ajax" extends="struts-default">        
+        <!-- Actions dealing with Tree Example  -->
+        <action name="staticTreeSelectAction">
+        	<result>/tags/ui/staticTreeSelect.jsp</result>
+        </action>
+        <action name="dynamicTreeSelectAction" class="org.apache.struts2.showcase.DynamicTreeSelectAction">
+        	<result>/tags/ui/dynamicTreeSelect.jsp</result>
+        </action>
+    </package>
+    
+    <!--  END SNIPPET: treeExampleXWorkXml -->
+</struts>

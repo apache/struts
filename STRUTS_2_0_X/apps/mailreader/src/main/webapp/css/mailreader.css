@@ -1,0 +1,46 @@
+/**
+* Mailreader stylesheet
+*/
+
+body {
+    background-color: #FFFFFF;
+    color: #000000;
+    link: 000066;
+    visited: #660066;
+    active: #33CCCC;
+}
+
+A:hover {
+    color: #FF0000;
+}
+
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h2 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h3 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h4 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h5 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h6 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+font.hint {
+    font-style: italic;
+    font-size: 80%;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+}

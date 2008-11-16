@@ -1,0 +1,3 @@
+<tr>
+    <td colspan="2"><div align="right"><input type="reset" name="myname" value="Reset" title="mytitle"/></div></td>
+</tr>

@@ -1,0 +1,21 @@
+<div
+  dojoType="struts:BindDiv"
+  delay="4000"
+  updateFreq="1000"
+  autoStart="true"
+  startTimerListenTopics="h"
+  stopTimerListenTopics="i"
+  refreshOnShow="true"
+  scriptSeparation="false"
+  id="mylabel"
+  href="a"
+  loadingText="b"
+  errorText="c"
+  listenTopics="g"
+  beforeLoading="j"
+  afterLoading="k"
+  handler="l"
+  indicator="m"
+  showError="true"
+  showLoading="true">
+</div>

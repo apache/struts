@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="/struts/xhtml/styles.css" type="text/css"/>
+<script type="text/javascript">
+    // Dojo configuration
+    djConfig = {
+        baseRelativePath: "/struts/dojo",
+        isDebug: false,
+        bindEncoding: "ISO-8859-1",
+        debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
+    };
+</script>
+<script type="text/javascript"
+        src="/struts/dojo/dojo.js"></script>
+<script type="text/javascript"
+        src="/struts/simple/dojoRequire.js"></script>
+<script type="text/javascript"
+        src="/struts/ajax/dojoRequire.js"></script>
+<script type="text/javascript"
+        src="/struts/CommonFunctions.js"></script>

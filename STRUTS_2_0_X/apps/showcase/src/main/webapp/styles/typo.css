@@ -1,0 +1,195 @@
+/* A CSS Framework by Mike Stenhouse of Content with Style */
+
+/* TYPOGRAPHY */
+	body {
+		text-align: left;
+		font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+		font-size: 76%;
+        line-height: 1em;
+		color: #333;
+		background: White;
+	}
+	div {
+		font-size: 1em;
+	}
+	img {
+		border: 0;
+	}
+	
+/* LINKS */
+	a,
+	a:link 
+	a:active {
+		color: blue;
+		text-decoration: underline;
+	}
+	a:visited {
+		color: purple;
+	}
+	a:hover {
+        color: red;
+		text-decoration: none;
+	}
+/* END LINKS */
+	
+/* HEADINGS */
+	h1 {
+		font-size: 2em;
+		line-height: 1.5em;
+		margin: 0 0 0.5em 0;
+		padding: 0;
+        color: black;
+	}
+
+    h1.title {
+        font-style: italic;
+        font-weight: bold;
+        color: white;
+    }
+
+	h2 {
+		font-size: 1.5em;
+        line-height: 1.5em;
+		margin: 0 0 0.5em 0;
+		padding: 0;
+        color: black;
+	}
+	h3 {
+		font-size: 1.3em;
+		line-height: 1.3em;
+		margin: 0 0 0.5em 0;
+		padding:0;
+        color: black;
+	}
+	h4 {
+		font-size: 1.2em;
+		line-height: 1.3em;
+		margin: 0 0 0.25em 0;
+		padding: 0;
+        color: black;
+	}
+	h5 {
+		font-size: 1.1em;
+		line-height: 1.3em;
+		margin: 0 0 0.25em 0;
+		padding: 0;
+        color: black;
+	}
+	h6 {
+		font-size: 1em;
+		line-height: 1.3em;
+		margin: 0 0 0.25em 0;
+		padding: 0;
+        color: black;
+	}
+/* END HEADINGS */
+
+/* TEXT */
+	p {
+		font-size: 1em;
+		margin: 0 0 1.5em 0;
+		padding: 0;
+		line-height:1.4em;
+	}
+
+	blockquote {
+		margin-left:10px;
+		margin-right:10px;
+        margin-top:0px;
+        margin-bottom:0px;
+		display: block;
+		font: italic large Verdana, Geneva, Arial, Helvetica, sans-serif;
+		color: #A9A9A9;
+        background-color:#CDFFAA;
+	}
+
+    blockquote p {
+        padding:5px;
+        margin: 0;
+    }
+
+	pre {
+		font-family: monospace;
+		font-size: 1.0em;
+	}
+	strong, b {
+		font-weight: bold;
+	}
+	em, i {
+		font-style:italic;
+	}
+    code {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 1em;
+        white-space: pre;
+    }
+/* END TEXT */
+	
+/* LISTS */
+	ul {
+        line-height:1.4em;
+		margin: 0 0 1.5em 0;
+		padding: 0;
+	}
+	ul li {
+		margin: 0 0 0.25em 30px;
+		padding: 0;
+	}
+	ol {
+		font-size: 1.0em;
+		line-height: 1.4em;
+		margin: 0 0 1.5em 0;
+		padding: 0;
+	}
+	ol li {
+		font-size: 1.0em;
+		margin: 0 0 0.25em 30px;
+		padding: 0;
+	}
+	dl {
+		margin: 0 0 1.5em 0;
+		padding: 0;
+		line-height: 1.4em;
+	}
+	dl dt {
+		font-weight: bold;
+		margin: 0.25em 0 0.25em 0;
+		padding: 0;
+	}
+	dl dd {
+		margin: 0 0 0 30px;
+		padding: 0;
+	}
+/* END LISTS */
+	
+	
+/* TABLE */
+	table {
+        font-size: 1em;
+		margin: 0 0 0 0;
+        padding: 0;
+	}
+	table caption {
+		font-weight: bold;
+		margin: 0 0 0 0;
+		padding: 0 0 0 0;
+	}
+	th {
+		font-weight: bold;
+		text-align: left;
+	}
+	td {
+		font-size: 1em;
+	}
+/* END TABLE */	
+	
+	hr {
+		display: none;
+	}
+	div.hr {
+		height: 1px;
+		margin: 1.5em 10px;
+		border-bottom: 1px dotted black;
+	}
+	
+/* END TYPOGRAPHY */	

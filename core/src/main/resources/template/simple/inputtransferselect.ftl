@@ -1,12 +1,34 @@
+<#--
+/*
+ * $Id: Action.java 502296 2007-02-01 17:33:39Z niallp $
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
 <#if !stack.findValue("#inputtransferselect_js_included")?exists><#t/>
-	<script language="javascript" src="<@s.url value="/struts/inputtransferselect.js" encode='false' includeParams='none'/>"></script>
+	<script type="text/javascript" src="<@s.url value="/struts/inputtransferselect.js" encode='false' includeParams='none'/>"></script>
 	<#assign temporaryVariable = stack.setValue("#inputtransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table border="0">
 <tr>
 <td>
 <#if parameters.leftTitle?exists><#t/>
-	<label for="leftTitle">${parameters.leftTitle}</label><br/>
+	<label for="leftTitle">${parameters.leftTitle}</label><br />
 </#if><#t/>
 
 
@@ -48,7 +70,7 @@
 		<#if parameters.buttonCssStyle?exists>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
-		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id?html}_input'), document.getElementById('${parameters.id?html}'))" /><br/><br/>
+		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id?html}_input'), document.getElementById('${parameters.id?html}'))" /><br /><br />
 	<#t/>
 	<#assign removeLabel=parameters.removeLabel?default("<-")?html /><#t/>
 	<input type="button"
@@ -58,7 +80,7 @@
 		<#if parameters.buttonCssStyle?exists>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
-		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id?html}'))" /><br/><br/>
+		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
 	<#t/>
 	<#assign removeAllLabel=parameters.removeAllLabel?default("<<--")?html /><#t/>
 	<input type="button"
@@ -68,11 +90,11 @@
 		<#if parameters.buttonCssStyle?exists>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
-		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id?html}'))" /><br/><br/>
+		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
 </td>
 <td>
 <#if parameters.rightTitle?exists><#t/>
-	<label for="rightTitle">${parameters.rightTitle}</label><br/>
+	<label for="rightTitle">${parameters.rightTitle}</label><br />
 </#if><#t/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
 <#if parameters.allowUpDown?default(true)>
@@ -100,4 +122,3 @@
 </td>
 </tr>
 </table>
-

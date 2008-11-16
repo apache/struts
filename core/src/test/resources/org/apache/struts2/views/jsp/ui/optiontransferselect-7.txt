@@ -1,7 +1,7 @@
 <tr> 
 <td class="tdLabel"></td>
 <td>
-<script language="javascript" src="/struts/optiontransferselect.js"></script>
+<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
 <table border="0">
 <tr>
 <td>
@@ -18,9 +18,9 @@
 </td>
 <td valign="middle" align="center">
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '')" /><br/><br/>
+			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '');alert('Moving Left');" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Right" onclick="moveSelectedOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '')" /><br/><br/>
+			value="Right" onclick="moveSelectedOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');alert('Moving Right');" /><br/><br/>
 </td> 
 <td>
 	<label for="rightTitle">Title Right</label><br/>

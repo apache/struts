@@ -46,7 +46,7 @@ import com.opensymphony.xwork2.ActionInvocation;
  * PortletResultTest. Insert description.
  *
  */
-public class PortletResultTest extends MockObjectTestCase {
+public class PortletResultTest extends MockObjectTestCase implements PortletActionConstants {
 
     Mock mockInvocation = null;
     Mock mockConfig = null;
@@ -79,7 +79,6 @@ public class PortletResultTest extends MockObjectTestCase {
         Mock mockRequest = mock(RenderRequest.class);
         Mock mockResponse = mock(RenderResponse.class);
         Mock mockRd = mock(PortletRequestDispatcher.class);
-        Mock mockPrep = mock(PortletRequestDispatcher.class);
 
         RenderRequest req = (RenderRequest)mockRequest.proxy();
         RenderResponse res = (RenderResponse)mockResponse.proxy();
@@ -90,9 +89,7 @@ public class PortletResultTest extends MockObjectTestCase {
 
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
-        mockPrep.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
-        mockCtx.expects(once()).method("getNamedDispatcher").with(eq("preparator")).will(returnValue(mockPrep.proxy()));
         mockResponse.expects(once()).method("setContentType").with(eq("text/html"));
         mockConfig.expects(once()).method("getPortletContext").will(returnValue(ctx));
 
@@ -148,26 +145,27 @@ public class PortletResultTest extends MockObjectTestCase {
 
         Constraint[] params = new Constraint[]{eq(PortletActionConstants.ACTION_PARAM), eq("renderDirect")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
-        params = new Constraint[]{eq("location"), eq("/WEB-INF/pages/testJsp.jsp")};
-        mockResponse.expects(once()).method("setRenderParameter").with(params);
         params = new Constraint[]{eq(PortletActionConstants.MODE_PARAM), eq(PortletMode.VIEW.toString())};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
 
         ActionContext ctx = ActionContext.getContext();
 
+        Map session = new HashMap();
+
         ctx.put(PortletActionConstants.REQUEST, mockRequest.proxy());
         ctx.put(PortletActionConstants.RESPONSE, mockResponse.proxy());
         ctx.put(PortletActionConstants.PHASE, PortletActionConstants.EVENT_PHASE);
+        ctx.put(ActionContext.SESSION, session);
 
         PortletResult result = new PortletResult();
         try {
             result.doExecute("/WEB-INF/pages/testJsp.jsp", (ActionInvocation)mockInvocation.proxy());
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
             fail("Error occured!");
         }
+        assertEquals("/WEB-INF/pages/testJsp.jsp", session.get(RENDER_DIRECT_LOCATION));
     }
 
     public void testDoExecute_event_locationHasQueryParams() {
@@ -204,7 +202,6 @@ public class PortletResultTest extends MockObjectTestCase {
         Mock mockRequest = mock(RenderRequest.class);
         Mock mockResponse = mock(RenderResponse.class);
         Mock mockRd = mock(PortletRequestDispatcher.class);
-        Mock mockPrep = mock(PortletRequestDispatcher.class);
 
         RenderRequest req = (RenderRequest)mockRequest.proxy();
         RenderResponse res = (RenderResponse)mockResponse.proxy();
@@ -214,9 +211,7 @@ public class PortletResultTest extends MockObjectTestCase {
 
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
-        mockPrep.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
-        mockCtx.expects(once()).method("getNamedDispatcher").with(eq("preparator")).will(returnValue(mockPrep.proxy()));
         mockConfig.expects(once()).method("getPortletContext").will(returnValue(ctx));
 
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));

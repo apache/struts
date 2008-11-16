@@ -52,10 +52,7 @@ import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -515,8 +512,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
             LOG.error("Could not find action or result", e);
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
-            LOG.error("Could not execute action", e);
-            sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+            throw new ServletException(e);
         } finally {
             UtilTimerStack.pop(timerKey);
         }
@@ -750,12 +746,15 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
             }
         } else {
             try {
-                // send a http error response to use the servlet defined error handler
-                // make the exception availible to the web.xml defined error page
-                request.setAttribute("javax.servlet.error.exception", e);
+                // WW-1977: Only put errors in the request when code is a 500 error
+                if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+                    // send a http error response to use the servlet defined error handler
+                    // make the exception availible to the web.xml defined error page
+                    request.setAttribute("javax.servlet.error.exception", e);
 
-                // for compatibility
-                request.setAttribute("javax.servlet.jsp.jspException", e);
+                    // for compatibility
+                    request.setAttribute("javax.servlet.jsp.jspException", e);
+                }
 
                 // send the error response
                 response.sendError(code, e.getMessage());

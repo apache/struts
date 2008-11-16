@@ -30,7 +30,6 @@ import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.context.TilesRequestContextWrapper;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -80,7 +79,12 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
     }
 
     public void dispatch(String include) throws IOException {
-        include(include);
+    	if (include.endsWith(mask)) {
+            // FIXME This way FreeMarker results still don't have a content-type!
+    	    include(include);
+        } else {
+            super.dispatch(include);
+        }
     }
 
     /**

@@ -32,6 +32,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: javadoc -->
  * The tabbedpanel widget is primarily an AJAX component, where each tab can either be local content or remote
  * content (refreshed each time the user selects that tab).</p>
+ * If the useSelectedTabCookie attribute is set to true, the id of the selected tab is saved in a cookie on activation.
+ * When coming back to this view, the cookie is read and the tab will be activated again, unless an actual value for the
+ * selectedTab attribute is specified.</p>
+ * If you want to use the cookie feature, please be sure that you provide a unique id for your tabbedpanel component,
+ * since this will also be the identifying name component of the stored cookie.</p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
@@ -66,6 +71,8 @@ public class TabbedPanel extends ClosingUIBean {
     protected String selectedTab;
     protected String closeButton;
     protected String doLayout ;
+    protected String templateCssPath;
+    protected String useSelectedTabCookie;
 
     public TabbedPanel(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -88,6 +95,11 @@ public class TabbedPanel extends ClosingUIBean {
                 labelPosition = "right-h";
             addParameter("labelPosition", null);
             addParameter("labelPosition", labelPosition);
+        }
+        if(templateCssPath != null)
+            addParameter("templateCssPath", findString(templateCssPath));
+        if(useSelectedTabCookie != null) {
+            addParameter("useSelectedTabCookie", findString(useSelectedTabCookie));
         }
     }
 
@@ -123,5 +135,17 @@ public class TabbedPanel extends ClosingUIBean {
     @StrutsTagAttribute(description="If doLayout is false, the tab container's height equals the height of the currently selected tab", type="Boolean", defaultValue="false")
     public void setDoLayout(String doLayout) {
         this.doLayout = doLayout;
+    }
+
+    @StrutsTagAttribute(description="Template css path")
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
+    }
+
+    @StrutsTagAttribute(required = false, defaultValue = "false", description = "If set to true, the id of the last selected " +
+            "tab will be stored in cookie. If the view is rendered, it will be tried to read this cookie and activate " +
+            "the corresponding tab on success, unless overridden by the selectedTab attribute. The cookie name is \"Struts2TabbedPanel_selectedTab_\"+id.")
+    public void setUseSelectedTabCookie( String useSelectedTabCookie ) {
+        this.useSelectedTabCookie = useSelectedTabCookie;
     }
 }

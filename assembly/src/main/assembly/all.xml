@@ -27,6 +27,12 @@
     <dependencySet>
       <outputDirectory>lib</outputDirectory>
       <scope>runtime</scope>
+      <excludes>
+        <exclude>net.sf.retrotranslator:retrotranslator-runtime</exclude>
+        <exclude>backport-util-concurrent:backport-util-concurrent</exclude>
+        <exclude>junit:junit</exclude>
+        <exclude>*:jdk14</exclude>
+      </excludes>
     </dependencySet>
   </dependencySets>
   <fileSets>
@@ -58,10 +64,10 @@
         <directory>../target/site</directory>
         <outputDirectory>docs</outputDirectory>
       </fileSet>
-      <fileSet>
+      <!--fileSet>
         <directory>../api/target/site</directory>
         <outputDirectory>docs/struts2-api</outputDirectory>
-      </fileSet>
+      </fileSet-->
       <fileSet>
         <directory>../core/target/site</directory>
         <outputDirectory>docs/struts2-core</outputDirectory>
@@ -80,6 +86,10 @@
         <outputDirectory>docs/struts2-plugins/struts2-$plugin-plugin</outputDirectory>
       </fileSet>
       -->
+      <fileSet>
+        <directory>../plugins/codebehind/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin</outputDirectory>
+      </fileSet>
       <fileSet>
         <directory>../plugins/config-browser/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-config-browser-plugin</outputDirectory>
@@ -113,6 +123,10 @@
         <outputDirectory>docs/struts2-plugins/struts2-sitegraph-plugin</outputDirectory>
       </fileSet>
       <fileSet>
+        <directory>../plugins/spring/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-spring-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
         <directory>../plugins/sitemesh/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin</outputDirectory>
       </fileSet>
@@ -130,14 +144,14 @@
         <include>src/</include>
       </includes>
     </fileSet>
-      <fileSet>
+      <!--fileSet>
         <directory>../api</directory>
         <outputDirectory>src/api</outputDirectory>
         <includes>
           <include>pom.xml</include>
           <include>src/</include>
         </includes>
-      </fileSet>
+      </fileSet-->
     <fileSet>
       <directory>../apps</directory>
       <outputDirectory>src/apps</outputDirectory>
@@ -186,5 +200,13 @@
         <include>src/</include>
       </includes>
    </fileSet>
+    <fileSet>
+      <directory>../plugins</directory>
+      <outputDirectory>src/plugins</outputDirectory>
+      <excludes>
+        <exclude>*/target/**</exclude>
+        <exclude>target/**</exclude>
+      </excludes>
+    </fileSet>
   </fileSets>
 </assembly>

@@ -20,41 +20,21 @@
  */
 package org.apache.struts2.portlet.dispatcher;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ListResourceBundle;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
-import junit.textui.TestRunner;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.ServletContextHolderListener;
-import org.jmock.Mock;
-import org.jmock.cglib.MockObjectTestCase;
-import org.jmock.core.Constraint;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import junit.textui.TestRunner;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.jmock.Mock;
+import org.jmock.cglib.MockObjectTestCase;
+import org.jmock.core.Constraint;
+
+import javax.portlet.*;
+import java.util.*;
 
 /**
  * Jsr168DispatcherTest. Insert description.
@@ -80,6 +60,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockConfig = mock(PortletConfig.class);
         mockCtx = mock(PortletContext.class);
         mockConfig.stubs().method(ANYTHING);
+        mockCtx.stubs().method(ANYTHING);
         setupStub(initParams, mockConfig, "getInitParameter");
         mockCtx.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(attributes.keySet())));
         setupStub(attributes, mockCtx, "getAttribute");
@@ -88,7 +69,6 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         setupStub(initParams, mockCtx, "getInitParameter");
         mockConfig.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
         setupStub(initParams, mockConfig, "getInitParameter");
-
         mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
             protected Object[][] getContents() {
                 return new String[][]{{"javax.portlet.title", "MyTitle"}};
@@ -116,10 +96,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
     public void testRender_ok() {
         final Mock mockResponse = mock(RenderResponse.class);
         mockResponse.stubs().method(ANYTHING);
-        final Mock servletContext = mock(ServletContext.class);
-        servletContext.stubs().method(ANYTHING);
-        ServletContextEvent event = new ServletContextEvent((ServletContext)servletContext.proxy());
-        new ServletContextHolderListener().contextInitialized(event);
+
         PortletMode mode = PortletMode.VIEW;
 
         Map requestParams = new HashMap();
@@ -170,16 +147,6 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
         setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
-        Constraint[] paramConstraints = new Constraint[] {
-                eq(PortletActionConstants.EVENT_ACTION), same(mockActionProxy.proxy()) };
-
-        mockSession.expects(once()).method("setAttribute").with(
-                paramConstraints);
-
-        mockResponse.expects(once()).method("setRenderParameter").with(
-                new Constraint[] { eq(PortletActionConstants.EVENT_ACTION),
-                        eq("true") });
-
         //mockSession.expects(once()).method("setAttribute").with(new Constraint[]{eq(PortletActionConstants.LAST_MODE), eq(PortletMode.VIEW)});
         try {
             dispatcher

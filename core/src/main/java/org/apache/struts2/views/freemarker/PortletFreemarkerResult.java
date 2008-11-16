@@ -20,33 +20,24 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Locale;
-
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import freemarker.template.*;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.views.util.ResourceUtil;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-
-import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Locale;
 
 /**
  */
@@ -136,7 +127,6 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     private void executeRenderResult(String location,
                                      ActionInvocation invocation) throws TemplateException, IOException,
             TemplateModelException, PortletException {
-        prepareServletActionContext();
         this.location = location;
         this.invocation = invocation;
         this.configuration = getConfiguration();
@@ -162,17 +152,6 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
                 postTemplateProcess(template, model);
             }
         }
-    }
-
-    /**
-     *
-     */
-    private void prepareServletActionContext() throws PortletException,
-            IOException {
-        PortletRequestDispatcher disp = PortletActionContext.getPortletConfig()
-                .getPortletContext().getNamedDispatcher("preparator");
-        disp.include(PortletActionContext.getRenderRequest(),
-                PortletActionContext.getRenderResponse());
     }
 
     /**

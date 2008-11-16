@@ -71,6 +71,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'listenTopics' comma separated list of topics names, that will trigger a request
  * 'indicator' element to be shown while the request executing
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
+ * 'showLoadingText' show loading text on targets</p>
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: html or json object when type='load' or type='error'</li>

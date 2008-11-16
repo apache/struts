@@ -36,7 +36,6 @@ public class AnchorTag extends AbstractRemoteCallUITag {
 	private static final long serialVersionUID = -1034616578492431113L;
 
     protected String targets;
-    protected String preInvokeJS;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Anchor(stack, req, res);
@@ -56,6 +55,11 @@ public class AnchorTag extends AbstractRemoteCallUITag {
     @Deprecated()
     public void setPreInvokeJS(String preInvokeJS) {
         this.beforeLoading = preInvokeJS;
+    }
+    
+    @Deprecated()
+    public void setOnLoadJS(String onLoadJS) {
+        this.afterLoading = onLoadJS;
     }
 }
 

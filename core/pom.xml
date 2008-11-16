@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!--
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.0.5</version>
+        <version>2.0.14</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-core</artifactId>
@@ -13,16 +34,16 @@
     <name>Struts 2 Core</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/core/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/core/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/core/</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/core</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/core</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14/core</url>
     </scm>
 
     <build>
         <plugins>
-        	<plugin>
+            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.0-alpha-1-SNAPSHOT</version>
+                <version>2.0-alpha-4</version>
                 <executions>
                     <execution>
                         <id>unpack-xwork</id>
@@ -31,25 +52,25 @@
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
-		                    <artifactItems>
-		                        <artifactItem>
-		                            <groupId>opensymphony</groupId>
-		                            <artifactId>xwork</artifactId>
-		                            <version>2.0.0</version>
-		                            <classifier>sources</classifier>
-		                        </artifactItem>
-		                    </artifactItems>
-		                    <outputDirectory>${project.build.directory}/xwork-sources</outputDirectory>
-		                </configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.opensymphony</groupId>
+                                    <artifactId>xwork</artifactId>
+                                    <version>2.0.7</version>
+                                    <classifier>sources</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/xwork-sources</outputDirectory>
+                        </configuration>
                     </execution>
-				</executions>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.myfaces.tobago</groupId>
                 <artifactId>maven-apt-plugin</artifactId>
                 <configuration>
                     <A>uri=/struts-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=s,displayName="Struts Tags",
-                    outFile=${basedir}/src/main/resources/META-INF/struts-tags.tld,
+                    outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
                     description="To make it easier to access dynamic data;
                     the Apache Struts framework includes a library of custom tags.
                     The tags interact with the framework's validation and internationalization features;
@@ -75,14 +96,14 @@
                             <goal>execute</goal>
                         </goals>
                 </execution>
-				</executions>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
     <reporting>
         <plugins>
-        	<plugin>
+            <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
@@ -107,73 +128,30 @@
                     </links>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rat-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <configuration>
+                    <includes>
+                        <include>pom.xml</include>
+                        <include>src/**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
+                        <exclude>src/main/etc/**</exclude>
+                        <exclude>src/main/resources/org/apache/struts2/static/dojo/src/**</exclude>
+                        <exclude>src/main/resources/org/apache/struts2/static/dojo/*</exclude>
+                        <exclude>src/main/resources/org/apache/struts2/static/niftycorners/**</exclude>
+                        <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
+                        <exclude>src/site/resources/tags/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </reporting>
 
     <profiles>
-     	<profile>
-	    	<!--
-	    		Run the translator for Java 1.4 compatiblity
-
-	    		Sample:
-	    		$ cd struts/struts2/
-	    		$ mvn clean install -Papps,j4 -Djava14.jar=$JAVA_HOME/../Classes/classes.jar
-
-	    	 -->
-	      <id>j4</id>
-	      <build>
-	        <plugins>
-	          <plugin>
-	            <groupId>org.codehaus.mojo</groupId>
-	            <artifactId>retrotranslator-maven-plugin</artifactId>
-	            <executions>
-	              <execution>
-	                <id>retrotranslate</id>
-	              </execution>
-	            </executions>
-	          </plugin>
-	          <plugin>
-	            <artifactId>maven-jar-plugin</artifactId>
-	            <executions>
-	              <execution>
-	                <id>create-j4-jar</id>
-	                <goals><goal>jar</goal></goals>
-	                <configuration>
-	                  <classesDirectory>${project.build.directory}/classes-retro</classesDirectory>
-	                  <classifier>j4</classifier>
-	                  <archive>
-	                    <manifestEntries>
-	                      <Extension-Name>${project.artifactId}-j4</Extension-Name>
-	                      <Specification-Vendor>${project.organization.name}</Specification-Vendor>
-	                      <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-	                      <Implementation-Title>${project.description}</Implementation-Title>
-	                      <Implementation-Version>${project.version}</Implementation-Version>
-	                      <Revision>${scm.revision}</Revision>
-	                    </manifestEntries>
-	                   </archive>
-	                </configuration>
-	              </execution>
-	            </executions>
-	          </plugin>
-	        </plugins>
-	      </build>
-	       <dependencies>
-	        <dependency>
-	          <groupId>sun.jdk</groupId>
-	          <artifactId>rt</artifactId>
-	          <version>1.4.0</version>
-	          <scope>system</scope>
-	          <!-- path to rt.jar (on OSX, it's classes.jar) -->
-	          <systemPath>${java14.jar}</systemPath>
-	        </dependency>
-	        <dependency>
-	          <groupId>net.sf.retrotranslator</groupId>
-	          <artifactId>retrotranslator-runtime</artifactId>
-	          <version>1.0.8</version>
-	        </dependency>
-	      </dependencies>
-	    </profile>
-
         <profile>
             <id>alljars</id>
             <build>
@@ -250,15 +228,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>opensymphony</groupId>
+            <groupId>com.opensymphony</groupId>
             <artifactId>xwork</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-api</artifactId>
-            <version>${pom.version}</version>
+            <version>2.0.7</version>
         </dependency>
 
         <dependency>
@@ -282,9 +254,9 @@
         </dependency>
 
         <dependency>
-            <groupId>ognl</groupId>
+            <groupId>opensymphony</groupId>
             <artifactId>ognl</artifactId>
-            <version>2.6.9</version>
+            <version>2.6.11</version>
         </dependency>
 
         <dependency>
@@ -467,10 +439,11 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts-annotations</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+            <version>1.0.2</version>
             <optional>true</optional>
         </dependency>
 
-        
+
     </dependencies>
 </project>

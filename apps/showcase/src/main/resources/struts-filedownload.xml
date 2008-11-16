@@ -10,7 +10,7 @@
         <default-action-ref name="download"/>
 
         <action name="download" class="org.apache.struts2.showcase.filedownload.FileDownloadAction">
-            <param name="inputPath">\images\struts.gif</param>
+            <param name="inputPath">/images/struts.gif</param>
 			<result name="success" type="stream">
                 <param name="contentType">image/gif</param>
                 <param name="inputName">inputStream</param>
@@ -20,7 +20,7 @@
         </action>
 
         <action name="download2" class="org.apache.struts2.showcase.filedownload.FileDownloadAction">
-            <param name="inputPath">\images\struts-gif.zip</param>
+            <param name="inputPath">/images/struts-gif.zip</param>
             <result name="success" type="stream">
                 <param name="contentType">application/zip</param>
                 <param name="inputName">inputStream</param>

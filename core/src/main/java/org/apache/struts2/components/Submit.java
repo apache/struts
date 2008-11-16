@@ -48,19 +48,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p/> <b>Examples</b>
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:submit value="%{'Submit'}" /&gt;
+ * &lt;s:submit value="%{'Submit the form'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an image submit:
- * &lt;s:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
+ * &lt;s:submit type="image" value="%{'Submit the form'}" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * Render an button submit:
- * &lt;s:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
+ * &lt;s:submit type="button" value="%{'Submit the form'}"/&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
@@ -101,6 +101,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'listenTopics' comma separated list of topics names, that will trigger a request
  * 'indicator' element to be shown while the request executing
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
+ * 'showLoadingText' show loading text on targets</p>
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: html or json object when type='load' or type='error'</li>
@@ -154,7 +155,7 @@ public class Submit extends FormButton implements RemoteUICallBean{
     protected String notifyTopics;
     protected String showErrorTransportText;
     protected String indicator;
-
+    protected String showLoadingText;
     //these two are called "preInvokeJS" and "onLoadJS" on the tld
     //Names changed here to keep some consistency
     protected String beforeLoading;
@@ -214,6 +215,8 @@ public class Submit extends FormButton implements RemoteUICallBean{
             addParameter("indicator", findString(indicator));
         if (targets != null)
             addParameter("targets", findString(targets));
+        if (showLoadingText != null)
+            addParameter("showLoadingText", findString(showLoadingText));
     }
 
     /**
@@ -326,5 +329,10 @@ public class Submit extends FormButton implements RemoteUICallBean{
     @StrutsTagAttribute(description="Set indicator")
     public void setIndicator(String indicator) {
         this.indicator = indicator;
+    }
+
+    @StrutsTagAttribute(description="Show loading text on targets", type="Boolean", defaultValue="true")
+    public void setShowLoadingText(String showLoadingText) {
+        this.showLoadingText = showLoadingText;
     }
 }

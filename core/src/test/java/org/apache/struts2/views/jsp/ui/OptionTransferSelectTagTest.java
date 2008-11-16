@@ -60,6 +60,8 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
         tag.setDoubleSize("20");
         tag.setMultiple("true");
         tag.setDoubleEmptyOption("true");
+        tag.setDoubleCssClass("c2");
+        tag.setDoubleCssStyle("s2");
 
         tag.setAllowAddAllToLeft("true");
         tag.setAllowAddAllToRight("true");
@@ -513,6 +515,9 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         tag.setDoubleHeaderKey("Double Header Key");
         tag.setDoubleHeaderValue("Double Header Value");
+
+        tag.setAddToLeftOnclick("alert('Moving Left')");
+        tag.setAddToRightOnclick("alert('Moving Right')");
 
         tag.doStartTag();
         tag.doEndTag();

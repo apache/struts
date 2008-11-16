@@ -69,14 +69,16 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'formFilter' is the name of a function which will be used to filter the fields that will be
  * seralized. This function takes as a parameter the element and returns true if the element
  * should be included.<p/>
- * 'updateFreq' sets(in milliseconds) the update interval.
- * 'autoStart' if set to true(true by default) starts the timer automatically
- * 'startTimerListenTopics' is a comma-separated list of topics used to start the timer
- * 'stopTimerListenTopics' is a comma-separated list of topics used to stop the timer
- * 'listenTopics' comma separated list of topics names, that will trigger a request
- * 'indicator' element to be shown while the request executing
+ * 'updateFreq' sets(in milliseconds) the update interval.<p/>
+ * 'autoStart' if set to true(true by default) starts the timer automatically<p/>
+ * 'startTimerListenTopics' is a comma-separated list of topics used to start the timer<p/>
+ * 'stopTimerListenTopics' is a comma-separated list of topics used to stop the timer<p/>
+ * 'listenTopics' comma separated list of topics names, that will trigger a request<p/>
+ * 'indicator' element to be shown while the request executing<p/>
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
- * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:
+ * 'showLoadingText' show loading text on targets</p>
+ * 'separateScript' Run scripts in a separate scope, unique for each Div<p/>
+ * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: html or json object when type='load' or type='error'</li>
  *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
@@ -116,6 +118,7 @@ public class Div extends AbstractRemoteCallUIBean {
     protected String startTimerListenTopics;
     protected String stopTimerListenTopics;
     protected String refreshOnShow;
+    protected String separateScripts;
 
     public Div(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -144,6 +147,8 @@ public class Div extends AbstractRemoteCallUIBean {
             addParameter("startTimerListenTopics", findString(startTimerListenTopics));
         if (stopTimerListenTopics != null)
             addParameter("stopTimerListenTopics", findString(stopTimerListenTopics));
+        if (separateScripts != null)
+            addParameter("separateScripts", findValue(separateScripts, Boolean.class));
     }
 
     @StrutsTagAttribute(description="Start timer automatically", type="Boolean", defaultValue="true")
@@ -179,5 +184,10 @@ public class Div extends AbstractRemoteCallUIBean {
     @StrutsTagAttribute(description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
     public void setAfterLoading(String afterLoading) {
         this.afterLoading = afterLoading;
+    }
+
+    @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each Div", defaultValue="true")
+    public void setSeparateScripts(String separateScripts) {
+        this.separateScripts = separateScripts;
     }
 }

@@ -23,8 +23,8 @@ package org.apache.struts2.components;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
 
@@ -65,12 +65,12 @@ public class Component {
      */
     public Component(ValueStack stack) {
         this.stack = stack;
-        this.parameters = new HashMap();
+        this.parameters = new LinkedHashMap();
         getComponentStack().push(this);
     }
 
     /**
-     * Get's the name of this component.
+     * Gets the name of this component.
      * @return the name of this component.
      */
     private String getComponentName() {
@@ -87,7 +87,7 @@ public class Component {
     }
     
     /**
-     * Get's the OGNL value stack assoicated with this component.
+     * Gets the OGNL value stack assoicated with this component.
      * @return the OGNL value stack assoicated with this component.
      */
     public ValueStack getStack() {
@@ -95,7 +95,7 @@ public class Component {
     }
 
     /**
-     * Get's the component stack of this component.
+     * Gets the component stack of this component.
      * @return the component stack of this component, never <tt>null</tt>.
      */
     public Stack getComponentStack() {
@@ -215,7 +215,7 @@ public class Component {
     }
 
     /**
-     * Constructs?a <code>RuntimeException</code> based on the given information.
+     * Constructs a <code>RuntimeException</code> based on the given information.
      * <p/>
      * A message is constructed and logged at ERROR level before being returned
      * as a <code>RuntimeException</code>.
@@ -323,7 +323,7 @@ public class Component {
         }
     }
 
-    /**
+	/**
      * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
      * @param action      the action
      * @param namespace   the namespace
@@ -336,14 +336,38 @@ public class Component {
      * @param encodeResult    should the url be encoded
      * @return the action url.
      */
+	 @Deprecated
     protected String determineActionURL(String action, String namespace, String method,
                                         HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
                                         boolean includeContext, boolean encodeResult) {
+        return determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encodeResult, false, true);
+    }
+
+    /**
+     * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
+     * @param action      the action
+     * @param namespace   the namespace
+     * @param method      the method
+     * @param req         HTTP request
+     * @param res         HTTP response
+     * @param parameters  parameters
+     * @param scheme      http or https
+     * @param includeContext  should the context path be included or not
+     * @param encodeResult    should the url be encoded
+	 * @param forceAddSchemeHostAndPort    should the scheme host and port be added to the url no matter what
+	 * @param escapeAmp    should the ampersands used separate parameters be escaped or not
+     * @return the action url.
+     */
+    protected String determineActionURL(String action, String namespace, String method,
+                                        HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
+                                        boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort,
+                                        boolean escapeAmp) {
         String finalAction = findString(action);
+        String finalMethod = method != null ? findString(method) : method;
         String finalNamespace = determineNamespace(namespace, getStack(), req);
-        ActionMapping mapping = new ActionMapping(finalAction, finalNamespace, method, parameters);
+        ActionMapping mapping = new ActionMapping(finalAction, finalNamespace, finalMethod, parameters);
         String uri = actionMapper.getUriFromActionMapping(mapping);
-        return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult);
+        return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, escapeAmp);
     }
 
     /**
@@ -407,7 +431,7 @@ public class Component {
     }
 
     /**
-     * Get's the parameters.
+     * Gets the parameters.
      * @return the parameters. Is never <tt>null</tt>.
      */
     public Map getParameters() {
@@ -415,7 +439,7 @@ public class Component {
     }
 
     /**
-     * Add's all the given parameters to this componenets own parameters.
+     * Adds all the given parameters to this component's own parameters.
      * @param params the parameters to add.
      */
     public void addAllParameters(Map params) {
@@ -423,9 +447,9 @@ public class Component {
     }
 
     /**
-     * Add's the given key and value to this components own parameter.
+     * Adds the given key and value to this component's own parameter.
      * <p/>
-     * If the provided key is <tt>null</tt> nothing happends.
+     * If the provided key is <tt>null</tt> nothing happens.
      * If the provided value is <tt>null</tt> any existing parameter with
      * the given key name is removed.
      * @param key  the key of the new parameter to add.
@@ -444,7 +468,7 @@ public class Component {
     }
 
     /**
-     * Get's the id for referencing element.
+     * Gets the id for referencing element.
      * @return the id for referencing element.
      */
     public String getId() {
@@ -465,5 +489,4 @@ public class Component {
     public boolean usesBody() {
         return false;
     }
-
 }

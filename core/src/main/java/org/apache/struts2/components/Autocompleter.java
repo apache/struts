@@ -29,18 +29,10 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
+ * <!-- START SNIPPET: javadoc -->
  * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box.
  * When used on the "simple" theme, the autocompleter can be used like the ComboBox.
- * When used on the "ajax" theme, the list can be retieved from an action. This action must
- * return a JSON list in the format:</p>
- * <pre>
- * [
- *   ["Text 1","Value1"],
- *   ["Text 2","Value2"],
- *   ["Text 3","Value3"]
- * ]
- * </pre>
- * <!-- START SNIPPET: ajaxJavadoc -->
+ * When used on the "ajax" theme, the list can be retieved from an action. </p>
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
  *      <li>href</li>
@@ -70,15 +62,27 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')<p/>
  * 'loadOnTextChange' options will be reloaded everytime a character is typed on the textbox<p/>
  * 'loadMinimumCount' minimum number of characters that will force the content to be loaded<p/>
- * 'showDownError' show or hide the down arrow button
+ * 'showDownError' show or hide the down arrow button<p/>
  * 'searchType' how the search must be performed, options are: "startstring", "startword" and "substring"<p/>
+ * 'keyName' name of the field to which the selected key will be assigned<p/>
+ * 'iconPath' path of icon used for the dropdown<p/>
+ * 'templateCssPath' path to css file used to customize Dojo's widget<p/>
+ * 'dataFieldName' name of the field to be used as the list in the returned JSON string<p/>
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: selected value when type='valuechanged'</li>
  *      <li>type: 'before' before the request is made, 'valuechanged' when selection changes, 'load' when the request succeeds, or 'error' when it fails</li>
  *      <li>request: request javascript object, when type='load' or type='error'</li>
  * <ul>
- *
+ *<!-- END SNIPPET: javadoc -->
+ *<!-- START SNIPPET: example -->
+ *<p>Autocompleter that gets its list from an action:</p>
+ *&lt;s:autocompleter name="test"  href="%{jsonList}" autoComplete="false"/&gt;
+ *<br/>
+ **<p>Autocompleter that uses a list:</p>
+ *&lt;s:autocompleter name="test"  list="{'apple','banana','grape','pear'}" autoComplete="false"/&gt;
+ *<br/>
+ *<!-- END SNIPPET: example -->
  */
 @StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
 public class Autocompleter extends ComboBox {
@@ -101,7 +105,12 @@ public class Autocompleter extends ComboBox {
     protected String loadOnTextChange;
     protected String loadMinimumCount;
     protected String showDownArrow;
-
+    protected String templateCssPath;
+    protected String iconPath;
+    protected String keyName;
+    protected String dataFieldName;
+    protected String resultsLimit;
+    
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
         super(stack, request, response);
@@ -159,11 +168,23 @@ public class Autocompleter extends ComboBox {
             addParameter("showDownArrow", findValue(showDownArrow, Boolean.class));
         else
             addParameter("showDownArrow", Boolean.TRUE);
-        //get the key value
-        if(name != null) {
-            String keyNameExpr = "%{" + name + "Key}";
-            addParameter("key", findString(keyNameExpr));
+        if(templateCssPath != null)
+            addParameter("templateCssPath", findString(templateCssPath));
+        if(iconPath != null)
+            addParameter("iconPath", findString(iconPath));
+        if(dataFieldName != null)
+            addParameter("dataFieldName", findString(dataFieldName));
+        if(keyName != null)
+            addParameter("keyName", findString(keyName));
+        else {
+            keyName = name + "Key";
+            addParameter("keyName", findString(keyName));
         }
+        
+        String keyNameExpr = "%{" + keyName + "}";
+        addParameter("key", findString(keyNameExpr));
+        if(resultsLimit != null)
+            addParameter("searchLimit", findString(resultsLimit));
     }
 
     protected Object findListValue() {
@@ -255,5 +276,30 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Iteratable source to populate from.")
     public void setList(String list) {
         super.setList(list);
+    }
+    
+    @StrutsTagAttribute(description="Template css path")
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
+    }
+    
+    @StrutsTagAttribute(description="Path to icon used for the dropdown")
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
+    
+    @StrutsTagAttribute(description="Name of the field to which the selected key will be assigned")
+    public void setKeyName(String keyName) {
+       this.keyName = keyName;
+    }
+
+    @StrutsTagAttribute(description="Name of the field in the returned JSON object that contains the data array", defaultValue="Value specified in 'name'")
+    public void setDataFieldName(String dataFieldName) {
+        this.dataFieldName = dataFieldName;
+    }
+
+    @StrutsTagAttribute(description="Limit how many results are shown as autocompletion options", defaultValue="30")
+    public void setResultsLimit(String resultsLimit) {
+        this.resultsLimit = resultsLimit;
     }
 }

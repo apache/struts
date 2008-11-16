@@ -115,7 +115,7 @@ public class StrutsModels {
         return comboBox;
     }
 
-    public AutocompleterModel getAutocompleterModel() {
+    public AutocompleterModel getAutocompleter() {
         if (autocompleterModel == null) {
             autocompleterModel = new AutocompleterModel(stack, req, res);
         }
@@ -242,7 +242,7 @@ public class StrutsModels {
         return date;
     }
 
-    public DateTimePickerModel getDateTimePicker() {
+    public DateTimePickerModel getDatetimepicker() {
         if (dateTimePicker == null) {
             dateTimePicker = new DateTimePickerModel(stack, req, res);
         }

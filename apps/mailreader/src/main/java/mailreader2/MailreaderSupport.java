@@ -32,8 +32,6 @@ import org.apache.struts.apps.mailreader.dao.User;
 import org.apache.struts.apps.mailreader.dao.UserDatabase;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemorySubscription;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUser;
-import org.springframework.beans.BeanUtils;
-
 import java.util.Map;
 
 /**
@@ -61,6 +59,28 @@ public class MailreaderSupport extends ActionSupport
      */
     public String cancel() {
         return Constants.CANCEL;
+    }
+
+    /**
+     * Convenience method to copy User properties.
+     **/
+    protected void copyUser(User source, User target) {
+      if ((source==null) || (target==null)) return;
+      target.setFromAddress(source.getFromAddress());
+      target.setFullName(source.getFullName());
+      target.setPassword(source.getPassword());
+      target.setReplyToAddress(source.getReplyToAddress());
+    }
+
+    /**
+     * Convenience method to copy Subscription properties.
+     **/
+    protected void copySubscription(Subscription source, Subscription target) {
+      if ((source==null) || (target==null)) return;
+      target.setAutoConnect(source.getAutoConnect());
+      target.setPassword(source.getPassword());
+      target.setType(source.getType());
+      target.setUsername(source.getUsername());
     }
 
 
@@ -435,7 +455,7 @@ public class MailreaderSupport extends ActionSupport
         input.setPassword(_password);
         User user = createUser(_username, _password);
         if (null != user) {
-            BeanUtils.copyProperties(input,user);
+            copyUser(input,user);
             setUser(user);
         }
     }
@@ -532,7 +552,7 @@ public class MailreaderSupport extends ActionSupport
         Subscription input = getSubscription();
         Subscription sub = createSubscription(host);
         if (null != sub) {
-            BeanUtils.copyProperties(input, sub);
+            copySubscription(input, sub);
             setSubscription(sub);
             setHost(sub.getHost());
         }

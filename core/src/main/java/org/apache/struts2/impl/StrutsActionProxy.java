@@ -22,11 +22,10 @@
 
 package org.apache.struts2.impl;
 
-import java.util.Map;
-import java.util.concurrent.Callable;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.DefaultActionProxy;
+
+import java.util.Map;
 
 public class StrutsActionProxy extends DefaultActionProxy {
 
@@ -41,11 +40,14 @@ public class StrutsActionProxy extends DefaultActionProxy {
         ActionContext previous = ActionContext.getContext();
         ActionContext.setContext(invocation.getInvocationContext());
         try {
-            return RequestContextImpl.callInContext(invocation, new Callable<String>() {
-                public String call() throws Exception {
-                    return invocation.invoke();
-                }
-            });
+// This is for the new API:
+//            return RequestContextImpl.callInContext(invocation, new Callable<String>() {
+//                public String call() throws Exception {
+//                    return invocation.invoke();
+//                }
+//            });
+            
+            return invocation.invoke();
         } finally {
             if (cleanupContext)
                 ActionContext.setContext(previous);

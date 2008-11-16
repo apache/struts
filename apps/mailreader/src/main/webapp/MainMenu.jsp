@@ -20,6 +20,7 @@
     <li><a href="<s:url action="Logout"/>">
         <s:text name="mainMenu.logout"/>
     </a>
+    </li>
 </ul>
 </body>
 </html>

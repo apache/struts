@@ -9,6 +9,10 @@
  dropdownWidth="10"
  dropdownHeight="10"
  name="f"
+ keyName="fKey"
+ buttonSrc="i"
+ templateCssPath="j"
+ searchLimit="1"
  >
  	<option value="d">d</option>
  	<option value="e">e</option>

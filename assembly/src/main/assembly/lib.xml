@@ -27,6 +27,12 @@
     <dependencySet>
       <outputDirectory>lib</outputDirectory>
       <scope>runtime</scope>
+      <excludes>
+        <exclude>net.sf.retrotranslator:retrotranslator-runtime</exclude>
+        <exclude>backport-util-concurrent:backport-util-concurrent</exclude>
+        <exclude>junit:junit</exclude>
+        <exclude>*:jdk14</exclude>
+      </excludes>
     </dependencySet>
   </dependencySets>
   <fileSets>

@@ -20,6 +20,7 @@
  */
 package org.apache.struts2;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +41,14 @@ public class TestAction extends ActionSupport {
     private Collection collection2;
     private Map map;
     private String foo;
+
     private String result;
     private User user;
     private String[] array;
     private String[][] list;
     private List list2;
     private List list3;
+    private SomeEnum status = SomeEnum.COMPLETED;
 
     public Collection getCollection() {
         return collection;
@@ -61,7 +64,7 @@ public class TestAction extends ActionSupport {
 
     public void setMap(Map map) {
         this.map = map;
-    }
+    }private Integer fooInt;
 
     public String getFoo() {
         return foo;
@@ -127,6 +130,14 @@ public class TestAction extends ActionSupport {
         this.collection2 = collection;
     }
 
+    public Integer getFooInt() {
+        return fooInt;
+    }
+
+    public void setFooInt(Integer fooInt) {
+        this.fooInt = fooInt;
+    }
+    
     public String execute() throws Exception {
         if (result == null) {
             result = Action.SUCCESS;
@@ -137,6 +148,18 @@ public class TestAction extends ActionSupport {
 
     public String doInput() throws Exception {
         return INPUT;
+    }
+
+	public SomeEnum getStatus() {
+		return status;
+	}
+
+	public void setStatus(SomeEnum status) {
+		this.status = status;
+	}
+    
+    public List<SomeEnum> getStatusList() {
+    	return Arrays.asList(SomeEnum.values());
     }
 
 }

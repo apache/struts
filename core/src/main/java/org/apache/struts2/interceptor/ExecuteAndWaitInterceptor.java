@@ -193,12 +193,23 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         return new BackgroundProcess(name + "BackgroundThread", actionInvocation, threadPriority);
     }
 
+    /**
+     * Returns the name to associate the background process.  Override to change the way background processes
+     * are mapped to requests.
+     * 
+     * @param actionInvocation The action invocation
+     * @return the name of the background thread
+     */
+    protected String getBackgroundProcessName(ActionProxy proxy) {
+        return proxy.getActionName();
+    }
+    
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
      */
     protected String doIntercept(ActionInvocation actionInvocation) throws Exception {
         ActionProxy proxy = actionInvocation.getProxy();
-        String name = proxy.getActionName();
+        String name = getBackgroundProcessName(proxy);
         ActionContext context = actionInvocation.getInvocationContext();
         Map session = context.getSession();
 

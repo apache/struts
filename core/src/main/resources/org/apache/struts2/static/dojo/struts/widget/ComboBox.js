@@ -1,3 +1,24 @@
+/*
+ * $Id: pom.xml 560558 2007-07-28 15:47:10Z apetrelli $
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 dojo.provide("struts.widget.ComboBox");
 
 dojo.require("dojo.html.*");
@@ -21,13 +42,15 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
 
   this.formId = "";
   this.formFilter = "";
+  this.firstRequest = true;
 
   this.cbox = null;
   this.init = function(/*Widget*/ cbox, /*DomNode*/ node){
     this.cbox = cbox;
     this.formId = cbox.formId;
     this.formFilter = cbox.formFilter;
-
+    this.searchLimit = cbox.searchLimit;
+    
     if(!dojo.string.isBlank(cbox.dataUrl)){
       this.getData(cbox.dataUrl);
     }else{
@@ -59,18 +82,57 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
       formNode: dojo.byId(this.formId),
       formFilter: window[this.formFilter],
       load: dojo.lang.hitch(this, function(type, data, evt) {
-         //show indicator
-         dojo.html.hide(this.cbox.indicator);
+        //show indicator
+        dojo.html.hide(this.cbox.indicator);
 
-        this.cbox.notify.apply(this.cbox, [data, type, evt]);
-        if(!dojo.lang.isArray(data)){
-          var arrData = [];
-          for(var key in data){
-            arrData.push([data[key], key]);
-          }
-          data = arrData;
+        //if notifyTopics is published on the first request (onload)
+        //the value of listeners will be reset
+        if(!this.firstRequest) {
+          this.cbox.notify.apply(this.cbox, [data, type, evt]);
+        }
+        var arrData = null;
+        var dataByName = data[this.cbox.dataFieldName];
+        if(!dojo.lang.isArray(data)) {
+           //if there is a dataFieldName, take it
+           if(dataByName) {
+             if(dojo.lang.isArray(dataByName)) {
+                //ok, it is an array
+                arrData = dataByName;
+             } else if(dojo.lang.isObject(dataByName)) {
+                //it is an object, treat it like a map
+                arrData = [];
+                for(var key in dataByName){
+                    arrData.push([dataByName[key], key]);
+                }
+             }
+           } else {
+             //try to find a match
+             var tmpArrData = [];
+             for(var key in data){
+               //does it start with the field name? take it
+               if(dojo.string.startsWith(key, this.cbox.name)) {
+                 arrData = data[key];
+                 break;
+               } else {
+                 //if nathing else is found, we will use values in this 
+                 //object as the data
+                 tmpArrData.push([data[key], key]);
+               }
+               //grab the first array found, we will use it if nothing else
+               //is found
+               if(!arrData && dojo.lang.isArray(data[key]) && !dojo.lang.isString(data[key])) {
+                 arrData = data[key];
+               }
+             }
+             if(!arrData) {
+               arrData = tmpArrData;
+             }
+           }
+           
+           data = arrData;
         }
         this.setData(data);
+        this.firstRequest = false;
       }),
       mimetype: "text/json"
     });
@@ -167,6 +229,13 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
   this.setData = function(/*Array*/ pdata){
     // populate this.data and initialize lookup structures
     this.data = pdata;
+    //all ellements must be a key and value pair
+    for(var i = 0; i < this.data.length; i++) {
+      var element = this.data[i];
+      if(!dojo.lang.isArray(element)) {
+        this.data[i] = [element, element];
+      }
+    }
   };
 
   if(dataPairs){
@@ -205,7 +274,11 @@ dojo.widget.defineWidget(
   //dojo has "stringstart" which is invalid
   searchType: "STARTSTRING",
 
+  dataFieldName : ""  ,
+  keyName: "",
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
+  
+  searchLimit : 30,
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time
@@ -315,7 +388,7 @@ dojo.widget.defineWidget(
     }
 
     //better name
-    this.comboBoxSelectionValue.name = this.name + "Key";
+    this.comboBoxSelectionValue.name = dojo.string.isBlank(this.keyName) ? this.name + "Key" : this.keyName;
 
     //init values
     this.comboBoxValue.value = this.initialValue;

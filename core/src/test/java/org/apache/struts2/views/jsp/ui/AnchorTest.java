@@ -49,10 +49,25 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setNotifyTopics("j");
         tag.setIndicator("k");
         tag.setShowErrorTransportText("true");
+        tag.setShowLoadingText("true");
         tag.doStartTag();
         tag.doEndTag();
 
         verify(AnchorTest.class.getResource("href-1.txt"));
     }
 
+    public void testSimpleBadQuote() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        AnchorTag tag = new AnchorTag();
+        tag.setPageContext(pageContext);
+
+        tag.setId("mylink");
+        tag.setHref("a\"");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(AnchorTest.class.getResource("href-2.txt"));
+    }
 }

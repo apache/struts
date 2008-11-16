@@ -50,7 +50,12 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String loadOnTextChange;
     protected String loadMinimumCount;
     protected String showDownArrow;
-
+    protected String templateCssPath;
+    protected String iconPath;
+    protected String keyName;
+    protected String dataFieldName;
+    protected String resultsLimit;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
     }
@@ -75,6 +80,11 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setLoadMinimumCount(loadMinimumCount);
         autocompleter.setLoadOnTextChange(loadOnTextChange);
         autocompleter.setShowDownArrow(showDownArrow);
+        autocompleter.setTemplateCssPath(templateCssPath);
+        autocompleter.setIconPath(iconPath);
+        autocompleter.setKeyName(keyName);
+        autocompleter.setDataFieldName(dataFieldName);
+        autocompleter.setResultsLimit(resultsLimit);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -145,4 +155,23 @@ public class AutocompleterTag extends ComboBoxTag {
         this.showDownArrow = showDownArrow;
     }
 
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
+    }
+    
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
+
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
+    }
+
+    public void setDataFieldName(String dataFieldName) {
+        this.dataFieldName = dataFieldName;
+    }
+
+    public void setResultsLimit(String resultsLimit) {
+        this.resultsLimit = resultsLimit;
+    }
 }

@@ -16,6 +16,7 @@
          endDate="d"
          weekStartsOn="g"
          staticDisplay="false"
+         templateCssPath="j"
          saveFormat="rfc">
     </div>
 </td>

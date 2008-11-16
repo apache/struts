@@ -47,6 +47,8 @@ public interface RemoteUICallBean {
 
     void setShowErrorTransportText(String showError);
 
+    void setShowLoadingText(String showLoadingText);
+
     void setIndicator(String indicator);
 
 }

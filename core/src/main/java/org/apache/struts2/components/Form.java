@@ -20,24 +20,6 @@
  */
 package org.apache.struts2.components;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
@@ -47,12 +29,29 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
 import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.util.UrlHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -95,6 +94,11 @@ import com.opensymphony.xwork2.validator.Validator;
  */
 @StrutsTag(name="form", tldTagClass="org.apache.struts2.views.jsp.ui.FormTag", description="Renders an input form")
 public class Form extends ClosingUIBean {
+    /**
+     * Provide a logging instance.
+     */
+    private static final Log LOG = LogFactory.getLog(Form.class);
+
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";
 
@@ -204,7 +208,7 @@ public class Form extends ClosingUIBean {
     }
 
     /**
-     * Form component determine the its HTML element id as follows:-
+     * The Form component determines its HTML element id as follows:-
      * <ol>
      *    <li>if an 'id' attribute is specified.</li>
      *    <li>if an 'action' attribute is specified, it will be used as the id.</li>
@@ -222,6 +226,9 @@ public class Form extends ClosingUIBean {
         if (id != null) {
             addParameter("id", escape(id));
         }
+
+        // if no id given, it will be tried to generate it from the action attribute in the
+        // corresponding evaluateExtraParams method
         if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
             evaluateExtraParamsPortletRequest(namespace, action);
         } else {
@@ -287,13 +294,19 @@ public class Form extends ClosingUIBean {
             }
 
             // if the id isn't specified, use the action name
-            if (id == null) {
-                addParameter("id", action);
+            if (id == null && action!=null) {
+                addParameter("id", escape(action));
             }
         } else if (action != null) {
             // Since we can't find an action alias in the configuration, we just assume
-            // the action attribute supplied is the path to be used as the uri this
+            // the action attribute supplied is the path to be used as the URI this
             // form is submitting to.
+
+            // Warn user that the specified namespace/action combo
+            // was not found in the configuration.
+            if (namespace != null) {
+                LOG.warn("No configuration found for the specified action: '" + action + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
+            }
 
             String result = UrlHelper.buildUrl(action, request, response, null);
             addParameter("action", result);
@@ -329,7 +342,7 @@ public class Form extends ClosingUIBean {
 
         // Only evaluate if Client-Side js is to be enable when validate=true
         Boolean validate = (Boolean) getParameters().get("validate");
-        if (validate != null && validate.booleanValue()) {
+        if (validate != null && validate) {
 
             addParameter("performValidation", Boolean.FALSE);
 
@@ -337,9 +350,8 @@ public class Form extends ClosingUIBean {
             ActionConfig actionConfig = runtimeConfiguration.getActionConfig(namespace, actionName);
 
             if (actionConfig != null) {
-                List interceptors = actionConfig.getInterceptors();
-                for (Iterator i = interceptors.iterator(); i.hasNext();) {
-                    InterceptorMapping interceptorMapping = (InterceptorMapping) i.next();
+                List<InterceptorMapping> interceptors = actionConfig.getInterceptors();
+                for (InterceptorMapping interceptorMapping : interceptors) {
                     if (ValidationInterceptor.class.isInstance(interceptorMapping.getInterceptor())) {
                         ValidationInterceptor validationInterceptor = (ValidationInterceptor) interceptorMapping.getInterceptor();
 
@@ -363,11 +375,6 @@ public class Form extends ClosingUIBean {
      */
     private void evaluateExtraParamsPortletRequest(String namespace, String action) {
 
-        if (this.action != null) {
-            // if it isn't specified, we'll make somethig up
-            action = findString(this.action);
-        }
-
         String type = "action";
         if (TextUtils.stringSet(method)) {
             if ("GET".equalsIgnoreCase(method.trim())) {
@@ -375,7 +382,7 @@ public class Form extends ClosingUIBean {
             }
         }
         if (action != null) {
-            String result = PortletUrlHelper.buildUrl(action, namespace,
+            String result = PortletUrlHelper.buildUrl(action, namespace, null,
                     getParameters(), type, portletMode, windowState);
             addParameter("action", result);
 
@@ -409,10 +416,9 @@ public class Form extends ClosingUIBean {
             return Collections.EMPTY_LIST;
         }
 
-        List all = ActionValidatorManagerFactory.getInstance().getValidators(actionClass, (String) getParameters().get("actionName"));
-        List validators = new ArrayList();
-        for (Iterator iterator = all.iterator(); iterator.hasNext();) {
-            Validator validator = (Validator) iterator.next();
+        List<Validator> all = ActionValidatorManagerFactory.getInstance().getValidators(actionClass, (String) getParameters().get("actionName"));
+        List<Validator> validators = new ArrayList<Validator>();
+        for (Validator validator : all) {
             if (validator instanceof FieldValidator) {
                 FieldValidator fieldValidator = (FieldValidator) validator;
                 if (fieldValidator.getFieldName().equals(name)) {
@@ -440,7 +446,7 @@ public class Form extends ClosingUIBean {
         this.onsubmit = onsubmit;
     }
 
-    @StrutsTagAttribute(description="Set action nane to submit to, without .action suffix", defaultValue="current action")
+    @StrutsTagAttribute(description="Set action name to submit to, without .action suffix", defaultValue="current action")
     public void setAction(String action) {
         this.action = action;
     }
@@ -471,7 +477,7 @@ public class Form extends ClosingUIBean {
         this.validate = validate;
     }
 
-    @StrutsTagAttribute(description="he portlet mode to display after the form submit")
+    @StrutsTagAttribute(description="The portlet mode to display after the form submit")
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }

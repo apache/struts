@@ -51,6 +51,7 @@ public class SubmitTag extends AbstractUITag {
     protected String src;
     protected String showErrorTransportText;
     protected String indicator;
+    protected String showLoadingText;
 
     //these two are called "preInvokeJS" and "onLoadJS" on the tld
     //Names changed here to keep some consistency
@@ -87,6 +88,7 @@ public class SubmitTag extends AbstractUITag {
         submit.setNotifyTopics(notifyTopics);
         submit.setShowErrorTransportText(showErrorTransportText);
         submit.setIndicator(indicator);
+        submit.setShowLoadingText(showLoadingText);
     }
 
     public void setAction(String action) {
@@ -174,5 +176,9 @@ public class SubmitTag extends AbstractUITag {
 
     public void setIndicator(String indicator) {
         this.indicator = indicator;
+    }
+
+    public void setShowLoadingText(String showLoadingText) {
+        this.showLoadingText = showLoadingText;
     }
 }

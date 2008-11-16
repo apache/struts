@@ -13,11 +13,11 @@
     <s:if test="task=='Delete'">
         <title><s:text name="subscription.title.delete"/></title>
     </s:if>
-    <link href="<s:url value="/css/mailreader.css"/>" rel="stylesheet"
+    <link href="<s:url value="/css/mailreader.css" includeParams="none"/>" rel="stylesheet"
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Subscription.username.focus()">
+<body onload="self.focus();document.Subscription.username.focus()">
 
 <s:actionerror/>
 <s:form action="Subscription_save" validate="true">

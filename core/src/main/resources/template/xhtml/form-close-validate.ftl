@@ -1,4 +1,26 @@
 <#--
+/*
+ * $Id: Action.java 502296 2007-02-01 17:33:39Z niallp $
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<#--
 START SNIPPET: supported-validators
 Only the following validators are supported:
 * required validator
@@ -46,12 +68,12 @@ END SNIPPET: supported-validators
                     while (value.substring(value.length-1, value.length) == ' ')
                         value = value.substring(0, value.length-1);
                 </#if>
-                if((${validator.minLength} > -1 && value.length < ${validator.minLength}) ||
-                        (${validator.maxLength} > -1 && value.length > ${validator.maxLength})) {
+                if ((${validator.minLength?string} > -1 && value.length < ${validator.minLength?string}) ||
+                    (${validator.maxLength?string} > -1 && value.length > ${validator.maxLength?string})) {
                     addError(field, error);
                     errors = true;
                 }
-            }
+            } 
             <#elseif validator.validatorType = "regex">
             if (field.value != null && !field.value.match("${validator.expression?js_string}")) {
                 addError(field, error);
@@ -70,9 +92,9 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "int">
             if (field.value != null) {
                 if (<#if validator.min?exists>parseInt(field.value) <
-                     ${validator.min}<#else>false</#if> ||
+                     ${validator.min?string}<#else>false</#if> ||
                         <#if validator.max?exists>parseInt(field.value) >
-                           ${validator.max}<#else>false</#if>) {
+                           ${validator.max?string}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                 }
@@ -80,10 +102,10 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "double">
             if (field.value != null) {
                 var value = parseFloat(field.value);
-                if (<#if validator.minInclusive?exists>value < ${validator.minInclusive}<#else>false</#if> ||
-                        <#if validator.maxInclusive?exists>value > ${validator.maxInclusive}<#else>false</#if> ||
-                        <#if validator.minExclusive?exists>value <= ${validator.minExclusive}<#else>false</#if> ||
-                        <#if validator.maxExclusive?exists>value >= ${validator.maxExclusive}<#else>false</#if>) {
+                if (<#if validator.minInclusive?exists>value < ${validator.minInclusive?string}<#else>false</#if> ||
+                        <#if validator.maxInclusive?exists>value > ${validator.maxInclusive?string}<#else>false</#if> ||
+                        <#if validator.minExclusive?exists>value <= ${validator.minExclusive?string}<#else>false</#if> ||
+                        <#if validator.maxExclusive?exists>value >= ${validator.maxExclusive?string}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                 }

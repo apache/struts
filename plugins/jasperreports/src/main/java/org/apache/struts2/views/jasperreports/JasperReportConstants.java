@@ -51,4 +51,9 @@ public interface JasperReportConstants {
      * CSV format constant
      */
     public static final String FORMAT_CSV = "CSV";
+    
+    /**
+     * RTF format constant
+     */
+    public static final String FORMAT_RTF = "RTF";
 }

@@ -5,6 +5,8 @@
   autoStart="true"
   startTimerListenTopics="h"
   stopTimerListenTopics="i"
+  refreshOnShow="true"
+  scriptSeparation="false"
   id="mylabel"
   href="a"
   loadingText="b"
@@ -14,5 +16,6 @@
   afterLoading="k"
   handler="l"
   indicator="m"
-  showError="true">
+  showError="true"
+  showLoading="true">
 </div>

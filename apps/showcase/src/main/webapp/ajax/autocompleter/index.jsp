@@ -24,7 +24,7 @@ Using a JSON list returned from an action (href="/JSONList.action"), without aut
 
 Reload on type (loadOnTextChange="true"), after 3 characters (loadMinimumCout="3", it is "3" by default), without the down arrow button (showDownArrow="false")
 <br/>
-<s:autocompleter theme="ajax" indicator="indicator" href="%{jsonList}" cssStyle="width: 200px;" autoComplete="false" loadOnTextChange="true" loadMinimumCount="3" showDownArrow="false"/>
+<s:autocompleter name="state" theme="ajax" indicator="indicator" href="%{jsonList}" cssStyle="width: 200px;" autoComplete="false" loadOnTextChange="true" loadMinimumCount="3" showDownArrow="false"/>
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 
 <br/>

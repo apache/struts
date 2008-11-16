@@ -84,6 +84,12 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setOnmouseover("window.status='onmouseover';");
         tag.setOnmouseup("window.status='onmouseup';");
 
+        //css style and class
+        tag.setCssClass("c1");
+        tag.setCssStyle("s1");
+        tag.setDoubleCssClass("c2");
+        tag.setDoubleCssStyle("s2");
+        
         tag.doStartTag();
         tag.doEndTag();
 

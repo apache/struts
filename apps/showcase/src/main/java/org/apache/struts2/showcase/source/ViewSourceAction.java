@@ -57,7 +57,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 
     public String execute() throws MalformedURLException, IOException {
 
-        if (page != null) {
+        if (page != null && page.trim().length() > 0) {
 
             InputStream in = ClassLoaderUtil.getResourceAsStream(page.substring(page.indexOf("//")+1), getClass());
             page = page.replace("//", "/");
@@ -70,18 +70,26 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
                 }
             }
             pageLines = read(in, -1);
+
+            if (in != null) {
+                in.close();
+            }
         }
 
-        if (className != null) {
-            className = "/"+className.replace('.', '/') + ".java";
+        if (className != null && className.trim().length() > 0) {
+            className = "/" + className.replace('.', '/') + ".java";
             InputStream in = getClass().getResourceAsStream(className);
             if (in == null) {
                 in = servletContext.getResourceAsStream("/WEB-INF/src"+className);
             }
             classLines = read(in, -1);
+
+            if (in != null) {
+                in.close();
+            }
         }
 
-        if (config != null) {
+        if (config != null && config.trim().length() > 0) {
             int pos = config.lastIndexOf(':');
             configLine = Integer.parseInt(config.substring(pos+1));
             config = config.substring(0, pos).replace("//", "/");
@@ -117,8 +125,6 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public void setPadding(int padding) {
         this.padding = padding;
     }
-
-
 
     /**
      * @return the classLines
@@ -215,6 +221,4 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public void setServletContext(ServletContext arg0) {
         this.servletContext = arg0;
     }
-
-
 }

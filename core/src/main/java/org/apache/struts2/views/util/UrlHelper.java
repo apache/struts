@@ -24,9 +24,11 @@ package org.apache.struts2.views.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +39,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -61,21 +62,22 @@ public class UrlHelper {
     private static final int DEFAULT_HTTPS_PORT = 443;
 
     private static final String AMP = "&amp;";
-    
+
     private static int httpPort = DEFAULT_HTTP_PORT;
     private static int httpsPort = DEFAULT_HTTPS_PORT;
     private static String customEncoding;
-    
+
+
     @Inject(StrutsConstants.STRUTS_URL_HTTP_PORT)
     public static void setHttpPort(String val) {
         httpPort = Integer.parseInt(val);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_URL_HTTPS_PORT)
     public static void setHttpsPort(String val) {
         httpsPort = Integer.parseInt(val);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public static void setCustomEncoding(String val) {
         customEncoding = val;
@@ -90,6 +92,10 @@ public class UrlHelper {
     }
 
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort) {
+        return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, true);
+    }
+
+    public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp) {
         StringBuffer link = new StringBuffer();
 
         boolean changedScheme = false;
@@ -103,21 +109,31 @@ public class UrlHelper {
             link.append("://");
             link.append(request.getServerName());
 
-            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
-            {
-                link.append(":");
-                link.append(scheme.equals("http") ? httpPort : httpsPort);
+            if (scheme != null) {
+                // If switching schemes, use the configured port for the particular scheme.
+                if (!scheme.equals(reqScheme)) {
+                    if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT)) {
+                        link.append(":");
+                        link.append(scheme.equals("http") ? httpPort : httpsPort);
+                    }
+		// Else use the port from the current request.
+                } else {
+                    int reqPort = request.getServerPort();
+
+                    if ((scheme.equals("http") && (reqPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && reqPort != DEFAULT_HTTPS_PORT)) {
+                        link.append(":");
+                        link.append(reqPort);
+                    }
+                }
             }
         }
-        else if (
-           (scheme != null) && !scheme.equals(request.getScheme())) {
+        else if ((scheme != null) && !scheme.equals(request.getScheme())) {
             changedScheme = true;
             link.append(scheme);
             link.append("://");
             link.append(request.getServerName());
 
-            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
-            {
+            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT)) {
                 link.append(":");
                 link.append(scheme.equals("http") ? httpPort : httpsPort);
             }
@@ -166,12 +182,20 @@ public class UrlHelper {
         }
 
         //if the action was not explicitly set grab the params from the request
-        buildParametersString(params, link);
+        if (escapeAmp) {
+            buildParametersString(params, link);
+        } else {
+            buildParametersString(params, link, "&");
+        }
 
-        String result;
+        String result = link.toString();
+
+        while (result.indexOf("<script>") > 0) {
+            result = result.replaceAll("<script>", "script");
+        }
 
         try {
-            result = encodeResult ? response.encodeURL(link.toString()) : link.toString();
+             result = encodeResult ? response.encodeURL(result) : result;
         } catch (Exception ex) {
             // Could not encode the URL for some reason
             // Use it unchanged
@@ -295,7 +319,26 @@ public class UrlHelper {
                     }
                     if (paramName != null) {
                         String translatedParamValue = translateAndDecode(paramValue);
-                        queryParams.put(paramName, translatedParamValue);
+
+                        if(queryParams.containsKey(paramName)) {
+                            // WW-1619 append new param value to existing value(s)
+                            Object currentParam = queryParams.get(paramName);
+                            if(currentParam instanceof String) {
+                                queryParams.put(paramName, new String[] {
+                                        (String) currentParam, translatedParamValue});
+                            } else {
+                                String currentParamValues[] = (String[]) currentParam;
+                                List paramList = new ArrayList(Arrays
+                                    .asList(currentParamValues));
+                                paramList.add(translatedParamValue);
+                                String newParamValues[] = new String[paramList
+                                    .size()];
+                                queryParams.put(paramName, paramList
+                                    .toArray(newParamValues));
+                            }
+                        } else {
+                            queryParams.put(paramName, translatedParamValue);
+                        }
                     }
                 }
             }

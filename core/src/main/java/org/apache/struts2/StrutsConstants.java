@@ -76,6 +76,9 @@ public final class StrutsConstants {
     /** The org.apache.struts2.views.freemarker.FreemarkerManager implementation class */
     public static final String STRUTS_FREEMARKER_MANAGER_CLASSNAME = "struts.freemarker.manager.classname";
 
+    /** Cache Freemarker templates */
+    public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE = "struts.freemarker.templatesCache";
+
     /** org.apache.struts2.views.velocity.VelocityManager implementation class */
     public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";
 
@@ -147,4 +150,11 @@ public final class StrutsConstants {
     public static final String STRUTS_XWORKCONVERTER = "struts.xworkConverter";
 
     public static final String STRUTS_ALWAYS_SELECT_FULL_NAMESPACE = "struts.mapper.alwaysSelectFullNamespace";
+
+    /** XWork default text provider */
+    public static final String STRUTS_XWORKTEXTPROVIDER = "struts.xworkTextProvider";
+
+    /** The name of the parameter to create when mapping an id (used by some action mappers) */
+	public static final String STRUTS_ID_PARAMETER_NAME = "struts.mapper.idParameterName";
+
 }

@@ -23,6 +23,10 @@ package org.apache.struts2.portlet.dispatcher;
 import com.opensymphony.xwork2.Action;
 
 import java.io.Serializable;
+import java.util.Map;
+
+import org.apache.struts2.interceptor.SessionAware;
+import org.apache.struts2.portlet.PortletActionConstants;
 
 /**
  * When a portlet is targetted for an <code>event</code>, the portlet will receive two
@@ -38,7 +42,7 @@ import java.io.Serializable;
  * specifying this action and the location of the view, which then will be executed in the
  * following render request.
  */
-public class DirectRenderFromEventAction implements Action, Serializable {
+public class DirectRenderFromEventAction implements SessionAware, PortletActionConstants, Action, Serializable {
 
     private static final long serialVersionUID = -1814807772308405785L;
 
@@ -54,20 +58,15 @@ public class DirectRenderFromEventAction implements Action, Serializable {
     }
 
     /**
-     * Set the location of the view.
-     *
-     * @param location The location to set.
-     */
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    /**
      * Always return success.
      *
      * @return SUCCESS
      */
     public String execute() throws Exception {
         return SUCCESS;
+    }
+
+    public void setSession(Map session) {
+        location = (String)session.get(RENDER_DIRECT_LOCATION);
     }
 }

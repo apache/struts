@@ -43,28 +43,21 @@ import com.opensymphony.xwork2.spring.SpringObjectFactory;
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
     private static final Log log = LogFactory.getLog(StrutsSpringObjectFactory.class);
-    
-    private String autoWire;
-    private boolean useClassCache = true;
-    
-    @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false)
-    public void setAutoWire(String val) {
-        autoWire = val;
-    }
-    
-    @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false)
-    public void setUseClassCache(String val) {
-        useClassCache = "true".equals(val);
-    }
-    
+
     @Inject
-    public void setServletContext(ServletContext servletContext) {
+    public StrutsSpringObjectFactory(
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
+            @Inject ServletContext servletContext) {
+          
+        super();
+        boolean useClassCache = "true".equals(useClassCacheStr);
         log.info("Initializing Struts-Spring integration...");
 
         ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         if (appContext == null) {
             // uh oh! looks like the lifecycle listener wasn't installed. Let's inform the user
-            String message = "********** FATAL ERROR STARTING UP SPRING-STRUTS INTEGRATION **********\n" +
+            String message = "********** FATAL ERROR STARTING UP STRUTS-SPRING INTEGRATION **********\n" +
                     "Looks like the Spring listener was not configured for your web app! \n" +
                     "Nothing will work until WebApplicationContextUtils returns a valid ApplicationContext.\n" +
                     "You might need to add the following to web.xml: \n" +

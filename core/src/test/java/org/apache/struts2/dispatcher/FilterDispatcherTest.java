@@ -21,8 +21,11 @@
 package org.apache.struts2.dispatcher;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.net.URL;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -177,6 +180,37 @@ public class FilterDispatcherTest extends StrutsTestCase {
         assertTrue(_dispatcher.serviceRequest);
     }
 
+    public void testFindAndCheckResourcesWithDojoJs() throws Exception  {
+        FilterDispatcher filterDispatcher = new FilterDispatcher();
+        filterDispatcher.pathPrefixes = filterDispatcher.parse(FilterDispatcher.DEFAULT_STATIC_PACKAGES);
+        List<URL> result = filterDispatcher.findAndCheckResources("/struts/dojo/dojo.js");
+        assertTrue(result.size()>=1);
+        for (URL url : result) {
+            try {
+                InputStream is = url.openStream();
+                is.close();
+            } catch (IOException e) {
+                fail("Resource could not be opened");
+            }
+
+        }
+    }
+
+    public void testFindAndCheckResourcesWithValidationClientJs() throws Exception  {
+        FilterDispatcher filterDispatcher = new FilterDispatcher();
+        filterDispatcher.pathPrefixes = filterDispatcher.parse(FilterDispatcher.DEFAULT_STATIC_PACKAGES);
+        List<URL> result = filterDispatcher.findAndCheckResources("/struts/validationClient.js");
+        assertTrue(result.size()>=1);
+        for (URL url : result) {
+            try {
+                InputStream is = url.openStream();
+                is.close();
+            } catch (IOException e) {
+                fail("Resource could not be opened");
+            }
+
+        }
+    }
 
     // === inner class ========
     public static class InnerObjectFactory extends ObjectFactory {

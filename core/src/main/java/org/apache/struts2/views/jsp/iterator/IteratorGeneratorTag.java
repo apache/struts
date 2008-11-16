@@ -205,7 +205,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
                 count = ((Long)countObj).intValue();
             }
             else if (countObj instanceof Double) {
-                count = ((Long)countObj).intValue();
+                count = ((Double)countObj).intValue();
             }
             else if (countObj instanceof String) {
                 try {

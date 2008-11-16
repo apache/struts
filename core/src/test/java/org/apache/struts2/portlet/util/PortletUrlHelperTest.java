@@ -95,7 +95,7 @@ public class PortletUrlHelperTest extends TestCase {
         renderRequestControl.replay();
         renderResponseControl.replay();
         portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null,
+        PortletUrlHelper.buildUrl("testAction", null, null,
                 new HashMap(), null, null, null);
         portletUrlControl.verify();
         renderRequestControl.verify();
@@ -113,7 +113,7 @@ public class PortletUrlHelperTest extends TestCase {
         renderRequestControl.replay();
         renderResponseControl.replay();
         portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null,
+        PortletUrlHelper.buildUrl("testAction", null, null,
                 new HashMap(), null, "edit", null);
         portletUrlControl.verify();
         renderRequestControl.verify();
@@ -131,7 +131,7 @@ public class PortletUrlHelperTest extends TestCase {
         renderRequestControl.replay();
         renderResponseControl.replay();
         portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null,
+        PortletUrlHelper.buildUrl("testAction", null, null,
                 new HashMap(), null, null, "maximized");
         portletUrlControl.verify();
         renderRequestControl.verify();
@@ -149,7 +149,7 @@ public class PortletUrlHelperTest extends TestCase {
         renderRequestControl.replay();
         renderResponseControl.replay();
         portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null,
+        PortletUrlHelper.buildUrl("testAction", null, null,
                 new HashMap(), "action", null, null);
         portletUrlControl.verify();
         renderRequestControl.verify();

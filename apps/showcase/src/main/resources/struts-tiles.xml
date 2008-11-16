@@ -17,6 +17,10 @@
             <result type="tiles">showcase.freemarker</result>
         </action>
 
+        <action name="freemarkerLayout">
+            <result type="tiles">showcase.freemarkerLayout</result>
+        </action>
+
         <action name="sanity">
             <result type="redirect">/tiles/layout.jsp</result>
             <result type="redirect" name="success">/tiles/layout.jsp</result>

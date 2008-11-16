@@ -243,6 +243,21 @@ public class SubsetIteratorTagTest extends AbstractTagTest {
     }
 
 
+        public void testWithDoubleCount() throws Exception {
+            SubsetIteratorTag tag = new SubsetIteratorTag();
+            tag.setPageContext(pageContext);
+            tag.setCount("3.0");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
+
+        public void testWithDoubleStart() throws Exception {
+            SubsetIteratorTag tag = new SubsetIteratorTag();
+            tag.setPageContext(pageContext);
+            tag.setStart("2.0");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
     public Action getAction() {
         return new ActionSupport() {

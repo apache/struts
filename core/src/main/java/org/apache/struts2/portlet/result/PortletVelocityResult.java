@@ -20,20 +20,10 @@
  */
 package org.apache.struts2.portlet.result;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspFactory;
-import javax.servlet.jsp.PageContext;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -47,10 +37,15 @@ import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.portlet.ActionResponse;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspFactory;
+import javax.servlet.jsp.PageContext;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -160,7 +155,6 @@ public class PortletVelocityResult extends StrutsResultSupport {
      */
     public void executeRenderResult(String finalLocation,
             ActionInvocation invocation) throws Exception {
-        prepareServletActionContext();
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -192,7 +186,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
             if (encoding != null) {
                 contentType = contentType + ";charset=" + encoding;
             }
-
+            response.setContentType(contentType);
             Template t = getTemplate(stack,
                     velocityManager.getVelocityEngine(), invocation,
                     finalLocation, encoding);
@@ -201,8 +195,6 @@ public class PortletVelocityResult extends StrutsResultSupport {
                     response, finalLocation);
             Writer writer = new OutputStreamWriter(response.getOutputStream(),
                     encoding);
-
-            response.setContentType(contentType);
 
             t.merge(context, writer);
 
@@ -294,14 +286,4 @@ public class PortletVelocityResult extends StrutsResultSupport {
         return velocityManager.createContext(stack, request, response);
     }
 
-    /**
-     *  Prepares the servlet action context for this request
-     */
-    private void prepareServletActionContext() throws PortletException,
-            IOException {
-        PortletRequestDispatcher disp = PortletActionContext.getPortletConfig()
-                .getPortletContext().getNamedDispatcher("preparator");
-        disp.include(PortletActionContext.getRenderRequest(),
-                PortletActionContext.getRenderResponse());
-    }
 }

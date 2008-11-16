@@ -1,12 +1,12 @@
 <tr>
     <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
     <td>
-<select name="foo" id="foo" onmousedown="window.status='onmousedown';" onmouseup="window.status='onmouseup';" onmouseover="window.status='onmouseover';" onmousemove="window.status='onmousemove';" onmouseout="window.status='onmouseout';" onchange="fooRedirect(this.options.selectedIndex)">
+<select name="foo" id="foo" class="c1" style="s1" onmousedown="window.status='onmousedown';" onmouseup="window.status='onmouseup';" onmouseover="window.status='onmouseover';" onmousemove="window.status='onmousemove';" onmouseout="window.status='onmouseout';" onchange="fooRedirect(this.options.selectedIndex)">
     <option value="BE">Belgium</option>
     <option value="FR">France</option>
 </select>
 <br/>
-<select name="region">
+<select name="region" id="region" class="c2" style="s2">
 </select>
 <script type="text/javascript">
     var fooGroup = new Array(2 + 0);

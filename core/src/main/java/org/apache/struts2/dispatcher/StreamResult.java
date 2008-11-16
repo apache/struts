@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 /**
  * <!-- START SNIPPET: description -->
  *
- * A custom Result type for send raw data (via an InputStream) directly to the
+ * A custom Result type for sending raw data (via an InputStream) directly to the
  * HttpServletResponse. Very useful for allowing users to download content.
  *
  * <!-- END SNIPPET: description -->

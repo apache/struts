@@ -50,6 +50,7 @@ public class DateTimePickerTag extends AbstractUITag {
     protected String toggleType;
     protected String toggleDuration;
     protected String type;
+    protected String templateCssPath;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new DateTimePicker(stack, req, res);
@@ -73,6 +74,7 @@ public class DateTimePickerTag extends AbstractUITag {
         dateTimePicker.setToggleType(toggleType);
         dateTimePicker.setToggleDuration(toggleDuration);
         dateTimePicker.setType(type);
+        dateTimePicker.setTemplateCssPath(templateCssPath);
     }
 
     public void setAdjustWeeks(String adjustWeeks) {
@@ -129,5 +131,9 @@ public class DateTimePickerTag extends AbstractUITag {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
     }
 }

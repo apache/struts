@@ -31,15 +31,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.components.ActionComponent;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleSequence;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 
@@ -56,17 +57,47 @@ public abstract class TagModel implements TemplateTransformModel {
         this.res = res;
     }
 
-    public Writer getWriter(Writer writer, Map params) throws TemplateModelException, IOException {
+    public Writer getWriter(Writer writer, Map params)
+        throws TemplateModelException, IOException {
         Component bean = getBean();
         Container container = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getContainer();
         container.inject(bean);
-        Map basicParams = convertParams(params);
-        bean.copyParams(basicParams);
-        bean.addAllParameters(getComplexParams(params));
+
+        Map unwrappedParameters = unwrapParameters(params);
+        bean.copyParams(unwrappedParameters);
+
         return new CallbackWriter(bean, writer);
     }
 
     protected abstract Component getBean();
+
+    protected Map unwrapParameters(Map params) {
+        Map map = new HashMap(params.size());
+        DefaultObjectWrapper objectWrapper = new DefaultObjectWrapper();
+        for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+
+            Object value = entry.getValue();
+
+            if (value != null) {
+                // the value should ALWAYS be a decendant of TemplateModel
+                if (value instanceof TemplateModel) {
+                    try {
+                        map.put(entry.getKey(), objectWrapper
+                            .unwrap((TemplateModel) value));
+                    } catch (TemplateModelException e) {
+                        LOG.error("failed to unwrap [" + value
+                            + "] it will be ignored", e);
+                    }
+                }
+                // if it doesn't, we'll do it the old way by just returning the toString() representation
+                else {
+                    map.put(entry.getKey(), value.toString());
+                }
+            }
+        }
+        return map;
+    }
 
     protected Map convertParams(Map params) {
         HashMap map = new HashMap(params.size());

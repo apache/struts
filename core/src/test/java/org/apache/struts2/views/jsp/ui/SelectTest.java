@@ -170,6 +170,33 @@ public class SelectTest extends AbstractUITagTest {
         }
     }
 
+    public class LongObject {
+        private Long id;
+        private String value;
+
+
+        public LongObject(Long id, String value) {
+            this.id = id;
+            this.value = value;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
     public void testNullList() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setList2(null);
@@ -237,6 +264,44 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-2.txt"));
+    }
+
+    /**
+     * WW-1747 - should be a valid test case for the described issue
+     * @throws Exception
+     */
+    public void testMultipleWithLists() throws Exception {
+        TestAction testAction = (TestAction) action;
+        Collection collection = new ArrayList(2);
+
+        collection.add(1l);
+        collection.add(300000000l);
+        testAction.setCollection(collection);
+
+        List selectList = new ArrayList();
+        selectList.add(new LongObject(1l, "foo"));
+        selectList.add(new LongObject(2l, "bar"));
+        selectList.add(new LongObject(300000000l, "foobar"));
+        testAction.setList2(selectList);
+
+        SelectTag tag = new SelectTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("collection");
+        tag.setList("list2");
+        tag.setListKey("id");
+        tag.setListValue("value");
+        tag.setMultiple("true");
+        tag.setOnmousedown("alert('onmousedown');");
+        tag.setOnmousemove("alert('onmousemove');");
+        tag.setOnmouseout("alert('onmouseout');");
+        tag.setOnmouseover("alert('onmouseover');");
+        tag.setOnmouseup("alert('onmouseup');");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Select-12.txt"));
     }
 
     public void testSimple() throws Exception {
@@ -377,6 +442,109 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-6.txt"));
+    }
+
+    public void testSimpleInteger() throws Exception {
+        TestAction testAction = (TestAction) action;
+
+        IdName hello = new IdName(new Integer(1), "hello");
+        IdName world = new IdName(new Integer(2), "world");
+        List list2 = new ArrayList();
+        list2.add(hello);
+        list2.add(world);
+        testAction.setList2(list2);
+
+        testAction.setFooInt(new Integer(1));
+
+        SelectTag tag = new SelectTag();
+        tag.setPageContext(pageContext);
+        tag.setEmptyOption("true");
+        tag.setLabel("mylabel");
+        tag.setName("fooInt");
+        tag.setList("list2");
+        tag.setListKey("id");
+        tag.setListValue("name");
+
+        // header stuff
+        tag.setHeaderKey("headerKey");
+        tag.setHeaderValue("headerValue");
+
+        // empty option
+        tag.setEmptyOption("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Select-11.txt"));
+    }
+
+    public void testSimpleIntegerWithValueWorkaround() throws Exception {
+        TestAction testAction = (TestAction) action;
+
+        IdName hello = new IdName(new Integer(1), "hello");
+        IdName world = new IdName(new Integer(2), "world");
+        List list2 = new ArrayList();
+        list2.add(hello);
+        list2.add(world);
+        testAction.setList2(list2);
+
+        testAction.setFooInt(new Integer(1));
+
+        SelectTag tag = new SelectTag();
+        tag.setPageContext(pageContext);
+        tag.setEmptyOption("true");
+        tag.setLabel("mylabel");
+        tag.setName("fooInt");
+        tag.setList("list2");
+        tag.setListKey("id");
+        tag.setListValue("name");
+        tag.setValue("fooInt.toString()");
+
+        // header stuff
+        tag.setHeaderKey("headerKey");
+        tag.setHeaderValue("headerValue");
+
+        // empty option
+        tag.setEmptyOption("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Select-11.txt"));
+    }
+    
+    public void testEnumList() throws Exception {
+
+        SelectTag tag = new SelectTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("status");
+        tag.setList("statusList");
+        tag.setListKey("name");
+        tag.setListValue("displayName");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Select-13.txt"));
+    }
+
+    public class IdName {
+        private String name;
+        private Integer id;
+
+        public IdName(Integer id, String name) {
+            this.name = name;
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getId() {
+            return id;
+        }
     }
 
     private void prepareTagGeneric(SelectTag tag) {

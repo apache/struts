@@ -22,9 +22,6 @@
 
 package org.apache.struts2.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -32,6 +29,9 @@ import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.OgnlUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class StrutsObjectFactory extends ObjectFactory {
 
@@ -59,8 +59,9 @@ public class StrutsObjectFactory extends ObjectFactory {
                 return interceptor;
             }
 
-            if (o instanceof org.apache.struts2.spi.Interceptor)
-                return new InterceptorAdapter((org.apache.struts2.spi.Interceptor) o);
+// This is for the new API:
+//            if (o instanceof org.apache.struts2.spi.Interceptor)
+//                return new InterceptorAdapter((org.apache.struts2.spi.Interceptor) o);
 
             throw new ConfigurationException(
                     "Class [" + className + "] does not implement Interceptor", interceptorConfig);
@@ -96,8 +97,9 @@ public class StrutsObjectFactory extends ObjectFactory {
         if (result instanceof Result)
             return (Result) result;
 
-        if (result instanceof org.apache.struts2.spi.Result)
-            return new ResultAdapter((org.apache.struts2.spi.Result) result);
+// This is for the new API:
+//        if (result instanceof org.apache.struts2.spi.Result)
+//            return new ResultAdapter((org.apache.struts2.spi.Result) result);
 
         throw new ConfigurationException(result.getClass().getName() + " does not implement Result.");
     }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
       <groupId>org.apache.struts</groupId>
       <artifactId>struts2-apps</artifactId>
-      <version>2.0.5</version>
+      <version>2.0.14</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-portlet</artifactId>
@@ -13,9 +12,9 @@
     <name>Portlet Webapp</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/portlet/</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/apps/portlet</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/apps/portlet</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14/apps/portlet</url>
     </scm>
 
     <dependencies>
@@ -29,7 +28,13 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-spring-plugin</artifactId>
             <version>${pom.version}</version>
-        </dependency>      
+<exclusions>
+<exclusion>
+           <groupId>javax.servlet</groupId>
+           <artifactId>servlet-api</artifactId>
+</exclusion>
+</exclusions>
+        </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-core</artifactId>
@@ -51,20 +56,25 @@
             <artifactId>commons-digester</artifactId>
             <version>1.8</version>
         </dependency>
-
-
-        <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet-api</artifactId>
-           <version>2.4</version>
-           <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
-
-
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+    </dependency>
     </dependencies>
 </project>

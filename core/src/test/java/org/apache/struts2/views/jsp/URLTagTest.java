@@ -223,7 +223,7 @@ public class URLTagTest extends AbstractUITagTest {
         tag.component.addParameter("param1", "value1");
         tag.component.addParameter("param2", "value2");
         tag.doEndTag();
-        assertEquals("/TestAction.action?param2=value2&amp;param0=value0&amp;param1=value1", writer.toString());
+        assertEquals("/TestAction.action?param0=value0&amp;param1=value1&amp;param2=value2", writer.toString());
     }
 
     public void testEvaluateValue() throws Exception {
@@ -281,7 +281,7 @@ public class URLTagTest extends AbstractUITagTest {
         paramTag.doEndTag();
         urlTag.doEndTag();
 
-        assertEquals(writer.getBuffer().toString(), "/context/someAction.action?name=John&amp;id=33");
+        assertEquals("/context/someAction.action?id=33&amp;name=John", writer.getBuffer().toString());
     }
 
     public void testParamPrecedenceWithAnchor() throws Exception {
@@ -304,7 +304,7 @@ public class URLTagTest extends AbstractUITagTest {
         paramTag.doEndTag();
         urlTag.doEndTag();
 
-        assertEquals(writer.getBuffer().toString(), "/context/someAction.action?name=John&amp;id=33#testAnchor");
+        assertEquals("/context/someAction.action?id=33&amp;name=John#testAnchor", writer.getBuffer().toString());
     }
 
     public void testPutId() throws Exception {
@@ -348,6 +348,19 @@ public class URLTagTest extends AbstractUITagTest {
         assertEquals("/team.action?section=team&amp;company=acme+inc", writer.toString());
     }
 
+    public void testRequestURIActionIncludeGetDoNotEscapeAmp() throws Exception {
+        request.setRequestURI("/public/about");
+        request.setQueryString("section=team&company=acme inc");
+
+        tag.setAction("team");
+        tag.setIncludeParams("get");
+        tag.setEscapeAmp("false");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("/team.action?section=team&company=acme+inc", writer.toString());
+    }
+    
     public void testRequestURINoActionIncludeNone() throws Exception {
         request.setRequestURI("/public/about");
         request.setQueryString("section=team&company=acme inc");
@@ -391,7 +404,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         tag.doEndTag();
 
-        assertEquals("/team.action?section=team&amp;year=2006&amp;company=acme+inc", writer.toString());
+        assertEquals("/team.action?section=team&amp;company=acme+inc&amp;year=2006", writer.toString());
     }
 
     public void testRequestURINoActionIncludeAll() throws Exception {
@@ -413,7 +426,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         tag.doEndTag();
 
-        assertEquals("/public/about?section=team&amp;year=2006&amp;company=acme+inc", writer.toString());
+        assertEquals("/public/about?section=team&amp;company=acme+inc&amp;year=2006", writer.toString());
     }
 
     public void testUnknownIncludeParam() throws Exception {
@@ -447,6 +460,15 @@ public class URLTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         assertEquals("/myapp/company.action", writer.toString());
+    }
+
+    public void testForceAddSchemeHostAndPort() throws Exception {
+        tag.setForceAddSchemeHostAndPort("true");
+        tag.setAction("company");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("http://localhost/company.action", writer.toString());
     }
 
     protected void setUp() throws Exception {

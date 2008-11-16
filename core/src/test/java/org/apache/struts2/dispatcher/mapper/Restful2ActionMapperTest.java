@@ -88,9 +88,26 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
         assertEquals("1", mapping.getParams().get("bar"));
     }
 
-    public void testPutCreate() throws Exception {
-        req.setupGetRequestURI("/my/namespace/foo/");
-        req.setupGetServletPath("/my/namespace/foo/");
+    public void testPostCreate() throws Exception {
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/");
+        req.setupGetAttribute(null);
+        req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
+        req.setupGetMethod("POST");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/my/namespace", mapping.getNamespace());
+        assertEquals("foo/", mapping.getName());
+        assertEquals("create", mapping.getMethod());
+        assertEquals(1, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
+    }
+ 
+    public void testPutUpdate() throws Exception {
+
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/2");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
         req.setupGetMethod("PUT");
@@ -98,7 +115,84 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/my/namespace", mapping.getNamespace());
-        assertEquals("foo/", mapping.getName());
-        assertEquals("create", mapping.getMethod());
+        assertEquals("foo/2", mapping.getName());
+        assertEquals("update", mapping.getMethod());
+        assertEquals(1, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
+    }
+    
+    public void testPutUpdateWithIdParam() throws Exception {
+
+        mapper.setIdParameterName("id");
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/2");
+        req.setupGetAttribute(null);
+        req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
+        req.setupGetMethod("PUT");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/my/namespace", mapping.getNamespace());
+        assertEquals("foo", mapping.getName());
+        assertEquals("update", mapping.getMethod());
+        assertEquals(2, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
+        assertEquals("2", mapping.getParams().get("id"));
+        
+    }
+
+    public void testPutUpdateWithFakePut() throws Exception {
+
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/2");
+        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "put");
+        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "put");
+        req.setupGetAttribute(null);
+        req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
+        req.setupGetMethod("POST");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/my/namespace", mapping.getNamespace());
+        assertEquals("foo/2", mapping.getName());
+        assertEquals("update", mapping.getMethod());
+        assertEquals(1, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
+    }
+
+    public void testDeleteRemove() throws Exception {
+
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/2");
+        req.setupGetAttribute(null);
+        req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
+        req.setupGetMethod("DELETE");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/my/namespace", mapping.getNamespace());
+        assertEquals("foo/2", mapping.getName());
+        assertEquals("remove", mapping.getMethod());
+        assertEquals(1, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
+    }
+
+    public void testDeleteRemoveWithFakeDelete() throws Exception {
+
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/2");
+        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "DELETE");
+        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "DELETE");
+        req.setupGetAttribute(null);
+        req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
+        req.setupGetMethod("POST");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/my/namespace", mapping.getNamespace());
+        assertEquals("foo/2", mapping.getName());
+        assertEquals("remove", mapping.getMethod());
+        assertEquals(1, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
     }
 }

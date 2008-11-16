@@ -44,10 +44,12 @@ public class URLTag extends ComponentTagSupport {
     protected String method;
     protected String encode;
     protected String includeContext;
+    protected String escapeAmp;
     protected String portletMode;
     protected String windowState;
     protected String portletUrlType;
     protected String anchor;
+    protected String forceAddSchemeHostAndPort;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new URL(stack, req, res);
@@ -74,6 +76,12 @@ public class URLTag extends ComponentTagSupport {
         if (includeContext != null) {
             url.setIncludeContext(Boolean.valueOf(includeContext).booleanValue());
         }
+        if (escapeAmp != null) {
+            url.setEscapeAmp(Boolean.valueOf(escapeAmp).booleanValue());
+        }
+	if (forceAddSchemeHostAndPort != null) {
+            url.setForceAddSchemeHostAndPort(Boolean.valueOf(forceAddSchemeHostAndPort).booleanValue());
+        }
     }
 
     public void setEncode(String encode) {
@@ -82,6 +90,10 @@ public class URLTag extends ComponentTagSupport {
 
     public void setIncludeContext(String includeContext) {
         this.includeContext = includeContext;
+    }
+
+    public void setEscapeAmp(String escapeAmp) {
+        this.escapeAmp = escapeAmp;
     }
 
     public void setIncludeParams(String name) {
@@ -107,17 +119,24 @@ public class URLTag extends ComponentTagSupport {
     public void setValue(String value) {
         this.value = value;
     }
+
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }
+
     public void setPortletUrlType(String portletUrlType) {
         this.portletUrlType = portletUrlType;
     }
+
     public void setWindowState(String windowState) {
         this.windowState = windowState;
     }
 
     public void setAnchor(String anchor) {
         this.anchor = anchor;
+    }
+
+    public void setForceAddSchemeHostAndPort(String forceAddSchemeHostAndPort) {
+        this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
 }

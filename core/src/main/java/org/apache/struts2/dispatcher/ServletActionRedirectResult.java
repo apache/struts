@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,19 +46,6 @@ import com.opensymphony.xwork2.inject.Inject;
  * standard redirect result.
  *
  * <p/>
- * @TODO - the below sentence is confusing and seems to be contradictory -- FIX ME
- * To pass parameters, use the &lt;param&gt; ... &lt;/param&gt; tag. The following parameters will not be
- * passed because they are part of the config param for this particular result.
- *
- * <ul>
- *  <li>actionName</li>
- *  <li>namespace</li>
- *  <li>method</li>
- *  <li>encode</li>
- *  <li>parse</li>
- *  <li>location</li>
- *  <li>prependServletContext</li>
- * </ul>
  *
  * See examples below for an example of how request parameters could be passed in.
  *
@@ -136,7 +124,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     protected String namespace;
     protected String method;
 
-    private Map<String, String> requestParameters = new HashMap<String, String>();
+    private Map<String, String> requestParameters = new LinkedHashMap<String, String>();
 
     public ServletActionRedirectResult() {
         super();

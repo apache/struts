@@ -1,4 +1,4 @@
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
 <%-- Show usage; Used in Header --%>
@@ -6,10 +6,12 @@
 <html>
     <head><title><tiles:getAsString name="title"/></title></head>
 <body>
-    <tiles:attribute name="header"/>
+    <tiles:insertAttribute name="header"/>
 
     <p id="body">
-        <tiles:attribute name="body"/>
+        <tiles:insertAttribute name="body"/>
     </p>
+
+	<p>Notice that this is a layout made in JSP</p>
 </body>
 </html>

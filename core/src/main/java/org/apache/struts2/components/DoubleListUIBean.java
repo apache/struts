@@ -192,6 +192,8 @@ public abstract class DoubleListUIBean extends ListUIBean {
             }
         } else if (form != null) {
             addParameter("doubleId", form.getParameters().get("id") + "_" +escape(this.doubleName));
+        } else {
+            addParameter("doubleId", escape(doubleName !=null ? findString(doubleName) : null));
         }
 
         if (doubleOnclick != null) {
@@ -514,7 +516,6 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleList;
     }
 
-    @StrutsTagAttribute(description="Set the list key of the second attribute")
     public String getDoubleListKey() {
         return doubleListKey;
     }

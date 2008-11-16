@@ -59,6 +59,7 @@ public class DateTimePickerTagTest extends AbstractUITagTest {
         tag.setWeekStartsOn("g");
         tag.setName("h");
         tag.setLanguage("i");
+        tag.setTemplateCssPath("j");
         tag.doStartTag();
         tag.doEndTag();
 

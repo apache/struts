@@ -790,6 +790,20 @@ public abstract class UIBean extends Component {
         }
     }
 
+    /**
+     * Ensures an unescaped attribute value cannot be vulnerable to XSS attacks
+     *
+     * @param val The value to check
+     * @return The escaped value
+     */
+    protected String ensureAttributeSafelyNotEscaped(String val) {
+        if (val != null) {
+            return val.replaceAll("\"", "&#34;");
+        } else {
+            return "";
+        }
+    }
+
     protected void evaluateExtraParams() {
     }
 
@@ -852,7 +866,8 @@ public abstract class UIBean extends Component {
 
     /**
      * Create HTML id element for the component and populate this component parmaeter
-     * map.
+     * map. Additionally, a parameter named escapedId is populated which contains the found id value filtered by
+     * {@link #escape(String)}, needed eg. for naming Javascript identifiers based on the id value.
      *
      * The order is as follows :-
      * <ol>
@@ -864,19 +879,22 @@ public abstract class UIBean extends Component {
      * @param form
      */
     protected void populateComponentHtmlId(Form form) {
+        String tryId;
         if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
             if (altSyntax()) {
-                addParameter("id", findString(id));
+                tryId = findString(id);
             } else {
-                addParameter("id", id);
+                tryId = id;
             }
         } else if (form != null) {
-            addParameter("id", form.getParameters().get("id") + "_" 
-                    + escape(name != null ? findString(name) : null));
+            tryId = form.getParameters().get("id") + "_"
+                    + escape(name != null ? findString(name) : null);
         } else {
-            addParameter("id", escape(name != null ? findString(name) : null));
+            tryId = escape(name != null ? findString(name) : null);
         }
+        addParameter("id", tryId);
+        addParameter("escapedId", escape(tryId));
     }
 
     @StrutsTagAttribute(description="The template directory.")
@@ -903,7 +921,7 @@ public abstract class UIBean extends Component {
         this.cssClass = cssClass;
     }
 
-    @StrutsTagAttribute(description="The css style definitions for element ro use")
+    @StrutsTagAttribute(description="The css style definitions for element to use")
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }

@@ -36,7 +36,7 @@ public @interface StrutsTagAttribute {
 
     boolean required() default false;
 
-    boolean rtexprvalue() default true;
+    boolean rtexprvalue() default false;
 
     String description();
 

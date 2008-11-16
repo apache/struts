@@ -34,9 +34,9 @@
     <name>Struts 2 JSF Plugin</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14plugins/jsf</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14plugins/jsf</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14plugins/jsf</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/plugins/jsf</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/plugins/jsf</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14/plugins/jsf</url>
     </scm>
 
     <dependencies>

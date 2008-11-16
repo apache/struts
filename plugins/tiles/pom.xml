@@ -34,9 +34,9 @@
     <name>Struts 2 Tiles Plugin</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14plugins/tiles</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14plugins/tiles</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14plugins/tiles</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/plugins/tiles</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/plugins/tiles</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14/plugins/tiles</url>
     </scm>
 
     <dependencies>

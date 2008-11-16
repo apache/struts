@@ -15,9 +15,9 @@
     </parent>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14assembly</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14assembly</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14assembly</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/assembly</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14/assembly</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14/assembly</url>
     </scm>
 
     <build>

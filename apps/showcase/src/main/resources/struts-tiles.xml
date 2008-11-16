@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="tiles" extends="tiles-default" namespace="/tiles">
+        <default-action-ref name="index"/>
+
+        <action name="index">
+            <result type="tiles">showcase.index</result>
+            <result name="success" type="tiles">showcase.index</result>
+        </action>
+
+        <action name="freemarker">
+            <result type="tiles">showcase.freemarker</result>
+        </action>
+
+        <action name="freemarkerLayout">
+            <result type="tiles">showcase.freemarkerLayout</result>
+        </action>
+
+        <action name="sanity">
+            <result type="redirect">/tiles/layout.jsp</result>
+            <result type="redirect" name="success">/tiles/layout.jsp</result>
+        </action>
+    </package>
+</struts>
+
+

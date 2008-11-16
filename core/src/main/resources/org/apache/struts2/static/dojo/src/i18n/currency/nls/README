@@ -1,0 +1,6 @@
+All files within this directory and subdirectories were manually derived from http://unicode.org/cldr
+
+See terms of use: http://www.unicode.org/copyright.html#Exhibit1
+
+Eventually, this data should be generated directly from the XML in the CLDR repository to provide
+accurate and full support for the full set of locales.

@@ -1,0 +1,8 @@
+param hello     = world
+param argle     = bargle
+param glip      = glop
+param obj.Class = class org.apache.struts2.views.jsp.ui.ComponentTag
+
+param array[0] = a
+param array[1] = b
+param array[2] = c

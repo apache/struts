@@ -1,0 +1,5 @@
+   <tlibversion>1.1</tlibversion>
+   <jspversion>1.2</jspversion>
+   <shortname>struts-tags</shortname>
+   <uri>/tags</uri>
+   <info>A tag library for processing Model-2 command results</info>

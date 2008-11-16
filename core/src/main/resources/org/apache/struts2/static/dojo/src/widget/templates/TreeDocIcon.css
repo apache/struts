@@ -1,0 +1,55 @@
+
+/* CSS for TreeDocIconExtension */
+
+
+/* long vertical line under docIcon, connecting w/ children */
+.TreeStateChildrenYes-ExpandOpen .TreeIconContent {
+    background-image : url('../templates/images/TreeV3/i_long.gif');
+    background-repeat : no-repeat;
+    background-position: 18px 9px;
+}
+
+/* close has higher priority */
+.TreeStateChildrenYes-ExpandClosed .TreeIconContent {
+    background-image : url();
+}
+
+/* higher priotity: same length and appear after background-definition */
+.TreeStateChildrenNo-ExpandLeaf .TreeIconContent {
+    background-image : url();
+}
+
+.TreeStateChildrenNo-ExpandClosed .TreeIconContent {
+    background-image : url();
+}
+
+.TreeStateChildrenNo-ExpandOpen .TreeIconContent {
+    background-image : url();
+}
+
+
+/* highest priority */
+.TreeIconDocument {
+    background-image: url('../templates/images/TreeV3/document.gif');
+}
+
+.TreeExpandOpen .TreeIconFolder {
+    background-image: url('../templates/images/TreeV3/open.gif');
+}
+
+.TreeExpandClosed .TreeIconFolder {
+    background-image: url('../templates/images/TreeV3/closed.gif');
+}
+
+/* generic class for docIcon */
+.TreeIcon {
+    width: 18px;
+    height: 18px;
+    float: left;
+    display: inline;
+    background-repeat : no-repeat;
+}
+
+div.TreeContent {
+    margin-left: 36px;
+}

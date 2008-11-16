@@ -1,0 +1,3 @@
+<tr>
+    <td colspan="2"><div align="right"><button type="reset" name="myname" value="bar">bar</button></div></td>
+</tr>

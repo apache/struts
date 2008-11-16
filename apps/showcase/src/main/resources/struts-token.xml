@@ -1,0 +1,63 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="token" extends="struts-default" namespace="/token">
+
+        <action name="tokenPrepare!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
+            <interceptor-ref name="defaultStack"/>
+            <result name="input">example1.jsp</result>
+        </action>
+
+        <action name="transfer" class="org.apache.struts2.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success">transferDone.jsp</result>
+        </action>
+
+
+
+        <action name="tokenPrepare2!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
+            <interceptor-ref name="defaultStack"/>
+            <result name="input">example2.jsp</result>
+        </action>
+
+        <action name="transfer2" class="org.apache.struts2.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success" type="redirect">transferDone.jsp</result>
+        </action>
+
+
+
+        <action name="tokenPrepare3!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
+            <interceptor-ref name="defaultStack"/>
+            <result name="input">example3.jsp</result>
+        </action>
+
+        <action name="transfer3" class="org.apache.struts2.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token-session"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success" type="redirect">transferDone.jsp</result>
+        </action>
+
+
+        <action name="tokenPrepare4!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="createSession"/> <!-- we must have a session when using freemarker and the @s.token tag -->
+            <result name="input" type="freemarker">example4.ftl</result>
+        </action>
+
+        <action name="transfer4" class="org.apache.struts2.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success">transferDone.jsp</result>
+        </action>
+
+    </package>
+
+</struts>

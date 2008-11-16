@@ -1,0 +1,56 @@
+<table _="weird end tag formatting is to prevent whitespace from becoming &nbsp;" 
+	class="sliderMain" 
+	dojoAttachPoint="focusNode" 
+	dojoAttachEvent="onmousedown:_setFocus; onkey:_handleKeyEvents; onkeyup:_buttonReleased; onmouseup:_buttonReleased; onmousewheel:_mouseWheeled;"
+	tabindex="0" cols=3 cellpadding=0 cellspacing=0 style="">
+	<tr valign=middle align=center>
+		<td class="sliderComponent" colspan=3 dojoAttachPoint=topBorderNode style=""
+			><img class="sliderOutsetButton sliderButtonY"
+				dojoAttachPoint=topButtonNode 
+				dojoAttachEvent="onmousedown:_topButtonPressed; onmousemove:_discardEvent; ondblclick:_topButtonDoubleClicked;"
+				src="${this.topButtonSrc}" 
+				style="${this.buttonStyleY}"
+		></td>
+	</tr>
+	<tr valign=middle align=center>
+		<td class="sliderComponent" dojoAttachPoint=leftBorderNode style=""
+			><img class="sliderOutsetButton sliderButtonX"
+				dojoAttachPoint=leftButtonNode
+				dojoAttachEvent="onmousedown:_leftButtonPressed; onmousemove:_discardEvent; ondblclick:_leftButtonDoubleClicked;"
+				src="${this.leftButtonSrc}" 
+				style="${this.buttonStyleX}"
+		></td>
+		<td dojoAttachPoint=constrainingContainerNode 
+			class="sliderComponent sliderBackground"
+			style="${this.backgroundStyle}"
+			><img src="${this.handleSrc}" 
+				class=sliderHandle
+				dojoAttachPoint=sliderHandleNode
+				style="${this.handleStyle}"
+			><img src="${this.progressBackgroundSrc}"
+				class="sliderBackgroundSizeOnly sliderProgressBackground"
+				dojoAttachPoint=progressBackgroundNode
+				style="${this.backgroundSize}"
+			><img src="${this.backgroundSrc}" 
+				class=sliderBackgroundSizeOnly
+				dojoAttachPoint=sliderBackgroundNode
+				style="${this.backgroundSize}"
+		></td>
+		<td class="sliderComponent" dojoAttachPoint=rightBorderNode style=""
+			><img class="sliderOutsetButton sliderButtonX"
+				dojoAttachPoint=rightButtonNode
+				dojoAttachEvent="onmousedown:_rightButtonPressed; onmousemove:_discardEvent; ondblclick:_rightButtonDoubleClicked;"
+				src="${this.rightButtonSrc}" 
+				style="${this.buttonStyleX}"
+		></td>
+	</tr>
+	<tr valign=middle align=center>
+		<td class="sliderComponent" colspan=3 dojoAttachPoint=bottomBorderNode style=""
+			><img class="sliderOutsetButton sliderButtonY"
+				dojoAttachPoint=bottomButtonNode 
+				dojoAttachEvent="onmousedown:_bottomButtonPressed; onmousemove:_discardEvent; ondblclick:_bottomButtonDoubleClicked;"
+				src="${this.bottomButtonSrc}" 
+				style="${this.buttonStyleY}"
+		></td>
+	</tr>
+</table>

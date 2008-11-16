@@ -1,0 +1,34 @@
+/* inline the table holding the <input> and buttons (method varies by browser) */
+.ie .dojoSpinner, .safari .dojoSpinner {
+	display: inline;
+}
+
+.moz .dojoSpinner {
+	display: -moz-inline-box;
+}
+
+.opera .dojoSpinner {
+	display: inline-table;
+}
+
+/* generic stuff for the table */
+.dojoSpinner td {
+	padding:0px;
+	margin:0px;
+	vertical-align: middle;
+}
+table.dojoSpinner {
+	border:0px;
+	border-spacing:0px;
+	line-height:0px;
+	padding:0px;
+	margin: 0px;
+	vertical-align: middle;
+}
+
+/* the buttons */
+.dojoSpinner img {
+	display: block;
+	border-width:0px 1px 1px 0px;
+	border-style:outset;
+}

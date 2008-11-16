@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Showcase - Non-UI Tag - Example Submited </title>
+</head>
+<body>
+
+<h1>Example Submitted</h1>
+<table>
+	#slabel ("label=Name" "name=name")
+	#slabel ("label=Birthday" "name=birthday")
+	#slabel ("label=Biography" "name=bio")
+	#slabel ("label=Favourite Color" "name=favouriteColor")
+	#slabel ("label=Friends" "name=friends")
+	#slabel ("label=Legal Age" "name=legalAge")
+	#slabel ("label=Region" "name=region")
+	#slabel ("label=State" "name=state")
+	#slabel ("label=Picture" "name=picture")
+	#slabel ("label=Favourite Language" "name=favouriteLanguage")
+	#slabel ("label=Favourite Vehical Type" "name=favouriteVehicalType")
+	#slabel ("label=Favourite Vehical Specific" "name=favouriteVehicalSpecific")
+	<tr>
+		<td>Favourite Cartoon Characters (Left):</td>
+		<td>
+            #set ( $startCount = 1)
+		    #foreach( $item in $leftSideCartoonCharacters)
+				$startCount.${item}&nbsp;
+				#set ( $startCount = $startCount + 1)
+            #end
+		</td>
+	</tr>
+	<tr>
+		<td>Favourite Cartoon Characters (Right):</td>
+		<td>
+            #set ( $startCount = 1)
+		    #foreach( $item in $rightSideCartoonCharacters)
+				$startCount.${item}&nbsp;
+				#set ( $startCount = $startCount + 1)
+            #end
+		</td>
+	</tr>
+</table>
+
+#surl ("id=url" "value=index.jsp")
+#sa("href=${url}")Back to index.jsp#end
+
+</body>
+</html>

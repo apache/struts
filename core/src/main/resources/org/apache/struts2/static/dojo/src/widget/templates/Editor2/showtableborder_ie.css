@@ -1,0 +1,4 @@
+table.dojoShowIETableBorders, table.dojoShowIETableBorders td, table.dojoShowIETableBorders th
+{
+	border: #d3d3d3 1px solid;
+}

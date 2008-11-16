@@ -244,6 +244,7 @@
                         </execution>
                     </executions>
                 </plugin>
+<!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>retrotranslator-maven-plugin</artifactId>
@@ -267,6 +268,7 @@
                     </execution>
                 </executions>
             </plugin>
+-->
             <!-- Commenting out the license plugin, until it works like we want.
             To use the "license:format" goal, remove the "core" module before running,
             otherwise it will ignore the file exclusions.

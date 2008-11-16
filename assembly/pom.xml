@@ -149,7 +149,9 @@
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
+<!--
                         <descriptor>src/main/assembly/lib-jdk14.xml</descriptor>
+-->
                         <descriptor>src/main/assembly/apps.xml</descriptor>
                         <descriptor>src/main/assembly/src.xml</descriptor>
                         <descriptor>src/main/assembly/docs.xml</descriptor>

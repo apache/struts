@@ -37,10 +37,10 @@
     </parent>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/assembly</connection>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_0_X/assembly</connection>
         <developerConnection>
-            scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/assembly</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/assembly</url>
+            scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_0_X/assembly</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_0_X/assembly</url>
     </scm>
 
     <build>

@@ -32,10 +32,10 @@
         </div>
         <div>
         <table><tr><td>
-        <a href="http://struts.apache.org/download.cgi#struts2013">
+        <a href="http://struts.apache.org/download.cgi#struts2014">
           <div style="background:url(images/download.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
             <span style="top:15px;position:absolute;color:white;padding-left:10px">
-              <small>version 2.0.13</small>
+              <small>version 2.0.14</small>
               <br />
               <span style="font-weight: bold; font-size:140%">Download Now</span>
             </span>
@@ -158,7 +158,7 @@
             <subsection>
             <p>
             To download the framework, visit
-            <a href="http://struts.apache.org/download.cgi#struts2013">
+            <a href="http://struts.apache.org/download.cgi#struts2014">
                Apache Struts Distributions.
             </a>
             For more about Apache Struts 2, visit

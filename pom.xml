@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-parent</artifactId>
-    <version>2.0.14-SNAPSHOT</version>
+    <version>2.0.14</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/struts2</url>
@@ -28,9 +28,9 @@
     -->
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_0_X/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_0_X/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_0_X/</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_0_14</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_0_14</url>
     </scm>
 
     <issueManagement>

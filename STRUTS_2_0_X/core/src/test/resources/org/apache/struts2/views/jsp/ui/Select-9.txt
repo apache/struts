@@ -1,9 +1,0 @@
-<tr>
-    <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
-    <td><select name="foo" id="foo">
-    <option value="headerKey">headerValue</option>
-    <option value=""></option>
-    <option value="hello" selected="selected"></option>
-    <option value="">bar</option>
-</select></td>
-</tr>

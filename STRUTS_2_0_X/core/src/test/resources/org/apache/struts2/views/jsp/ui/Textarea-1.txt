@@ -1,4 +1,0 @@
-<tr>
-    <td class="tdLabel"><label for="the_id" class="label">mylabel:</label></td>
-    <td><textarea name="myname" cols="20" rows="30" disabled="disabled" readonly="readonly" tabindex="5" id="the_id" title="mytitle" onclick="alert('onclick');" onkeyup="alert('hello');" onchange="alert('goodbye');">bar</textarea></td>
-</tr>

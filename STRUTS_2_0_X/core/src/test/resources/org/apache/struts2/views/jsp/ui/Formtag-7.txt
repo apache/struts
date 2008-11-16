@@ -1,4 +1,0 @@
-<form id="test" onsubmit="return true;" action="test.html" method="post">
-<table class="wwFormTable">
-</table>
-</form>

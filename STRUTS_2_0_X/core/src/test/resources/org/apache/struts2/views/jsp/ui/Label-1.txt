@@ -1,4 +1,0 @@
-<tr>
-    <td class="tdLabel"><label for="myname" class="label">mylabel:</label></td>
-    <td><label id="myname" title="mytitle">bar</label></td>
-</tr>

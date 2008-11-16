@@ -1,4 +1,0 @@
-<form id="testNamespaceAction" name="myForm"onsubmit="return true;" action="/testNamespace/testNamespaceAction.jspa" method="post">
-<table class="wwFormTable">
-</table>
-</form>

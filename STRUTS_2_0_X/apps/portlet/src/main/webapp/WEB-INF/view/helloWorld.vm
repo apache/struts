@@ -1,4 +1,0 @@
-Hello World from velocity!
-<p />
-#surl ("id=url" "action=index")
-<a href="${url}">Back to the front page</a>

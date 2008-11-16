@@ -1,8 +1,0 @@
-<tr>
-	<td class="tdLabel">
-		<label for="myFooValue" class="label">mylabel:</label>
-	</td>
-	<td>
-		<input type="text" name="myname" value="foo" id="myFooValue"/>
-	</td>
-</tr>

@@ -1,3 +1,0 @@
-<tr>
-    <td colspan="2"><div align="left"><button type="submit" id="myname" name="myname" value="bar">mylabel</button></div></td>
-</tr>

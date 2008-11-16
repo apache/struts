@@ -1,4 +1,0 @@
-<form id="myAction" name="myForm" onsubmit="submitMe(); return true;" action="myAction" method="post" enctype="myEncType" title="mytitle" accept-charset="UTF-8">
-<table class="wwFormTable">
-</table>
-</form>

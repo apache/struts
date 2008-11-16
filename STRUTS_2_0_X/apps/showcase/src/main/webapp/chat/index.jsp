@@ -1,3 +1,0 @@
-
-<% response.sendRedirect("main.action"); %>
-

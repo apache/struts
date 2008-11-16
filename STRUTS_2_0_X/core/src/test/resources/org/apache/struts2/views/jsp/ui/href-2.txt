@@ -1,4 +1,0 @@
-<a
- id="mylink"
- href="a&#34;">
-</a>

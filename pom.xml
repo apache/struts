@@ -169,7 +169,10 @@
                 </plugin>
                 <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-release-plugin</artifactId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <configuration>
+                        <preparationGoals>clean verify install</preparationGoals>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

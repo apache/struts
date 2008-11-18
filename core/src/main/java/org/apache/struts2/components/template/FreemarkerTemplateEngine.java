@@ -163,22 +163,20 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         // the BodyContent JSP writer doesn't like it when FM flushes automatically --
         // so let's just not do it (it will be flushed eventually anyway)
         Writer writer = templateContext.getWriter();
-        if (bodyContent != null && bodyContent.isAssignableFrom(writer.getClass())) {
-            final Writer wrapped = writer;
-            writer = new Writer() {
-                public void write(char cbuf[], int off, int len) throws IOException {
-                    wrapped.write(cbuf, off, len);
-                }
+        final Writer wrapped = writer;
+        writer = new Writer() {
+            public void write(char cbuf[], int off, int len) throws IOException {
+                wrapped.write(cbuf, off, len);
+            }
 
-                public void flush() throws IOException {
-                    // nothing!
-                }
+            public void flush() throws IOException {
+                // nothing!
+            }
 
-                public void close() throws IOException {
-                    wrapped.close();
-                }
-            };
-        }
+            public void close() throws IOException {
+                wrapped.close();
+            }
+        };
 
         try {
             stack.push(templateContext.getTag());

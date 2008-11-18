@@ -152,7 +152,7 @@
         <outputDirectory>docs/struts2-plugins/struts2-jsf-plugin</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/jsf/target/site</directory>
+        <directory>../plugins/junit/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-junit-plugin</outputDirectory>
       </fileSet>
       <fileSet>
@@ -188,7 +188,7 @@
         <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/tiles/target/site</directory>
+        <directory>../plugins/testng/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-testng-plugin</outputDirectory>
       </fileSet>
       <fileSet>

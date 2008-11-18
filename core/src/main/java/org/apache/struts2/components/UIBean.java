@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
@@ -511,7 +512,7 @@ public abstract class UIBean extends Component {
             super.end(writer, body, false);
             mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
         } catch (Exception e) {
-            LOG.error("error when rendering", e);
+            throw new StrutsException(e);
         }
         finally {
             popComponentStack();

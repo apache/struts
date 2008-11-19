@@ -28,7 +28,7 @@
 <#elseif !(parameters.cssClass?exists) && (hasFieldErrors && parameters.cssErrorClass?exists)>
  class="${parameters.cssErrorClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists && !(hasFieldErrors && parameters.cssErrorStyle?exists)>
+<#if parameters.cssStyle?exists && !(hasFieldErrors && (parameters.cssErrorStyle?exists || parameters.cssErrorClass?exists))>
  style="${parameters.cssStyle?html}"<#rt/>
 <#elseif hasFieldErrors && parameters.cssErrorStyle?exists>
  style="${parameters.cssErrorStyle?html}"<#rt/>

@@ -35,6 +35,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
+import org.apache.commons.collections.iterators.EntrySetMapIterator;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
@@ -196,7 +197,7 @@ public class PortletUrlHelper {
      * @param value
      * @return encoded url to non Struts action resources.
      */
-    public static String buildResourceUrl(String value, Map params) {
+    public static String buildResourceUrl(String value, Map<String, Object> params) {
         StringBuffer sb = new StringBuffer();
         // Relative URLs are not allowed in a portlet
         if (!value.startsWith("/")) {
@@ -205,14 +206,13 @@ public class PortletUrlHelper {
         sb.append(value);
         if(params != null && params.size() > 0) {
             sb.append("?");
-            Iterator it = params.keySet().iterator();
+            Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
             try {
             while(it.hasNext()) {
-                String key = (String)it.next();
-                String val = (String)params.get(key);
+            	Map.Entry<String, Object> entry = it.next();
 
-                sb.append(URLEncoder.encode(key, ENCODING)).append("=");
-                sb.append(URLEncoder.encode(val, ENCODING));
+                sb.append(URLEncoder.encode(entry.getKey(), ENCODING)).append("=");
+                sb.append(URLEncoder.encode(entry.getValue().toString(), ENCODING));
                 if(it.hasNext()) {
                     sb.append("&");
                 }
@@ -233,18 +233,18 @@ public class PortletUrlHelper {
      * @param params The parameters to the URL.
      * @return A Map with all parameters as String arrays.
      */
-    public static Map ensureParamsAreStringArrays(Map params) {
-        Map result = null;
+    public static Map ensureParamsAreStringArrays(Map<String, Object> params) {
+        Map<String, String[]> result = null;
         if (params != null) {
-            result = new LinkedHashMap(params.size());
-            Iterator it = params.keySet().iterator();
+            result = new LinkedHashMap<String, String[]>(params.size());
+            Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
             while (it.hasNext()) {
-                Object key = it.next();
-                Object val = params.get(key);
+            	Map.Entry<String, Object> entry = it.next();
+            	Object val = entry.getValue();
                 if (val instanceof String[]) {
-                    result.put(key, val);
+                    result.put(entry.getKey(), (String[])val);
                 } else {
-                    result.put(key, new String[] { val.toString() });
+                    result.put(entry.getKey(), new String[] { val.toString() });
                 }
             }
         }

@@ -237,6 +237,49 @@ public class PortletUrlTagTest extends StrutsTestCase {
 		tag.doEndTag();
 		jspWriter.verify();
 	}
+	
+	public void testResourceUrlWithNestedParamThatIsNotString() throws Exception {
+		renderRequest.setContextPath("/myPortlet");
+		jspWriter.setExpectedData("/myPortlet/image.gif?id=5");
+		
+		ParamTag paramTag = new ParamTag();
+		paramTag.setPageContext(pageContext);
+		paramTag.setParent(tag);
+		paramTag.setName("id");
+		paramTag.setValue("5");
+		
+		tag.setValue("image.gif");
+		tag.doStartTag();
+		paramTag.doStartTag();
+		paramTag.doEndTag();
+		tag.doEndTag();
+		jspWriter.verify();
+	}
+	
+	public void testResourceUrlWithNestedOgnlExpressionParamThatIsNotString() throws Exception {
+		renderRequest.setContextPath("/myPortlet");
+		jspWriter.setExpectedData("/myPortlet/image.gif?id=5");
+		
+		Object o = new Object() {
+			public Integer getId() {
+				return 5;
+			}
+		};
+		tag.getStack().push(o);
+		
+		ParamTag paramTag = new ParamTag();
+		paramTag.setPageContext(pageContext);
+		paramTag.setParent(tag);
+		paramTag.setName("id");
+		paramTag.setValue("id");
+		
+		tag.setValue("image.gif");
+		tag.doStartTag();
+		paramTag.doStartTag();
+		paramTag.doEndTag();
+		tag.doEndTag();
+		jspWriter.verify();
+	}
 
 	public void testUrlWithMethod() throws Exception {
 		tag.setAction("testAction");

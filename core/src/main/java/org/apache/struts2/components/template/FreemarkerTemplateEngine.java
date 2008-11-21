@@ -23,10 +23,9 @@ package org.apache.struts2.components.template;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -55,8 +54,8 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     static Class bodyContent = null;
     private FreemarkerManager freemarkerManager;
 
-    private final HashMap<String, freemarker.template.Template> templates = new HashMap<String, freemarker.template.Template>();
-    private final HashSet<String> missingTemplates = new HashSet<String>();
+    private final Map<String, freemarker.template.Template> templates = new ConcurrentHashMap<String, freemarker.template.Template>();
+    private final Set<String> missingTemplates = new CopyOnWriteArraySet<String>();
     private boolean freemarkerCaching = false;
 
     static {
@@ -191,28 +190,20 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     }
 
     protected void addToMissingTemplateCache(String templateName) {
-        synchronized(missingTemplates) {
-            missingTemplates.add(templateName);
-        }
+        missingTemplates.add(templateName);
     }
     
     protected boolean isTemplateMissing(String templateName) {
-        synchronized(missingTemplates) {
-            return missingTemplates.contains(templateName);
-        }
+        return missingTemplates.contains(templateName);
     }
 
     protected void addToCache(String templateName,
         freemarker.template.Template template) {
-        synchronized(templates) {
-            templates.put(templateName, template);
-        }
+        templates.put(templateName, template);
     }
     
     protected freemarker.template.Template findInCache(String templateName) {
-        synchronized(templates) {
-            return templates.get(templateName);
-        }
+        return templates.get(templateName);
     }
     
     /**

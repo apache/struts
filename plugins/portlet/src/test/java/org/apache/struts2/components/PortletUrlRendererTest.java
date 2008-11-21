@@ -45,29 +45,33 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class PortletUrlRendererTest extends StrutsTestCase {
 
 	PortletUrlRenderer renderer;
+	MockPortletURL renderUrl;
+	MockPortletURL actionUrl;
+	MockRenderRequest request;
+	MockRenderResponse response;
+	ActionContext ctx;
+	ValueStack stack;
 
 	public void setUp() throws Exception {
 		super.setUp();
 		renderer = new PortletUrlRenderer();
-	}
-
-	/**
-	 * Ensure that the namespace of the current executing action is used when no
-	 * namespace is specified. (WW-1875)
-	 */
-	public void testShouldIncludeCurrentNamespaceIfNoNamespaceSpecifiedForRenderUrl()
-			throws Exception {
-		final MockPortletURL portletUrl = new MockPortletURL(
+		renderUrl = new MockPortletURL(
 				new MockPortalContext(), "render");
-		MockRenderRequest request = new MockRenderRequest();
-		MockRenderResponse response = new MockRenderResponse() {
+		actionUrl = new MockPortletURL(
+				new MockPortalContext(), "action");
+		request = new MockRenderRequest();
+		response = new MockRenderResponse() {
+			@Override
+			public PortletURL createActionURL() {
+				return actionUrl;
+			}
 			@Override
 			public PortletURL createRenderURL() {
-				return portletUrl;
+				return renderUrl;
 			}
 		};
 
-		ActionContext ctx = ActionContext.getContext();
+		ctx = ActionContext.getContext();
 		ctx.put(PortletActionConstants.PHASE,
 				PortletActionConstants.RENDER_PHASE);
 		ctx.put(PortletActionConstants.REQUEST, request);
@@ -76,7 +80,16 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		Map<PortletMode, String> modeMap = new HashMap<PortletMode, String>();
 		modeMap.put(PortletMode.VIEW, "/view");
 		ctx.put(PortletActionConstants.MODE_NAMESPACE_MAP, modeMap);
-		ValueStack stack = ctx.getValueStack();
+		stack = ctx.getValueStack();
+	}
+
+	/**
+	 * Ensure that the namespace of the current executing action is used when no
+	 * namespace is specified. (WW-1875)
+	 */
+	public void testShouldIncludeCurrentNamespaceIfNoNamespaceSpecifiedForRenderUrl()
+			throws Exception {
+		
 		URL url = new URL(stack, new PortletServletRequest(request, null),
 				new PortletServletResponse(response));
 
@@ -92,7 +105,7 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		StringWriter renderOutput = new StringWriter();
 		renderer.renderUrl(renderOutput, url);
 
-		String action = portletUrl
+		String action = renderUrl
 				.getParameter(PortletActionConstants.ACTION_PARAM);
 		assertEquals("/view/current_namespace/testAction", action);
 	}
@@ -103,26 +116,7 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 	 */
 	public void testShouldIncludeCurrentNamespaceIfNoNamespaceSpecifiedForRenderFormUrl()
 			throws Exception {
-		final MockPortletURL portletUrl = new MockPortletURL(
-				new MockPortalContext(), "render");
-		MockRenderRequest request = new MockRenderRequest();
-		MockRenderResponse response = new MockRenderResponse() {
-			@Override
-			public PortletURL createActionURL() {
-				return portletUrl;
-			}
-		};
 
-		ActionContext ctx = ActionContext.getContext();
-		ctx.put(PortletActionConstants.PHASE,
-				PortletActionConstants.RENDER_PHASE);
-		ctx.put(PortletActionConstants.REQUEST, request);
-		ctx.put(PortletActionConstants.RESPONSE, response);
-
-		Map<PortletMode, String> modeMap = new HashMap<PortletMode, String>();
-		modeMap.put(PortletMode.VIEW, "/view");
-		ctx.put(PortletActionConstants.MODE_NAMESPACE_MAP, modeMap);
-		ValueStack stack = ctx.getValueStack();
 		Form form = new Form(stack, new PortletServletRequest(request, null),
 				new PortletServletResponse(response));
 
@@ -135,11 +129,65 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		ai.setAction(new Object());
 		ctx.setActionInvocation(ai);
 
-		StringWriter renderOutput = new StringWriter();
 		renderer.renderFormUrl(form);
 
-		String action = portletUrl
+		String action = actionUrl
 				.getParameter(PortletActionConstants.ACTION_PARAM);
 		assertEquals("/view/current_namespace/testAction", action);
 	}
+	
+	public void testShouldEvaluateActionAsOGNLExpression() throws Exception {
+		
+		TestObject obj = new TestObject();
+		obj.someProperty = "EvaluatedProperty";
+		stack.push(obj);
+		MockActionInvocation ai = new MockActionInvocation();
+		MockActionProxy ap = new MockActionProxy();
+		ap.setActionName("testAction");
+		ap.setNamespace("");
+		ai.setProxy(ap);
+		ai.setStack(stack);
+		ctx.setActionInvocation(ai);
+		
+		URL url = new URL(stack, new PortletServletRequest(request, null),
+				new PortletServletResponse(response));
+		url.setAction("%{someProperty}");
+		
+		StringWriter renderOutput = new StringWriter();
+		renderer.renderUrl(renderOutput, url);
+
+		String action = renderUrl
+				.getParameter(PortletActionConstants.ACTION_PARAM);
+		assertEquals("/view/EvaluatedProperty", action);
+		
+	}
+	
+	public void testShouldEvaluateAnchorAsOGNLExpression() throws Exception {
+		
+		TestObject obj = new TestObject();
+		obj.someProperty = "EvaluatedProperty";
+		stack.push(obj);
+		MockActionInvocation ai = new MockActionInvocation();
+		MockActionProxy ap = new MockActionProxy();
+		ap.setActionName("testAction");
+		ap.setNamespace("");
+		ai.setProxy(ap);
+		ai.setStack(stack);
+		ctx.setActionInvocation(ai);
+		
+		URL url = new URL(stack, new PortletServletRequest(request, null),
+				new PortletServletResponse(response));
+		url.setAnchor("%{someProperty}");
+		
+		StringWriter renderOutput = new StringWriter();
+		renderer.renderUrl(renderOutput, url);
+		assertTrue(renderOutput.toString().indexOf("#EvaluatedProperty") != -1);
+		
+	}
+	
+	private final static class TestObject {
+		public String someProperty;
+	}
+	
+	
 }

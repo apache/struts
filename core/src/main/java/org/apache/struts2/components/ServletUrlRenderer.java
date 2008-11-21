@@ -82,7 +82,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 	                result = UrlHelper.buildUrl(_value, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, urlComponent.forceAddSchemeHostAndPort, urlComponent.escapeAmp);
 	        }
 	        if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
-	            result += '#' + urlComponent.anchor;
+	        	result += '#' + urlComponent.findString(urlComponent.anchor);
 	        }
 
 	        String var = urlComponent.getVar();

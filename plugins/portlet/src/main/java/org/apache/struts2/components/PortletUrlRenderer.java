@@ -43,6 +43,10 @@ public class PortletUrlRenderer implements UrlRenderer {
 	 * {@inheritDoc}
 	 */
 	public void renderUrl(Writer writer, URL urlComponent) {
+		String action = null;
+		if(urlComponent.action != null) {
+			action = urlComponent.findString(urlComponent.action);
+		}
 		String scheme = urlComponent.req.getScheme();
 
 		if (urlComponent.scheme != null) {
@@ -52,7 +56,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         String result;
         urlComponent.namespace = urlComponent.determineNamespace(urlComponent.namespace, urlComponent.stack, urlComponent.req);
         if (onlyActionSpecified(urlComponent)) {
-                result = PortletUrlHelper.buildUrl(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
+                result = PortletUrlHelper.buildUrl(action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
         } else if(onlyValueSpecified(urlComponent)){
                 result = PortletUrlHelper.buildResourceUrl(urlComponent.value, urlComponent.parameters);
         }
@@ -60,7 +64,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         	result = createDefaultUrl(urlComponent);
         }
         if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
-            result += '#' + urlComponent.anchor;
+        	result += '#' + urlComponent.findString(urlComponent.anchor);
         }
 
         String var = urlComponent.getVar();

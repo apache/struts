@@ -107,10 +107,10 @@ public class FreemarkerManager {
     public static final String KEY_EXCEPTION = "exception";
 
     // coppied from freemarker servlet - since they are private
-    private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
-    private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
-    private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
-    private static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
+    protected static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
+    protected static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
+    protected static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
+    protected static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
 
     // coppied from freemarker servlet - so that there is no dependency on it
     public static final String KEY_APPLICATION = "Application";
@@ -119,11 +119,11 @@ public class FreemarkerManager {
     public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
     public static final String KEY_REQUEST_PARAMETER_MODEL = "Parameters";
     
-    private String encoding;
-    private boolean altMapWrapper;
-    private boolean cacheBeanWrapper;
-    private int mruMaxStrongSize;
-    private Map<String,TagLibrary> tagLibraries;
+    protected String encoding;
+    protected boolean altMapWrapper;
+    protected boolean cacheBeanWrapper;
+    protected int mruMaxStrongSize;
+    protected Map<String,TagLibrary> tagLibraries;
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {

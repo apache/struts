@@ -41,7 +41,7 @@ public class TestUtils {
     public static String normalize(Object obj, boolean appendSpace) {
         StringTokenizer st =
             new StringTokenizer(obj.toString().trim(), " \t\r\n");
-        StringBuffer buffer = new StringBuffer(128);
+        StringBuilder buffer = new StringBuilder(128);
 
         while(st.hasMoreTokens()) {
             buffer.append(st.nextToken());
@@ -81,7 +81,7 @@ public class TestUtils {
             throw new Exception("unable to verify a null URL");
         }
 
-        StringBuffer buffer = new StringBuffer(128);
+        StringBuilder buffer = new StringBuilder(128);
         InputStream in = url.openStream();
         byte[] buf = new byte[4096];
         int nbytes;

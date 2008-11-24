@@ -77,7 +77,7 @@ public class UrlHelper {
     }
 
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp) {
-        StringBuffer link = new StringBuffer();
+        StringBuilder link = new StringBuilder();
 
         boolean changedScheme = false;
 
@@ -191,11 +191,11 @@ public class UrlHelper {
         return result;
     }
 
-    public static void buildParametersString(Map params, StringBuffer link) {
+    public static void buildParametersString(Map params, StringBuilder link) {
         buildParametersString(params, link, AMP);
     }
 
-    public static void buildParametersString(Map params, StringBuffer link, String paramSeparator) {
+    public static void buildParametersString(Map params, StringBuilder link, String paramSeparator) {
         if ((params != null) && (params.size() > 0)) {
             if (link.toString().indexOf("?") == -1) {
                 link.append("?");

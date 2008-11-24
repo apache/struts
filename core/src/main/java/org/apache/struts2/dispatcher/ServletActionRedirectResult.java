@@ -194,7 +194,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
             }
         }
 
-        StringBuffer tmpLocation = new StringBuffer(actionMapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
+        StringBuilder tmpLocation = new StringBuilder(actionMapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
         UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
         setLocation(tmpLocation.toString());

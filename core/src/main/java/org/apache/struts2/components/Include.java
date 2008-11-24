@@ -124,7 +124,7 @@ public class Include extends Component {
 
     public boolean end(Writer writer, String body) {
         String page = findString(value, "value", "You must specify the URL to include. Example: /foo.jsp");
-        StringBuffer urlBuf = new StringBuffer();
+        StringBuilder urlBuf = new StringBuilder();
 
         // Add URL
         urlBuf.append(page);
@@ -212,7 +212,7 @@ public class Include extends Component {
                 }
             }
 
-            StringBuffer flatPathBuffer = new StringBuffer();
+            StringBuilder flatPathBuffer = new StringBuilder();
 
             for (int i = 0; i < stack.size(); i++) {
                 flatPathBuffer.append("/").append(stack.elementAt(i));

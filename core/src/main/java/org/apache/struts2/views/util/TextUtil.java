@@ -33,7 +33,7 @@ public class TextUtil {
 
     /**
      * We use arrays of char in the lookup table because it is faster
-     * appending this to a StringBuffer than appending a String
+     * appending this to a StringBuilder than appending a String
      */
     protected static final char[][] _stringChars = new char[MAX_LENGTH][];
 
@@ -97,16 +97,16 @@ public class TextUtil {
         }
 
         // We found a character to escape and broke out at position i
-        // Now copy all characters before that to StringBuffer sb
+        // Now copy all characters before that to StringBuilder sb
         // Since a char[] will be used for copying we might as well get
         // a complete copy of it so that we can use array indexing instead of charAt
-        StringBuffer sb = new StringBuffer(len + 40);
+        StringBuilder sb = new StringBuilder(len + 40);
         char[] chars = new char[len];
 
         // Copy all chars from the String s to the chars buffer
         s.getChars(0, len, chars, 0);
 
-        // Append the first i characters that we have checked to the resulting StringBuffer
+        // Append the first i characters that we have checked to the resulting StringBuilder
         sb.append(chars, 0, i);
 
         int last = i;

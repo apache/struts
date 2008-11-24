@@ -219,7 +219,7 @@ public class Date extends ContextBean {
      */
     public String formatTime(TextProvider tp, java.util.Date date) {
         java.util.Date now = new java.util.Date();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         List args = new ArrayList();
         long secs = Math.abs((now.getTime() - date.getTime()) / 1000);
         long mins = secs / 60;

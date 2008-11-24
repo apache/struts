@@ -399,7 +399,7 @@ public class VelocityManager {
     public void setChainedContexts(String contexts) {
         // we expect contexts to be a comma separated list of classnames
         StringTokenizer st = new StringTokenizer(contexts, ",");
-        List contextList = new ArrayList();
+        List<String> contextList = new ArrayList<String>();
 
         while (st.hasMoreTokens()) {
             String classname = st.nextToken();
@@ -539,7 +539,7 @@ public class VelocityManager {
         p.setProperty("strutsclass.resource.loader.cache", "true");
 
         // components
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (TagLibrary tagLibrary : tagLibraries) {
             List<Class> directives = tagLibrary.getVelocityDirectiveClasses();
@@ -560,7 +560,7 @@ public class VelocityManager {
         p.setProperty("userdirective", userdirective);
     }
 
-    private void addDirective(StringBuffer sb, Class clazz) {
+    private void addDirective(StringBuilder sb, Class clazz) {
         sb.append(clazz.getName()).append(",");
     }
 
@@ -579,7 +579,7 @@ public class VelocityManager {
             char[] string2 = string.toCharArray();
             char[] newString2 = newString.toCharArray();
             int oLength = oldString.length();
-            StringBuffer buf = new StringBuffer(string2.length);
+            StringBuilder buf = new StringBuilder(string2.length);
             buf.append(string2, 0, i).append(newString2);
             i += oLength;
             int j = i;

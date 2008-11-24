@@ -113,11 +113,11 @@ public class PlainTextResultTest extends StrutsTestCase {
             is = ClassLoaderUtil.getResourceAsStream(resource, PlainTextResultTest.class);
             int sizeRead = 0;
             byte[] buffer = new byte[1024];
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
             while((sizeRead = is.read(buffer)) != -1) {
-                stringBuffer.append(new String(buffer, 0, sizeRead));
+                stringBuilder.append(new String(buffer, 0, sizeRead));
             }
-            return stringBuffer.toString();
+            return stringBuilder.toString();
         }
         finally {
             if (is != null)

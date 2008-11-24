@@ -34,14 +34,11 @@ import javax.servlet.jsp.tagext.BodyContent;
  * StrutsBodyContent
  */
 public class StrutsBodyContent extends BodyContent {
-
-    private StringBuffer buffer = new StringBuffer();
-
+    private StringBuilder buffer = new StringBuilder();
 
     public StrutsBodyContent(JspWriter jspWriter) {
         super(jspWriter);
     }
-
 
     public Reader getReader() {
         return new StringReader(buffer.toString());
@@ -56,7 +53,7 @@ public class StrutsBodyContent extends BodyContent {
     }
 
     public void clear() throws IOException {
-        buffer = new StringBuffer();
+        buffer = new StringBuilder();
     }
 
     public void clearBuffer() throws IOException {

@@ -519,7 +519,7 @@ public class DefaultActionMapper implements ActionMapper {
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
      */
     public String getUriFromActionMapping(ActionMapping mapping) {
-        StringBuffer uri = new StringBuffer();
+        StringBuilder uri = new StringBuilder();
 
         if (mapping.getNamespace() != null) {
             uri.append(mapping.getNamespace());

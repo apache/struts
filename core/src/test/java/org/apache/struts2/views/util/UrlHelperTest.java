@@ -107,7 +107,7 @@ public class UrlHelperTest extends StrutsTestCase {
         parameters.put("param1", "value1");
         parameters.put("param2", "value2");
 
-        StringBuffer url = new StringBuffer("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
+        StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
         UrlHelper.buildParametersString(parameters, url);
 

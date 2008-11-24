@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 public class SimpleNodeList implements NodeList {
-
     private Logger log = LoggerFactory.getLogger(SimpleNodeList.class);
 
     private List<Node> nodes;
@@ -51,9 +50,9 @@ public class SimpleNodeList implements NodeList {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("SimpleNodeList: [");
+        StringBuilder sb = new StringBuilder("SimpleNodeList: [");
         for (int i = 0; i < getLength(); i++)
-            sb.append(item(i).getNodeName() + ',');
+            sb.append(item(i).getNodeName()).append(',');
         sb.append("]");
         return sb.toString();
     }

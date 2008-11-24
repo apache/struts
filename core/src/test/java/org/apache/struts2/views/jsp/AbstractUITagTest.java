@@ -268,7 +268,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
             fail("AbstractJspWriter.writer not initialized.  Unable to verify");
         }
 
-        StringBuffer buffer = new StringBuffer(128);
+        StringBuilder buffer = new StringBuilder(128);
         InputStream in = url.openStream();
         byte[] buf = new byte[4096];
         int nbytes;
@@ -303,7 +303,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
             fail("AbstractJspWriter.writer not initialized.  Unable to verify");
         }
 
-        StringBuffer buffer = new StringBuffer(128);
+        StringBuilder buffer = new StringBuilder(128);
         InputStream in = url.openStream();
         byte[] buf = new byte[4096];
         int nbytes;
@@ -345,7 +345,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      */
     public static String normalize(Object obj, boolean appendSpace) {
         StringTokenizer st = new StringTokenizer(obj.toString().trim(), " \t\r\n");
-        StringBuffer buffer = new StringBuffer(128);
+        StringBuilder buffer = new StringBuilder(128);
 
         while (st.hasMoreTokens()) {
             buffer.append(st.nextToken());

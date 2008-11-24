@@ -35,6 +35,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -172,19 +173,15 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = -4764627478894962478L;
 
     protected static final Logger LOG = LoggerFactory.getLogger(FileUploadInterceptor.class);
-    private static final String DEFAULT_DELIMITER = ",";
     private static final String DEFAULT_MESSAGE = "no.message.found";
 
     protected boolean useActionMessageBundle;
 
     protected Long maximumSize;
-    protected String allowedTypes;
-    protected Set allowedTypesSet = Collections.EMPTY_SET;
-
-
+    protected Set<String> allowedTypesSet = Collections.emptySet();
 
     public void setUseActionMessageBundle(String value) {
-        this.useActionMessageBundle = Boolean.valueOf(value).booleanValue();
+        this.useActionMessageBundle = Boolean.valueOf(value);
     }
 
     /**
@@ -193,10 +190,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      * @param allowedTypes A comma-delimited list of types
      */
     public void setAllowedTypes(String allowedTypes) {
-        this.allowedTypes = allowedTypes;
-
-        // set the allowedTypes as a collection for easier access later
-        allowedTypesSet = getDelimitedValues(allowedTypes);
+        allowedTypesSet = TextParseUtil.commaDelimitedStringToSet(allowedTypes);
     }
 
     /**
@@ -236,9 +230,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
 
         if (multiWrapper.hasErrors()) {
-            for (Iterator errorIter = multiWrapper.getErrors().iterator(); errorIter.hasNext();) {
-                String error = (String) errorIter.next();
-
+            for (String error : multiWrapper.getErrors()) {
                 if (validation != null) {
                     validation.addActionError(error);
                 }
@@ -247,9 +239,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             }
         }
 
-        Map parameters = ac.getParameters();
-
-        // Bind allowed Files
+        // bind allowed Files
         Enumeration fileParameterNames = multiWrapper.getFileParameterNames();
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             // get the value of this input tag
@@ -263,14 +253,15 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                 String[] fileName = multiWrapper.getFileNames(inputName);
 
                 if (isNonEmpty(fileName)) {
-                    // Get a File object for the uploaded File
+                    // get a File object for the uploaded File
                     File[] files = multiWrapper.getFiles(inputName);
                     if (files != null && files.length > 0) {
-                        ArrayList<File> acceptedFiles = new ArrayList<File>(files.length);
-                        ArrayList<String> acceptedContentTypes = new ArrayList<String>(files.length);
-                        ArrayList<String> acceptedFileNames = new ArrayList<String>(files.length);
+                        List<File> acceptedFiles = new ArrayList<File>(files.length);
+                        List<String> acceptedContentTypes = new ArrayList<String>(files.length);
+                        List<String> acceptedFileNames = new ArrayList<String>(files.length);
                         String contentTypeName = inputName + "ContentType";
                         String fileNameName = inputName + "FileName";
+
                         for (int index = 0; index < files.length; index++) {
                             if (acceptFile(action, files[index], contentType[index], inputName, validation, ac.getLocale())) {
                                 acceptedFiles.add(files[index]);
@@ -278,10 +269,13 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                                 acceptedFileNames.add(fileName[index]);
                             }
                         }
-                        if (acceptedFiles.size() != 0) {
-                            parameters.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
-                            parameters.put(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
-                            parameters.put(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
+
+                        if (!acceptedFiles.isEmpty()) {
+                            Map<String, Object> params = ac.getParameters();
+
+                            params.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
+                            params.put(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
+                            params.put(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
                         }
                     }
                 } else {
@@ -299,12 +293,13 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         fileParameterNames = multiWrapper.getFileParameterNames();
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             String inputValue = (String) fileParameterNames.nextElement();
-            File[] file = multiWrapper.getFiles(inputValue);
-            for (int index = 0; index < file.length; index++) {
-                File currentFile = file[index];
+            File[] files = multiWrapper.getFiles(inputValue);
+
+            for (File currentFile : files) {
                 if (LOG.isInfoEnabled()) {
                     LOG.info(getTextMessage(action, "struts.messages.removing.file", new Object[]{inputValue, currentFile}, ac.getLocale()));
                 }
+
                 if ((currentFile != null) && currentFile.isFile()) {
                     currentFile.delete();
                 }
@@ -353,7 +348,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             }
 
             LOG.error(errMsg);
-        } else if (maximumSize != null && maximumSize.longValue() < file.length()) {
+        } else if (maximumSize != null && maximumSize < file.length()) {
             String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new Object[]{inputName, file.getName(), "" + file.length()}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
@@ -376,25 +371,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
     /**
      * @param itemCollection - Collection of string items (all lowercase).
-     * @param key            - Key to search for.
-     * @return true if itemCollection contains the key, false otherwise.
+     * @param item           - Item to search for.
+     * @return true if itemCollection contains the item, false otherwise.
      */
-    private static boolean containsItem(Collection itemCollection, String key) {
-        return itemCollection.contains(key.toLowerCase());
-    }
-
-    private static Set getDelimitedValues(String delimitedString) {
-        Set<String> delimitedValues = new HashSet<String>();
-        if (delimitedString != null) {
-            StringTokenizer stringTokenizer = new StringTokenizer(delimitedString, DEFAULT_DELIMITER);
-            while (stringTokenizer.hasMoreTokens()) {
-                String nextToken = stringTokenizer.nextToken().toLowerCase().trim();
-                if (nextToken.length() > 0) {
-                    delimitedValues.add(nextToken);
-                }
-            }
-        }
-        return delimitedValues;
+    private static boolean containsItem(Collection<String> itemCollection, String item) {
+        return itemCollection.contains(item.toLowerCase());
     }
 
     private static boolean isNonEmpty(Object[] objArray) {
@@ -409,7 +390,6 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
     private String getTextMessage(String messageKey, Object[] args, Locale locale) {
         return getTextMessage(null, messageKey, args, locale);
-
     }
     
     private String getTextMessage(Object action, String messageKey, Object[] args, Locale locale) {

@@ -20,45 +20,45 @@
  * under the License.
  */
 -->
-<#if parameters.onclick?exists>
+<#if parameters.onclick??>
  onclick="${parameters.onclick?html}"<#rt/>
 </#if>
-<#if parameters.ondblclick?exists>
+<#if parameters.ondblclick??>
  ondblclick="${parameters.ondblclick?html}"<#rt/>
 </#if>
-<#if parameters.onmousedown?exists>
+<#if parameters.onmousedown??>
  onmousedown="${parameters.onmousedown?html}"<#rt/>
 </#if>
-<#if parameters.onmouseup?exists>
+<#if parameters.onmouseup??>
  onmouseup="${parameters.onmouseup?html}"<#rt/>
 </#if>
-<#if parameters.onmouseover?exists>
+<#if parameters.onmouseover??>
  onmouseover="${parameters.onmouseover?html}"<#rt/>
 </#if>
-<#if parameters.onmousemove?exists>
+<#if parameters.onmousemove??>
  onmousemove="${parameters.onmousemove?html}"<#rt/>
 </#if>
-<#if parameters.onmouseout?exists>
+<#if parameters.onmouseout??>
  onmouseout="${parameters.onmouseout?html}"<#rt/>
 </#if>
-<#if parameters.onfocus?exists>
+<#if parameters.onfocus??>
  onfocus="${parameters.onfocus?html}"<#rt/>
 </#if>
-<#if parameters.onblur?exists>
+<#if parameters.onblur??>
  onblur="${parameters.onblur?html}"<#rt/>
 </#if>
-<#if parameters.onkeypress?exists>
+<#if parameters.onkeypress??>
  onkeypress="${parameters.onkeypress?html}"<#rt/>
 </#if>
-<#if parameters.onkeydown?exists>
+<#if parameters.onkeydown??>
  onkeydown="${parameters.onkeydown?html}"<#rt/>
 </#if>
-<#if parameters.onkeyup?exists>
+<#if parameters.onkeyup??>
  onkeyup="${parameters.onkeyup?html}"<#rt/>
 </#if>
-<#if parameters.onselect?exists>
+<#if parameters.onselect??>
  onselect="${parameters.onselect?html}"<#rt/>
 </#if>
-<#if parameters.onchange?exists>
+<#if parameters.onchange??>
  onchange="${parameters.onchange?html}"<#rt/>
 </#if>

@@ -20,11 +20,11 @@
  * under the License.
  */
 -->
-<#if parameters.optGroupInternalListUiBeanList?exists>
+<#if parameters.optGroupInternalListUiBeanList??>
 <#assign optGroupInternalListUiBeans=parameters.optGroupInternalListUiBeanList />
 <#list optGroupInternalListUiBeans as optGroupInternalListUiBean>
 <optgroup 
-	<#if optGroupInternalListUiBean.parameters.label?exists>
+	<#if optGroupInternalListUiBean.parameters.label??>
 	label="${optGroupInternalListUiBean.parameters.label}"
 	</#if>
 	<#if optGroupInternalListUiBean.parameters.disabled?default(false)>

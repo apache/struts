@@ -38,13 +38,13 @@
 
 <#assign msgs = [] />
 <#list chain as ex>
-    <#if ex.message?exists>
+    <#if ex.message??>
         <#assign msgs = [ex.message] + msgs/>
     </#if>    
 </#list>
 <#assign rootex = exception/>
 <#list chain as ex>
-    <#if (ex.location?exists && (ex.location != unknown))>
+    <#if (ex.location?? && (ex.location != unknown))>
         <#assign rootloc = ex.location/>
         <#assign rootex = ex/>
     <#else>
@@ -80,7 +80,7 @@
             </#if>
         </td>
     </tr>
-    <#if rootloc?exists>
+    <#if rootloc??>
     <tr>
         <td><strong>File</strong>:</td>
         <td>${rootloc.URI}</td>
@@ -100,7 +100,7 @@
 </table>
 </div>
 
-<#if rootloc?exists>
+<#if rootloc??>
     <#assign snippet = rootloc.getSnippet(2) />
     <#if (snippet?size > 0)>
         <div id="snippet">

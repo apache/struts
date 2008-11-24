@@ -55,7 +55,7 @@
         <#list stackObject.value.keySet() as propertyName>
             <#if renderRow==true></tr><tr><#else> <#assign renderRow=false> </#if>
             <td bgcolor="<#if (index % 2) == 0>#BBBBBB<#else>#CCCCCC</#if>">${propertyName}</td>
-            <td bgcolor="<#if (index % 2) == 0>#BBBBBB<#else>#CCCCCC</#if>"><#if stackObject.value.get(propertyName)?exists>${stackObject.value.get(propertyName).toString()?html}<#else>null</#if></td>
+            <td bgcolor="<#if (index % 2) == 0>#BBBBBB<#else>#CCCCCC</#if>"><#if stackObject.value.get(propertyName)??>${stackObject.value.get(propertyName).toString()?html}<#else>null</#if></td>
     </tr>
             <#assign index= index + 1>
         </#list>
@@ -73,7 +73,7 @@
     <#assign index=1>
     <#list stack.context.keySet() as contextKey>
     <tr bgcolor="<#if (index % 2) == 0>#BBBBBB<#else>#CCCCCC</#if>">
-        <td>${contextKey}</td><td><#if stack.context.get(contextKey)?exists>${stack.context.get(contextKey).toString()?html}<#else>null</#if></td>
+        <td>${contextKey}</td><td><#if stack.context.get(contextKey)??>${stack.context.get(contextKey).toString()?html}<#else>null</#if></td>
     </tr>
         <#assign index= index + 1>
     </#list>

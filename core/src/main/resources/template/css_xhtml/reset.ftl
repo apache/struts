@@ -25,10 +25,10 @@
 <#else>
 <span <#rt/>
 </#if>
-<#if parameters.align?exists>
+<#if parameters.align??>
     align="${parameters.align?html}"<#t/>
 </#if>
-<#if parameters.id?exists>
+<#if parameters.id??>
     id="wwctrl_${parameters.id}"<#rt/>
 </#if>
 ><#t/>

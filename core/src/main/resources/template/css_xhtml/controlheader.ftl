@@ -26,5 +26,5 @@
 <#else>
 <span <#rt/>
 </#if>
-<#if parameters.id?exists>id="wwctrl_${parameters.id}"<#rt/></#if> class="wwctrl">
+<#if parameters.id??>id="wwctrl_${parameters.id}"<#rt/></#if> class="wwctrl">
     

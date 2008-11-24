@@ -20,16 +20,16 @@
  * under the License.
  */
 -->
-<#assign hasFieldErrors = parameters.name?exists && fieldErrors?exists && fieldErrors[parameters.name]?exists/>
-<#if parameters.cssClass?exists && !(hasFieldErrors && parameters.cssErrorClass?exists)>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<#if parameters.cssClass?? && !(hasFieldErrors && parameters.cssErrorClass??)>
  class="${parameters.cssClass?html}"<#rt/>
-<#elseif parameters.cssClass?exists && (hasFieldErrors && parameters.cssErrorClass?exists)>
+<#elseif parameters.cssClass?? && (hasFieldErrors && parameters.cssErrorClass??)>
  class="${parameters.cssClass?html} ${parameters.cssErrorClass?html}"<#rt/>
-<#elseif !(parameters.cssClass?exists) && (hasFieldErrors && parameters.cssErrorClass?exists)>
+<#elseif !(parameters.cssClass??) && (hasFieldErrors && parameters.cssErrorClass??)>
  class="${parameters.cssErrorClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists && !(hasFieldErrors && (parameters.cssErrorStyle?exists || parameters.cssErrorClass?exists))>
+<#if parameters.cssStyle?? && !(hasFieldErrors && (parameters.cssErrorStyle?? || parameters.cssErrorClass??))>
  style="${parameters.cssStyle?html}"<#rt/>
-<#elseif hasFieldErrors && parameters.cssErrorStyle?exists>
+<#elseif hasFieldErrors && parameters.cssErrorStyle??>
  style="${parameters.cssErrorStyle?html}"<#rt/>
 </#if>

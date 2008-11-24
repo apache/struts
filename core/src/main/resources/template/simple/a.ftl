@@ -27,16 +27,16 @@
 <#if parameters.href?if_exists != "">
  href="${parameters.href}"<#rt/>
 </#if>
-<#if parameters.tabindex?exists>
+<#if parameters.tabindex??>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.cssClass?exists>
+<#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists>
+<#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.title?exists>
+<#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />

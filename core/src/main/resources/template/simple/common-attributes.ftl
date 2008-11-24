@@ -20,6 +20,6 @@
  * under the License.
  */
 -->
-<#if parameters.accesskey?exists>
+<#if parameters.accesskey??>
  accesskey="${parameters.accesskey?html}" 
 </#if>

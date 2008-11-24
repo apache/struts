@@ -20,16 +20,16 @@
  * under the License.
  */
 -->
-<#if (actionMessages?exists && actionMessages?size > 0)>
+<#if (actionMessages?? && actionMessages?size > 0)>
 	<ul>
 		<#list actionMessages as message>
 			<li><span<#rt/>
-<#if parameters.cssClass?exists>
+<#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
  class="actionMessage"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists>
+<#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 >${message!}</span></li>

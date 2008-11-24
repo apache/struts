@@ -21,7 +21,7 @@
  */
 -->
 <#include "/${parameters.templateDir}/simple/form-common.ftl" />
-<#if parameters.onreset?exists>
+<#if parameters.onreset??>
  onreset="${parameters.onreset?html}"<#rt/>
 </#if>
 >

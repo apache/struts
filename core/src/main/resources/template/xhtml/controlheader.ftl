@@ -22,7 +22,7 @@
 -->
 <#include "/${parameters.templateDir}/xhtml/controlheader-core.ftl" />
     <td
-<#if parameters.align?exists>
+<#if parameters.align??>
     align="${parameters.align?html}"<#t/>
 </#if>
 ><#t/>

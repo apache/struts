@@ -22,10 +22,10 @@
 -->
 <#include "/${parameters.templateDir}/simple/select.ftl" />
 <#assign startCount = 0/>
-<#if parameters.headerKey?exists && parameters.headerValue?exists>
+<#if parameters.headerKey?? && parameters.headerValue??>
     <#assign startCount = startCount + 1/>
 </#if>
-<#if parameters.emptyOption?exists>
+<#if parameters.emptyOption??>
     <#assign startCount = startCount + 1/>
 </#if>
 
@@ -35,25 +35,25 @@
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.doubleTabindex?exists>
+<#if parameters.doubleTabindex??>
  tabindex="${parameters.doubleTabindex?html}"<#rt/>
 </#if>
-<#if parameters.doubleId?exists>
+<#if parameters.doubleId??>
  id="${parameters.doubleId?html}"<#rt/>
 </#if>
-<#if parameters.doubleCss?exists>
+<#if parameters.doubleCss??>
  class="${parameters.doubleCss?html}"<#rt/>
 </#if>
-<#if parameters.doubleStyle?exists>
+<#if parameters.doubleStyle??>
  style="${parameters.doubleStyle?html}"<#rt/>
 </#if>
-<#if parameters.title?exists>
+<#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#if parameters.multiple?default(false)>
  multiple="multiple"<#rt/>
 </#if>
-<#if parameters.get("doubleSize")?exists>
+<#if parameters.get("doubleSize")??>
  size="${parameters.get("doubleSize")?html}"<#rt/>
 </#if>
 <#if parameters.doubleMultiple?default(false)>
@@ -68,25 +68,25 @@
     ${parameters.id}Group[i] = new Array();
 
 <@s.iterator value="parameters.list">
-    <#if parameters.listKey?exists>
+    <#if parameters.listKey??>
         <#assign itemKey = stack.findValue(parameters.listKey)/>
     <#else>
         <#assign itemKey = stack.findValue('top')/>
     </#if>
-    <#if parameters.listValue?exists>
+    <#if parameters.listValue??>
         <#assign itemValue = stack.findString(parameters.listValue)/>
     <#else>
         <#assign itemValue = stack.findString('top')/>
     </#if>
     <#assign doubleItemCount = 0/>
     <@s.iterator value="${parameters.doubleList}">
-        <#if parameters.doubleListKey?exists>
+        <#if parameters.doubleListKey??>
             <#assign doubleItemKey = stack.findValue(parameters.doubleListKey)/>
         <#else>
             <#assign doubleItemKey = stack.findValue('top')/>
         </#if>
         <#assign doubleItemKeyStr = doubleItemKey.toString() />
-        <#if parameters.doubleListValue?exists>
+        <#if parameters.doubleListValue??>
             <#assign doubleItemValue = stack.findString(parameters.doubleListValue)/>
         <#else>
             <#assign doubleItemValue = stack.findString('top')/>
@@ -102,7 +102,7 @@
 <#assign itemCount = startCount/>
 <#assign redirectTo = 0/>
 <@s.iterator value="parameters.list">
-    <#if parameters.listKey?exists>
+    <#if parameters.listKey??>
         <#assign itemKey = stack.findValue(parameters.listKey)/>
     <#else>
         <#assign itemKey = stack.findValue('top')/>
@@ -121,7 +121,7 @@
 
         for (i = 0; i < ${parameters.id}Group[x].length; i++) {
             ${parameters.id}Temp.options[i] = new Option(${parameters.id}Group[x][i].text, ${parameters.id}Group[x][i].value);
-            <#if parameters.doubleNameValue?exists>
+            <#if parameters.doubleNameValue??>
             	if (${parameters.id}Temp.options[i].value == '${parameters.doubleNameValue}') {
             		${parameters.id}Temp.options[i].selected = true;
             		selected = true;

@@ -20,16 +20,16 @@
  * under the License.
  */
 -->
-<#if (actionErrors?exists && actionErrors?size > 0)>
+<#if (actionErrors?? && actionErrors?size > 0)>
 	<ul>
 	<#list actionErrors as error>
 		<li><span<#rt/>
-<#if parameters.cssClass?exists>
+<#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
  class="errorMessage"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists>
+<#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 >${error!}</span></li>

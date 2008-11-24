@@ -20,7 +20,7 @@
  * under the License.
  */
 -->
-<#if fieldErrors?exists><#t/>
+<#if fieldErrors??><#t/>
 <#assign eKeys = fieldErrors.keySet()><#t/>
 <#assign eKeysSize = eKeys.size()><#t/>
 <#assign doneStartUlTag=false><#t/>
@@ -38,12 +38,12 @@
 			</#if><#t/>
 			<#list eValue as eEachValue><#t/>
 				<li><span<#rt/>
-<#if parameters.cssClass?exists>
+<#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
  class="errorMessage"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists>
+<#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 >${eEachValue}</span></li>
@@ -62,12 +62,12 @@
 				<#assign eValue = fieldErrors[eKey]><#t/>
 				<#list eValue as eEachValue><#t/>
 					<li><span<#rt/>
-<#if parameters.cssClass?exists>
+<#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
  class="errorMessage"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists>
+<#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 >${eEachValue}</span></li>

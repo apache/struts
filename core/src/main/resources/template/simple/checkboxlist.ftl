@@ -21,15 +21,15 @@
  */
 -->
 <#assign itemCount = 0/>
-<#if parameters.list?exists>
+<#if parameters.list??>
     <@s.iterator value="parameters.list">
         <#assign itemCount = itemCount + 1/>
-        <#if parameters.listKey?exists>
+        <#if parameters.listKey??>
             <#assign itemKey = stack.findValue(parameters.listKey)/>
         <#else>
             <#assign itemKey = stack.findValue('top')/>
         </#if>
-        <#if parameters.listValue?exists>
+        <#if parameters.listValue??>
             <#assign itemValue = stack.findString(parameters.listValue)?default("")/>
         <#else>
             <#assign itemValue = stack.findString('top')/>
@@ -42,7 +42,7 @@
         <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
         </#if>
-        <#if parameters.title?exists>
+        <#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
         </#if>
         <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />

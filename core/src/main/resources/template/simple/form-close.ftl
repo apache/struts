@@ -35,7 +35,7 @@
 		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId}");
-				<#if parameters.optiontransferselectIds.get(selectObjectId)?exists>
+				<#if parameters.optiontransferselectIds.get(selectObjectId)??>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectIds.get(selectObjectId)/>
 					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
 				<#else>
@@ -51,7 +51,7 @@
 		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId}");
-				<#if parameters.inputtransferselectIds.get(selectObjectId)?exists>
+				<#if parameters.inputtransferselectIds.get(selectObjectId)??>
 					<#assign selectTagHeaderKey = parameters.inputtransferselectIds.get(selectObjectId)/>
 					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
 				<#else>
@@ -67,7 +67,7 @@
 		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjId}");
-				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)?exists>
+				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)??>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectDoubleIds.get(selectObjId)/>
 					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
 				<#else>
@@ -89,7 +89,7 @@
 		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
 				var updownselectObj = document.getElementById("${tmpId}");
-				<#if parameters.updownselectIds.get(tmpId)?exists>
+				<#if parameters.updownselectIds.get(tmpId)??>
 					<#assign tmpHeaderKey = parameters.updownselectIds.get(tmpId) />
 					selectAllOptionsExceptSome(updownselectObj, "key", "${tmpHeaderKey}");
 				<#else>

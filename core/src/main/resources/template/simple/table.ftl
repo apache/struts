@@ -23,7 +23,7 @@
 <#assign webTable = tag/>
 <#assign tableModel = webTable.model/>
 
-<#if tableModel?exists>
+<#if tableModel??>
 <p align="center">
 <table bgcolor="white" border="0" cellpadding="1" cellspacing="0" >
     <tr>

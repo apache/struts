@@ -24,14 +24,14 @@
 	Only show message if errors are available.
 	This will be done if ActionSupport is used.
 -->
-<#assign hasFieldErrors = parameters.name?exists && fieldErrors?exists && fieldErrors[parameters.name]?exists/> 
-<div <#rt/><#if parameters.id?exists>id="wwgrp_${parameters.id}"<#rt/></#if> class="wwgrp">
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<div <#rt/><#if parameters.id??>id="wwgrp_${parameters.id}"<#rt/></#if> class="wwgrp">
 	
 <#if hasFieldErrors>
-<div <#rt/><#if parameters.id?exists>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
+<div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
 <#list fieldErrors[parameters.name] as error>
     <div<#rt/>
-    <#if parameters.id?exists>
+    <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
     </#if>
     class="errorMessage">
@@ -41,15 +41,15 @@
 </div><#t/>
 </#if>
 
-<#if parameters.label?exists>
+<#if parameters.label??>
 <#if parameters.labelposition?default("top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
 </#if>
-<#if parameters.id?exists>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
+<#if parameters.id??>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
     <label <#t/>
-<#if parameters.id?exists>
+<#if parameters.id??>
         for="${parameters.id?html}" <#t/>
 </#if>
 <#if hasFieldErrors>

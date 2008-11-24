@@ -24,7 +24,7 @@
 	Only show message if errors are available.
 	This will be done if ActionSupport is used.
 -->
-<#assign hasFieldErrors = parameters.name?exists && fieldErrors?exists && fieldErrors[parameters.name]?exists/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
 <#if hasFieldErrors>
 <#list fieldErrors[parameters.name] as error>
 <tr errorFor="${parameters.id}">
@@ -48,9 +48,9 @@
 <#else>
     <td class="tdLabel"><#rt/>
 </#if>
-<#if parameters.label?exists>
+<#if parameters.label??>
     <label <#t/>
-<#if parameters.id?exists>
+<#if parameters.id??>
         for="${parameters.id?html}" <#t/>
 </#if>
 <#if hasFieldErrors>

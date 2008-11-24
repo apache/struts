@@ -20,11 +20,11 @@
  * under the License.
  */
 -->
-<#assign hasFieldErrors = fieldErrors?exists && fieldErrors[parameters.name]?exists/>
+<#assign hasFieldErrors = fieldErrors?? && fieldErrors[parameters.name]??/>
 <#if hasFieldErrors>
 <#list fieldErrors[parameters.name] as error>
 <tr<#rt/>
-<#if parameters.id?exists>
+<#if parameters.id??>
  errorFor="${parameters.id}"<#rt/>
 </#if>
 >
@@ -37,8 +37,8 @@
 <#if parameters.labelposition?default("") == 'top'>
 <tr>
     <td colspan="2">
-<#if parameters.label?exists> <label<#t/>
-<#if parameters.id?exists>
+<#if parameters.label??> <label<#t/>
+<#if parameters.id??>
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
@@ -55,7 +55,7 @@ ${parameters.label?html}<#t/>
  <span class="required">*</span><#t/>
 </#if>
 :<#t/>
-<#if parameters.tooltip?exists>
+<#if parameters.tooltip??>
     <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
 </#if>
 </label><#t/>
@@ -69,8 +69,8 @@ ${parameters.label?html}<#t/>
 <tr>
 	<td valign="top" align="right">
 <#if parameters.labelposition?default("") == 'left'>
-<#if parameters.label?exists> <label<#t/>
-<#if parameters.id?exists>
+<#if parameters.label??> <label<#t/>
+<#if parameters.id??>
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
@@ -87,7 +87,7 @@ ${parameters.label?html}<#t/>
  <span class="required">*</span><#t/>
 </#if>
 :<#t/>
-<#if parameters.tooltip?exists>
+<#if parameters.tooltip??>
     <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
 </#if>
 </label><#t/>
@@ -97,7 +97,7 @@ ${parameters.label?html}<#t/>
     <#if parameters.required?default(false)>
         <span class="required">*</span><#t/>
     </#if>
-    <#if parameters.tooltip?exists>
+    <#if parameters.tooltip??>
         <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
     </#if>
 </#if>
@@ -108,8 +108,8 @@ ${parameters.label?html}<#t/>
                 	<#include "/${parameters.templateDir}/simple/checkbox.ftl" />
 </#if>                    
 <#if parameters.labelposition?default("") != 'top' && parameters.labelposition?default("") != 'left'>
-<#if parameters.label?exists> <label<#t/>
-<#if parameters.id?exists>
+<#if parameters.label??> <label<#t/>
+<#if parameters.id??>
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>

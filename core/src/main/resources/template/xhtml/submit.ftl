@@ -22,7 +22,7 @@
 -->
 <tr>
     <td colspan="2"><div <#rt/>
-<#if parameters.align?exists>
+<#if parameters.align??>
     align="${parameters.align?html}"<#t/>
 </#if>
 ><#t/>

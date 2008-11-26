@@ -506,7 +506,7 @@ public class Autocompleter extends ComboBox {
         this.valueNotifyTopics = valueNotifyTopics;
     }
     
-    @StrutsTagAttribute(description="Limit how many results are shown as autocompletion options, set to -1 for unlimited results", defaultValue="30")
+    @StrutsTagAttribute(description="Limit how many results are shown as autocompletion options, set to -1 for unlimited results", defaultValue="30", type = "Integer")
     public void setResultsLimit(String resultsLimit) {
         this.resultsLimit = resultsLimit;
     }

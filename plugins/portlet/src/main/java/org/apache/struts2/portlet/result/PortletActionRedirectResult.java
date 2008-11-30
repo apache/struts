@@ -44,11 +44,11 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 
 /**
- * 
+ *
  * Portlet modification of the {@link ServletActionRedirectResult}.
- * 
+ *
  * <!-- START SNIPPET: description -->
- * 
+ *
  * This result uses the {@link ActionMapper} provided by the
  * {@link ActionMapperFactory} to instruct the render phase to invoke the
  * specified action and (optional) namespace. This is better than the
@@ -58,31 +58,31 @@ import com.opensymphony.xwork2.inject.Inject;
  * and your application will still work. It is strongly recommended that if you
  * are redirecting to another action, you use this result rather than the
  * standard redirect result.
- * 
+ *
  * See examples below for an example of how request parameters could be passed
  * in.
- * 
+ *
  * <!-- END SNIPPET: description -->
- * 
+ *
  * <b>This result type takes the following parameters:</b>
- * 
+ *
  * <!-- START SNIPPET: params -->
- * 
+ *
  * <ul>
- * 
+ *
  * <li><b>actionName (default)</b> - the name of the action that will be
  * redirect to</li>
- * 
+ *
  * <li><b>namespace</b> - used to determine which namespace the action is in
  * that we're redirecting to . If namespace is null, this defaults to the
  * current namespace</li>
- * 
+ *
  * </ul>
- * 
+ *
  * <!-- END SNIPPET: params -->
- * 
+ *
  * <b>Example:</b>
- * 
+ *
  * <pre>
  * &lt;!-- START SNIPPET: example --&gt;
  *  &lt;package name=&quot;public&quot; extends=&quot;struts-default&quot;&gt;
@@ -94,19 +94,19 @@ import com.opensymphony.xwork2.inject.Inject;
  *          &lt;/result&gt;
  *      &lt;/action&gt;
  *  &lt;/package&gt;
- * 
+ *
  *  &lt;package name=&quot;secure&quot; extends=&quot;struts-default&quot; namespace=&quot;/secure&quot;&gt;
  *      &lt;-- Redirect to an action in the same namespace --&gt;
  *      &lt;action name=&quot;dashboard&quot; class=&quot;...&quot;&gt;
  *          &lt;result&gt;dashboard.jsp&lt;/result&gt;
  *          &lt;result name=&quot;error&quot; type=&quot;redirectAction&quot;&gt;error&lt;/result&gt;
  *      &lt;/action&gt;
- * 
+ *
  *      &lt;action name=&quot;error&quot; class=&quot;...&quot;&gt;
  *          &lt;result&gt;error.jsp&lt;/result&gt;
  *      &lt;/action&gt;
  *  &lt;/package&gt;
- * 
+ *
  *  &lt;package name=&quot;passingRequestParameters&quot; extends=&quot;struts-default&quot; namespace=&quot;/passingRequestParameters&quot;&gt;
  *     &lt;-- Pass parameters (reportType, width and height) --&gt;
  *     &lt;!--
@@ -123,11 +123,11 @@ import com.opensymphony.xwork2.inject.Inject;
  *        &lt;/result&gt;
  *     &lt;/action&gt;
  *  &lt;/package&gt;
- * 
- * 
+ *
+ *
  *  &lt;!-- END SNIPPET: example --&gt;
  * </pre>
- * 
+ *
  * @see ActionMapper
  */
 public class PortletActionRedirectResult extends PortletResult implements ReflectionExceptionHandler {
@@ -210,8 +210,8 @@ public class PortletActionRedirectResult extends PortletResult implements Reflec
 			}
 		}
 
-		StringBuffer tmpLocation = new StringBuffer(actionMapper.getUriFromActionMapping(new ActionMapping(actionName,
-				namespace, method, null)));
+		StringBuilder tmpLocation = new StringBuilder(actionMapper.getUriFromActionMapping(new ActionMapping(actionName,
+                namespace, method, null)));
 		UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
 		setLocation(tmpLocation.toString());
@@ -221,7 +221,7 @@ public class PortletActionRedirectResult extends PortletResult implements Reflec
 
 	/**
 	 * Sets the action name
-	 * 
+	 *
 	 * @param actionName
 	 *            The name
 	 */
@@ -231,7 +231,7 @@ public class PortletActionRedirectResult extends PortletResult implements Reflec
 
 	/**
 	 * Sets the namespace
-	 * 
+	 *
 	 * @param namespace
 	 *            The namespace
 	 */
@@ -241,7 +241,7 @@ public class PortletActionRedirectResult extends PortletResult implements Reflec
 
 	/**
 	 * Sets the method
-	 * 
+	 *
 	 * @param method
 	 *            The method
 	 */
@@ -251,7 +251,7 @@ public class PortletActionRedirectResult extends PortletResult implements Reflec
 
 	/**
 	 * Adds a request parameter to be added to the redirect url
-	 * 
+	 *
 	 * @param key
 	 *            The parameter name
 	 * @param value

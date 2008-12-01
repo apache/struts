@@ -21,16 +21,15 @@
 
 package org.apache.struts2.components;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.components.Param.UnnamedParametric;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.components.Param.UnnamedParametric;
-
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -65,6 +64,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;s:form .... &gt;
  *       ....
  *    &lt;/s:form&gt;
+ *
+ *    OR
+ *
+ *    &lt;s:fielderror fieldName="field1" /&gt;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -107,6 +110,11 @@ public class FieldError extends UIBean implements UnnamedParametric {
 
     public List<String> getFieldErrorFieldNames() {
         return errorFieldNames;
+    }
+
+    @StrutsTagAttribute(description="Field name for single field attribute usage", type="String")
+    public void setFieldName(String fieldName) {
+        addParameter(fieldName);
     }
 }
 

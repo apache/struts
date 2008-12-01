@@ -40,6 +40,7 @@ public class PropertyTag extends ComponentTagSupport {
     private String defaultValue;
     private String value;
     private boolean escape = true;
+    private boolean escapeJavaScript = false;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Property(stack);
@@ -52,6 +53,7 @@ public class PropertyTag extends ComponentTagSupport {
         tag.setDefault(defaultValue);
         tag.setValue(value);
         tag.setEscape(escape);
+        tag.setEscapeJavaScript(escapeJavaScript);
     }
 
     public void setDefault(String defaultValue) {
@@ -62,6 +64,10 @@ public class PropertyTag extends ComponentTagSupport {
         this.escape = escape;
     }
 
+    public void setEscapeJavaScript(boolean escapeJavaScript) {
+        this.escapeJavaScript = escapeJavaScript;
+    }
+    
     public void setValue(String value) {
         this.value = value;
     }

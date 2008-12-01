@@ -99,6 +99,7 @@ public class Property extends Component {
     private String defaultValue;
     private String value;
     private boolean escape = true;
+    private boolean escapeJavaScript = false;
 
     @StrutsTagAttribute(description="The default value to be used if <u>value</u> attribute is null")
     public void setDefault(String defaultValue) {
@@ -108,6 +109,11 @@ public class Property extends Component {
     @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
     public void setEscape(boolean escape) {
         this.escape = escape;
+    }
+
+    @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
+    public void setEscapeJavaScript(boolean escapeJavaScript) {
+        this.escapeJavaScript = escapeJavaScript;
     }
 
     @StrutsTagAttribute(description="Value to be displayed", type="Object", defaultValue="&lt;top of stack&gt;")
@@ -150,10 +156,13 @@ public class Property extends Component {
     }
 
     private String prepare(String value) {
+    	String result = value;
         if (escape) {
-            return TextUtils.htmlEncode(value);
-        } else {
-            return value;
+        	result = TextUtils.htmlEncode(result);
         }
+        if (escapeJavaScript) {
+        	result = TextUtils.escapeJavaScript(result);
+        }
+        return result;
     }
 }

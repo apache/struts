@@ -50,7 +50,7 @@ public class MakeIterator {
 
         if (object instanceof Map) {
             return true;
-        } else if (object instanceof Collection) {
+        } else if (object instanceof Iterable) {
             return true;
         } else if (object.getClass().isArray()) {
             return true;
@@ -78,8 +78,8 @@ public class MakeIterator {
             return null;
         }
 
-        if (value instanceof Collection) {
-            iterator = ((Collection) value).iterator();
+        if (value instanceof Iterable) {
+            iterator = ((Iterable) value).iterator();
         } else if (value.getClass().isArray()) {
             //need ability to support primitives; therefore, cannot
             //use Object[] casting.

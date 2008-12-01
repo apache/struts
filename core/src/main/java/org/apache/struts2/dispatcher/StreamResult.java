@@ -61,6 +61,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <li><b>bufferSize</b> - the size of the buffer to copy from input to output
  * (default = <code>1024</code>).</li>
  *
+ * <li><b>allowCaching</b> if set to 'false' it will set the headers 'Pragma' and 'Cache-Control'
+ * to 'no-cahce', and prevent client from caching the content. (default = <code>true</code>)
  * </ul>
  *
  * <p>These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
@@ -94,6 +96,7 @@ public class StreamResult extends StrutsResultSupport {
     protected String inputName = "inputStream";
     protected InputStream inputStream;
     protected int bufferSize = 1024;
+    protected boolean allowCaching = true;
 
     public StreamResult() {
         super();
@@ -102,6 +105,24 @@ public class StreamResult extends StrutsResultSupport {
     public StreamResult(InputStream in) {
         this.inputStream = in;
     }
+
+     /**
+     * @return Returns the whether or not the client should be requested to allow caching of the data stream.
+     */
+    public boolean getAllowCaching() {
+        return allowCaching;
+    }
+
+    /**
+     * Set allowCaching to <tt>false</tt> to indicate that the client should be requested not to cache the data stream.
+     * This is set to <tt>false</tt> by default
+     *
+     * @param allowCaching Enable caching.
+     */
+    public void setAllowCaching(boolean allowCaching) {
+        this.allowCaching = allowCaching;
+    }
+
 
     /**
      * @return Returns the bufferSize.
@@ -220,6 +241,12 @@ public class StreamResult extends StrutsResultSupport {
             // Set the content-disposition
             if (contentDisposition != null) {
                 oResponse.addHeader("Content-Disposition", conditionalParse(contentDisposition, invocation));
+            }
+
+            // Set the cache control headers if neccessary
+            if (!allowCaching) {
+                oResponse.addHeader("Pragma", "no-cache");
+                oResponse.addHeader("Cache-Control", "no-cache");
             }
 
             // Get the outputstream

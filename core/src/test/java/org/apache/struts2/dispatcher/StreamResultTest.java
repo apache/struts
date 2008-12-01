@@ -93,6 +93,26 @@ public class StreamResultTest extends StrutsTestCase {
         assertEquals("inline", response.getHeader("Content-disposition"));
     }
 
+    public void testAllowCacheDefault() throws Exception {
+        result.setInputName("streamForImage");
+
+        result.doExecute("helloworld", mai);
+
+        //check that that headers are not set by default        
+        assertNull(response.getHeader("Pragma"));
+        assertNull(response.getHeader("Cache-Control"));
+    }
+
+     public void testAllowCacheFalse() throws Exception {
+        result.setInputName("streamForImage");
+        result.setAllowCaching(false);
+        result.doExecute("helloworld", mai);
+
+        //check that that headers are not set by default
+        assertEquals("no-cache", response.getHeader("Pragma"));
+        assertEquals("no-cache", response.getHeader("Cache-Control"));
+    }
+
     public void testStreamResultNoDefault() throws Exception {
         // it's not easy to test using easymock as we use getOutputStream on HttpServletResponse.
         result.setParse(false);

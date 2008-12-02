@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -105,7 +106,7 @@ public class Dispatcher {
      * Store list of DispatcherListeners.
      */
     private static List<DispatcherListener> dispatcherListeners =
-        new ArrayList<DispatcherListener>();
+        new CopyOnWriteArrayList<DispatcherListener>();
 
     /**
      * Store ConfigurationManager instance, set on init.
@@ -169,7 +170,7 @@ public class Dispatcher {
      *
      * @param listener The listener to add
      */
-    public static synchronized void addDispatcherListener(DispatcherListener listener) {
+    public static void addDispatcherListener(DispatcherListener listener) {
         dispatcherListeners.add(listener);
     }
 
@@ -178,7 +179,7 @@ public class Dispatcher {
      *
      * @param listener The listener
      */
-    public static synchronized void removeDispatcherListener(DispatcherListener listener) {
+    public static void removeDispatcherListener(DispatcherListener listener) {
         dispatcherListeners.remove(listener);
     }
 
@@ -264,11 +265,9 @@ public class Dispatcher {
         instance.set(null);
 
         // clean up DispatcherListeners
-        synchronized(Dispatcher.class) {
-            if (dispatcherListeners.size() > 0) {
-                for (DispatcherListener l : dispatcherListeners) {
-                    l.dispatcherDestroyed(this);
-                }
+        if (!dispatcherListeners.isEmpty()) {
+            for (DispatcherListener l : dispatcherListeners) {
+                l.dispatcherDestroyed(this);
             }
         }
 
@@ -382,15 +381,6 @@ public class Dispatcher {
             paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
                     StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
         }
-
-        synchronized(Dispatcher.class) {
-            if (dispatcherListeners.size() > 0) {
-                for (DispatcherListener l : dispatcherListeners) {
-                    l.dispatcherInitialized(this);
-                }
-            }
-        }
-
     }
 
     /**
@@ -415,6 +405,11 @@ public class Dispatcher {
         init_CheckConfigurationReloading(container);
         init_CheckWebLogicWorkaround(container);
 
+        if (!dispatcherListeners.isEmpty()) {
+            for (DispatcherListener l : dispatcherListeners) {
+                l.dispatcherInitialized(this);
+            }
+        }
     }
 
     /**

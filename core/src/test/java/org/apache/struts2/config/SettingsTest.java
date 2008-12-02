@@ -45,7 +45,7 @@ public class SettingsTest extends StrutsTestCase {
         assertEquals("othertestvalue", Settings.get("othertestkey"));
 
         int count = getKeyCount();
-        assertEquals(11, count);
+        assertEquals(12, count);
     }
 
     public void testDefaultResourceBundlesLoaded() {

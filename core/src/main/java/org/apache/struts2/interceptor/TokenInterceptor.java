@@ -24,12 +24,15 @@ package org.apache.struts2.interceptor;
 import java.util.Map;
 
 import org.apache.struts2.util.TokenHelper;
+import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -129,7 +132,9 @@ public class TokenInterceptor extends MethodFilterInterceptor {
             log.debug("Intercepting invocation to check for valid transaction token.");
         }
 
-        Map session = ActionContext.getContext().getSession();
+        //see WW-2902: we need to use the real HttpSession here, as opposed to the map
+        //that wraps the session, because a new wrap is created on every request
+        HttpSession session = ServletActionContext.getRequest().getSession(true);
 
         synchronized (session) {
             if (!TokenHelper.validToken()) {

@@ -33,11 +33,7 @@
 			<#assign haveMatchedErrorField=true><#t/>
 			<#assign eValue = fieldErrors[fieldErrorFieldName]><#t/>
 			<#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
-				<ul>
-				<#assign doneStartUlTag=true><#t/>
-			</#if><#t/>
-			<#list eValue as eEachValue><#t/>
-				<li><span<#rt/>
+				<ul<#rt/>
 <#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
@@ -46,7 +42,11 @@
 <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
->${eEachValue}</span></li>
+>
+				<#assign doneStartUlTag=true><#t/>
+			</#if><#t/>
+			<#list eValue as eEachValue><#t/>
+				<li><span>${eEachValue}</span></li>
 			</#list><#t/>			
 		</#if><#t/>
 		</#list><#t/>
@@ -57,11 +57,7 @@
 	</#if><#t/>
 <#else><#t/>	
 	<#if (eKeysSize > 0)><#t/>
-		<ul>
-			<#list eKeys as eKey><#t/>
-				<#assign eValue = fieldErrors[eKey]><#t/>
-				<#list eValue as eEachValue><#t/>
-					<li><span<#rt/>
+		<ul<#rt/>
 <#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
@@ -70,7 +66,11 @@
 <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
->${eEachValue}</span></li>
+>
+			<#list eKeys as eKey><#t/>
+				<#assign eValue = fieldErrors[eKey]><#t/>
+				<#list eValue as eEachValue><#t/>
+					<li><span>${eEachValue}</span></li>
 				</#list><#t/>
 			</#list><#t/>
 		</ul>

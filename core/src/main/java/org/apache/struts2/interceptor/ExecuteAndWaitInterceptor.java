@@ -32,6 +32,9 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.util.TokenHelper;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -212,6 +215,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         String name = getBackgroundProcessName(proxy);
         ActionContext context = actionInvocation.getInvocationContext();
         Map session = context.getSession();
+        HttpSession httpSession = ServletActionContext.getRequest().getSession(true);
 
         Boolean secondTime  = true;
         if (executeAfterValidationPass) {
@@ -225,7 +229,9 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
             }
         }
 
-        synchronized (session) {
+        //sync on the real HttpSession as the session from the context is a wrap that is created
+        //on every request
+        synchronized (httpSession) {
             BackgroundProcess bp = (BackgroundProcess) session.get(KEY + name);
 
             if ((!executeAfterValidationPass || secondTime) && bp == null) {

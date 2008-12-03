@@ -55,10 +55,10 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
     private FileUploadInterceptor interceptor;
     private File tempDir;
 
-    public void testAcceptFileWithEmptyAllowedTypes() throws Exception {
+    public void testAcceptFileWithEmptyAllowedTypesAndExtensions() throws Exception {
         // when allowed type is empty
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(new File(""), "text/plain", "inputName", validation, Locale.getDefault());
+        boolean ok = interceptor.acceptFile(null, new File(""), "filename", "text/plain", "inputName", validation, Locale.getDefault());
 
         assertTrue(ok);
         assertTrue(validation.getFieldErrors().isEmpty());
@@ -70,7 +70,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
 
         // when file is of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(new File(""), "text/plain", "inputName", validation, Locale.getDefault());
+        boolean ok = interceptor.acceptFile(null, new File(""), "filename.txt", "text/plain", "inputName", validation, Locale.getDefault());
 
         assertTrue(ok);
         assertTrue(validation.getFieldErrors().isEmpty());
@@ -78,11 +78,40 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
 
         // when file is not of allowed types
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(new File(""), "text/html", "inputName", validation, Locale.getDefault());
+        boolean notOk = interceptor.acceptFile(null, new File(""), "filename.html", "text/html", "inputName", validation, Locale.getDefault());
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());
         assertTrue(validation.hasErrors());
+    }
+
+    public void testAcceptFileWithoutEmptyExtensions() throws Exception {
+        interceptor.setAllowedExtensions(".txt");
+
+        // when file is of allowed extensions
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+        boolean ok = interceptor.acceptFile(null, new File(""), "filename.txt", "text/plain", "inputName", validation, Locale.getDefault());
+
+        assertTrue(ok);
+        assertTrue(validation.getFieldErrors().isEmpty());
+        assertFalse(validation.hasErrors());
+
+        // when file is not of allowed extensions
+        validation = new ValidationAwareSupport();
+        boolean notOk = interceptor.acceptFile(null, new File(""), "filename.html", "text/html", "inputName", validation, Locale.getDefault());
+
+        assertFalse(notOk);
+        assertFalse(validation.getFieldErrors().isEmpty());
+        assertTrue(validation.hasErrors());
+
+        //test with multiple extensions
+        interceptor.setAllowedExtensions(".txt,.lol");
+        validation = new ValidationAwareSupport();
+        ok = interceptor.acceptFile(null, new File(""), "filename.lol", "text/plain", "inputName", validation, Locale.getDefault());
+
+        assertTrue(ok);
+        assertTrue(validation.getFieldErrors().isEmpty());
+        assertFalse(validation.hasErrors());
     }
 
     public void testAcceptFileWithNoFile() throws Exception {
@@ -91,7 +120,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
 
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(null, "text/html", "inputName", validation, Locale.getDefault());
+        boolean notOk = interceptor.acceptFile(null, null, "filename.html", "text/html", "inputName", validation, Locale.getDefault());
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());
@@ -113,7 +142,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
         URL url = ClassLoaderUtil.getResource("log4j.properties", FileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
         assertTrue("log4j.properties should be in src/test folder", file.exists());
-        boolean notOk = interceptor.acceptFile(file, "text/html", "inputName", validation, Locale.getDefault());
+        boolean notOk = interceptor.acceptFile(null, file, "filename", "text/html", "inputName", validation, Locale.getDefault());
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());

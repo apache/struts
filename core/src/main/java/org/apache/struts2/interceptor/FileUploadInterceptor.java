@@ -74,6 +74,9 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <li>struts.messages.error.content.type.not.allowed - occurs when the uploaded file does not match the expected
  * content types specified</li>
  * <p/>
+ * <li>struts.messages.error.file.extension.not.allowed - occurs when the uploaded file does not match the expected
+ * file extensions specified</li>
+ * <p/>
  * </ul>
  * <p/>
  * <!-- END SNIPPET: description -->
@@ -91,7 +94,10 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <li>allowedTypes (optional) - a comma separated list of content types (ie: text/html) that the interceptor will allow
  * a file reference to be set on the action. If none is specified allow all types to be uploaded.</li>
  * <p/>
+ * <li>allowedExtensions (optional) - a comma separated list of file extensions (ie: .html) that the interceptor will allow
+ * a file reference to be set on the action. If none is specified allow all extensions to be uploaded.</li>
  * </ul>
+ * <p/>
  * <p/>
  * <!-- END SNIPPET: parameters -->
  * <p/>
@@ -179,9 +185,19 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
     protected Long maximumSize;
     protected Set<String> allowedTypesSet = Collections.emptySet();
+    protected Set<String> allowedExtensionsSet = Collections.emptySet();
 
     public void setUseActionMessageBundle(String value) {
         this.useActionMessageBundle = Boolean.valueOf(value);
+    }
+
+    /**
+     * Sets the allowed extensions
+     *
+     * @param allowedExtensions A comma-delimited list of extensions
+     */
+    public void setAllowedExtensions(String allowedExtensions) {
+        allowedExtensionsSet = TextParseUtil.commaDelimitedStringToSet(allowedExtensions);
     }
 
     /**
@@ -263,7 +279,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         String fileNameName = inputName + "FileName";
 
                         for (int index = 0; index < files.length; index++) {
-                            if (acceptFile(action, files[index], contentType[index], inputName, validation, ac.getLocale())) {
+                            if (acceptFile(action, files[index], fileName[index], contentType[index], inputName, validation, ac.getLocale())) {
                                 acceptedFiles.add(files[index]);
                                 acceptedContentTypes.add(contentType[index]);
                                 acceptedFileNames.add(fileName[index]);
@@ -312,22 +328,6 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     /**
      * Override for added functionality. Checks if the proposed file is acceptable based on contentType and size.
      *
-     * @param file        - proposed upload file.
-     * @param contentType - contentType of the file.
-     * @param inputName   - inputName of the file.
-     * @param validation  - Non-null ValidationAware if the action implements ValidationAware, allowing for better
-     *                    logging.
-     * @param locale
-     * @return true if the proposed file is acceptable by contentType and size.
-     */
-    protected boolean acceptFile(File file, String contentType, String inputName, ValidationAware validation, Locale locale) {
-        return acceptFile(null, file, contentType, inputName, validation, locale);
-
-    }
-    
-    /**
-     * Override for added functionality. Checks if the proposed file is acceptable based on contentType and size.
-     *
      * @param action      - uploading action for message retrieval.
      * @param file        - proposed upload file.
      * @param contentType - contentType of the file.
@@ -337,7 +337,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      * @param locale
      * @return true if the proposed file is acceptable by contentType and size.
      */
-    protected boolean acceptFile(Object action, File file, String contentType, String inputName, ValidationAware validation, Locale locale) {
+    protected boolean acceptFile(Object action, File file, String filename, String contentType, String inputName, ValidationAware validation, Locale locale) {
         boolean fileIsAcceptable = false;
 
         // If it's null the upload failed
@@ -349,14 +349,21 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
             LOG.error(errMsg);
         } else if (maximumSize != null && maximumSize < file.length()) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new Object[]{inputName, file.getName(), "" + file.length()}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new Object[]{inputName, filename, file.getName(), "" + file.length()}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             LOG.error(errMsg);
         } else if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
-            String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new Object[]{inputName, file.getName(), contentType}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new Object[]{inputName, filename, file.getName(), contentType}, locale);
+            if (validation != null) {
+                validation.addFieldError(inputName, errMsg);
+            }
+
+            LOG.error(errMsg);
+        } else if ((! allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
+            String errMsg = getTextMessage(action, "struts.messages.error.file.extension.not.allowed", new Object[]{inputName, filename, file.getName(), contentType}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
@@ -367,6 +374,26 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         }
 
         return fileIsAcceptable;
+    }
+
+    /**
+     * @param extensionCollection - Collection of extensions (all lowercase).
+     * @param filename            - filename to check.
+     * @return true if the filename has an allowed extension, false otherwise.
+     */
+    private static boolean hasAllowedExtension(Collection<String> extensionCollection, String filename) {
+        if (filename == null) {
+            return false;
+        }
+
+        String lowercaseFilename = filename.toLowerCase();
+        for (String extension : extensionCollection) {
+            if (lowercaseFilename.endsWith(extension)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -129,6 +129,14 @@ public class PortletActionContext implements PortletActionConstants {
     public static PortletRequest getRequest() {
         return (PortletRequest) getContext().get(REQUEST);
     }
+    
+    /**
+     * Convenience setter for the portlet request.
+     * @param request
+     */
+    public static void setRequest(PortletRequest request) {
+    	getContext().put(REQUEST, request);
+    }
 
     /**
      * Get the current PortletResponse
@@ -137,6 +145,14 @@ public class PortletActionContext implements PortletActionConstants {
      */
     public static PortletResponse getResponse() {
         return (PortletResponse) getContext().get(RESPONSE);
+    }
+    
+    /**
+     * Convenience setter for the portlet response.
+     * @param response
+     */
+    public static void setResponse(PortletResponse response) {
+    	getContext().put(RESPONSE, response);
     }
 
     /**
@@ -203,6 +219,14 @@ public class PortletActionContext implements PortletActionConstants {
      */
     public static PortletContext getPortletContext() {
     	return (PortletContext)getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
+    }
+    
+    /**
+     * Convenience setter for the portlet context.
+     * @param context
+     */
+    public static void setPortletContext(PortletContext context) {
+    	getContext().put(StrutsStatics.STRUTS_PORTLET_CONTEXT, context);
     }
     
     /**

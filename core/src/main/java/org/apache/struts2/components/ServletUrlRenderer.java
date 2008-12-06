@@ -131,10 +131,10 @@ public class ServletUrlRenderer implements UrlRenderer {
         String actionMethod = nameMapping.getMethod();
 
 		final ActionConfig actionConfig = formComponent.configuration.getRuntimeConfiguration().getActionConfig(
-				namespace, action);
+				namespace, actionName);
 		if (actionConfig != null) {
 
-			ActionMapping mapping = new ActionMapping(action, namespace, actionMethod, formComponent.parameters);
+			ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
 			String result = UrlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
 					formComponent.request, formComponent.response, null);
 			formComponent.addParameter("action", result);
@@ -153,14 +153,14 @@ public class ServletUrlRenderer implements UrlRenderer {
 
 			// if the name isn't specified, use the action name
 			if (formComponent.name == null) {
-				formComponent.addParameter("name", action);
+				formComponent.addParameter("name", actionName);
 			}
 
 			// if the id isn't specified, use the action name
-			if (formComponent.getId() == null  && action!=null ) {
-				formComponent.addParameter("id", formComponent.escape(action));
+			if (formComponent.getId() == null  && actionName!=null ) {
+				formComponent.addParameter("id", formComponent.escape(actionName));
 			}
-		} else if (action != null) {
+		} else if (actionName != null) {
 			// Since we can't find an action alias in the configuration, we just
 			// assume the action attribute supplied is the path to be used as
 			// the URI this form is submitting to.
@@ -168,10 +168,10 @@ public class ServletUrlRenderer implements UrlRenderer {
             // Warn user that the specified namespace/action combo
             // was not found in the configuration.
             if (namespace != null) {
-              LOG.warn("No configuration found for the specified action: '" + action + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
+              LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
             }
 
-			String result = UrlHelper.buildUrl(action, formComponent.request, formComponent.response, null);
+			String result = UrlHelper.buildUrl(actionName, formComponent.request, formComponent.response, null);
 			formComponent.addParameter("action", result);
 
 			// namespace: cut out anything between the start and the last /

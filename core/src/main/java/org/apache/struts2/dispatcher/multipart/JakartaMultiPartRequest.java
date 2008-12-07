@@ -47,18 +47,19 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
- *
  */
 public class JakartaMultiPartRequest implements MultiPartRequest {
     
     static final Logger LOG = LoggerFactory.getLogger(MultiPartRequest.class);
     
     // maps parameter name -> List of FileItem objects
-    private Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
+    private final Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
+
     // maps parameter name -> List of param values
-    private Map<String,List<String>> params = new HashMap<String,List<String>>();
+    private final Map<String,List<String>> params = new HashMap<String,List<String>>();
+
     // any errors while processing this request
-    private List<String> errors = new ArrayList<String>();
+    private final List<String> errors = new ArrayList<String>();
     
     private long maxSize;
     
@@ -151,38 +152,36 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getContentType(java.lang.String)
      */
     public String[] getContentType(String fieldName) {
-        List items = (List) files.get(fieldName);
+        List<FileItem> items = files.get(fieldName);
 
         if (items == null) {
             return null;
         }
 
         List<String> contentTypes = new ArrayList<String>(items.size());
-        for (int i = 0; i < items.size(); i++) {
-            FileItem fileItem = (FileItem) items.get(i);
+        for (FileItem fileItem : items) {
             contentTypes.add(fileItem.getContentType());
         }
 
-        return (String[]) contentTypes.toArray(new String[contentTypes.size()]);
+        return contentTypes.toArray(new String[contentTypes.size()]);
     }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
      */
     public File[] getFile(String fieldName) {
-        List items = (List) files.get(fieldName);
+        List<FileItem> items = files.get(fieldName);
 
         if (items == null) {
             return null;
         }
 
         List<File> fileList = new ArrayList<File>(items.size());
-        for (int i = 0; i < items.size(); i++) {
-            DiskFileItem fileItem = (DiskFileItem) items.get(i);
-            fileList.add(fileItem.getStoreLocation());
+        for (FileItem fileItem : items) {
+            fileList.add(((DiskFileItem) fileItem).getStoreLocation());
         }
 
-        return (File[]) fileList.toArray(new File[fileList.size()]);
+        return fileList.toArray(new File[fileList.size()]);
     }
 
     /* (non-Javadoc)
@@ -196,40 +195,38 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         }
 
         List<String> fileNames = new ArrayList<String>(items.size());
-        for (int i = 0; i < items.size(); i++) {
-            DiskFileItem fileItem = (DiskFileItem) items.get(i);
+        for (FileItem fileItem : items) {
             fileNames.add(getCanonicalName(fileItem.getName()));
         }
 
-        return (String[]) fileNames.toArray(new String[fileNames.size()]);
+        return fileNames.toArray(new String[fileNames.size()]);
     }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFilesystemName(java.lang.String)
      */
     public String[] getFilesystemName(String fieldName) {
-        List items = (List) files.get(fieldName);
+        List<FileItem> items = files.get(fieldName);
 
         if (items == null) {
             return null;
         }
 
         List<String> fileNames = new ArrayList<String>(items.size());
-        for (int i = 0; i < items.size(); i++) {
-            DiskFileItem fileItem = (DiskFileItem) items.get(i);
-            fileNames.add(fileItem.getStoreLocation().getName());
+        for (FileItem fileItem : items) {
+            fileNames.add(((DiskFileItem) fileItem).getStoreLocation().getName());
         }
 
-        return (String[]) fileNames.toArray(new String[fileNames.size()]);
+        return fileNames.toArray(new String[fileNames.size()]);
     }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameter(java.lang.String)
      */
     public String getParameter(String name) {
-        List v = (List) params.get(name);
+        List<String> v = params.get(name);
         if (v != null && v.size() > 0) {
-            return (String) v.get(0);
+            return v.get(0);
         }
 
         return null;
@@ -248,7 +245,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     public String[] getParameterValues(String name) {
         List<String> v = params.get(name);
         if (v != null && v.size() > 0) {
-            return (String[]) v.toArray(new String[v.size()]);
+            return v.toArray(new String[v.size()]);
         }
 
         return null;

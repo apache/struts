@@ -123,7 +123,9 @@
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
+<!--
                         <descriptor>src/main/assembly/lib-jdk14.xml</descriptor>
+-->
                         <descriptor>src/main/assembly/apps.xml</descriptor>
                         <descriptor>src/main/assembly/src.xml</descriptor>
                         <descriptor>src/main/assembly/docs.xml</descriptor>
@@ -433,6 +435,7 @@
 
 
         <!-- Backported JDK 1.4 jars -->
+        <!--
         <dependency>
             <groupId>net.sf.retrotranslator</groupId>
             <artifactId>retrotranslator-runtime</artifactId>
@@ -455,6 +458,7 @@
             <classifier>jdk14</classifier>
             <scope>runtime</scope>
         </dependency>
+-->
 
         <dependency>
             <groupId>org.apache.struts</groupId>

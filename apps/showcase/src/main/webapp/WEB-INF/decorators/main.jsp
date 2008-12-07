@@ -70,7 +70,7 @@
         <li><a href="<s:url value="/empmanager/index.jsp"/>">CRUD</a></li>
         <li><a href="<s:url value="/wait/index.jsp"/>">Execute & Wait</a></li>
         <li><a href="<s:url value="/filedownload/index.jsp"/>">File Download</a></li>
-        <li><a href="<s:url value="/fileupload" />">File Upload</a></li>
+        <li><a href="<s:url value="/fileupload/index.jsp" />">File Upload</a></li>
         <li><a href="<s:url value="/freemarker/index.jsp"/>">Freemarker</a>
         <li><a href="<s:url action="hangmanMenu" namespace="/hangman"/>">Hangman</a></li>
         <li><a href="<s:url value="/jsf/index.jsp"/>">JavaServer Faces</a></li>

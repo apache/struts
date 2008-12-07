@@ -33,11 +33,13 @@ import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.springframework.mock.web.portlet.MockPortalContext;
+import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockPortletURL;
 import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
@@ -75,6 +77,8 @@ public class PortletUrlTagTest extends StrutsTestCase {
 	private MockActionProxy actionProxy;
 
 	private MockJspWriter jspWriter;
+	
+	private MockPortletContext portletContext;
 
 	public void setUp() throws Exception {
 		super.setUp();
@@ -82,6 +86,7 @@ public class PortletUrlTagTest extends StrutsTestCase {
 		context = ActionContext.getContext();
 		stack = context.getValueStack();
 
+		portletContext = new MockPortletContext();
 		renderRequest = new MockRenderRequest();
 		renderRequest.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 		renderUrl = new MockPortletUrl("render");
@@ -107,6 +112,7 @@ public class PortletUrlTagTest extends StrutsTestCase {
 		context.put(PortletActionConstants.RESPONSE, renderResponse);
 		context.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
 		context.put(PortletActionConstants.MODE_NAMESPACE_MAP, modeMap);
+		context.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, portletContext);
 
 		actionInvocation = new MockActionInvocation();
 		actionProxy = new MockActionProxy();

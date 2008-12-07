@@ -21,18 +21,24 @@
 
 package org.apache.struts2.components;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.PortletMode;
 import javax.portlet.PortletURL;
 
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
+import org.easymock.EasyMock;
 import org.springframework.mock.web.portlet.MockPortalContext;
+import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockPortletURL;
 import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
@@ -49,12 +55,14 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 	MockPortletURL actionUrl;
 	MockRenderRequest request;
 	MockRenderResponse response;
+	MockPortletContext context;
 	ActionContext ctx;
 	ValueStack stack;
 
 	public void setUp() throws Exception {
 		super.setUp();
 		renderer = new PortletUrlRenderer();
+		context = new MockPortletContext();
 		renderUrl = new MockPortletURL(
 				new MockPortalContext(), "render");
 		actionUrl = new MockPortletURL(
@@ -76,6 +84,7 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 				PortletActionConstants.RENDER_PHASE);
 		ctx.put(PortletActionConstants.REQUEST, request);
 		ctx.put(PortletActionConstants.RESPONSE, response);
+		ctx.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, context);
 
 		Map<PortletMode, String> modeMap = new HashMap<PortletMode, String>();
 		modeMap.put(PortletMode.VIEW, "/view");
@@ -183,6 +192,41 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		renderer.renderUrl(renderOutput, url);
 		assertTrue(renderOutput.toString().indexOf("#EvaluatedProperty") != -1);
 		
+	}
+	
+	public void testShouldPassThroughRenderUrlToServletUrlRendererIfNotPortletRequest() throws Exception {
+		UrlRenderer mockRenderer = EasyMock.createMock(UrlRenderer.class);
+		ActionContext.getContext().put(StrutsStatics.STRUTS_PORTLET_CONTEXT, null);
+		renderer.setServletRenderer(mockRenderer);
+		URL url = new URL(stack, new PortletServletRequest(request, null), new PortletServletResponse(response));
+		StringWriter renderOutput = new StringWriter();
+		mockRenderer.renderUrl(renderOutput, url);
+		EasyMock.replay(mockRenderer);
+		renderer.renderUrl(renderOutput, url);
+		EasyMock.verify(mockRenderer);
+	}
+	
+	public void testShouldPassThroughRenderFormUrlToServletUrlRendererIfNotPortletRequest() throws Exception {
+		UrlRenderer mockRenderer = EasyMock.createMock(UrlRenderer.class);
+		ActionContext.getContext().put(StrutsStatics.STRUTS_PORTLET_CONTEXT, null);
+		renderer.setServletRenderer(mockRenderer);
+		Form form = new Form(stack, new PortletServletRequest(request, null), new PortletServletResponse(response));
+		mockRenderer.renderFormUrl(form);
+		EasyMock.replay(mockRenderer);
+		renderer.renderFormUrl(form);
+		EasyMock.verify(mockRenderer);
+	}
+	
+	public void testShouldPassThroughRenderUrlToServletUrlRendererWhenPortletUrlTypeIsNone() throws Exception {
+		UrlRenderer mockRenderer = EasyMock.createMock(UrlRenderer.class);
+		renderer.setServletRenderer(mockRenderer);
+		URL url = new URL(stack, new PortletServletRequest(request, null), new PortletServletResponse(response));
+		url.setPortletUrlType("none");
+		StringWriter renderOutput = new StringWriter();
+		mockRenderer.renderUrl(renderOutput, url);
+		EasyMock.replay(mockRenderer);
+		renderer.renderUrl(renderOutput, url);
+		EasyMock.verify(mockRenderer);
 	}
 	
 	private final static class TestObject {

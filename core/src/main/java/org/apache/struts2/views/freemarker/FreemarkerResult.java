@@ -63,7 +63,7 @@ import freemarker.template.TemplateModelException;
  * <li>relative to the web root folder. eg <code>/WEB-INF/views/home.ftl</code>
  * </li>
  *
- * <li>a classpath resuorce. eg <code>com/company/web/views/home.ftl</code></li>
+ * <li>a classpath resuorce. eg <code>/com/company/web/views/home.ftl</code></li>
  *
  * </ul>
  *

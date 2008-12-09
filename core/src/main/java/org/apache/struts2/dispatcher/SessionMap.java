@@ -205,4 +205,21 @@ public class SessionMap<K, V> extends AbstractMap<K,V> implements Serializable {
             return value;
         }
     }
+
+    
+    /**
+     * Checks if the specified session attribute with the given key exists.
+     *
+     * @param key the name of the session attribute.
+     * @return <tt>true</tt> if the session attribute exits or <tt>false</tt> if it doesn't exist.
+     */
+    public boolean containsKey(Object key) {
+        if (session == null) {
+            return false;
+        }
+
+        synchronized (session) {
+            return (session.getAttribute(key.toString()) != null);
+        }
+    }
 }

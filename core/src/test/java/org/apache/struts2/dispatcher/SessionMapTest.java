@@ -31,6 +31,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.mock.web.MockHttpServletRequest;
+
 import junit.framework.TestCase;
 
 import com.mockobjects.constraint.Constraint;
@@ -100,6 +102,57 @@ public class SessionMapTest extends TestCase {
         SessionMap sessionMap = new SessionMap((HttpServletRequest) requestMock.proxy());
         sessionMap.put("KEY", value);
         sessionMock.verify();
+    }
+
+    public void testGetObjectOnSessionMapUsesWrappedSessionsGetAttributeWithStringValue() throws Exception {
+        Object key = new Object();
+        Object value = new Object();
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual(key.toString())
+        }, value);
+
+        SessionMap sessionMap = new SessionMap((HttpServletRequest) requestMock.proxy());
+        assertEquals("Expected the get using KEY to return the value object setup in the mockSession", value, sessionMap.get(key));
+        sessionMock.verify();
+    }
+
+    public void testPutObjectOnSessionMapUsesWrappedSessionsSetsAttributeWithStringValue() throws Exception {
+        Object key = new Object();
+        Object value = new Object();
+        sessionMock.expect("getAttribute", new Constraint[]{new IsAnything()});
+        sessionMock.expect("setAttribute", new Constraint[]{
+                new IsEqual(key.toString()), new IsEqual(value)
+        });
+
+        SessionMap sessionMap = new SessionMap((HttpServletRequest) requestMock.proxy());
+        sessionMap.put(key, value);
+        sessionMock.verify();
+    }
+    
+    public void testContainsKeyWillFindAnObjectPutOnSessionMap() throws Exception {
+    	
+    	MockHttpServletRequest request = new MockHttpServletRequest();
+    	
+        Object key = new Object();
+        Object value = new Object();
+        
+        SessionMap<Object, Object> sessionMap = new SessionMap<Object, Object>(request);
+        sessionMap.put(key, value);
+        assertTrue(sessionMap.containsKey(key));
+    }
+
+    public void testContainsKeyWillReturnFalseIfObjectNotFoundOnSessionMap() throws Exception {
+    	
+    	MockHttpServletRequest request = new MockHttpServletRequest();
+    	
+        Object key = new Object();
+        Object someOtherKey = new Object();
+        Object value = new Object();
+        
+        SessionMap<Object, Object> sessionMap = new SessionMap<Object, Object>(request);
+        sessionMap.put(key, value);
+        
+        assertFalse(sessionMap.containsKey(someOtherKey));
     }
 
     public void testPuttingObjectInMapReturnsNullForPreviouslyUnusedKey() throws Exception {

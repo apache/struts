@@ -36,7 +36,7 @@
  onsubmit="${parameters.onsubmit?html}"<#rt/>
 </#if>
 <#if parameters.onreset??>
- onsubmit="${parameters.onreset?html}"<#rt/>
+ onreset="${parameters.onreset?html}"<#rt/>
 </#if>
 <#if parameters.action??>
  action="${parameters.action?html}"<#rt/>

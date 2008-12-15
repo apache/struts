@@ -143,13 +143,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         }
 
         if (doubleListValue != null) {
-            if (altSyntax()) {
-                // the same logic as with findValue(String)
-                // if value start with %{ and end with }, just cut it off!
-                if (doubleListValue.startsWith("%{") && doubleListValue.endsWith("}")) {
-                    doubleListValue = doubleListValue.substring(2, doubleListValue.length() - 1);
-                }
-            }
+        	doubleListValue = stripExpressionIfAltSyntax(doubleListValue);
 
             addParameter("doubleListValue", doubleListValue);
         }else if (tmpDoubleList instanceof Map) {
@@ -186,11 +180,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         Form form = (Form) findAncestor(Form.class);
         if (doubleId != null) {
             // this check is needed for backwards compatibility with 2.1.x
-            if (altSyntax()) {
-                addParameter("doubleId", findString(doubleId));
-            } else {
-                addParameter("doubleId", doubleId);
-            }
+        	addParameter("doubleId", findStringIfAltSyntax(doubleId));
         } else if (form != null) {
             addParameter("doubleId", form.getParameters().get("id") + "_" +escape(this.doubleName));
         } else {

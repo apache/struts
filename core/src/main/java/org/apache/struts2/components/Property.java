@@ -129,12 +129,8 @@ public class Property extends Component {
         if (value == null) {
             value = "top";
         }
-        else if (altSyntax()) {
-            // the same logic as with findValue(String)
-            // if value start with %{ and end with }, just cut it off!
-            if (value.startsWith("%{") && value.endsWith("}")) {
-                value = value.substring(2, value.length() - 1);
-            }
+        else {
+        	value = stripExpressionIfAltSyntax(value);
         }
 
         // exception: don't call findString(), since we don't want the

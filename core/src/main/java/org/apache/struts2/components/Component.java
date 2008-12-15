@@ -243,15 +243,48 @@ public class Component {
             return null;
         }
 
-        if (altSyntax()) {
-            // does the expression start with %{ and end with }? if so, just cut it off!
-            if (expr.startsWith("%{") && expr.endsWith("}")) {
-                expr = expr.substring(2, expr.length() - 1);
-            }
-        }
+        expr = stripExpressionIfAltSyntax(expr);
 
         return getStack().findValue(expr);
     }
+
+    /**
+     * If altsyntax (%{...}) is applied, simply strip the "%{" and "}" off. 
+     * @param expr the expression (must be not null)
+     * @return the stripped expression if altSyntax is enabled. Otherwise
+     * the parameter expression is returned as is.
+     */
+	protected String stripExpressionIfAltSyntax(String expr) {
+		return stripExpressionIfAltSyntax(stack, expr);
+	}
+	
+    /**
+     * If altsyntax (%{...}) is applied, simply strip the "%{" and "}" off.
+     * @param stack the ValueStack where the context value is searched for. 
+     * @param expr the expression (must be not null)
+     * @return the stripped expression if altSyntax is enabled. Otherwise
+     * the parameter expression is returned as is.
+     */
+	public static String stripExpressionIfAltSyntax(ValueStack stack, String expr) {
+		if (altSyntax(stack)) {
+            // does the expression start with %{ and end with }? if so, just cut it off!
+            if (expr.startsWith("%{") && expr.endsWith("}")) {
+                return expr.substring(2, expr.length() - 1);
+            }
+        }
+		return expr;
+	}
+
+    /**
+     * Is the altSyntax enabled? [TRUE]
+     * <p/>
+     * @param stack the ValueStack where the context value is searched for.
+     * @return true if altSyntax is activated. False otherwise. 
+     * See <code>struts.properties</code> where the altSyntax flag is defined.
+     */
+	public static boolean altSyntax(ValueStack stack)  {
+        return ContextUtil.isUseAltSyntax(stack.getContext());
+	}
 
     /**
      * Is the altSyntax enabled? [TRUE]
@@ -259,8 +292,34 @@ public class Component {
      * See <code>struts.properties</code> where the altSyntax flag is defined.
      */
     public boolean altSyntax() {
-        return ContextUtil.isUseAltSyntax(stack.getContext());
+        return altSyntax(stack);
     }
+
+    /**
+     * Adds the sorrounding %{ } to the expression for proper processing.
+     * @param expr the expression.
+     * @return the modified expression if altSyntax is enabled, or the parameter 
+     * expression otherwise.
+     */
+	protected String completeExpressionIfAltSyntax(String expr) {
+		if (altSyntax()) {
+			return "%{" + expr + "}";
+		}
+		return expr;
+	}
+
+    /**
+     * This check is needed for backwards compatibility with 2.1.x
+     * @param expr the expression.
+     * @return the found string if altSyntax is enabled. The parameter
+     * expression otherwise.
+     */
+	protected String findStringIfAltSyntax(String expr) {
+		if (altSyntax()) {
+		    return findString(expr);
+		}
+		return expr;
+	}
 
     /**
      * Evaluates the OGNL stack to find an Object value.
@@ -309,14 +368,9 @@ public class Component {
      */
     protected Object findValue(String expr, Class toType) {
         if (altSyntax() && toType == String.class) {
-            return TextParseUtil.translateVariables('%', expr, stack);
+        	return TextParseUtil.translateVariables('%', expr, stack);
         } else {
-            if (altSyntax()) {
-                // does the expression start with %{ and end with }? if so, just cut it off!
-                if (expr.startsWith("%{") && expr.endsWith("}")) {
-                    expr = expr.substring(2, expr.length() - 1);
-                }
-            }
+            expr = stripExpressionIfAltSyntax(expr);
 
             return getStack().findValue(expr, toType);
         }

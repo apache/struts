@@ -111,11 +111,7 @@ public abstract class FormButton extends ClosingUIBean {
         String _tmp_id = "";
         if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
-            if (altSyntax()) {
-                _tmp_id = findString(id);
-            } else {
-                _tmp_id = id;
-            }
+        	_tmp_id = findStringIfAltSyntax(id);
         }
         else {
             if (form != null && form.getParameters().get("id") != null) {

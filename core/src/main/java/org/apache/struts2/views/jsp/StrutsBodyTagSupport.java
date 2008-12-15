@@ -25,9 +25,10 @@ import java.io.PrintWriter;
 
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.struts2.components.Component;
 import org.apache.struts2.util.FastByteArrayOutputStream;
-import org.apache.struts2.views.util.ContextUtil;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
 
@@ -39,10 +40,6 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
 
     private static final long serialVersionUID = -1201668454354226175L;
 
-    protected boolean altSyntax() {
-        return ContextUtil.isUseAltSyntax(getStack().getContext());
-    }
-
     protected ValueStack getStack() {
         return TagUtils.getStack(pageContext);
     }
@@ -52,26 +49,17 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
     }
 
     protected Object findValue(String expr) {
-        if (altSyntax()) {
-            // does the expression start with %{ and end with }? if so, just cut it off!
-            if (expr.startsWith("%{") && expr.endsWith("}")) {
-                expr = expr.substring(2, expr.length() - 1);
-            }
-        }
+    	expr = Component.stripExpressionIfAltSyntax(getStack(), expr);
 
         return getStack().findValue(expr);
     }
 
     protected Object findValue(String expr, Class toType) {
-        if (altSyntax() && toType == String.class) {
-            return translateVariables(expr, getStack());
+        if (Component.altSyntax(getStack()) && toType == String.class) {
+        	return TextParseUtil.translateVariables('%', expr, getStack());
+            //return translateVariables(expr, getStack());
         } else {
-            if (altSyntax()) {
-                // does the expression start with %{ and end with }? if so, just cut it off!
-                if (expr.startsWith("%{") && expr.endsWith("}")) {
-                    expr = expr.substring(2, expr.length() - 1);
-                }
-            }
+        	expr = Component.stripExpressionIfAltSyntax(getStack(), expr);
 
             return getStack().findValue(expr, toType);
         }
@@ -92,29 +80,5 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
         } else {
             return bodyContent.getString().trim();
         }
-    }
-
-    public static String translateVariables(String expression, ValueStack stack) {
-        while (true) {
-            int x = expression.indexOf("%{");
-            int y = expression.indexOf("}", x);
-
-            if ((x != -1) && (y != -1)) {
-                String var = expression.substring(x + 2, y);
-
-                Object o = stack.findValue(var, String.class);
-
-                if (o != null) {
-                    expression = expression.substring(0, x) + o + expression.substring(y + 1);
-                } else {
-                    // the variable doesn't exist, so don't display anything
-                    expression = expression.substring(0, x) + expression.substring(y + 1);
-                }
-            } else {
-                break;
-            }
-        }
-
-        return expression;
     }
 }

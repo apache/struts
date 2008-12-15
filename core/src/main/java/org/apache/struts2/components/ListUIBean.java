@@ -103,19 +103,14 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (listKey != null) {
+        	listKey = stripExpressionIfAltSyntax(listKey);
             addParameter("listKey", listKey);
         } else if (value instanceof Map) {
             addParameter("listKey", "key");
         }
 
         if (listValue != null) {
-            if (altSyntax()) {
-                // the same logic as with findValue(String)
-                // if value start with %{ and end with }, just cut it off!
-                if (listValue.startsWith("%{") && listValue.endsWith("}")) {
-                    listValue = listValue.substring(2, listValue.length() - 1);
-                }
-            }
+        	listValue = stripExpressionIfAltSyntax(listValue);
             addParameter("listValue", listValue);
         } else if (value instanceof Map) {
             addParameter("listValue", "value");

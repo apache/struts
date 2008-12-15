@@ -764,10 +764,7 @@ public abstract class UIBean extends Component {
                     if (value != null) {
                         addParameter("nameValue", findValue(value, valueClazz));
                     } else if (name != null) {
-                        String expr = name;
-                        if (altSyntax()) {
-                            expr = "%{" + expr + "}";
-                        }
+                        String expr = completeExpressionIfAltSyntax(name);
 
                         addParameter("nameValue", findValue(expr, valueClazz));
                     }
@@ -859,7 +856,7 @@ public abstract class UIBean extends Component {
         evaluateExtraParams();
     }
 
-    protected String escape(String name) {
+	protected String escape(String name) {
         // escape any possible values that can make the ID painful to work with in JavaScript
         if (name != null) {
             return name.replaceAll("[^a-zA-Z0-9_]", "_");
@@ -966,11 +963,7 @@ public abstract class UIBean extends Component {
         String tryId;
         if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
-            if (altSyntax()) {
-                tryId = findString(id);
-            } else {
-                tryId = id;
-            }
+            tryId = findStringIfAltSyntax(id);
         } else if (form != null) {
             tryId = form.getParameters().get("id") + "_"
                     + escape(name != null ? findString(name) : null);

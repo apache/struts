@@ -24,6 +24,7 @@ package org.apache.struts2.rest;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.DefaultActionInvocation;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.UnknownHandlerManager;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -81,9 +82,9 @@ public class RestActionInvocation extends DefaultActionInvocation {
                     method = getAction().getClass().getMethod(altMethodName, new Class[0]);
                 } catch (NoSuchMethodException e1) {
                     // well, give the unknown handler a shot
-                    if (unknownHandler != null) {
+                    if (unknownHandlerManager.hasUnknownHandlers()) {
                         try {
-                            methodResult = unknownHandler.handleUnknownActionMethod(action, methodName);
+                            methodResult = unknownHandlerManager.handleUnknownMethod(action, methodName);
                             methodCalled = true;
                         } catch (NoSuchMethodException e2) {
                             // throw the original one

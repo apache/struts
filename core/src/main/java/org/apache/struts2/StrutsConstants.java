@@ -193,4 +193,6 @@ public final class StrutsConstants {
     /** The {@link org.apache.struts2.dispatcher.StaticContentLoader} implementation class */
     public static final String STRUTS_STATIC_CONTENT_LOADER = "struts.staticContentLoader";
 
+    /** The {@link com.opensymphony.xwork2.UnknownHandlerManager} implementation class */
+    public static final String STRUTS_UNKNOWN_HANDLER_MANAGER = "struts.unknownHandlerManager";
 }

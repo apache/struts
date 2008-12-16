@@ -96,6 +96,7 @@
     <bean class="org.apache.struts2.views.jsp.ui.OgnlTool" />
 
     <bean type="org.apache.struts2.dispatcher.StaticContentLoader" class="org.apache.struts2.dispatcher.DefaultStaticContentLoader" name="struts" />
+    <bean type="com.opensymphony.xwork2.UnknownHandlerManager" class="com.opensymphony.xwork2.DefaultUnknownHandlerManager" name="struts" />
 
     <!--  Silly workarounds for OGNL since there is currently no way to flush its internal caches -->
     <bean type="ognl.PropertyAccessor" name="java.util.ArrayList" class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor" />

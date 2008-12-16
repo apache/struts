@@ -77,6 +77,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         reloadKey = "configurationReload-"+filename;
         Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
+        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
         setDtdMappings(dtdMappings);
         File file = new File(filename);
         if (file.getParent() != null) {

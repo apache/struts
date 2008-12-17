@@ -50,8 +50,10 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * <p/>
  *
- * If the named message is not found, then the body of the tag will be used as default message.
- * If no body is used, then the name of the message will be used.
+ * If the named message is not found in a property file, then the body of the
+ * tag will be used as default message. If no body is used, then the stack will
+ * be searched, and if a value is returned, it will written to the output.
+ * If no value is found on the stack, the key of the message will be written out.
  *
  * <!-- END SNIPPET: javadoc -->
  *

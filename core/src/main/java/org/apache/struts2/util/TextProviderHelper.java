@@ -38,6 +38,21 @@ public class TextProviderHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(TextProviderHelper.class);
 
+     /**
+     * <p>Get a message from the first TextProvider encountered in the stack.
+     * If the first TextProvider doesn't provide the message the default message is returned.</p>
+     * The stack is searched if if no TextProvider is found, or the message is not found.
+     * @param key             the message key in the resource bundle
+     * @param defaultMessage  the message to return if not found (evaluated for OGNL)
+     * @param args            an array args to be used in a {@link java.text.MessageFormat} message
+     * @param stack           the value stack to use for finding the text
+     *
+     * @return the message if found, otherwise the defaultMessage
+     */
+    public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack) {
+        return getText(key, defaultMessage, args, stack, true);
+    }
+
     /**
      * <p>Get a message from the first TextProvider encountered in the stack.
      * If the first TextProvider doesn't provide the message the default message is returned.</p>
@@ -48,10 +63,11 @@ public class TextProviderHelper {
      * @param defaultMessage  the message to return if not found (evaluated for OGNL)
      * @param args            an array args to be used in a {@link java.text.MessageFormat} message
      * @param stack           the value stack to use for finding the text
-       *
+     * @param searchStack     search stack for the key
+     *
      * @return the message if found, otherwise the defaultMessage
      */
-    public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack) {
+    public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack, boolean searchStack) {
         String msg = null;
         TextProvider tp = null;
 
@@ -68,7 +84,9 @@ public class TextProviderHelper {
 
         if (msg == null) {
             // evaluate the defaultMesage as an OGNL expression
-            msg = stack.findString(defaultMessage);
+            if (searchStack)
+                msg = stack.findString(defaultMessage);
+            
             if (msg == null) {
                 // use the defaultMessage literal value
                 msg = defaultMessage;

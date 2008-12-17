@@ -38,6 +38,7 @@ public class TextTag extends ContextBeanTag {
     private static final long serialVersionUID = -3075088084198264581L;
 
     protected String name;
+    protected String searchValueStack;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Text(stack);
@@ -46,10 +47,16 @@ public class TextTag extends ContextBeanTag {
     protected void populateParams() {
         super.populateParams();
 
-        ((Text) component).setName(name);
+        Text text = (Text) component;
+        text.setName(name);
+        text.setSearchValueStack(searchValueStack);
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setSearchValueStack(String searchStack) {
+        this.searchValueStack = searchStack;
     }
 }

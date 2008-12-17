@@ -125,6 +125,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     protected List values = Collections.EMPTY_LIST;
     protected String actualName;
     protected String name;
+    protected String searchStack;
 
     public Text(ValueStack stack) {
         super(stack);
@@ -135,6 +136,10 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         this.name = name;
     }
 
+    @StrutsTagAttribute(description="Search the stack if property is not found on resources", type = "Boolean", defaultValue = "true")
+    public void setSearchValueStack(String searchStack) {
+        this.searchStack = searchStack;
+    }
 
     public boolean usesBody() {
         // overriding this to true such that EVAL_BODY_BUFFERED is return and
@@ -152,7 +157,8 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
             defaultMessage = actualName;
         }
 
-        String msg = TextProviderHelper.getText(actualName, defaultMessage, values, getStack());
+        Boolean doSearchStack = searchStack != null ? (Boolean) findValue(searchStack, Boolean.class) : true;
+        String msg = TextProviderHelper.getText(actualName, defaultMessage, values, getStack(), doSearchStack == null || doSearchStack);
 
         if (msg != null) {
             try {

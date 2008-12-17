@@ -128,6 +128,10 @@
         <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin</outputDirectory>
       </fileSet>
       <fileSet>
+        <directory>../plugins/convention/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-convention-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
         <directory>../plugins/config-browser/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-config-browser-plugin</outputDirectory>
       </fileSet>

@@ -102,6 +102,14 @@ public class FieldError extends UIBean implements UnnamedParametric {
         return TEMPLATE;
     }
 
+    @Override
+    protected void evaluateExtraParams() {
+        super.evaluateExtraParams();
+
+        if (errorFieldNames != null)
+            addParameter("errorFieldNames", errorFieldNames);               
+    }
+
     public void addParameter(Object value) {
         if (value != null) {
             errorFieldNames.add(value.toString());

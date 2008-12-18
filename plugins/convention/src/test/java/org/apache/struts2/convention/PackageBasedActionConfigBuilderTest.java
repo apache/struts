@@ -597,6 +597,13 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                                 ((ActionChainResult)o).setActionName(properties.get("actionName"));
                             }
                         }
+
+                        @Override
+                        public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
+                            if (o instanceof ActionChainResult) {
+                                ((ActionChainResult)o).setActionName((String)value);
+                            }
+                        }
                     });
                 }
                 return obj;

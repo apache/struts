@@ -43,14 +43,6 @@
     <constant name="struts.mapper.idParameterName" value="id" />
     <constant name="struts.action.extension" value="xhtml,,xml,json" />
 
-    <!--  Overwrite Codebehind -->
-    <constant name="struts.codebehind.classSuffix" value="Controller"/>
-    <constant name="struts.codebehind.action.checkImplementsAction" value="false"/>
-    <constant name="struts.codebehind.action.checkAnnotation" value="false"/>
-    <constant name="struts.codebehind.action.defaultMethodName" value="index"/>
-
-    <constant name="struts.configuration.classpath.defaultParentPackage" value="rest-default" />
-
     <package name="rest-default" extends="struts-default">
         <result-types>
             <result-type name="redirect" class="org.apache.struts2.dispatcher.ServletRedirectResult">

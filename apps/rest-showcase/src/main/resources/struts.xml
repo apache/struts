@@ -27,8 +27,10 @@
         "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
+    <!--  Overwrite Convention -->
     <constant name="struts.convention.action.suffix" value="Controller"/>
     <constant name="struts.convention.action.mapAllMatches" value="true"/>
     <constant name="struts.convention.default.parent.package" value="rest-default"/>
 
+    <constant name="struts.convention.package.locators" value="example"/>
 </struts>

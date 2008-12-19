@@ -19,8 +19,6 @@ import com.opensymphony.xwork2.ValidationAwareSupport;
 @Results({
     @Result(name="success", type="redirectAction", params = {"actionName" , "orders"})
 })
-@Namespace("")
-@InterceptorRef("restDefaultStack")
 public class OrdersController extends ValidationAwareSupport implements ModelDriven<Object>, Validateable{
     
     private Order model = new Order();

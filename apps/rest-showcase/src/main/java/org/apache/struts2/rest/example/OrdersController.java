@@ -2,19 +2,25 @@ package org.apache.struts2.rest.example;
 
 import java.util.Collection;
 
-import org.apache.struts2.config.Result;
-import org.apache.struts2.config.Results;
 import org.apache.struts2.dispatcher.ServletActionRedirectResult;
 import org.apache.struts2.rest.DefaultHttpHeaders;
 import org.apache.struts2.rest.HttpHeaders;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Namespaces;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.InterceptorRef;
 
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 
 @Results({
-    @Result(name="success", type=ServletActionRedirectResult.class, value="orders") 
+    @Result(name="success", type="redirectAction", params = {"actionName" , "orders"})
 })
+@Namespace("")
+@InterceptorRef("restDefaultStack")
 public class OrdersController extends ValidationAwareSupport implements ModelDriven<Object>, Validateable{
     
     private Order model = new Order();

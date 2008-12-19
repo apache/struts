@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-codebehind-plugin</artifactId>
+            <artifactId>struts2-convention-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
         <dependency>

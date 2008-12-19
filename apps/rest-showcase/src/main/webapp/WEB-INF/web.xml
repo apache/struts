@@ -13,10 +13,6 @@
     <filter>
         <filter-name>action2</filter-name>
         <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
-        <init-param>
-          <param-name>actionPackages</param-name>
-          <param-value>org.apache.struts2.rest.example</param-value>
-        </init-param>
     </filter>
     <!-- END SNIPPET: filter -->
 

@@ -21,9 +21,7 @@
  */
 -->
 <#if (actionErrors?? && actionErrors?size > 0)>
-	<ul>
-	<#list actionErrors as error>
-		<li><span<#rt/>
+	<ul<#rt/>
 <#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
@@ -32,7 +30,9 @@
 <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
->${error!}</span></li>
+>
+	<#list actionErrors as error>
+		<li><span>${error!}</span></li>
 	</#list>
 	</ul>
 </#if>

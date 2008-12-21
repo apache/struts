@@ -135,7 +135,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         }
 
         if (action instanceof ParameterAware) {
-            ((ParameterAware) action).setParameters(context.getParameters());
+            ((ParameterAware) action).setParameters((Map)context.getParameters());
         }
 
         if (action instanceof ApplicationAware) {

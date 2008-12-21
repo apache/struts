@@ -91,7 +91,7 @@ public class ServletConfigInterceptorTest extends StrutsTestCase {
         Map<String, Object> param = new HashMap<String, Object>();
         mai.getInvocationContext().setParameters(param);
 
-        mock.setParameters(param);
+        mock.setParameters((Map)param);
         control.setVoidCallable();
 
         control.replay();

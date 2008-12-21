@@ -109,7 +109,7 @@
                                     <groupId>com.opensymphony</groupId>
                                     <artifactId>xwork</artifactId>
                                     <classifier>javadoc</classifier>
-                                    <version>2.1.2-SNAPSHOT</version>
+                                    <version>2.1.2</version>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/xwork-apidocs</outputDirectory>
@@ -286,7 +286,7 @@
         <dependency>
             <groupId>com.opensymphony</groupId>
             <artifactId>xwork</artifactId>
-            <version>2.1.2-SNAPSHOT</version>
+            <version>2.1.2</version>
             <type>jar</type>
             <classifier>jdk14</classifier>
             <scope>runtime</scope>

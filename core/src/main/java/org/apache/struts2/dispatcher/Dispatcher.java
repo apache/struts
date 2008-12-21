@@ -472,7 +472,13 @@ public class Dispatcher {
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             }
         } catch (ConfigurationException e) {
-            LOG.error("Could not find action or result", e);
+        	// WW-2874 Only log error if in devMode
+        	if(devMode) {
+        		LOG.error("Could not find action or result", e);
+        	}
+        	else {
+        		LOG.warn("Could not find action or result", e);
+        	}
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);

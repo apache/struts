@@ -35,7 +35,8 @@
   <bean type="org.apache.struts2.convention.InterceptorMapBuilder" class="org.apache.struts2.convention.DefaultInterceptorMapBuilder"/>
   <bean type="org.apache.struts2.convention.ConventionsService" class="org.apache.struts2.convention.ConventionsServiceImpl"/>
 
-  <bean type="com.opensymphony.xwork2.config.PackageProvider" class="org.apache.struts2.convention.ClasspathConfigurationProvider"/>
+  <bean type="com.opensymphony.xwork2.config.PackageProvider" name="convention.packageProvider" class="org.apache.struts2.convention.ClasspathPackageProvider"/>
+  <bean type="com.opensymphony.xwork2.config.PackageProvider" name="convention.containerProvider" class="org.apache.struts2.convention.ClasspathConfigurationProvider"/>
 
   <constant name="struts.convention.result.path" value="/WEB-INF/content/"/>
   <constant name="struts.convention.result.flatLayout" value="true"/>
@@ -54,6 +55,8 @@
   <constant name="struts.convention.relative.result.types" value="dispatcher,velocity,freemarker"/>
   <constant name="struts.convention.redirect.to.slash" value="true"/>
   <constant name="struts.mapper.alwaysSelectFullNamespace" value="true"/>
+
+  <constant name="struts.convention.classes.reload" value="false" />  
 
   <package name="convention-default" extends="struts-default">
   </package>

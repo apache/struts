@@ -26,56 +26,83 @@ import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.dispatcher.DispatcherListener;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.StrutsConstants;
 
 /**
  * <p>
- * This class is a configuration provider for the XWork configuration
- * system. This is really the only way to truly handle loading of the
- * packages, actions and results correctly. This doesn't contain any
- * logic and instead delegates to the configured instance of the
- * {@link ActionConfigBuilder} interface.
+ * Xwork will only reload configurations, if one ContainerProvider needs reloading, that's all this class does
  * </p>
  */
-public class ClasspathConfigurationProvider implements ConfigurationProvider {
+public class ClasspathConfigurationProvider implements ConfigurationProvider, DispatcherListener {
     private ActionConfigBuilder actionConfigBuilder;
+    private boolean devMode;
+    private boolean reload;
+    private boolean listeningToDispatcher;
 
     @Inject
     public ClasspathConfigurationProvider(ActionConfigBuilder actionConfigBuilder) {
         this.actionConfigBuilder = actionConfigBuilder;
     }
 
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public void setDevMode(String mode) {
+        this.devMode = "true".equals(mode);
+    }
+
+    @Inject("struts.convention.classes.reload")
+    public void setReload(String reload) {
+        this.reload = "true".equals(reload);
+    }
+
     /**
      * Not used.
      */
     public void destroy() {
+        if (this.listeningToDispatcher)
+            Dispatcher.removeDispatcherListener(this);
+        actionConfigBuilder.destroy();
     }
 
     /**
      * Not used.
      */
     public void init(Configuration configuration) {
+        if (devMode && reload && !listeningToDispatcher) {
+            //this is the only way I found to be able to get added to to ConfigurationProvider list
+            //listening to events in Dispatcher
+            listeningToDispatcher = true;
+            Dispatcher.addDispatcherListener(this);
+        }
     }
 
     /**
      * Does nothing.
      */
     public void register(ContainerBuilder containerBuilder, LocatableProperties locatableProperties)
-    throws ConfigurationException {
+            throws ConfigurationException {
     }
 
     /**
      * Loads the packages using the {@link ActionConfigBuilder}.
      *
-     * @throws  ConfigurationException
+     * @throws ConfigurationException
      */
     public void loadPackages() throws ConfigurationException {
-        actionConfigBuilder.buildActionConfigs();
     }
 
     /**
-     * @return  Always false.
+     * @return Always false.
      */
     public boolean needsReload() {
-        return false;
+        return devMode && reload ? actionConfigBuilder.needsReload() : false;
+    }
+
+    public void dispatcherInitialized(Dispatcher du) {
+        du.getConfigurationManager().addContainerProvider(this);
+    }
+
+    public void dispatcherDestroyed(Dispatcher du) {
     }
 }

@@ -18,25 +18,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.convention;
+package org.apache.struts2.convention.classloader;
 
 /**
- * <p>
- * This interface defines how the action configurations for the current
- * web application can be constructed. This must find all actions that
- * are not specifically defined in the struts XML files or any plugins.
- * Furthermore, it must make every effort to locate all action results
- * as well.
- * </p>
+ * *interface taken from Apache JCI
  */
-public interface ActionConfigBuilder {
-    /**
-     * Builds all the action configurations and stores them into the XWork configuration instance
-     * via XWork dependency injetion.
-     */
-    void buildActionConfigs();
+public interface ResourceStore {
 
-    boolean needsReload();
+    void write(final String pResourceName, final byte[] pResourceData);
 
-    void destroy();
+    byte[] read(final String pResourceName);
+
+    //FIXME: return the result of the remove
+    void remove(final String pResourceName);
 }
+

@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.net.URL;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
@@ -41,6 +42,8 @@ import org.apache.struts2.convention.annotation.ExceptionMappings;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Namespaces;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.classloader.ReloadingClassLoader;
+import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
@@ -56,6 +59,7 @@ import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.finder.UrlSet;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.FileManager;
 
 /**
  * <p>
@@ -82,30 +86,34 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private String actionSuffix = "Action";
     private boolean checkImplementsAction = true;
     private boolean mapAllMatches = false;
+    private Set<String> loadedFileUrls = new HashSet<String>();
+    private boolean devMode;
+    private ReloadingClassLoader reloadingClassLoader;
+    private boolean reload;
 
     /**
      * Constructs actions based on a list of packages.
      *
-     * @param   configuration The XWork configuration that the new package configs and action configs
-     *          are added to.
-     * @param   actionNameBuilder The action name builder used to convert action class names to action
-     *          names.
-     * @param   resultMapBuilder The result map builder used to create ResultConfig mappings for each
-     *          action.
-     * @param   interceptorMapBuilder The interceptor map builder used to create InterceptorConfig mappings for each
-     *          action.
-     * @param   objectFactory The ObjectFactory used to create the actions and such.
-     * @param   redirectToSlash A boolean parameter that controls whether or not this will create an
-     *          action for indexes. If this is set to true, index actions are not created because
-     *          the unknown handler will redirect from /foo to /foo/. The only action that is created
-     *          is to the empty action in the namespace (e.g. the namespace /foo and the action "").
-     * @param   defaultParentPackage The default parent package for all the configuration.
+     * @param configuration         The XWork configuration that the new package configs and action configs
+     *                              are added to.
+     * @param actionNameBuilder     The action name builder used to convert action class names to action
+     *                              names.
+     * @param resultMapBuilder      The result map builder used to create ResultConfig mappings for each
+     *                              action.
+     * @param interceptorMapBuilder The interceptor map builder used to create InterceptorConfig mappings for each
+     *                              action.
+     * @param objectFactory         The ObjectFactory used to create the actions and such.
+     * @param redirectToSlash       A boolean parameter that controls whether or not this will create an
+     *                              action for indexes. If this is set to true, index actions are not created because
+     *                              the unknown handler will redirect from /foo to /foo/. The only action that is created
+     *                              is to the empty action in the namespace (e.g. the namespace /foo and the action "").
+     * @param defaultParentPackage  The default parent package for all the configuration.
      */
     @Inject
     public PackageBasedActionConfigBuilder(Configuration configuration, ActionNameBuilder actionNameBuilder,
-            ResultMapBuilder resultMapBuilder, InterceptorMapBuilder interceptorMapBuilder, ObjectFactory objectFactory,
-            @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
-            @Inject("struts.convention.default.parent.package") String defaultParentPackage) {
+                                           ResultMapBuilder resultMapBuilder, InterceptorMapBuilder interceptorMapBuilder, ObjectFactory objectFactory,
+                                           @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
+                                           @Inject("struts.convention.default.parent.package") String defaultParentPackage) {
 
         // Validate that the parameters are okay
         this.configuration = configuration;
@@ -122,6 +130,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         this.defaultParentPackage = defaultParentPackage;
     }
 
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public void setDevMode(String mode) {
+        this.devMode = "true".equals(mode);
+    }
+
+    @Inject("struts.convention.classes.reload")
+    public void setReload(String reload) {
+        this.reload = "true".equals(reload);
+    }
+
     /**
      * @param disableActionScanning Disable scanning for actions
      */
@@ -136,7 +154,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.excludeJars", required = false)
     public void setExcludeJars(String excludeJars) {
-        this.excludeJars = excludeJars.split("\\s*[,]\\s*");;
+        this.excludeJars = excludeJars.split("\\s*[,]\\s*");
     }
 
     /**
@@ -156,8 +174,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param   actionPackages (Optional) An optional list of action packages that this should create
-     *          configuration for.
+     * @param actionPackages (Optional) An optional list of action packages that this should create
+     *                       configuration for.
      */
     @Inject(value = "struts.convention.action.packages", required = false)
     public void setActionPackages(String actionPackages) {
@@ -167,8 +185,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param   actionPackages (Optional) Map classes that implement com.opensymphony.xwork2.Action
-     *          as actions
+     * @param actionPackages (Optional) Map classes that implement com.opensymphony.xwork2.Action
+     *                       as actions
      */
     @Inject(value = "struts.convention.action.checkImplementsAction", required = false)
     public void setCheckImplementsAction(String checkImplementsAction) {
@@ -176,8 +194,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param   actionSuffix (Optional) Classes that end with these value will be mapped as actions
-     *          (defaults to "Action")
+     * @param actionSuffix (Optional) Classes that end with these value will be mapped as actions
+     *                     (defaults to "Action")
      */
     @Inject(value = "struts.convention.action.suffix", required = false)
     public void setActionSuffix(String actionSuffix) {
@@ -187,8 +205,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param   excludePackages (Optional) A  list of packages that should be skipped when building
-     *          configuration.
+     * @param excludePackages (Optional) A  list of packages that should be skipped when building
+     *                        configuration.
      */
     @Inject(value = "struts.convention.exclude.packages", required = false)
     public void setExcludePackages(String excludePackages) {
@@ -198,7 +216,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param   packageLocators (Optional) A list of names used to find action packages.
+     * @param packageLocators (Optional) A list of names used to find action packages.
      */
     @Inject(value = "struts.convention.package.locators", required = false)
     public void setPackageLocators(String packageLocators) {
@@ -206,24 +224,29 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param   packageLocatorsBasePackage (Optional) If set, only packages that start with this
-     * name will be scanned for actions.
+     * @param packageLocatorsBasePackage (Optional) If set, only packages that start with this
+     *                                   name will be scanned for actions.
      */
     @Inject(value = "struts.convention.package.locators.basePackage", required = false)
     public void setPackageLocatorsBase(String packageLocatorsBasePackage) {
         this.packageLocatorsBasePackage = packageLocatorsBasePackage;
-    }        
+    }
 
     /**
-     * @param   mapAllMatches (Optional) Map actions that match the "*${Suffix}" pattern
-     *                          even if they don't have a default method. The mapping from
-     *                          the url to the action will be delegated the action mapper.
+     * @param mapAllMatches (Optional) Map actions that match the "*${Suffix}" pattern
+     *                      even if they don't have a default method. The mapping from
+     *                      the url to the action will be delegated the action mapper.
      */
     @Inject(value = "struts.convention.action.mapAllMatches", required = false)
     public void setMapAllMatches(String mapAllMatches) {
-        this.mapAllMatches  = "true".equals(mapAllMatches);
+        this.mapAllMatches = "true".equals(mapAllMatches);
     }
 
+    protected void initReloadClassLoader() {
+        //when the configuration is reloaded, a new classloader will be setup
+        if (isReloadEnabled() && reloadingClassLoader == null)
+           reloadingClassLoader = new ReloadingClassLoader(getClassLoader());
+    }
     /**
      * Builds the action configurations by loading all classes in the packages specified by the
      * property <b>struts.convention.action.packages</b> and then figuring out which classes implement Action
@@ -235,11 +258,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * {@link ResultMapBuilder} is used to create ResultConfig instances of the action.
      */
     public void buildActionConfigs() {
-        if (!disableActionScanning ) {
+        //setup reload class loader based on dev settings
+        initReloadClassLoader();
+        
+        if (!disableActionScanning) {
             if (actionPackages == null && packageLocators == null) {
                 throw new ConfigurationException("At least a list of action packages or action package locators " +
-                    "must be given using one of the properties [struts.convention.action.packages] or " +
-                    "[struts.convention.package.locators]");
+                        "must be given using one of the properties [struts.convention.action.packages] or " +
+                        "[struts.convention.package.locators]");
             }
 
             if (LOG.isTraceEnabled()) {
@@ -260,12 +286,20 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
     }
 
+    protected ClassLoader getClassLoaderForFinder() {
+        return isReloadEnabled() ? this.reloadingClassLoader : getClassLoader();
+    }
+
+    protected boolean isReloadEnabled() {
+        return devMode && reload;
+    }
+
     @SuppressWarnings("unchecked")
     protected Set<Class> findActions() {
         Set<Class> classes = new HashSet<Class>();
         try {
             if (actionPackages != null || (packageLocators != null && !disablePackageLocatorsScanning)) {
-                ClassFinder finder = new ClassFinder(getClassLoader(), buildUrlSet().getUrls(), true);
+                ClassFinder finder = new ClassFinder(getClassLoaderForFinder(), buildUrlSet().getUrls(), true);
 
                 // named packages
                 if (actionPackages != null) {
@@ -326,7 +360,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 boolean nameMatches = classInfo.getName().endsWith(actionSuffix);
 
                 try {
-                    return inPackage && (nameMatches ||  (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
+                    return inPackage && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
                 } catch (ClassNotFoundException ex) {
                     if (LOG.isErrorEnabled())
                         LOG.error("Unable to load class [#0]", ex, classInfo.getName());
@@ -347,7 +381,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                     boolean nameMatches = classInfo.getName().endsWith(actionSuffix);
 
                     try {
-                        return packageMatches && (nameMatches ||  (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
+                        return packageMatches && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
                     } catch (ClassNotFoundException ex) {
                         if (LOG.isErrorEnabled())
                             LOG.error("Unable to load class [#0]", ex, classInfo.getName());
@@ -391,7 +425,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 String defaultActionName = determineActionName(actionClass);
                 String defaultActionMethod = "execute";
                 PackageConfig.Builder defaultPackageConfig = getPackageConfig(packageConfigs, namespace,
-                    actionPackage, actionClass, null);
+                        actionPackage, actionClass, null);
 
                 // Verify that the annotations have no errors and also determine if the default action
                 // configuration should still be built or not.
@@ -407,8 +441,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                             String actionName = action.value().equals(Action.DEFAULT_VALUE) ? defaultActionName : action.value();
                             if (actionNames.contains(actionName)) {
                                 throw new ConfigurationException("The action class [" + actionClass +
-                                    "] contains two methods with an action name annotation whose value " +
-                                    "is the same (they both might be empty as well).");
+                                        "] contains two methods with an action name annotation whose value " +
+                                        "is the same (they both might be empty as well).");
                             } else {
                                 actionNames.add(actionName);
                             }
@@ -433,7 +467,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         PackageConfig.Builder pkgCfg = defaultPackageConfig;
                         if (action.value().contains("/")) {
                             pkgCfg = getPackageConfig(packageConfigs, namespace, actionPackage,
-                                actionClass, action);
+                                    actionClass, action);
                         }
 
                         createActionConfig(pkgCfg, actionClass, defaultActionName, method, action);
@@ -466,8 +500,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * configuration values. These are used to determine which part of the Java package name should
      * be converted into the namespace for the XWork PackageConfig.
      *
-     * @param   actionClass The action class.
-     * @return  The namespace or an empty string.
+     * @param actionClass The action class.
+     * @return The namespace or an empty string.
      */
     protected List<String> determineActionNamespace(Class<?> actionClass) {
         List<String> namespaces = new ArrayList<String>();
@@ -540,8 +574,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * Converts the class name into an action name using the ActionNameBuilder.
      *
-     * @param   actionClass The action class.
-     * @return  The action name.
+     * @param actionClass The action class.
+     * @return The action name.
      */
     protected String determineActionName(Class<?> actionClass) {
         String actionName = actionNameBuilder.build(actionClass.getSimpleName());
@@ -556,8 +590,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * Locates all of the {@link Actions} and {@link Action} annotations on methods within the Action
      * class and its parent classes.
      *
-     * @param   actionClass The action class.
-     * @return  The list of annotations or an empty list if there are none.
+     * @param actionClass The action class.
+     * @return The list of annotations or an empty list if there are none.
      */
     protected Map<String, List<Action>> getActionAnnotations(Class<?> actionClass) {
         Method[] methods = actionClass.getMethods();
@@ -573,7 +607,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         valuelessSeen = true;
                     } else if (ann.value().equals(Action.DEFAULT_VALUE)) {
                         throw new ConfigurationException("You may only add a single Action " +
-                            "annotation that has no value parameter.");
+                                "annotation that has no value parameter.");
                     }
 
                     actions.add(ann);
@@ -594,23 +628,23 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * Creates a single ActionConfig object.
      *
-     * @param   pkgCfg The package the action configuration instance will belong to.
-     * @param   actionClass The action class.
-     * @param   actionName The name of the action.
-     * @param   actionMethod The method that the annotation was on (if the annotation is not null) or
-     *          the default method (execute).
-     * @param   annotation The ActionName annotation that might override the action name and possibly
+     * @param pkgCfg       The package the action configuration instance will belong to.
+     * @param actionClass  The action class.
+     * @param actionName   The name of the action.
+     * @param actionMethod The method that the annotation was on (if the annotation is not null) or
+     *                     the default method (execute).
+     * @param annotation   The ActionName annotation that might override the action name and possibly
      */
     protected void createActionConfig(PackageConfig.Builder pkgCfg, Class<?> actionClass, String actionName,
-            String actionMethod, Action annotation) {
+                                      String actionMethod, Action annotation) {
         if (annotation != null) {
             actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ?
-                actionName : annotation.value();
+                    actionName : annotation.value();
             actionName = StringTools.lastToken(actionName, "/");
         }
 
         ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(),
-            actionName, actionClass.getName());
+                actionName, actionClass.getName());
         actionConfig.methodName(actionMethod);
 
         if (LOG.isDebugEnabled()) {
@@ -648,7 +682,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             // there is a package already with that name, check action
             ActionConfig existingActionConfig = existingPkg.getActionConfigs().get(actionName);
             if (existingActionConfig != null && LOG.isWarnEnabled())
-                LOG.warn("Duplicated action definition in package [#0] with name [#1]. First definition was loaded from [#3]", pkgCfg.getName(), actionName, existingActionConfig.getLocation().toString());
+                LOG.warn("Duplicated action definition in package [#0] with name [#1].", pkgCfg.getName(), actionName);
+        }
+
+        //watch class file
+        if (isReloadEnabled()) {
+            URL classFile = actionClass.getResource(actionClass.getSimpleName() + ".class");
+            FileManager.loadFile(classFile, false);
+            loadedFileUrls.add(classFile.toString());
         }
     }
 
@@ -670,8 +711,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     private PackageConfig.Builder getPackageConfig(final Map<String, PackageConfig.Builder> packageConfigs,
-            String actionNamespace, final String actionPackage, final Class<?> actionClass,
-            Action action) {
+                                                   String actionNamespace, final String actionPackage, final Class<?> actionClass,
+                                                   Action action) {
         if (action != null && !action.value().equals(Action.DEFAULT_VALUE)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using non-default action namespace from the Action annotation of [#0]", action.value());
@@ -697,7 +738,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
         if (parentName == null) {
             throw new ConfigurationException("Unable to determine the parent XWork package for the action class [" +
-                actionClass.getName() + "]");
+                    actionClass.getName() + "]");
         }
 
         PackageConfig parentPkg = configuration.getPackageConfig(parentName);
@@ -735,12 +776,12 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      *
      * 1. Loop over all the namespaces such as /foo and see if it has an action named index
      * 2. If an action doesn't exists in the parent namespace of the same name, create an action
-     *    in the parent namespace of the same name as the namespace that points to the index
-     *    action in the namespace. e.g. /foo -> /foo/index
+     * in the parent namespace of the same name as the namespace that points to the index
+     * action in the namespace. e.g. /foo -> /foo/index
      * 3. Create the action in the namespace for empty string if it doesn't exist. e.g. /foo/
-     *    the action is "" and the namespace is /foo
+     * the action is "" and the namespace is /foo
      *
-     * @param   packageConfigs Used to store the actions.
+     * @param packageConfigs Used to store the actions.
      */
     protected void buildIndexActions(Map<String, PackageConfig.Builder> packageConfigs) {
         Map<String, PackageConfig.Builder> byNamespace = new HashMap<String, PackageConfig.Builder>();
@@ -769,7 +810,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                     if (parent == null || parent.build().getAllActionConfigs().get(parentAction) == null) {
                         if (parent == null) {
                             parent = new PackageConfig.Builder(parentNamespace).namespace(parentNamespace).
-                                addParents(pkgConfig.build().getParents());
+                                    addParents(pkgConfig.build().getParents());
                             packageConfigs.put(parentNamespace, parent);
                         }
 
@@ -778,7 +819,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         }
                     } else if (LOG.isTraceEnabled()) {
                         LOG.trace("The parent namespace [#0] already contains " +
-                            "an action [#1]", parentNamespace, parentAction);
+                                "an action [#1]", parentNamespace, parentAction);
                     }
                 }
             }
@@ -787,11 +828,30 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (pkgConfig.build().getAllActionConfigs().get("") == null) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Creating index ActionConfig with an action name of [] for the action " +
-                        "class [#0]", indexActionConfig.getClassName());
+                            "class [#0]", indexActionConfig.getClassName());
                 }
 
                 pkgConfig.addActionConfig("", indexActionConfig);
             }
         }
+    }
+
+    public void destroy() {
+        loadedFileUrls.clear();
+    }
+
+    public boolean needsReload() {
+        if (devMode && reload) {
+            for (String url : loadedFileUrls) {
+                if (FileManager.fileNeedsReloading(url)) {
+                    if (LOG.isDebugEnabled())
+                        LOG.debug("File [#0] changed, configuration will be reloaded", url);
+                    return true;
+                }
+            }
+
+            return false;
+        } else
+            return false;
     }
 }

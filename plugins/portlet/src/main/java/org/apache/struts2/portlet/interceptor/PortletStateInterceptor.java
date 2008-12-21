@@ -80,7 +80,7 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 					CompoundRoot oldRoot = oldStack.getRoot();
 					ValueStack currentStack = invocation.getStack();
 					CompoundRoot root = currentStack.getRoot();
-					root.addAll(oldRoot);
+					root.addAll(0, oldRoot);
 					LOG.debug("Restored stack");
 				}
 			}

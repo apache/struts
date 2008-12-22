@@ -32,7 +32,6 @@ import java.util.Map;
  * Base class for ActionError and ActionMessage
  */
 public abstract class AbstractMessageListHandler extends AbstractTagHandler implements TagGenerator {
-    @Override
     public void generate() throws IOException {
         Map<String, Object> params = context.getParameters();
         Object errorsObj = findValue(getListExpression());

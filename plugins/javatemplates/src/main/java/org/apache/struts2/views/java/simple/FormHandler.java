@@ -47,7 +47,6 @@ public class FormHandler extends AbstractTagHandler implements TagGenerator {
     }
 
     public static class CloseHandler extends AbstractTagHandler implements TagGenerator {
-        @Override
         public void generate() throws IOException {
             end("form");
         }

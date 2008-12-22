@@ -26,7 +26,6 @@ import java.io.IOException;
 
 //does nothing
 public class EmptyHandler extends AbstractTagHandler implements TagGenerator {
-    @Override
     public void generate() throws IOException {
     }
 }

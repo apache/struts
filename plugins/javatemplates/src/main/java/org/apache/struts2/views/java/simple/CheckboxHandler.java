@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Map;
 
 public class CheckboxHandler extends AbstractTagHandler implements TagGenerator {
-    @Override
     public void generate() throws IOException {
         Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();

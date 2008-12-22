@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.Map;
 
 public class AnchorHandler extends AbstractTagHandler implements TagGenerator {
-    @Override
     public void generate() throws IOException {
         Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
@@ -43,7 +42,6 @@ public class AnchorHandler extends AbstractTagHandler implements TagGenerator {
     }
 
     public static class CloseHandler extends AbstractTagHandler implements TagGenerator {
-        @Override
         public void generate() throws IOException {
             end("a");
         }

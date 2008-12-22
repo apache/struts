@@ -43,6 +43,7 @@
         <module>codebehind</module>
         <module>convention</module>
         <module>config-browser</module>
+        <module>javatemplates</module>
         <module>jasperreports</module>
         <module>jfreechart</module>
         <module>jsf</module>

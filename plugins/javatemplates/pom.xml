@@ -13,9 +13,9 @@
     <name>Struts 2 Java Templates Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/trunk/struts2-javatemplates-plugin/</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/trunk/struts2-javatemplates-plugin/</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/trunk/struts2-javatemplates-plugin/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/javatemplates/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/javatemplates/</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/javatemplates/</url>
     </scm>
 
     <dependencies>

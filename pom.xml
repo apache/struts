@@ -59,7 +59,9 @@
 
     <modules>
         <module>core</module>
-        <!--<module>assembly</module>-->
+        <module>apps</module>
+        <module>plugins</module>
+        <module>assembly</module>
     </modules>
 
     <licenses>
@@ -77,30 +79,6 @@
     </organization>
 
     <profiles>
-        <profile>
-            <id>apps</id>
-            <activation>
-                <property>
-                    <name>apps</name>
-                </property>
-            </activation>
-            <modules>
-                <module>apps</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>plugins</id>
-            <modules>
-                <module>plugins</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>all</id>
-            <modules>
-                <module>plugins</module>
-                <module>apps</module>
-            </modules>
-        </profile>
         <profile>
             <id>xwork</id>
             <modules>
@@ -142,42 +120,6 @@
             </build>
         </profile>
         <profile>
-            <id>alljars</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.2</version>
-                        <!--
-                        <configuration>
-                            <aggregate>true</aggregate>
-                        </configuration>
-                        -->
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>release</id>
             <activation>
                 <property>
@@ -200,27 +142,19 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>rat-maven-plugin</artifactId>
-                        <version>1.0-alpha-2</version>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.2</version>
+                        <!--
+                        <configuration>
+                            <aggregate>true</aggregate>
+                        </configuration>
+                        -->
                         <executions>
                             <execution>
-                                <phase>verify</phase>
+                                <id>attach-source</id>
                                 <goals>
-                                    <goal>check</goal>
+                                    <goal>jar</goal>
                                 </goals>
-                                <configuration>
-                                    <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
-                                    <licenseMatchers>
-                                        <classNames>
-                                            <className>rat.analysis.license.ApacheSoftwareLicense20</className>
-                                        </classNames>
-                                    </licenseMatchers>
-                                    <includes>
-                                        <include>pom.xml</include>
-                                        <include>src/**</include>
-                                    </includes>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -280,10 +214,12 @@
                 </plugin>
                 <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-release-plugin</artifactId>
-                  <configuration>
-                    <useReleaseProfile>false</useReleaseProfile>
-                  </configuration>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <!--
+                    <configuration>
+                        <preparationGoals>clean verify install</preparationGoals>
+                    </configuration>
+                    -->
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -309,23 +245,49 @@
                 </execution>
               </executions>
             </plugin>
+            <!--
             <plugin>
-              <inherited>true</inherited>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-source-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>attach-sources</id>
-                  <goals>
-                    <goal>jar</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>            
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rat-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
+                            <licenseMatchers>
+                                <classNames>
+                                    <className>rat.analysis.license.ApacheSoftwareLicense20</className>
+                                </classNames>
+                            </licenseMatchers>
+                            <includes>
+                                <include>pom.xml</include>
+                                <include>src/**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-source</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Commenting out the license plugin, until it works like we want.
             To use the "license:format" goal, remove the "core" module before running,
             otherwise it will ignore the file exclusions.
- 	    
+
             <plugin>
 	            <groupId>com.google.code.maven-license-plugin</groupId>
 	            <artifactId>maven-license-plugin</artifactId>
@@ -396,6 +358,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
             -->
+            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>rat-maven-plugin</artifactId>
@@ -405,8 +368,12 @@
                         <include>pom.xml</include>
                         <include>src/**</include>
                     </includes>
+                    <excludes>
+                        <exclude>assembly/src/main/resources/backport/RETROTRANSLATOR-LICENSE.txt</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
+            -->
         </plugins>
     </reporting>
 

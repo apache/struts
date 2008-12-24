@@ -287,15 +287,6 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2-beta-1</version>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                             <goal>attached</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>

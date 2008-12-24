@@ -237,6 +237,7 @@
                    </dependency>
                 </dependencies>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.twdata.maven</groupId>
                 <artifactId>maven-itblast-plugin</artifactId>
@@ -253,6 +254,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -278,6 +280,7 @@
         </resources>
 
     </build>
+    <!--
     <pluginRepositories>
         <pluginRepository>
             <id>twdata-m2-repository</id>
@@ -285,4 +288,5 @@
             <url>http://twdata-m2-repository.googlecode.com/svn/</url>
         </pluginRepository>
     </pluginRepositories>
+    -->
 </project>

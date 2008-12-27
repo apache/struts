@@ -95,6 +95,7 @@
 	</div>
     <div id="footer" class="clearfix">
         <p>Copyright &copy; 2003-<s:property value="#dateAction.now.year + 1900" /> The Apache Software Foundation.</p>
+        <s:hidden name="project-name" value="Struts 2" />
     </div><!-- end footer -->
     <p/>
 

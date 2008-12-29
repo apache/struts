@@ -20,11 +20,17 @@
  */
 package it.org.apache.struts2.showcase;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
+public class CRUDTest extends ITBaseTest {
+    public void testCreate() {
+        beginAt("/skill/edit.action");
 
-public abstract class ITBaseTest extends WebTestCase {
+        setTextField("currentSkill.name", "somename1");
+        setTextField("currentSkill.description", "somedescription1");
 
-    public void setUp() throws Exception {
-        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
+        submit();
+
+        beginAt("/skill/list.action");
+        assertTextPresent("somename1");
+        assertTextPresent("somedescription1");
     }
 }

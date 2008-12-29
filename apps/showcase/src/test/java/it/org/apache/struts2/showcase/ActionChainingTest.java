@@ -20,11 +20,11 @@
  */
 package it.org.apache.struts2.showcase;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
-
-public abstract class ITBaseTest extends WebTestCase {
-
-    public void setUp() throws Exception {
-        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
+public class ActionChainingTest extends ITBaseTest {
+    public void test() {
+        beginAt("/actionchaining/actionChain1!input");
+        assertTextPresent("Action Chain 1 Property 1: Property Set In Action Chain 1");
+        assertTextPresent("Action Chain 2 Property 1: Property Set in Action Chain 2");
+        assertTextPresent("Action Chain 3 Property 1: Property set in Action Chain 3");
     }
 }

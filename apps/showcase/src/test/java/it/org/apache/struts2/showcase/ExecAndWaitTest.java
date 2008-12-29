@@ -20,11 +20,16 @@
  */
 package it.org.apache.struts2.showcase;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
+public class ExecAndWaitTest extends ITBaseTest {
+    public void testNodelay() throws InterruptedException {
+        beginAt("/wait/example1.jsp");
 
-public abstract class ITBaseTest extends WebTestCase {
+        setTextField("time", "7000");
+        submit();
+        assertTextPresent("We are processing your request. Please wait.");
 
-    public void setUp() throws Exception {
-        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
+        //hit it again
+        beginAt("/wait/longProcess1.action?time=1000");
+        assertTextPresent("We are processing your request. Please wait.");
     }
 }

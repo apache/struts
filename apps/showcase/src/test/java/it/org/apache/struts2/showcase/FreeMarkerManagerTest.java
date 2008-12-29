@@ -20,11 +20,25 @@
  */
 package it.org.apache.struts2.showcase;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-public abstract class ITBaseTest extends WebTestCase {
+public class FreeMarkerManagerTest extends ITBaseTest {
+    public void testCustomManager() {
+        beginAt("/freemarker/customFreemarkerManagerDemo.action");
 
-    public void setUp() throws Exception {
-        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
+        String date = getElementTextByXPath("//*[@id='todaysDate']");
+        assertNotNull(date);
+        assertTrue(date.length() > 0);
+
+        String time = getElementTextByXPath("//*[@id='timeNow']");
+        assertNotNull(time);
+        assertTrue(time.length() > 0);
+    }
+
+    public void testTags() {
+        beginAt("/freemarker/standardTags.action");
+        assertElementPresent("test_name");
+        assertElementPresent("test_");
     }
 }

@@ -20,11 +20,21 @@
  */
 package it.org.apache.struts2.showcase;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
+import java.net.URL;
+import java.net.MalformedURLException;
 
-public abstract class ITBaseTest extends WebTestCase {
+public class FileDownloadTest extends ITBaseTest {
+    public void testImage() throws InterruptedException, MalformedURLException {
+        beginAt("/filedownload/download.action");
 
-    public void setUp() throws Exception {
-        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
+        URL url = new URL("http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/src/main/webapp/images/struts.gif");
+        assertDownloadedFileEquals(url);
+    }
+
+     public void testZip() throws InterruptedException, MalformedURLException {
+        beginAt("/filedownload/download2.action");
+
+        URL url = new URL("http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/src/main/webapp/images/struts-gif.zip");
+        assertDownloadedFileEquals(url);
     }
 }

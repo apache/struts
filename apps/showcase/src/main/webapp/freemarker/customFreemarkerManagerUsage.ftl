@@ -18,8 +18,8 @@
 		<li>$ { customFreemarkerManagerUtil.timeNow } - to get the time now</li>
 	</ul>
 	 
-	 Today's Date = ${customFreemarkerManagerUtil.todayDate}<br/>
-	 Time now = ${customFreemarkerManagerUtil.getTimeNow()}<br/>
+	 Today's Date = <span id="todaysDate">${customFreemarkerManagerUtil.todayDate}</span><br/>
+	 Time now =  <span id="timeNow">${customFreemarkerManagerUtil.getTimeNow()}</span><br/>
 
 </body>
 </html>

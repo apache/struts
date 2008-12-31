@@ -36,7 +36,9 @@
             <a name="Welcome"/>
 
         <div style="text-align:left;height:200px">
-        <a href="docs/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger" hspace="16" align="left"/></a>
+            <div style="float:left;margin-left:16px;margin-right:16px">
+                <a href="docs/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger"/></a>
+            </div>
 
         <p>
          <strong>Apache Struts 2 is an elegant, extensible framework</strong> for creating enterprise-ready Java web applications.
@@ -54,10 +56,11 @@
         </div>
         <div>
         <table><tr><td>
-        <a href="http://struts.apache.org/download.cgi#struts213">
+        #set($aname=$currentVersion.replaceAll('\.', "")) 
+        <a href="http://struts.apache.org/download.cgi#struts${aname}">
           <div style="background:url(images/download.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
             <span style="top:15px;position:absolute;color:white;padding-left:10px">
-              <small>version 2.1.3</small>
+              <small>version ${currentVersion}</small>
               <br />
               <span style="font-weight: bold; font-size:140%">Download Now</span>
             </span>

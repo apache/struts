@@ -21,24 +21,23 @@
 
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.views.util.UrlHelper;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.views.util.UrlHelper;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Implementation of the {@link UrlRenderer} interface that creates URLs suitable in a servlet environment.
@@ -160,7 +159,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 			if (formComponent.getId() == null  && actionName!=null ) {
 				formComponent.addParameter("id", formComponent.escape(actionName));
 			}
-		} else if (actionName != null) {
+		} else if (action != null) {
 			// Since we can't find an action alias in the configuration, we just
 			// assume the action attribute supplied is the path to be used as
 			// the URI this form is submitting to.
@@ -171,7 +170,7 @@ public class ServletUrlRenderer implements UrlRenderer {
               LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
             }
 
-			String result = UrlHelper.buildUrl(actionName, formComponent.request, formComponent.response, null);
+			String result = UrlHelper.buildUrl(action, formComponent.request, formComponent.response, null);
 			formComponent.addParameter("action", result);
 
 			// namespace: cut out anything between the start and the last /

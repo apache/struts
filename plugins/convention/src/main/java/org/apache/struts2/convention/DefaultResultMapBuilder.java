@@ -398,9 +398,6 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             if (!params.containsKey(defaultParamName)) {
                 params.put(defaultParamName, info.location);
             }
-        } else if (LOG.isWarnEnabled()){
-            LOG.warn("Result [#0] for action class [#1] is missing the location", info.name,
-                    actionClass.getSimpleName());
         }
 
         return new ResultConfig.Builder(info.name, resultTypeConfig.getClassName()).addParams(params).build();

@@ -42,7 +42,6 @@
   <constant name="struts.convention.result.flatLayout" value="true"/>
   <constant name="struts.convention.action.suffix" value="Action"/>
   <constant name="struts.convention.action.disableScanning" value="false"/>
-  <constant name="struts.convention.action.disableJarScanning" value="true"/>
   <constant name="struts.convention.action.mapAllMatches" value="false"/>
   <constant name="struts.convention.action.checkImplementsAction" value="true"/>
   <constant name="struts.convention.default.parent.package" value="convention-default"/>

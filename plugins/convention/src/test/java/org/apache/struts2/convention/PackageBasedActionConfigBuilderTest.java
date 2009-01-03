@@ -279,7 +279,6 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         interceptorBuilder.setConfiguration(configuration);
         PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration,
             actionNameBuilder, resultMapBuilder, interceptorBuilder ,of, "false", "struts-default");
-        builder.setDisableJarScanning("true");
         if (actionPackages != null) {
             builder.setActionPackages(actionPackages);
         }

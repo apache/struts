@@ -82,7 +82,6 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private String[] packageLocators;
     private String[] includeJars;
     private String packageLocatorsBasePackage;
-    private boolean disableJarScanning = true;
     private boolean disableActionScanning = false;
     private boolean disablePackageLocatorsScanning = false;
     private String actionSuffix = "Action";
@@ -158,14 +157,6 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     public void setIncludeJars(String includeJars) {
         if (TextUtils.stringSet(includeJars))
             this.includeJars = includeJars.split("\\s*[,]\\s*");
-    }
-
-    /**
-     * @param disableJarScanning Disable scanning jar files for actions
-     */
-    @Inject(value = "struts.convention.action.disableJarScanning", required = false)
-    public void setDisableJarScanning(String disableJarScanning) {
-        this.disableJarScanning = "true".equals(disableJarScanning);
     }
 
     /**
@@ -338,20 +329,26 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         urlSet = urlSet.excludePaths(System.getProperty("sun.boot.class.path", ""));
         urlSet = urlSet.exclude(".*/JavaVM.framework/.*");
 
-        if (disableJarScanning || includeJars == null) {
+        if (includeJars == null) {
             urlSet = urlSet.exclude(".*?jar(!/)?");
-        } else if (includeJars != null) {
+        } else {
+            //jar urls regexes were specified
             //TODO: add this functionality to UrlSet in xwork for next release
-
             List<URL> rawIncludedUrls = urlSet.getUrls();
             Set<URL> includeUrls = new HashSet<URL>();
+
             for (URL url : rawIncludedUrls) {
-                //check if the url matches one of the "includeJars"
-                for (String includeJar : includeJars) {
-                    if (Pattern.matches(includeJar, url.toExternalForm())) {
-                        includeUrls.add(url);
-                        break;
+                if ("jar".equalsIgnoreCase(url.getProtocol())) {
+                    //it is a jar file, make sure it macthes at least a url regex
+                    for (String includeJar : includeJars) {
+                        if (Pattern.matches(includeJar, url.toExternalForm())) {
+                            includeUrls.add(url);
+                            break;
+                        }
                     }
+                } else {
+                    //it is not a jar
+                    includeUrls.add(url);
                 }
             }
 

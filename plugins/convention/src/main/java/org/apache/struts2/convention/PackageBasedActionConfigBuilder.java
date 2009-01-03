@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.net.URL;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -60,6 +61,7 @@ import com.opensymphony.xwork2.util.finder.UrlSet;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.TextUtils;
 
 /**
  * <p>
@@ -78,7 +80,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private String[] actionPackages;
     private String[] excludePackages;
     private String[] packageLocators;
-    private String[] excludeJars;
+    private String[] includeJars;
     private String packageLocatorsBasePackage;
     private boolean disableJarScanning = true;
     private boolean disableActionScanning = false;
@@ -149,12 +151,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param exlcudeJars Comma separated list of regular expressions of jars to be exluded.
+     * @param exlcudeJars Comma separated list of regular expressions of jars to be included.
      *                    Ignored if "struts.convention.action.disableJarScanning" is true
      */
-    @Inject(value = "struts.convention.action.excludeJars", required = false)
-    public void setExcludeJars(String excludeJars) {
-        this.excludeJars = excludeJars.split("\\s*[,]\\s*");
+    @Inject(value = "struts.convention.action.includeJars", required = false)
+    public void setIncludeJars(String includeJars) {
+        if (TextUtils.stringSet(includeJars))
+            this.includeJars = includeJars.split("\\s*[,]\\s*");
     }
 
     /**
@@ -335,12 +338,24 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         urlSet = urlSet.excludePaths(System.getProperty("sun.boot.class.path", ""));
         urlSet = urlSet.exclude(".*/JavaVM.framework/.*");
 
-        if (disableJarScanning) {
+        if (disableJarScanning || includeJars == null) {
             urlSet = urlSet.exclude(".*?jar(!/)?");
-        } else if (excludeJars != null) {
-            for (String pattern : excludeJars) {
-                urlSet = urlSet.exclude(pattern.trim());
+        } else if (includeJars != null) {
+            //TODO: add this functionality to UrlSet in xwork for next release
+
+            List<URL> rawIncludedUrls = urlSet.getUrls();
+            Set<URL> includeUrls = new HashSet<URL>();
+            for (URL url : rawIncludedUrls) {
+                //check if the url matches one of the "includeJars"
+                for (String includeJar : includeJars) {
+                    if (Pattern.matches(includeJar, url.toExternalForm())) {
+                        includeUrls.add(url);
+                        break;
+                    }
+                }
             }
+
+            return new UrlSet(includeUrls);
         }
 
         return urlSet;

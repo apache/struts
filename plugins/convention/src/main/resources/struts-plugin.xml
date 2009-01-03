@@ -55,6 +55,7 @@
   <constant name="struts.convention.relative.result.types" value="dispatcher,velocity,freemarker"/>
   <constant name="struts.convention.redirect.to.slash" value="true"/>
   <constant name="struts.mapper.alwaysSelectFullNamespace" value="true"/>
+  <constant name="struts.convention.action.includeJars" value="" />  
 
   <constant name="struts.convention.classes.reload" value="false" />  
 

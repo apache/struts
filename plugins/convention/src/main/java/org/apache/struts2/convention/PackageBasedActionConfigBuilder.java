@@ -150,8 +150,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param exlcudeJars Comma separated list of regular expressions of jars to be included.
-     *                    Ignored if "struts.convention.action.disableJarScanning" is true
+     * @param includeJars Comma separated list of regular expressions of jars to be included.                         
      */
     @Inject(value = "struts.convention.action.includeJars", required = false)
     public void setIncludeJars(String includeJars) {
@@ -336,13 +335,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             //TODO: add this functionality to UrlSet in xwork for next release
             List<URL> rawIncludedUrls = urlSet.getUrls();
             Set<URL> includeUrls = new HashSet<URL>();
+            boolean[] patternUsed = new boolean[includeJars.length];
 
             for (URL url : rawIncludedUrls) {
                 if ("jar".equalsIgnoreCase(url.getProtocol())) {
                     //it is a jar file, make sure it macthes at least a url regex
-                    for (String includeJar : includeJars) {
+                    for (int i = 0; i < includeJars.length; i++) {
+                        String includeJar = includeJars[i];
                         if (Pattern.matches(includeJar, url.toExternalForm())) {
                             includeUrls.add(url);
+                            patternUsed[i] = true;
                             break;
                         }
                     }
@@ -352,6 +354,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 }
             }
 
+            if (LOG.isWarnEnabled()) {
+                for (int i = 0; i < patternUsed.length; i++) {
+                    if (!patternUsed[i]) {
+                        LOG.warn("The includeJars pattern \""+includeJars[i]+"\" did not match any jars in the classpath");
+                    }
+                }
+            }
             return new UrlSet(includeUrls);
         }
 

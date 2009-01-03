@@ -357,7 +357,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (LOG.isWarnEnabled()) {
                 for (int i = 0; i < patternUsed.length; i++) {
                     if (!patternUsed[i]) {
-                        LOG.warn("The includeJars pattern \""+includeJars[i]+"\" did not match any jars in the classpath");
+                        LOG.warn("The includeJars pattern [#0] did not match any jars in the classpath", includeJars[i]);
                     }
                 }
             }

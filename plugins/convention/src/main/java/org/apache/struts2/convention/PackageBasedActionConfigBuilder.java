@@ -332,7 +332,6 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             urlSet = urlSet.exclude(".*?jar(!/)?");
         } else {
             //jar urls regexes were specified
-            //TODO: add this functionality to UrlSet in xwork for next release
             List<URL> rawIncludedUrls = urlSet.getUrls();
             Set<URL> includeUrls = new HashSet<URL>();
             boolean[] patternUsed = new boolean[includeJars.length];

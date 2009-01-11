@@ -249,11 +249,11 @@
                             <tasks>
                                 <mkdir dir="${project.build.directory}/cwiki" />
                                 <exec executable="wget">
-                        				    <arg value="--progress=dot:mega" />
-                        				    <arg value="-nc" />
-                        				    <arg value="--output-document=${project.build.directory}/docs.zip" />
-                        				    <arg value="http://struts.apache.org/2.x/docs.zip" />
-                        				</exec>    
+                                    <arg value="--progress=dot:mega" />
+                                    <arg value="-nc" />
+                                    <arg value="--output-document=${project.build.directory}/docs.zip" />
+                                    <arg value="http://struts.apache.org/2.x/docs.zip" />
+                                </exec>    
                                 <unzip src="${project.build.directory}/docs.zip" dest="${project.build.directory}/cwiki" />
                             </tasks>
                         </configuration>

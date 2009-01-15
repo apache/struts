@@ -248,6 +248,9 @@
                         <configuration>
                             <tasks>
                                 <mkdir dir="${project.build.directory}/cwiki" />
+                                <exec executable="ssh" failonerror="true">
+                                    <arg line="people.apache.org /www/struts.apache.org/2.x/docs-zip2.sh" />
+                                </exec>
                                 <exec executable="wget">
                                     <arg value="--progress=dot:mega" />
                                     <arg value="-nc" />

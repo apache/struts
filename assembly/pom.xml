@@ -248,16 +248,24 @@
                         <configuration>
                             <tasks>
                                 <mkdir dir="${project.build.directory}/cwiki" />
+<!--
                                 <exec executable="ssh" failonerror="true" >
                                     <arg line="${username}@people.apache.org /www/struts.apache.org/2.x/docs-zip2.sh" />
                                 </exec>
-                                <exec executable="wget">
-                                    <arg value="--progress=dot:mega" />
-                                    <arg value="-nc" />
-                                    <arg value="--output-document=${project.build.directory}/docs.zip" />
-                                    <arg value="http://struts.apache.org/2.x/docs.zip" />
-                                </exec>    
                                 <unzip src="${project.build.directory}/docs.zip" dest="${project.build.directory}/cwiki" />
+-->
+                                <exec executable="wget">
+                                    <arg value="-erobots=off" />
+                                    <arg value="-nH" />
+                                    <arg value="-nv" />
+                                    <arg value="-E" />
+                                    <arg value="-L" />
+                                    <arg value="-r" />
+                                    <arg value="http://struts.apache.org/2.x/docs/" />
+                                </exec>    
+                                <move todir="${project.build.directory}/cwiki">
+                                    <fileset dir="2.x/docs"/>
+                                </move>
                             </tasks>
                         </configuration>
                         <goals>

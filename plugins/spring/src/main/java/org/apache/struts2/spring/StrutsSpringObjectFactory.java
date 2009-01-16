@@ -21,18 +21,16 @@
 
 package org.apache.struts2.spring;
 
-import javax.servlet.ServletContext;
-
-import org.apache.struts2.StrutsConstants;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.context.WebApplicationContext;
-
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+
+import javax.servlet.ServletContext;
 
 
 
@@ -98,6 +96,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             type = AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT;
         } else if ("constructor".equals(autoWire)) {
             type = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
+        } else if ("no".equals(autoWire)) {
+            type = AutowireCapableBeanFactory.AUTOWIRE_NO;
         }
         this.setAutowireStrategy(type);
 

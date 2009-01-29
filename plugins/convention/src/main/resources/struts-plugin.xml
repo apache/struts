@@ -27,7 +27,7 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-  <bean type="com.opensymphony.xwork2.UnknownHandler" class="org.apache.struts2.convention.ConventionUnknownHandler"/>
+  <bean type="com.opensymphony.xwork2.UnknownHandler" name="convention" class="org.apache.struts2.convention.ConventionUnknownHandler"/>
 
   <bean type="org.apache.struts2.convention.ActionConfigBuilder" class="org.apache.struts2.convention.PackageBasedActionConfigBuilder"/>
   <bean type="org.apache.struts2.convention.ActionNameBuilder" class="org.apache.struts2.convention.SEOActionNameBuilder"/>

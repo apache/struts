@@ -411,7 +411,8 @@ public class IteratorComponent extends ContextBean {
         this.beginStr = begin;
     }
 
-    @StrutsTagAttribute(description="if specified the iteration will end on that index(inclusive)", type="Integer", defaultValue="Size of the 'values' collection or array")
+    @StrutsTagAttribute(description="if specified the iteration will end on that index(inclusive)", type="Integer",
+            defaultValue="Size of the 'values' List or array, or 0 if 'step' is negative")
     public void setEnd(String end) {
         this.endStr = end;
     }

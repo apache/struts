@@ -39,6 +39,9 @@ public class IteratorTag extends ContextBeanTag {
 
     protected String statusAttr;
     protected String value;
+    protected String begin;
+    protected String end;
+    protected String step;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new IteratorComponent(stack);
@@ -50,6 +53,9 @@ public class IteratorTag extends ContextBeanTag {
         IteratorComponent tag = (IteratorComponent) getComponent();
         tag.setStatus(statusAttr);
         tag.setValue(value);
+        tag.setBegin(begin);
+        tag.setEnd(end);
+        tag.setStep(step);
     }
 
     public void setStatus(String status) {
@@ -58,6 +64,18 @@ public class IteratorTag extends ContextBeanTag {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setBegin(String begin) {
+        this.begin = begin;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public void setStep(String step) {
+        this.step = step;
     }
 
     public int doEndTag() throws JspException {

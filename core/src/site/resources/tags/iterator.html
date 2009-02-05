@@ -34,6 +34,22 @@ Please do not edit it directly.
 				<th align="left" valign="top"><h4>Description</h4></th>
 			</tr>
 				<tr>
+					<td align="left" valign="top">begin</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">0</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Integer</td>
+					<td align="left" valign="top">if specified the iteration will start on that index</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">end</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Size of the 'values' collection or array</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Integer</td>
+					<td align="left" valign="top">if specified the iteration will end on that index(inclusive)</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">id</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -48,6 +64,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">Boolean</td>
 					<td align="left" valign="top">If specified, an instanceof IteratorStatus will be pushed into stack upon each iteration</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">step</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">1</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Integer</td>
+					<td align="left" valign="top">if specified the iteration index will be increased by this value on each iteration. It can be a negative value, in which case 'begin' must be greater than 'end'</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">value</td>

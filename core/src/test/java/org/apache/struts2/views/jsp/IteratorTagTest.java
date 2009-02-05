@@ -21,17 +21,18 @@
 
 package org.apache.struts2.views.jsp;
 
+import com.mockobjects.servlet.MockBodyContent;
+import com.mockobjects.servlet.MockJspWriter;
+import org.apache.commons.collections.ListUtils;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
-
-import com.mockobjects.servlet.MockBodyContent;
-import com.mockobjects.servlet.MockJspWriter;
 
 
 /**
@@ -350,6 +351,294 @@ public class IteratorTagTest extends AbstractUITagTest {
         tag.setValue("list");
 
         validateSkipBody();
+    }
+
+    public void testCounter() throws JspException {
+        tag.setBegin("0");
+        tag.setEnd("5");
+        validateCounter(new Integer[]{0, 1, 2, 3, 4, 5});
+    }
+
+     public void testCounterWithStackValues() throws JspException {
+        stack.getContext().put("begin", 0);
+        stack.getContext().put("end", 5);
+        tag.setBegin("%{#begin}");
+        tag.setEnd("%{#end}");
+        validateCounter(new Integer[]{0, 1, 2, 3, 4, 5});
+    }
+
+    public void testCounterWithList() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setBegin("0");
+        tag.setEnd("2");
+        validateCounter(new String[]{"a", "b", "c"});
+    }
+
+    public void testCounterWithArray() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        foo.setArray(new String[]{"a", "b", "c", "d"});
+
+        stack.push(foo);
+
+        tag.setValue("array");
+
+        tag.setBegin("0");
+        tag.setEnd("2");
+        validateCounter(new String[]{"a", "b", "c"});
+    }
+
+
+    public void testCounterWithListNoEnd() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setBegin("0");
+        validateCounter(new String[]{"a", "b", "c", "d"});
+    }
+
+    public void testCounterWithArrayNoEnd() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        foo.setArray(new String[]{"a", "b", "c", "d"});
+
+        stack.push(foo);
+
+        tag.setValue("array");
+
+        tag.setBegin("0");
+        validateCounter(new String[]{"a", "b", "c", "d"});
+    }
+
+    public void testCounterWithList2() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setBegin("1");
+        tag.setEnd("2");
+        validateCounter(new String[]{"b", "c"});
+    }
+
+    public void testCounterWithArray2() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        foo.setArray(new String[]{"a", "b", "c", "d"});
+
+        stack.push(foo);
+
+        tag.setValue("array");
+
+        tag.setBegin("1");
+        tag.setEnd("2");
+        validateCounter(new String[]{"b", "c"});
+    }
+
+    public void testCounterWithListNoEnd2() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setBegin("2");
+        validateCounter(new String[]{"c", "d"});
+    }
+
+     public void testCounterWithArrayNoEnd2() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        foo.setArray(new String[]{"a", "b", "c", "d"});
+
+        stack.push(foo);
+
+        tag.setValue("array");
+
+        tag.setBegin("2");
+        validateCounter(new String[]{"c", "d"});
+    }
+
+    public void testCounter2() throws JspException {
+        tag.setBegin("2");
+        tag.setEnd("5");
+        validateCounter(new Integer[]{2, 3, 4, 5});
+    }
+
+    public void testCounterWithStep() throws JspException {
+        tag.setBegin("0");
+        tag.setEnd("5");
+        tag.setStep("2");
+        validateCounter(new Integer[]{0, 2, 4});
+    }
+
+     public void testCounterWithListAndStep() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setStep("2");
+        tag.setBegin("0");
+        tag.setEnd("3");
+
+        validateCounter(new String[]{"a", "c"});
+    }
+
+     public void testCounterWithArrayAndStep() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        foo.setArray(new String[]{"a", "b", "c", "d"});
+
+        stack.push(foo);
+
+        tag.setValue("array");
+
+        tag.setStep("2");
+        tag.setBegin("0");
+        tag.setEnd("3");
+
+        validateCounter(new String[]{"a", "c"});
+    }
+
+    public void testCounterWithListAndStepNoEnd() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setStep("2");
+        tag.setBegin("0");
+
+        validateCounter(new String[]{"a", "c"});
+    }
+
+    public void testCounterWithArrayAndStepNoEnd() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        foo.setArray(new String[]{"a", "b", "c", "d"});
+
+        stack.push(foo);
+
+        tag.setValue("array");
+
+        tag.setStep("2");
+        tag.setBegin("0");
+
+        validateCounter(new String[]{"a", "c"});
+    }
+
+    public void testCounterWithNegativeStep() throws JspException {
+        tag.setBegin("8");
+        tag.setEnd("5");
+        tag.setStep("-1");
+        validateCounter(new Integer[]{8, 7, 6, 5});
+    }
+
+    public void testCounterWithListAndNegativeStep() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setStep("-1");
+        tag.setBegin("3");
+        tag.setEnd("1");
+
+        validateCounter(new String[]{"d", "c", "b"});
+    }
+
+     public void testCounterWithArrayAndNegativeStep() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setStep("-1");
+        tag.setBegin("3");
+        tag.setEnd("1");
+
+        validateCounter(new String[]{"d", "c", "b"});
+    }
+
+    protected void validateCounter(Object[] expectedValues) throws JspException {
+        List values = new ArrayList();
+        try {
+            int result = tag.doStartTag();
+            assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+            values.add(stack.getRoot().peek());
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        while (tag.doAfterBody() == TagSupport.EVAL_BODY_AGAIN) {
+            values.add(stack.getRoot().peek());
+        }
+
+        assertEquals(expectedValues.length, values.size());
+        ListUtils.isEqualList(Arrays.asList(expectedValues), values);
     }
 
     protected void setUp() throws Exception {

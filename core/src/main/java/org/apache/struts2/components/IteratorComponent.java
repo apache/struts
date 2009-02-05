@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Arrays;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -30,6 +32,8 @@ import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.jsp.IteratorStatus;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -48,6 +52,13 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <li>id (String) - if specified the current iteration object will be place with this id in Struts stack's context
  * scope</li>
+ *
+ * <li>begin (Integer) - if specified the iteration will start on that index</li>
+ *
+ * <li>end (Integer) - if specified the iteration will end on that index(inclusive)</li>
+ *
+ * <li>step (Integer) - if specified the iteration index will be increased by this value on each iteration. It can be a negative
+ * value, in which case 'begin' must be greater than 'end'</li>
  *
  * </ul>
  *
@@ -162,19 +173,14 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: example5description -->
  *
- * </p>To simulate a simple loop with iterator tag, the following could be done.
- * It does the loop 5 times.
+ * </p>A loop that iterates 5 times
  *
  * <!-- END SNIPPET: example5description -->
  *
  * <pre>
  * <!-- START SNIPPET: example5code -->
  *
- * &lt;s:iterator status="stat" value="{1,2,3,4,5}" &gt;
- *    &lt;!-- grab the index (start with 0 ... ) --&gt;
- *    &lt;s:property value="#stat.index" /&gt;
- *
- *    &lt;!-- grab the top of the stack which should be the --&gt;
+ * &lt;s:iterator var="counter" begin="1" end="5" &gt;
  *    &lt;!-- current iteration value (1, ... 5) --&gt;
  *    &lt;s:property value="top" /&gt;
  * &lt;/s:iterator&gt;
@@ -201,15 +207,39 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example6code -->
  * </pre>
  *
+ *  <!-- START SNIPPET: example7description -->
+ *
+ * </p>A loop that iterates over a partial list
+ *
+ * <!-- END SNIPPET: example7description -->
+ *
+ * <pre>
+ * <!-- START SNIPPET: example7code -->
+ *
+ * &lt;s:iterator value="{1,2,3,4,5}" begin="2" end="4" &gt;
+ *    &lt;!-- current iteration value (2,3,4) --&gt;
+ *    &lt;s:property value="top" /&gt;
+ * &lt;/s:iterator&gt;
+ *
+ * <!-- END SNIPPET: example7code -->
+ * </pre>
  */
 @StrutsTag(name="iterator", tldTagClass="org.apache.struts2.views.jsp.IteratorTag", description="Iterate over a iterable value")
 public class IteratorComponent extends ContextBean {
+    private static final Logger LOG = LoggerFactory.getLogger(IteratorComponent.class);
+
     protected Iterator iterator;
     protected IteratorStatus status;
     protected Object oldStatus;
     protected IteratorStatus.StatusState statusState;
     protected String statusAttr;
     protected String value;
+    protected String beginStr;
+    protected Integer begin;
+    protected String endStr;
+    protected Integer end;
+    protected String stepStr;
+    protected Integer step;
 
     public IteratorComponent(ValueStack stack) {
         super(stack);
@@ -222,12 +252,50 @@ public class IteratorComponent extends ContextBean {
             status = new IteratorStatus(statusState);
         }
 
+        if (beginStr != null)
+            begin = (Integer) findValue(beginStr,  Integer.class);
+
+        if (endStr != null)
+            end = (Integer) findValue(endStr,  Integer.class);
+
+        if (stepStr != null)
+            step = (Integer) findValue(stepStr,  Integer.class);
+
         ValueStack stack = getStack();
 
-        if (value == null) {
+        if (value == null && begin == null && end == null) {
             value = "top";
         }
-        iterator = MakeIterator.convert(findValue(value));
+        Object iteratorTarget = findValue(value);
+        iterator = MakeIterator.convert(iteratorTarget);
+
+        if (begin != null) {
+            //default step to 1
+            if (step == null)
+                step = 1;
+
+            if (iterator == null) {
+                //classic for loop from 'begin' to 'end'
+                iterator = new CounterIterator(begin, end, step, null);
+            } else if (iterator != null) {
+                //only arrays and lists are supported
+                if (iteratorTarget.getClass().isArray()) {
+                    Object[] values = (Object[]) iteratorTarget;
+                    if (end == null)
+                        end = step > 0 ? values.length - 1 : 0;
+                    iterator = new CounterIterator(begin, end, step, Arrays.asList(values));
+                } else if (iteratorTarget instanceof List) {
+                    List values = (List) iteratorTarget;
+                    if (end == null)
+                        end = step > 0 ? values.size() - 1 : 0;
+                    iterator = new CounterIterator(begin, end, step, values);
+                } else {
+                    //so the iterator is not based on an array or a list
+                    LOG.error("Incorrect use of the iterator tag. When 'begin' is set, 'value' must be" +
+                            " an Array or a List, or not set at all. 'begin', 'end' and 'step' will be ignored");
+                }
+            }
+        }
 
         // get the first
         if ((iterator != null) && iterator.hasNext()) {
@@ -289,6 +357,44 @@ public class IteratorComponent extends ContextBean {
         }
     }
 
+    class CounterIterator implements Iterator<Object> {
+        private int step;
+        private int end;
+        private int currentIndex;
+        private List<Object> values;
+
+        CounterIterator(Integer begin, Integer end, Integer step, List<Object> values) {
+            this.end = end;
+            if (step != null)
+                this.step = step;
+            this.currentIndex = begin - this.step;
+            this.values = values;
+        }
+
+        public boolean hasNext() {
+            int next = peekNextIndex();
+            return step > 0 ? next <= end : next >= end;
+        }
+
+        public Object next() {
+            if (hasNext()) {
+                int nextIndex = peekNextIndex();
+                currentIndex += step;
+                return value != null ? values.get(nextIndex) : nextIndex;
+            } else {
+                throw new IndexOutOfBoundsException("Index " + ( currentIndex + step) + " must be less than or equal to " + end);
+            }
+        }
+
+        private int peekNextIndex() {
+           return currentIndex + step;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("Values cannot be removed from this iterator");
+        }
+    }
+
     @StrutsTagAttribute(description="If specified, an instanceof IteratorStatus will be pushed into stack upon each iteration",
         type="Boolean", defaultValue="false")
     public void setStatus(String status) {
@@ -300,4 +406,19 @@ public class IteratorComponent extends ContextBean {
         this.value = value;
     }
 
+    @StrutsTagAttribute(description="if specified the iteration will start on that index", type="Integer", defaultValue="0")
+    public void setBegin(String begin) {
+        this.beginStr = begin;
+    }
+
+    @StrutsTagAttribute(description="if specified the iteration will end on that index(inclusive)", type="Integer", defaultValue="Size of the 'values' collection or array")
+    public void setEnd(String end) {
+        this.endStr = end;
+    }
+
+    @StrutsTagAttribute(description="if specified the iteration index will be increased by this value on each iteration. It can be a negative " +
+            "value, in which case 'begin' must be greater than 'end'", type="Integer", defaultValue="1")
+    public void setStep(String step) {
+        this.stepStr = step;
+    }
 }

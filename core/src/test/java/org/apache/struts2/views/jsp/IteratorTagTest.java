@@ -602,6 +602,25 @@ public class IteratorTagTest extends AbstractUITagTest {
         validateCounter(new String[]{"d", "c", "b"});
     }
 
+    public void testCounterWithListAndNegativeStepNoEnd() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setStep("-1");
+        tag.setBegin("3");
+
+        validateCounter(new String[]{"d", "c", "b", "a"});
+    }
+
      public void testCounterWithArrayAndNegativeStep() throws JspException {
         Foo foo = new Foo();
         ArrayList list = new ArrayList();
@@ -620,6 +639,25 @@ public class IteratorTagTest extends AbstractUITagTest {
         tag.setEnd("1");
 
         validateCounter(new String[]{"d", "c", "b"});
+    }
+
+    public void testCounterWithArrayAndNegativeStepNoEnd() throws JspException {
+        Foo foo = new Foo();
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+
+        tag.setStep("-1");
+        tag.setBegin("3");
+
+        validateCounter(new String[]{"d", "c", "b", "a"});
     }
 
     protected void validateCounter(Object[] expectedValues) throws JspException {

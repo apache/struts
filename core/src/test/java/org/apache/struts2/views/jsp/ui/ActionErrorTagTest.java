@@ -53,6 +53,7 @@ public class ActionErrorTagTest extends AbstractUITagTest {
     public void testHaveActionErrors() throws Exception {
 
         ActionErrorTag tag = new ActionErrorTag();
+        tag.setId("someid");
         ((InternalActionSupport)action).setHasActionErrors(true);
         tag.setPageContext(pageContext);
         tag.doStartTag();
@@ -64,6 +65,7 @@ public class ActionErrorTagTest extends AbstractUITagTest {
     public void testNullError() throws Exception {
 
         ActionErrorTag tag = new ActionErrorTag();
+        tag.setId("someid");
         ((InternalActionSupport)action).setHasActionErrors(true);
         ((InternalActionSupport)action).addActionError(null);
         tag.setPageContext(pageContext);

@@ -62,6 +62,7 @@ public class FieldErrorTagTest extends AbstractUITagTest {
 
     public void testWithParamsWithFieldErrors1() throws Exception {
         FieldErrorTag tag = new FieldErrorTag();
+        tag.setId("someid");
         ((InternalAction)action).setHaveFieldErrors(true);
         tag.setPageContext(pageContext);
         tag.doStartTag();

@@ -34,6 +34,9 @@
 			<#assign eValue = fieldErrors[fieldErrorFieldName]><#t/>
 			<#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
 				<ul<#rt/>
+<#if parameters.id?if_exists != "">
+ id="${parameters.id?html}"<#rt/>
+</#if>
 <#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>

@@ -1,4 +1,4 @@
-<ul class="actionMessage">
+<ul id="someid" class="actionMessage">
 	<li><span>action message number 1</span></li>
 	<li><span>action message number 2</span></li>
 	<li><span>action message number 3</span></li>

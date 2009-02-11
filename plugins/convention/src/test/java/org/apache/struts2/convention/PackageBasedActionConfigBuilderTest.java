@@ -260,11 +260,13 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
         EasyMock.replay(resultMapBuilder);
 
+        final DummyContainer mockContainer = new DummyContainer();
+
         Configuration configuration = new DefaultConfiguration() {
 
             @Override
             public Container getContainer() {
-                return new DummyContainer();
+                return mockContainer;
             }
 
         };
@@ -277,8 +279,14 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         ObjectFactory of = new ObjectFactory();
         DefaultInterceptorMapBuilder interceptorBuilder = new DefaultInterceptorMapBuilder();
         interceptorBuilder.setConfiguration(configuration);
-        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration,
-            actionNameBuilder, resultMapBuilder, interceptorBuilder ,of, "false", "struts-default");
+
+        //set beans on mock container
+        mockContainer.setActionNameBuilder(actionNameBuilder);
+        mockContainer.setInterceptorMapBuilder(interceptorBuilder);
+        mockContainer.setResultMapBuilder(resultMapBuilder);
+        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration, mockContainer ,of, "false", "struts-default");
         if (actionPackages != null) {
             builder.setActionPackages(actionPackages);
         }
@@ -489,7 +497,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         EasyMock.replay(context);
 
         ObjectFactory workingFactory = configuration.getContainer().getInstance(ObjectFactory.class);
-        ConventionUnknownHandler uh = new ConventionUnknownHandler(configuration, workingFactory, context, resultMapBuilder, new ConventionsServiceImpl(""), "struts-default", null, "-");
+        ConventionUnknownHandler uh = new ConventionUnknownHandler(configuration, workingFactory, context, mockContainer, "struts-default", null, "-");
         ActionContext actionContext = new ActionContext(Collections.EMPTY_MAP);
 
         Result result = uh.handleUnknownResult(actionContext, "foo", pkgConfig.getActionConfigs().get("foo"), "bar");
@@ -580,6 +588,26 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     }
 
     public class DummyContainer implements Container {
+        private ActionNameBuilder actionNameBuilder;
+        private ResultMapBuilder resultMapBuilder;
+        private InterceptorMapBuilder interceptorMapBuilder;
+        private ConventionsService conventionsService;
+
+        public void setActionNameBuilder(ActionNameBuilder actionNameBuilder) {
+            this.actionNameBuilder = actionNameBuilder;
+        }
+
+        public void setInterceptorMapBuilder(InterceptorMapBuilder interceptorMapBuilder) {
+            this.interceptorMapBuilder = interceptorMapBuilder;
+        }
+
+        public void setResultMapBuilder(ResultMapBuilder resultMapBuilder) {
+            this.resultMapBuilder = resultMapBuilder;
+        }
+
+        public void setConventionsService(ConventionsService conventionsService) {
+            this.conventionsService = conventionsService;
+        }
 
         public <T> T getInstance(Class<T> type) {
             try {
@@ -612,6 +640,14 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         }
 
         public <T> T getInstance(Class<T> type, String name) {
+            if (type == ResultMapBuilder.class)
+                return (T) resultMapBuilder;
+            else if (type == InterceptorMapBuilder.class)
+                return (T) interceptorMapBuilder;
+            else if (type == ActionNameBuilder.class)
+                return (T) actionNameBuilder;
+            else if (type == ConventionsService.class)
+                return (T) conventionsService;
             return null;
         }
 

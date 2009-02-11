@@ -43,6 +43,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -81,9 +82,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
      * @param   configuration The XWork configuration.
      * @param   objectFactory The XWork object factory used to create result instances.
      * @param   servletContext The servlet context used to help build the action configurations.
-     * @param   resultMapBuilder The result map builder that is used to create results.
-     * @param   conventionsService The conventions service used to get all the conventions and
-     *          configurations.
+     * @param   container The Xwork container
      * @param   defaultParentPackageName The default XWork package that the unknown handler will use as
      *          the parent package for new actions and results.
      * @param   redirectToSlash A boolean parameter that controls whether or not this will handle
@@ -94,16 +93,15 @@ public class ConventionUnknownHandler implements UnknownHandler {
      */
     @Inject
     public ConventionUnknownHandler(Configuration configuration, ObjectFactory objectFactory,
-            ServletContext servletContext, ResultMapBuilder resultMapBuilder,
-            ConventionsService conventionsService,
+            ServletContext servletContext, Container container,
             @Inject("struts.convention.default.parent.package") String defaultParentPackageName,
             @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
             @Inject("struts.convention.action.name.separator") String nameSeparator) {
         this.configuration = configuration;
         this.objectFactory = objectFactory;
         this.servletContext = servletContext;
-        this.resultMapBuilder = resultMapBuilder;
-        this.conventionsService = conventionsService;
+        this.resultMapBuilder = container.getInstance(ResultMapBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_RESULT_MAP_BUILDER));
+        this.conventionsService = container.getInstance(ConventionsService.class, container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE));
         this.defaultParentPackageName = defaultParentPackageName;
         this.nameSeparator = nameSeparator;
 

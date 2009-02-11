@@ -39,6 +39,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -122,16 +123,16 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
      * Constructs the SimpleResultMapBuilder using the given result location.
      *
      * @param   servletContext The ServletContext for finding the resources of the web application.
-     * @param   conventionsService The service used to assist in finding configuration and conventions.
+     * @param   container The Xwork container
      * @param   relativeResultTypes The list of result types that can have locations that are relative
      *          and the result location (which is the resultPath plus the namespace) prepended to them.
      */
     @Inject
-    public DefaultResultMapBuilder(ServletContext servletContext, ConventionsService conventionsService,
+    public DefaultResultMapBuilder(ServletContext servletContext, Container container,
             @Inject("struts.convention.relative.result.types") String relativeResultTypes) {
         this.servletContext = servletContext;
         this.relativeResultTypes = new HashSet<String>(Arrays.asList(relativeResultTypes.split("\\s*[,]\\s*")));
-        this.conventionsService = conventionsService;
+        this.conventionsService = container.getInstance(ConventionsService.class, container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE));
     }
 
     /**

@@ -29,14 +29,20 @@
 <struts>
   <bean type="com.opensymphony.xwork2.UnknownHandler" name="convention" class="org.apache.struts2.convention.ConventionUnknownHandler"/>
 
-  <bean type="org.apache.struts2.convention.ActionConfigBuilder" class="org.apache.struts2.convention.PackageBasedActionConfigBuilder"/>
-  <bean type="org.apache.struts2.convention.ActionNameBuilder" class="org.apache.struts2.convention.SEOActionNameBuilder"/>
-  <bean type="org.apache.struts2.convention.ResultMapBuilder" class="org.apache.struts2.convention.DefaultResultMapBuilder"/>
-  <bean type="org.apache.struts2.convention.InterceptorMapBuilder" class="org.apache.struts2.convention.DefaultInterceptorMapBuilder"/>
-  <bean type="org.apache.struts2.convention.ConventionsService" class="org.apache.struts2.convention.ConventionsServiceImpl"/>
+  <bean type="org.apache.struts2.convention.ActionConfigBuilder" name="convention" class="org.apache.struts2.convention.PackageBasedActionConfigBuilder"/>
+  <bean type="org.apache.struts2.convention.ActionNameBuilder" name="convention" class="org.apache.struts2.convention.SEOActionNameBuilder"/>
+  <bean type="org.apache.struts2.convention.ResultMapBuilder" name="convention" class="org.apache.struts2.convention.DefaultResultMapBuilder"/>
+  <bean type="org.apache.struts2.convention.InterceptorMapBuilder" name="convention" class="org.apache.struts2.convention.DefaultInterceptorMapBuilder"/>
+  <bean type="org.apache.struts2.convention.ConventionsService" name="convention" class="org.apache.struts2.convention.ConventionsServiceImpl"/>
 
   <bean type="com.opensymphony.xwork2.config.PackageProvider" name="convention.packageProvider" class="org.apache.struts2.convention.ClasspathPackageProvider"/>
   <bean type="com.opensymphony.xwork2.config.PackageProvider" name="convention.containerProvider" class="org.apache.struts2.convention.ClasspathConfigurationProvider"/>
+
+  <constant name="struts.convention.actionConfigBuilder" value="convention"/>
+  <constant name="struts.convention.actionNameBuilder" value="convention"/>
+  <constant name="struts.convention.resultMapBuilder" value="convention"/>
+  <constant name="struts.convention.interceptorMapBuilder" value="convention"/>
+  <constant name="struts.convention.conventionsService" value="convention"/>
 
   <constant name="struts.convention.result.path" value="/WEB-INF/content/"/>
   <constant name="struts.convention.result.flatLayout" value="true"/>

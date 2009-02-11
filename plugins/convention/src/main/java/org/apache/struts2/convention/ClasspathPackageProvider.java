@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * <p>
@@ -37,8 +38,8 @@ public class ClasspathPackageProvider implements PackageProvider {
      private ActionConfigBuilder actionConfigBuilder;
 
     @Inject
-    public ClasspathPackageProvider(ActionConfigBuilder actionConfigBuilder) {
-        this.actionConfigBuilder = actionConfigBuilder;
+    public ClasspathPackageProvider(Container container) {
+        this.actionConfigBuilder = container.getInstance(ActionConfigBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_ACTION_CONFIG_BUILDER));
     }
 
     public void init(Configuration configuration) throws ConfigurationException {

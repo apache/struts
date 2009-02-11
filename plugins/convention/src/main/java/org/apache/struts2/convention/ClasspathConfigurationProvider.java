@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.dispatcher.DispatcherListener;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -42,8 +43,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
     private boolean listeningToDispatcher;
 
     @Inject
-    public ClasspathConfigurationProvider(ActionConfigBuilder actionConfigBuilder) {
-        this.actionConfigBuilder = actionConfigBuilder;
+    public ClasspathConfigurationProvider(Container container) {
+        this.actionConfigBuilder = container.getInstance(ActionConfigBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_ACTION_CONFIG_BUILDER));
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)

@@ -55,6 +55,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.finder.ClassFinder;
 import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.finder.UrlSet;
@@ -97,12 +98,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      *
      * @param configuration         The XWork configuration that the new package configs and action configs
      *                              are added to.
-     * @param actionNameBuilder     The action name builder used to convert action class names to action
-     *                              names.
-     * @param resultMapBuilder      The result map builder used to create ResultConfig mappings for each
-     *                              action.
-     * @param interceptorMapBuilder The interceptor map builder used to create InterceptorConfig mappings for each
-     *                              action.
+     * @param container             Xwork Container
      * @param objectFactory         The ObjectFactory used to create the actions and such.
      * @param redirectToSlash       A boolean parameter that controls whether or not this will create an
      *                              action for indexes. If this is set to true, index actions are not created because
@@ -111,16 +107,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param defaultParentPackage  The default parent package for all the configuration.
      */
     @Inject
-    public PackageBasedActionConfigBuilder(Configuration configuration, ActionNameBuilder actionNameBuilder,
-                                           ResultMapBuilder resultMapBuilder, InterceptorMapBuilder interceptorMapBuilder, ObjectFactory objectFactory,
+    public PackageBasedActionConfigBuilder(Configuration configuration, Container container, ObjectFactory objectFactory,
                                            @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
                                            @Inject("struts.convention.default.parent.package") String defaultParentPackage) {
 
         // Validate that the parameters are okay
         this.configuration = configuration;
-        this.actionNameBuilder = actionNameBuilder;
-        this.resultMapBuilder = resultMapBuilder;
-        this.interceptorMapBuilder = interceptorMapBuilder;
+        this.actionNameBuilder = container.getInstance(ActionNameBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_ACTION_NAME_BUILDER));
+        this.resultMapBuilder = container.getInstance(ResultMapBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_RESULT_MAP_BUILDER));
+        this.interceptorMapBuilder = container.getInstance(InterceptorMapBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_INTERCEPTOR_MAP_BUILDER));;
         this.objectFactory = objectFactory;
         this.redirectToSlash = Boolean.parseBoolean(redirectToSlash);
 

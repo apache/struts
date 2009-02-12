@@ -63,6 +63,7 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.TextParseUtil;
 
 /**
  * <p>
@@ -92,6 +93,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private boolean devMode;
     private ReloadingClassLoader reloadingClassLoader;
     private boolean reload;
+    private Set<String> fileProtocols;
 
     /**
      * Constructs actions based on a list of packages.
@@ -134,6 +136,17 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
         this.reload = "true".equals(reload);
+    }
+
+    /**
+     * Comma separated list of file protocols that will be considered as jar files and scanned
+     * @param fileProtocols
+     */
+    @Inject("struts.convention.action.fileProtocols")
+    public void setFileProtocols(String fileProtocols) {
+        if (!StringTools.isTrimmedEmpty(fileProtocols)) {
+            this.fileProtocols = TextParseUtil.commaDelimitedStringToSet(fileProtocols);
+        }
     }
 
     /**
@@ -332,7 +345,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             boolean[] patternUsed = new boolean[includeJars.length];
 
             for (URL url : rawIncludedUrls) {
-                if ("jar".equalsIgnoreCase(url.getProtocol())) {
+                if (fileProtocols.contains(url.getProtocol())) {
                     //it is a jar file, make sure it macthes at least a url regex
                     for (int i = 0; i < includeJars.length; i++) {
                         String includeJar = includeJars[i];

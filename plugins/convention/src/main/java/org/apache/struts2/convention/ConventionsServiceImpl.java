@@ -109,9 +109,9 @@ public class ConventionsServiceImpl implements ConventionsService {
 
         Map<String, ResultTypeConfig> resultsByExtension = new HashMap<String, ResultTypeConfig>();
         resultsByExtension.put("jsp", results.get("dispatcher"));
+        resultsByExtension.put("jspx", results.get("dispatcher"));
         resultsByExtension.put("vm", results.get("velocity"));
         resultsByExtension.put("ftl", results.get("freemarker"));
-        // Issue 22 - Add html and htm as default result extensions
         resultsByExtension.put("html", results.get("dispatcher"));
         resultsByExtension.put("htm", results.get("dispatcher"));
         return resultsByExtension;

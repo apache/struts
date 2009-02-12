@@ -22,6 +22,8 @@ package org.apache.struts2.convention;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -61,5 +63,20 @@ public class ReflectionTools {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Return the list of parent classes in order (Object will be at index 0)
+     * @param clazz class to process
+     * @return hierarchy of classes
+     */
+    public static List<Class<?>> getClassHierarchy(Class<?> clazz) {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        while (clazz != null) {
+            classes.add(0, clazz);
+            clazz = clazz.getSuperclass();
+        }
+
+        return classes;
     }
 }

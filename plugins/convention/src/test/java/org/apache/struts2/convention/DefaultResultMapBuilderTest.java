@@ -33,6 +33,9 @@ import org.apache.struts2.convention.actions.result.ActionLevelResultAction;
 import org.apache.struts2.convention.actions.result.ActionLevelResultsAction;
 import org.apache.struts2.convention.actions.result.ClassLevelResultAction;
 import org.apache.struts2.convention.actions.result.ClassLevelResultsAction;
+import org.apache.struts2.convention.actions.result.InheritedResultExtends;
+import org.apache.struts2.convention.actions.result.InheritedResultsExtends;
+import org.apache.struts2.convention.actions.result.OverrideInheritedResultExtends;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.annotation.Action;
 import org.easymock.EasyMock;
@@ -109,7 +112,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService =  new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "no-annotation", packageConfig);
         assertEquals(4, results.size());
@@ -153,6 +156,54 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
+    public void testClassLevelInheritedSingleResultAnnotation() throws Exception {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+
+        // Setup some mock jsps
+        Set<String> resources = new HashSet<String>();
+        EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
+        EasyMock.replay(context);
+
+        PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
+
+        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
+        Map<String, ResultConfig> results = builder.build(InheritedResultExtends.class, null, "result-inheritance-extends", packageConfig);
+        assertEquals(1, results.size());
+        assertEquals("error", results.get("error").getName());
+        assertEquals(3, results.get("error").getParams().size());
+        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
+        assertEquals("value", results.get("error").getParams().get("key"));
+        assertEquals("value1", results.get("error").getParams().get("key1"));
+        EasyMock.verify(context);
+    }
+
+     public void testClassLevelOverwriteInheritedSingleResultAnnotation() throws Exception {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+
+        // Setup some mock jsps
+        Set<String> resources = new HashSet<String>();
+        EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
+        EasyMock.replay(context);
+
+        PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
+
+        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
+        Map<String, ResultConfig> results = builder.build(OverrideInheritedResultExtends.class, null, "result-inheritance-extends", packageConfig);
+        assertEquals(1, results.size());
+        assertEquals("error", results.get("error").getName());
+        assertEquals(5, results.get("error").getParams().size());
+        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
+        assertEquals("value", results.get("error").getParams().get("key"));
+        assertEquals("value1", results.get("error").getParams().get("key1"));
+        assertEquals("value-overwritten", results.get("error").getParams().get("key-overwritten"));
+        assertEquals("value1-overwritten", results.get("error").getParams().get("key1-overwritten"));
+        EasyMock.verify(context);
+    }
+
     public void testClassLevelMultipleResultAnnotation() throws Exception {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
@@ -166,6 +217,45 @@ public class DefaultResultMapBuilderTest extends TestCase {
         this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ClassLevelResultsAction.class, null, "class-level-results", packageConfig);
+        assertEquals(4, results.size());
+        assertEquals("error", results.get("error").getName());
+        assertEquals("input", results.get("input").getName());
+        assertEquals("success", results.get("success").getName());
+        assertEquals("failure", results.get("failure").getName());
+        assertEquals(3, results.get("error").getParams().size());
+        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
+        assertEquals("ann-value", results.get("error").getParams().get("key"));
+        assertEquals("ann-value1", results.get("error").getParams().get("key1"));
+        assertEquals(1, results.get("input").getParams().size());
+        assertEquals("foo.action", results.get("input").getParams().get("actionName"));
+        assertEquals("org.apache.struts2.dispatcher.ServletActionRedirectResult", results.get("input").getClassName());
+        assertEquals(3, results.get("failure").getParams().size());
+        assertEquals("/WEB-INF/location/namespace/action-failure.jsp", results.get("failure").getParams().get("location"));
+        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("failure").getClassName());
+        assertEquals("value", results.get("failure").getParams().get("key"));
+        assertEquals("value1", results.get("failure").getParams().get("key1"));
+        assertEquals(3, results.get("success").getParams().size());
+        assertEquals("/WEB-INF/location/namespace/action-success.jsp", results.get("success").getParams().get("location"));
+        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("value", results.get("success").getParams().get("key"));
+        assertEquals("value1", results.get("success").getParams().get("key1"));
+        EasyMock.verify(context);
+    }
+
+    public void testClassLevelInheritanceMultipleResultAnnotation() throws Exception {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+
+        // Setup some mock jsps
+        Set<String> resources = new HashSet<String>();
+        EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
+        EasyMock.replay(context);
+
+        PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
+
+        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
+        Map<String, ResultConfig> results = builder.build(InheritedResultsExtends.class, null, "class-level-results", packageConfig);
         assertEquals(4, results.size());
         assertEquals("error", results.get("error").getName());
         assertEquals("input", results.get("input").getName());
@@ -254,9 +344,9 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createNiceMock(ServletContext.class);
 
         ResultTypeConfig resultType = new ResultTypeConfig.Builder("freemarker", "org.apache.struts2.dispatcher.ServletDispatcherResult").
-            defaultResultParam("location").build();
+                defaultResultParam("location").build();
         PackageConfig packageConfig = new PackageConfig.Builder("package").
-            defaultResultType("dispatcher").addResultTypeConfig(resultType).build();
+                defaultResultType("dispatcher").addResultTypeConfig(resultType).build();
 
         this.conventionsService = new ConventionsServiceImpl("/WEB-INF/component");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
@@ -278,20 +368,20 @@ public class DefaultResultMapBuilderTest extends TestCase {
 
     private PackageConfig createPackageConfigBuilder(String namespace) {
         ResultTypeConfig resultType = new ResultTypeConfig.Builder("dispatcher", "org.apache.struts2.dispatcher.ServletDispatcherResult").
-            addParam("key", "value").addParam("key1", "value1").defaultResultParam("location").build();
+                addParam("key", "value").addParam("key1", "value1").defaultResultParam("location").build();
 
-        ResultTypeConfig redirect  = new ResultTypeConfig.Builder("redirectAction",
-            "org.apache.struts2.dispatcher.ServletActionRedirectResult").defaultResultParam("actionName").build();
+        ResultTypeConfig redirect = new ResultTypeConfig.Builder("redirectAction",
+                "org.apache.struts2.dispatcher.ServletActionRedirectResult").defaultResultParam("actionName").build();
 
         ResultTypeConfig ftlResultType = new ResultTypeConfig.Builder("freemarker",
-            "org.apache.struts2.views.freemarker.FreemarkerResult").defaultResultParam("location").build();
+                "org.apache.struts2.views.freemarker.FreemarkerResult").defaultResultParam("location").build();
 
         return new PackageConfig.Builder("package").
-            namespace(namespace).
-            defaultResultType("dispatcher").
-            addResultTypeConfig(resultType).
-            addResultTypeConfig(redirect).
-            addResultTypeConfig(ftlResultType).build();
+                namespace(namespace).
+                defaultResultType("dispatcher").
+                addResultTypeConfig(resultType).
+                addResultTypeConfig(redirect).
+                addResultTypeConfig(ftlResultType).build();
     }
 
     private ServletContext mockServletContext(String resultPath) {
@@ -308,7 +398,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
     }
 
     private void verify(ServletContext context, String resultPath, Map<String, ResultConfig> results,
-            boolean redirect) {
+                        boolean redirect) {
         assertEquals(4, results.size());
         assertEquals("success", results.get("success").getName());
         assertEquals("input", results.get("input").getName());

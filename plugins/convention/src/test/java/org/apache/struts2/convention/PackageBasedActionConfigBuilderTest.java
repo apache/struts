@@ -28,7 +28,6 @@ import static org.easymock.EasyMock.verify;
 
 import java.util.*;
 import java.net.MalformedURLException;
-import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
@@ -61,6 +60,7 @@ import org.apache.struts2.convention.actions.result.ActionLevelResultAction;
 import org.apache.struts2.convention.actions.result.ActionLevelResultsAction;
 import org.apache.struts2.convention.actions.result.ClassLevelResultAction;
 import org.apache.struts2.convention.actions.result.ClassLevelResultsAction;
+import org.apache.struts2.convention.actions.result.InheritedResultExtends;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.actions.resultpath.PackageLevelResultPathAction;
 import org.apache.struts2.convention.actions.skip.Index;
@@ -87,7 +87,6 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
 
 import javax.servlet.ServletContext;
 
@@ -241,6 +240,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         expect(resultMapBuilder.build(ClassLevelResultsAction.class, null, "class-level-results", resultPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionLevelResultAction.class, getAnnotation(ActionLevelResultAction.class, "execute", Action.class), "action-level-result", resultPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionLevelResultsAction.class, getAnnotation(ActionLevelResultsAction.class, "execute", Action.class), "action-level-results", resultPkg)).andReturn(results);
+        expect(resultMapBuilder.build(InheritedResultExtends.class, null, "inherited-result-extends", resultPkg)).andReturn(results);
 
         /* org.apache.struts2.convention.actions.resultpath */
         expect(resultMapBuilder.build(ClassLevelResultPathAction.class, null, "class-level-result-path", resultPathPkg)).andReturn(results);
@@ -449,12 +449,13 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         /* org.apache.struts2.convention.actions.result */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.result#struts-default#/result");
         assertNotNull(pkgConfig);
-        assertEquals(4, pkgConfig.getActionConfigs().size());
+        assertEquals(5, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "class-level-result", ClassLevelResultAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "class-level-results", ClassLevelResultsAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action-level-result", ActionLevelResultAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action-level-results", ActionLevelResultsAction.class, "execute", pkgConfig.getName());
-
+        verifyActionConfig(pkgConfig, "inherited-result-extends", InheritedResultExtends.class, "execute", pkgConfig.getName());
+        
         /* org.apache.struts2.convention.actions.resultpath */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.resultpath#struts-default#/resultpath");
         assertNotNull(pkgConfig);

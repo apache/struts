@@ -188,20 +188,32 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                 actionClass, resultsByExtension);
         }
 
+        //get inherited @Results and @Result
+        for (Class<?> clazz : ReflectionTools.getClassHierarchy(actionClass)) {
+            createResultsFromAnnotations(clazz, packageConfig, defaultResultPath, results, resultsByExtension);
+        }
+
+        return results;
+    }
+
+    /**
+     * Creates results from @Results and @Result annotations
+     */
+    protected void createResultsFromAnnotations(Class<?> actionClass, PackageConfig packageConfig, String defaultResultPath,
+                                                Map<String, ResultConfig> results, Map<String, ResultTypeConfig> resultsByExtension) {
         Results resultsAnn = actionClass.getAnnotation(Results.class);
         if (resultsAnn != null) {
             createFromAnnotations(results, defaultResultPath, packageConfig, resultsAnn.value(),
-                actionClass, resultsByExtension);
+                    actionClass, resultsByExtension);
         }
 
         Result resultAnn = actionClass.getAnnotation(Result.class);
         if (resultAnn != null) {
             createFromAnnotations(results, defaultResultPath, packageConfig, new Result[]{resultAnn},
-                actionClass, resultsByExtension);
+                    actionClass, resultsByExtension);
         }
-
-        return results;
     }
+
 
     /**
      * Creates any result types from the resources available in the web application. This scans the

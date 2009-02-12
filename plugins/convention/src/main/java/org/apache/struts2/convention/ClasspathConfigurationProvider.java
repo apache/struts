@@ -94,10 +94,11 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
     }
 
     /**
+     * Depends on devMode, relead and actionConfigBuilder.needsReload()
      * @return Always false.
      */
     public boolean needsReload() {
-        return devMode && reload ? actionConfigBuilder.needsReload() : false;
+        return devMode && reload && actionConfigBuilder.needsReload();
     }
 
     public void dispatcherInitialized(Dispatcher du) {

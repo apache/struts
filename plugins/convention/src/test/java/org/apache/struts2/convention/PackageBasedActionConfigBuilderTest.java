@@ -505,7 +505,8 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertNotNull(result);
         assertTrue(result instanceof ActionChainResult);
         ActionChainResult chainResult = (ActionChainResult) result;
-        ActionChainResult chainResultToCompare = new ActionChainResult("/chain", "foo-bar", "bar");
+        ActionChainResult chainResultToCompare = new ActionChainResult(null, "foo-bar", null);
+        assertEquals(chainResultToCompare, chainResult);
     }
 
     private void verifyActionConfig(PackageConfig pkgConfig, String actionName, Class<?> actionClass,

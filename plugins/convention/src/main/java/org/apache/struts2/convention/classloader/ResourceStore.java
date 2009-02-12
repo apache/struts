@@ -29,7 +29,6 @@ public interface ResourceStore {
 
     byte[] read(final String pResourceName);
 
-    //FIXME: return the result of the remove
     void remove(final String pResourceName);
 }
 

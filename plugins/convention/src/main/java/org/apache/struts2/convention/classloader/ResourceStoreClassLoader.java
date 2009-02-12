@@ -42,8 +42,7 @@ public final class ResourceStoreClassLoader extends ClassLoader {
     private Class fastFindClass(final String name) {
 
         if (stores != null) {
-            for (int i = 0; i < stores.length; i++) {
-                final ResourceStore store = stores[i];
+            for (final ResourceStore store : stores) {
                 final byte[] clazzBytes = store.read(name.replace('.', '/') + ".class");
                 if (clazzBytes != null) {
                     return defineClass(name, clazzBytes, 0, clazzBytes.length);

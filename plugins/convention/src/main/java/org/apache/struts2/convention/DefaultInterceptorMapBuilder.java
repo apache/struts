@@ -98,7 +98,7 @@ public class DefaultInterceptorMapBuilder implements InterceptorMapBuilder {
 			PackageConfig.Builder builder, InterceptorRef ref, Map params) {
 		return InterceptorBuilder.constructInterceptorReference(builder, ref
 				.value(), params, builder.build().getLocation(),
-				(ObjectFactory) configuration.getContainer().getInstance(
+                configuration.getContainer().getInstance(
 						ObjectFactory.class));
 	}
 

@@ -45,6 +45,7 @@ import org.apache.struts2.convention.annotation.Namespaces;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.classloader.ReloadingClassLoader;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
@@ -117,7 +118,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         this.configuration = configuration;
         this.actionNameBuilder = container.getInstance(ActionNameBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_ACTION_NAME_BUILDER));
         this.resultMapBuilder = container.getInstance(ResultMapBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_RESULT_MAP_BUILDER));
-        this.interceptorMapBuilder = container.getInstance(InterceptorMapBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_INTERCEPTOR_MAP_BUILDER));;
+        this.interceptorMapBuilder = container.getInstance(InterceptorMapBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_INTERCEPTOR_MAP_BUILDER));
         this.objectFactory = objectFactory;
         this.redirectToSlash = Boolean.parseBoolean(redirectToSlash);
 
@@ -435,9 +436,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             try {
                 objectFactory.getClassInstance(actionClass.getName());
             } catch (ClassNotFoundException e) {
-                // Impossible
-                new Throwable().printStackTrace();
-                System.exit(1);
+                if (LOG.isErrorEnabled())
+                    LOG.error("Object Factory was unable to load class [#0]", e, actionClass.getName());
+                throw new StrutsException("Object Factory was unable to load class " + actionClass.getName(), e);
             }
 
             // Determine the action package

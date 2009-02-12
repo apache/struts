@@ -413,9 +413,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         Map<String, PackageConfig.Builder> packageConfigs = new HashMap<String, PackageConfig.Builder>();
 
         for (Class<?> actionClass : classes) {
-            // Skip all interfaces, enums, annotations, and abstract classes
-            if (actionClass.isAnnotation() || actionClass.isInterface() || actionClass.isEnum() ||
-                    (actionClass.getModifiers() & Modifier.ABSTRACT) != 0) {
+            // Skip classes that can't be instantiated
+            if (cannotInstantiate(actionClass)) {
                 continue;
             }
 
@@ -505,6 +504,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         for (String packageName : packageNames) {
             configuration.addPackageConfig(packageName, packageConfigs.get(packageName).build());
         }
+    }
+
+    /**
+     * Interfaces, enums, annotations, and abstract classes cannot be instantiated.
+     */
+    protected boolean cannotInstantiate(Class<?> actionClass) {
+        return actionClass.isAnnotation() || actionClass.isInterface() || actionClass.isEnum() ||
+                (actionClass.getModifiers() & Modifier.ABSTRACT) != 0;
     }
 
     /**

@@ -525,7 +525,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     protected boolean cannotInstantiate(Class<?> actionClass) {
         return actionClass.isAnnotation() || actionClass.isInterface() || actionClass.isEnum() ||
-                (actionClass.getModifiers() & Modifier.ABSTRACT) != 0;
+                (actionClass.getModifiers() & Modifier.ABSTRACT) != 0 || actionClass.isAnonymousClass();
     }
 
     /**

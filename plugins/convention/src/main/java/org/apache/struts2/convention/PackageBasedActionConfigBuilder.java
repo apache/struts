@@ -429,6 +429,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         for (Class<?> actionClass : classes) {
             // Skip classes that can't be instantiated
             if (cannotInstantiate(actionClass)) {
+                if (LOG.isTraceEnabled())
+                    LOG.trace("Class [#0] did not pass the instantiation test and will be ignored", actionClass.getName());
                 continue;
             }
 

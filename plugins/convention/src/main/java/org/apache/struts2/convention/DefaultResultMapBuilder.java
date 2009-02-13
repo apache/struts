@@ -106,6 +106,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <table>
  * <tr><th>Extension</th><th>Type</th></tr>
  * <tr><td>.jsp</td><td>dispatcher</td</tr>
+ * <tr><td>.jspx</td><td>dispatcher</td</tr>
  * <tr><td>.html</td><td>dispatcher</td</tr>
  * <tr><td>.htm</td><td>dispatcher</td</tr>
  * <tr><td>.vm</td><td>velocity</td</tr>

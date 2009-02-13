@@ -198,6 +198,11 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
 
     /**
      * Creates results from @Results and @Result annotations
+     * @param actionClass  class to check for annotations
+     * @param packageConfig packageConfig where the action will be located
+     * @param defaultResultPath default result path
+     * @param results map of results
+     * @param resultsByExtension  map of result types keyed by extension
      */
     protected void createResultsFromAnnotations(Class<?> actionClass, PackageConfig packageConfig, String defaultResultPath,
                                                 Map<String, ResultConfig> results, Map<String, ResultTypeConfig> resultsByExtension) {

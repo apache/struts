@@ -20,6 +20,9 @@
  */
 package org.apache.struts2.convention.classloader;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,7 +34,7 @@ import java.io.InputStream;
  *  class taken from Apache JCI
  */
 public final class FileResourceStore implements ResourceStore {
-
+    private static final Logger LOG = LoggerFactory.getLogger(FileResourceStore.class);
     private final File root;
 
     public FileResourceStore(final File pFile) {
@@ -48,6 +51,8 @@ public final class FileResourceStore implements ResourceStore {
 
             return data;
         } catch (Exception e) {
+            if (LOG.isErrorEnabled())
+                LOG.error("Unable to read file [#0]", e, pResourceName);
             return null;
         } finally {
             closeQuietly(fis);
@@ -63,11 +68,9 @@ public final class FileResourceStore implements ResourceStore {
             if (is != null)
                 is.close();
         } catch (IOException e) {
+            if (LOG.isErrorEnabled())
+                LOG.error("Unable to close file input stream", e);
         }
-    }
-
-    public void remove(final String pResourceName) {
-        getFile(pResourceName).delete();
     }
 
     private File getFile(final String pResourceName) {
@@ -78,6 +81,4 @@ public final class FileResourceStore implements ResourceStore {
     public String toString() {
         return this.getClass().getName() + root.toString();
     }
-
-
 }

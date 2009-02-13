@@ -140,8 +140,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * Comma separated list of file protocols that will be considered as jar files and scanned
-     * @param fileProtocols
+     * File URLs whose protocol are in these list will be processed as jars containing classes 
+     * @param fileProtocols Comma separated list of file protocols that will be considered as jar files and scanned
      */
     @Inject("struts.convention.action.fileProtocols")
     public void setFileProtocols(String fileProtocols) {
@@ -168,7 +168,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param disableActionScanning If set to true, only the named packages will be scanned
+     * @param disablePackageLocatorsScanning If set to true, only the named packages will be scanned
      */
     @Inject(value = "struts.convention.package.locators.disable", required = false)
     public void setDisablePackageLocatorsScanning(String disablePackageLocatorsScanning) {
@@ -187,7 +187,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param actionPackages (Optional) Map classes that implement com.opensymphony.xwork2.Action
+     * @param checkImplementsAction (Optional) Map classes that implement com.opensymphony.xwork2.Action
      *                       as actions
      */
     @Inject(value = "struts.convention.action.checkImplementsAction", required = false)
@@ -524,6 +524,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     /**
      * Interfaces, enums, annotations, and abstract classes cannot be instantiated.
+     * @param actionClass class to check
+     * @return returns true if the class cannot be instantiated or should be ignored
      */
     protected boolean cannotInstantiate(Class<?> actionClass) {
         return actionClass.isAnnotation() || actionClass.isInterface() || actionClass.isEnum() ||

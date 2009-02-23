@@ -21,10 +21,7 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -164,11 +161,11 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(CookieInterceptor.class);
 
-    private Set cookiesNameSet = Collections.EMPTY_SET;
-    private Set cookiesValueSet = Collections.EMPTY_SET;
+    private Set<String> cookiesNameSet = Collections.emptySet();
+    private Set<String> cookiesValueSet = Collections.emptySet();
 
     /**
-     * Set the <code>cookiesName</code> which if matche will allow the cookie
+     * Set the <code>cookiesName</code> which if matched will allow the cookie
      * to be injected into action, could be comma-separated string.
      *
      * @param cookiesName
@@ -190,35 +187,32 @@ public class CookieInterceptor extends AbstractInterceptor {
             this.cookiesValueSet = TextParseUtil.commaDelimitedStringToSet(cookiesValue);
     }
 
-
     public String intercept(ActionInvocation invocation) throws Exception {
-
         if (LOG.isDebugEnabled())
             LOG.debug("start interception");
 
-        final ValueStack stack = ActionContext.getContext().getValueStack();
-        HttpServletRequest request = ServletActionContext.getRequest();
-
         // contains selected cookies
-        Map cookiesMap = new LinkedHashMap();
+        final Map<String, String> cookiesMap = new LinkedHashMap<String, String>();
 
-        Cookie cookies[] = request.getCookies();
+        Cookie[] cookies = ServletActionContext.getRequest().getCookies();
         if (cookies != null) {
-            for (int a=0; a< cookies.length; a++) {
-                String name = cookies[a].getName();
-                String value = cookies[a].getValue();
+            final ValueStack stack = ActionContext.getContext().getValueStack();
+
+            for (Cookie cookie : cookies) {
+                String name = cookie.getName();
+                String value = cookie.getValue();
 
                 if (cookiesNameSet.contains("*")) {
                     if (LOG.isDebugEnabled())
-                        LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name ["+name+"] with value ["+value+"] will be injected");
+                        LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name [" + name + "] with value [" + value + "] will be injected");
                     populateCookieValueIntoStack(name, value, cookiesMap, stack);
-                }
-                else if (cookiesNameSet.contains(cookies[a].getName())) {
+                } else if (cookiesNameSet.contains(cookie.getName())) {
                     populateCookieValueIntoStack(name, value, cookiesMap, stack);
                 }
             }
         }
 
+        // inject the cookiesMap, even if we don't have any cookies
         injectIntoCookiesAwareAction(invocation.getAction(), cookiesMap);
 
         return invocation.invoke();
@@ -233,7 +227,7 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param cookiesMap
      * @param stack
      */
-    protected void populateCookieValueIntoStack(String cookieName, String cookieValue, Map cookiesMap, ValueStack stack) {
+    protected void populateCookieValueIntoStack(String cookieName, String cookieValue, Map<String, String> cookiesMap, ValueStack stack) {
         if (cookiesValueSet.isEmpty() || cookiesValueSet.contains("*")) {
             // If the interceptor is configured to accept any cookie value
             // OR
@@ -267,12 +261,11 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param action
      * @param cookiesMap
      */
-    protected void injectIntoCookiesAwareAction(Object action, Map cookiesMap) {
+    protected void injectIntoCookiesAwareAction(Object action, Map<String, String> cookiesMap) {
         if (action instanceof CookiesAware) {
             if (LOG.isDebugEnabled())
                 LOG.debug("action ["+action+"] implements CookiesAware, injecting cookies map ["+cookiesMap+"]");
             ((CookiesAware)action).setCookiesMap(cookiesMap);
         }
     }
-
 }

@@ -91,8 +91,8 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     @Override
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
         if (servletContext != null && !containerBuilder.contains(ServletContext.class)) {
-            containerBuilder.factory(ServletContext.class, new Factory<ServletContext>() {
-                public ServletContext create(Context context) throws Exception {
+            containerBuilder.factory(ServletContext.class, new Factory() {
+                public Object create(Context context) throws Exception {
                     return servletContext;
                 }
                 
@@ -148,7 +148,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         }
         if (file.exists()) {
             try {
-                url = file.toURI().toURL();
+                url = file.toURL();
             } catch (MalformedURLException e) {
                 throw new IOException("Unable to convert "+file+" to a URL");
             }

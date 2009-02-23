@@ -78,7 +78,7 @@ public class RestfulActionMapper implements ActionMapper {
         }
 
         String actionName = uri.substring(1, nextSlash);
-        HashMap<String,String> parameters = new HashMap<String,String>();
+        Map<String, Object> parameters = new HashMap<String, Object>();
         try {
             StringTokenizer st = new StringTokenizer(uri.substring(nextSlash), "/");
             boolean isNameTok = true;
@@ -121,9 +121,8 @@ public class RestfulActionMapper implements ActionMapper {
      */
     public String getUriFromActionMapping(ActionMapping mapping) {
         String base = mapping.getNamespace() + mapping.getName();
-        for (Iterator iterator = mapping.getParams().entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            String name = (String) entry.getKey();
+        for (Map.Entry<String, Object> entry : mapping.getParams().entrySet()) {
+            String name = entry.getKey();
             if (name.equals(mapping.getName() + "Id")) {
                 base = base + "/" + entry.getValue();
                 break;

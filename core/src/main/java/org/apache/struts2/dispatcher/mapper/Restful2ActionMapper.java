@@ -110,7 +110,6 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
     */
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
-
     	if (!isSlashesInActionNames()) {
     		throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
     	}
@@ -174,7 +173,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
 
             if (idParameterName != null && id != null) {
                 if (mapping.getParams() == null) {
-                    mapping.setParams(new HashMap());
+                    mapping.setParams(new HashMap<String, Object>());
                 }
                 mapping.getParams().put(idParameterName, id);
             }
@@ -206,7 +205,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     }
                     if (parameters.size() > 0) {
                         if (mapping.getParams() == null) {
-                            mapping.setParams(new HashMap());
+                            mapping.setParams(new HashMap<String, Object>());
                         }
                         mapping.getParams().putAll(parameters);
                     }
@@ -252,7 +251,4 @@ public class Restful2ActionMapper extends DefaultActionMapper {
 	public void setIdParameterName(String idParameterName) {
 		this.idParameterName = idParameterName;
 	}
-    
-    
-
 }

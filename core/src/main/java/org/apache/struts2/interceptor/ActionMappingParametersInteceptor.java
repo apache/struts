@@ -79,12 +79,12 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
      *         an empty map.
      */
     @Override
-    protected Map retrieveParameters(ActionContext ac) {
+    protected Map<String, Object> retrieveParameters(ActionContext ac) {
         ActionMapping mapping = (ActionMapping) ac.get(ServletActionContext.ACTION_MAPPING);
         if (mapping != null) {
             return mapping.getParams();
         } else {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
     }
 

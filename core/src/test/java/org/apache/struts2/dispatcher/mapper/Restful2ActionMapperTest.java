@@ -22,7 +22,6 @@
 package org.apache.struts2.dispatcher.mapper;
 
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.StrutsConstants;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.Configuration;

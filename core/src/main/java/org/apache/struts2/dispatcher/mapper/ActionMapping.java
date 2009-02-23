@@ -38,7 +38,7 @@ public class ActionMapping {
     private String namespace;
     private String method;
     private String extension;
-    private Map params;
+    private Map<String, Object> params;
     private Result result;
 
     /**
@@ -63,7 +63,7 @@ public class ActionMapping {
      * @param method The method
      * @param params The extra parameters
      */
-    public ActionMapping(String name, String namespace, String method, Map params) {
+    public ActionMapping(String name, String namespace, String method, Map<String, Object> params) {
         this.name = name;
         this.namespace = namespace;
         this.method = method;
@@ -87,7 +87,7 @@ public class ActionMapping {
     /**
      * @return The extra parameters
      */
-    public Map getParams() {
+    public Map<String, Object> getParams() {
         return params;
     }
 
@@ -147,7 +147,7 @@ public class ActionMapping {
     /**
      * @param params The extra parameters for this mapping
      */
-    public void setParams(Map params) {
+    public void setParams(Map<String, Object> params) {
         this.params = params;
     }
     

@@ -41,13 +41,13 @@ public class RestfulActionMapperTest extends TestCase {
         ActionMapping am = new ActionMapping();
         am.setName("view");
         am.setNamespace("secure");
-        am.setParams(Collections.EMPTY_MAP);
+        am.setParams(Collections.<String, Object>emptyMap());
 
         assertEquals("secureview", mapper.getUriFromActionMapping(am));
     }
 
     public void testGetUriParam() {
-        Map param = new HashMap();
+        Map<String, Object> param = new HashMap<String, Object>();
         param.put("article", "123");
         ActionMapping am = new ActionMapping();
         am.setName("view");
@@ -58,7 +58,7 @@ public class RestfulActionMapperTest extends TestCase {
     }
 
     public void testGetUriParamId() {
-        Map param = new HashMap();
+        Map<String, Object> param = new HashMap<String, Object>();
         param.put("article", "123");
         param.put("viewId", "456");
         ActionMapping am = new ActionMapping();

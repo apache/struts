@@ -326,10 +326,9 @@ public class CookieInterceptorTest extends StrutsTestCase {
         private String cookie2;
         private String cookie3;
 
-        public void setCookiesMap(Map<String, String> cookies) {
+        public void setCookiesMap(Map cookies) {
             this.cookies = cookies;
         }
-
         public Map getCookiesMap() {
             return this.cookies;
         }

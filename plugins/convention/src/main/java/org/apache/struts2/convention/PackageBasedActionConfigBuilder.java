@@ -301,7 +301,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         Set<Class> classes = new HashSet<Class>();
         try {
             if (actionPackages != null || (packageLocators != null && !disablePackageLocatorsScanning)) {
-                ClassFinder finder = new ClassFinder(getClassLoaderForFinder(), buildUrlSet().getUrls(), true);
+                ClassFinder finder = new ClassFinder(getClassLoaderForFinder(), buildUrlSet().getUrls(), true, this.fileProtocols);
 
                 // named packages
                 if (actionPackages != null) {

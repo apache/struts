@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 
 import org.apache.struts2.convention.annotation.AnnotationTools;
 import org.apache.struts2.convention.annotation.ResultPath;
+import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -94,7 +95,7 @@ public class ConventionsServiceImpl implements ConventionsService {
         }
 
         try {
-            return determineResultPath(Class.forName(actionConfig.getClassName()));
+            return  determineResultPath(ClassLoaderUtils.loadClass(actionConfig.getClassName(), this.getClass()));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Invalid action class configuration that references an unknown " +
                 "class named [" + actionConfig.getClassName() + "]", e);

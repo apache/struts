@@ -97,7 +97,7 @@ public class LabelTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(LabelTest.class.getResource("Label-2.txt"));
+        verify(LabelTest.class.getResource("Label-5.txt"));
     }
 
     public void testGenericSimple() throws Exception {
@@ -110,7 +110,7 @@ public class LabelTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
-    public void testWithKey() throws Exception {
+    public void testWithKeyNoValueFromStack() throws Exception {
         TestAction testAction = (TestAction) action;
         final String key = "labelKey";
         final String value = "baz";
@@ -122,13 +122,34 @@ public class LabelTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
         tag.setLabel("mylabel");
         tag.setFor("for");
-        tag.setName("foo");
+        tag.setName("foo2");
         tag.setKey(key);
 
         tag.doStartTag();
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-2.txt"));
+    }
+
+     public void testWithKeyValueFromStack() throws Exception {
+        TestAction testAction = (TestAction) action;
+        final String key = "labelKey";
+        final String value = "baz";
+        testAction.setText(key, value);
+
+        testAction.setFoo("output");
+
+        LabelTag tag = new LabelTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setFor("for");
+        tag.setName("foo");
+        tag.setKey(key);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(LabelTest.class.getResource("Label-4.txt"));
     }
 
 }

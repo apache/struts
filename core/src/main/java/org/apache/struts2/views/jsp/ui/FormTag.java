@@ -44,6 +44,7 @@ public class FormTag extends AbstractClosingTag {
     protected String namespace;
     protected String validate;
     protected String onsubmit;
+    protected String onreset;
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
@@ -96,6 +97,10 @@ public class FormTag extends AbstractClosingTag {
 
     public void setOnsubmit(String onsubmit) {
         this.onsubmit = onsubmit;
+    }
+
+    public void setOnreset(String onreset) {
+        this.onreset = onreset;
     }
 
     public void setPortletMode(String portletMode) {

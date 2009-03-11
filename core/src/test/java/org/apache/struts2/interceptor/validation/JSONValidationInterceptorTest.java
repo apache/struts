@@ -80,7 +80,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         //http status
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
         assertEquals("application/json", response.getContentType());
-
+        assertEquals("UTF-8", response.getCharacterEncoding());
     }
 
     public void testValidationSucceeds() throws Exception {
@@ -123,6 +123,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         assertEquals("/*{}*/", normalizedActual);
         assertFalse(action.isExecuted());
         assertEquals("application/json", response.getContentType());
+        assertEquals("UTF-8", response.getCharacterEncoding());
     }
 
     protected void setUp() throws Exception {

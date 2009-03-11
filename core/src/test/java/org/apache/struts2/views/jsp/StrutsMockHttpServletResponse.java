@@ -39,6 +39,7 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     private int status;
     private String redirectURL;
     private String contentType;
+    private String encoding;
 
     public Locale getLocale() {
         return locale;
@@ -65,7 +66,7 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     }
 
     public void setCharacterEncoding(String string) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        this.encoding = string;
     }
 
     public void setWriter(PrintWriter writer) {
@@ -101,5 +102,10 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     public void sendRedirect(String redirectURL) throws IOException {
         this.redirectURL = redirectURL;
         super.sendRedirect(redirectURL);
+    }
+
+    @Override
+    public String getCharacterEncoding() {
+        return encoding;
     }
 }

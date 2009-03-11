@@ -99,6 +99,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
                 if (validationAware.hasErrors()) {
                     if (validationFailedStatus >= 0)
                         response.setStatus(validationFailedStatus);
+                    response.setCharacterEncoding("UTF-8");
                     response.getWriter().print(buildResponse(validationAware));
                     response.setContentType("application/json");
                     return Action.NONE;
@@ -108,6 +109,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             String validateOnly = request.getParameter(VALIDATE_ONLY_PARAM);
             if (validateOnly != null && "true".equals(validateOnly)) {
                 //there were no errors
+                response.setCharacterEncoding("UTF-8");
                 response.getWriter().print("/* {} */");
                 response.setContentType("application/json");
                 return Action.NONE;

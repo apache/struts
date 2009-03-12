@@ -34,14 +34,14 @@ public interface UrlRenderer {
 	 * Preprocessing step
 	 * @param urlComponent
 	 */
-	void beforeRenderUrl(URL urlComponent);
+	void beforeRenderUrl(UrlProvider provider);
 	
 	/**
 	 * Render a URL.
 	 * @param writer A writer that the implementation can use to write the result to.
-	 * @param urlComponent The {@link URL} component that "owns" this renderer.
+	 * @param urlComponent The {@link UrlProvider} component that "owns" this renderer.
 	 */
-	void renderUrl(Writer writer, URL urlComponent);
+	void renderUrl(Writer writer, UrlProvider provider);
 	
 	/**
 	 * Render a Form URL.

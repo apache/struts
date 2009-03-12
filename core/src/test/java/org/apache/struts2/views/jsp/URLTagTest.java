@@ -511,7 +511,7 @@ public class URLTagTest extends AbstractUITagTest {
         pageContext.setJspWriter(jspWriter);
     }
 
-    public class Foo {
+    public static class Foo {
         private String title;
 
         public void setTitle(String title) {
@@ -527,7 +527,7 @@ public class URLTagTest extends AbstractUITagTest {
         }
     }
     
-    class ValueHolder {
+    public static class ValueHolder {
         private String value;
 
         public ValueHolder(String value) {

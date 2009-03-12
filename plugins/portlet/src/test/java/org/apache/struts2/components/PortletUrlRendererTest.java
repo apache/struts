@@ -112,7 +112,7 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		ctx.setActionInvocation(ai);
 
 		StringWriter renderOutput = new StringWriter();
-		renderer.renderUrl(renderOutput, url);
+		renderer.renderUrl(renderOutput, url.getUrlProvider());
 
 		String action = renderUrl
 				.getParameter(PortletActionConstants.ACTION_PARAM);
@@ -163,7 +163,7 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		url.setAction("%{someProperty}");
 		
 		StringWriter renderOutput = new StringWriter();
-		renderer.renderUrl(renderOutput, url);
+		renderer.renderUrl(renderOutput, url.getUrlProvider());
 
 		String action = renderUrl
 				.getParameter(PortletActionConstants.ACTION_PARAM);
@@ -189,7 +189,7 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		url.setAnchor("%{someProperty}");
 		
 		StringWriter renderOutput = new StringWriter();
-		renderer.renderUrl(renderOutput, url);
+		renderer.renderUrl(renderOutput, url.getUrlProvider());
 		assertTrue(renderOutput.toString().indexOf("#EvaluatedProperty") != -1);
 		
 	}
@@ -200,9 +200,9 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		renderer.setServletRenderer(mockRenderer);
 		URL url = new URL(stack, new PortletServletRequest(request, null), new PortletServletResponse(response));
 		StringWriter renderOutput = new StringWriter();
-		mockRenderer.renderUrl(renderOutput, url);
+		mockRenderer.renderUrl(renderOutput, url.getUrlProvider());
 		EasyMock.replay(mockRenderer);
-		renderer.renderUrl(renderOutput, url);
+		renderer.renderUrl(renderOutput, url.getUrlProvider());
 		EasyMock.verify(mockRenderer);
 	}
 	
@@ -223,9 +223,9 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 		URL url = new URL(stack, new PortletServletRequest(request, null), new PortletServletResponse(response));
 		url.setPortletUrlType("none");
 		StringWriter renderOutput = new StringWriter();
-		mockRenderer.renderUrl(renderOutput, url);
+		mockRenderer.renderUrl(renderOutput, url.getUrlProvider());
 		EasyMock.replay(mockRenderer);
-		renderer.renderUrl(renderOutput, url);
+		renderer.renderUrl(renderOutput, url.getUrlProvider());
 		EasyMock.verify(mockRenderer);
 	}
 	

@@ -22,10 +22,6 @@
 package org.apache.struts2.components;
 
 import java.io.Writer;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -118,144 +113,118 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 @StrutsTag(name="url", tldTagClass="org.apache.struts2.views.jsp.URLTag", description="This tag is used to create a URL")
 public class URL extends ContextBean {
     private static final Logger LOG = LoggerFactory.getLogger(URL.class);
-
-    /**
-     * The includeParams attribute may have the value 'none', 'get' or 'all'.
-     * It is used when the url tag is used without a value attribute.
-     * Its value is looked up on the ValueStack
-     * If no includeParams is specified then 'get' is used.
-     * none - include no parameters in the URL
-     * get  - include only GET parameters in the URL (default)
-     * all  - include both GET and POST parameters in the URL
-     */
-    public static final String NONE = "none";
-    public static final String GET = "get";
-    public static final String ALL = "all";
-
-    protected HttpServletRequest req;
-    protected HttpServletResponse res;
-
-    protected String includeParams;
-    protected String scheme;
-    protected String value;
-    protected String action;
-    protected String namespace;
-    protected String method;
-    protected boolean encode = true;
-    protected boolean includeContext = true;
-    protected boolean escapeAmp = true;
-    protected String portletMode;
-    protected String windowState;
-    protected String portletUrlType;
-    protected String anchor;
-    protected boolean forceAddSchemeHostAndPort;
-    protected String urlIncludeParams;
-    protected ExtraParameterProvider extraParameterProvider;
-	protected UrlRenderer urlRenderer;
+    private UrlProvider urlProvider;
+    private UrlRenderer urlRenderer;
 
     public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
-        this.req = req;
-        this.res = res;
+        urlProvider = new ComponentUrlProvider(this, this.parameters);
+        urlProvider.setHttpServletRequest(req);
+        urlProvider.setHttpServletResponse(res);
     }
 
     @Inject(StrutsConstants.STRUTS_URL_INCLUDEPARAMS)
     public void setUrlIncludeParams(String urlIncludeParams) {
-        this.urlIncludeParams = urlIncludeParams;
+       urlProvider.setUrlIncludeParams(urlIncludeParams);
     }
 
     @Inject
 	public void setUrlRenderer(UrlRenderer urlRenderer) {
-		this.urlRenderer = urlRenderer;
+		urlProvider.setUrlRenderer(urlRenderer);
+        this.urlRenderer = urlRenderer;
 	}
 
     @Inject(required=false)
     public void setExtraParameterProvider(ExtraParameterProvider provider) {
-        this.extraParameterProvider = provider;
+        urlProvider.setExtraParameterProvider(provider);
     }
 
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
-        urlRenderer.beforeRenderUrl(this);
+        urlRenderer.beforeRenderUrl(urlProvider);
         return result;
     }
 
     public boolean end(Writer writer, String body) {
-    	urlRenderer.renderUrl(writer, this);
+    	urlRenderer.renderUrl(writer, urlProvider);
         return super.end(writer, body);
+    }
+
+    public String findString(String expr) {
+        return super.findString(expr);
+    }
+
+    public UrlProvider getUrlProvider() {
+        return urlProvider;
     }
 
     @StrutsTagAttribute(description="The includeParams attribute may have the value 'none', 'get' or 'all'", defaultValue="none")
     public void setIncludeParams(String includeParams) {
-        this.includeParams = includeParams;
+        urlProvider.setIncludeParams(includeParams);
     }
 
     @StrutsTagAttribute(description="Set scheme attribute")
     public void setScheme(String scheme) {
-        this.scheme = scheme;
+        urlProvider.setScheme(scheme);
     }
 
     @StrutsTagAttribute(description="The target value to use, if not using action")
     public void setValue(String value) {
-        this.value = value;
+        urlProvider.setValue(value);
     }
 
     @StrutsTagAttribute(description="The action to generate the URL for, if not using value")
     public void setAction(String action) {
-        this.action = action;
+        urlProvider.setAction(action);
     }
 
     @StrutsTagAttribute(description="The namespace to use")
     public void setNamespace(String namespace) {
-        this.namespace = namespace;
+        urlProvider.setNamespace(namespace);
     }
 
     @StrutsTagAttribute(description="The method of action to use")
     public void setMethod(String method) {
-        this.method = method;
+        urlProvider.setMethod(method);
     }
 
     @StrutsTagAttribute(description="Whether to encode parameters", type="Boolean", defaultValue="true")
     public void setEncode(boolean encode) {
-        this.encode = encode;
+        urlProvider.setEncode(encode);
     }
 
     @StrutsTagAttribute(description="Whether actual context should be included in URL", type="Boolean", defaultValue="true")
     public void setIncludeContext(boolean includeContext) {
-        this.includeContext = includeContext;
+        urlProvider.setIncludeContext(includeContext);
     }
 
     @StrutsTagAttribute(description="The resulting portlet mode")
     public void setPortletMode(String portletMode) {
-        this.portletMode = portletMode;
+        urlProvider.setPortletMode(portletMode);
     }
 
     @StrutsTagAttribute(description="The resulting portlet window state")
     public void setWindowState(String windowState) {
-        this.windowState = windowState;
+        urlProvider.setWindowState(windowState);
     }
 
     @StrutsTagAttribute(description="Specifies if this should be a portlet render or action URL. Default is \"render\". To create an action URL, use \"action\".")
     public void setPortletUrlType(String portletUrlType) {
-        this.portletUrlType = portletUrlType;
+       urlProvider.setPortletUrlType(portletUrlType);
     }
 
     @StrutsTagAttribute(description="The anchor for this URL")
     public void setAnchor(String anchor) {
-        this.anchor = anchor;
+        urlProvider.setAnchor(anchor);
     }
 
     @StrutsTagAttribute(description="Specifies whether to escape ampersand (&amp;) to (&amp;amp;) or not", type="Boolean", defaultValue="true")
     public void setEscapeAmp(boolean escapeAmp) {
-        this.escapeAmp = escapeAmp;
+        urlProvider.setEscapeAmp(escapeAmp);
     }
 
     @StrutsTagAttribute(description="Specifies whether to force the addition of scheme, host and port or not", type="Boolean", defaultValue="false")
     public void setForceAddSchemeHostAndPort(boolean forceAddSchemeHostAndPort) {
-        this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
-    }
-
-    public static interface ExtraParameterProvider {
-        public Map getExtraParameters();
+        urlProvider.setForceAddSchemeHostAndPort(forceAddSchemeHostAndPort);
     }
 }

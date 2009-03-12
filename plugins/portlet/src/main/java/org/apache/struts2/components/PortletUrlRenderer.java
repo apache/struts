@@ -52,33 +52,35 @@ public class PortletUrlRenderer implements UrlRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void renderUrl(Writer writer, URL urlComponent) {
-		if(PortletActionContext.getPortletContext() == null || "none".equalsIgnoreCase(urlComponent.portletUrlType)) {
+	public void renderUrl(Writer writer, UrlProvider urlComponent) {
+		if(PortletActionContext.getPortletContext() == null || "none".equalsIgnoreCase(urlComponent.getPortletUrlType())) {
 			servletRenderer.renderUrl(writer, urlComponent);
 		}
 		else {
 			String action = null;
-			if(urlComponent.action != null) {
-				action = urlComponent.findString(urlComponent.action);
+			if(urlComponent.getAction() != null) {
+				action = urlComponent.findString(urlComponent.getAction());
 			}
-			String scheme = urlComponent.req.getScheme();
+			String scheme = urlComponent.getHttpServletRequest().getScheme();
 
-			if (urlComponent.scheme != null) {
-				scheme = urlComponent.scheme;
+			if (urlComponent.getScheme() != null) {
+				scheme = urlComponent.getScheme();
 			}
 
 			String result;
-			urlComponent.namespace = urlComponent.determineNamespace(urlComponent.namespace, urlComponent.stack, urlComponent.req);
+			urlComponent.setNamespace(urlComponent.determineNamespace(urlComponent.getNamespace(), urlComponent.getStack(), urlComponent.getHttpServletRequest()));
 			if (onlyActionSpecified(urlComponent)) {
-				result = PortletUrlHelper.buildUrl(action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
+				result = PortletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(), urlComponent.getPortletUrlType(),
+                        urlComponent.getPortletMode(), urlComponent.getWindowState());
 			} else if(onlyValueSpecified(urlComponent)){
-				result = PortletUrlHelper.buildResourceUrl(urlComponent.value, urlComponent.parameters);
+				result = PortletUrlHelper.buildResourceUrl(urlComponent.getValue(), urlComponent.getParameters());
 			}
 			else {
 				result = createDefaultUrl(urlComponent);
 			}
-			if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
-				result += '#' + urlComponent.findString(urlComponent.anchor);
+            String anchor = urlComponent.getAnchor();
+			if (TextUtils.stringSet(anchor)) {
+				result += '#' + urlComponent.findString(anchor);
 			}
 
 			String var = urlComponent.getVar();
@@ -87,7 +89,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 				urlComponent.putInContext(result);
 
 				// add to the request and page scopes as well
-				urlComponent.req.setAttribute(var, result);
+				urlComponent.getHttpServletRequest().setAttribute(var, result);
 			} else {
 				try {
 					writer.write(result);
@@ -98,21 +100,22 @@ public class PortletUrlRenderer implements UrlRenderer {
 		}
 	}
 
-	private String createDefaultUrl(URL urlComponent) {
+	private String createDefaultUrl(UrlProvider urlComponent) {
 		String result;
 		ActionInvocation ai = (ActionInvocation)urlComponent.getStack().getContext().get(
 				ActionContext.ACTION_INVOCATION);
 		String action = ai.getProxy().getActionName();
-		result = PortletUrlHelper.buildUrl(action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
+		result = PortletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(),
+                urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
 		return result;
 	}
 
-	private boolean onlyValueSpecified(URL urlComponent) {
-		return urlComponent.value != null && urlComponent.action == null;
+	private boolean onlyValueSpecified(UrlProvider urlComponent) {
+		return urlComponent.getValue() != null && urlComponent.getAction() == null;
 	}
 
-	private boolean onlyActionSpecified(URL urlComponent) {
-		return urlComponent.value == null && urlComponent.action != null;
+	private boolean onlyActionSpecified(UrlProvider urlComponent) {
+		return urlComponent.getValue() == null && urlComponent.getAction() != null;
 	}
 
 	/**
@@ -163,7 +166,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 		
 	}
 
-	public void beforeRenderUrl(URL urlComponent) {
+	public void beforeRenderUrl(UrlProvider urlComponent) {
 		if(PortletActionContext.getPortletContext() == null) {
 			servletRenderer.beforeRenderUrl(urlComponent);
 		}

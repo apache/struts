@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.TextUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -60,44 +61,52 @@ public class ServletUrlRenderer implements UrlRenderer {
     /**
 	 * {@inheritDoc}
 	 */
-	public void renderUrl(Writer writer, URL urlComponent) {
-		String scheme = urlComponent.req.getScheme();
+	public void renderUrl(Writer writer, UrlProvider urlComponent) {
+		String scheme = urlComponent.getHttpServletRequest().getScheme();
 
-		if (urlComponent.scheme != null) {
-			scheme = urlComponent.scheme;
+		if (urlComponent.getScheme() != null) {
+			scheme = urlComponent.getScheme();
 		}
 
 	       String result;
-	        if (urlComponent.value == null && urlComponent.action != null) {
-	                result = urlComponent.determineActionURL(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, urlComponent.forceAddSchemeHostAndPort, urlComponent.escapeAmp);
+	        if (urlComponent.getValue() == null && urlComponent.getAction() != null) {
+	                result = urlComponent.determineActionURL(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
 	        } else {
-	                String _value = urlComponent.value;
+	                String _value = urlComponent.getValue();
 
 	                // We don't include the request parameters cause they would have been
 	                // prioritised before this [in start(Writer) method]
 	                if (_value != null && _value.indexOf("?") > 0) {
 	                    _value = _value.substring(0, _value.indexOf("?"));
 	                }
-	                result = UrlHelper.buildUrl(_value, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, urlComponent.forceAddSchemeHostAndPort, urlComponent.escapeAmp);
+	                result = UrlHelper.buildUrl(_value, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
 	        }
-	        if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
-	        	result += '#' + urlComponent.findString(urlComponent.anchor);
+            String anchor = urlComponent.getAnchor();
+	        if (TextUtils.stringSet(anchor)) {
+	        	result += '#' + urlComponent.findString(anchor);
 	        }
 
-	        String var = urlComponent.getVar();
+        if (urlComponent.isPutInContext()) {
+            String var = urlComponent.getVar();
+            if (TextUtils.stringSet(var)) {
+                urlComponent.putInContext(result);
 
-	        if (var != null) {
-	        	urlComponent.putInContext(result);
-
-	            // add to the request and page scopes as well
-	        	urlComponent.req.setAttribute(var, result);
-	        } else {
-	            try {
-	                writer.write(result);
-	            } catch (IOException e) {
-	                throw new StrutsException("IOError: " + e.getMessage(), e);
-	            }
-	        }
+                // add to the request and page scopes as well
+                urlComponent.getHttpServletRequest().setAttribute(var, result);
+            } else {
+                try {
+                    writer.write(result);
+                } catch (IOException e) {
+                    throw new StrutsException("IOError: " + e.getMessage(), e);
+                }
+            }
+        } else {
+            try {
+                writer.write(result);
+            } catch (IOException e) {
+                throw new StrutsException("IOError: " + e.getMessage(), e);
+            }
+        }
 	}
 
 	/**
@@ -203,57 +212,57 @@ public class ServletUrlRenderer implements UrlRenderer {
 	}
 
 
-	public void beforeRenderUrl(URL urlComponent) {
-		if (urlComponent.value != null) {
-            urlComponent.value = urlComponent.findString(urlComponent.value);
+	public void beforeRenderUrl(UrlProvider urlComponent) {
+		if (urlComponent.getValue() != null) {
+            urlComponent.setValue(urlComponent.findString(urlComponent.getValue()));
         }
 
         // no explicit url set so attach params from current url, do
         // this at start so body params can override any of these they wish.
         try {
             // ww-1266
-            String includeParams = (urlComponent.urlIncludeParams != null ? urlComponent.urlIncludeParams.toLowerCase() : URL.GET);
+            String includeParams = (urlComponent.getUrlIncludeParams() != null ? urlComponent.getUrlIncludeParams().toLowerCase() : UrlProvider.GET);
 
-            if (urlComponent.includeParams != null) {
-                includeParams = urlComponent.findString(urlComponent.includeParams);
+            if (urlComponent.getIncludeParams() != null) {
+                includeParams = urlComponent.findString(urlComponent.getIncludeParams());
             }
 
-            if (URL.NONE.equalsIgnoreCase(includeParams)) {
-                mergeRequestParameters(urlComponent.value, urlComponent.parameters, Collections.EMPTY_MAP);
-            } else if (URL.ALL.equalsIgnoreCase(includeParams)) {
-                mergeRequestParameters(urlComponent.value, urlComponent.parameters, urlComponent.req.getParameterMap());
+            if (UrlProvider.NONE.equalsIgnoreCase(includeParams)) {
+                mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), Collections.EMPTY_MAP);
+            } else if (UrlProvider.ALL.equalsIgnoreCase(includeParams)) {
+                mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlComponent.getHttpServletRequest().getParameterMap());
 
                 // for ALL also include GET parameters
                 includeGetParameters(urlComponent);
                 includeExtraParameters(urlComponent);
-            } else if (URL.GET.equalsIgnoreCase(includeParams) || (includeParams == null && urlComponent.value == null && urlComponent.action == null)) {
+            } else if (UrlProvider.GET.equalsIgnoreCase(includeParams) || (includeParams == null && urlComponent.getValue() == null && urlComponent.getAction() == null)) {
                 includeGetParameters(urlComponent);
                 includeExtraParameters(urlComponent);
             } else if (includeParams != null) {
                 LOG.warn("Unknown value for includeParams parameter to URL tag: " + includeParams);
             }
         } catch (Exception e) {
-            LOG.warn("Unable to put request parameters (" + urlComponent.req.getQueryString() + ") into parameter map.", e);
+            LOG.warn("Unable to put request parameters (" + urlComponent.getHttpServletRequest().getQueryString() + ") into parameter map.", e);
         }
 
 		
 	}
 	
-    private void includeExtraParameters(URL urlComponent) {
-        if (urlComponent.extraParameterProvider != null) {
-            mergeRequestParameters(urlComponent.value, urlComponent.parameters, urlComponent.extraParameterProvider.getExtraParameters());
+    private void includeExtraParameters(UrlProvider urlComponent) {
+        if (urlComponent.getExtraParameterProvider() != null) {
+            mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlComponent.getExtraParameterProvider().getExtraParameters());
         }
     }
-    private void includeGetParameters(URL urlComponent) {
+    private void includeGetParameters(UrlProvider urlComponent) {
     	String query = extractQueryString(urlComponent);
-    	mergeRequestParameters(urlComponent.value, urlComponent.parameters, UrlHelper.parseQueryString(query));
+    	mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), UrlHelper.parseQueryString(query));
     }
 
-    private String extractQueryString(URL urlComponent) {
+    private String extractQueryString(UrlProvider urlComponent) {
         // Parse the query string to make sure that the parameters come from the query, and not some posted data
-        String query = urlComponent.req.getQueryString();
+        String query = urlComponent.getHttpServletRequest().getQueryString();
         if (query == null) {
-            query = (String) urlComponent.req.getAttribute("javax.servlet.forward.query_string");
+            query = (String) urlComponent.getHttpServletRequest().getAttribute("javax.servlet.forward.query_string");
         }
 
         if (query != null) {

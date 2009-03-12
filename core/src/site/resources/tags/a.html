@@ -42,6 +42,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">action</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The action to generate the URL for, if not using value</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">anchor</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The anchor for this URL</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">cssClass</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -82,6 +98,30 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html disabled attribute on rendered html element</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">encode</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Whether to encode parameters</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">escapeAmp</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Specifies whether to escape ampersand (&amp;) to (&amp;amp;) or not</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">forceAddSchemeHostAndPort</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Specifies whether to force the addition of scheme, host and port or not</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">href</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -96,6 +136,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">HTML id attribute</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">includeContext</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Whether actual context should be included in URL</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">includeParams</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">none</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The includeParams attribute may have the value 'none', 'get' or 'all'</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">javascriptTooltip</td>
@@ -138,12 +194,28 @@ Please do not edit it directly.
 					<td align="left" valign="top">Define label position of form element (top/left)</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">method</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The method of action to use</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">name</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The name to set for element</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">namespace</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The namespace to use</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">onblur</td>
@@ -266,6 +338,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set template to use for opening the rendered html.</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">portletMode</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The resulting portlet mode</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">portletUrlType</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Specifies if this should be a portlet render or action URL. Default is "render". To create an action URL, use "action".</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">required</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">false</td>
@@ -280,6 +368,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Define required position of required form element (left|right)</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">scheme</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Set scheme attribute</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">tabindex</td>
@@ -367,7 +463,15 @@ Please do not edit it directly.
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Preset the value of input element.</td>
+					<td align="left" valign="top">The target value to use, if not using action</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">windowState</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The resulting portlet window state</td>
 				</tr>
 		</table>
 		<!-- END SNIPPET: tagattributes -->

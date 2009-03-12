@@ -80,7 +80,7 @@ public class URLTag extends ContextBeanTag {
         if (escapeAmp != null) {
             url.setEscapeAmp(Boolean.valueOf(escapeAmp).booleanValue());
         }
-	if (forceAddSchemeHostAndPort != null) {
+	    if (forceAddSchemeHostAndPort != null) {
             url.setForceAddSchemeHostAndPort(Boolean.valueOf(forceAddSchemeHostAndPort).booleanValue());
         }
     }

@@ -22,8 +22,9 @@ package org.apache.struts2.views.java.simple;
 
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.components.ServletUrlRenderer;
 
-public class AnchorTest extends AbstractCommonAttributesTest {
+public class AnchorTest extends AbstractTest {
     private Anchor tag;
 
     public void testRenderAnchor() {
@@ -49,6 +50,7 @@ public class AnchorTest extends AbstractCommonAttributesTest {
     protected void setUp() throws Exception {
         super.setUp();
         this.tag = new Anchor(stack, request, response);
+        this.tag.setUrlRenderer(new ServletUrlRenderer());
     }
 
     @Override

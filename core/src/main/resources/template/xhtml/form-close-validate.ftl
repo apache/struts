@@ -35,7 +35,7 @@ END SNIPPET: supported-validators
 -->
 <#if ((parameters.validate?default(false) == true) && (parameters.performValidation?default(false) == true))>
 <script type="text/javascript">
-    function validateForm_${parameters.id}() {
+    function validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}() {
         form = document.getElementById("${parameters.id}");
         clearErrorMessages(form);
         clearErrorLabels(form);

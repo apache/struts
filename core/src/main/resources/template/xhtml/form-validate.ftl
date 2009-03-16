@@ -24,8 +24,8 @@
 	<script type="text/javascript" src="${base}/struts/xhtml/validation.js"></script>
 	<script type="text/javascript" src="${base}/struts/utils.js"></script>
 	<#if parameters.onsubmit??>
-		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.id}();")}
+		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}();")}
 	<#else>
-		${tag.addParameter('onsubmit', "return validateForm_${parameters.id}();")}
+		${tag.addParameter('onsubmit', "return validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}();")}
 	</#if>
 </#if>

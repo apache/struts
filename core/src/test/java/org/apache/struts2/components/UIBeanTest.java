@@ -98,8 +98,8 @@ public class UIBeanTest extends StrutsTestCase {
         assertEquals(bean.escape("hello[world"), "hello_world");
         assertEquals(bean.escape("hello.world"), "hello_world");
         assertEquals(bean.escape("hello]world"), "hello_world");
-        assertEquals(bean.escape("hello!world"), "hello_world");
-        assertEquals(bean.escape("hello!@#$%^&*()world"), "hello__________world");
+        assertEquals(bean.escape("hello!world"), "hello!world");
+        assertEquals(bean.escape("hello!@#$%^&*()world"), "hello!@#$%^&*()world");
     }
 
     public void testEscapeId() throws Exception {

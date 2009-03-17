@@ -180,20 +180,23 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
 
         String resultPrefix = defaultResultPath + actionName;
 
+        //results from files
         Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
         Map<String, ResultTypeConfig> resultsByExtension = conventionsService.getResultTypesByExtension(packageConfig);
         createFromResources(actionClass, results, defaultResultPath, resultPrefix, actionName,
             packageConfig, resultsByExtension);
-        if (annotation != null && annotation.results() != null && annotation.results().length > 0) {
-            createFromAnnotations(results, defaultResultPath, packageConfig, annotation.results(),
-                actionClass, resultsByExtension);
-        }
 
-        //get inherited @Results and @Result
+        //get inherited @Results and @Result (class level)
         for (Class<?> clazz : ReflectionTools.getClassHierarchy(actionClass)) {
             createResultsFromAnnotations(clazz, packageConfig, defaultResultPath, results, resultsByExtension);
         }
 
+
+        //method level
+        if (annotation != null && annotation.results() != null && annotation.results().length > 0) {
+            createFromAnnotations(results, defaultResultPath, packageConfig, annotation.results(),
+                    actionClass, resultsByExtension);
+        }
         return results;
     }
 

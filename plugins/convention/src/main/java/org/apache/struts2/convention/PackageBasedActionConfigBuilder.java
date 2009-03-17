@@ -46,6 +46,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.classloader.ReloadingClassLoader;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
@@ -163,7 +164,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.includeJars", required = false)
     public void setIncludeJars(String includeJars) {
-        if (TextUtils.stringSet(includeJars))
+        if (StringUtils.isNotEmpty(includeJars))
             this.includeJars = includeJars.split("\\s*[,]\\s*");
     }
 

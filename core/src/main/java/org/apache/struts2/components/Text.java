@@ -30,6 +30,7 @@ import java.util.List;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.TextProviderHelper;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -151,7 +152,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     public boolean end(Writer writer, String body) {
         actualName = findString(name, "name", "You must specify the i18n key. Example: welcome.header");
         String defaultMessage;
-        if (TextUtils.stringSet(body)) {
+        if (StringUtils.isNotEmpty(body)) {
             defaultMessage = body;
         } else {
             defaultMessage = actualName;

@@ -44,6 +44,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import org.apache.commons.lang.xwork.StringUtils;
+
 /**
  * ClasspathPackageProvider loads the configuration
  * by scanning the classpath or selected packages for Action classes.
@@ -393,7 +395,7 @@ public class ClasspathPackageProvider implements PackageProvider {
 
             // Try to guess the namespace from the first package
             PackageConfig firstParent = parents.get(0);
-            if (!TextUtils.stringSet(pkgConfig.getNamespace()) && TextUtils.stringSet(firstParent.getNamespace())) {
+            if (StringUtils.isEmpty(pkgConfig.getNamespace()) && StringUtils.isNotEmpty(firstParent.getNamespace())) {
                 pkgConfig.namespace(firstParent.getNamespace());
             }
         }

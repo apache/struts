@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.util.TextUtils;
 
@@ -41,7 +42,7 @@ public class DispatcherServlet extends HttpServlet implements PortletActionConst
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String dispatchTo = (String) request.getAttribute(DISPATCH_TO);
 		HttpServletRequest wrapper = wrapRequestIfNecessary(request);
-		if(TextUtils.stringSet(dispatchTo)) {
+		if(StringUtils.isNotEmpty(dispatchTo)) {
 			request.getRequestDispatcher(dispatchTo).include(wrapper, response);
 		}
 	}

@@ -32,6 +32,7 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -82,13 +83,13 @@ public class ServletUrlRenderer implements UrlRenderer {
 	                result = UrlHelper.buildUrl(_value, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
 	        }
             String anchor = urlComponent.getAnchor();
-	        if (TextUtils.stringSet(anchor)) {
+	        if (StringUtils.isNotEmpty(anchor)) {
 	        	result += '#' + urlComponent.findString(anchor);
 	        }
 
         if (urlComponent.isPutInContext()) {
             String var = urlComponent.getVar();
-            if (TextUtils.stringSet(var)) {
+            if (StringUtils.isNotEmpty(var)) {
                 urlComponent.putInContext(result);
 
                 // add to the request and page scopes as well

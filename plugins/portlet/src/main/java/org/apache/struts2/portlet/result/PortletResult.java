@@ -41,6 +41,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
@@ -187,7 +188,7 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 		RenderRequest req = PortletActionContext.getRenderRequest();
 		RenderResponse res = PortletActionContext.getRenderResponse();
 		res.setContentType(contentType);
-		if (TextUtils.stringSet(title)) {
+		if (StringUtils.isNotEmpty(title)) {
 			res.setTitle(title);
 		}
 		LOG.debug("Location: " + finalLocation);

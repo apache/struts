@@ -53,6 +53,7 @@ import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextUtils;
@@ -418,7 +419,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         dataSource = conditionalParse(dataSource, invocation);
 
         format = conditionalParse(format, invocation);
-        if (!TextUtils.stringSet(format)) {
+        if (StringUtils.isEmpty(format)) {
             format = FORMAT_PDF;
         }
 

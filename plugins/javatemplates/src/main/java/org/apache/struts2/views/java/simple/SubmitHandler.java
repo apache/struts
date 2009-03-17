@@ -22,6 +22,7 @@ package org.apache.struts2.views.java.simple;
 
 import org.apache.struts2.views.java.TagGenerator;
 import org.apache.struts2.views.java.Attributes;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
         Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
 
-        String type = TextUtils.noNull((String) params.get("type"), "input");
+        String type = StringUtils.defaultString((String) params.get("type"), "input");
 
         if ("button".equals(type)) {
             attrs.addIfExists("name", params.get("name"))
@@ -73,19 +74,19 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
             Attributes attrs = new Attributes();
             String body = (String) params.get("body");
 
-            String type = TextUtils.noNull((String) params.get("type"), "input");
+            String type = StringUtils.defaultString((String) params.get("type"), "input");
             if ("button".equals(type)) {
                 //button body
-                if (TextUtils.stringSet(body))
+                if (StringUtils.isNotEmpty(body))
                     characters(body, false);
                 else if (params.containsKey("label")) {
                     String label = (String) params.get("label");
-                    if (TextUtils.stringSet(label))
+                    if (StringUtils.isNotEmpty(label))
                         characters(label, false);
                 }
                 end("button");
             } else if ("image".equals(type)) {
-                if (TextUtils.stringSet(body))
+                if (StringUtils.isNotEmpty(body))
                     characters(body, false);
                 end("input");
             } else

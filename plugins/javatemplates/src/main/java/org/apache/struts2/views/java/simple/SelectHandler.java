@@ -28,6 +28,7 @@ import org.apache.struts2.util.ContainUtil;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -76,10 +77,10 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
 
                 //key
                 Object itemKey = findValue(listKey != null ? listKey : "top");
-                String itemKeyStr = TextUtils.noNull(itemKey.toString());
+                String itemKeyStr = StringUtils.defaultString(itemKey.toString());
                 //value
                 Object itemValue = findValue(listValue != null ? listValue : "top");
-                String itemValueStr = TextUtils.noNull(itemValue.toString());
+                String itemValueStr = StringUtils.defaultString(itemValue.toString());
 
                 boolean selected = ContainUtil.contains(value, itemKey);
                 writeOption(itemKeyStr, itemValueStr, selected);
@@ -128,9 +129,9 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
                 stack.push(optGroupBean);
 
                 Object tmpKey = stack.findValue(listKey != null ? listKey : "top");
-                String tmpKeyStr = TextUtils.noNull(tmpKey.toString());
+                String tmpKeyStr = StringUtils.defaultString(tmpKey.toString());
                 Object tmpValue = stack.findValue(listValue != null ? listValue : "top");
-                String tmpValueStr = TextUtils.noNull(tmpValue.toString());
+                String tmpValueStr = StringUtils.defaultString(tmpValue.toString());
                 boolean selected = ContainUtil.contains(value, tmpKeyStr);
                 writeOption(tmpKeyStr, tmpValueStr, selected);
 

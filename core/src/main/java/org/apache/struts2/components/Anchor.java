@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,7 +107,7 @@ public class Anchor extends ClosingUIBean {
             urlRenderer.beforeRenderUrl(urlProvider);
             urlRenderer.renderUrl(sw, urlProvider);
             String builtHref = sw.toString();
-            if (TextUtils.stringSet(builtHref))
+            if (StringUtils.isNotEmpty(builtHref))
                 addParameter("href", ensureAttributeSafelyNotEscaped(builtHref));
         }
     }

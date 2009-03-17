@@ -22,6 +22,7 @@ package org.apache.struts2.views.java.simple;
 
 import org.apache.struts2.views.java.TagGenerator;
 import org.apache.struts2.views.java.Attributes;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class LabelHandler extends AbstractTagHandler implements TagGenerator {
                 .addIfExists("title", params.get("title"));
         super.start("label", a);
         String value = (String) params.get("nameValue");
-        if (TextUtils.stringSet(value))
+        if (StringUtils.isNotEmpty(value))
             characters(value);
         super.end("label");
     }

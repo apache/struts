@@ -22,6 +22,7 @@ package org.apache.struts2.views.java.simple;
 
 import org.apache.struts2.views.java.TagGenerator;
 import org.apache.struts2.views.java.Attributes;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class ResetHandler extends AbstractTagHandler implements TagGenerator {
         super.start("input", attrs);
         if (isButton) {
             String label = (String) params.get("label");
-            if (TextUtils.stringSet(label))
+            if (StringUtils.isNotEmpty(label))
                 characters(label);
         }
 

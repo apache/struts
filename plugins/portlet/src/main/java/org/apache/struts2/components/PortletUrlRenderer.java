@@ -27,6 +27,7 @@ import java.io.Writer;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -79,7 +80,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 				result = createDefaultUrl(urlComponent);
 			}
             String anchor = urlComponent.getAnchor();
-			if (TextUtils.stringSet(anchor)) {
+			if (StringUtils.isNotEmpty(anchor)) {
 				result += '#' + urlComponent.findString(anchor);
 			}
 
@@ -137,7 +138,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 				action = ai.getProxy().getActionName();
 			}
 			String type = "action";
-			if (TextUtils.stringSet(formComponent.method)) {
+			if (StringUtils.isNotEmpty(formComponent.method)) {
 				if ("GET".equalsIgnoreCase(formComponent.method.trim())) {
 					type = "render";
 				}

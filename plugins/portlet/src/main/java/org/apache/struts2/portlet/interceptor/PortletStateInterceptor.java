@@ -28,6 +28,7 @@ import javax.portlet.RenderRequest;
 
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
@@ -71,7 +72,7 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 	@SuppressWarnings("unchecked")
 	private void restoreStack(ActionInvocation invocation) {
 		RenderRequest request = (RenderRequest) invocation.getInvocationContext().get(REQUEST);
-		if (TextUtils.stringSet(request.getParameter(EVENT_ACTION))) {
+		if (StringUtils.isNotEmpty(request.getParameter(EVENT_ACTION))) {
 			if(!isProperPrg(invocation)) {
 				LOG.debug("Restoring value stack from event phase");
 				ValueStack oldStack = (ValueStack) invocation.getInvocationContext().getSession().get(

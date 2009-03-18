@@ -146,7 +146,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject("struts.convention.action.fileProtocols")
     public void setFileProtocols(String fileProtocols) {
-        if (!StringTools.isTrimmedEmpty(fileProtocols)) {
+        if (StringUtils.isNotBlank(fileProtocols)) {
             this.fileProtocols = TextParseUtil.commaDelimitedStringToSet(fileProtocols);
         }
     }
@@ -182,7 +182,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.packages", required = false)
     public void setActionPackages(String actionPackages) {
-        if (!StringTools.isTrimmedEmpty(actionPackages)) {
+        if (StringUtils.isNotBlank(actionPackages)) {
             this.actionPackages = actionPackages.split("\\s*[,]\\s*");
         }
     }
@@ -202,7 +202,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.suffix", required = false)
     public void setActionSuffix(String actionSuffix) {
-        if (!StringTools.isTrimmedEmpty(actionSuffix)) {
+        if (StringUtils.isNotBlank(actionSuffix)) {
             this.actionSuffix = actionSuffix;
         }
     }
@@ -213,7 +213,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.exclude.packages", required = false)
     public void setExcludePackages(String excludePackages) {
-        if (!StringTools.isTrimmedEmpty(excludePackages)) {
+        if (StringUtils.isNotBlank(excludePackages)) {
             this.excludePackages = excludePackages.split("\\s*[,]\\s*");
         }
     }
@@ -681,7 +681,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (annotation != null) {
             actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ?
                     actionName : annotation.value();
-            actionName = StringTools.lastToken(actionName, "/");
+            actionName = StringUtils.contains(actionName, "/") ? StringUtils.substringAfterLast(actionName, "/") : actionName;
         }
 
         ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(),
@@ -758,7 +758,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using non-default action namespace from the Action annotation of [#0]", action.value());
             }
-            actionNamespace = StringTools.upToLastToken(action.value(), "/");
+            String actionName = action.value();
+            actionNamespace = StringUtils.contains(actionName, "/") ? StringUtils.substringBeforeLast(actionName, "/") : StringUtils.EMPTY; 
         }
 
         // Next grab the parent annotation from the class

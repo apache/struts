@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
+import org.apache.commons.lang.xwork.StringUtils;
 
 /**
  * <p>
@@ -31,19 +32,6 @@ import com.opensymphony.xwork2.config.ConfigurationException;
  * </p>
  */
 public class StringTools {
-    public static boolean isTrimmedEmpty(String s) {
-        return s == null || s.trim().length() == 0;
-    }
-
-    public static String lastToken(String str, String s) {
-        int index = str.lastIndexOf(s);
-        if (index >= 0) {
-            return str.substring(index + 1);
-        }
-
-        return str;
-    }
-
     public static boolean contains(String[] strings, String value, boolean ignoreCase) {
         if (strings != null) {
             for (String string :  strings) {
@@ -53,15 +41,6 @@ public class StringTools {
         }
 
         return false;
-    }
-
-    public static String upToLastToken(String str, String s) {
-        int index = str.lastIndexOf(s);
-        if (index >= 0) {
-            return str.substring(0, index);
-        }
-
-        return "";
     }
 
     public static Map<String, String> createParameterMap(String[] parms) {

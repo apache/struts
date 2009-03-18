@@ -32,6 +32,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -440,9 +441,9 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         public ResultInfo(Result result, PackageConfig packageConfig, String resultPath,
                 Class<?> actionClass, Map<String, ResultTypeConfig> resultsByExtension) {
             this.name = result.name();
-            if (!StringTools.isTrimmedEmpty(result.type())) {
+            if (StringUtils.isNotBlank(result.type())) {
                 this.type = result.type();
-            } else if (!StringTools.isTrimmedEmpty(result.location())) {
+            } else if (StringUtils.isNotBlank(result.location())) {
                 this.type = determineType(result.location(), packageConfig, resultsByExtension);
             } else {
                 throw new ConfigurationException("The action class [" + actionClass + "] contains a " +
@@ -451,7 +452,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             }
 
             // See if we can handle relative locations or not
-            if (!StringTools.isTrimmedEmpty(result.location())) {
+            if (StringUtils.isNotBlank(result.location())) {
                 if (relativeResultTypes.contains(this.type) && !result.location().startsWith("/")) {
                     location = resultPath + result.location();
                 } else {

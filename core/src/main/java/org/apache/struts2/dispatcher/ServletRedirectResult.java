@@ -26,16 +26,25 @@ import javax.servlet.http.HttpServletResponse;
 import static javax.servlet.http.HttpServletResponse.*;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Arrays;
 
 
 /**
@@ -81,7 +90,7 @@ import java.io.IOException;
  * <!-- END SNIPPET: example --></pre>
  *
  */
-public class ServletRedirectResult extends StrutsResultSupport {
+public class ServletRedirectResult extends StrutsResultSupport implements ReflectionExceptionHandler {
 
     private static final long serialVersionUID = 6316947346435301270L;
 
@@ -92,6 +101,10 @@ public class ServletRedirectResult extends StrutsResultSupport {
     protected ActionMapper actionMapper;
 
     protected int statusCode = SC_FOUND;
+
+    protected boolean supressEmptyParameters = false;
+
+    protected Map<String, String> requestParameters = new LinkedHashMap<String, String>();
 
     public ServletRedirectResult() {
         super();
@@ -153,7 +166,26 @@ public class ServletRedirectResult extends StrutsResultSupport {
                 finalLocation = request.getContextPath() + finalLocation;
             }
 
-            finalLocation = response.encodeRedirectURL(finalLocation);
+            ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(invocation.getResultCode());
+            Map resultConfigParams = resultConfig.getParams();
+            for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext();) {
+                Map.Entry e = (Map.Entry) i.next();
+
+                if (!getProhibitedResultParams().contains(e.getKey())) {
+                    requestParameters.put(e.getKey().toString(),
+                            e.getValue() == null ? "" :
+                                    conditionalParse(e.getValue().toString(), invocation));
+                    String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue().toString(), invocation);
+                    if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
+                        requestParameters.put(e.getKey().toString(), potentialValue);
+                    }
+                }
+            }
+
+            StringBuilder tmpLocation = new StringBuilder(finalLocation);
+            UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
+
+            finalLocation = response.encodeRedirectURL(tmpLocation.toString());
         }
 
         if (LOG.isDebugEnabled()) {
@@ -162,6 +194,13 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
         sendRedirect(response, finalLocation);
     }
+
+    protected List<String> getProhibitedResultParams() {
+        return Arrays.asList(new String[]{
+                DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
+                "prependServletContext", "supressEmptyParameters"});
+    }
+
 
     /**
      * Sends the redirection.  Can be overridden to customize how the redirect is handled (i.e. to use a different
@@ -188,5 +227,30 @@ public class ServletRedirectResult extends StrutsResultSupport {
         // since the only valid places for : in URL's is before the path specification
         // either before the port, or after the protocol
         return (url.indexOf(':') == -1);
+    }
+
+    /**
+     * Sets the supressEmptyParameters option
+     *
+     * @param suppress The new value for this option
+     */
+    public void setSupressEmptyParameters(boolean supressEmptyParameters) {
+        this.supressEmptyParameters = supressEmptyParameters;
+    }
+
+    /**
+     * Adds a request parameter to be added to the redirect url
+     *
+     * @param key The parameter name
+     * @param value The parameter value
+     */
+    public ServletRedirectResult addParameter(String key, Object value) {
+        requestParameters.put(key, String.valueOf(value));
+        return this;
+    }
+
+    public void handle(ReflectionException ex) {
+        // Only log as debug as they are probably parameters to be appended to the url
+        LOG.debug(ex.getMessage(), ex);
     }
 }

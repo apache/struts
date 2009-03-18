@@ -131,9 +131,6 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     protected String actionName;
     protected String namespace;
     protected String method;
-    protected boolean supressEmptyParameters = false;
-
-    private Map<String, String> requestParameters = new LinkedHashMap<String, String>();
 
     public ServletActionRedirectResult() {
         super();
@@ -154,9 +151,6 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
         this.method = method;
     }
 
-    protected List<String> prohibitedResultParam = Arrays.asList(new String[] {
-            DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
-            "prependServletContext", "supressEmptyParameters" });
 
     /**
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
@@ -175,27 +169,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
             method = conditionalParse(method, invocation);
         }
 
-        String resultCode = invocation.getResultCode();
-        if (resultCode != null) {
-            ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(
-                    resultCode);
-            Map resultConfigParams = resultConfig.getParams();
-            for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry e = (Map.Entry) i.next();
-                if (! prohibitedResultParam.contains(e.getKey())) {
-                    requestParameters.put(e.getKey().toString(),
-                            e.getValue() == null ? "":
-                                conditionalParse(e.getValue().toString(), invocation));
-                    String potentialValue = e.getValue() == null ? "": conditionalParse(e.getValue().toString(), invocation);
-                    if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
-                      requestParameters.put(e.getKey().toString(), potentialValue);
-                    }
-                }
-            }
-        }
-
         StringBuilder tmpLocation = new StringBuilder(actionMapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
-        UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
         setLocation(tmpLocation.toString());
 
@@ -229,29 +203,9 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
         this.method = method;
     }
 
-    /**
-     * Sets the supressEmptyParameters option
-     *
-     * @param suppress The new value for this option
-     */
-    public void setSupressEmptyParameters(boolean supressEmptyParameters) {
-        this.supressEmptyParameters = supressEmptyParameters;
+    protected List<String> getProhibitedResultParams() {
+        return Arrays.asList(new String[]{
+                DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
+                "prependServletContext", "supressEmptyParameters"});
     }
-
-    /**
-     * Adds a request parameter to be added to the redirect url
-     *
-     * @param key The parameter name
-     * @param value The parameter value
-     */
-    public ServletActionRedirectResult addParameter(String key, Object value) {
-        requestParameters.put(key, String.valueOf(value));
-        return this;
-    }
-
-    public void handle(ReflectionException ex) {
-        // Only log as debug as they are probably parameters to be appended to the url
-        LOG.debug(ex.getMessage(), ex);
-    }
-
 }

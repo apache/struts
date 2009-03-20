@@ -80,6 +80,7 @@
 
     <properties>
         <currentVersion>${pom.version}</currentVersion>
+        <struts2.springPlatformVersion>2.5.6</struts2.springPlatformVersion>
     </properties>
 
     <profiles>

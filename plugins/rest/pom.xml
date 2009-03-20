@@ -67,15 +67,15 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>1.2.8</version>
+            <artifactId>spring-test</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
             <optional>true</optional>
         </dependency>
 
        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>1.2.8</version>
+            <version>${struts2.springPlatformVersion}</version>
             <optional>true</optional>
         </dependency>
 

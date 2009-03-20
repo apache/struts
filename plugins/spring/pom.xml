@@ -39,39 +39,35 @@
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/spring/</url>
     </scm>
    
-   <properties>
-    <spring.version>2.5.3</spring.version>
-   </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
+            <version>${struts2.springPlatformVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
+            <version>${struts2.springPlatformVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
+            <version>${struts2.springPlatformVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
+            <version>${struts2.springPlatformVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
+            <version>${struts2.springPlatformVersion}</version>
             <scope>test</scope>
         </dependency>
 

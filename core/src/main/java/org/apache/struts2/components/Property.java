@@ -26,11 +26,13 @@ import java.io.Writer;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -136,7 +138,7 @@ public class Property extends Component {
         // exception: don't call findString(), since we don't want the
         //            expression parsed in this one case. it really
         //            doesn't make sense, in fact.
-        actualValue = (String) getStack().findValue(value, String.class);
+        actualValue = (String) getStack().findValue(value, String.class, throwExceptionOnELFailure);
 
         try {
             if (actualValue != null) {

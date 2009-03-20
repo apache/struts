@@ -195,4 +195,7 @@ public final class StrutsConstants {
 
     /** The {@link com.opensymphony.xwork2.UnknownHandlerManager} implementation class */
     public static final String STRUTS_UNKNOWN_HANDLER_MANAGER = "struts.unknownHandlerManager";
+
+    /** Throw RuntimeException when a property is not found, or the evaluation of the espression fails*/
+    public static final String STRUTS_EL_THROW_EXCEPTION = "struts.el.throwExceptionOnFailure";
 }

@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.FastByteArrayOutputStream;
@@ -56,6 +57,7 @@ public class Component {
     protected ValueStack stack;
     protected Map parameters;
     protected ActionMapper actionMapper;
+    protected boolean throwExceptionOnELFailure;
 
     /**
      * Constructor.
@@ -83,6 +85,11 @@ public class Component {
     @Inject
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
+    }
+
+    @Inject(StrutsConstants.STRUTS_EL_THROW_EXCEPTION)
+    public void setThrowExceptionsOnELFailure(String throwException) {
+        this.throwExceptionOnELFailure = "true".equals(throwException);
     }
     
     /**
@@ -245,7 +252,7 @@ public class Component {
 
         expr = stripExpressionIfAltSyntax(expr);
 
-        return getStack().findValue(expr);
+        return getStack().findValue(expr, throwExceptionOnELFailure);
     }
 
     /**
@@ -372,7 +379,7 @@ public class Component {
         } else {
             expr = stripExpressionIfAltSyntax(expr);
 
-            return getStack().findValue(expr, toType);
+            return getStack().findValue(expr, toType, throwExceptionOnELFailure);
         }
     }
 

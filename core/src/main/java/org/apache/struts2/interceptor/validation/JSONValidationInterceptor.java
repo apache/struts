@@ -73,8 +73,6 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
     private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
     private static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
 
-    static char[] hex = "0123456789ABCDEF".toCharArray();
-
     private int validationFailedStatus = -1;
 
     /**

@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.commons.lang.xwork.StringEscapeUtils;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -177,7 +178,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
         sb.append("[");
         for (String value : values) {
             sb.append("\"");
-            sb.append(escapeJSON(value));
+            sb.append(StringEscapeUtils.escapeJavaScript(value));
             sb.append("\",");
         }
         if (values.size() > 0)
@@ -185,55 +186,4 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
         sb.append("]");
         return sb.toString();
     }
-
-    private String escapeJSON(Object obj) {
-        StringBuilder sb = new StringBuilder();
-
-        CharacterIterator it = new StringCharacterIterator(obj.toString());
-
-        for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
-            if (c == '"') {
-                sb.append("\\\"");
-            } else if (c == '\\') {
-                sb.append("\\\\");
-            } else if (c == '/') {
-                sb.append("\\/");
-            } else if (c == '\b') {
-                sb.append("\\b");
-            } else if (c == '\f') {
-                sb.append("\\f");
-            } else if (c == '\n') {
-                sb.append("\\n");
-            } else if (c == '\r') {
-                sb.append("\\r");
-            } else if (c == '\t') {
-                sb.append("\\t");
-            } else if (Character.isISOControl(c)) {
-                sb.append(unicode(c));
-            } else {
-                sb.append(c);
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Represent as unicode
-     * @param c character to be encoded
-     */
-    private String unicode(char c) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\\u");
-
-        int n = c;
-
-        for (int i = 0; i < 4; ++i) {
-            int digit = (n & 0xf000) >> 12;
-
-            sb.append(hex[digit]);
-            n <<= 4;
-        }
-        return sb.toString();
-    }
-
 }

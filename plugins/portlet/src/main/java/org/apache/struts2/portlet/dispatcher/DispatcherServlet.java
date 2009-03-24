@@ -32,8 +32,6 @@ import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.commons.lang.xwork.StringUtils;
 
-import com.opensymphony.xwork2.util.TextUtils;
-
 public class DispatcherServlet extends HttpServlet implements PortletActionConstants {
 
 	private static final long serialVersionUID = -266147033645951967L;

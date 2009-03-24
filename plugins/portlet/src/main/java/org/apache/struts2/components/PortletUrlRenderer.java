@@ -31,7 +31,6 @@ import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.TextUtils;
 
 /**
  * Implementation of the {@link UrlRenderer} interface that renders URLs for portlet environments.

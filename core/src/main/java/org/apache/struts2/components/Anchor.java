@@ -22,7 +22,6 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;

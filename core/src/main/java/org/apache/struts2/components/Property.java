@@ -24,11 +24,12 @@ package org.apache.struts2.components;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -156,10 +157,10 @@ public class Property extends Component {
     private String prepare(String value) {
     	String result = value;
         if (escape) {
-        	result = TextUtils.htmlEncode(result);
+        	result = StringEscapeUtils.escapeHtml(result);
         }
         if (escapeJavaScript) {
-        	result = TextUtils.escapeJavaScript(result);
+        	result = StringEscapeUtils.escapeJavaScript(result);
         }
         return result;
     }

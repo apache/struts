@@ -99,10 +99,12 @@ public abstract class AbstractTest extends TestCase {
 
     protected void expectFind(String expr, Class toClass, Object returnVal) {
         EasyMock.expect(stack.findValue(expr, toClass)).andReturn(returnVal);
+        EasyMock.expect(stack.findValue(expr, toClass, false)).andReturn(returnVal);
     }
 
     protected void expectFind(String expr, Object returnVal) {
-        EasyMock.expect(stack.findValue(expr)).andReturn(returnVal);
+        EasyMock.expect(stack.findValue(expr)).andReturn(returnVal).anyTimes();
+        EasyMock.expect(stack.findValue(expr, false)).andReturn(returnVal).anyTimes();
     }
 
     protected void setUpStack() {

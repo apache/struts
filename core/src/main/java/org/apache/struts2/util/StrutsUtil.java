@@ -224,14 +224,6 @@ public class StrutsUtil {
         return selectList;
     }
 
-    public String htmlEncode(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-
-        return StringEscapeUtils.escapeHtml(obj.toString());
-    }
-
     public int toInt(long aLong) {
         return (int) aLong;
     }

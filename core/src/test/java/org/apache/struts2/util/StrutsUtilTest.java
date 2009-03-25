@@ -169,14 +169,6 @@ public class StrutsUtilTest extends StrutsTestCase {
         assertEquals(((ListEntry)listMade.get(2)).getIsSelected(), false);
     }
 
-
-    public void testHtmlEncode() throws Exception {
-        assertEquals(
-                strutsUtil.htmlEncode("<html><head><title>some title</title><body>some content</body></html>"),
-                "&lt;html&gt;&lt;head&gt;&lt;title&gt;some title&lt;/title&gt;&lt;body&gt;some content&lt;/body&gt;&lt;/html&gt;");
-    }
-
-
     public void testToInt() throws Exception {
         assertEquals(strutsUtil.toInt(11l), 11);
     }

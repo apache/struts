@@ -1,8 +1,9 @@
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.util.TextUtils;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
+import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.xwork.StringEscapeUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -34,9 +35,9 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
         //hidden input
         attrs = new Attributes();
         attrs.add("type", "hidden")
-                .add("id", "__checkbox_" + TextUtils.htmlEncode(id))
-                .add("name", "__checkbox_" + TextUtils.htmlEncode(name))
-                .add("value", "__checkbox_" + TextUtils.htmlEncode(fieldValue))
+                .add("id", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml(id)))
+                .add("name", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml(name)))
+                .add("value", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml(fieldValue)))
                 .addIfTrue("disabled", disabled);
         start("input", attrs);
         end("input");

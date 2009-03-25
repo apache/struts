@@ -27,8 +27,6 @@ import org.apache.commons.lang.xwork.StringUtils;
 import java.io.IOException;
 import java.util.Map;
 
-import com.opensymphony.xwork2.util.TextUtils;
-
 public class ResetHandler extends AbstractTagHandler implements TagGenerator {
 
     public void generate() throws IOException {

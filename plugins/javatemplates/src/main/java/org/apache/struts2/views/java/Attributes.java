@@ -20,7 +20,8 @@
  */
 package org.apache.struts2.views.java;
 
-import com.opensymphony.xwork2.util.TextUtils;
+import org.apache.commons.lang.xwork.StringEscapeUtils;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import java.util.LinkedHashMap;
 
@@ -34,7 +35,7 @@ public class Attributes extends LinkedHashMap<String, String> {
     }
 
     public Attributes add(String key, String value, boolean encode) {
-        put(key, (encode ? TextUtils.htmlEncode(value) : value));
+        put(key, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml(value)) : value));
         return this;
     }
 
@@ -59,8 +60,8 @@ public class Attributes extends LinkedHashMap<String, String> {
     public Attributes addIfExists(String attrName, Object paramValue, boolean encode) {
         if (paramValue != null) {
             String val = paramValue.toString();
-            if (val.trim().length() > 0)
-                put(attrName, (encode ? TextUtils.htmlEncode(val) : val));
+            if (StringUtils.isNotBlank(val))
+                put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml(val)) : val));
         }
         return this;
     }
@@ -103,7 +104,7 @@ public class Attributes extends LinkedHashMap<String, String> {
     public Attributes addDefaultToEmpty(String attrName, Object paramValue, boolean encode) {
         if (paramValue != null) {
             String val = paramValue.toString();
-            put(attrName, (encode ? TextUtils.htmlEncode(val) : val));
+            put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml(val)) : val));
         } else {
             put(attrName, "");
         }

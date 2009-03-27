@@ -31,7 +31,6 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.components.Form;
-import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 
@@ -391,6 +390,88 @@ public class FormTagTest extends AbstractUITagTest {
 
         verify(FormTag.class.getResource("Formtag-22.txt"));
     }
+
+/**
+     * Tests the numbers are formatted correctly to not break the javascript, using doubles
+     */
+    public void testFormWithCustomOnsubmitEnabledWithValidateEnabled4() throws Exception {
+
+        final Container cont = container;
+        // used to determined if the form action needs js validation
+        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+            private DefaultConfiguration self = this;
+            public Container getContainer() {
+                return new Container() {
+                    public <T> T inject(Class<T> implementation) {return null;}
+                    public void removeScopeStrategy() {}
+                    public void setScopeStrategy(Strategy scopeStrategy) {}
+                    public <T> T getInstance(Class<T> type, String name) {return null;}
+                    public <T> T getInstance(Class<T> type) {return null;}
+                    public Set<String> getInstanceNames(Class<?> type) {return null;}
+
+                    public void inject(Object o) {
+                        cont.inject(o);
+                        if (o instanceof Form) {
+                            ((Form)o).setConfiguration(self);
+                        }
+                    }
+                };
+            }
+            public RuntimeConfiguration getRuntimeConfiguration() {
+                return new RuntimeConfiguration() {
+                    public ActionConfig getActionConfig(String namespace, String name) {
+                        ActionConfig actionConfig = new ActionConfig("", name, DoubleValidationAction.class.getName()) {
+                            public List getInterceptors() {
+                                List interceptors = new ArrayList();
+
+                                ValidationInterceptor validationInterceptor = new ValidationInterceptor();
+                                validationInterceptor.setIncludeMethods("*");
+
+                                InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
+                                interceptors.add(interceptorMapping);
+
+                                return interceptors;
+                            }
+                            public String getClassName() {
+                                return DoubleValidationAction.class.getName();
+                            }
+                        };
+                        return actionConfig;
+                    }
+
+                    public Map getActionConfigs() {
+                        return null;
+                    }
+                };
+            }
+        });
+
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setName("myForm");
+        tag.setMethod("post");
+        tag.setAction("myAction");
+        tag.setAcceptcharset("UTF-8");
+        tag.setEnctype("myEncType");
+        tag.setTitle("mytitle");
+        tag.setOnsubmit("submitMe()");
+        tag.setValidate("true");
+        tag.setNamespace("");
+
+        UpDownSelectTag t = new UpDownSelectTag();
+        t.setPageContext(pageContext);
+        t.setName("myUpDownSelectTag");
+        t.setList("{}");
+
+        tag.doStartTag();
+        tag.getComponent().getParameters().put("actionClass", DoubleValidationAction.class);
+        t.doStartTag();
+        t.doEndTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-24.txt"));
+    }
+
 
     /**
      * This test with form tag validation disabled.

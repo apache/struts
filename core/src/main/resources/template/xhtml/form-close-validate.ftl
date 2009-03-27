@@ -110,10 +110,10 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "double">
             if (continueValidation && field.value != null) {
                 var value = parseFloat(field.value);
-                if (<#if validator.minInclusive??>value < ${validator.minInclusive?c}<#else>false</#if> ||
-                        <#if validator.maxInclusive??>value > ${validator.maxInclusive?c}<#else>false</#if> ||
-                        <#if validator.minExclusive??>value <= ${validator.minExclusive?c}<#else>false</#if> ||
-                        <#if validator.maxExclusive??>value >= ${validator.maxExclusive?c}<#else>false</#if>) {
+                if (<#if validator.minInclusive??>value < ${validator.minInclusive}<#else>false</#if> ||
+                        <#if validator.maxInclusive??>value > ${validator.maxInclusive}<#else>false</#if> ||
+                        <#if validator.minExclusive??>value <= ${validator.minExclusive}<#else>false</#if> ||
+                        <#if validator.maxExclusive??>value >= ${validator.maxExclusive}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                     <#if validator.shortCircuit>continueValidation = false;</#if>

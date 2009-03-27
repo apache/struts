@@ -287,6 +287,9 @@ public class Dispatcher {
         	interceptor.destroy();
         }
 
+        //cleanup action context
+        ActionContext.setContext(null);
+
         // clean up configuration
     	configurationManager.destroyConfiguration();
     	configurationManager = null;

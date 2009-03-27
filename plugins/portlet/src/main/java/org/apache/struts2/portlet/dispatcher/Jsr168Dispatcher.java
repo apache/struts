@@ -295,8 +295,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         LOG.debug("Entering processAction");
         resetActionContext();
         try {
-            serviceAction(request, response, getActionMapping(request),
-                    getRequestMap(request), getParameterMap(request),
+            serviceAction(request, response, getRequestMap(request), getParameterMap(request),
                     getSessionMap(request), getApplicationMap(),
                     portletNamespace, EVENT_PHASE);
             LOG.debug("Leaving processAction");
@@ -320,8 +319,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         if(!request.getWindowState().equals(WindowState.MINIMIZED)) {
         try {
             // Check to see if an event set the render to be included directly
-            serviceAction(request, response, getActionMapping(request),
-                    getRequestMap(request), getParameterMap(request),
+            serviceAction(request, response, getRequestMap(request), getParameterMap(request),
                     getSessionMap(request), getApplicationMap(),
                     portletNamespace, RENDER_PHASE);
             LOG.debug("Leaving render");
@@ -337,7 +335,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     private void resetActionContext() {
         ActionContext.setContext(null);
     }
-
+    
     /**
      * Merges all application and portlet attributes into a single
      * <tt>HashMap</tt> to represent the entire <tt>Action</tt> context.
@@ -355,27 +353,17 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      */
     public HashMap<String, Object> createContextMap(Map<String, Object> requestMap, Map<String, String[]> parameterMap,
             Map<String, Object> sessionMap, Map<String, Object> applicationMap, PortletRequest request,
-            PortletResponse response, PortletConfig portletConfig, Integer phase) throws IOException {
+            PortletResponse response, HttpServletRequest servletRequest, HttpServletResponse servletResponse, ServletContext servletContext, PortletConfig portletConfig, Integer phase) throws IOException {
 
         // TODO Must put http request/response objects into map for use with
-    	HttpServletResponse dummyResponse = new PortletServletResponse(response);
-    	HttpServletRequest dummyRequest = new PortletServletRequest(request, getPortletContext());
-    	container.inject(dummyRequest);
-    	ServletContext dummyServletContext = new PortletServletContext(getPortletContext());
-    	if(EVENT_PHASE.equals(phase)) {
-    		dummyRequest = dispatcherUtils.wrapRequest(dummyRequest, dummyServletContext);
-    		if(dummyRequest instanceof MultiPartRequestWrapper) {
-    			// Multipart request. Request parameters are encoded in the multipart data,
-    			// so we need to manually add them to the parameter map.
-    			parameterMap.putAll(dummyRequest.getParameterMap());
-    		}
-    	}
+    	container.inject(servletRequest);
+    	
         // ServletActionContext
         HashMap<String, Object> extraContext = new HashMap<String, Object>();
         // The dummy servlet objects. Eases reuse of existing interceptors that uses the servlet objects.
-        extraContext.put(StrutsStatics.HTTP_REQUEST, dummyRequest);
-        extraContext.put(StrutsStatics.HTTP_RESPONSE, dummyResponse);
-        extraContext.put(StrutsStatics.SERVLET_CONTEXT, dummyServletContext);
+        extraContext.put(StrutsStatics.HTTP_REQUEST, servletRequest);
+        extraContext.put(StrutsStatics.HTTP_RESPONSE, servletResponse);
+        extraContext.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
         // End dummy servlet objects
         extraContext.put(ActionContext.PARAMETERS, parameterMap);
         extraContext.put(ActionContext.SESSION, sessionMap);
@@ -419,7 +407,6 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      *
      * @param request the HttpServletRequest object.
      * @param response the HttpServletResponse object.
-     * @param mapping the action mapping.
      * @param requestMap a Map of request attributes.
      * @param parameterMap a Map of request parameters.
      * @param sessionMap a Map of all session attributes.
@@ -428,18 +415,32 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * @param phase The portlet phase (render or action, see
      *        {@link PortletActionConstants})
      */
-    public void serviceAction(PortletRequest request, PortletResponse response,
-            ActionMapping mapping, Map<String, Object> requestMap, Map<String, String[]> parameterMap,
+    public void serviceAction(PortletRequest request, PortletResponse response, Map<String, Object> requestMap, Map<String, String[]> parameterMap,
             Map<String, Object> sessionMap, Map<String, Object> applicationMap, String portletNamespace,
             Integer phase) throws PortletException {
         LOG.debug("serviceAction");
-        String actionName = mapping.getName();
-        String namespace = mapping.getNamespace();
         Dispatcher.setInstance(dispatcherUtils);
+        String actionName = null;
+        String namespace = null;
         try {
+            ServletContext servletContext = new PortletServletContext(getPortletContext());
+            HttpServletRequest servletRequest = new PortletServletRequest(request, getPortletContext());
+            HttpServletResponse servletResponse = new PortletServletResponse(response);
+            if(EVENT_PHASE.equals(phase)) {
+            	servletRequest = dispatcherUtils.wrapRequest(servletRequest, servletContext);
+        		if(servletRequest instanceof MultiPartRequestWrapper) {
+        			// Multipart request. Request parameters are encoded in the multipart data,
+        			// so we need to manually add them to the parameter map.
+        			parameterMap.putAll(servletRequest.getParameterMap());
+        		}
+        	}
+            container.inject(servletRequest);
+            ActionMapping mapping = getActionMapping(request, servletRequest);
+            actionName = mapping.getName();
+            namespace = mapping.getNamespace();
             HashMap<String, Object> extraContext = createContextMap(requestMap, parameterMap,
-                    sessionMap, applicationMap, request, response,
-                    getPortletConfig(), phase);
+                    sessionMap, applicationMap, request, response, servletRequest, servletResponse,
+                    servletContext, getPortletConfig(), phase);
             extraContext.put(PortletActionConstants.ACTION_MAPPING, mapping);
             LOG.debug("Creating action proxy for name = " + actionName
                     + ", namespace = " + namespace);
@@ -479,24 +480,22 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * @param request the PortletRequest object.
      * @return the namespace of the action.
      */
-    protected ActionMapping getActionMapping(final PortletRequest request) {
+    protected ActionMapping getActionMapping(final PortletRequest portletRequest, final HttpServletRequest servletRequest) {
         ActionMapping mapping = null;
         String actionPath = null;
-        if (resetAction(request)) {
-            mapping = (ActionMapping) actionMap.get(request.getPortletMode());
+        if (resetAction(portletRequest)) {
+            mapping = (ActionMapping) actionMap.get(portletRequest.getPortletMode());
         } else {
-            actionPath = request.getParameter(ACTION_PARAM);
+            actionPath = servletRequest.getParameter(ACTION_PARAM);
             if (StringUtils.isEmpty(actionPath)) {
-                mapping = (ActionMapping) actionMap.get(request
+                mapping = (ActionMapping) actionMap.get(portletRequest
                         .getPortletMode());
             } else {
                 
                 // Use the usual action mapper, but it is expecting an action extension
                 // on the uri, so we add the default one, which should be ok as the
                 // portlet is a portlet first, a servlet second
-                PortletServletRequest httpRequest = new PortletServletRequest(request, getPortletContext());
-                container.inject(httpRequest);
-                mapping = actionMapper.getMapping(httpRequest, dispatcherUtils.getConfigurationManager());
+                mapping = actionMapper.getMapping(servletRequest, dispatcherUtils.getConfigurationManager());
             }
         }
         

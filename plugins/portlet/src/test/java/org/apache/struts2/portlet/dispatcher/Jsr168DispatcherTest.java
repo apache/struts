@@ -319,24 +319,4 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 		dispatcher.render((RenderRequest) mockRequest.proxy(), (RenderResponse) mockResponse.proxy());
 	}
 
-	public void testMultipartRequest_parametersAreCopiedToActionInvocation() throws Exception {
-		MockPortletContext ctx = new MockPortletContext();
-		ctx.setAttribute("javax.servlet.context.tempdir", new File("target").getAbsoluteFile());
-		MockActionRequest request = new MockActionRequest(ctx);
-		request.setContent(MULTIPART_REQUEST.getBytes("US-ASCII"));
-		request.setContentType("multipart/form-data; boundary=---------------------------4827543632391");
-		request.setProperty("Content-Length", "" + MULTIPART_REQUEST.length());
-		MockActionResponse response = new MockActionResponse();
-		Map<String, Object> requestMap = new HashMap<String, Object>();
-		Map<String, String[]> paramMap = new HashMap<String, String[]>();
-		Map<String, Object> sessionMap = new HashMap<String, Object>();
-		Map<String, Object> applicationMap = new HashMap<String, Object>();
-		initPortletConfig(new HashMap<String, String>(), new HashMap<String, Object>());
-		MockPortletConfig config = new MockPortletConfig(ctx);
-		dispatcher.init(config);
-		dispatcher.createContextMap(requestMap, paramMap, sessionMap, applicationMap, request, response, config,
-				PortletActionConstants.EVENT_PHASE);
-		assertNotNull("Caption was not found in parameter map!", paramMap.get("caption"));
-		assertEquals("TestCaption", paramMap.get("caption")[0]);
-	}
 }

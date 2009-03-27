@@ -21,6 +21,7 @@
 
 package org.apache.struts2.portlet.interceptor;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -68,6 +69,10 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Port
         if (action instanceof PortletContextAware) {
             PortletContext portletContext = (PortletContext) context.get(STRUTS_PORTLET_CONTEXT);
             ((PortletContextAware) action).setPortletContext(portletContext);
+        }
+        if (action instanceof PortletConfigAware) {
+        	PortletConfig portletConfig = (PortletConfig)context.get(PORTLET_CONFIG);
+        	((PortletConfigAware) action).setPortletConfig(portletConfig);
         }
         if (action instanceof PortletPreferencesAware) {
         	PortletRequest request = (PortletRequest) context.get(REQUEST);

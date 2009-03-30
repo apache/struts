@@ -27,6 +27,7 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.Validateable;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 public class AnnotationValidationInterceptorTest extends StrutsTestCase {
 
@@ -34,12 +35,14 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
     private Mock mockActionInvocation;
     private Mock mockActionProxy;
     private TestAction test;
+    private ActionConfig config;
 
     public void setUp() throws Exception {
         super.setUp();
         test = new TestAction();
         interceptor = new AnnotationValidationInterceptor();
         container.inject(interceptor);
+        config = new ActionConfig.Builder("", "foo", "").build();
         mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionProxy = new Mock(ActionProxy.class);
         mockActionInvocation.matchAndReturn("getProxy", (ActionProxy) mockActionProxy.proxy());
@@ -49,7 +52,7 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
 
     public void testShouldNotSkip() throws Exception {
         mockActionProxy.expectAndReturn("getMethod", "execute");
-        mockActionProxy.expectAndReturn("getActionName", "foo");
+        mockActionProxy.expectAndReturn("getConfig", config);
         mockActionProxy.expectAndReturn("getMethod", "execute");
         interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
         mockActionProxy.verify();
@@ -81,7 +84,7 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
 
     public void testShouldNotSkipBase() throws Exception {
         mockActionProxy.expectAndReturn("getMethod", "dontSkipMeBase");
-        mockActionProxy.expectAndReturn("getActionName", "foo");
+        mockActionProxy.expectAndReturn("getConfig", config);
         mockActionProxy.expectAndReturn("getMethod", "dontSkipMeBase");
         interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
         mockActionProxy.verify();

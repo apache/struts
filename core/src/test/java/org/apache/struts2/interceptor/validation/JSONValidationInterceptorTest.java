@@ -38,6 +38,7 @@ import org.apache.struts2.views.jsp.StrutsMockServletContext;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -128,6 +129,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        ActionConfig config = new ActionConfig.Builder("", "name", "").build();
         this.action = new TestAction();
         this.interceptor = new JSONValidationInterceptor();
         this.validationInterceptor = new AnnotationValidationInterceptor();
@@ -152,6 +154,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("execute");
         proxy.setAction(action);
+        proxy.setConfig(config);
         invocation.setProxy(proxy);
     }
 

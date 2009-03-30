@@ -198,4 +198,7 @@ public final class StrutsConstants {
 
     /** Throw RuntimeException when a property is not found, or the evaluation of the espression fails*/
     public static final String STRUTS_EL_THROW_EXCEPTION = "struts.el.throwExceptionOnFailure";
+
+    /** Logs properties that are not found (very verbose) **/
+    public static final String STRUTS_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
 }

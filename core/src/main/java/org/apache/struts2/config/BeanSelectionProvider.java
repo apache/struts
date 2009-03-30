@@ -228,6 +228,8 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             props.setProperty("devMode", "false");
         }
 
+        props.setProperty("logMissingProperties", props.getProperty(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES));
+
         String val = props.getProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS);
         if (val != null) {
             props.setProperty("allowStaticMethodAccess", val);

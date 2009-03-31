@@ -60,14 +60,14 @@
         <#if parameters.listKey??>
             <#if stack.findValue(parameters.listKey)??>
               <#assign itemKey = stack.findValue(parameters.listKey)/>
-              <#assign itemKeyStr = itemKey.toString()/>
+              <#assign itemKeyStr = stack.findString(parameters.listKey)/>
             <#else>
               <#assign itemKey = ''/>
               <#assign itemKeyStr = ''/>
             </#if>
         <#else>
             <#assign itemKey = stack.findValue('top')/>
-            <#assign itemKeyStr = itemKey.toString()/>
+            <#assign itemKeyStr = stack.findString('top')>
         </#if>
         <#if parameters.listValue??>
             <#if stack.findString(parameters.listValue)??>

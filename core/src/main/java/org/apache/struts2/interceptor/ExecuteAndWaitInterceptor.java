@@ -27,12 +27,18 @@ import java.util.Map;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.views.freemarker.FreemarkerResult;
 
 import javax.servlet.http.HttpSession;
 
@@ -179,9 +185,16 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
     private int threadPriority = Thread.NORM_PRIORITY;
 
+    private Container container;
+
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#init()
-     */
+    * @see com.opensymphony.xwork2.interceptor.Interceptor#init()
+    */
     public void init() {
     }
 
@@ -243,21 +256,27 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
             if ((!executeAfterValidationPass || !secondTime) && bp != null && !bp.isDone()) {
                 actionInvocation.getStack().push(bp.getAction());
+
+                if (TokenHelper.getToken() != null) {
+                    session.put(TokenHelper.getTokenName(), TokenHelper.getToken());
+                }
+
                 Map results = proxy.getConfig().getResults();
                 if (!results.containsKey(WAIT)) {
                     LOG.warn("ExecuteAndWait interceptor has detected that no result named 'wait' is available. " +
                             "Defaulting to a plain built-in wait page. It is highly recommend you " +
                             "provide an action-specific or global result named '" + WAIT +
-                            "'! This requires FreeMarker support and won't work if you don't have it installed");
+                            "'.");
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
-                    ResultConfig rc = new ResultConfig.Builder(WAIT, "org.apache.struts2.views.freemarker.FreemarkerResult")
-                            .addParams(Collections.singletonMap("location", "/org/apache/struts2/interceptor/wait.ftl"))
-                            .build();
-                    results.put(WAIT, rc);
-                }
 
-                if (TokenHelper.getToken() != null) {
-                    session.put(TokenHelper.getTokenName(), TokenHelper.getToken());
+                    //we used to add a fake "wait" result here, since the configuration is unmodifiable, that is no longer
+                    //an option, see WW-3068
+                    FreemarkerResult waitResult = new FreemarkerResult();
+                    container.inject(waitResult);
+                    waitResult.setLocation("/org/apache/struts2/interceptor/wait.ftl");
+                    waitResult.execute(actionInvocation);
+
+                    return Action.NONE;
                 }
 
                 return WAIT;

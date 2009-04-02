@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.config.BeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
@@ -396,22 +397,28 @@ public class Dispatcher {
     		configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
     	}
 
-    	init_DefaultProperties(); // [1]
-        init_TraditionalXmlConfigurations(); // [2]
-        init_LegacyStrutsProperties(); // [3]
-        init_CustomConfigurationProviders(); // [5]
-        init_FilterInitParameters() ; // [6]
-        init_AliasStandardObjects() ; // [7]
+        try {
+            init_DefaultProperties(); // [1]
+            init_TraditionalXmlConfigurations(); // [2]
+            init_LegacyStrutsProperties(); // [3]
+            init_CustomConfigurationProviders(); // [5]
+            init_FilterInitParameters() ; // [6]
+            init_AliasStandardObjects() ; // [7]
 
-        Container container = init_PreloadConfiguration();
-        container.inject(this);
-        init_CheckConfigurationReloading(container);
-        init_CheckWebLogicWorkaround(container);
+            Container container = init_PreloadConfiguration();
+            container.inject(this);
+            init_CheckConfigurationReloading(container);
+            init_CheckWebLogicWorkaround(container);
 
-        if (!dispatcherListeners.isEmpty()) {
-            for (DispatcherListener l : dispatcherListeners) {
-                l.dispatcherInitialized(this);
+            if (!dispatcherListeners.isEmpty()) {
+                for (DispatcherListener l : dispatcherListeners) {
+                    l.dispatcherInitialized(this);
+                }
             }
+        } catch (Exception ex) {
+            if (LOG.isErrorEnabled())
+                LOG.error("Dispatcher initialization failed", ex);
+            throw new StrutsException(ex);
         }
     }
 

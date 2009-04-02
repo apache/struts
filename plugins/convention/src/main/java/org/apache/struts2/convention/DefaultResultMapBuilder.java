@@ -426,7 +426,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         return new ResultConfig.Builder(info.name, resultTypeConfig.getClassName()).addParams(params).build();
     }
 
-    class ResultInfo {
+    protected class ResultInfo {
         public final String name;
         public final String location;
         public final String type;

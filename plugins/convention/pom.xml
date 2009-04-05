@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -11,9 +12,11 @@
     <name>Struts 2 Convention Plugin</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/trunk/struts2-convention-plugin</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/trunk/struts2-convention-plugin</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/trunk/struts2-convention-plugin</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/trunk/struts2-convention-plugin</connection>
+        <developerConnection>
+            scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/trunk/struts2-convention-plugin
+        </developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/trunk/struts2-convention-plugin</url>
     </scm>
 
     <build>
@@ -31,7 +34,19 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.apache.struts2.osgi.StrutsActivator</Bundle-Activator>
+                        <manifestLocation>META-INF</manifestLocation>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
+
     </build>
     <dependencies>
         <dependency>

@@ -21,6 +21,7 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -35,9 +36,12 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.finder.ClassFinder;
 import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.finder.UrlSet;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.xwork.ObjectUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.convention.annotation.Action;
@@ -248,6 +252,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (isReloadEnabled() && reloadingClassLoader == null)
            reloadingClassLoader = new ReloadingClassLoader(getClassLoader());
     }
+
+    private ClassLoader getClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
     /**
      * Builds the action configurations by loading all classes in the packages specified by the
      * property <b>struts.convention.action.packages</b> and then figuring out which classes implement Action
@@ -287,8 +296,25 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
     }
 
-    protected ClassLoader getClassLoaderForFinder() {
-        return isReloadEnabled() ? this.reloadingClassLoader : getClassLoader();
+    protected ClassLoaderInterface getClassLoaderInterface() {
+        if (isReloadEnabled())
+            return new ClassLoaderInterfaceDelegate(this.reloadingClassLoader);
+        else {
+            /*
+            if there is a ClassLoaderInterface in the context, use it, otherwise
+            default to the default ClassLoaderInterface (a wrapper around the current
+            thread classloader)
+            using this, other plugins (like OSGi) can plugin their own classloader for a while
+            and it will be used by Convention (it cannot be a bean, as Convention is likely to be
+            called multiple times, and it need to use the default ClassLoaderInterface during normal startup)
+            */
+            ClassLoaderInterface classLoaderInterface = null;
+            ActionContext ctx = ActionContext.getContext();
+            if (ctx != null)
+                classLoaderInterface = (ClassLoaderInterface) ctx.get(ClassLoaderInterface.CLASS_LOADER_INTERFACE);
+
+            return (ClassLoaderInterface) ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(getClassLoader()));
+        }
     }
 
     protected boolean isReloadEnabled() {
@@ -300,7 +326,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         Set<Class> classes = new HashSet<Class>();
         try {
             if (actionPackages != null || (packageLocators != null && !disablePackageLocatorsScanning)) {
-                ClassFinder finder = new ClassFinder(getClassLoaderForFinder(), buildUrlSet().getUrls(), true, this.fileProtocols);
+                ClassFinder finder = new ClassFinder(getClassLoaderInterface(), buildUrlSet().getUrls(), true, this.fileProtocols);
 
                 // named packages
                 if (actionPackages != null) {
@@ -327,9 +353,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     private UrlSet buildUrlSet() throws IOException {
-        UrlSet urlSet = new UrlSet(getClassLoader());
+        ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
+        UrlSet urlSet = new UrlSet(classLoaderInterface);
 
-        urlSet = urlSet.exclude(ClassLoader.getSystemClassLoader().getParent());
+        //exclude parent of classloaders
+        if (classLoaderInterface.getParent() != null)
+            urlSet = urlSet.exclude(classLoaderInterface.getParent());
+
+        urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(ClassLoader.getSystemClassLoader().getParent()));
         urlSet = urlSet.excludeJavaExtDirs();
         urlSet = urlSet.excludeJavaEndorsedDirs();
         urlSet = urlSet.excludeJavaHome();
@@ -372,10 +403,6 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
 
         return urlSet;
-    }
-
-    private ClassLoader getClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
     }
 
     protected Test<ClassFinder.ClassInfo> getPackageFinderTest(final String packageName) {

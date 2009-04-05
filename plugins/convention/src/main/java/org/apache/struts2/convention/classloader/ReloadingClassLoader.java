@@ -32,9 +32,9 @@ import org.apache.struts2.StrutsException;
 
 
 /**
- * The ReloadingClassLoader uses a delegation mechansim to allow
+ * The ReloadingClassLoader uses a delegation mechanism to allow
  * classes to be reloaded. That means that loadClass calls may
- * return different results if the class was change in the underlying
+ * return different results if the class was changed in the underlying
  * ResoruceStore.
  * <p/>
  * class taken from Apache JCI

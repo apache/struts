@@ -33,8 +33,10 @@ import javax.servlet.ServletContext;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.xwork.ObjectUtils;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
@@ -43,6 +45,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -267,7 +271,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                     actionName);
         }
 
-        ResourceFinder finder = new ResourceFinder(classPathLocation);
+        ResourceFinder finder = new ResourceFinder(classPathLocation, getClassLoaderInterface());
         try {
             Map<String, URL> matches = finder.getResourcesMap("");
             if (matches != null) {
@@ -290,6 +294,24 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
            if (LOG.isErrorEnabled())
                LOG.error("Unable to scan directory [#0] for results", ex, classPathLocation);
         }
+    }
+
+    protected ClassLoaderInterface getClassLoaderInterface() {
+
+        /*
+        if there is a ClassLoaderInterface in the context, use it, otherwise
+        default to the default ClassLoaderInterface (a wrapper around the current
+        thread classloader)
+        using this, other plugins (like OSGi) can plugin their own classloader for a while
+        and it will be used by Convention (it cannot be a bean, as Convention is likely to be
+        called multiple times, and it need to use the default ClassLoaderInterface during normal startup)
+        */
+        ClassLoaderInterface classLoaderInterface = null;
+        ActionContext ctx = ActionContext.getContext();
+        if (ctx != null)
+            classLoaderInterface = (ClassLoaderInterface) ctx.get(ClassLoaderInterface.CLASS_LOADER_INTERFACE);
+
+        return (ClassLoaderInterface) ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()));
 
     }
 

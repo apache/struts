@@ -52,7 +52,7 @@ import java.lang.annotation.Target;
  * </pre>
  * <!-- END SNIPPET: javadoc -->
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Action {
     String DEFAULT_VALUE = "DEFAULT_VALUE";

@@ -202,7 +202,7 @@ public class PropertyTagTest extends StrutsTestCase {
         stack.push(foo);
 
         MockJspWriter jspWriter = new MockJspWriter();
-        jspWriter.setExpectedData("Foo is: \\t\\b\\n\\f\\r\\\"\\\'/\\\\");
+        jspWriter.setExpectedData("Foo is: \\t\\b\\n\\f\\r\\\"\\\'\\/\\\\");
 
         MockPageContext pageContext = new MockPageContext();
         pageContext.setJspWriter(jspWriter);

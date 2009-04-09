@@ -51,8 +51,8 @@ public final class FileResourceStore implements ResourceStore {
 
             return data;
         } catch (Exception e) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to read file [#0]", e, pResourceName);
+            if (LOG.isDebugEnabled())
+                LOG.debug("Unable to read file [#0]", e, pResourceName);
             return null;
         } finally {
             closeQuietly(fis);

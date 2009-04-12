@@ -40,7 +40,9 @@ public class AnnotationTools {
     public static <T extends Annotation> T findAnnotation(Class<?> klass, Class<T> annotationClass) {
         T ann = klass.getAnnotation(annotationClass);
         while (ann == null && klass != null) {
-            ann = klass.getPackage().getAnnotation(annotationClass);
+            ann = klass.getAnnotation(annotationClass);
+            if (ann == null)
+                ann = klass.getPackage().getAnnotation(annotationClass);
             if (ann == null) {
                 klass = klass.getSuperclass();
             }

@@ -56,6 +56,8 @@ import org.apache.struts2.convention.actions.namespace4.ActionAndPackageLevelNam
 import org.apache.struts2.convention.actions.params.ActionParamsMethodLevelAction;
 import org.apache.struts2.convention.actions.parentpackage.ClassLevelParentPackageAction;
 import org.apache.struts2.convention.actions.parentpackage.PackageLevelParentPackageAction;
+import org.apache.struts2.convention.actions.parentpackage.sub.ClassLevelParentPackageChildAction;
+import org.apache.struts2.convention.actions.parentpackage.sub.PackageLevelParentPackageChildAction;
 import org.apache.struts2.convention.actions.result.ActionLevelResultAction;
 import org.apache.struts2.convention.actions.result.ActionLevelResultsAction;
 import org.apache.struts2.convention.actions.result.ClassLevelResultAction;
@@ -148,8 +150,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 "/interceptor", strutsDefault, null);
         PackageConfig packageLevelPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage#package-level#/parentpackage",
             "/parentpackage", packageLevelParentPkg, null);
+        PackageConfig packageLevelSubPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#package-level#/parentpackage/sub",
+            "/parentpackage/sub", packageLevelParentPkg, null);
         PackageConfig differentPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage#class-level#/parentpackage",
             "/parentpackage", classLevelParentPkg, null);
+        PackageConfig differentSubPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#class-level#/parentpackage/sub",
+            "/parentpackage/sub", classLevelParentPkg, null);
         PackageConfig pkgLevelNamespacePkg = makePackageConfig("org.apache.struts2.convention.actions.namespace#struts-default#/package-level",
             "/package-level", strutsDefault, null);
         PackageConfig classLevelNamespacePkg = makePackageConfig("org.apache.struts2.convention.actions.namespace#struts-default#/class-level",
@@ -234,7 +240,9 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
         /* org.apache.struts2.convention.actions.parentpackage */
         expect(resultMapBuilder.build(PackageLevelParentPackageAction.class, null, "package-level-parent-package", packageLevelPkg)).andReturn(results);
+        expect(resultMapBuilder.build(PackageLevelParentPackageChildAction.class, null, "package-level-parent-package-child", packageLevelSubPkg)).andReturn(results);
         expect(resultMapBuilder.build(ClassLevelParentPackageAction.class, null, "class-level-parent-package", differentPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ClassLevelParentPackageChildAction.class, null, "class-level-parent-package-child", differentSubPkg)).andReturn(results);
 
         /* org.apache.struts2.convention.actions.result */
         expect(resultMapBuilder.build(ClassLevelResultAction.class, null, "class-level-result", resultPkg)).andReturn(results);
@@ -443,11 +451,25 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertEquals(1, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "class-level-parent-package", ClassLevelParentPackageAction.class, "execute", pkgConfig.getName());
 
+        /* org.apache.struts2.convention.actions.parentpackage.sub class level */
+        pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#class-level#/parentpackage/sub");
+        assertNotNull(pkgConfig);
+        assertEquals(1, pkgConfig.getActionConfigs().size());
+        verifyActionConfig(pkgConfig, "class-level-parent-package-child", ClassLevelParentPackageChildAction.class, "execute", pkgConfig.getName());
+        assertEquals("class-level", pkgConfig.getParents().get(0).getName());
+
         /* org.apache.struts2.convention.actions.parentpackage package level */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.parentpackage#package-level#/parentpackage");
         assertNotNull(pkgConfig);
         assertEquals(1, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "package-level-parent-package", PackageLevelParentPackageAction.class, "execute", pkgConfig.getName());
+
+        /* org.apache.struts2.convention.actions.parentpackage.sub package level */
+        pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#package-level#/parentpackage/sub");
+        assertNotNull(pkgConfig);
+        assertEquals(1, pkgConfig.getActionConfigs().size());
+        verifyActionConfig(pkgConfig, "package-level-parent-package-child", PackageLevelParentPackageChildAction.class, "execute", pkgConfig.getName());
+        assertEquals("package-level", pkgConfig.getParents().get(0).getName());
 
         /* org.apache.struts2.convention.actions.result */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.result#struts-default#/result");

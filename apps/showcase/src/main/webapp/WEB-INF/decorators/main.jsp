@@ -58,26 +58,27 @@
             <div class="wrapper">
                 <h2 class="accessibility">Navigation</h2>
                 <ul class="clearfix">
-                    <li><a href="<s:url value="/showcase.jsp"/>">Home</a></li>
-                    <li><a href="<s:url value="/ajax/index.jsp"/>">Ajax</a></li>
-                    <li><a href="<s:url value="/chat/index.jsp"/>">Ajax Chat</a></li>
-                    <li><a href="<s:url action="actionChain1!input" namespace="/actionchaining"  includeParams="none" />">Action Chaining</a></li>
-                    <li><a href="<s:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
-                    <li><a href="<s:url value="/conversion/index.jsp"/>">Conversion</a></li>
-                    <li><a href="<s:url value="/empmanager/index.jsp"/>">CRUD</a></li>
-                    <li><a href="<s:url value="/wait/index.jsp"/>">Execute & Wait</a></li>
-                    <li><a href="<s:url value="/filedownload/index.jsp"/>">File Download</a></li>
-                    <li><a href="<s:url value="/fileupload/index.jsp" />">File Upload</a></li>
-                    <li><a href="<s:url value="/freemarker/index.jsp"/>">Freemarker</a>
-                    <li><a href="<s:url action="hangmanMenu" namespace="/hangman"/>">Hangman</a></li>
-                    <li><a href="<s:url value="/jsf/index.jsp"/>">JavaServer Faces</a></li>
-                    <li><a href="<s:url value="/tags/index.jsp"/>">Tags</a></li>
-                    <li><a href="<s:url value="/tiles/index.action" />">Tiles</a></li>
-                    <li><a href="<s:url value="/token/index.jsp"/>">Token</a></li>
-                    <li><a href="<s:url value="/validation/index.jsp"/>">Validation</a></li>
-                    <li><a href="<s:url value="/interactive/index.jsp"/>">Interactive Demo</a></li>
-                    <li><a href="<s:url value="/person/index.jsp"/>">Person Manager</a></li>
-                    <li class="last"><a href="<s:url value="/help.jsp"/>">Help</a></li>
+                    <li><s:a value="/showcase.jsp">Home</s:a></li>
+                    <li><s:a value="/ajax/index.jsp">Ajax</s:a></li>
+                    <li><s:a value="/chat/index.jsp">Ajax Chat</s:a></li>
+                    <li><s:a action="actionChain1!input" namespace="/actionchaining"  includeParams="none">Action Chaining</s:a></li>
+                    <li><s:a action="index" namespace="/config-browser" includeParams="none">Config Browser</s:a></li>
+                    <li><s:a value="/conversion/index.jsp">Conversion</s:a></li>
+                    <li><s:a value="/empmanager/index.jsp">CRUD</s:a></li>
+                    <li><s:a value="/wait/index.jsp">Execute & Wait</s:a></li>
+                    <li><s:a value="/filedownload/index.jsp">File Download</s:a></li>
+                    <li><s:a value="/fileupload/index.jsp">File Upload</s:a></li>
+                    <li><s:a value="/freemarker/index.jsp">Freemarker</s:a></li>
+                    <li><s:a action="hangmanMenu" namespace="/hangman">Hangman</s:a></li>
+                    <li><s:a value="/jsf/index.jsp">JavaServer Faces</s:a></li>
+                    <li><s:a value="/tags/index.jsp">Tags</s:a></li>
+                    <li><s:a value="/tiles/index.action">Tiles</s:a></li>
+                    <li><s:a value="/token/index.jsp">Token</s:a></li>
+                    <li><s:a value="/validation/index.jsp">Validation</s:a></li>
+                    <li><s:a value="/interactive/index.jsp">Interactive Demo</s:a></li>
+                    <li><s:a value="/person/index.jsp">Person Manager</s:a></li>
+                    <li><s:a value="/integration/editGangster">Struts 1 Integration</s:a></li>
+                    <li class="last"><s:a value="/help.jsp">Help</s:a></li>
                 </ul>
             </div>
             <hr/>

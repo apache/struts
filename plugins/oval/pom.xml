@@ -32,9 +32,14 @@
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-oval-plugin</artifactId>
     <packaging>jar</packaging>
-    <version>2.1.7-SNAPSHOT</version>
     <name>Struts 2 OVal Plugin</name>
-    <url>http://maven.apache.org</url>
+    
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/oval/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/oval/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/oval/</url>
+    </scm>
+    
     <dependencies>
         <!-- Core -->
         <dependency>

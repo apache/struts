@@ -215,6 +215,10 @@
         <directory>../plugins/oval/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-oval-plugin</outputDirectory>
       </fileSet>
+      <fileSet>
+        <directory>../plugins/osgi/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin</outputDirectory>
+      </fileSet>
 
     <!-- Include the source code in the assembly -->
     <fileSet>

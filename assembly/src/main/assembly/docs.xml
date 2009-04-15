@@ -127,6 +127,14 @@
         <directory>../plugins/tiles/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin</outputDirectory>
       </fileSet>
+      <fileSet>
+        <directory>../plugins/oval/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-oval-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/osgi/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin</outputDirectory>
+      </fileSet>
 
   </fileSets>
 </assembly>

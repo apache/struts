@@ -86,5 +86,13 @@
         <include>ANTLR-LICENSE.txt</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>../plugins/oval/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>OVAL-LICENSE.txt</include>
+        <include>XSTREAM-LICENSE.txt</include>
+      </includes>
+    </fileSet>
   </fileSets>
 </assembly>

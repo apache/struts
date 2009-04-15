@@ -87,6 +87,14 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>../plugins/oval/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>OVAL-LICENSE.txt</include>
+        <include>XSTREAM-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>target/apps</directory>
       <outputDirectory>apps</outputDirectory>
       <includes>
@@ -202,6 +210,10 @@
       <fileSet>
         <directory>../plugins/tiles/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/oval/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-oval-plugin</outputDirectory>
       </fileSet>
 
     <!-- Include the source code in the assembly -->

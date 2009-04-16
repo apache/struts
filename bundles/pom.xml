@@ -29,7 +29,7 @@
         <version>2.1.7-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
-    <artifactId>struts2-bundles</artifactId>
+    <artifactId>struts2-osgi-bundles</artifactId>
     <packaging>pom</packaging>
     <name>Struts OSGi Bundles</name>
 
@@ -40,7 +40,8 @@
    </scm>
 
     <modules>
-        
+        <module>admin</module>
+        <module>demo</module>
     </modules>
 
     <dependencies>

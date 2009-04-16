@@ -2,19 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.apache.struts.osgi</groupId>
-    <artifactId>struts2-demo-bundle</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-osgi-bundles</artifactId>
+        <version>2.1.7-SNAPSHOT</version>
+    </parent>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-osgi-demo-bundle</artifactId>
     <packaging>bundle</packaging>
     <name>Struts 2 OSGi Demo Bundle</name>
 
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/demo/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/demo/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/bundles/demo/</url>
+    </scm>
+    
     <dependencies>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>2.1.7-SNAPSHOT</version>
-        </dependency>
-
+       
         <dependency>
             <groupId>velocity</groupId>
             <artifactId>velocity</artifactId>
@@ -32,24 +37,25 @@
             <artifactId>commons-digester</artifactId>
             <version>1.8</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-convention-plugin</artifactId>
-            <version>2.1.7-SNAPSHOT</version>
+            <version>${pom.version}</version>
         </dependency>
 
          <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${pom.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-spring-plugin</artifactId>
-            <version>2.1.7-SNAPSHOT</version>
-        </dependency>
+        
     </dependencies>
 
     <build>
@@ -69,16 +75,5 @@
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.5</source>
-                        <target>1.5</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>

@@ -25,7 +25,6 @@ import org.osgi.framework.Bundle;
 import org.apache.struts2.osgi.interceptor.BundleContextAware;
 import org.apache.struts2.osgi.interceptor.ServiceAware;
 import org.apache.struts2.convention.annotation.ResultPath;
-import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 
@@ -35,20 +34,11 @@ import com.opensymphony.xwork2.ActionSupport;
  * This action shows how to interact with the OSGi container, using the OSGi interceptor
  */
 @ResultPath("/content")
-public class BundlesAction extends ActionSupport implements BundleContextAware, ServiceAware<ApplicationContext> {
+public class BundlesAction extends ActionSupport implements BundleContextAware {
     private BundleContext bundleContext;
-    private List<ApplicationContext> services;
-
-    public void setServices(List<ApplicationContext> services) {
-        this.services = services;
-    }
 
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
-    }
-
-    public int getApplicationContextsCount() {
-        return services.size();
     }
 
     public Bundle[] getBundles() {

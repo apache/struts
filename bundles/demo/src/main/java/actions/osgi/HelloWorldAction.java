@@ -6,7 +6,6 @@ import org.apache.struts2.convention.annotation.ResultPath;
 import org.apache.struts2.osgi.interceptor.BundleContextAware;
 import org.apache.struts2.osgi.interceptor.ServiceAware;
 import org.osgi.framework.BundleContext;
-import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 

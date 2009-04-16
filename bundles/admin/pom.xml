@@ -2,36 +2,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.apache.struts.osgi</groupId>
-    <artifactId>struts2-admin-bundle</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-osgi-bundles</artifactId>
+        <version>2.1.7-SNAPSHOT</version>
+    </parent>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-osgi-admin-bundle</artifactId>    
     <packaging>bundle</packaging>
     <name>Struts 2 OSGi Admin Bundle</name>
+
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/admin/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/admin/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/bundles/admin/</url>
+    </scm>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-       <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <version>3.8.1</version>
-        </dependency>
+            <version>${pom.version}</version>
+        </dependency>       
     </dependencies>
-
-    <properties>
-        <jdkLevel>1.5</jdkLevel>
-    </properties>
-
+   
     <build>
         <plugins>
             <plugin>
@@ -49,30 +43,6 @@
                     </instructions>
                 </configuration>
             </plugin>
-            <plugin>
-                <inherited>true</inherited>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.5</source>
-                        <target>1.5</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>

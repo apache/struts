@@ -219,6 +219,17 @@
         <directory>../plugins/osgi/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin</outputDirectory>
       </fileSet>
+      
+    <!-- bundles -->
+    <fileSet>
+       <directory>../bundles/admin/target/site</directory>
+       <outputDirectory>docs/struts2-bundles/admin</outputDirectory>
+    </fileSet>  
+    
+    <fileSet>
+       <directory>../bundles/demo/target/site</directory>
+       <outputDirectory>docs/struts2-bundles/demo</outputDirectory>
+    </fileSet>  
 
     <!-- Include the source code in the assembly -->
     <fileSet>

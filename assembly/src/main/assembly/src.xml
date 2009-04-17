@@ -128,6 +128,14 @@
           <exclude>target/**</exclude>
         </excludes>
       </fileSet>
+      <fileSet>
+        <directory>../bundles</directory>
+        <outputDirectory>src/bundles</outputDirectory>
+        <excludes>
+          <exclude>*/target/**</exclude>
+          <exclude>target/**</exclude>
+        </excludes>
+      </fileSet>
 
   </fileSets>
 </assembly>

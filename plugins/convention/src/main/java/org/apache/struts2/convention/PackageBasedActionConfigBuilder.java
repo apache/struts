@@ -357,8 +357,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         UrlSet urlSet = new UrlSet(classLoaderInterface);
 
         //exclude parent of classloaders
-        if (classLoaderInterface.getParent() != null)
-            urlSet = urlSet.exclude(classLoaderInterface.getParent());
+        ClassLoaderInterface parent = classLoaderInterface.getParent();
+        //if reload is enabled, we need to step up one level, otherwise the UrlSet will be empty
+        //this happens because the parent of the realoding class loader is the web app classloader
+        if (parent != null && isReloadEnabled())
+            parent = parent.getParent();
+        
+        if (parent != null)
+            urlSet = urlSet.exclude(parent);
 
         urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(ClassLoader.getSystemClassLoader().getParent()));
         urlSet = urlSet.excludeJavaExtDirs();

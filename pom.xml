@@ -61,6 +61,7 @@
         <module>core</module>
         <module>apps</module>
         <module>plugins</module>
+        <module>bundles</module>
         <module>assembly</module>
     </modules>
 

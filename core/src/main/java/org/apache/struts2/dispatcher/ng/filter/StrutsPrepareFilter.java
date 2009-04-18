@@ -56,9 +56,9 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         try {
+            prepare.setEncodingAndLocale(request, response);
             prepare.createActionContext(request, response);
             prepare.assignDispatcherToThread();
-            prepare.setEncodingAndLocale(request, response);
             request = prepare.wrapRequest(request);
             prepare.findActionMapping(request, response);
 

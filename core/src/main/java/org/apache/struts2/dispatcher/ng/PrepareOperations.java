@@ -134,13 +134,24 @@ public class PrepareOperations {
     }
 
     /**
-     * Finds and optionally creates an {@link ActionMapping}.  It first looks in the current request to see if one
+     *   Finds and optionally creates an {@link ActionMapping}.  It first looks in the current request to see if one
      * has already been found, otherwise, it creates it and stores it in the request.  No mapping will be created in the
      * case of static resource requests or unidentifiable requests for other servlets, for example.
      */
     public ActionMapping findActionMapping(HttpServletRequest request, HttpServletResponse response) {
+        return findActionMapping(request, response, false);
+    }
+
+    /**
+     * Finds and optionally creates an {@link ActionMapping}.  if forceLookup is false, it first looks in the current request to see if one
+     * has already been found, otherwise, it creates it and stores it in the request.  No mapping will be created in the
+     * case of static resource requests or unidentifiable requests for other servlets, for example.
+     * @param forceLookup if true, the action mapping will be looked up from the ActionMapper instance, ignoring if there is one
+     * in the request or not 
+     */
+    public ActionMapping findActionMapping(HttpServletRequest request, HttpServletResponse response, boolean forceLookup) {
         ActionMapping mapping = (ActionMapping) request.getAttribute(STRUTS_ACTION_MAPPING_KEY);
-        if (mapping == null) {
+        if (mapping == null || forceLookup) {
             try {
                 mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
                 if (mapping != null) {

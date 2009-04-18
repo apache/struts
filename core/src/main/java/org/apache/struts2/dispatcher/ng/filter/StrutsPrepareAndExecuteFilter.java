@@ -66,7 +66,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             prepare.assignDispatcherToThread();
             prepare.setEncodingAndLocale(request, response);
             request = prepare.wrapRequest(request);
-            ActionMapping mapping = prepare.findActionMapping(request, response);
+            ActionMapping mapping = prepare.findActionMapping(request, response, true);
             if (mapping == null) {
                 boolean handled = execute.executeStaticResourceRequest(request, response);
                 if (!handled) {

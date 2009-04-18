@@ -36,6 +36,7 @@ import com.opensymphony.xwork2.validator.Validator;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -153,27 +154,17 @@ public class Form extends ClosingUIBean {
     */
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
-
-        //boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
-
         if (validate != null) {
             addParameter("validate", findValue(validate, Boolean.class));
         }
 
-        // calculate the action and namespace
-        /*String action = null;
-        if (this.action != null) {
-            // if it isn't specified, we'll make somethig up
-            action = findString(this.action);
+        if (name == null) {
+            //make the name the same as the id
+            String id = (String) getParameters().get("id");
+             if (StringUtils.isNotEmpty(id)) {
+                addParameter("name", id);
+             }
         }
-
-        if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
-            evaluateExtraParamsPortletRequest(namespace, action);
-        } else {
-            String namespace = determineNamespace(this.namespace, getStack(),
-                    request);
-            evaluateExtraParamsServletRequest(action, namespace, isAjax);
-        }*/
 
         if (onsubmit != null) {
             addParameter("onsubmit", findString(onsubmit));

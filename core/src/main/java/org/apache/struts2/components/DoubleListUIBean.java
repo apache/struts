@@ -182,7 +182,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
             // this check is needed for backwards compatibility with 2.1.x
         	addParameter("doubleId", findStringIfAltSyntax(doubleId));
         } else if (form != null) {
-            addParameter("doubleId", form.getParameters().get("id") + "_" +escape(this.doubleName));
+            addParameter("doubleId", form.getParameters().get("id") + "_" +escape(doubleName !=null ? findString(doubleName) : null));
         } else {
             addParameter("doubleId", escape(doubleName != null ? findString(doubleName) : null));
         }

@@ -68,7 +68,6 @@ public class ComponentUrlProvider implements UrlProvider {
         return component.determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, escapeAmp);
     }
 
-    @Override
     public String determineNamespace(String namespace, ValueStack stack, HttpServletRequest req) {
         return component.determineNamespace(namespace, stack, req);
     }
@@ -113,12 +112,10 @@ public class ComponentUrlProvider implements UrlProvider {
         this.scheme = scheme;
     }
 
-    @Override
     public boolean isPutInContext() {
         return component instanceof ContextBean;
     }
 
-    @Override
     public String getVar() {
         return isPutInContext() ? ((ContextBean)component).getVar() :  null;
     }
@@ -199,7 +196,6 @@ public class ComponentUrlProvider implements UrlProvider {
         return portletUrlType;
     }
 
-    @Override
     public ValueStack getStack() {
         return component.getStack();
     }
@@ -224,7 +220,6 @@ public class ComponentUrlProvider implements UrlProvider {
         this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
 
-    @Override
     public void putInContext(String result) {
         if (isPutInContext()) {
             ((ContextBean)component).putInContext(result);

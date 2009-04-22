@@ -27,11 +27,19 @@ import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.views.java.simple.SimpleTheme;
 
 import java.util.HashMap;
+import java.util.StringTokenizer;
+
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Template engine that renders tags using java implementations
  */
 public class JavaTemplateEngine extends BaseTemplateEngine {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JavaTemplateEngine.class);
 
     private Themes themes = new Themes() {{
         add(new SimpleTheme());
@@ -64,4 +72,34 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
         }
     }
 
+    /**
+     * Allows for providing custom theme classes (implementations of the org.apache.struts2.views.java.Theme) interface
+     * for custom rendering of tags using the javatemplates engine
+     *
+     * @param themeClasses a comma delimited list of custom theme class names
+     */
+    @Inject("struts.javatemplates.customThemes")
+    public void setThemeClasses(String themeClasses) {
+
+        StringTokenizer customThemes = new StringTokenizer(themeClasses, ",");
+
+        while (customThemes.hasMoreTokens()) {
+            String themeClass = customThemes.nextToken().trim();
+            try {
+                LOG.info("Registering custom theme '" + themeClass + "' to javatemplates engine");
+
+
+                //FIXME: This means Themes must have no-arg constructor - should use object factory here
+                //ObjectFactory.getObjectFactory().buildBean(ClassLoaderUtil.loadClass(themeClass, getClass()), null);
+                themes.add((Theme) ClassLoaderUtil.loadClass(themeClass, getClass()).newInstance());
+
+            } catch (ClassCastException cce) {
+                LOG.error("Invalid java them class '" + themeClass + "'. Class does not implement 'org.apache.struts2.views.java.Theme' interface");
+            } catch (ClassNotFoundException cnf) {
+                LOG.error("Invalid java theme class '" + themeClass + "'. Class not found");
+            } catch (Exception e) {
+                LOG.error("Could not find messages file " + themeClass + ".properties. Skipping");
+            }
+        }
+    }
 }

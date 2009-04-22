@@ -32,36 +32,41 @@ import java.util.List;
 public class SimpleTheme extends DefaultTheme {
 
     public SimpleTheme() {
-        setHandlerFactories(new HashMap<String, List<TagHandlerFactory>>() {{
-            put("text", new FactoryList(TextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("textfield", new FactoryList(TextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("select", new FactoryList(SelectHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("form", new FactoryList(FormHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("form-close", new FactoryList(FormHandler.CloseHandler.class));
-            put("a", new FactoryList(AnchorHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("a-close", new FactoryList(AnchorHandler.CloseHandler.class));
-            put("checkbox", new FactoryList(CheckboxHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("file", new FactoryList(FileHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("password", new FactoryList(PasswordHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("label", new FactoryList(LabelHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("reset", new FactoryList(ResetHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("submit", new FactoryList(SubmitHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("submit-close", new FactoryList(SubmitHandler.CloseHandler.class));
-            put("textarea", new FactoryList(TextAreaHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("actionerror", new FactoryList(ActionErrorHandler.class));
-            put("token", new FactoryList(TokenHandler.class));
-            put("actionmessage", new FactoryList(ActionMessageHandler.class));
-            put("head", new FactoryList(HeadHandler.class));
-            put("hidden", new FactoryList(HiddenHandler.class));
-            put("fielderror", new FactoryList(FieldErrorHandler.class));
-            put("div", new FactoryList(DivHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
-            put("div-close", new FactoryList(DivHandler.CloseHandler.class));
-            put("empty", new FactoryList(EmptyHandler.class));
-        }});
+        setHandlerFactories(new HashMap<String, List<TagHandlerFactory>>() {
+            {
+                put("text", new FactoryList(TextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("textfield", new FactoryList(TextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("select", new FactoryList(SelectHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("form", new FactoryList(FormHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("form-close", new FactoryList(FormHandler.CloseHandler.class));
+                put("a", new FactoryList(AnchorHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("a-close", new FactoryList(AnchorHandler.CloseHandler.class));
+                put("checkbox", new FactoryList(CheckboxHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("file", new FactoryList(FileHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("password", new FactoryList(PasswordHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("label", new FactoryList(LabelHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("reset", new FactoryList(ResetHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("submit", new FactoryList(SubmitHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("submit-close", new FactoryList(SubmitHandler.CloseHandler.class));
+                put("textarea", new FactoryList(TextAreaHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("actionerror", new FactoryList(ActionErrorHandler.class));
+                put("token", new FactoryList(TokenHandler.class));
+                put("actionmessage", new FactoryList(ActionMessageHandler.class));
+                put("head", new FactoryList(HeadHandler.class));
+                put("hidden", new FactoryList(HiddenHandler.class));
+                put("fielderror", new FactoryList(FieldErrorHandler.class));
+                put("div", new FactoryList(DivHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
+                put("div-close", new FactoryList(DivHandler.CloseHandler.class));
+                put("empty", new FactoryList(EmptyHandler.class));
+           }
+        });
         setName("simple");
     }
 
     private class FactoryList extends ArrayList<TagHandlerFactory> {
+
+        private static final long serialVersionUID = -1551895041394434032L; 
+
         public FactoryList(Class... classes) {
             super();
             for (Class cls : classes) {

@@ -30,6 +30,8 @@ import java.util.LinkedHashMap;
  */
 public class Attributes extends LinkedHashMap<String, String> {
 
+    private static final long serialVersionUID = 4103241472140545630L; 
+
     public Attributes add(String key, String value) {
         return add(key, value, true);
     }

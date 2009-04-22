@@ -32,7 +32,7 @@ import java.io.Writer;
  */
 public class XHTMLTagSerializer implements TagSerializer {
 
-    private Writer writer;
+    protected Writer writer;
 
     public void characters(String text) throws IOException {
         characters(text, true);

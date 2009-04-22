@@ -37,9 +37,13 @@ public class HeadHandler extends AbstractTagHandler implements TagGenerator {
         attrs.put("type", "text/javascript");
 
         String base = ServletActionContext.getRequest().getContextPath();
+        attrs.put("base", base);
+        
         StringBuilder sb = new StringBuilder();
-        if (base != null)
+        if (base != null) {
             sb.append(base);
+        }
+        
         sb.append("/struts/utils.js");
         attrs.put("src", sb.toString());
 

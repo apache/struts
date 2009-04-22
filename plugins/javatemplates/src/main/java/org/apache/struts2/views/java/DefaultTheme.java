@@ -38,7 +38,7 @@ public class DefaultTheme implements Theme {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTheme.class);
 
     private String name;
-    private Map<String, List<TagHandlerFactory>> handlerFactories;
+    protected Map<String, List<TagHandlerFactory>> handlerFactories;
 
     protected void setName(String name) {
         this.name = name;
@@ -46,6 +46,47 @@ public class DefaultTheme implements Theme {
 
     protected void setHandlerFactories(Map<String, List<TagHandlerFactory>> handlers) {
         this.handlerFactories = handlers;
+    }
+
+
+    /**
+     * Set (replace if exists) the tag handler factories for specific tag
+     *
+     * @param tagName
+     * @param handlers
+     */
+    protected void setTagHandlerFactories(String tagName, List<TagHandlerFactory> handlers) {
+        if (tagName != null && handlers != null && this.handlerFactories != null) {
+            handlerFactories.put(tagName, handlers);
+        }
+    }
+
+    /**
+     * Insert a new tag handler into a sequence of tag handlers for a specific tag
+     * TODO: Need to take care of serializers, if handler specified is not a TagSerializer it should never
+     * be placed after the serializer, but if it is not a TagSerializer, it should never
+     *
+     * @param tagName
+     * @param sequence
+     * @param factory
+     */
+    protected void insertTagHandlerFactory(String tagName, int sequence, TagHandlerFactory factory) {
+
+        if (tagName != null && factory != null && this.handlerFactories != null) {
+
+            List<TagHandlerFactory> tagHandlerFactories = handlerFactories.get(tagName);
+
+            if (tagHandlerFactories == null) {
+                tagHandlerFactories = new ArrayList<TagHandlerFactory>(); //TODO: Could use public FactoryList here
+            }
+
+            if (sequence > tagHandlerFactories.size()) {
+                sequence = tagHandlerFactories.size();
+            }
+
+            //TODO, need to account for TagHandlers vs. TagSerializers here
+            tagHandlerFactories.add(sequence, factory);
+        }
     }
 
     public String getName() {
@@ -70,7 +111,7 @@ public class DefaultTheme implements Theme {
             handlers.add(0, prev);
         }
 
-        TagSerializer ser = (TagSerializer) handlers.get(handlers.size() - 1);
+        // TagSerializer ser = (TagSerializer) handlers.get(handlers.size() - 1);
 
         TagGenerator gen = (TagGenerator) handlers.get(0);
         try {

@@ -35,7 +35,7 @@ public class DivHandler extends AbstractTagHandler implements TagGenerator {
                 .addIfExists("class", params.get("cssClass"))
                 .addIfExists("style", params.get("cssStyle"))
                 .addIfExists("title", params.get("title"));
-        start("div", attrs);
+        super.start("div", attrs);
     }
 
     public static class CloseHandler extends AbstractTagHandler implements TagGenerator {

@@ -76,10 +76,10 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
 
                 //key
                 Object itemKey = findValue(listKey != null ? listKey : "top");
-                String itemKeyStr = StringUtils.defaultString(itemKey.toString());
+                String itemKeyStr = StringUtils.defaultString(itemKey == null ? null : itemKey.toString()); 
                 //value
                 Object itemValue = findValue(listValue != null ? listValue : "top");
-                String itemValueStr = StringUtils.defaultString(itemValue.toString());
+                String itemValueStr = StringUtils.defaultString(itemValue == null ? null : itemValue.toString()); 
 
                 boolean selected = ContainUtil.contains(value, itemKey);
                 writeOption(itemKeyStr, itemValueStr, selected);

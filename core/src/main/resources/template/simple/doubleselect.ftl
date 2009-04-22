@@ -121,13 +121,22 @@
 
         for (i = 0; i < ${parameters.id}Group[x].length; i++) {
             ${parameters.id}Temp.options[i] = new Option(${parameters.id}Group[x][i].text, ${parameters.id}Group[x][i].value);
-            <#if parameters.doubleNameValue??>
-            	if (${parameters.id}Temp.options[i].value == '${parameters.doubleNameValue}') {
-            		${parameters.id}Temp.options[i].selected = true;
-            		selected = true;
-            	}
-            </#if>
-        }
+            <#if parameters.doubleNameValue?exists>
+                   <#if parameters.doubleMultiple?exists>
+                         for (j = 0; j < ${parameters.doubleNameValue}.length; j++) {
+                             if (${parameters.id}Temp.options[i].value == ${parameters.doubleNameValue}[j]) {
+                               ${parameters.id}Temp.options[i].selected = true;
+                                selected = true;
+                             }
+                        }
+                   <#else>
+                        if (${parameters.id}Temp.options[i].value == '${parameters.doubleNameValue}') {
+                            ${parameters.id}Temp.options[i].selected = true;
+                            selected = true;
+                        }
+                   </#if>
+             </#if>
+         }
 
         if ((${parameters.id}Temp.options.length > 0) && (! selected)) {
            	${parameters.id}Temp.options[0].selected = true;

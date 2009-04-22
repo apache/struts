@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import java.sql.Connection;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -113,6 +114,11 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * encryption and set the user password to a string known to the report creator.
  * </li>
  * <p/>
+ * <li>
+ * <b>connection</b> - (2.1.7+) JDBC Connection which can be passed to the
+ * report instead of dataSource
+ * </li>
+ * <p/>
  * </ul>
  * <p/>
  * <p>
@@ -152,6 +158,12 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     protected String delimiter;
     protected String imageServletUrl = "/images/";
     protected String timeZone;
+
+    /**
+     * Connection which can be passed to the report
+     * instead od dataSource.
+     */
+    protected String connection;
 
     /**
      * Names a report parameters map stack value, allowing
@@ -234,6 +246,14 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         this.exportParameters = exportParameters;
     }
 
+    public String getConnection() {
+        return connection;
+    }
+
+    public void setConnection(String connection) {
+        this.connection = connection;
+    }
+
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
         // Will throw a runtime exception if no "datasource" property. TODO Best place for that is...?
         initializeProperties(invocation);
@@ -263,7 +283,11 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         // Construct the data source for the report.
         ValueStack stack = invocation.getStack();
-        ValueStackDataSource stackDataSource = new ValueStackDataSource(stack, dataSource);
+        ValueStackDataSource stackDataSource = null;
+
+        Connection conn = (Connection) stack.findValue(connection);
+        if (conn == null)
+            stackDataSource = new ValueStackDataSource(stack, dataSource);
 
         // Determine the directory that the report file is in and set the reportDirectory parameter
         // For WW 2.1.7:
@@ -298,7 +322,10 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Fill the report and produce a print object
         try {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(systemId);
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
+            if (conn == null)
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
+            else
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
         } catch (JRException e) {
             LOG.error("Error building report for uri " + systemId, e);
             throw new ServletException(e.getMessage(), e);
@@ -410,12 +437,13 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * @throws Exception on initialization error.
      */
     private void initializeProperties(ActionInvocation invocation) throws Exception {
-        if (dataSource == null) {
+        if (dataSource == null && connection == null) {
             String message = "No dataSource specified...";
             LOG.error(message);
             throw new RuntimeException(message);
         }
-        dataSource = conditionalParse(dataSource, invocation);
+        if (dataSource != null)
+            dataSource = conditionalParse(dataSource, invocation);
 
         format = conditionalParse(format, invocation);
         if (StringUtils.isEmpty(format)) {

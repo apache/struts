@@ -62,7 +62,6 @@
         <module>apps</module>
         <module>plugins</module>
         <module>bundles</module>
-        <module>assembly</module>
     </modules>
 
     <licenses>
@@ -85,6 +84,17 @@
     </properties>
 
     <profiles>
+        <profile>
+            <id>includeAssembly</id>
+            <activation>
+                <property>
+                    <name>!skipAssembly</name>
+                </property>
+            </activation>
+            <modules>
+                <module>assembly</module>
+            </modules>
+        </profile>
         <profile>
             <id>xwork</id>
             <modules>

@@ -35,6 +35,7 @@ import org.apache.felix.main.AutoActivator;
 import org.apache.felix.main.Main;
 import org.apache.felix.shell.ShellService;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.StrutsException;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.Constants;
@@ -143,27 +144,69 @@ public class FelixOsgiHost implements OsgiHost {
         return StringUtils.defaultString(this.servletContext.getInitParameter(paramName), defaultValue);
     }
 
-    protected int addAutoStartBundles(Properties configProps) {
+    protected void addAutoStartBundles(Properties configProps) {
         //starts system bundles in level 1
         List<String> bundleJarsLevel1 = new ArrayList<String>();
         bundleJarsLevel1.add(getJarUrl(ShellService.class));
         bundleJarsLevel1.add(getJarUrl(ServiceTracker.class));
-
-        //add third party bundles in level 2
-        List<String> bundleJarsLevel2 = new ArrayList<String>();
-        bundleJarsLevel2.addAll(getBundlesInDir("bundles/other"));
-
-        //start app bundles in level 3
-        List<String> bundleJarsLevel3 = new ArrayList<String>();
-        bundleJarsLevel3.addAll(getBundlesInDir("bundles"));
-
-
         configProps.put(AutoActivator.AUTO_START_PROP + ".1", StringUtils.join(bundleJarsLevel1, " "));
-        configProps.put(AutoActivator.AUTO_START_PROP + ".2", StringUtils.join(bundleJarsLevel2, " "));
-        configProps.put(AutoActivator.AUTO_START_PROP + ".3", StringUtils.join(bundleJarsLevel3, " "));
 
+        //get a list of directories under /bundles with numeric names (the runlevel)
+        List<String> runLevels = getRunLevelDirs("bundles");
+        if (runLevels.isEmpty()) {
+            //there are no run level dirs, search for bundles in that dir
+            List<String> bundles = getBundlesInDir("bundles");
+            if (!bundles.isEmpty())
+                configProps.put(AutoActivator.AUTO_START_PROP + ".2", StringUtils.join(bundles, " "));
+        } else {
+            for (String runLevel : runLevels) {
+                 if ("1".endsWith(runLevel))
+                    throw new StrutsException("Run level dirs must be greater than 1. Run level 1 is reserved for the Felix bundles");
+                List<String> bundles = getBundlesInDir(runLevel);
+                configProps.put(AutoActivator.AUTO_START_PROP + "." + runLevel, StringUtils.join(bundles, " "));
+            }
+        }
+    }
 
-        return bundleJarsLevel1.size() + bundleJarsLevel2.size() + bundleJarsLevel3.size();
+    /**
+     * Return a list of directories under a directory whose name is a number
+     */
+    protected List<String> getRunLevelDirs(String dir) {
+        List<String> dirs = new ArrayList<String>();
+        try {
+            ResourceFinder finder = new ResourceFinder();
+            URL url = finder.find("bundles");
+            if (url != null) {
+                if ("file".equals(url.getProtocol())) {
+                    File bundlesDir = new File(url.toURI());
+                    String[] runLevelDirs = bundlesDir.list(new FilenameFilter() {
+                        public boolean accept(File file, String name) {
+                            try {
+                                return file.isDirectory() && Integer.valueOf(name) > 0;
+                            } catch (NumberFormatException ex) {
+                                //the name is not a number
+                                return false;
+                            }
+                        }
+                    });
+
+                    if (runLevelDirs != null && runLevelDirs.length > 0) {
+                        //add all the dirs to the list
+                        for (String runLevel : runLevelDirs)
+                            dirs.add(StringUtils.chomp(dir,  "/") + "/" + runLevel);
+
+                    } else if (LOG.isDebugEnabled()) {
+                        LOG.debug("No bundles found under the [#0] directory", dir);
+                    }
+                } else if (LOG.isWarnEnabled())
+                    LOG.warn("Unable to read [#0] directory", dir);
+            } else if (LOG.isWarnEnabled())
+                LOG.warn("The [#0] directory was not found", dir);
+        } catch (Exception e) {
+            if (LOG.isWarnEnabled())
+                LOG.warn("Unable load bundles from the [#0] directory", e, dir);
+        }
+        return dirs;
     }
 
     protected List<String> getBundlesInDir(String dir) {
@@ -174,8 +217,8 @@ public class FelixOsgiHost implements OsgiHost {
             URL url = finder.find(dir);
             if (url != null) {
                 if ("file".equals(url.getProtocol())) {
-                    File bundlerDir = new File(url.toURI());
-                    File[] bundles = bundlerDir.listFiles(new FilenameFilter() {
+                    File bundlesDir = new File(url.toURI());
+                    File[] bundles = bundlesDir.listFiles(new FilenameFilter() {
                         public boolean accept(File file, String name) {
                             return StringUtils.endsWith(name, ".jar");
                         }

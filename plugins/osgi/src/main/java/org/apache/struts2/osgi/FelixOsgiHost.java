@@ -295,11 +295,20 @@ public class FelixOsgiHost implements OsgiHost {
         //build a list of subpackages
         for (String rootPackage : rootPackages) {
             try {
+                String version = null;
+                if (rootPackage.indexOf(";") > 0) {
+                    String[] splitted = rootPackage.split(";");
+                    rootPackage = splitted[0];
+                    version = splitted[1];
+                }
                 Map<URL, Set<String>> subpackagesMap = finder.findPackagesMap(StringUtils.replace(rootPackage.trim(), ".", "/"));
                 for (Map.Entry<URL, Set<String>> entry : subpackagesMap.entrySet()) {
                     URL url = entry.getKey();
                     Set<String> packages = entry.getValue();
-                    String version = getVersion(url);
+
+                    //get version if not set
+                    if (StringUtils.isBlank(version))
+                        version = getVersion(url);
 
                     if (packages != null) {
                         for (String subpackage : packages) {

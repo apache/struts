@@ -23,7 +23,8 @@ package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 
@@ -97,7 +98,9 @@ import java.io.OutputStream;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  */
-public class ChartResult implements Result {
+public class ChartResult extends StrutsResultSupport {
+
+    private final static Logger LOG = LoggerFactory.getLogger(ChartResult.class);
 
     private static final long serialVersionUID = -6484761870055986612L;
     private static final String DEFAULT_TYPE = "png";
@@ -105,7 +108,7 @@ public class ChartResult implements Result {
 
     private JFreeChart chart; // the JFreeChart to render
     private boolean chartSet;
-    Integer height, width;
+    String height, width;
     String type = DEFAULT_TYPE; // supported are jpg, jpeg or png, defaults to png
     String value = DEFAULT_VALUE; // defaults to 'chart'
 
@@ -115,7 +118,7 @@ public class ChartResult implements Result {
         super();
     }
 
-    public ChartResult(JFreeChart chart, int height, int width) {
+    public ChartResult(JFreeChart chart, String height, String width) {
         this.chart = chart;
         this.height = height;
         this.width = width;
@@ -123,19 +126,19 @@ public class ChartResult implements Result {
 
     // ACCESSORS ----------------------------
 
-    public Integer getHeight() {
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(Integer height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
-    public Integer getWidth() {
+    public String getWidth() {
         return width;
     }
 
-    public void setWidth(Integer width) {
+    public void setWidth(String width) {
         this.width = width;
     }
 
@@ -174,7 +177,10 @@ public class ChartResult implements Result {
      * @param invocation an encapsulation of the action execution state.
      * @throws Exception if an error occurs when creating or writing the chart to the servlet output stream.
      */
-    public void execute(ActionInvocation invocation) throws Exception {
+    public void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
+
+        initializeProperties(invocation);
+        
         if (!chartSet) // if our chart hasn't been set (by the testcase), we'll look it up in the value stack
             chart = (JFreeChart) invocation.getStack().findValue(value, JFreeChart.class);
         if (chart == null) // we need to have a chart object - if not, blow up
@@ -190,13 +196,48 @@ public class ChartResult implements Result {
         try {
             // check the type to see what kind of output we have to produce
             if ("png".equalsIgnoreCase(type))
-                ChartUtilities.writeChartAsPNG(os, chart, width, height);
+                ChartUtilities.writeChartAsPNG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
             else if ("jpg".equalsIgnoreCase(type) || "jpeg".equalsIgnoreCase(type))
-                ChartUtilities.writeChartAsJPEG(os, chart, width, height);
+                ChartUtilities.writeChartAsJPEG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
             else
                 throw new IllegalArgumentException(type + " is not a supported render type (only JPG and PNG are).");
         } finally {
             if (os != null) os.flush();
         }
     }
+
+    /**
+     * Sets up result properties, parsing etc.
+     *
+     * @param invocation Current invocation.
+     * @throws Exception on initialization error.
+     */
+    private void initializeProperties(ActionInvocation invocation) throws Exception {
+
+        if (height != null) {
+            height = conditionalParse(height, invocation);
+        }
+
+        if (width != null) {
+            width = conditionalParse(width, invocation);
+        }
+
+        if (type != null) {
+            type = conditionalParse(type, invocation);
+        }
+        
+        if ( type == null) {
+            type = DEFAULT_TYPE;
+        }
+    }
+
+    private Integer getIntValueFromString(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            LOG.error("Specified value for width or height is not of type Integer...", e);
+            return null;
+        }
+    }
+
 }

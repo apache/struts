@@ -23,10 +23,11 @@ package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import junit.framework.TestCase;
-import ognl.Ognl;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
@@ -38,12 +39,14 @@ import java.io.IOException;
 
 /**
  */
-public class ChartResultTest extends TestCase {
+public class ChartResultTest extends StrutsTestCase {
 
     private ActionInvocation actionInvocation;
     private JFreeChart mockChart;
     private Mock responseMock;
+    private Mock mockActionProxy;
     private MockServletOutputStream os;
+    private ValueStack stack;
 
 
     public void testChart() throws Exception {
@@ -53,8 +56,8 @@ public class ChartResultTest extends TestCase {
 
         result.setChart(mockChart);
 
-        result.setHeight(10);
-        result.setWidth(10);
+        result.setHeight("10");
+        result.setWidth("10");
         result.execute(actionInvocation);
 
         responseMock.verify();
@@ -77,19 +80,59 @@ public class ChartResultTest extends TestCase {
         assertFalse(os.isWritten());
     }
 
+
+    public void testChartWithOGNLProperties() throws Exception {
+        responseMock.expectAndReturn("getOutputStream", os);
+
+
+        ChartResult result = new ChartResult();
+
+        result.setChart(mockChart);
+
+        result.setHeight("${myHeight}");
+        result.setWidth("${myWidth}");
+
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.set("myHeight", 250);
+        stack.set("myWidth", 150);
+
+        result.execute(actionInvocation);
+
+        responseMock.verify();
+        assertEquals(result.getHeight(), stack.findValue("myHeight").toString());
+        assertEquals(result.getWidth(), stack.findValue("myWidth").toString());
+        assertEquals("250", result.getHeight().toString());
+        assertEquals("150", result.getWidth().toString());
+        assertTrue(os.isWritten());
+    }
+    
     protected void setUp() throws Exception {
+        super.setUp();
+
         DefaultPieDataset data = new DefaultPieDataset();
         data.setValue("Java", new Double(43.2));
         data.setValue("Visual Basic", new Double(0.0));
         data.setValue("C/C++", new Double(17.5));
         mockChart = ChartFactory.createPieChart("Pie Chart", data, true, true, false);
 
+
+        stack = ActionContext.getContext().getValueStack();
+        ActionContext.getContext().setValueStack(stack);
+
+
+        mockActionProxy = new Mock(ActionProxy.class);
+        mockActionProxy.expectAndReturn("getNamespace", "/html");
+
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
+
+        mockActionInvocation.matchAndReturn("getStack", stack);
+//        mockActionInvocation.expectAndReturn("getProxy", mockActionProxy.proxy());
+        
         actionInvocation = (ActionInvocation) mockActionInvocation.proxy();
+        
         os = new MockServletOutputStream();
         responseMock = new Mock(HttpServletResponse.class);
 
-        ActionContext.setContext(new ActionContext(Ognl.createDefaultContext(null)));
         ServletActionContext.setResponse((HttpServletResponse) responseMock.proxy());
     }
 
@@ -97,6 +140,8 @@ public class ChartResultTest extends TestCase {
         actionInvocation = null;
         os = null;
         responseMock = null;
+        stack = null;
+        mockActionProxy = null;
     }
 
 

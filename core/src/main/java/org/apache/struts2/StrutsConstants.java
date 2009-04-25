@@ -45,7 +45,7 @@ public final class StrutsConstants {
     public static final String STRUTS_ACTION_EXTENSION = "struts.action.extension";
 
 	/** Comma separated list of patterns (java.util.regex.Pattern) to be excluded from Struts2-processing */
-	public static final String STRUTS_ACTION_EXCLUDE_PATTERN = "struts.action.exclude_pattern";
+	public static final String STRUTS_ACTION_EXCLUDE_PATTERN = "struts.action.excludePattern";
 
     /** Whether to use the alterative syntax for the tags or not */
     public static final String STRUTS_TAG_ALTSYNTAX = "struts.tag.altSyntax";

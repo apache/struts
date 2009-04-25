@@ -22,21 +22,27 @@ package org.apache.struts2.dispatcher.ng.filter;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.ng.PrepareOperations;
 import org.apache.struts2.dispatcher.ng.InitOperations;
+import org.apache.struts2.dispatcher.ng.PrepareOperations;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Prepares the request for execution by a later {@link org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter} filter instance.
  */
 public class StrutsPrepareFilter implements StrutsStatics, Filter {
-    private PrepareOperations prepare;
 
-    public void init(FilterConfig filterConfig) throws ServletException {
+	protected static final String REQUEST_EXCLUDED_FROM_ACTION_MAPPING = StrutsPrepareFilter.class.getName() + ".REQUEST_EXCLUDED_FROM_ACTION_MAPPING";
+
+    private PrepareOperations prepare;
+	private List<Pattern> excludedPatterns = null;
+
+	public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
         try {
             FilterHostConfig config = new FilterHostConfig(filterConfig);
@@ -44,6 +50,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             Dispatcher dispatcher = init.initDispatcher(config);
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
+			this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
         } finally {
             init.cleanup();
         }
@@ -60,15 +67,18 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             prepare.createActionContext(request, response);
             prepare.assignDispatcherToThread();
             request = prepare.wrapRequest(request);
-            prepare.findActionMapping(request, response);
-
+			if ( excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
+				request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, new Object());
+			} else {
+				prepare.findActionMapping(request, response);
+			}
             chain.doFilter(request, response);
         } finally {
             prepare.cleanupRequest(request);
         }
     }
 
-    public void destroy() {
+	public void destroy() {
         prepare.cleanupDispatcher();
     }
 }

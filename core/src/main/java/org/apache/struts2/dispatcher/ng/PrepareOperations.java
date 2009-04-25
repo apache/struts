@@ -24,6 +24,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.RequestUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletContext;
@@ -38,6 +39,8 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Contains preparation operations for a request before execution
@@ -179,4 +182,48 @@ public class PrepareOperations {
             }
         }
     }
+
+    /**
+     * Check whether the request matches a list of exclude patterns.
+     *
+     * @param request          The request to check patterns against
+     * @param excludedPatterns list of patterns for exclusion
+     *
+     * @return <tt>true</tt> if the request URI matches one of the given patterns
+     */
+    public boolean isUrlExcluded( HttpServletRequest request, List<Pattern> excludedPatterns ) {
+        if (excludedPatterns != null) {
+            String uri = getUri(request);
+            for ( Pattern pattern : excludedPatterns ) {
+                if (pattern.matcher(uri).matches()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Gets the uri from the request
+     *
+     * @param request The request
+     *
+     * @return The uri
+     */
+    private String getUri( HttpServletRequest request ) {
+        // handle http dispatcher includes.
+        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+        if (uri != null) {
+            return uri;
+        }
+
+        uri = RequestUtils.getServletPath(request);
+        if (uri != null && !"".equals(uri)) {
+            return uri;
+        }
+
+        uri = request.getRequestURI();
+        return uri.substring(request.getContextPath().length());
+    }
+
 }

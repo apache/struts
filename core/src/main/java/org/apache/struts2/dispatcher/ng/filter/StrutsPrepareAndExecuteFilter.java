@@ -22,15 +22,17 @@ package org.apache.struts2.dispatcher.ng.filter;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.ng.PrepareOperations;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.ng.ExecuteOperations;
 import org.apache.struts2.dispatcher.ng.InitOperations;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.ng.PrepareOperations;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Handles both the preparation and execution phases of the Struts dispatching process.  This filter is better to use
@@ -39,6 +41,7 @@ import java.io.IOException;
 public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     private PrepareOperations prepare;
     private ExecuteOperations execute;
+	protected List<Pattern> excludedPatterns = null;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
@@ -50,6 +53,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
             execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
+			this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
         } finally {
             init.cleanup();
         }
@@ -66,15 +70,19 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             prepare.createActionContext(request, response);
             prepare.assignDispatcherToThread();
             request = prepare.wrapRequest(request);
-            ActionMapping mapping = prepare.findActionMapping(request, response, true);
-            if (mapping == null) {
-                boolean handled = execute.executeStaticResourceRequest(request, response);
-                if (!handled) {
-                    chain.doFilter(request, response);
-                }
-            } else {
-                execute.executeAction(request, response, mapping);
-            }
+			if ( excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
+				chain.doFilter(request, response);
+			} else {
+				ActionMapping mapping = prepare.findActionMapping(request, response, true);
+				if (mapping == null) {
+					boolean handled = execute.executeStaticResourceRequest(request, response);
+					if (!handled) {
+						chain.doFilter(request, response);
+					}
+				} else {
+					execute.executeAction(request, response, mapping);
+				}
+			}
         } finally {
             prepare.cleanupRequest(request);
         }

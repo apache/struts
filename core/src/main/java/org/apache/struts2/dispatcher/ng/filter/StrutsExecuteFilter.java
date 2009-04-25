@@ -63,8 +63,15 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+		if (excludeUrl(request)) {
+			chain.doFilter(request, response);
+			return;
+		}
+
         // This is necessary since we need the dispatcher instance, which was created by the prepare filter
-        lazyInit();
+		if (execute == null) {
+			lazyInit();
+		}
 
         ActionMapping mapping = prepare.findActionMapping(request, response);
         if (mapping == null) {
@@ -76,6 +83,10 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
             execute.executeAction(request, response, mapping);
         }
     }
+
+	private boolean excludeUrl(HttpServletRequest request) {
+		return request.getAttribute(StrutsPrepareFilter.REQUEST_EXCLUDED_FROM_ACTION_MAPPING) != null;
+	}
 
     public void destroy() {
         prepare = null;

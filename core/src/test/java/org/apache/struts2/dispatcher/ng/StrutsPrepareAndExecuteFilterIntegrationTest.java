@@ -32,7 +32,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.FilterConfig;
 import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 /**
  * Integration tests for the filter
@@ -111,6 +114,32 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
         assertNull(ActionContext.getContext());
         assertNull(Dispatcher.getInstance());
         assertTrue((Boolean) request.getAttribute("__invoked"));
+    }
+
+    public void testUriPatternExclusion() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterChain filterChain = new MockFilterChain() {
+            @Override
+            public void doFilter(ServletRequest req, ServletResponse res) {
+                req.setAttribute("i_was", "invoked");
+            }
+        };
+
+        request.setRequestURI("/hello.action");
+        StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter() {
+            @Override
+            public void init( FilterConfig filterConfig ) throws ServletException {
+                super.init(filterConfig);
+                excludedPatterns = new ArrayList<Pattern>();
+                excludedPatterns.add(Pattern.compile(".*hello.*"));
+            }
+        };
+        filter.init(filterConfig);
+        filter.doFilter(request, response, filterChain);
+        assertEquals(200, response.getStatus());
+        assertEquals("invoked", request.getAttribute("i_was"));
     }
 
     public void testStaticFallthrough() throws ServletException, IOException {

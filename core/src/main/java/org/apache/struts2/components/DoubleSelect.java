@@ -24,6 +24,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.xwork.StringUtils;
 import org.apache.struts2.views.annotations.StrutsTag;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -59,8 +60,12 @@ public class DoubleSelect extends DoubleListUIBean {
 
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
-
+        StringBuilder onchangeParam = new StringBuilder();
+        onchangeParam.append(getParameters().get("id")).append("Redirect(this.options.selectedIndex)");
+        if(StringUtils.isNotEmpty(this.onchange)) {
+        	onchangeParam.append(";").append(this.onchange);
+        }
         // force the onchange parameter
-        addParameter("onchange", getParameters().get("id") + "Redirect(this.options.selectedIndex)");
+        addParameter("onchange", onchangeParam.toString());
     }
 }

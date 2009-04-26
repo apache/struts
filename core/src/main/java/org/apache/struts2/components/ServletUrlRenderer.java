@@ -69,8 +69,15 @@ public class ServletUrlRenderer implements UrlRenderer {
 		}
 
 	       String result;
+	       ActionInvocation ai = (ActionInvocation) ActionContext.getContext().get(ActionContext.ACTION_INVOCATION);
 	        if (urlComponent.getValue() == null && urlComponent.getAction() != null) {
 	                result = urlComponent.determineActionURL(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
+	        } else if (urlComponent.getValue() == null && urlComponent.getAction() == null && ai != null) {
+	                // both are null, we will default to the current action
+
+	                final String action = ai.getProxy().getActionName();
+	                final String namespace = ai.getProxy().getNamespace();
+	                result = urlComponent.determineActionURL(action, namespace, urlComponent.getMethod(),urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
 	        } else {
 	                String _value = urlComponent.getValue();
 

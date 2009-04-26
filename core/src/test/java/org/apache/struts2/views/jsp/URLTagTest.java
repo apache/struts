@@ -21,14 +21,34 @@
 
 package org.apache.struts2.views.jsp;
 
+import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.URL;
+import org.apache.struts2.dispatcher.ApplicationMap;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.RequestMap;
+import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
+
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.DefaultActionInvocation;
+import com.opensymphony.xwork2.DefaultActionProxy;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * Unit test for {@link URLTag}.
@@ -497,6 +517,107 @@ public class URLTagTest extends AbstractUITagTest {
 
         assertEquals("http://localhost/company.action", writer.toString());
     }
+    
+    public void testEmptyActionCustomMapper() throws Exception {
+        Map<String,String> props = new HashMap<String, String>();
+        props.put("config", "struts-default.xml,struts-plugin.xml,struts.xml,org/apache/struts2/views/jsp/WW3090-struts.xml");
+        
+        this.tearDown();
+        
+        Dispatcher du = this.initDispatcher(props);
+        
+        /**
+         * create our standard mock objects
+         */
+        action = this.getAction();
+        stack = ActionContext.getContext().getValueStack();
+        context = stack.getContext();
+        stack.push(action);
+
+        request = new StrutsMockHttpServletRequest();
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
+        response = new StrutsMockHttpServletResponse();
+        request.setSession(new StrutsMockHttpSession());
+        request.setupGetServletPath("/");
+
+        writer = new StringWriter();
+
+        servletContext = new StrutsMockServletContext();
+        servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
+        servletContext.setServletInfo("Resin");
+
+        pageContext = new StrutsMockPageContext();
+        pageContext.setRequest(request);
+        pageContext.setResponse(response);
+        pageContext.setServletContext(servletContext);
+
+        mockContainer = new Mock(Container.class);
+
+        du.setConfigurationManager(configurationManager);
+        session = new SessionMap(request);
+        Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
+                request.getParameterMap(),
+                session,
+                new ApplicationMap(pageContext.getServletContext()),
+                request,
+                response,
+                pageContext.getServletContext());
+        // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
+        // ... but generally we want to just use no locale (let it stay system default)
+        extraContext.remove(ActionContext.LOCALE);
+        stack.getContext().putAll(extraContext);
+
+        context.put(ServletActionContext.HTTP_REQUEST, request);
+        context.put(ServletActionContext.HTTP_RESPONSE, response);
+        context.put(ServletActionContext.SERVLET_CONTEXT, servletContext);
+
+        ActionContext.setContext(new ActionContext(context));
+        
+        // Make sure we have an action invocation available
+        ActionContext.getContext().setActionInvocation(new DefaultActionInvocation(null, true));
+        DefaultActionProxyFactory apFactory = new DefaultActionProxyFactory();
+        apFactory.setContainer(container);
+        ActionProxy ap = apFactory.createActionProxy("/", "hello", null);
+        ActionContext.getContext().getActionInvocation().init(ap);
+
+        request.setScheme("http");
+        request.setServerName("localhost");
+        request.setServerPort(80);
+
+        tag = new URLTag();
+        tag.setPageContext(pageContext);
+        JspWriter jspWriter = new StrutsMockJspWriter(writer);
+        pageContext.setJspWriter(jspWriter);
+        
+        request.setRequestURI("/context/someAction.action");
+        
+        tag.setAction(null);
+        tag.setValue(null);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("/hello.action-red", writer.toString());
+        
+        writer = new StringWriter();
+        jspWriter = new StrutsMockJspWriter(writer);
+        pageContext.setJspWriter(jspWriter);
+        
+        tag.doStartTag();
+        tag.doEndTag();
+        
+        assertEquals("/hello.action-blue", writer.toString());
+        
+        writer = new StringWriter();
+        jspWriter = new StrutsMockJspWriter(writer);
+        pageContext.setJspWriter(jspWriter);
+        
+        tag.doStartTag();
+        tag.doEndTag();
+        
+        assertEquals("/hello.action-red", writer.toString());
+        
+        
+    }
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -539,6 +660,25 @@ public class URLTagTest extends AbstractUITagTest {
             return value;
         }
         
+        
+    }
+    
+    public static class RedBlueActionMapper extends DefaultActionMapper {
+        
+        @Override
+        public String getUriFromActionMapping(ActionMapping mapping) {
+            String baseUri = super.getUriFromActionMapping(mapping);
+            HttpSession session = ServletActionContext.getRequest().getSession();
+            if (session.getAttribute("redBlue")==null) {
+                // We are red
+                session.setAttribute("redBlue", 0);
+                return baseUri + "-red";
+            } else {
+                // We are blue
+                session.removeAttribute("redBlue");
+                return baseUri + "-blue";
+            }
+        }
         
     }
 }

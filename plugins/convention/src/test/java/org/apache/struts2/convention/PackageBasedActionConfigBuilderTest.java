@@ -35,11 +35,7 @@ import org.apache.struts2.convention.actions.DefaultResultPathAction;
 import org.apache.struts2.convention.actions.NoAnnotationAction;
 import org.apache.struts2.convention.actions.Skip;
 import org.apache.struts2.convention.actions.chain.ChainedAction;
-import org.apache.struts2.convention.actions.action.ActionNameAction;
-import org.apache.struts2.convention.actions.action.ActionNamesAction;
-import org.apache.struts2.convention.actions.action.SingleActionNameAction;
-import org.apache.struts2.convention.actions.action.TestAction;
-import org.apache.struts2.convention.actions.action.TestExtends;
+import org.apache.struts2.convention.actions.action.*;
 import org.apache.struts2.convention.actions.defaultinterceptor.SingleActionNameAction2;
 import org.apache.struts2.convention.actions.exception.ExceptionsActionLevelAction;
 import org.apache.struts2.convention.actions.exception.ExceptionsMethodLevelAction;
@@ -194,6 +190,17 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         expect(resultMapBuilder.build(TestAction.class, null, "test", actionPkg)).andReturn(results);
         expect(resultMapBuilder.build(TestExtends.class, null, "test-extends", actionPkg)).andReturn(results);
 
+        Actions classLevelActions = ClassLevelAnnotationsAction.class.getAnnotation(Actions.class);
+        expect(resultMapBuilder.build(ClassLevelAnnotationsAction.class, classLevelActions.value()[0], "class1", actionPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ClassLevelAnnotationsAction.class, classLevelActions.value()[1], "class2", actionPkg)).andReturn(results);
+
+        Actions classLevelActionsDefaultMethod = ClassLevelAnnotationsDefaultMethodAction.class.getAnnotation(Actions.class);
+        expect(resultMapBuilder.build(ClassLevelAnnotationsDefaultMethodAction.class, classLevelActionsDefaultMethod.value()[0], "class3", actionPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ClassLevelAnnotationsDefaultMethodAction.class, classLevelActionsDefaultMethod.value()[1], "class4", actionPkg)).andReturn(results);
+
+        expect(resultMapBuilder.build(ClassLevelAnnotationAction.class, ClassLevelAnnotationAction.class.getAnnotation(Action.class), "class5", actionPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ClassLevelAnnotationDefaultMethodAction.class, ClassLevelAnnotationDefaultMethodAction.class.getAnnotation(Action.class), "class6", actionPkg)).andReturn(results);
+
         /* org.apache.struts2.convention.actions.idx */
         /* org.apache.struts2.convention.actions.idx.idx2 */
         expect(resultMapBuilder.build(org.apache.struts2.convention.actions.idx.Index.class, null, "index", idxPkg)).andReturn(results);
@@ -314,7 +321,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         /* org.apache.struts2.convention.actions.action */
         PackageConfig pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.action#struts-default#/action");
         assertNotNull(pkgConfig);
-        assertEquals(7, pkgConfig.getActionConfigs().size());
+        assertEquals(13, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "action1", ActionNameAction.class, "run1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action2", ActionNameAction.class, "run2", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "actions1", ActionNamesAction.class, "run", pkgConfig.getName());
@@ -322,6 +329,13 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         verifyActionConfig(pkgConfig, "action", SingleActionNameAction.class, "run", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "test", TestAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "test-extends", TestExtends.class, "execute", pkgConfig.getName());
+
+        verifyActionConfig(pkgConfig, "class1", ClassLevelAnnotationsAction.class, null, pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "class2", ClassLevelAnnotationsAction.class, null, pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "class3", ClassLevelAnnotationsDefaultMethodAction.class, "execute", pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "class4", ClassLevelAnnotationsDefaultMethodAction.class, "execute", pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "class5", ClassLevelAnnotationAction.class, null, pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "class6", ClassLevelAnnotationDefaultMethodAction.class, "execute", pkgConfig.getName());
 
         /* org.apache.struts2.convention.actions.namespace3 */
         //action on namespace1 (action level)

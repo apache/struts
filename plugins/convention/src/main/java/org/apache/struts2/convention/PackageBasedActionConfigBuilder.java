@@ -40,6 +40,7 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.LoggerUtils;
 import org.apache.commons.lang.xwork.StringUtils;
 import org.apache.commons.lang.xwork.ObjectUtils;
 import org.apache.struts2.StrutsConstants;
@@ -98,6 +99,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private ReloadingClassLoader reloadingClassLoader;
     private boolean reload;
     private Set<String> fileProtocols;
+
+    private static final String DEFAULT_METHOD = "execute";
 
     /**
      * Constructs actions based on a list of packages.
@@ -459,6 +462,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         Map<String, PackageConfig.Builder> packageConfigs = new HashMap<String, PackageConfig.Builder>();
 
         for (Class<?> actionClass : classes) {
+            Actions actionsAnnotation = actionClass.getAnnotation(Actions.class);
+            Action actionAnnotation = actionClass.getAnnotation(Action.class);
+
             // Skip classes that can't be instantiated
             if (cannotInstantiate(actionClass)) {
                 if (LOG.isTraceEnabled())
@@ -485,7 +491,6 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             List<String> namespaces = determineActionNamespace(actionClass);
             for (String namespace : namespaces) {
                 String defaultActionName = determineActionName(actionClass);
-                String defaultActionMethod = "execute";
                 PackageConfig.Builder defaultPackageConfig = getPackageConfig(packageConfigs, namespace,
                         actionPackage, actionClass, null);
 
@@ -493,7 +498,10 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 // configuration should still be built or not.
                 Map<String, List<Action>> map = getActionAnnotations(actionClass);
                 Set<String> actionNames = new HashSet<String>();
-                if (!map.containsKey(defaultActionMethod) && ReflectionTools.containsMethod(actionClass, defaultActionMethod)) {
+                boolean hasDefaultMethod = ReflectionTools.containsMethod(actionClass, DEFAULT_METHOD);
+                if (!map.containsKey(DEFAULT_METHOD)
+                        && hasDefaultMethod
+                        && actionAnnotation == null && actionsAnnotation == null) {
                     boolean found = false;
                     for (String method : map.keySet()) {
                         List<Action> actions = map.get(method);
@@ -518,7 +526,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
                     // Build the default
                     if (!found) {
-                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, defaultActionMethod, null);
+                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, DEFAULT_METHOD, null);
                     }
                 }
 
@@ -538,10 +546,18 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
                 // some actions will not have any @Action or a default method, like the rest actions
                 // where the action mapper is the one that finds the right method at runtime
-                if (map.isEmpty() && mapAllMatches) {
-                    Action actionAnnotation = actionClass.getAnnotation(Action.class);
+                if (map.isEmpty() && mapAllMatches && actionAnnotation == null && actionsAnnotation == null) {
                     createActionConfig(defaultPackageConfig, actionClass, defaultActionName, null, actionAnnotation);
                 }
+
+                //if there are @Actions or @Action at the class level, create the mappings for them
+                String methodName = hasDefaultMethod ? DEFAULT_METHOD : null;
+                if (actionsAnnotation != null) {
+                    List<Action> actionAnnotations = checkActionsAnnotation(actionsAnnotation);
+                    for (Action actionAnnotation2 : actionAnnotations)
+                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, methodName, actionAnnotation2);
+                } else if (actionAnnotation != null)
+                    createActionConfig(defaultPackageConfig, actionClass, defaultActionName, methodName, actionAnnotation);
             }
         }
 
@@ -671,20 +687,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         for (Method method : methods) {
             Actions actionsAnnotation = method.getAnnotation(Actions.class);
             if (actionsAnnotation != null) {
-                Action[] actionArray = actionsAnnotation.value();
-                boolean valuelessSeen = false;
-                List<Action> actions = new ArrayList<Action>();
-                for (Action ann : actionArray) {
-                    if (ann.value().equals(Action.DEFAULT_VALUE) && !valuelessSeen) {
-                        valuelessSeen = true;
-                    } else if (ann.value().equals(Action.DEFAULT_VALUE)) {
-                        throw new ConfigurationException("You may only add a single Action " +
-                                "annotation that has no value parameter.");
-                    }
-
-                    actions.add(ann);
-                }
-
+                List<Action> actions = checkActionsAnnotation(actionsAnnotation);
                 map.put(method.getName(), actions);
             } else {
                 Action ann = method.getAnnotation(Action.class);
@@ -695,6 +698,28 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
 
         return map;
+    }
+
+    /**
+     *  Builds a list of actions from an @Actions annotation, and check that they are not all empty
+     * @param actionsAnnotation Actions annotation
+     * @return a list   of Actions
+     */
+    protected List<Action> checkActionsAnnotation(Actions actionsAnnotation) {
+        Action[] actionArray = actionsAnnotation.value();
+        boolean valuelessSeen = false;
+        List<Action> actions = new ArrayList<Action>();
+        for (Action ann : actionArray) {
+            if (ann.value().equals(Action.DEFAULT_VALUE) && !valuelessSeen) {
+                valuelessSeen = true;
+            } else if (ann.value().equals(Action.DEFAULT_VALUE)) {
+                throw new ConfigurationException("You may only add a single Action " +
+                        "annotation that has no value parameter.");
+            }
+
+            actions.add(ann);
+        }
+        return actions;
     }
 
     /**

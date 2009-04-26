@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ActionNamesAction.java 655902 2008-05-13 15:15:12Z bpontarelli $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,23 +18,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.convention.annotation;
+package org.apache.struts2.convention.actions.action;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.struts2.convention.annotation.Actions;
+import org.apache.struts2.convention.annotation.Action;
 
-/**
- * <!-- START SNIPPET: javadoc -->
- * <p>
- * This annotation allows for multiple {@link Action} annotations
- * to be used on a single method.
- * </p>
- * <!-- END SNIPPET: javadoc -->
- */
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Actions {
-    Action[] value() default {};
+@Actions({
+    @Action("class3"),
+    @Action("class4")
+})
+public class ClassLevelAnnotationsDefaultMethodAction {
+   public String execute() {
+       return "boo";
+   }
 }

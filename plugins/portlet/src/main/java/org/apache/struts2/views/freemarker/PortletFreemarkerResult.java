@@ -51,7 +51,7 @@ import freemarker.template.TemplateModelException;
 
 /**
  */
-public class PortletFreemarkerResult extends StrutsResultSupport {
+public class PortletFreemarkerResult extends StrutsResultSupport implements PortletActionConstants{
 
     private static final long serialVersionUID = -5570612389289887543L;
 
@@ -120,8 +120,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
                                      ActionInvocation invocation) {
         ActionResponse res = PortletActionContext.getActionResponse();
         // View is rendered outside an action...uh oh...
+		invocation.getInvocationContext().getSession().put(RENDER_DIRECT_LOCATION, location);
         res.setRenderParameter(PortletActionConstants.ACTION_PARAM, "freemarkerDirect");
-        res.setRenderParameter("location", location);
         res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
                 .getRequest().getPortletMode().toString());
 

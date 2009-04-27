@@ -317,7 +317,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                 }
 
                 if ((currentFile != null) && currentFile.isFile()) {
-                    currentFile.delete();
+                    if (currentFile.delete() == false) {
+                        LOG.warn("Resource Leaking:  Could not remove uploaded file '"+currentFile.getCanonicalPath()+"'.");
+                    }
                 }
             }
         }

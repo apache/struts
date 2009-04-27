@@ -134,10 +134,20 @@ public class FastByteArrayOutputStream extends OutputStream {
      * This method is need only for debug. And needed for tests generated files.
      */
     private void writeToFile() {
+        FileOutputStream fileOutputStream = null;
         try {
-            writeTo(new FileOutputStream("/tmp/" + getClass().getName() + System.currentTimeMillis() + ".log"));
+            fileOutputStream = new FileOutputStream("/tmp/" + getClass().getName() + System.currentTimeMillis() + ".log");
+            writeTo(fileOutputStream);
         } catch (IOException e) {
             // Ignore
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    // Ignore
+                }
+            }
         }
     }
 

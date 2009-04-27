@@ -210,6 +210,9 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
       public String toString() {
         return "NULL";
       }
+      public int hashCode() {
+        return 1; // All instances of this class are equivalent
+      }
       public boolean equals(Object obj) {
         return obj == null || (obj instanceof NULLClass);
       }

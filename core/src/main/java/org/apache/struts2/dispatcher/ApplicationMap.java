@@ -86,6 +86,9 @@ public class ApplicationMap extends AbstractMap implements Serializable {
                 final Object value = context.getAttribute(key);
                 entries.add(new Map.Entry() {
                     public boolean equals(Object obj) {
+                        if (!(obj instanceof Map.Entry)) {
+                          return false;
+                        }
                         Map.Entry entry = (Map.Entry) obj;
 
                         return ((key == null) ? (entry.getKey() == null) : key.equals(entry.getKey())) && ((value == null) ? (entry.getValue() == null) : value.equals(entry.getValue()));
@@ -119,6 +122,9 @@ public class ApplicationMap extends AbstractMap implements Serializable {
                 final Object value = context.getInitParameter(key);
                 entries.add(new Map.Entry() {
                     public boolean equals(Object obj) {
+                        if (!(obj instanceof Map.Entry)) {
+                          return false;
+                        }
                         Map.Entry entry = (Map.Entry) obj;
 
                         return ((key == null) ? (entry.getKey() == null) : key.equals(entry.getKey())) && ((value == null) ? (entry.getValue() == null) : value.equals(entry.getValue()));

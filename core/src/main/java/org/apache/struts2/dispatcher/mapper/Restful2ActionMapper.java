@@ -121,15 +121,15 @@ public class Restful2ActionMapper extends DefaultActionMapper {
 
         String actionName = mapping.getName();
 
-        int lastSlashPos = actionName.lastIndexOf('/');
         String id = null;
-        if (lastSlashPos > -1 && actionName != null) {
-            id = actionName.substring(lastSlashPos+1);
-        }
-
 
         // Only try something if the action name is specified
         if (actionName != null && actionName.length() > 0) {
+
+            int lastSlashPos = actionName.lastIndexOf('/');
+            if (lastSlashPos > -1) {
+                id = actionName.substring(lastSlashPos+1);
+            }
 
 
             // If a method hasn't been explicitly named, try to guess using ReST-style patterns

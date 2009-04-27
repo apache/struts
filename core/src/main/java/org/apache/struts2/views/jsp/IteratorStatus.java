@@ -77,7 +77,7 @@ public class IteratorStatus {
     }
 
     public boolean isOdd() {
-        return ((state.index + 1) % 2) == 1;
+        return ((state.index + 1) % 2) != 0;
     }
 
     public int modulus(int operand) {

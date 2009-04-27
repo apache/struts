@@ -44,7 +44,6 @@ public abstract class FormButton extends ClosingUIBean {
     protected String method;
     protected String align;
     protected String type;
-    protected ActionMapper actionMapper;
 
     public FormButton(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);

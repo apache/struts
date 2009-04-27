@@ -39,7 +39,6 @@ public class AnchorTag extends AbstractClosingTag {
     protected String href;
     protected String includeParams;
     protected String scheme;
-    protected String value;
     protected String action;
     protected String namespace;
     protected String method;

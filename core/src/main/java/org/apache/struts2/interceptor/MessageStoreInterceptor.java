@@ -160,9 +160,9 @@ public class MessageStoreInterceptor implements Interceptor {
     private String requestParameterSwitch = "operationMode";
     private String operationMode = NONE;
 
-    public static String fieldErrorsSessionKey = "__MessageStoreInterceptor_FieldErrors_SessionKey";
-    public static String actionErrorsSessionKey = "__MessageStoreInterceptor_ActionErrors_SessionKey";
-    public static String actionMessagesSessionKey = "__MessageStoreInterceptor_ActionMessages_SessionKey";
+    public static final String fieldErrorsSessionKey = "__MessageStoreInterceptor_FieldErrors_SessionKey";
+    public static final String actionErrorsSessionKey = "__MessageStoreInterceptor_ActionErrors_SessionKey";
+    public static final String actionMessagesSessionKey = "__MessageStoreInterceptor_ActionMessages_SessionKey";
 
 
 

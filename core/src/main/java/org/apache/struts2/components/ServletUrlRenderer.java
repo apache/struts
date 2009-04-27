@@ -308,8 +308,6 @@ public class ServletUrlRenderer implements UrlRenderer {
         // where the parameters specified in value attribute takes priority.
 
         if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
-            mergedParams = new LinkedHashMap();
-
             String queryString = value.substring(value.indexOf("?")+1);
 
             mergedParams = UrlHelper.parseQueryString(queryString);

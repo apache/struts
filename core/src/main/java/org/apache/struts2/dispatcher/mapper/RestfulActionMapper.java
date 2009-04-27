@@ -120,15 +120,18 @@ public class RestfulActionMapper implements ActionMapper {
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
      */
     public String getUriFromActionMapping(ActionMapping mapping) {
-        String base = mapping.getNamespace() + mapping.getName();
+        StringBuilder retVal = new StringBuilder();
+        retVal.append(mapping.getNamespace());
+        retVal.append(mapping.getName());
         for (Map.Entry<String, Object> entry : mapping.getParams().entrySet()) {
             String name = entry.getKey();
             if (name.equals(mapping.getName() + "Id")) {
-                base = base + "/" + entry.getValue();
+                retVal.append("/");
+                retVal.append(entry.getValue());
                 break;
             }
         }
 
-        return base;
+        return retVal.toString();
     }
 }

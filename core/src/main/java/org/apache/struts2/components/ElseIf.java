@@ -88,7 +88,7 @@ public class ElseIf extends Component {
         if (answer.booleanValue()) {
             stack.getContext().put(If.ANSWER, answer);
         }
-        return answer != null && answer.booleanValue();
+        return answer.booleanValue();
     }
 
     public boolean end(Writer writer, String body) {

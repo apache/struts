@@ -170,7 +170,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
                     String pathEnding = buildPath(name, pathPrefix);
                     if (resourceUrl.getFile().endsWith(pathEnding))
                         is = resourceUrl.openStream();
-                } catch (Exception ex) {
+                } catch (IOException ex) {
                     // just ignore it
                     continue;
                 }

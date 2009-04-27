@@ -66,14 +66,15 @@ public class CheckboxInterceptor implements Interceptor {
     public String intercept(ActionInvocation ai) throws Exception {
         Map parameters = ai.getInvocationContext().getParameters();
         Map<String, String[]> newParams = new HashMap<String, String[]>();
-        Set<String> keys = parameters.keySet();
-        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
-            String key = iterator.next();
+        Set<Map.Entry> entries = parameters.entrySet();
+        for (Iterator<Map.Entry> iterator = entries.iterator(); iterator.hasNext();) {
+            Map.Entry entry = iterator.next();
+            String key = (String)entry.getKey();
 
             if (key.startsWith("__checkbox_")) {
                 String name = key.substring("__checkbox_".length());
 
-                Object values = parameters.get(key);
+                Object values = entry.getValue();
                 iterator.remove();
                 if (values != null && values instanceof String[] && ((String[])values).length > 1) {
                     LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: #1", name);

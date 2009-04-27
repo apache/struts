@@ -274,7 +274,6 @@ public class Date extends ContextBean {
 
     public boolean end(Writer writer, String body) {
         String msg = null;
-        ValueStack stack = getStack();
         java.util.Date date = null;
         // find the name on the valueStack
         try {

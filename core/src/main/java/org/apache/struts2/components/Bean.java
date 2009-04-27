@@ -97,7 +97,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 @StrutsTag(name="bean", tldTagClass="org.apache.struts2.views.jsp.BeanTag",
         description="Instantiate a JavaBean and place it in the context")
 public class Bean extends ContextBean {
-    protected static Logger LOG = LoggerFactory.getLogger(Bean.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Bean.class);
 
     protected Object bean;
     protected String name;

@@ -128,7 +128,6 @@ public class ActionComponent extends ContextBean {
     protected ValueStackFactory valueStackFactory;
     protected ActionProxyFactory actionProxyFactory;
     protected ActionProxy proxy;
-    protected ActionMapper actionMapper;
     protected String name;
     protected String namespace;
     protected boolean executeResult;

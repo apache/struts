@@ -108,7 +108,7 @@ public class Param extends Component {
                 String name = findString(this.name);
 
                 if (name == null) {
-                    throw new StrutsException("No name found for following expression: " + name);
+                    throw new StrutsException("No name found for following expression: " + this.name);
                 }
 
                 Object value = findValue(this.value);

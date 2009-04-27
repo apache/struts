@@ -57,7 +57,7 @@ public class DateFormatter {
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.date = (date == null) ? null : (Date)date.clone();
     }
 
     public void setDate(int date) {

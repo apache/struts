@@ -35,7 +35,7 @@
 
    <scm>
      <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/</connection>
-     <developerConnection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/</developerConnection>
+     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/</developerConnection>
      <url>http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/</url>
    </scm>
 

@@ -63,6 +63,13 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
             boolean selected = ContainUtil.contains(value, params.get("headerKey"));
             writeOption(headerKey, headerValue, selected);
         }
+	
+	//emptyoption
+        Object emptyOption = params.get("emptyOption");
+        if (emptyOption != null && emptyOption.toString().equals(Boolean.toString(true))) {
+        	boolean selected = ContainUtil.contains(value, "") || ContainUtil.contains(value, null);
+        	writeOption("", "", selected);
+        }
 
         Object listObj = params.get("list");
         String listKey = (String) params.get("listKey");

@@ -369,10 +369,22 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (parent != null)
             urlSet = urlSet.exclude(parent);
 
-        urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(ClassLoader.getSystemClassLoader().getParent()));
+        try {
+        	// This may fail in some sandboxes, ie GAE
+        	ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+        	urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(systemClassLoader.getParent()));
+        	
+        } catch (SecurityException e) {
+        	LOG.warn("Could not get the system classloader due to security constraints, there may be improper urls left to scan");
+        }
         urlSet = urlSet.excludeJavaExtDirs();
         urlSet = urlSet.excludeJavaEndorsedDirs();
-        urlSet = urlSet.excludeJavaHome();
+        try {
+        	urlSet = urlSet.excludeJavaHome();
+        } catch (NullPointerException e) {
+        	// This happens in GAE since the sandbox contains no java.home directory
+        	LOG.warn("Could not exclude JAVA_HOME, is this a sandbox jvm?");
+        }
         urlSet = urlSet.excludePaths(System.getProperty("sun.boot.class.path", ""));
         urlSet = urlSet.exclude(".*/JavaVM.framework/.*");
 

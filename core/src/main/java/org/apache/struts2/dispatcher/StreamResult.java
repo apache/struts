@@ -53,7 +53,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <li><b>contentDisposition</b> - the content disposition header value for
  * specifing the file name (default = <code>inline</code>, values are typically
- * <i>attachment; filename="document.pdf"</i>.</li>
+ * <i>attachment;filename="document.pdf"</i>.</li>
  *
  * <li><b>inputName</b> - the name of the InputStream property from the chained
  * action (default = <code>inputStream</code>).</li>
@@ -76,7 +76,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;result name="success" type="stream"&gt;
  *   &lt;param name="contentType"&gt;image/jpeg&lt;/param&gt;
  *   &lt;param name="inputName"&gt;imageStream&lt;/param&gt;
- *   &lt;param name="contentDisposition"&gt;attachment; filename="document.pdf"&lt;/param&gt;
+ *   &lt;param name="contentDisposition"&gt;attachment;filename="document.pdf"&lt;/param&gt;
  *   &lt;param name="bufferSize"&gt;1024&lt;/param&gt;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>

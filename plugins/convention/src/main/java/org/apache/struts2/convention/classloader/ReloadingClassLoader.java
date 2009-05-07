@@ -35,7 +35,7 @@ import org.apache.struts2.StrutsException;
  * The ReloadingClassLoader uses a delegation mechanism to allow
  * classes to be reloaded. That means that loadClass calls may
  * return different results if the class was changed in the underlying
- * ResoruceStore.
+ * ResourceStore.
  * <p/>
  * class taken from Apache JCI
  */
@@ -53,6 +53,12 @@ public class ReloadingClassLoader extends ClassLoader {
             stores = new ResourceStore[]{new FileResourceStore(new File(root.toURI()))};
         } catch (URISyntaxException e) {
             throw new StrutsException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false", e);
+        } catch (RuntimeException e) {
+            // see WW-3121
+            // TODO: Fix this for a reloading mechanism to be marked as stable
+            LOG.error("Exception while trying to build the ResourceStore for URL " + root.toString(), e);
+            LOG.error("Consider setting struts.convention.classes.reload=false");
+            throw e;
         }
 
         delegate = new ResourceStoreClassLoader(parent, stores);

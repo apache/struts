@@ -78,7 +78,7 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
      *
      * @param themeClasses a comma delimited list of custom theme class names
      */
-    @Inject("struts.javatemplates.customThemes")
+    @Inject(value = "struts.javatemplates.customThemes", required = false)
     public void setThemeClasses(String themeClasses) {
 
         StringTokenizer customThemes = new StringTokenizer(themeClasses, ",");

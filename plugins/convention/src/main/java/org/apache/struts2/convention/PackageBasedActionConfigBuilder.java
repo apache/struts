@@ -99,6 +99,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private ReloadingClassLoader reloadingClassLoader;
     private boolean reload;
     private Set<String> fileProtocols;
+    private boolean alwaysMapExecute;
 
     private static final String DEFAULT_METHOD = "execute";
 
@@ -143,6 +144,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
         this.reload = "true".equals(reload);
+    }
+
+    /**
+     * If this constant is true, and there is an "execute" method(not annotated), a mapping will be added
+     * pointing to it, even if there are other mapping in the class
+     */
+    @Inject("struts.convention.action.alwaysMapExecute")
+    public void setAlwaysMapExecute(String alwaysMapExecute) {
+        this.alwaysMapExecute = "true".equals(alwaysMapExecute);
     }
 
     /**
@@ -513,7 +523,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 boolean hasDefaultMethod = ReflectionTools.containsMethod(actionClass, DEFAULT_METHOD);
                 if (!map.containsKey(DEFAULT_METHOD)
                         && hasDefaultMethod
-                        && actionAnnotation == null && actionsAnnotation == null) {
+                        && actionAnnotation == null && actionsAnnotation == null
+                        && (alwaysMapExecute || map.isEmpty())) {
                     boolean found = false;
                     for (String method : map.keySet()) {
                         List<Action> actions = map.get(method);

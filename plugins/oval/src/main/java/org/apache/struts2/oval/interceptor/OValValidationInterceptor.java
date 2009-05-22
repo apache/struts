@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.validator.ValidatorContext;
@@ -38,6 +39,9 @@ import net.sf.oval.context.FieldContext;
 import net.sf.oval.context.OValContext;
 import net.sf.oval.context.MethodReturnValueContext;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
@@ -167,7 +171,11 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
 
         //perform validation
         List<ConstraintViolation> violations = validator.validate(action);
-        if (violations != null) {
+        addValidationErrors(violations.toArray(new ConstraintViolation[0]), action, valueStack, null);
+    }
+
+	private void addValidationErrors(ConstraintViolation[] violations, Object action, ValueStack valueStack, String parentFieldname) {
+		if (violations != null) {
             ValidatorContext validatorContext = new DelegatingValidatorContext(action);
             for (ConstraintViolation violation : violations) {
                 //translate message
@@ -182,15 +190,34 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
                     valueStack.pop();
                 }
 
-                if (isActionError(violation))
+                if (isActionError(violation)) {
+                	LOG.debug("Adding action error '#0'", message);
                     validatorContext.addActionError(message);
-                else {
+                } else {
                     ValidationError validationError = buildValidationError(violation, message);
-                    validatorContext.addFieldError(validationError.getFieldName(), validationError.getMessage());
+
+                    // build field name
+                    String fieldName = validationError.getFieldName();
+                    if (parentFieldname != null) {
+                    	fieldName = parentFieldname + "." + fieldName;
+                    }
+
+                    LOG.debug("Adding field error [#0] with message '#1'", fieldName, validationError.getMessage());
+                    validatorContext.addFieldError(fieldName, validationError.getMessage());
+
+                    // don't add "model." prefix to fields of model in model driven action
+                    if ((action instanceof ModelDriven) && "model".equals(fieldName)) {
+                    	fieldName = null;
+                    }
+
+                    // add violations of member object fields
+                    addValidationErrors(violation.getCauses(), action, valueStack, fieldName);
                 }
             }
         }
-    }
+	}
+
+
 
 
     /**

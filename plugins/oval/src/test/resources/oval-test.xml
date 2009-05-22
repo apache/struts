@@ -7,7 +7,7 @@
     <bean type="org.apache.struts2.oval.interceptor.OValValidationManager" class="org.apache.struts2.oval.interceptor.DummyDefaultOValValidationManager"/>
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
     <constant name="struts.oval.validateJPAAnnotations" value="false" />
-    
+
     <package namespace="oval" name="oval-test">
         <result-types>
             <result-type name="void" class="org.apache.struts2.oval.interceptor.VoidResult"/>
@@ -79,6 +79,18 @@
         <action name="simpleFieldNoProgrammatic" class="org.apache.struts2.oval.interceptor.SimpleField">
             <interceptor-ref name="ovalValidation">
                 <param name="programmatic">false</param>
+            </interceptor-ref>
+            <result type="void"></result>
+        </action>
+        <action name="modelDrivenAction" class="org.apache.struts2.oval.interceptor.ModelDrivenAction">
+            <interceptor-ref name="ovalValidation">
+              <param name="validateJPAAnnotations">true</param>
+            </interceptor-ref>
+            <result type="void"></result>
+        </action>
+        <action name="memberObject" class="org.apache.struts2.oval.interceptor.MemberObject">
+            <interceptor-ref name="ovalValidation">
+              <param name="validateJPAAnnotations">true</param>
             </interceptor-ref>
             <result type="void"></result>
         </action>

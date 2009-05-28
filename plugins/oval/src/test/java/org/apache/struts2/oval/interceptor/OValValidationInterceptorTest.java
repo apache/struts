@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import net.sf.oval.configuration.Configurer;
 import org.apache.struts2.oval.interceptor.OValValidationManager;
@@ -293,6 +294,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        Locale.setDefault(Locale.US);
         super.setUp();
         loadConfigurationProviders(new XmlConfigurationProvider("oval-test.xml"));
     }

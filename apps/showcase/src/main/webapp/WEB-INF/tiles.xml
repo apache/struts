@@ -23,7 +23,7 @@
 
 <!DOCTYPE tiles-definitions PUBLIC
         "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
-        "http://struts.apache.org/dtds/tiles-config_2_0.dtd">
+        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 
 <tiles-definitions>
 

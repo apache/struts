@@ -58,7 +58,7 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <li>Redirect prefix - <i>redirect:cancel.jsp</i></li>
  *
- * <li>Redirect-action prefix - <i>redirect-action:cancel</i></li>
+ * <li>Redirect-action prefix - <i>redirectAction:cancel</i></li>
  *
  * </ul>
  *
@@ -151,7 +151,7 @@ import com.opensymphony.xwork2.inject.Container;
  *  &lt;s:form action=&quot;baz&quot;&gt;
  *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
  *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;redirect-action:dashboard&quot; value=&quot;Cancel&quot;/&gt;
+ *      &lt;s:submit name=&quot;redirectAction:dashboard&quot; value=&quot;Cancel&quot;/&gt;
  *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: redirect-action-example --&gt;
  * </pre>
@@ -165,7 +165,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     protected static final String REDIRECT_PREFIX = "redirect:";
 
-    protected static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
+    protected static final String REDIRECT_ACTION_PREFIX = "redirectAction:";
 
     protected boolean allowDynamicMethodCalls = true;
 

@@ -367,7 +367,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     private UrlSet buildUrlSet() throws IOException {
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
-        UrlSet urlSet = new UrlSet(classLoaderInterface);
+        UrlSet urlSet = new UrlSet(classLoaderInterface, this.fileProtocols);
 
         //exclude parent of classloaders
         ClassLoaderInterface parent = classLoaderInterface.getParent();

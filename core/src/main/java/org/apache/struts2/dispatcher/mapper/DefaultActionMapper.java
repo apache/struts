@@ -184,9 +184,10 @@ public class DefaultActionMapper implements ActionMapper {
             {
                 put(METHOD_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
-                        mapping
-                                .setMethod(key
-                                        .substring(METHOD_PREFIX.length()));
+                        if (allowDynamicMethodCalls) {
+                            mapping.setMethod(key.substring(
+                                                   METHOD_PREFIX.length()));
+                        }
                     }
                 });
 
@@ -356,7 +357,7 @@ public class DefaultActionMapper implements ActionMapper {
             if (key.endsWith(".x") || key.endsWith(".y")) {
                 key = key.substring(0, key.length() - 2);
             }
-
+            
             // Ensure a parameter doesn't get processed twice
             if (!uniqueParameters.contains(key)) {
                 ParameterAction parameterAction = (ParameterAction) prefixTrie

@@ -21,22 +21,25 @@
 
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.rest.handler.ContentTypeHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.rest.handler.ContentTypeHandler;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Manages {@link ContentTypeHandler} instances and uses them to
@@ -91,8 +94,12 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
         ContentTypeHandler handler = null;
         String contentType = req.getContentType();
         if (contentType != null) {
+        	int index = contentType.indexOf(';');
+        	if( index != -1)
+        		contentType = contentType.substring(0,index).trim();
             handler = handlersByContentType.get(contentType);
         }
+        
         if (handler == null) {
             String extension = findExtension(req.getRequestURI());
             if (extension == null) {

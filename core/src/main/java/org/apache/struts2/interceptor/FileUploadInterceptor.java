@@ -251,7 +251,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                     validation.addActionError(error);
                 }
 
-                LOG.error(error);
+                LOG.warn(error);
             }
         }
 
@@ -295,10 +295,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         }
                     }
                 } else {
-                    LOG.error(getTextMessage(action, "struts.messages.invalid.file", new Object[]{inputName}, ac.getLocale()));
+                    LOG.warn(getTextMessage(action, "struts.messages.invalid.file", new Object[]{inputName}, ac.getLocale()));
                 }
             } else {
-                LOG.error(getTextMessage(action, "struts.messages.invalid.content.type", new Object[]{inputName}, ac.getLocale()));
+                LOG.warn(getTextMessage(action, "struts.messages.invalid.content.type", new Object[]{inputName}, ac.getLocale()));
             }
         }
 
@@ -349,28 +349,28 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                 validation.addFieldError(inputName, errMsg);
             }
 
-            LOG.error(errMsg);
+            LOG.warn(errMsg);
         } else if (maximumSize != null && maximumSize < file.length()) {
             String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new Object[]{inputName, filename, file.getName(), "" + file.length()}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
-            LOG.error(errMsg);
+            LOG.warn(errMsg);
         } else if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
             String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new Object[]{inputName, filename, file.getName(), contentType}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
-            LOG.error(errMsg);
+            LOG.warn(errMsg);
         } else if ((! allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
             String errMsg = getTextMessage(action, "struts.messages.error.file.extension.not.allowed", new Object[]{inputName, filename, file.getName(), contentType}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
-            LOG.error(errMsg);
+            LOG.warn(errMsg);
         } else {
             fileIsAcceptable = true;
         }

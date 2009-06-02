@@ -136,7 +136,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
                 }
             }
         } catch (FileUploadException e) {
-            LOG.error("Unable to parse request", e);
+            LOG.warn("Unable to parse request", e);
             errors.add(e.getMessage());
         }
     }

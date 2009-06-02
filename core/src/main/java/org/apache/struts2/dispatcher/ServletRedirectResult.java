@@ -167,17 +167,19 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             }
 
             ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(invocation.getResultCode());
-            Map resultConfigParams = resultConfig.getParams();
-            for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext();) {
-                Map.Entry e = (Map.Entry) i.next();
+            if (resultConfig != null ) {
+                Map resultConfigParams = resultConfig.getParams();
+                for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext();) {
+                    Map.Entry e = (Map.Entry) i.next();
 
-                if (!getProhibitedResultParams().contains(e.getKey())) {
-                    requestParameters.put(e.getKey().toString(),
-                            e.getValue() == null ? "" :
-                                    conditionalParse(e.getValue().toString(), invocation));
-                    String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue().toString(), invocation);
-                    if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
-                        requestParameters.put(e.getKey().toString(), potentialValue);
+                    if (!getProhibitedResultParams().contains(e.getKey())) {
+                        requestParameters.put(e.getKey().toString(),
+                                e.getValue() == null ? "" :
+                                        conditionalParse(e.getValue().toString(), invocation));
+                        String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue().toString(), invocation);
+                        if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
+                            requestParameters.put(e.getKey().toString(), potentialValue);
+                        }
                     }
                 }
             }
@@ -232,7 +234,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     /**
      * Sets the supressEmptyParameters option
      *
-     * @param suppress The new value for this option
+     * @param supressEmptyParameters The new value for this option
      */
     public void setSupressEmptyParameters(boolean supressEmptyParameters) {
         this.supressEmptyParameters = supressEmptyParameters;

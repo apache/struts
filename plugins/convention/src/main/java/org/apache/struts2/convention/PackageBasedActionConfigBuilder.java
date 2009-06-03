@@ -141,6 +141,10 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         this.devMode = "true".equals(mode);
     }
 
+    /**
+     * Reload configuration when classes change. Defaults to "false" and should not be used
+     * in production.
+     */
     @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
         this.reload = "true".equals(reload);
@@ -266,7 +270,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
            reloadingClassLoader = new ReloadingClassLoader(getClassLoader());
     }
 
-    private ClassLoader getClassLoader() {
+    protected ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 
@@ -293,15 +297,12 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Loading action configurations");
-                if (actionPackages != null) {
+                if (actionPackages != null)
                     LOG.trace("Actions being loaded from action packages " + Arrays.asList(actionPackages));
-                }
-                if (packageLocators != null) {
+                if (packageLocators != null)
                     LOG.trace("Actions being loaded using package locators " + Arrays.asList(packageLocators));
-                }
-                if (excludePackages != null) {
+                if (excludePackages != null)
                     LOG.trace("Excluding actions from packages " + Arrays.asList(excludePackages));
-                }
             }
 
             Set<Class> classes = findActions();
@@ -319,7 +320,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             thread classloader)
             using this, other plugins (like OSGi) can plugin their own classloader for a while
             and it will be used by Convention (it cannot be a bean, as Convention is likely to be
-            called multiple times, and it need to use the default ClassLoaderInterface during normal startup)
+            called multiple times, and it needs to use the default ClassLoaderInterface during normal startup)
             */
             ClassLoaderInterface classLoaderInterface = null;
             ActionContext ctx = ActionContext.getContext();
@@ -385,7 +386,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         	urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(systemClassLoader.getParent()));
         	
         } catch (SecurityException e) {
-        	LOG.warn("Could not get the system classloader due to security constraints, there may be improper urls left to scan");
+            if (LOG.isWarnEnabled())
+        	    LOG.warn("Could not get the system classloader due to security constraints, there may be improper urls left to scan");
         }
         urlSet = urlSet.excludeJavaExtDirs();
         urlSet = urlSet.excludeJavaEndorsedDirs();
@@ -393,7 +395,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         	urlSet = urlSet.excludeJavaHome();
         } catch (NullPointerException e) {
         	// This happens in GAE since the sandbox contains no java.home directory
-        	LOG.warn("Could not exclude JAVA_HOME, is this a sandbox jvm?");
+            if (LOG.isWarnEnabled())
+        	    LOG.warn("Could not exclude JAVA_HOME, is this a sandbox jvm?");
         }
         urlSet = urlSet.excludePaths(System.getProperty("sun.boot.class.path", ""));
         urlSet = urlSet.exclude(".*/JavaVM.framework/.*");
@@ -813,7 +816,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
     }
 
-    private List<ExceptionMappingConfig> buildExceptionMappings(ExceptionMapping[] exceptions, String actionName) {
+    protected List<ExceptionMappingConfig> buildExceptionMappings(ExceptionMapping[] exceptions, String actionName) {
         List<ExceptionMappingConfig> exceptionMappings = new ArrayList<ExceptionMappingConfig>();
 
         for (ExceptionMapping exceptionMapping : exceptions) {
@@ -830,7 +833,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         return exceptionMappings;
     }
 
-    private PackageConfig.Builder getPackageConfig(final Map<String, PackageConfig.Builder> packageConfigs,
+    protected PackageConfig.Builder getPackageConfig(final Map<String, PackageConfig.Builder> packageConfigs,
                                                    String actionNamespace, final String actionPackage, final Class<?> actionClass,
                                                    Action action) {
         if (action != null && !action.value().equals(Action.DEFAULT_VALUE)) {

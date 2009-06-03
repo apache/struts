@@ -56,7 +56,7 @@ public class ReloadingClassLoader extends ClassLoader {
         } catch (RuntimeException e) {
             // see WW-3121
             // TODO: Fix this for a reloading mechanism to be marked as stable
-            LOG.error("Exception while trying to build the ResourceStore for URL " + root.toString(), e);
+            LOG.error("Exception while trying to build the ResourceStore for URL [#0]", e, root.toString());
             LOG.error("Consider setting struts.convention.classes.reload=false");
             throw e;
         }
@@ -74,7 +74,7 @@ public class ReloadingClassLoader extends ClassLoader {
             delegate = new ResourceStoreClassLoader(parent, stores);
             return true;
         } catch (final RuntimeException e) {
-            LOG.error("could not add resource store " + pStore);
+            LOG.error("Could not add resource store", e);
         }
         return false;
     }

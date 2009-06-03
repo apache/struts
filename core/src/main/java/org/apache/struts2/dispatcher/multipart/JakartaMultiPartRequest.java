@@ -53,15 +53,15 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     static final Logger LOG = LoggerFactory.getLogger(MultiPartRequest.class);
     
     // maps parameter name -> List of FileItem objects
-    private final Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
+    protected Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
 
     // maps parameter name -> List of param values
-    private final Map<String,List<String>> params = new HashMap<String,List<String>>();
+    protected Map<String,List<String>> params = new HashMap<String,List<String>>();
 
     // any errors while processing this request
-    private final List<String> errors = new ArrayList<String>();
+    protected List<String> errors = new ArrayList<String>();
     
-    private long maxSize;
+    protected long maxSize;
     
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
     public void setMaxSize(String maxSize) {

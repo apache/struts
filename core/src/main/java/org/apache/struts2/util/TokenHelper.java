@@ -97,6 +97,9 @@ public class TokenHelper {
      * @return the token String or null, if the token could not be found
      */
     public static String getToken(String tokenName) {
+        if (tokenName == null ) {
+            return null;
+        }
         Map params = ActionContext.getContext().getParameters();
         String[] tokens = (String[]) params.get(tokenName);
         String token;

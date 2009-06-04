@@ -58,6 +58,11 @@ public class TokenHelperTest extends TestCase {
         assertTrue(TokenHelper.validToken());
     }
 
+    public void testGetTokenDoesNotNpe() {
+        String token = TokenHelper.getToken(null);
+        assertTrue(token == null);
+    }
+
     protected void setUp() throws Exception {
         session = new HashMap();
         Map params = new HashMap();

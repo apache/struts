@@ -23,6 +23,7 @@ package org.apache.struts2.interceptor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -110,9 +111,9 @@ public class TokenInterceptorTest extends StrutsTestCase {
     protected void setUp() throws Exception {
         loadConfigurationProviders(new TestConfigurationProvider());
 
-        session = new HashMap();
-        params = new HashMap();
-        extraContext = new HashMap();
+        session = new TreeMap();
+        params = new TreeMap();
+        extraContext = new TreeMap();
         extraContext.put(ActionContext.SESSION, session);
         extraContext.put(ActionContext.PARAMETERS, params);
 

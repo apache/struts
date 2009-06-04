@@ -44,6 +44,12 @@ public class TokenSessionStoreInterceptorTest extends TokenInterceptorTest {
         assertEquals(Action.SUCCESS, proxy2.execute());
     }
 
+    public void testNullTokenName() throws Exception {
+        ActionProxy proxy = buildProxy(getActionName());
+        setToken((String)null);
+        proxy.execute();
+    }
+
     protected String getActionName() {
         return TestConfigurationProvider.TOKEN_SESSION_ACTION_NAME;
     }

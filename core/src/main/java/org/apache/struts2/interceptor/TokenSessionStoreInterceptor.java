@@ -116,11 +116,11 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         String tokenName = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(tokenName);
 
-        Map params = ac.getParameters();
-        params.remove(tokenName);
-        params.remove(TokenHelper.TOKEN_NAME_FIELD);
-
         if ((tokenName != null) && (token != null)) {
+            Map params = ac.getParameters();
+            params.remove(tokenName);
+            params.remove(TokenHelper.TOKEN_NAME_FIELD);
+
             ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(tokenName, token);
 
             if (savedInvocation != null) {

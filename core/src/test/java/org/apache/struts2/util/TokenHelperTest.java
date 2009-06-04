@@ -23,6 +23,7 @@ package org.apache.struts2.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import junit.framework.TestCase;
 
@@ -61,12 +62,15 @@ public class TokenHelperTest extends TestCase {
     public void testGetTokenDoesNotNpe() {
         String token = TokenHelper.getToken(null);
         assertTrue(token == null);
+
+        String token2 = TokenHelper.getToken("");
+        assertTrue(token2 == null);
     }
 
     protected void setUp() throws Exception {
         session = new HashMap();
-        Map params = new HashMap();
-        Map ctxMap = new HashMap();
+        Map params = new TreeMap();
+        Map ctxMap = new TreeMap();
         ctxMap.put(ActionContext.SESSION, session);
         ctxMap.put(ActionContext.PARAMETERS, params);
         ActionContext ctx = new ActionContext(ctxMap);

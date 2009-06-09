@@ -59,7 +59,6 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.UnknownHandler;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -694,7 +693,7 @@ public class Dispatcher {
         String content_type = request.getContentType();
         if (content_type != null && content_type.indexOf("multipart/form-data") != -1) {
             MultiPartRequest mpr = null;
-            //add all available UnknownHandlers
+            //check for alternate implementations of MultiPartRequest
             Set<String> multiNames = getContainer().getInstanceNames(MultiPartRequest.class);
             if (multiNames != null) {
                 for (String multiName : multiNames) {

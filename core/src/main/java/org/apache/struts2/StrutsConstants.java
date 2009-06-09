@@ -116,6 +116,11 @@ public final class StrutsConstants {
     public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
 
     /**
+     * The name of the bean that will handle multipart requests
+     */
+    public static final String STRUTS_MULTIPART_HANDLER = "struts.multipart.handler";
+
+    /**
      * The org.apache.struts2.dispatcher.multipart.MultiPartRequest parser implementation
      * for a multipart request (file upload)
      */

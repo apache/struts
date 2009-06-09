@@ -59,6 +59,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.UnknownHandler;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -133,6 +134,11 @@ public class Dispatcher {
      * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
      */
     private String multipartSaveDir;
+
+    /**
+     * Stores the value of StrutsConstants.STRUTS_MULTIPART_HANDLER setting
+     */
+    private String multipartHandlerName;
 
     /**
      * Provide list of default configuration files.
@@ -235,6 +241,11 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
     public void setMultipartSaveDir(String val) {
         multipartSaveDir = val;
+    }
+
+    @Inject(StrutsConstants.STRUTS_MULTIPART_HANDLER)
+    public void setMultipartHandler(String val) {
+        multipartHandlerName = val;
     }
 
     @Inject
@@ -682,8 +693,20 @@ public class Dispatcher {
 
         String content_type = request.getContentType();
         if (content_type != null && content_type.indexOf("multipart/form-data") != -1) {
-            MultiPartRequest multi = getContainer().getInstance(MultiPartRequest.class);
-            request = new MultiPartRequestWrapper(multi, request, getSaveDir(servletContext));
+            MultiPartRequest mpr = null;
+            //add all available UnknownHandlers
+            Set<String> multiNames = getContainer().getInstanceNames(MultiPartRequest.class);
+            if (multiNames != null) {
+                for (String multiName : multiNames) {
+                    if (multiName.equals(multipartHandlerName)) {
+                        mpr = getContainer().getInstance(MultiPartRequest.class, multiName);
+                    }
+                }
+            }
+            if (mpr == null ) {
+                mpr = getContainer().getInstance(MultiPartRequest.class);
+            }
+            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext));
         } else {
             request = new StrutsRequestWrapper(request);
         }

@@ -277,7 +277,7 @@
                                     <arg value="http://struts.apache.org/2.x/docs/" />
                                 </exec>
 -->
-                                <move todir="${project.build.directory}/cwiki">
+                                <copy todir="${project.build.directory}/cwiki">
                                     <fileset dir="${docsDir}"/>
                                 </move>
                             </tasks>

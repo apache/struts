@@ -50,7 +50,12 @@ public class ReloadingClassLoader extends ClassLoader {
         parent = pParent;
         URL root = pParent.getResource("/");
         try {
-            stores = new ResourceStore[]{new FileResourceStore(new File(root.toURI()))};
+            if (root != null) {
+                stores = new ResourceStore[]{new FileResourceStore(new File(root.toURI()))};
+            }
+            else {
+                throw new StrutsException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false");
+            }
         } catch (URISyntaxException e) {
             throw new StrutsException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false", e);
         } catch (RuntimeException e) {

@@ -31,7 +31,7 @@ public class AnnotationTools {
 
     /**
      * Returns the annotation on the given class or the package of the class. This searchs up the
-     * class hierarchy and the package hierarchy.
+     * class hierarchy and the package hierarchy for the closest match. 
      *
      * @param   klass The class to search for the annotation.
      * @param   annotationClass The Class of the annotation.
@@ -45,6 +45,9 @@ public class AnnotationTools {
                 ann = klass.getPackage().getAnnotation(annotationClass);
             if (ann == null) {
                 klass = klass.getSuperclass();
+                if (klass != null ) {
+                    ann = klass.getAnnotation(annotationClass);
+                }
             }
         }
 

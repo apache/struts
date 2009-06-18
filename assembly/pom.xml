@@ -279,7 +279,7 @@
 -->
                                 <copy todir="${project.build.directory}/cwiki">
                                     <fileset dir="${docsDir}"/>
-                                </move>
+                                </copy>
                             </tasks>
                         </configuration>
                         <goals>

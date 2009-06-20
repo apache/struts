@@ -267,6 +267,7 @@
                                     <arg line="${username}@people.apache.org /www/struts.apache.org/2.x/docs-zip2.sh" />
                                 </exec>
                                 <unzip src="${project.build.directory}/docs.zip" dest="${project.build.directory}/cwiki" />
+-->
                                 <exec executable="wget">
                                     <arg value="-erobots=off" />
                                     <arg value="-nH" />
@@ -276,10 +277,9 @@
                                     <arg value="-r" />
                                     <arg value="http://struts.apache.org/2.x/docs/" />
                                 </exec>
--->
-                                <copy todir="${project.build.directory}/cwiki">
-                                    <fileset dir="${docsDir}" />
-                                </copy>
+                                <move todir="${project.build.directory}/cwiki">
+                                    <fileset dir="2.x/docs" />
+                                </move>
                             </tasks>
                         </configuration>
                         <goals>

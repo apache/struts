@@ -21,6 +21,7 @@
 
 package org.apache.struts2.components;
 
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import java.io.Writer;
 
 /**
@@ -48,5 +49,7 @@ public interface UrlRenderer {
 	 * @param formComponent The {@link Form} component that "owns" this renderer.
 	 */
 	void renderFormUrl(Form formComponent);
+
+      void setActionMapper(ActionMapper actionMapper);
 
 }

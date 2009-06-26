@@ -24,6 +24,7 @@ package org.apache.struts2.components;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.apache.struts2.dispatcher.mapper.ActionMapper; 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
@@ -31,6 +32,7 @@ import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Implementation of the {@link UrlRenderer} interface that renders URLs for portlet environments.
@@ -47,6 +49,11 @@ public class PortletUrlRenderer implements UrlRenderer {
 	
 	public PortletUrlRenderer() {
 		this.servletRenderer = new ServletUrlRenderer();
+	}
+
+	@Inject
+	public void setActionMapper(ActionMapper actionMapper) {
+		servletRenderer.setActionMapper(actionMapper);
 	}
 	
 	/**

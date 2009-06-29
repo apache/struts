@@ -231,6 +231,9 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         if (props.containsKey(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES))
             props.setProperty("logMissingProperties", props.getProperty(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES));
 
+        if (props.containsKey(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE))
+            props.setProperty("enableOGNLExpressionCache", props.getProperty(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE));
+
         String val = props.getProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS);
         if (val != null) {
             props.setProperty("allowStaticMethodAccess", val);

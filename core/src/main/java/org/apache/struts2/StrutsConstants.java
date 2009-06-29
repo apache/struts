@@ -209,4 +209,7 @@ public final class StrutsConstants {
 
     /** Logs properties that are not found (very verbose) **/
     public static final String STRUTS_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
+
+    /** Enables caching of parsed OGNL expressions **/
+    public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
 }

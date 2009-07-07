@@ -48,7 +48,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * &lt;bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" 
  *       class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" /&gt;
  * &lt;constant name="struts.mapper.composite" 
- *       value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper,org.apache.struts2.dispatcher.mapper.RestfulActionMapperorg.apache.struts2.dispatcher.mapper.Restful2ActionMapper" /&gt;
+ *       value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper,org.apache.struts2.dispatcher.mapper.RestfulActionMapper,org.apache.struts2.dispatcher.mapper.Restful2ActionMapper" /&gt;
  * </pre>
  * <p/>
  * When {@link CompositeActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} or

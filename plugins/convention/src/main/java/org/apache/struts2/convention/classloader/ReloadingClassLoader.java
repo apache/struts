@@ -48,7 +48,7 @@ public class ReloadingClassLoader extends ClassLoader {
     public ReloadingClassLoader(final ClassLoader pParent) {
         super(pParent);
         parent = pParent;
-        URL root = pParent.getResource("/");
+        URL root = pParent.getResource("");
         try {
             if (root != null) {
                 stores = new ResourceStore[]{new FileResourceStore(new File(root.toURI()))};
@@ -61,7 +61,10 @@ public class ReloadingClassLoader extends ClassLoader {
         } catch (RuntimeException e) {
             // see WW-3121
             // TODO: Fix this for a reloading mechanism to be marked as stable
-            LOG.error("Exception while trying to build the ResourceStore for URL [#0]", e, root.toString());
+            if (root != null)
+                LOG.error("Exception while trying to build the ResourceStore for URL [#0]", e, root.toString());
+            else
+                 LOG.error("Exception while trying to get root resource from class loader", e);
             LOG.error("Consider setting struts.convention.classes.reload=false");
             throw e;
         }

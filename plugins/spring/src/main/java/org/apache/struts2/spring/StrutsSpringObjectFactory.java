@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.spring.SpringObjectFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -65,7 +66,9 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE_ALWAYS_RESPECT,required=false) String alwaysAutoWire,
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
-            @Inject ServletContext servletContext) {
+            @Inject ServletContext servletContext,
+            @Inject(StrutsConstants.STRUTS_DEVMODE) String devMode,
+            @Inject(value = "struts.class.reloading.watchList", required = false) String watchList) {
           
         super();
         boolean useClassCache = "true".equals(useClassCacheStr);
@@ -86,6 +89,17 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
         }
 
         this.setApplicationContext(appContext);
+
+        if ("true".equals(devMode)
+                && StringUtils.isNotBlank(watchList)
+                && appContext instanceof ClassReloadingXMLWebApplicationContext) {
+            ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext;
+            reloadingContext.setupReloading(watchList.split(","));
+            LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!", watchList);
+
+            //we need to reload the context, so our isntance of the factory is picked up
+            reloadingContext.refresh();
+        }
 
         int type = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;   // default
         if ("name".equals(autoWire)) {

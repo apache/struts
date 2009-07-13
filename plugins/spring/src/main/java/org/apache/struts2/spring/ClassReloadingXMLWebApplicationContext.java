@@ -28,14 +28,19 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 import org.apache.commons.jci.monitor.FilesystemAlterationObserver;
+import org.apache.commons.lang.xwork.StringUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.BeansException;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.regex.Pattern;
 
 /**
  * This class can be used instead of XmlWebApplicationContext, and it will watch jar files and directories for changes
@@ -46,7 +51,7 @@ import java.util.ArrayList;
  * <li>Set "struts.devMode" to "true" </li>
  * <li>Set "struts.class.reloading.watchList" to a comma separated list of directories, or jar files (absolute paths)</p>
  * <li>Add this to web.xml:
- *  <pre>
+ * <pre>
  *  &lt;context-param&gt;
  *       &lt;param-name&gt;contextClass&lt;/param-name&gt;
  *       &lt;param-value&gt;org.apache.struts2.spring.ClassReloadingXMLWebApplicationContext&lt;/param-value&gt;
@@ -67,18 +72,34 @@ import java.util.ArrayList;
 public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationContext implements FilesystemAlterationListener {
     private static final Logger LOG = LoggerFactory.getLogger(ClassReloadingXMLWebApplicationContext.class);
 
-    private ReloadingClassLoader classLoader;
-    private FilesystemAlterationMonitor fam;
+    protected ReloadingClassLoader classLoader;
+    protected FilesystemAlterationMonitor fam;
 
-    private ClassReloadingBeanFactory beanFactory;
+    protected ClassReloadingBeanFactory beanFactory;
 
-    public void setupReloading(String[] watchList) {
+    public void setupReloading(String[] watchList, String acceptClasses, ServletContext servletContext) {
         classLoader = new ReloadingClassLoader(ClassReloadingXMLWebApplicationContext.class.getClassLoader());
+
+        //make a list of accepted classes
+        if (StringUtils.isNotBlank(acceptClasses)) {
+            String[] splitted =  acceptClasses.split(",");
+            Set<Pattern> patterns = new HashSet<Pattern>(splitted.length);
+            for (String pattern : splitted)
+                patterns.add(Pattern.compile(pattern));
+
+            classLoader.setAccepClasses(patterns);
+        }
+
         fam = new FilesystemAlterationMonitor();
 
         //setup stores
         for (String watch : watchList) {
             File file = new File(watch);
+
+            //make it absolute, if it is a relative path
+            if (!file.isAbsolute())
+                file = new File(servletContext.getRealPath(watch));
+
             if (watch.endsWith(".jar")) {
                 classLoader.addResourceStore(new JarResourceStore(file));
                 //register with the fam
@@ -157,6 +178,8 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
     }
 
     public void onDirectoryCreate(File file) {
+        if (classLoader != null)
+            classLoader.reload();
     }
 
     public void onDirectoryDelete(File file) {
@@ -168,6 +191,8 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
     }
 
     public void onFileCreate(File file) {
+        if (classLoader != null)
+            classLoader.reload();
     }
 
     public void onFileDelete(File file) {

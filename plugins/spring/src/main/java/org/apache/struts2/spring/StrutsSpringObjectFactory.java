@@ -68,7 +68,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
             @Inject ServletContext servletContext,
             @Inject(StrutsConstants.STRUTS_DEVMODE) String devMode,
-            @Inject(value = "struts.class.reloading.watchList", required = false) String watchList) {
+            @Inject(value = "struts.class.reloading.watchList", required = false) String watchList,
+            @Inject(value = "struts.class.reloading.acceptClasses", required = false) String acceptClasses) {
           
         super();
         boolean useClassCache = "true".equals(useClassCacheStr);
@@ -94,7 +95,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
                 && StringUtils.isNotBlank(watchList)
                 && appContext instanceof ClassReloadingXMLWebApplicationContext) {
             ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext;
-            reloadingContext.setupReloading(watchList.split(","));
+            reloadingContext.setupReloading(watchList.split(","), acceptClasses, servletContext);
             LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!", watchList);
 
             //we need to reload the context, so our isntance of the factory is picked up

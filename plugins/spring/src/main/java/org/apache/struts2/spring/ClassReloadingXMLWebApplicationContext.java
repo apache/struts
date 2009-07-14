@@ -178,16 +178,22 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
     }
 
     public void onDirectoryCreate(File file) {
-        if (classLoader != null)
+        if (classLoader != null) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("Change detected in file [#0], reloading class loader", file.getAbsolutePath());
             classLoader.reload();
+        }
     }
 
     public void onDirectoryDelete(File file) {
     }
 
     public void onFileChange(File file) {
-        if (classLoader != null)
+        if (classLoader != null) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("Change detected in file [#0], reloading class loader", file.getAbsolutePath());
             classLoader.reload();
+        }
     }
 
     public void onFileCreate(File file) {

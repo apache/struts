@@ -89,8 +89,6 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             return;
         }
 
-        this.setApplicationContext(appContext);
-
         if ("true".equals(devMode)
                 && StringUtils.isNotBlank(watchList)
                 && appContext instanceof ClassReloadingXMLWebApplicationContext) {
@@ -101,6 +99,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             //we need to reload the context, so our isntance of the factory is picked up
             reloadingContext.refresh();
         }
+
+        this.setApplicationContext(appContext);
 
         int type = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;   // default
         if ("name".equals(autoWire)) {

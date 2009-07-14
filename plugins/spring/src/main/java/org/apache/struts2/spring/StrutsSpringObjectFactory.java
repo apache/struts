@@ -92,9 +92,14 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
         if ("true".equals(devMode)
                 && StringUtils.isNotBlank(watchList)
                 && appContext instanceof ClassReloadingXMLWebApplicationContext) {
+            //prevent class caching
+            useClassCache = false;
+
             ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext;
             reloadingContext.setupReloading(watchList.split(","), acceptClasses, servletContext);
             LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!", watchList);
+
+            setClassLoader(reloadingContext.getReloadingClassLoader());
 
             //we need to reload the context, so our isntance of the factory is picked up
             reloadingContext.refresh();

@@ -209,4 +209,8 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
 
     public void onStop(FilesystemAlterationObserver filesystemAlterationObserver) {
     }
+
+    public ReloadingClassLoader getReloadingClassLoader() {
+        return classLoader;
+    }
 }

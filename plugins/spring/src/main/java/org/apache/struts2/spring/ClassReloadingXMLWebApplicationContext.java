@@ -110,8 +110,9 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
                 List<File> dirs = new ArrayList<File>();
                 getAllPaths(file, dirs);
 
+                classLoader.addResourceStore(new FileResourceStore(file));
+
                 for (File dir : dirs) {
-                    classLoader.addResourceStore(new FileResourceStore(dir));
                     //register with the fam
                     fam.addListener(dir, this);
                     LOG.debug("Watching [#0] for changes", dir.getAbsolutePath());

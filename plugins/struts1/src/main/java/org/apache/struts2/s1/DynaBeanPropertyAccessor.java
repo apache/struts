@@ -26,12 +26,27 @@ import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
+import ognl.OgnlContext;
+
 import java.util.Map;
 
 /**
  * Provides access to DynaBean properties in OGNL
  */
 public class DynaBeanPropertyAccessor implements PropertyAccessor {
+    /**
+     * Used by OGNL to generate bytecode
+     */
+    public String getSourceAccessor(OgnlContext ognlContext, Object o, Object o1) {
+        return null;
+    }
+
+    /**
+     * Used by OGNL to generate bytecode
+     */
+    public String getSourceSetter(OgnlContext ognlContext, Object o, Object o1) {
+        return null;  
+    }
 
     public Object getProperty(Map context, Object target, Object name) throws OgnlException {
         

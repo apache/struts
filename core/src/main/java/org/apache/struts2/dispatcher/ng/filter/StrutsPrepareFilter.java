@@ -39,8 +39,8 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
 	protected static final String REQUEST_EXCLUDED_FROM_ACTION_MAPPING = StrutsPrepareFilter.class.getName() + ".REQUEST_EXCLUDED_FROM_ACTION_MAPPING";
 
-    private PrepareOperations prepare;
-	private List<Pattern> excludedPatterns = null;
+    protected PrepareOperations prepare;
+	protected List<Pattern> excludedPatterns = null;
 
 	public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
@@ -51,10 +51,17 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
 			this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+
+            postInit(dispatcher, filterConfig);
         } finally {
             init.cleanup();
         }
+    }
 
+    /**
+     * Callback for post initialization
+     */
+    protected void postInit(Dispatcher dispatcher, FilterConfig filterConfig) {
     }
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {

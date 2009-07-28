@@ -37,10 +37,10 @@ import java.io.IOException;
  * been executed in the current chain.
  */
 public class StrutsExecuteFilter implements StrutsStatics, Filter {
-    private PrepareOperations prepare;
-    private ExecuteOperations execute;
+    protected PrepareOperations prepare;
+    protected ExecuteOperations execute;
 
-    private FilterConfig filterConfig;
+    protected FilterConfig filterConfig;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;

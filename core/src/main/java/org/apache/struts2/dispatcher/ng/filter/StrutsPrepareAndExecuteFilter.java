@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
  * when you don't have another filter that needs access to action context information, such as Sitemesh.
  */
 public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
-    private PrepareOperations prepare;
-    private ExecuteOperations execute;
+    protected PrepareOperations prepare;
+    protected ExecuteOperations execute;
 	protected List<Pattern> excludedPatterns = null;
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -54,10 +54,18 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
             execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
 			this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+
+            postInit(dispatcher, filterConfig);
         } finally {
             init.cleanup();
         }
 
+    }
+
+    /**
+     * Callback for post initialization
+     */
+    protected void postInit(Dispatcher dispatcher, FilterConfig filterConfig) {
     }
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {

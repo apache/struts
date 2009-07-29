@@ -26,7 +26,7 @@ import com.opensymphony.xwork2.spring.SpringObjectFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.xwork.StringUtils;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;

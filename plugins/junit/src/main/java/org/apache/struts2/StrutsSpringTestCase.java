@@ -21,12 +21,8 @@
 package org.apache.struts2;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.mock.web.MockServletConfig;
-import org.springframework.test.context.ContextLoader;
 import org.springframework.test.context.support.GenericXmlContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-import org.apache.struts2.views.JspSupportServlet;
 
 /**
  * Base class for Spring JUnit actions

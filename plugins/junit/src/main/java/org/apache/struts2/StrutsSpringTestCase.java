@@ -37,10 +37,7 @@ public abstract class StrutsSpringTestCase extends StrutsTestCase {
 
 
     protected void setupBeforeInitDispatcher() throws Exception {
-        //init Spring
-        //servletContext = new MockServletContext();
-        //servletContext.addInitParameter(ContextLoader.,
-        //        CONFIG_LOCATION);
+        //init context
         GenericXmlContextLoader xmlContextLoader = new GenericXmlContextLoader();
         applicationContext = xmlContextLoader.loadContext(getContextLocations());
         servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);

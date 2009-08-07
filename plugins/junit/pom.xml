@@ -62,7 +62,7 @@
             <artifactId>spring-context</artifactId>
             <version>${struts2.springPlatformVersion}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-spring-plugin</artifactId>
             <version>${pom.version}</version>

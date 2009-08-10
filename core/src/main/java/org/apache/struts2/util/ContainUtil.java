@@ -93,7 +93,7 @@ public class ContainUtil {
                 Object value = null;
                 value = Array.get(obj1, i);
 
-                if (value.equals(obj2)) {
+                if (obj2.equals(value)) {
                     //log.debug("obj1 is an array and contains obj2");
                     return true;
                 }

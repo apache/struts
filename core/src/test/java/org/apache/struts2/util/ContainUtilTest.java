@@ -42,6 +42,10 @@ public class ContainUtilTest extends TestCase {
         assertFalse(ContainUtil.contains(null, new Object()));
     }
 
+    public void testNullInAray()throws Exception {
+        assertTrue(ContainUtil.contains(new String[] {"a", null, "b"}, "b"));
+    }
+
     public void testSimpleList() throws Exception {
         List<String> l = new ArrayList<String>();
         l.add("one");

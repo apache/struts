@@ -196,7 +196,7 @@ public class FelixOsgiHost implements OsgiHost {
                             dirs.put(runLevel, StringUtils.chomp(dir,  "/") + "/" + runLevel);
 
                     } else if (LOG.isDebugEnabled()) {
-                        LOG.debug("No bundles found under the [#0] directory", dir);
+                        LOG.debug("No run level directories found under the [#0] directory", dir);
                     }
                 } else if (LOG.isWarnEnabled())
                     LOG.warn("Unable to read [#0] directory", dir);

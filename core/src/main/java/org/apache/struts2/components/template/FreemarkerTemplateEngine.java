@@ -216,4 +216,12 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     public void setCacheTemplates(String cacheTemplates) {
         freemarkerCaching = "true".equals(cacheTemplates);
     }
+
+    /**
+     * Clear the templates and missing templates cache
+     */
+    public void clearTemplatesCache() {
+        templates.clear();
+        missingTemplates.clear();
+    }
 }

@@ -35,7 +35,9 @@
 </#if>
 >
 	<#list actionErrors as error>
-		<li><span>${error!}</span></li>
+		<#if error?if_exists != "">
+            <li><span>${error!}</span></li>
+        </#if>
 	</#list>
 	</ul>
 </#if>

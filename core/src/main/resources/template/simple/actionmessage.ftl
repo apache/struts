@@ -20,7 +20,7 @@
  * under the License.
  */
 -->
-<#if (actionMessages?? && actionMessages?size > 0)>
+<#if (actionMessages?? && actionMessages?size > 0 && !parameters.isEmptyList)>
 	<ul<#rt/>
 <#if parameters.id?if_exists != "">
  id="${parameters.id?html}"<#rt/>
@@ -35,7 +35,9 @@
 </#if>
 >
 		<#list actionMessages as message>
-			<li><span>${message!}</span></li>
+            <#if message?if_exists != "">
+                <li><span>${message!}</span></li>
+            </#if>
 		</#list>
 	</ul>
 </#if>

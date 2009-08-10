@@ -25,14 +25,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.util.ValueStack;
+
+import java.util.List;
+import java.util.Collection;
 
 /**
  * <!-- START SNIPPET: javadoc -->
  *
  * Render action messages if they exists, specific rendering layout depends on the
- * theme itself.
+ * theme itself. Empty (null or blank string) messages will not be printed.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -59,5 +63,20 @@ public class ActionMessage extends UIBean {
 
     protected String getDefaultTemplate() {
         return TEMPLATE;
+    }
+
+    protected void evaluateExtraParams() {
+        boolean isEmptyList = true;
+        Collection<String> actionMessages = (List) findValue("actionMessages");
+        if (actionMessages != null) {
+            for (String message : actionMessages) {
+                if (StringUtils.isNotBlank(message)) {
+                    isEmptyList = false;
+                    break;
+                }
+            }
+        }
+
+        addParameter("isEmptyList", isEmptyList);
     }
 }

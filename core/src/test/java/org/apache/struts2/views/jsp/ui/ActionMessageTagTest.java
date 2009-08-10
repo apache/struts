@@ -21,12 +21,10 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
@@ -60,6 +58,19 @@ public class ActionMessageTagTest extends AbstractUITagTest {
         verify(ActionMessageTagTest.class.getResource("actionmessage-2.txt"));
     }
 
+     public void testYesActionMessagesWithEmptyMessages() throws Exception {
+
+        ActionMessageTag tag = new ActionMessageTag();
+        tag.setId("someid");
+        InternalActionSupport internalActionSupport = (InternalActionSupport) action;
+        internalActionSupport.setJustNullElement(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+       assertTrue(StringUtils.isBlank(writer.toString()));
+    }
+
     public void testNullMessage() throws Exception {
 
         ActionMessageTag tag = new ActionMessageTag();
@@ -87,13 +98,20 @@ public class ActionMessageTagTest extends AbstractUITagTest {
         private static final long serialVersionUID = -3230043189352453629L;
 
         private boolean canHaveActionMessage;
+        private boolean justNullElement;
 
         public void setHasActionMessage(boolean canHaveActionMessage) {
             this.canHaveActionMessage = canHaveActionMessage;
         }
 
+        public void setJustNullElement(boolean justNullElement) {
+            this.justNullElement = justNullElement;
+        }
+
         public Collection getActionMessages() {
-            if (canHaveActionMessage) {
+            if (justNullElement) {
+                return Arrays.asList(null);
+            } else if (canHaveActionMessage) {
                 List messages = new ArrayList();
                 messages.add("action message number 1");
                 messages.add("action message number 2");

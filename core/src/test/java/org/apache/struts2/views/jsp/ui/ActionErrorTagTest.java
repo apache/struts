@@ -21,12 +21,10 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
@@ -75,6 +73,19 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         verify(ActionErrorTagTest.class.getResource("actionerror-2.txt"));
     }
 
+     public void testEmptyErrorList() throws Exception {
+
+        ActionErrorTag tag = new ActionErrorTag();
+        tag.setId("someid");
+        ((InternalActionSupport)action).setHasActionErrors(true);
+        ((InternalActionSupport)action).setJustNullElement(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertTrue(StringUtils.isBlank(writer.toString()));
+    }
+
 
     public Action getAction() {
         return new InternalActionSupport();
@@ -86,6 +97,11 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         private static final long serialVersionUID = -4777466640658557661L;
 
         private boolean yesActionErrors;
+        private boolean justNullElement;
+
+        public void setJustNullElement(boolean justNullElement) {
+            this.justNullElement = justNullElement;
+        }
 
         public void setHasActionErrors(boolean aYesActionErrors) {
             yesActionErrors = aYesActionErrors;
@@ -96,7 +112,9 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         }
 
         public Collection getActionErrors() {
-            if (yesActionErrors) {
+             if (justNullElement) {
+                return Arrays.asList(null);
+            } else if (yesActionErrors) {
                 List errors = new ArrayList();
                 errors.add("action error number 1");
                 errors.add("action error number 2");

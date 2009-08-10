@@ -25,14 +25,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.util.ValueStack;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
  *
  * Render action errors if they exists the specific layout of the rendering depends on
- * the theme itself.
+ * the theme itself. Empty (null or blank string) errors will not be printed.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -64,4 +68,18 @@ public class ActionError extends UIBean {
         return TEMPLATE;
     }
 
+    protected void evaluateExtraParams() {
+        boolean isEmptyList = true;
+        Collection<String> actionMessages = (List) findValue("actionErrors");
+        if (actionMessages != null) {
+            for (String message : actionMessages) {
+                if (StringUtils.isNotBlank(message)) {
+                    isEmptyList = false;
+                    break;
+                }
+            }
+        }
+
+        addParameter("isEmptyList", isEmptyList);
+    }
 }

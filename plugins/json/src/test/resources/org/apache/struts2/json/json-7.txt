@@ -1,0 +1,20 @@
+{
+        "bigDecimal": 111111.5,
+        "bigInteger": 111111,
+        "booleanField": true,
+        "primitiveBooleanField1": true,
+        "primitiveBooleanField2": false,
+        "primitiveBooleanField3": null,
+        "stringField" : "test\u000e\u000F",
+        "intField" : 10,
+        "nullIntField" : null,
+        "charField": "s",
+        "doubleField": 10.1,
+        "byteField": 3,
+        "objectField": { "empty": "to test issue 28 (http://code.google.com/p/jsonplugin/issues/detail?id=28) the value of objectField should be simply empty curly braces { } " },
+        "enumField": "ValueA",
+        "listField": [{"value":"1"},{"value":"2"}],
+        "listMapField": [{"id1":2073501,"id2":3}],
+        "mapListField": {"id1":[1,2,3],"id2":[4,3,2,1]},
+        "arrayMapField": [{"id1":2073501,"id2":3}]
+}

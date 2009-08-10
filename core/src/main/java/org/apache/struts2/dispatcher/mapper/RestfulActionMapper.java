@@ -123,14 +123,11 @@ public class RestfulActionMapper implements ActionMapper {
         StringBuilder retVal = new StringBuilder();
         retVal.append(mapping.getNamespace());
         retVal.append(mapping.getName());
-        for (Map.Entry<String, Object> entry : mapping.getParams().entrySet()) {
-            String name = entry.getKey();
-            if (name.equals(mapping.getName() + "Id")) {
-                retVal.append("/");
-                retVal.append(entry.getValue());
-                break;
-            }
-        }
+        Object value = mapping.getParams().get(mapping.getName() + "Id");
+        if (value != null) {
+            retVal.append("/");
+            retVal.append(value);
+        } 
 
         return retVal.toString();
     }

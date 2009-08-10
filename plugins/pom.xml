@@ -62,6 +62,7 @@
         <module>dwr</module>
         <module>oval</module>
         <module>osgi</module>
+        <module>json</module>
     </modules>
 
     <dependencies>

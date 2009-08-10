@@ -52,11 +52,11 @@ import freemarker.core.ParseException;
  */
 public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     static Class bodyContent = null;
-    private FreemarkerManager freemarkerManager;
+    protected FreemarkerManager freemarkerManager;
 
-    private final Map<String, freemarker.template.Template> templates = new ConcurrentHashMap<String, freemarker.template.Template>();
-    private final Set<String> missingTemplates = new CopyOnWriteArraySet<String>();
-    private boolean freemarkerCaching = false;
+    protected final Map<String, freemarker.template.Template> templates = new ConcurrentHashMap<String, freemarker.template.Template>();
+    protected final Set<String> missingTemplates = new CopyOnWriteArraySet<String>();
+    protected boolean freemarkerCaching = false;
 
     static {
         try {

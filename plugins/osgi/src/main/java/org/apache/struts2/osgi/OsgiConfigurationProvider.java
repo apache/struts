@@ -71,6 +71,11 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
         bundleAccessor.setBundleContext(bundleContext);
         bundleAccessor.setOsgiHost(osgiHost);
         this.configuration = configuration;
+
+        //this class loader interface can be used by other plugins to lookup resources
+        //from the bundles. A temporary class loader interface is set during other configuration
+        //loading as well
+        servletContext.setAttribute(ClassLoaderInterface.CLASS_LOADER_INTERFACE, new BundleClassLoaderInterface());
     }
 
     public synchronized void loadPackages() throws ConfigurationException {

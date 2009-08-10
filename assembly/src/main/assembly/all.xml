@@ -219,6 +219,10 @@
         <directory>../plugins/osgi/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin</outputDirectory>
       </fileSet>
+      <fileSet>
+        <directory>../plugins/osgi/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-json-plugin</outputDirectory>
+      </fileSet>
       
     <!-- bundles -->
     <fileSet>

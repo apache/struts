@@ -48,7 +48,12 @@ public class CollectionAdapter extends AbstractAdapterElement {
         List<Node> children = new ArrayList<Node>(values.size());
 
         for (Object value : values) {
-            Node childAdapter = getAdapterFactory().adaptNode(this, "item", value);
+            Node childAdapter;
+            if (value == null) {
+                childAdapter = getAdapterFactory().adaptNullValue(this, "item");
+            } else {
+                childAdapter = getAdapterFactory().adaptNode(this, "item", value);
+            }
             if (childAdapter != null)
                 children.add(childAdapter);
 

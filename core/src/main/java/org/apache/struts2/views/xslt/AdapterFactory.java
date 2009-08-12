@@ -229,7 +229,7 @@ public class AdapterFactory {
      * @param parent
      * @param propertyName
      */
-    public Node adaptNullValue(BeanAdapter parent, String propertyName) {
+    public Node adaptNullValue(AdapterNode parent, String propertyName) {
         return new StringAdapter(this, parent, propertyName, "null");
     }
 

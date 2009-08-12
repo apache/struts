@@ -248,6 +248,7 @@ public class XSLTResultTest extends StrutsTestCase {
         public List getBooks() {
             List list = new ArrayList();
             list.add(new Book("WebWork in Action", "Patrick and Jason"));
+            list.add(null);
             list.add(new Book("XWork not in Action", "Superman"));
             return list;
         }

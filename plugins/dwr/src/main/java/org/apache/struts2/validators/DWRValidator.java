@@ -46,6 +46,7 @@ import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -70,7 +71,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 public class DWRValidator {
     private static final Logger LOG = LoggerFactory.getLogger(DWRValidator.class);
     
-    public ValidationAwareSupport doPost(String namespace, String action, Map params) throws Exception {
+    public ValidationAwareSupport doPost(String namespace, String actionName, Map params) throws Exception {
         HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
         ServletContext servletContext = WebContextFactory.get().getServletContext();
         HttpServletResponse res = WebContextFactory.get().getHttpServletResponse();
@@ -94,16 +95,13 @@ public class DWRValidator {
                 servletContext);
 
         try {
-            ActionMapper actionMapper = du.getContainer().getInstance(ActionMapper.class);
-            ActionMapping mapping = actionMapper.getMappingFromActionName(action);
-            ActionInvocation inv = new ValidatorActionInvocation(ctx, true);
             ActionProxyFactory actionProxyFactory = du.getContainer().getInstance(ActionProxyFactory.class);
-            ActionProxy proxy = actionProxyFactory.createActionProxy(inv, namespace, mapping.getName(), mapping.getMethod(), true, true);
+            ActionProxy proxy = actionProxyFactory.createActionProxy(namespace, actionName, null, ctx, true, true);
             proxy.execute();
-            Object a = proxy.getAction();
+            Object action = proxy.getAction();
 
-            if (a instanceof ValidationAware) {
-                ValidationAware aware = (ValidationAware) a;
+            if (action instanceof ValidationAware) {
+                ValidationAware aware = (ValidationAware) action;
                 ValidationAwareSupport vas = new ValidationAwareSupport();
                 vas.setActionErrors(aware.getActionErrors());
                 vas.setActionMessages(aware.getActionMessages());

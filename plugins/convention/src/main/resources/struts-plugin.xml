@@ -64,7 +64,9 @@
   <!-- <constant name="struts.convention.action.includeJars"  /> -->
   <constant name="struts.convention.action.fileProtocols" value="jar" />
 
-  <constant name="struts.convention.classes.reload" value="false" />  
+  <constant name="struts.convention.classes.reload" value="false" />
+
+  <constant name="struts.convention.exclude.parentClassLoader" value="true" />
 
   <package name="convention-default" extends="struts-default">
   </package>

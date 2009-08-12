@@ -100,6 +100,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private boolean reload;
     private Set<String> fileProtocols;
     private boolean alwaysMapExecute;
+    private boolean excludeParentClassLoader;
 
     private static final String DEFAULT_METHOD = "execute";
 
@@ -148,6 +149,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
         this.reload = "true".equals(reload);
+    }
+
+    /**
+     * Exclude URLs found by the parent class loader. Defaults to "true", set to true for JBoss
+     */
+    @Inject("struts.convention.exclude.parentClassLoader")
+    public void setExcludeParentClassLoader(String exclude) {
+        this.excludeParentClassLoader = "true".equals(exclude);
     }
 
     /**
@@ -370,25 +379,30 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
         UrlSet urlSet = new UrlSet(classLoaderInterface, this.fileProtocols);
 
-        //exclude parent of classloaders
-        ClassLoaderInterface parent = classLoaderInterface.getParent();
-        //if reload is enabled, we need to step up one level, otherwise the UrlSet will be empty
-        //this happens because the parent of the realoding class loader is the web app classloader
-        if (parent != null && isReloadEnabled())
-            parent = parent.getParent();
-        
-        if (parent != null)
-            urlSet = urlSet.exclude(parent);
+        //excluding the urls found by the parent class loader is desired, but fails in JBoss (all urls are removed)
+        if (excludeParentClassLoader) {
+            //exclude parent of classloaders
+            ClassLoaderInterface parent = classLoaderInterface.getParent();
+            //if reload is enabled, we need to step up one level, otherwise the UrlSet will be empty
+            //this happens because the parent of the realoding class loader is the web app classloader
+            if (parent != null && isReloadEnabled())
+                parent = parent.getParent();
 
-        try {
-        	// This may fail in some sandboxes, ie GAE
-        	ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        	urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(systemClassLoader.getParent()));
-        	
-        } catch (SecurityException e) {
-            if (LOG.isWarnEnabled())
-        	    LOG.warn("Could not get the system classloader due to security constraints, there may be improper urls left to scan");
+            if (parent != null)
+                urlSet = urlSet.exclude(parent);
+
+            try {
+                // This may fail in some sandboxes, ie GAE
+                ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+                urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(systemClassLoader.getParent()));
+
+            } catch (SecurityException e) {
+                if (LOG.isWarnEnabled())
+                    LOG.warn("Could not get the system classloader due to security constraints, there may be improper urls left to scan");
+            }
         }
+
+
         urlSet = urlSet.excludeJavaExtDirs();
         urlSet = urlSet.excludeJavaEndorsedDirs();
         try {
@@ -402,7 +416,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         urlSet = urlSet.exclude(".*/JavaVM.framework/.*");
 
         if (includeJars == null) {
-            urlSet = urlSet.exclude(".*?jar(!/)?");
+            urlSet = urlSet.exclude(".*?\\.jar(!/|/)?");
         } else {
             //jar urls regexes were specified
             List<URL> rawIncludedUrls = urlSet.getUrls();

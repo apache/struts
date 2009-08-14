@@ -4,5 +4,7 @@
     <option value="1" selected="selected">foo</option>
     <option value="2">bar</option>
     <option value="300000000" selected="selected">foobar</option>
-</select></td>
+</select>
+<inputtype="hidden" id="__multiselect_collection" name="__multiselect_collection" value=""/>
+</td>
 </tr>

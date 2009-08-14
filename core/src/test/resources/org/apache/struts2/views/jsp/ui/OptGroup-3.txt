@@ -38,5 +38,6 @@
 </optgroup>
 
 </select>
+<input type="hidden" id="__multiselect_mySelection" name="__multiselect_mySelection" value=""/>
 </td>
 </tr>

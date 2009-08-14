@@ -7,7 +7,9 @@
 <table>
 <tr><td>
 <select name="myUpDownSelectTag" size="5" id="myAction_myUpDownSelectTag" multiple="multiple">
-</select></td></tr>
+</select>
+<input type="hidden" id="__multiselect_myAction_myUpDownSelectTag" name="__multiselect_myUpDownSelectTag"value=""/>
+</td></tr>
 <tr><td>
 		&nbsp;<input type="button" value="^" onclick="moveOptionUp(document.getElementById('myAction_myUpDownSelectTag'), 'key', '');" />&nbsp;
 		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myAction_myUpDownSelectTag'), 'key', '');" />&nbsp;

@@ -7,5 +7,6 @@
 <label for="collection-2" class="checkboxLabel">bar</label>
 <input type="checkbox" name="collection" value="cat" id="collection-3" disabled="disabled"/>
 <label for="collection-3" class="checkboxLabel">dog</label>
+<input type="hidden" id="__multiselect_collection" name="__multiselect_collection" value="" disabled="disabled"/>
     </td>
 </tr>

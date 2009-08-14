@@ -154,6 +154,7 @@
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
             <interceptor name="jsonValidation" class="org.apache.struts2.interceptor.validation.JSONValidationInterceptor" />
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
+            <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
 
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
@@ -161,6 +162,7 @@
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params">
                     <param name="excludeParams">dojo\..*,^struts\..*</param>
@@ -226,6 +228,7 @@
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="params">
                     <param name="excludeParams">dojo\..*,^struts\..*</param>
                 </interceptor-ref>
@@ -272,6 +275,7 @@
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload"/>
                 <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params">

@@ -7,5 +7,6 @@
 <label for="foo-2" class="checkboxLabel">bar</label>
 <input type="checkbox" name="foo" value="baz" id="foo-3" title="mytitle" onchange="alert('foo');"/>
 <label for="foo-3" class="checkboxLabel"></label>
+<input type="hidden" id="__multiselect_foo" name="__multiselect_foo" value=""/>
     </td>
 </tr>

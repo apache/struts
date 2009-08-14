@@ -88,3 +88,10 @@
 <#include "/${parameters.templateDir}/simple/optgroup.ftl" />
 
 </select>
+<#if parameters.multiple?default(false)>
+<input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.name?html}" value=""<#rt/>
+<#if parameters.disabled?default(false)>
+ disabled="disabled"<#rt/>
+</#if>
+ />
+</#if>

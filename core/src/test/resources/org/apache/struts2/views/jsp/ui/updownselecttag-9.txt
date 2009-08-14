@@ -8,7 +8,9 @@
     <option value="america" selected="selected">America</option>
     <option value="australia">Australia</option>
     <option value="germany" selected="selected">Germany</option>
-</select></td></tr>
+</select>
+<input type="hidden" id="__multiselect_myId" name="__multiselect_myName" value=""/>
+</td></tr>
 <tr><td>
 		&nbsp;<input type="button" value="^" onclick="moveOptionUp(document.getElementById('myId'), 'key', '');" />&nbsp;
 		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myId'), 'key', '');" />&nbsp;

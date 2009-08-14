@@ -58,9 +58,16 @@
 </#if>
 <#if parameters.doubleMultiple?default(false)>
  multiple="multiple"<#rt/>
-</#if> 
+</#if>
 >
 </select>
+<#if parameters.doubleMultiple?default(false)>
+<input type="hidden" id="__multiselect_${parameters.doubleId?html}" name="__multiselect_${parameters.doubleName?default("")?html}" value=""<#rt/>
+<#if parameters.disabled?default(false)>
+ disabled="disabled"<#rt/>
+</#if>
+ />
+</#if>
 <script type="text/javascript">
 <#assign itemCount = startCount/>
     var ${parameters.id}Group = new Array(${parameters.listSize} + ${startCount});

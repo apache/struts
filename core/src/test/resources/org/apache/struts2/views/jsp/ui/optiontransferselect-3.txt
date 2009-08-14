@@ -11,7 +11,8 @@
     	<option value="Left1">Left1</option>
     	<option value="Left2" selected="selected">Left2</option>
     	<option value="Left3">Left3</option>
-	</select> 
+	</select>
+	<input type="hidden" id="__multiselect_id" name="__multiselect_collection" value=""/>
 	<input type="button" onclick="moveOptionDown(document.getElementById('id'), 'key', '');" value="v" />
 	<input type="button" onclick="moveOptionUp(document.getElementById('id'), 'key', '');" value="^" />
 </td>
@@ -40,6 +41,7 @@
     	<option value="Right2" selected="selected">Right2</option>
     	<option value="Right3">Right3</option>
 	</select>
+	<input type="hidden" id="__multiselect_doubleId" name="__multiselect_list2" value=""/>
 	<input type="button" onclick="moveOptionDown(document.getElementById('doubleId'), 'key', '');" value="v" />
 	<input type="button" onclick="moveOptionUp(document.getElementById('doubleId'), 'key', '');" value="^" />
 </td>

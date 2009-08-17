@@ -67,12 +67,6 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
@@ -102,7 +96,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${struts2.springPlatformVersion}</version>
-            <optional>true</optional>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

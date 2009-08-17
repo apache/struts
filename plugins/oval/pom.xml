@@ -40,13 +40,6 @@
     </scm>
     
     <dependencies>
-        <!-- Core -->
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>2.1.8-SNAPSHOT</version>
-        </dependency>
-
         <!-- OVal -->
         <dependency>
             <groupId>net.sf.oval</groupId>

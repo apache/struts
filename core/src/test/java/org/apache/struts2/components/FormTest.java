@@ -64,6 +64,9 @@ public class FormTest extends AbstractUITagTest {
         EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
         EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
         
+        EasyMock.replay(invocation);
+        EasyMock.replay(proxy);
+        
         ActionContext.getContext().setActionInvocation(invocation);
     }
 }

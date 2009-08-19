@@ -182,6 +182,13 @@
                         <version>${version}</version>
                         <classifier>jdk14</classifier>
                     </dependency>
+                    
+                    <dependency>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-embeddedjsp-plugin</artifactId>
+                        <version>${version}</version>
+                        <classifier>jdk14</classifier>
+                    </dependency>
             </dependencies>
         </profile>
     </profiles>
@@ -453,6 +460,12 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-json-plugin</artifactId>
+            <version>${version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-embeddedjsp-plugin</artifactId>
             <version>${version}</version>
         </dependency>
         

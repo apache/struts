@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ParamTag;
+import org.apache.struts2.TestAction;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
@@ -58,6 +59,38 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-2.txt"));
+    }
+
+     public void testFieldErrorsEscape() throws Exception {
+
+        FieldErrorTag tag = new FieldErrorTag();
+        TestAction testAction = new TestAction();
+        testAction.addFieldError("f", "<p>hey</p>");
+        stack.pop();
+        stack.push(testAction);
+        tag.setEscape(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals(normalize("<ul class=\"errorMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
+                normalize(writer.toString(), true));
+    }
+
+    public void testFieldErrorsDontEscape() throws Exception {
+
+        FieldErrorTag tag = new FieldErrorTag();
+        TestAction testAction = new TestAction();
+        testAction.addFieldError("f", "<p>hey</p>");
+        stack.pop();
+        stack.push(testAction);
+        tag.setEscape(false);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals(normalize("<ul class=\"errorMessage\"><li><span><p>hey</p></span></li></ul>", true),
+                normalize(writer.toString(), true));
     }
 
     public void testWithParamsWithFieldErrors1() throws Exception {

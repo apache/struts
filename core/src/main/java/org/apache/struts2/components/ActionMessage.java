@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -36,7 +37,8 @@ import java.util.Collection;
  * <!-- START SNIPPET: javadoc -->
  *
  * Render action messages if they exists, specific rendering layout depends on the
- * theme itself. Empty (null or blank string) messages will not be printed.
+ * theme itself. Empty (null or blank string) messages will not be printed. The action message
+ * strings will be html escaped by default.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -56,6 +58,7 @@ import java.util.Collection;
 public class ActionMessage extends UIBean {
 
     private static final String TEMPLATE = "actionmessage";
+    protected boolean escape = true;
 
     public ActionMessage(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -78,5 +81,11 @@ public class ActionMessage extends UIBean {
         }
 
         addParameter("isEmptyList", isEmptyList);
+        addParameter("escape", escape);
+    }
+
+    @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
+    public void setEscape(boolean escape) {
+        this.escape = escape;
     }
 }

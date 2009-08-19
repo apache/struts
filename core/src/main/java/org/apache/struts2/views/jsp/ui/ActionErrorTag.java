@@ -37,8 +37,20 @@ public class ActionErrorTag extends AbstractUITag {
 
     private static final long serialVersionUID = -3710234378022378639L;
 
+    private boolean escape = true;
+
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ActionError(stack, req, res);
     }
 
+    protected void populateParams() {
+        super.populateParams();
+
+        ActionError error = (ActionError) component;
+        error.setEscape(escape);
+    }
+
+    public void setEscape(boolean escape) {
+        this.escape = escape;
+    }
 }

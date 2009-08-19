@@ -37,6 +37,7 @@ public class FieldErrorTag extends AbstractUITag {
     private static final long serialVersionUID = -182532967507726323L;
 
     protected String fieldName;
+    protected boolean escape = true;
 
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -48,10 +49,15 @@ public class FieldErrorTag extends AbstractUITag {
 
         FieldError fieldError = ((FieldError) component);
         fieldError.setFieldName(this.fieldName);
+        fieldError.setEscape(escape);
     }
 
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
+    }
+
+    public void setEscape(boolean escape) {
+        this.escape = escape;
     }
 }
 

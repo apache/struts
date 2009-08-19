@@ -35,6 +35,7 @@ import java.util.List;
  * <!-- START SNIPPET: javadoc -->
  *
  * Render field errors if they exists. Specific layout depends on the particular theme.
+ * The field error strings will be html escaped by default.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -91,6 +92,7 @@ import java.util.List;
 public class FieldError extends UIBean implements UnnamedParametric {
 
     private List<String> errorFieldNames = new ArrayList<String>();
+    private boolean escape = true;
 
     public FieldError(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -107,7 +109,9 @@ public class FieldError extends UIBean implements UnnamedParametric {
         super.evaluateExtraParams();
 
         if (errorFieldNames != null)
-            addParameter("errorFieldNames", errorFieldNames);               
+            addParameter("errorFieldNames", errorFieldNames);
+
+        addParameter("escape", escape);
     }
 
     public void addParameter(Object value) {
@@ -123,6 +127,11 @@ public class FieldError extends UIBean implements UnnamedParametric {
     @StrutsTagAttribute(description="Field name for single field attribute usage", type="String")
     public void setFieldName(String fieldName) {
         addParameter(fieldName);
+    }
+
+    @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
+    public void setEscape(boolean escape) {
+        this.escape = escape;
     }
 }
 

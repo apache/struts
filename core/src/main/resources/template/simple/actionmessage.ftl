@@ -36,7 +36,7 @@
 >
 		<#list actionMessages as message>
             <#if message?if_exists != "">
-                <li><span>${message!}</span></li>
+                <li><span><#if parameters.escape>${message!?html}<#else>${message!}</#if></span></li>
             </#if>
 		</#list>
 	</ul>

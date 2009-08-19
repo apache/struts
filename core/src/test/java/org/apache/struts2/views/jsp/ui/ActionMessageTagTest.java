@@ -24,6 +24,7 @@ package org.apache.struts2.views.jsp.ui;
 import java.util.*;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+import org.apache.struts2.TestAction;
 import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.Action;
@@ -45,6 +46,39 @@ public class ActionMessageTagTest extends AbstractUITagTest {
 
         verify(ActionMessageTagTest.class.getResource("actionmessage-1.txt"));
     }
+
+    public void testActionMessageEscape() throws Exception {
+
+           ActionMessageTag tag = new ActionMessageTag();
+           TestAction testAction = new TestAction();
+           testAction.addActionMessage("<p>hey</p>");
+           stack.pop();
+           stack.push(testAction);
+           tag.setEscape(true);
+           tag.setPageContext(pageContext);
+           tag.doStartTag();
+           tag.doEndTag();
+
+           assertEquals(normalize("<ul class=\"actionMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
+                   normalize(writer.toString(), true));
+       }
+
+       public void testActionErrorsDontEscape() throws Exception {
+
+           ActionMessageTag tag = new ActionMessageTag();
+           TestAction testAction = new TestAction();
+           testAction.addActionMessage("<p>hey</p>");
+           stack.pop();
+           stack.push(testAction);
+           tag.setEscape(false);
+           tag.setPageContext(pageContext);
+           tag.doStartTag();
+           tag.doEndTag();
+
+           assertEquals(normalize("<ul class=\"actionMessage\"><li><span><p>hey</p></span></li></ul>", true),
+                   normalize(writer.toString(), true));
+       }
+
 
     public void testYesActionMessages() throws Exception {
 

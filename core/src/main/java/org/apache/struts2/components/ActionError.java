@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -36,7 +37,8 @@ import java.util.List;
  * <!-- START SNIPPET: javadoc -->
  *
  * Render action errors if they exists the specific layout of the rendering depends on
- * the theme itself. Empty (null or blank string) errors will not be printed.
+ * the theme itself. Empty (null or blank string) errors will not be printed. The action error
+ * strings will be html escaped by default.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -58,7 +60,7 @@ import java.util.List;
 public class ActionError extends UIBean {
 
     public static final String TEMPLATE = "actionerror";
-
+    private boolean escape = true;
 
     public ActionError(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -81,5 +83,11 @@ public class ActionError extends UIBean {
         }
 
         addParameter("isEmptyList", isEmptyList);
+        addParameter("escape", escape);
+    }
+
+    @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
+    public void setEscape(boolean escape) {
+        this.escape = escape;
     }
 }

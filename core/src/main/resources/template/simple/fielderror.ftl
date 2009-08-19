@@ -73,7 +73,7 @@
 			<#list eKeys as eKey><#t/>
 				<#assign eValue = fieldErrors[eKey]><#t/>
 				<#list eValue as eEachValue><#t/>
-					<li><span>${eEachValue}</span></li>
+					<li><span><#if parameters.escape>${eEachValue!?html}<#else>${eEachValue!}</#if></span></li>
 				</#list><#t/>
 			</#list><#t/>
 		</ul>

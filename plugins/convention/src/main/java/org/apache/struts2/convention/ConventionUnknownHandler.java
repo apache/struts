@@ -185,22 +185,30 @@ public class ConventionUnknownHandler implements UnknownHandler {
      */
     protected Resource findResource(Map<String, ResultTypeConfig> resultsByExtension, String... parts) {
         for (String ext : resultsByExtension.keySet()) {
-            String path = string(parts) + "." + ext;
+            String canonicalPath = canonicalize(string(parts) + "." + ext);
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Checking for [#0]", path);
+                LOG.trace("Checking for [#0]", canonicalPath);
             }
 
             try {
-                if (servletContext.getResource(path) != null) {
-                    return new Resource(path, ext);
+                if (servletContext.getResource(canonicalPath) != null) {
+                    return new Resource(canonicalPath, ext);
                 }
             } catch (MalformedURLException e) {
                 if (LOG.isErrorEnabled())
-                    LOG.error("Unable to parse path to the web application resource [#0] skipping...", path);
+                    LOG.error("Unable to parse path to the web application resource [#0] skipping...", canonicalPath);
             }
         }
 
         return null;
+    }
+
+    protected String canonicalize(final String path) {
+        if (path == null) {
+            return null;
+        }
+
+        return path.replaceAll("/+", "/");
     }
 
     protected ActionConfig buildActionConfig(String path, ResultTypeConfig resultTypeConfig) {

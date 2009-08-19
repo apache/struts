@@ -63,6 +63,7 @@
         <module>oval</module>
         <module>osgi</module>
         <module>json</module>
+        <module>embeddedjsp</module>
     </modules>
 
     <dependencies>

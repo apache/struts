@@ -402,6 +402,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             }
         }
 
+        //try to find classes dirs inside war files
+        urlSet = urlSet.includeClassesUrl(classLoaderInterface);
+
 
         urlSet = urlSet.excludeJavaExtDirs();
         urlSet = urlSet.excludeJavaEndorsedDirs();

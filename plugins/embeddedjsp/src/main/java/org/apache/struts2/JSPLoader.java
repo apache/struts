@@ -196,7 +196,7 @@ public class JSPLoader {
             classPath.add(entry);
         }
 
-        String classPathString = StringUtils.join(classPath, ";");
+        String classPathString = StringUtils.join(classPath, File.pathSeparator);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Compiling [#0] with classpath [#1]", className, classPathString);
         }

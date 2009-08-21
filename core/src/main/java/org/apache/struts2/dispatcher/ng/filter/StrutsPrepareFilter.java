@@ -73,10 +73,10 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             prepare.setEncodingAndLocale(request, response);
             prepare.createActionContext(request, response);
             prepare.assignDispatcherToThread();
-            request = prepare.wrapRequest(request);
 			if ( excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
 				request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, new Object());
 			} else {
+				request = prepare.wrapRequest(request);
 				prepare.findActionMapping(request, response);
 			}
             chain.doFilter(request, response);

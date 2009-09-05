@@ -201,11 +201,15 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
 
     private void reload(File file) {
         if (classLoader != null) {
-            if (LOG.isDebugEnabled())
+            final boolean debugEnabled = LOG.isDebugEnabled();
+            if (debugEnabled)
                 LOG.debug("Change detected in file [#0], reloading class loader", file.getAbsolutePath());
             classLoader.reload();
-            if (reloadConfig && Dispatcher.getInstance() != null)
+            if (reloadConfig && Dispatcher.getInstance() != null) {
+                if (debugEnabled)
+                    LOG.debug("Change detected in file [#0], reloading configuration", file.getAbsolutePath());
                 Dispatcher.getInstance().getConfigurationManager().reload();
+            }
         }
     }
 

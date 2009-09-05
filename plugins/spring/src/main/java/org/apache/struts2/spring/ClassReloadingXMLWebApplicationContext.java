@@ -29,6 +29,7 @@ import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 import org.apache.commons.jci.monitor.FilesystemAlterationObserver;
 import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -76,13 +77,17 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
     protected FilesystemAlterationMonitor fam;
 
     protected ClassReloadingBeanFactory beanFactory;
+    //reload the runtime configuration when a change is detected
+    private boolean reloadConfig;
 
-    public void setupReloading(String[] watchList, String acceptClasses, ServletContext servletContext) {
+    public void setupReloading(String[] watchList, String acceptClasses, ServletContext servletContext, boolean reloadConfig) {
+        this.reloadConfig = reloadConfig;
+
         classLoader = new ReloadingClassLoader(ClassReloadingXMLWebApplicationContext.class.getClassLoader());
 
         //make a list of accepted classes
         if (StringUtils.isNotBlank(acceptClasses)) {
-            String[] splitted =  acceptClasses.split(",");
+            String[] splitted = acceptClasses.split(",");
             Set<Pattern> patterns = new HashSet<Pattern>(splitted.length);
             for (String pattern : splitted)
                 patterns.add(Pattern.compile(pattern));
@@ -176,30 +181,32 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
     }
 
     public void onDirectoryChange(File file) {
+        reload(file);
     }
 
     public void onDirectoryCreate(File file) {
-        if (classLoader != null) {
-            if (LOG.isDebugEnabled())
-                LOG.debug("Change detected in file [#0], reloading class loader", file.getAbsolutePath());
-            classLoader.reload();
-        }
+        reload(file);
     }
 
     public void onDirectoryDelete(File file) {
     }
 
     public void onFileChange(File file) {
+        reload(file);
+    }
+
+    public void onFileCreate(File file) {
+        reload(file);
+    }
+
+    private void reload(File file) {
         if (classLoader != null) {
             if (LOG.isDebugEnabled())
                 LOG.debug("Change detected in file [#0], reloading class loader", file.getAbsolutePath());
             classLoader.reload();
+            if (reloadConfig && Dispatcher.getInstance() != null)
+                Dispatcher.getInstance().getConfigurationManager().reload();
         }
-    }
-
-    public void onFileCreate(File file) {
-        if (classLoader != null)
-            classLoader.reload();
     }
 
     public void onFileDelete(File file) {

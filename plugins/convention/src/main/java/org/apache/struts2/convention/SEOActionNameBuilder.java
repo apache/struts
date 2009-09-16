@@ -59,6 +59,9 @@ public class SEOActionNameBuilder implements ActionNameBuilder {
 
     public String build(String className) {
         String actionName = className;
+        
+        if (actionName.equals(actionSuffix))
+            throw new IllegalStateException("The action name cannot be the same as the action suffix [" + actionSuffix + "]");
 
         // Truncate Action suffix if found
         if (actionName.endsWith(actionSuffix)) {

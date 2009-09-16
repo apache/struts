@@ -28,6 +28,16 @@ import junit.framework.TestCase;
  * </p>
  */
 public class SEOActionNameBuilderTest extends TestCase {
+    public void testEmptyActionName() {
+        SEOActionNameBuilder builder = new SEOActionNameBuilder("true", "_");
+        try {
+            builder.build("Action");
+            fail("Should have failed");
+        } catch (IllegalStateException e) {
+            //ok
+        }
+    }
+    
     public void testBuild() throws Exception {
         SEOActionNameBuilder builder = new SEOActionNameBuilder("true", "_");
         assertEquals("foo", builder.build("Foo"));

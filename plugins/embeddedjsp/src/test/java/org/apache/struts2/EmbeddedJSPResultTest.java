@@ -230,7 +230,6 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(request.getSession()).andReturn(session).anyTimes();
         EasyMock.expect(request.getParameterMap()).andReturn(params).anyTimes();
         EasyMock.expect(request.getParameter("username")).andAnswer(new IAnswer<String>() {
-            @Override
             public String answer() throws Throwable {
                 return ((String[]) params.get("username"))[0];
             }
@@ -291,7 +290,6 @@ class ServletGetRunnable implements Runnable {
         this.actionContext = actionContext;
     }
 
-    @Override
     public void run() {
         ActionContext.setContext(actionContext);
         //wait to start all therads at once..or try at least

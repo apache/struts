@@ -124,7 +124,7 @@
                 <version>2.4.2</version>
                 <configuration>
                     <additionalClasspathElements>
-                        <element>${project.build.testOutputDirectory}/jsps.jar</element>
+                        <element>target/test-classes/jsps.jar</element>
                     </additionalClasspathElements>
                     <forkMode>never</forkMode>
                 </configuration>

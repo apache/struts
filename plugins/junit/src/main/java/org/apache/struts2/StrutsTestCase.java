@@ -21,39 +21,38 @@
 
 package org.apache.struts2;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.io.UnsupportedEncodingException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.StrutsTestCaseHelper;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockPageContext;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockPageContext;
+import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.ServletException;
 
 /**
  * Base test case for JUnit testing Struts.
@@ -107,7 +106,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
      * Executes an action and returns it's output (not the result returned from
      * execute()), but the actual output that would be written to the response.
      * For this to work the configured result for the action needs to be
-     * FreeMarker, or Velocity (actually, anything except JSPs)
+     * FreeMarker, or Velocity (JSPs can be used with the Embedded JSP plugin)
      */
     protected String executeAction(String uri) throws ServletException, UnsupportedEncodingException {
         request.setRequestURI(uri);
@@ -124,7 +123,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
 
     /**
-     * Creates an action profy for a request, and sets parameters of the ActionInvocation to the passed
+     * Creates an action proxy for a request, and sets parameters of the ActionInvocation to the passed
      * parameters. Make sure to set the request parameters in the protected "request" object before calling this method.
      */
     protected ActionProxy getActionProxy(String uri) {
@@ -154,7 +153,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
 
     /**
-     * Finds an an ActionMapping for a given request
+     * Finds an ActionMapping for a given request
      */
     protected ActionMapping getActionMapping(HttpServletRequest request) {
         return Dispatcher.getInstance().getContainer().getInstance(ActionMapper.class).getMapping(request,
@@ -162,7 +161,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
 
     /**
-     * Finds an an ActionMapping for a given url
+     * Finds an ActionMapping for a given url
      */
     protected ActionMapping getActionMapping(String url) {
         MockHttpServletRequest req = new MockHttpServletRequest();

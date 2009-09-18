@@ -167,8 +167,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     protected ActionMapping getActionMapping(String url) {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setRequestURI(url);
-        return Dispatcher.getInstance().getContainer().getInstance(ActionMapper.class).getMapping(req,
-                Dispatcher.getInstance().getConfigurationManager());
+        return getActionMapping(req);
     }
 
     /**

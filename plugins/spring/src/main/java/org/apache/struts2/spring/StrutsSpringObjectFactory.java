@@ -76,7 +76,15 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
         boolean useClassCache = "true".equals(useClassCacheStr);
         LOG.info("Initializing Struts-Spring integration...");
 
-        ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        Object rootWebApplicationContext =  servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+
+        if(rootWebApplicationContext instanceof RuntimeException){
+            RuntimeException runtimeException = (RuntimeException)rootWebApplicationContext;
+            LOG.fatal(runtimeException.getMessage());
+            return;
+        }
+
+        ApplicationContext appContext = (ApplicationContext) rootWebApplicationContext;
         if (appContext == null) {
             // uh oh! looks like the lifecycle listener wasn't installed. Let's inform the user
             String message = "********** FATAL ERROR STARTING UP STRUTS-SPRING INTEGRATION **********\n" +

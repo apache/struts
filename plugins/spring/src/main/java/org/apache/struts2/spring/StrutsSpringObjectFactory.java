@@ -21,6 +21,7 @@
 
 package org.apache.struts2.spring;
 
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -68,9 +69,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
             @Inject ServletContext servletContext,
             @Inject(StrutsConstants.STRUTS_DEVMODE) String devMode,
-            @Inject(value = "struts.class.reloading.watchList", required = false) String watchList,
-            @Inject(value = "struts.class.reloading.acceptClasses", required = false) String acceptClasses,
-            @Inject(value = "struts.class.reloading.reloadConfig", required = false) String reloadConfig) {
+            @Inject Container container) {
           
         super();
         boolean useClassCache = "true".equals(useClassCacheStr);
@@ -97,6 +96,10 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             LOG.fatal(message);
             return;
         }
+        
+        String watchList = container.getInstance(String.class, "struts.class.reloading.watchList");
+        String acceptClasses = container.getInstance(String.class, "struts.class.reloading.acceptClasses");
+        String reloadConfig = container.getInstance(String.class, "struts.class.reloading.reloadConfig");
 
         if ("true".equals(devMode)
                 && StringUtils.isNotBlank(watchList)

@@ -30,6 +30,8 @@ import org.jfree.chart.JFreeChart;
 
 import java.io.OutputStream;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * <!-- START SNIPPET: description -->
  * <p/>
@@ -192,13 +194,18 @@ public class ChartResult extends StrutsResultSupport {
             throw new NullPointerException("No width parameter was given.");
 
         // get a reference to the servlet output stream to write our chart image to
-        OutputStream os = ServletActionContext.getResponse().getOutputStream();
+        HttpServletResponse response = ServletActionContext.getResponse();
+        OutputStream os = response.getOutputStream();
         try {
             // check the type to see what kind of output we have to produce
-            if ("png".equalsIgnoreCase(type))
+            if ("png".equalsIgnoreCase(type)) {
+                response.setContentType("image/png");
                 ChartUtilities.writeChartAsPNG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
-            else if ("jpg".equalsIgnoreCase(type) || "jpeg".equalsIgnoreCase(type))
+            }
+            else if ("jpg".equalsIgnoreCase(type) || "jpeg".equalsIgnoreCase(type)) {
+                response.setContentType("image/jpg");
                 ChartUtilities.writeChartAsJPEG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
+            }
             else
                 throw new IllegalArgumentException(type + " is not a supported render type (only JPG and PNG are).");
         } finally {

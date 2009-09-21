@@ -21,9 +21,10 @@
 
 package org.apache.struts2.dispatcher;
 
-import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
+import org.easymock.EasyMock;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
@@ -43,15 +44,16 @@ public class ChartResultTest extends StrutsTestCase {
 
     private ActionInvocation actionInvocation;
     private JFreeChart mockChart;
-    private Mock responseMock;
-    private Mock mockActionProxy;
     private MockServletOutputStream os;
     private ValueStack stack;
+    private ActionProxy mockActionProxy;
+    private HttpServletResponse responseMock;
 
 
     public void testChart() throws Exception {
-        responseMock.expectAndReturn("getOutputStream", os);
-
+        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
+        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
+        
         ChartResult result = new ChartResult();
 
         result.setChart(mockChart);
@@ -60,13 +62,49 @@ public class ChartResultTest extends StrutsTestCase {
         result.setWidth("10");
         result.execute(actionInvocation);
 
-        responseMock.verify();
+        EasyMock.verify(responseMock);
+        assertTrue(os.isWritten());
+    }
+    
+    public void testContentTypePng() throws Exception {
+        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
+        responseMock.setContentType("image/png");
+        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
+        ChartResult result = new ChartResult();
+
+        result.setChart(mockChart);
+
+        result.setHeight("10");
+        result.setWidth("10");
+        result.setType("png");
+        result.execute(actionInvocation);
+
+        EasyMock.verify(responseMock);
+        assertTrue(os.isWritten());
+    }
+    
+    public void testContentTypeJpg() throws Exception {
+        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
+        responseMock.setContentType("image/jpg");
+        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
+        ChartResult result = new ChartResult();
+
+        result.setChart(mockChart);
+
+        result.setHeight("10");
+        result.setWidth("10");
+        result.setType("jpg");
+        result.execute(actionInvocation);
+
+        EasyMock.verify(responseMock);
         assertTrue(os.isWritten());
     }
 
+
     public void testChartNotSet() {
         ChartResult result = new ChartResult();
-
+        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
+        
         // expect exception if chart not set.
         result.setChart(null);
 
@@ -76,13 +114,14 @@ public class ChartResultTest extends StrutsTestCase {
         } catch (Exception e) {
         }
 
-        responseMock.verify();
+        EasyMock.verify(responseMock);
         assertFalse(os.isWritten());
     }
 
 
     public void testChartWithOGNLProperties() throws Exception {
-        responseMock.expectAndReturn("getOutputStream", os);
+        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
+        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
 
 
         ChartResult result = new ChartResult();
@@ -98,7 +137,7 @@ public class ChartResultTest extends StrutsTestCase {
 
         result.execute(actionInvocation);
 
-        responseMock.verify();
+        EasyMock.verify(responseMock);
         assertEquals(result.getHeight(), stack.findValue("myHeight").toString());
         assertEquals(result.getWidth(), stack.findValue("myWidth").toString());
         assertEquals("250", result.getHeight().toString());
@@ -120,20 +159,18 @@ public class ChartResultTest extends StrutsTestCase {
         ActionContext.getContext().setValueStack(stack);
 
 
-        mockActionProxy = new Mock(ActionProxy.class);
-        mockActionProxy.expectAndReturn("getNamespace", "/html");
+        mockActionProxy = EasyMock.createNiceMock(ActionProxy.class);
+        EasyMock.expect(mockActionProxy.getNamespace()).andReturn("/html");
 
-        Mock mockActionInvocation = new Mock(ActionInvocation.class);
+        actionInvocation = EasyMock.createMock(ActionInvocation.class);
 
-        mockActionInvocation.matchAndReturn("getStack", stack);
-//        mockActionInvocation.expectAndReturn("getProxy", mockActionProxy.proxy());
+        EasyMock.expect(actionInvocation.getStack()).andReturn(stack).anyTimes();
         
-        actionInvocation = (ActionInvocation) mockActionInvocation.proxy();
         
         os = new MockServletOutputStream();
-        responseMock = new Mock(HttpServletResponse.class);
+        responseMock = EasyMock.createNiceMock(HttpServletResponse.class);
 
-        ServletActionContext.setResponse((HttpServletResponse) responseMock.proxy());
+        ServletActionContext.setResponse((HttpServletResponse) responseMock);
     }
 
     protected void tearDown() throws Exception {

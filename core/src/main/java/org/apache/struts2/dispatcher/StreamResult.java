@@ -63,8 +63,13 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <li><b>allowCaching</b> if set to 'false' it will set the headers 'Pragma' and 'Cache-Control'
  * to 'no-cahce', and prevent client from caching the content. (default = <code>true</code>)
- * </ul>
  *
+ * <li><b>contentCharSet</b> if set to a string, ';charset=value' will be added to the
+ * content-type header, where value is the string set. If set to an expression, the result
+ * of evaluating the expression will be used. If not set, then no charset will be set on
+ * the header</li>
+ * </ul>
+ * 
  * <p>These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
  * provide <code>getContentType()</code> to override that parameter for the current action.</p>
  *
@@ -93,6 +98,7 @@ public class StreamResult extends StrutsResultSupport {
     protected String contentType = "text/plain";
     protected String contentLength;
     protected String contentDisposition = "inline";
+    protected String contentCharSet ;
     protected String inputName = "inputStream";
     protected InputStream inputStream;
     protected int bufferSize = 1024;
@@ -181,6 +187,20 @@ public class StreamResult extends StrutsResultSupport {
     }
 
     /**
+     * @return Returns the charset specified by the user
+     */
+    public String getContentCharSet() {
+        return contentCharSet;
+    }
+
+    /**
+     * @param contentCharSet the charset to use on the header when sending the stream
+     */
+    public void setContentCharSet(String contentCharSet) {
+        this.contentCharSet = contentCharSet;
+    }
+
+    /**
      * @return Returns the inputName.
      */
     public String getInputName() {
@@ -200,7 +220,7 @@ public class StreamResult extends StrutsResultSupport {
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
 
         // Override any parameters using values on the stack
-        resolveParamsFromStack(invocation.getStack());
+        resolveParamsFromStack(invocation.getStack(), invocation);
 
         OutputStream oOutput = null;
 
@@ -217,11 +237,21 @@ public class StreamResult extends StrutsResultSupport {
                 throw new IllegalArgumentException(msg);
             }
 
+            /*
+            if (contentCharSet != null && contentCharSet.startsWith("${")) {
+                contentCharSet = (String)invocation.getStack().findValue(contentCharSet, String.class);
+            }
+            */
             // Find the Response in context
             HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
 
             // Set the content type
-            oResponse.setContentType(conditionalParse(contentType, invocation));
+            if (contentCharSet != null ) {
+                oResponse.setContentType(conditionalParse(contentType, invocation)+";charset="+contentCharSet);
+            }
+            else {
+                oResponse.setContentType(conditionalParse(contentType, invocation));
+            }
 
             // Set the content length
             if (contentLength != null) {
@@ -254,7 +284,7 @@ public class StreamResult extends StrutsResultSupport {
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Streaming result [" + inputName + "] type=[" + contentType + "] length=[" + contentLength +
-                    "] content-disposition=[" + contentDisposition + "]");
+                    "] content-disposition=[" + contentDisposition + "] charset=[" + contentCharSet + "]");
             }
 
             // Copy input to output
@@ -280,7 +310,7 @@ public class StreamResult extends StrutsResultSupport {
      *
      * @param stack The current value stack
      */
-    protected void resolveParamsFromStack(ValueStack stack) {
+    protected void resolveParamsFromStack(ValueStack stack, ActionInvocation invocation) {
         String disposition = stack.findString("contentDisposition");
         if (disposition != null) {
             setContentDisposition(disposition);
@@ -304,6 +334,10 @@ public class StreamResult extends StrutsResultSupport {
         Integer bufferSize = (Integer) stack.findValue("bufferSize", Integer.class);
         if (bufferSize != null) {
             setBufferSize(bufferSize.intValue());
+        }
+
+        if (contentCharSet != null ) {
+            contentCharSet = conditionalParse(contentCharSet, invocation);
         }
     }
 

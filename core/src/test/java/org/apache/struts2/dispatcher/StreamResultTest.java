@@ -93,6 +93,38 @@ public class StreamResultTest extends StrutsTestCase {
         assertEquals("inline", response.getHeader("Content-disposition"));
     }
 
+    public void testStreamResultWithCharSet() throws Exception {
+        result.setInputName("streamForImage");
+        result.setContentCharSet("ISO-8859-1");
+        result.doExecute("helloworld", mai);
+
+        assertEquals(String.valueOf(contentLength), result.getContentLength());
+        assertEquals("text/plain", result.getContentType());
+        assertEquals("streamForImage", result.getInputName());
+        assertEquals(1024, result.getBufferSize()); // 1024 is default
+        assertEquals("inline", result.getContentDisposition());
+        assertEquals("text/plain;charset=ISO-8859-1", response.getContentType());
+        assertEquals(contentLength, response.getContentLength());
+        assertEquals("inline", response.getHeader("Content-disposition"));
+    }
+
+    public void testStreamResultWithCharSet2() throws Exception {
+        result.setParse(true);
+        result.setInputName("streamForImage");
+        result.setContentCharSet("${contentCharSetMethod}");
+
+        result.doExecute("helloworld", mai);
+
+        assertEquals(String.valueOf(contentLength), result.getContentLength());
+        assertEquals("text/plain", result.getContentType());
+        assertEquals("streamForImage", result.getInputName());
+        assertEquals(1024, result.getBufferSize()); // 1024 is default
+        assertEquals("inline", result.getContentDisposition());
+        assertEquals("text/plain;charset=UTF-8", response.getContentType());
+        assertEquals(contentLength, response.getContentLength());
+        assertEquals("inline", response.getHeader("Content-disposition"));
+    }
+
     public void testAllowCacheDefault() throws Exception {
         result.setInputName("streamForImage");
 
@@ -239,6 +271,10 @@ public class StreamResultTest extends StrutsTestCase {
 
         public String getStreamForImageAsString() {
             return "streamForImage";
+        }
+
+        public String getContentCharSetMethod() {
+            return "UTF-8";
         }
     }
 

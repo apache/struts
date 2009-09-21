@@ -237,16 +237,11 @@ public class StreamResult extends StrutsResultSupport {
                 throw new IllegalArgumentException(msg);
             }
 
-            /*
-            if (contentCharSet != null && contentCharSet.startsWith("${")) {
-                contentCharSet = (String)invocation.getStack().findValue(contentCharSet, String.class);
-            }
-            */
             // Find the Response in context
             HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
 
             // Set the content type
-            if (contentCharSet != null ) {
+            if (contentCharSet != null && ! contentCharSet.equals("")) {
                 oResponse.setContentType(conditionalParse(contentType, invocation)+";charset="+contentCharSet);
             }
             else {
@@ -338,6 +333,9 @@ public class StreamResult extends StrutsResultSupport {
 
         if (contentCharSet != null ) {
             contentCharSet = conditionalParse(contentCharSet, invocation);
+        }
+        else {
+            contentCharSet = stack.findString("contentCharSet");
         }
     }
 

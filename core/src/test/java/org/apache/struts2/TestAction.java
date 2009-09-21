@@ -177,6 +177,10 @@ public class TestAction extends ActionSupport {
         return result;
     }
 
+    public String executeThrowsException() throws Exception {
+        throw new StrutsException("something went wrong!");
+    }
+
     public String doInput() throws Exception {
         return INPUT;
     }

@@ -133,6 +133,7 @@ public class ActionComponent extends ContextBean {
     protected boolean executeResult;
     protected boolean ignoreContextParams;
     protected boolean flush = true;
+    protected boolean rethrowException;
 
     public ActionComponent(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
@@ -253,7 +254,7 @@ public class ActionComponent extends ContextBean {
      *
      * @see org.apache.struts2.views.jsp.TagUtils#buildNamespace
      */
-    private void executeAction() {
+    protected void executeAction() {
         String actualName = findString(name, "name", "Action name is required. Example: updatePerson");
 
         if (actualName == null) {
@@ -290,6 +291,9 @@ public class ActionComponent extends ContextBean {
         } catch (Exception e) {
             String message = "Could not execute action: " + namespace + "/" + actualName;
             LOG.error(message, e);
+            if (rethrowException) {
+                throw new StrutsException(message, e);
+            }
         } finally {
             // set the old stack back on the request
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
@@ -326,5 +330,10 @@ public class ActionComponent extends ContextBean {
     @StrutsTagAttribute(description="Whether the writer should be flush upon end of action component tag, default to true", type="Boolean", defaultValue="true")
     public void setFlush(boolean flush) {
         this.flush = flush;
+    }
+
+    @StrutsTagAttribute(description="Whether an exception should be rethrown, if the target action throws an exception", type="Boolean", defaultValue="false")
+    public void setRethrowException(boolean rethrowException) {
+        this.rethrowException = rethrowException;
     }
 }

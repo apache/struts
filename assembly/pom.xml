@@ -292,7 +292,7 @@
                                     <arg value="http://cwiki.apache.org/WW/" />
                                 </exec>
                                 <move todir="${project.build.directory}/cwiki">
-                                    <fileset dir="2.x/docs" />
+                                    <fileset dir="WW/docs" />
                                 </move>
                             </tasks>
                         </configuration>

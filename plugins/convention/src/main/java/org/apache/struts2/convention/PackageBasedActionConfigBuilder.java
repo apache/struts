@@ -101,6 +101,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private Set<String> fileProtocols;
     private boolean alwaysMapExecute;
     private boolean excludeParentClassLoader;
+    private boolean slashesInActionNames;
 
     private static final String DEFAULT_METHOD = "execute";
 
@@ -149,6 +150,12 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
         this.reload = "true".equals(reload);
+    }
+    
+    
+    @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
+    public void setSlashesInActionNames(String slashesInActionNames) {
+        this.slashesInActionNames = "true".equals(slashesInActionNames);
     }
 
     /**
@@ -578,7 +585,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                     List<Action> actions = map.get(method);
                     for (Action action : actions) {
                         PackageConfig.Builder pkgCfg = defaultPackageConfig;
-                        if (action.value().contains("/")) {
+                        if (action.value().contains("/") && !slashesInActionNames) {
                             pkgCfg = getPackageConfig(packageConfigs, namespace, actionPackage,
                                     actionClass, action);
                         }
@@ -780,7 +787,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (annotation != null) {
             actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ?
                     actionName : annotation.value();
-            actionName = StringUtils.contains(actionName, "/") ? StringUtils.substringAfterLast(actionName, "/") : actionName;
+            actionName = StringUtils.contains(actionName, "/") && !slashesInActionNames ? StringUtils.substringAfterLast(actionName, "/") : actionName;
         }
 
         ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(),

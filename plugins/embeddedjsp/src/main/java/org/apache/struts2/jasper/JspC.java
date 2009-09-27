@@ -20,7 +20,6 @@ package org.apache.struts2.jasper;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.jasper.compiler.Compiler;
 import org.apache.struts2.jasper.compiler.*;
 import org.apache.struts2.jasper.servlet.JspCServletContext;
@@ -927,10 +926,6 @@ public class JspC implements Options {
                 rootCause.printStackTrace();
             }
             throw je;
-        } finally {
-            if (loader != null) {
-                LogFactory.release(loader);
-            }
         }
     }
 

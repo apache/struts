@@ -28,6 +28,8 @@ import javax.servlet.jsp.HttpJspPage;
 import javax.servlet.jsp.JspFactory;
 import java.io.IOException;
 
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 /**
  * This is the super class of all JSP-generated servlets.
  *
@@ -59,7 +61,7 @@ public abstract class HttpJspBase
                     factory.getClass().getClassLoader().loadClass(basePackage +
                             "servlet.JspServletWrapper");
                 } catch (ClassNotFoundException ex) {
-                    org.apache.commons.logging.LogFactory.getLog(HttpJspBase.class)
+                    LoggerFactory.getLogger(HttpJspBase.class)
                             .error("Jasper JspRuntimeContext preload of class failed: " +
                                     ex.getMessage(), ex);
                 }

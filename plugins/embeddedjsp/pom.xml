@@ -60,12 +60,6 @@
             <artifactId>spring-core</artifactId>
             <version>2.5.6</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
@@ -80,15 +74,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>juli</artifactId>
+            <version>6.0.18</version>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-el</groupId>
-            <artifactId>commons-el</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>taglibs</groupId>
@@ -101,6 +101,12 @@
             <artifactId>jstl</artifactId>
             <version>1.1.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>jasper</artifactId>
+            <version>6.0.18</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

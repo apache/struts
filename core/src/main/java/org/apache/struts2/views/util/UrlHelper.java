@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
@@ -234,7 +235,7 @@ public class UrlHelper {
                             link.append(paramSeparator);
                     }
                 } else {
-                    link.append(buildParameterSubstring(name, value.toString()));
+                    link.append(buildParameterSubstring(name, value != null ? value.toString() : StringUtils.EMPTY));
                 }
 
                 if (iter.hasNext())

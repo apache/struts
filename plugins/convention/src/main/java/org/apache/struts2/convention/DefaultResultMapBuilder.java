@@ -258,6 +258,13 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                     LOG.trace("Processing resource path [#0]", path);
                 }
 
+                String fileName = StringUtils.substringAfterLast(path, "/");
+                if (StringUtils.startsWith(fileName, ".")) {
+                    if (LOG.isTraceEnabled())
+                        LOG.trace("Ignoring file without name [#0]", path);
+                    continue;
+                }
+
                 makeResults(actionClass, path, resultPrefix, results, packageConfig, resultsByExtension);
             }
         }

@@ -259,7 +259,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                 }
 
                 String fileName = StringUtils.substringAfterLast(path, "/");
-                if (StringUtils.startsWith(fileName, ".")) {
+                if (StringUtils.isBlank(fileName) || StringUtils.startsWith(fileName, ".")) {
                     if (LOG.isTraceEnabled())
                         LOG.trace("Ignoring file without name [#0]", path);
                     continue;

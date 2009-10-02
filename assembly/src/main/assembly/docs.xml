@@ -51,7 +51,7 @@
       <!-- Include the Confluence docs in the assembly -->
       <fileSet>
         <directory>target/cwiki/WW</directory>
-        <outputDirectory>docs</outputDirectory>
+        <outputDirectory>docs/docs</outputDirectory>
       </fileSet>
 
       <!-- Plugins -->

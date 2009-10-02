@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.1.8</version>
+        <version>2.1.8.1-SNAPSHOT</version>
     </parent>
 
     <scm>
@@ -288,8 +288,9 @@
                                     <arg value="-nv" />
                                     <arg value="-E" />
                                     <arg value="-L" />
-                                    <arg value="--directory-prefix=${project.build.directory}/cwiki" />
                                     <arg value="-r" />
+                                    <arg value="--directory-prefix=${project.build.directory}/cwiki" />
+                                    <arg value="--restrict-file-names=windows" />
                                     <arg value="http://cwiki.apache.org/WW/" />
                                 </exec>
                             </tasks>

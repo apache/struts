@@ -120,8 +120,8 @@
 
       <!-- Include the Confluence docs in the assembly -->
       <fileSet>
-        <directory>target/cwiki</directory>
-        <outputDirectory>docs</outputDirectory>
+        <directory>target/cwiki/WW</directory>
+        <outputDirectory>docs/docs</outputDirectory>
       </fileSet>
 
       <!-- Plugins -->

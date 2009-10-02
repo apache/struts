@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-parent</artifactId>
-    <version>2.1.8</version>
+    <version>2.1.8.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/struts2</url>
@@ -28,9 +28,9 @@
     -->
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_1_8</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_1_8</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_1_8</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_1_X</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_1_X</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_1_X</url>
     </scm>
 
     <issueManagement>
@@ -53,7 +53,7 @@
         </snapshotRepository>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.x/</url>
+            <url>scp://people.apache.org/www/struts.apache.org/${pom.version}</url>
         </site>
     </distributionManagement>
 
@@ -332,6 +332,14 @@
 	            </configuration>
 	        </plugin> -->
 
+            <plugin>
+            <artifactId>maven-release-plugin</artifactId>
+                <version>2.0-beta-7</version>
+                <configuration>
+                   <releaseProfiles>release</releaseProfiles>
+                   <goals>deploy site-deploy</goals>
+                </configuration>
+            </plugin>
         </plugins>
         <defaultGoal>install</defaultGoal>
 

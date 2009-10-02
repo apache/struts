@@ -34,9 +34,9 @@
     <name>Showcase Webapp</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_1_8/apps/showcase</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_1_8/apps/showcase</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_1_8/apps/showcase</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_1_X/apps/showcase</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_1_X/apps/showcase</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_1_X/apps/showcase</url>
     </scm>
 
 

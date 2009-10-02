@@ -34,10 +34,10 @@
     <name>Struts 2 JSON Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_1_8/plugins/json</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_1_8/plugins/json
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_1_X/plugins/json</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_1_X/plugins/json
         </developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_1_8/plugins/json</url>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_1_X/plugins/json</url>
     </scm>
 
     <build>

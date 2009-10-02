@@ -11,11 +11,11 @@
     <name>Struts 2 Convention Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_1_8</connection>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_1_X</connection>
         <developerConnection>
-            scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_1_8
+            scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_1_X
         </developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/tags/STRUTS_2_1_8</url>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/branches/STRUTS_2_1_X</url>
     </scm>
 
     <build>

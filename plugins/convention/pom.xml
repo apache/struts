@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.1.8.1-SNAPSHOT</version>
+        <version>2.1.8.1</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-convention-plugin</artifactId>
@@ -11,11 +11,9 @@
     <name>Struts 2 Convention Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_1_X</connection>
-        <developerConnection>
-            scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_1_X
-        </developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/branches/STRUTS_2_1_X</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_1_8_1</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_1_8_1</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/tags/STRUTS_2_1_8_1</url>
     </scm>
 
     <build>
@@ -51,7 +49,7 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-core</artifactId>
-            <version>2.1.8.1-SNAPSHOT</version>
+            <version>2.1.8.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -39,6 +39,7 @@ import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.finder.UrlSet;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
+import com.opensymphony.xwork2.util.finder.ClassFinder.ClassInfo;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.LoggerUtils;
@@ -356,23 +357,17 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         Set<Class> classes = new HashSet<Class>();
         try {
             if (actionPackages != null || (packageLocators != null && !disablePackageLocatorsScanning)) {
-                ClassFinder finder = new ClassFinder(getClassLoaderInterface(), buildUrlSet().getUrls(), true, this.fileProtocols);
+                
+                // By default, ClassFinder scans EVERY class in the specified
+                // url set, which can produce spurious warnings for non-action
+                // classes that can't be loaded. We pass a package filter that
+                // only considers classes that match the action packages
+                // specified by the user
+                Test<String> classPackageTest = getClassPackageTest();
+                ClassFinder finder = new ClassFinder(getClassLoaderInterface(), buildUrlSet().getUrls(), true, this.fileProtocols, classPackageTest);
 
-                // named packages
-                if (actionPackages != null) {
-                    for (String packageName : actionPackages) {
-                        Test<ClassFinder.ClassInfo> test = getPackageFinderTest(packageName);
-                        classes.addAll(finder.findClasses(test));
-                    }
-                }
-
-                //package locators
-                if (packageLocators != null && !disablePackageLocatorsScanning) {
-                    for (String packageLocator : packageLocators) {
-                        Test<ClassFinder.ClassInfo> test = getPackageLocatorTest(packageLocator);
-                        classes.addAll(finder.findClasses(test));
-                    }
-                }
+                Test<ClassFinder.ClassInfo> test = getActionClassTest();
+                classes.addAll(finder.findClasses(test));
             }
         } catch (Exception ex) {
             if (LOG.isErrorEnabled())
@@ -463,13 +458,87 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         return urlSet;
     }
 
-    protected Test<ClassFinder.ClassInfo> getPackageFinderTest(final String packageName) {
-        // so "my.package" does not match "my.package2.test"
-        final String strictPackageName = packageName + ".";
+    /**
+     * Note that we can't include the test for {@link #actionSuffix} here
+     * because a class is included if its name ends in {@link #actionSuffix} OR
+     * it implements {@link com.opensymphony.xwork2.Action}. Since the whole
+     * goal is to avoid loading the class if we don't have to, the (actionSuffix
+     * || implements Action) test will have to remain until later. See
+     * {@link #getActionClassTest()} for the test performed on the loaded
+     * {@link ClassInfo} structure.
+     * 
+     * @param className the name of the class to test
+     * @return true if the specified class should be included in the
+     *         package-based action scan
+     */
+    protected boolean includeClassNameInActionScan(String className) {
+
+        String classPackageName = StringUtils.substringBeforeLast(className, ".");
+
+        if (actionPackages != null) {
+            for (String packageName : actionPackages) {
+                String strictPackageName = packageName + ".";
+                if (classPackageName.equals(packageName)
+                        || classPackageName.startsWith(strictPackageName))
+                    return true;
+            }
+        }
+
+        if (packageLocators != null && !disablePackageLocatorsScanning) {
+            for (String packageLocator : packageLocators) {
+                if (classPackageName.length() > 0
+                        && (packageLocatorsBasePackage == null || classPackageName
+                        .startsWith(packageLocatorsBasePackage))) {
+                    String[] splitted = classPackageName.split("\\.");
+
+                    if (StringTools.contains(splitted, packageLocator, false))
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    /**
+     * Construct a {@link Test} object that determines if a specified class name
+     * should be included in the package scan based on the clazz's package name.
+     * Note that the goal is to avoid loading the class, so the test should only
+     * rely on information in the class name itself. The default implementation
+     * is to return the result of {@link #includeClassNameInActionScan(String)}.
+     * 
+     * @return a {@link Test} object that returns true if the specified class
+     *         name should be included in the package scan
+     */
+    protected Test<String> getClassPackageTest() {
+        return new Test<String>() {
+            public boolean test(String className) {
+                return includeClassNameInActionScan(className);
+            }
+        };
+    }
+
+    /**
+     * Construct a {@link Test} Object that determines if a specified class
+     * should be included in the package scan based on the full {@link ClassInfo}
+     * of the class. At this point, the class has been loaded, so it's ok to
+     * perform tests such as checking annotations or looking at interfaces or
+     * super-classes of the specified class.
+     * 
+     * @return a {@link Test} object that returns true if the specified class
+     *         should be included in the package scan
+     */
+    protected Test<ClassFinder.ClassInfo> getActionClassTest() {
         return new Test<ClassFinder.ClassInfo>() {
             public boolean test(ClassFinder.ClassInfo classInfo) {
-                String classPackageName = classInfo.getPackageName();
-                boolean inPackage = classPackageName.equals(packageName) || classPackageName.startsWith(strictPackageName);
+                
+                // Why do we call includeClassNameInActionScan here, when it's
+                // already been called to in the initial call to ClassFinder?
+                // When some action class passes our package filter in that step,
+                // ClassFinder automatically includes parent classes of that action,
+                // such as com.opensymphony.xwork2.ActionSupport.  We repeat the
+                // package filter here to filter out such results.
+                boolean inPackage = includeClassNameInActionScan(classInfo.getName());
                 boolean nameMatches = classInfo.getName().endsWith(actionSuffix);
 
                 try {
@@ -479,29 +548,6 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         LOG.error("Unable to load class [#0]", ex, classInfo.getName());
                     return false;
                 }
-            }
-        };
-    }
-
-    protected Test<ClassFinder.ClassInfo> getPackageLocatorTest(final String packageLocator) {
-        return new Test<ClassFinder.ClassInfo>() {
-            public boolean test(ClassFinder.ClassInfo classInfo) {
-                String packageName = classInfo.getPackageName();
-                if (packageName.length() > 0 && (packageLocatorsBasePackage == null || packageName.startsWith(packageLocatorsBasePackage))) {
-                    String[] splitted = packageName.split("\\.");
-
-                    boolean packageMatches = StringTools.contains(splitted, packageLocator, false);
-                    boolean nameMatches = classInfo.getName().endsWith(actionSuffix);
-
-                    try {
-                        return packageMatches && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
-                    } catch (ClassNotFoundException ex) {
-                        if (LOG.isErrorEnabled())
-                            LOG.error("Unable to load class [#0]", ex, classInfo.getName());
-                        return false;
-                    }
-                } else
-                    return false;
             }
         };
     }

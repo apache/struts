@@ -46,7 +46,7 @@ import org.apache.struts2.jasper.el.ELContextImpl;
  */
 public class JspApplicationContextImpl implements JspApplicationContext {
 
-	private final static String KEY = JspApplicationContextImpl.class.getName();
+	private final static String KEY = JspApplicationContextImpl.class.getName() + "@" + JspApplicationContextImpl.class.getClassLoader().hashCode();
 
 	private final static ExpressionFactory expressionFactory = new ExpressionFactoryImpl();
 

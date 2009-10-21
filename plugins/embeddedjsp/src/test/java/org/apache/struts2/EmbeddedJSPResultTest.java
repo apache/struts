@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import junit.framework.TestCase;
 import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.struts2.jasper.runtime.JspApplicationContextImpl;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -97,6 +98,14 @@ public class EmbeddedJSPResultTest extends TestCase {
         result.execute(null);
 
         assertEquals("hello", response.getContentAsString());
+    }
+
+    public void testKeyInContext() throws Exception {
+        result.setLocation("org/apache/struts2/simple0.jsp");
+        result.execute(null);
+
+        String key = JspApplicationContextImpl.class.getName() + "@" + this.getClass().getClassLoader().hashCode();
+        assertNotNull(context.getAttribute(key));
     }
 
     public void testEL() throws Exception {

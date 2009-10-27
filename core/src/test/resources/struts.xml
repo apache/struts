@@ -40,6 +40,29 @@
         <action name="test" class="com.opensymphony.xwork2.ActionSupport">
             <result name="input">sitegraph/guess-input.ftl</result>
         </action>
+
+        <action name="test2" class="com.opensymphony.xwork2.ActionSupport">
+            <result type="freemarker">
+                <param name="location">org/apache/struts2/views/freemarker/callActionFreeMarker.ftl</param>
+            </result>
+        </action>
+
+        <action name="test3" class="com.opensymphony.xwork2.ActionSupport">
+            <result type="freemarker">org/apache/struts2/views/freemarker/nested.ftl</result>
+        </action>
+
+        <action name="test4" class="org.apache.struts2.TestAction" method="executeThrowsException">
+            <result type="freemarker">
+                <param name="location">org/apache/struts2/views/freemarker/nested.ftl</param>
+            </result>
+        </action>
+
+         <action name="test5" class="com.opensymphony.xwork2.ActionSupport">
+            <result type="freemarker">
+                <param name="location">org/apache/struts2/views/freemarker/callActionFreeMarker2.ftl</param>
+            </result>
+        </action>
+
     </package>
 
     <package name="sitegraph" namespace="/tutorial/sitegraph" extends="struts-default">

@@ -30,14 +30,25 @@ import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.easymock.EasyMock;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+
+import javax.servlet.ServletContext;
+
+import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.Configuration;
 
 /**
  * Test case for FreeMarkerResult.
@@ -54,6 +65,58 @@ public class FreeMarkerResultTest extends StrutsTestCase {
     StrutsMockServletContext servletContext;
     private FreemarkerManager mgr;
     private MockHttpServletRequest request;
+
+    public void testActionThatThrowsExceptionTag() throws Exception {
+        //get fm config to use it in mock servlet context
+        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
+        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+        File file = new File(FreeMarkerResultTest.class.getResource("callActionFreeMarker2.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/callActionFreeMarker.ftl")).andReturn(file.getAbsolutePath());
+        file = new File(FreeMarkerResultTest.class.getResource("nested.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/nested.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
+        EasyMock.replay(servletContext);
+
+        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
+        ServletActionContext.setServletContext(servletContext);
+
+
+        request.setRequestURI("/tutorial/test2.action");
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(
+                    request, dispatcher.getConfigurationManager());
+        dispatcher.serviceAction(request, response, servletContext, mapping);
+        assertEquals("beforenestedafter", stringWriter.toString());
+    }
+
+     public void testActionThatSucceedsTag() throws Exception {
+        //get fm config to use it in mock servlet context
+        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
+        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+        File file = new File(FreeMarkerResultTest.class.getResource("callActionFreeMarker2.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/callActionFreeMarker2.ftl")).andReturn(file.getAbsolutePath());
+        file = new File(FreeMarkerResultTest.class.getResource("nested.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/nested.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
+        EasyMock.replay(servletContext);
+
+        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null); 
+        ServletActionContext.setServletContext(servletContext); 
+
+
+        request.setRequestURI("/tutorial/test5.action");
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(
+                    request, dispatcher.getConfigurationManager());
+        dispatcher.serviceAction(request, response, servletContext, mapping);
+        assertEquals("beforenestedafter", stringWriter.toString());
+    }
 
     public void testWriteIfCompleted() throws Exception {
         FreemarkerResult result = new FreemarkerResult();

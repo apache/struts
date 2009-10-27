@@ -117,6 +117,7 @@ public class FreemarkerResult extends StrutsResultSupport {
      */
     protected String location;
     private String pContentType = "text/html";
+    private static final String PARENT_TEMPLATE_WRITER = FreemarkerResult.class.getName() +  ".parentWriter";
 
     public FreemarkerResult() {
         super();
@@ -158,9 +159,10 @@ public class FreemarkerResult extends StrutsResultSupport {
         this.configuration = getConfiguration();
         this.wrapper = getObjectWrapper();
 
+        ActionContext ctx = invocation.getInvocationContext();
+        HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
+
         if (!locationArg.startsWith("/")) {
-            ActionContext ctx = invocation.getInvocationContext();
-            HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
             String base = ResourceUtil.getResourceBase(req);
             locationArg = base + "/" + locationArg;
         }
@@ -174,14 +176,27 @@ public class FreemarkerResult extends StrutsResultSupport {
                 // Process the template
                 Writer writer = getWriter();
                 if (isWriteIfCompleted() || configuration.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER) {
-                    CharArrayWriter charArrayWriter = new CharArrayWriter();
+                    CharArrayWriter parentCharArrayWriter = (CharArrayWriter) req.getAttribute(PARENT_TEMPLATE_WRITER);
+                    boolean isTopTemplate = false;
+                    if (isTopTemplate = (parentCharArrayWriter == null)) {
+                        //this is the top template
+                        parentCharArrayWriter = new CharArrayWriter();
+                        //set it in the request because when the "action" tag is used a new VS and ActionContext is created
+                        req.setAttribute(PARENT_TEMPLATE_WRITER, parentCharArrayWriter);
+                    }
+
                     try {
-                        template.process(model, charArrayWriter);
-                        charArrayWriter.flush();
-                        charArrayWriter.writeTo(writer);
+                        template.process(model, parentCharArrayWriter);
+
+                        if (isTopTemplate) {
+                            parentCharArrayWriter.flush();
+                            parentCharArrayWriter.writeTo(writer);
+                        }
                     } finally {
-                        if (charArrayWriter != null)
-                            charArrayWriter.close();
+                        if (isTopTemplate && parentCharArrayWriter != null) {
+                            req.removeAttribute(PARENT_TEMPLATE_WRITER);
+                            parentCharArrayWriter.close();
+                        }
                     }
                 } else {
                     template.process(model, writer);

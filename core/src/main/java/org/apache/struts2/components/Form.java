@@ -104,8 +104,9 @@ public class Form extends ClosingUIBean {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
-    protected String focusElement;
+    protected boolean includeContext = true;
 
+    protected String focusElement;
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
     protected UrlRenderer urlRenderer;
@@ -345,5 +346,10 @@ public class Form extends ClosingUIBean {
     @StrutsTagAttribute(description="Id of element that will receive the focus when page loads.")
     public void setFocusElement(String focusElement) {
         this.focusElement = focusElement;
+    }
+
+    @StrutsTagAttribute(description="Whether actual context should be included in URL", type="Boolean", defaultValue="true")
+    public void setIncludeContext(boolean includeContext) {
+        this.includeContext = includeContext;
     }
 }

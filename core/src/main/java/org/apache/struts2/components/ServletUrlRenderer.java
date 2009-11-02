@@ -151,7 +151,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
 			ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
 			String result = UrlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
-					formComponent.request, formComponent.response, null);
+					formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
 			formComponent.addParameter("action", result);
 
 			// let's try to get the actual action class and name
@@ -186,7 +186,7 @@ public class ServletUrlRenderer implements UrlRenderer {
               LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
             }
 
-			String result = UrlHelper.buildUrl(action, formComponent.request, formComponent.response, null);
+			String result = UrlHelper.buildUrl(action, formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
 			formComponent.addParameter("action", result);
 
 			// namespace: cut out anything between the start and the last /

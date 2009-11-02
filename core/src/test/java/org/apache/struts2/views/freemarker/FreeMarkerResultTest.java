@@ -145,6 +145,45 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         }
     }
 
+    public void testContentTypeIsNotOverwritten() throws Exception {
+         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
+					"nested.ftl").toURI()).toURL().getFile());
+
+        FreemarkerResult result = new FreemarkerResult();
+        result.setLocation("nested.ftl");
+        result.setFreemarkerManager(mgr);
+                                   
+        response.setContentType("contenttype"); 
+        result.execute(invocation);
+        assertEquals("contenttype", response.getContentType());
+    }
+
+    public void testDefaultContentType() throws Exception {
+         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
+					"nested.ftl").toURI()).toURL().getFile());
+
+        FreemarkerResult result = new FreemarkerResult();
+        result.setLocation("nested.ftl");
+        result.setFreemarkerManager(mgr);
+
+        assertNull(response.getContentType());
+        result.execute(invocation);
+        assertEquals("text/html; charset=UTF-8", response.getContentType());
+    }
+
+    public void testContentTypeFromTemplate() throws Exception {
+         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
+					"something.ftl").toURI()).toURL().getFile());
+
+        FreemarkerResult result = new FreemarkerResult();
+        result.setLocation("something.ftl");
+        result.setFreemarkerManager(mgr);
+
+        assertNull(response.getContentType());
+        result.execute(invocation);
+        assertEquals("text/xml", response.getContentType());
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         mgr = new FreemarkerManager();

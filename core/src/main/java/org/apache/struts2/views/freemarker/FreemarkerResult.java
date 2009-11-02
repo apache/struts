@@ -311,22 +311,25 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected boolean preTemplateProcess(Template template, TemplateModel model) throws IOException {
         Object attrContentType = template.getCustomAttribute("content_type");
 
-        if (attrContentType != null) {
-            ServletActionContext.getResponse().setContentType(attrContentType.toString());
-        } else {
-            String contentType = getContentType();
+        HttpServletResponse response = ServletActionContext.getResponse();
+        if (response.getContentType() == null) {
+            if (attrContentType != null) {
+                response.setContentType(attrContentType.toString());
+            } else {
+                String contentType = getContentType();
 
-            if (contentType == null) {
-                contentType = "text/html";
+                if (contentType == null) {
+                    contentType = "text/html";
+                }
+
+                String encoding = template.getEncoding();
+
+                if (encoding != null) {
+                    contentType = contentType + "; charset=" + encoding;
+                }
+
+                response.setContentType(contentType);
             }
-
-            String encoding = template.getEncoding();
-
-            if (encoding != null) {
-                contentType = contentType + "; charset=" + encoding;
-            }
-
-            ServletActionContext.getResponse().setContentType(contentType);
         }
 
         return true;

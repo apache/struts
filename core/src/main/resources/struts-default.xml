@@ -51,6 +51,14 @@
 
     <bean type="org.apache.struts2.views.TagLibrary" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
 
+    <bean class="com.opensymphony.xwork2.parameters.XWorkParametersBinder" />
+    <bean class="com.opensymphony.xwork2.parameters.bytecode.AccessorBytecodeUtil" />
+    <bean type="com.opensymphony.xwork2.parameters.accessor.ParametersPropertyAccessor" name="java.util.List" class="com.opensymphony.xwork2.parameters.accessor.ParametersListPropertyAccessor" />
+    <bean type="com.opensymphony.xwork2.parameters.accessor.ParametersPropertyAccessor" name="java.util.Set" class="com.opensymphony.xwork2.parameters.accessor.ParametersCollectionPropertyAccessor" />
+    <bean type="com.opensymphony.xwork2.parameters.accessor.ParametersPropertyAccessor" name="java.util.Map" class="com.opensymphony.xwork2.parameters.accessor.ParametersMapPropertyAccessor" />
+    <bean type="com.opensymphony.xwork2.parameters.accessor.ParametersPropertyAccessor" name="com.opensymphony.xwork2.util.CompoundRoot" class="com.opensymphony.xwork2.parameters.accessor.ParametersCompoundRootAccessor" />
+    <bean type="com.opensymphony.xwork2.parameters.accessor.ParametersPropertyAccessor" name="java.lang.Object" class="com.opensymphony.xwork2.parameters.accessor.ParametersObjectPropertyAccessor" />
+
     <bean class="org.apache.struts2.views.freemarker.FreemarkerManager" name="struts" />
     <bean class="org.apache.struts2.views.velocity.VelocityManager" name="struts" optional="true" />
 

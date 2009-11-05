@@ -21,28 +21,20 @@
 
 package org.apache.struts2.portlet.util;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.context.PortletActionContext;
+
+import javax.portlet.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import javax.portlet.PortletMode;
-import javax.portlet.PortletSecurityException;
-import javax.portlet.PortletURL;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
-
-import org.apache.commons.collections.iterators.EntrySetMapIterator;
-import org.apache.commons.lang.xwork.StringUtils;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.PortletActionContext;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Helper class for creating Portlet URLs. Portlet URLs are fundamentally different from regular
@@ -116,15 +108,15 @@ public class PortletUrlHelper {
         if(StringUtils.isNotEmpty(method)) {
         	resultingAction.append("!").append(method);
         }
-        LOG.debug("Resulting actionPath: " + resultingAction);
+        if (LOG.isDebugEnabled()) LOG.debug("Resulting actionPath: " + resultingAction);
         params.put(PortletActionConstants.ACTION_PARAM, new String[] { resultingAction.toString() });
 
         PortletURL url = null;
         if ("action".equalsIgnoreCase(type)) {
-            LOG.debug("Creating action url");
+            if (LOG.isDebugEnabled()) LOG.debug("Creating action url");
             url = response.createActionURL();
         } else {
-            LOG.debug("Creating render url");
+            if (LOG.isDebugEnabled()) LOG.debug("Creating render url");
             url = response.createRenderURL();
         }
 
@@ -170,7 +162,7 @@ public class PortletUrlHelper {
         }
         String portletNamespace = PortletActionContext.getPortletNamespace();
         String modeNamespace = (String)PortletActionContext.getModeNamespaceMap().get(mode);
-        LOG.debug("PortletNamespace: " + portletNamespace + ", modeNamespace: " + modeNamespace);
+        if (LOG.isDebugEnabled()) LOG.debug("PortletNamespace: " + portletNamespace + ", modeNamespace: " + modeNamespace);
         if(StringUtils.isNotEmpty(portletNamespace)) {
             sb.append(portletNamespace);
         }
@@ -186,7 +178,7 @@ public class PortletUrlHelper {
             }
             sb.append(namespace);
         }
-        LOG.debug("Resulting namespace: " + sb);
+        if (LOG.isDebugEnabled()) LOG.debug("Resulting namespace: " + sb);
         return sb.toString();
     }
 
@@ -257,13 +249,12 @@ public class PortletUrlHelper {
      * @param portletReq The RenderRequest.
      * @param windowState The WindowState as a String.
      * @return The WindowState that mathces the <tt>windowState</tt> String, or if
-     * the Sring is blank, the current WindowState.
+     * the String is blank, the current WindowState.
      */
     private static WindowState getWindowState(RenderRequest portletReq,
             String windowState) {
         WindowState state = portletReq.getWindowState();
         if (StringUtils.isNotEmpty(windowState)) {
-            state = portletReq.getWindowState();
             if ("maximized".equalsIgnoreCase(windowState)) {
                 state = WindowState.MAXIMIZED;
             } else if ("normal".equalsIgnoreCase(windowState)) {
@@ -284,14 +275,13 @@ public class PortletUrlHelper {
      * @param portletReq The RenderRequest.
      * @param portletMode The PortletMode as a String.
      * @return The PortletMode that mathces the <tt>portletMode</tt> String, or if
-     * the Sring is blank, the current PortletMode.
+     * the String is blank, the current PortletMode.
      */
     private static PortletMode getPortletMode(RenderRequest portletReq,
             String portletMode) {
         PortletMode mode = portletReq.getPortletMode();
 
         if (StringUtils.isNotEmpty(portletMode)) {
-            mode = portletReq.getPortletMode();
             if ("edit".equalsIgnoreCase(portletMode)) {
                 mode = PortletMode.EDIT;
             } else if ("view".equalsIgnoreCase(portletMode)) {

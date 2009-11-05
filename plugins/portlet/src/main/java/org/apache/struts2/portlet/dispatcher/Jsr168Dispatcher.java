@@ -188,7 +188,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      */
     public void init(PortletConfig cfg) throws PortletException {
         super.init(cfg);
-        LOG.debug("Initializing portlet " + getPortletName());
+        if (LOG.isDebugEnabled()) LOG.debug("Initializing portlet " + getPortletName());
         
         Map<String,String> params = new HashMap<String,String>();
         for (Enumeration e = cfg.getInitParameterNames(); e.hasMoreElements(); ) {
@@ -205,7 +205,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             factory = dispatcherUtils.getConfigurationManager().getConfiguration().getContainer().getInstance(ActionProxyFactory.class);
         }
         portletNamespace = cfg.getInitParameter("portletNamespace");
-        LOG.debug("PortletNamespace: " + portletNamespace);
+        if (LOG.isDebugEnabled()) LOG.debug("PortletNamespace: " + portletNamespace);
         parseModeConfig(actionMap, cfg, PortletMode.VIEW, "viewNamespace",
                 "defaultViewAction");
         parseModeConfig(actionMap, cfg, PortletMode.EDIT, "editNamespace",
@@ -292,13 +292,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      */
     public void processAction(ActionRequest request, ActionResponse response)
             throws PortletException, IOException {
-        LOG.debug("Entering processAction");
+        if (LOG.isDebugEnabled()) LOG.debug("Entering processAction");
         resetActionContext();
         try {
             serviceAction(request, response, getRequestMap(request), getParameterMap(request),
                     getSessionMap(request), getApplicationMap(),
                     portletNamespace, EVENT_PHASE);
-            LOG.debug("Leaving processAction");
+            if (LOG.isDebugEnabled()) LOG.debug("Leaving processAction");
         } finally {
             ActionContext.setContext(null);
         }
@@ -313,7 +313,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     public void render(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
 
-        LOG.debug("Entering render");
+        if (LOG.isDebugEnabled()) LOG.debug("Entering render");
         resetActionContext();
         response.setTitle(getTitle(request));
         if(!request.getWindowState().equals(WindowState.MINIMIZED)) {
@@ -322,7 +322,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             serviceAction(request, response, getRequestMap(request), getParameterMap(request),
                     getSessionMap(request), getApplicationMap(),
                     portletNamespace, RENDER_PHASE);
-            LOG.debug("Leaving render");
+            if (LOG.isDebugEnabled()) LOG.debug("Leaving render");
         } finally {
             resetActionContext();
         }
@@ -418,7 +418,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     public void serviceAction(PortletRequest request, PortletResponse response, Map<String, Object> requestMap, Map<String, String[]> parameterMap,
             Map<String, Object> sessionMap, Map<String, Object> applicationMap, String portletNamespace,
             Integer phase) throws PortletException {
-        LOG.debug("serviceAction");
+        if (LOG.isDebugEnabled()) LOG.debug("serviceAction");
         Dispatcher.setInstance(dispatcherUtils);
         String actionName = null;
         String namespace = null;

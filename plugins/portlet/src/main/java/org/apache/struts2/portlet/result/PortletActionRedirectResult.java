@@ -264,6 +264,6 @@ public class PortletActionRedirectResult extends PortletResult implements Reflec
 
     public void handle(ReflectionException ex) {
         // Only log as debug as they are probably parameters to be appended to the url
-        LOG.debug(ex.getMessage(), ex);
+        if (LOG.isDebugEnabled()) LOG.debug(ex.getMessage(), ex);
     }
 }

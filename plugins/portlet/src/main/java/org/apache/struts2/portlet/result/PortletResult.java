@@ -126,10 +126,10 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	 * @param invocation
 	 */
 	protected void executeActionResult(String finalLocation, ActionInvocation invocation) throws Exception {
-		LOG.debug("Executing result in Event phase");
+		if (LOG.isDebugEnabled()) LOG.debug("Executing result in Event phase");
 		ActionResponse res = PortletActionContext.getActionResponse();
 		Map sessionMap = invocation.getInvocationContext().getSession();
-		LOG.debug("Setting event render parameter: " + finalLocation);
+		if (LOG.isDebugEnabled()) LOG.debug("Setting event render parameter: " + finalLocation);
 		if (finalLocation.indexOf('?') != -1) {
 			convertQueryParamsToRenderParams(res, finalLocation.substring(finalLocation.indexOf('?') + 1));
 			finalLocation = finalLocation.substring(0, finalLocation.indexOf('?'));
@@ -182,7 +182,7 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	 * @throws IOException
 	 */
 	protected void executeRenderResult(final String finalLocation) throws PortletException, IOException {
-		LOG.debug("Executing result in Render phase");
+		if (LOG.isDebugEnabled()) LOG.debug("Executing result in Render phase");
 		PortletContext ctx = PortletActionContext.getPortletContext();
 		RenderRequest req = PortletActionContext.getRenderRequest();
 		RenderResponse res = PortletActionContext.getRenderResponse();
@@ -190,7 +190,7 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 		if (StringUtils.isNotEmpty(title)) {
 			res.setTitle(title);
 		}
-		LOG.debug("Location: " + finalLocation);
+		if (LOG.isDebugEnabled()) LOG.debug("Location: " + finalLocation);
 		if (useDispatcherServlet) {
 			req.setAttribute(DISPATCH_TO, finalLocation);
 			PortletRequestDispatcher dispatcher = ctx.getNamedDispatcher(dispatcherServletName);

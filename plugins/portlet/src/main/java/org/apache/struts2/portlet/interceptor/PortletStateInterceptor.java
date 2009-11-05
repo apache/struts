@@ -73,7 +73,7 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 		RenderRequest request = (RenderRequest) invocation.getInvocationContext().get(REQUEST);
 		if (StringUtils.isNotEmpty(request.getParameter(EVENT_ACTION))) {
 			if(!isProperPrg(invocation)) {
-				LOG.debug("Restoring value stack from event phase");
+				if (LOG.isDebugEnabled()) LOG.debug("Restoring value stack from event phase");
 				ValueStack oldStack = (ValueStack) invocation.getInvocationContext().getSession().get(
 				STACK_FROM_EVENT_PHASE);
 				if (oldStack != null) {
@@ -81,11 +81,11 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 					ValueStack currentStack = invocation.getStack();
 					CompoundRoot root = currentStack.getRoot();
 					root.addAll(0, oldRoot);
-					LOG.debug("Restored stack");
+					if (LOG.isDebugEnabled()) LOG.debug("Restored stack");
 				}
 			}
 			else {
-				LOG.debug("Won't restore stack from event phase since it's a proper PRG request");
+				if (LOG.isDebugEnabled()) LOG.debug("Won't restore stack from event phase since it's a proper PRG request");
 			}
 		}
 	}

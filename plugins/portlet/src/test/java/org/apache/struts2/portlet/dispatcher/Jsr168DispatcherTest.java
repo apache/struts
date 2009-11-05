@@ -21,24 +21,11 @@
 
 package org.apache.struts2.portlet.dispatcher;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ListResourceBundle;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
@@ -46,17 +33,11 @@ import org.easymock.EasyMock;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
-import org.springframework.mock.web.portlet.MockActionRequest;
-import org.springframework.mock.web.portlet.MockActionResponse;
 import org.springframework.mock.web.portlet.MockPortletConfig;
 import org.springframework.mock.web.portlet.MockPortletContext;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.portlet.*;
+import java.util.*;
 
 /**
  * Jsr168DispatcherTest. Insert description.
@@ -164,14 +145,14 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 		requestParams.put(EVENT_ACTION, new String[] { "true" });
 		requestParams.put(PortletActionConstants.MODE_PARAM, new String[] { mode.toString() });
 
-		Map sessionMap = new HashMap();
+		Map<String, Object> sessionMap = new HashMap<String, Object>();
 
 		Map<String, String> initParams = new HashMap<String, String>();
 		initParams.put("viewNamespace", "/view");
 		initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
 
 		initPortletConfig(initParams, new HashMap<String, Object>());
-		initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), PortletMode.VIEW, WindowState.NORMAL,
+		initRequest(requestParams, new HashMap<String, Object>(), sessionMap, new HashMap<String, String[]>(), PortletMode.VIEW, WindowState.NORMAL,
 				false, null);
 		setupActionFactory("/view", "testAction", "success", EasyMock.createNiceMock(ValueStack.class));
 
@@ -258,12 +239,10 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 
 	private void setupParamStub(Map<String, String[]> requestParams, Mock mockRequest, String method) {
 		Map<String, String> newMap = new HashMap<String, String>();
-		Iterator<String> it = requestParams.keySet().iterator();
-		while (it.hasNext()) {
-			String key = it.next();
-			String[] val = (String[]) requestParams.get(key);
-			newMap.put(key, val[0]);
-		}
+        for ( String key : requestParams.keySet() ) {
+            String[] val = requestParams.get(key);
+            newMap.put(key, val[0]);
+        }
 		setupStub(newMap, mockRequest, method);
 
 	}
@@ -282,12 +261,10 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 	 *            The name of the method to stub.
 	 */
 	private void setupStub(Map map, Mock mock, String method) {
-		Iterator it = map.keySet().iterator();
-		while (it.hasNext()) {
-			Object key = it.next();
-			Object val = map.get(key);
-			mock.stubs().method(method).with(eq(key)).will(returnValue(val));
-		}
+        for ( Object key : map.keySet() ) {
+            Object val = map.get(key);
+            mock.stubs().method(method).with(eq(key)).will(returnValue(val));
+        }
 	}
 
 	public void testModeChangeUsingPortletWidgets() throws Exception {

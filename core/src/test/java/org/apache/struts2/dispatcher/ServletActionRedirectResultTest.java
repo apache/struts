@@ -21,17 +21,6 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
@@ -39,6 +28,17 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import static org.easymock.EasyMock.createControl;
+import static org.easymock.EasyMock.expect;
+import org.easymock.IMocksControl;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -87,20 +87,14 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         result.setEncode(false);
         result.setPrependServletContext(false);
 
-        IMocksControl control = EasyMock.createControl();
+        IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
         ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
-        mockInvocation.getProxy();
-        control.andReturn(mockActionProxy);
-        mockInvocation.getResultCode();
-        control.andReturn("myResult");
-        mockActionProxy.getConfig();
-        control.andReturn(actionConfig);
-        mockInvocation.getInvocationContext();
-        control.andReturn(context);
-        mockInvocation.getStack();
-        control.andReturn(stack);
-        control.anyTimes();
+        expect(mockInvocation.getProxy()).andReturn(mockActionProxy);
+        expect(mockInvocation.getResultCode()).andReturn("myResult");
+        expect(mockActionProxy.getConfig()).andReturn(actionConfig);
+        expect(mockInvocation.getInvocationContext()).andReturn(context);
+        expect(mockInvocation.getStack()).andReturn(stack).anyTimes();
 
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
@@ -145,17 +139,13 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         result.setEncode(false);
         result.setPrependServletContext(false);
 
-        IMocksControl control = EasyMock.createControl();
+        IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
         ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
-        mockInvocation.getProxy();
-        control.andReturn(mockActionProxy);
-        mockInvocation.getResultCode();
-        control.andReturn("myResult");
-        mockActionProxy.getConfig();
-        control.andReturn(actionConfig);
-        mockInvocation.getInvocationContext();
-        control.andReturn(context);
+        expect(mockInvocation.getProxy()).andReturn(mockActionProxy);
+        expect(mockInvocation.getResultCode()).andReturn("myResult");
+        expect(mockActionProxy.getConfig()).andReturn(actionConfig);
+        expect(mockInvocation.getInvocationContext()).andReturn(context);
 
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));

@@ -22,9 +22,7 @@
 package org.apache.struts2.views.jsp;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 import javax.servlet.jsp.tagext.DynamicAttributes;
 import javax.xml.parsers.DocumentBuilder;

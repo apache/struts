@@ -21,39 +21,32 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.io.StringWriter;
-import java.io.PrintWriter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import static javax.servlet.http.HttpServletResponse.*;
-
-import ognl.Ognl;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
-
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import ognl.Ognl;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import static org.easymock.EasyMock.*;
+import org.easymock.IMocksControl;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -180,17 +173,13 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         result.setEncode(false);
         result.setPrependServletContext(false);
 
-        IMocksControl control = EasyMock.createControl();
+        IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
         ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
-        mockInvocation.getProxy();
-        control.andReturn(mockActionProxy);
-        mockInvocation.getResultCode();
-        control.andReturn("myResult");
-        mockActionProxy.getConfig();
-        control.andReturn(actionConfig);
-        mockInvocation.getInvocationContext();
-        control.andReturn(context);
+        expect(mockInvocation.getProxy()).andReturn(mockActionProxy);
+        expect(mockInvocation.getResultCode()).andReturn("myResult");
+        expect(mockActionProxy.getConfig()).andReturn(actionConfig);
+        expect(mockInvocation.getInvocationContext()).andReturn(context);
 
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
@@ -227,10 +216,10 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         MockActionInvocation ai = new MockActionInvocation();
         ai.setInvocationContext(ac);
         ai.setResultCode("myResult");
-        ActionProxy mockActionProxy = EasyMock.createNiceMock(ActionProxy.class);
+        ActionProxy mockActionProxy = createNiceMock(ActionProxy.class);
         ai.setProxy(mockActionProxy);
-        EasyMock.expect(mockActionProxy.getConfig()).andReturn(actionConfig).anyTimes();
-        EasyMock.replay(mockActionProxy);
+        expect(mockActionProxy.getConfig()).andReturn(actionConfig).anyTimes();
+        replay(mockActionProxy);
         this.ai = ai;
         ai.setStack(ActionContext.getContext().getValueStack());
     }

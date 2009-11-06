@@ -212,7 +212,4 @@ public final class StrutsConstants {
 
     /** Enables caching of parsed OGNL expressions **/
     public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
-
-    /** Enables experimental version of parameter binder **/
-    public static final String STRUTS_ENABLE_SIMPLE_PARAMETERS_BINDER = "struts.enableSimpleParametersBinder";
 }

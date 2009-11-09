@@ -28,7 +28,7 @@
  * <pre>
  * &lt;filter&gt;
  *     &lt;filter-name&gt;struts2&lt;/filter-name&gt;
- *     &lt;filter-class&gt;org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter&lt;/filter-class&gt;
+ *     &lt;filter-class&gt;org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter&lt;/filter-class&gt;
  * &lt;/filter&gt;
  *
  * &lt;filter-mapping&gt;
@@ -41,7 +41,7 @@
  * <pre>
  * &lt;filter&gt;
  *     &lt;filter-name&gt;struts2-prepare&lt;/filter-name&gt;
- *     &lt;filter-class&gt;org.apache.struts2.dispatcher.filter.StrutsPrepareFilter&lt;/filter-class&gt;
+ *     &lt;filter-class&gt;org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter&lt;/filter-class&gt;
  * &lt;/filter&gt;
  * &lt;filter&gt;
  *     &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
@@ -49,7 +49,7 @@
  * &lt;/filter&gt;
  * &lt;filter&gt;
  *     &lt;filter-name&gt;struts2-execute&lt;/filter-name&gt;
- *     &lt;filter-class&gt;org.apache.struts2.dispatcher.filter.StrutsExecuteFilter&lt;/filter-class&gt;
+ *     &lt;filter-class&gt;org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter&lt;/filter-class&gt;
  * &lt;/filter&gt;
  *
  * &lt;filter-mapping&gt;

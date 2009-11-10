@@ -190,6 +190,13 @@ public class JSPLoader {
         //jsp api
         classPath.add(getJarUrl(JspPage.class));
 
+        try {
+            Class annotationsProcessor = Class.forName("org.apache.AnnotationProcessor");
+            classPath.add(getJarUrl(annotationsProcessor));
+        } catch (ClassNotFoundException e) {
+            //ok ignore
+        }
+
         //add extra classpath entries (jars where tlds were found will be here)
         for (Iterator<String> iterator = extraClassPath.iterator(); iterator.hasNext();) {
             String entry = iterator.next();

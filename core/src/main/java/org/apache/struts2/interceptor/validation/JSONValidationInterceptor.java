@@ -146,8 +146,9 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
                     .entrySet()) {
                     sb.append("\"");
                     //if it is model driven, remove "model." see WW-2721
-                    sb.append(validationAware instanceof ModelDriven ? fieldError.getKey().substring(6)
-                            : fieldError.getKey());
+                    String fieldErrorKey = fieldError.getKey();
+                    sb.append(((validationAware instanceof ModelDriven) &&  fieldErrorKey.startsWith("model."))? fieldErrorKey.substring(6)
+                            : fieldErrorKey);
                     sb.append("\":");
                     sb.append(buildArray(fieldError.getValue()));
                     sb.append(",");

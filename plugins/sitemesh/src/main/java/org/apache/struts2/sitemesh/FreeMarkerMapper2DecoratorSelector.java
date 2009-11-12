@@ -41,11 +41,11 @@ import javax.servlet.http.HttpServletRequest;
  * 
  * Won't decorate the output if it finds a "decorator" flag in the request
  */
-public class FreemarkerMapper2DecoratorSelector implements DecoratorSelector {
+public class FreeMarkerMapper2DecoratorSelector implements DecoratorSelector {
 
     private final DecoratorMapper decoratorMapper;
 
-    public FreemarkerMapper2DecoratorSelector(DecoratorMapper decoratorMapper) {
+    public FreeMarkerMapper2DecoratorSelector(DecoratorMapper decoratorMapper) {
         this.decoratorMapper = decoratorMapper;
     }
 

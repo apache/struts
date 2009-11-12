@@ -36,7 +36,7 @@ import org.apache.struts2.views.freemarker.FreemarkerManager;
  * Core Filter for integrating SiteMesh + Freemarker into
  * a Java web application.
  */
-public class FreemarkerPageFilter extends SiteMeshFilter {
+public class FreeMarkerPageFilter extends SiteMeshFilter {
 
     @Inject(required=false)
     public static void setFreemarkerManager(FreemarkerManager mgr) {

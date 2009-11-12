@@ -45,7 +45,6 @@ import freemarker.cache.WebappTemplateLoader;
 public class BundleFreemarkerManager extends FreemarkerManager {
     private static final Logger LOG = LoggerFactory.getLogger(BundleFreemarkerManager.class);
 
-    @Override
     protected TemplateLoader getTemplateLoader(ServletContext servletContext) {
         // construct a FileTemplateLoader for the init-param 'TemplatePath'
         FileTemplateLoader templatePathLoader = null;

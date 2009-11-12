@@ -32,6 +32,9 @@ import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
+import java.util.Map;
+import java.util.HashMap;
+
 
 /**
  * Simple Hash model that also searches other scopes.
@@ -39,14 +42,17 @@ import freemarker.template.TemplateModelException;
  * If the key doesn't exist in this hash, this template model tries to
  * resolve the key within the attributes of the following scopes,
  * in the order stated: Request, Session, Servlet Context
+ *
+ * Updated to subclass AllHttpScopesHashModel.java to incorporate invisible scopes and compatibility with freemarker.
  */
-public class ScopesHashModel extends SimpleHash {
+public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
     private static final long serialVersionUID = 5551686380141886764L;
 
     private HttpServletRequest request;
     private ServletContext servletContext;
     private ValueStack stack;
+    private final Map<String,TemplateModel> unlistedModels = new HashMap<String,TemplateModel>();
 
 
     public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, ValueStack stack) {
@@ -56,6 +62,23 @@ public class ScopesHashModel extends SimpleHash {
         this.stack = stack;
     }
 
+    // This constructor is for Freemarker Sitemesh integration where the model is somehow lost...
+    public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request) {
+         super(objectWrapper);
+         this.servletContext = context;
+         this.request = request;
+    }
+
+    /**
+     * Stores a model in the hash so that it doesn't show up in <tt>keys()</tt>
+     * and <tt>values()</tt> methods. Used to put the Application, Session,
+     * Request, RequestParameters and JspTaglibs objects.
+     * @param key the key under which the model is stored
+     * @param model the stored model
+     */
+    public void putUnlistedModel(String key, TemplateModel model) {
+        unlistedModels.put(key, model);
+    }
 
     public TemplateModel get(String key) throws TemplateModelException {
         // Lookup in default scope
@@ -108,6 +131,13 @@ public class ScopesHashModel extends SimpleHash {
                 return wrap(obj);
             }
         }
+
+        // Look in unlisted models
+        model = unlistedModels.get(key);
+        if(model != null) {
+            return wrap(model);
+        }
+
 
         return null;
     }

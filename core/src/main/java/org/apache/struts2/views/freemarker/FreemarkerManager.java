@@ -24,11 +24,8 @@ package org.apache.struts2.views.freemarker;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
@@ -48,6 +45,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -58,11 +56,9 @@ import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleHash;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.TemplateModel;
+import freemarker.template.*;
+import freemarker.core.Configurable;
+import freemarker.template.utility.StringUtil;
 
 
 /**
@@ -74,7 +70,7 @@ import freemarker.template.TemplateModel;
  * <ul>
  *   <li>createConfiguration method</li>
  *   <li>loadSettings method</li>
- *   <li>getTemplateLoader method</li>
+ *   <li>createTemplateLoader method</li>
  *   <li>populateContext method</li>
  * </ul>
  *
@@ -87,7 +83,7 @@ import freemarker.template.TemplateModel;
  * Load freemarker settings, default to freemarker.properties (if found in classpath)
  * <p/>
  *
- * <b> getTemplateLoader method</b><br/>
+ * <b> createTemplateLoader method</b><br/>
  * create a freemarker TemplateLoader that loads freemarker template in the following order :-
  * <ol>
  *   <li>path defined in ServletContext init parameter named 'templatePath' or 'TemplatePath' (must be an absolute path)</li>
@@ -102,29 +98,74 @@ import freemarker.template.TemplateModel;
  */
 public class FreemarkerManager {
 
+    // coppied from freemarker servlet - so that there is no dependency on it
+    private static final String INITPARAM_TEMPLATE_PATH = "TemplatePath";
+     private static final String INITPARAM_NOCACHE = "NoCache";
+     private static final String INITPARAM_CONTENT_TYPE = "ContentType";
+     private static final String DEFAULT_CONTENT_TYPE = "text/html";
+     private static final String INITPARAM_DEBUG = "Debug";
+
+     public static final String KEY_REQUEST = "Request";
+     public static final String KEY_INCLUDE = "include_page";
+     public static final String KEY_REQUEST_PRIVATE = "__FreeMarkerServlet.Request__";
+     public static final String KEY_REQUEST_PARAMETERS = "RequestParameters";
+     public static final String KEY_SESSION = "Session";
+     public static final String KEY_APPLICATION = "Application";
+     public static final String KEY_APPLICATION_PRIVATE = "__FreeMarkerServlet.Application__";
+     public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
+
+     // Note these names start with dot, so they're essentially invisible from  a freemarker script.
+     public static final String ATTR_TEMPLATE_MODEL = ".freemarker.TemplateModel";  // template model stored in request for siteMesh
+     private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
+     private static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
+     private static final String ATTR_SESSION_MODEL = ".freemarker.Session";
+     private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
+     private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
+
+    public static final String KEY_HASHMODEL_PRIVATE = "__FreeMarkerManager.Request__";
+
+    private static final String EXPIRATION_DATE;
+
+    /**
+     * Adds individual settings.
+     *
+     * @see freemarker.template.Configuration#setSettings for the definition of valid settings
+     */
+    boolean contentTypeEvaluated = false;
+
+    static {
+        // Generate expiration date that is one year from now in the past
+        GregorianCalendar expiration = new GregorianCalendar();
+        expiration.roll(Calendar.YEAR, -1);
+        SimpleDateFormat httpDate =
+                new SimpleDateFormat(
+                        "EEE, dd MMM yyyy HH:mm:ss z",
+                        java.util.Locale.US);
+        EXPIRATION_DATE = httpDate.format(expiration.getTime());
+    }
+
+    // end freemarker definitions...
+
     private static final Logger LOG = LoggerFactory.getLogger(FreemarkerManager.class);
     public static final String CONFIG_SERVLET_CONTEXT_KEY = "freemarker.Configuration";
     public static final String KEY_EXCEPTION = "exception";
 
-    // coppied from freemarker servlet - since they are private
-    protected static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
-    protected static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
-    protected static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
-    protected static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
 
-    // coppied from freemarker servlet - so that there is no dependency on it
-    public static final String KEY_APPLICATION = "Application";
-    public static final String KEY_REQUEST_MODEL = "Request";
-    public static final String KEY_SESSION_MODEL = "Session";
-    public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
-    public static final String KEY_REQUEST_PARAMETER_MODEL = "Parameters";
-    
+
+    protected String templatePath;
+    protected boolean nocache;
+    protected boolean debug;
+    protected Configuration config;
+    protected ObjectWrapper wrapper;
+    protected String contentType = null;
+    protected boolean noCharsetInContentType = true;
+
     protected String encoding;
     protected boolean altMapWrapper;
     protected boolean cacheBeanWrapper;
     protected int mruMaxStrongSize;
     protected Map<String,TagLibrary> tagLibraries;
-    
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {
         this.encoding = encoding;
@@ -155,20 +196,111 @@ public class FreemarkerManager {
         this.tagLibraries = Collections.unmodifiableMap(map);
     }
 
-    public synchronized freemarker.template.Configuration getConfiguration(ServletContext servletContext) throws TemplateException {
-        freemarker.template.Configuration config = (freemarker.template.Configuration) servletContext.getAttribute(CONFIG_SERVLET_CONTEXT_KEY);
+    public boolean getNoCharsetInContentType() {
+        return noCharsetInContentType;
+    }
 
+    public String getTemplatePath() {
+        return templatePath;
+    }
+
+    public boolean getNocache() {
+        return nocache;
+    }
+
+    public boolean getDebug() {
+        return debug;
+    }
+
+    public Configuration getConfig() {
+        return config;
+    }
+
+    public ObjectWrapper getWrapper() {
+        return wrapper;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public synchronized freemarker.template.Configuration getConfiguration(ServletContext servletContext) {
         if (config == null) {
-            config = createConfiguration(servletContext);
+            try {
+                init(servletContext);
+            } catch (TemplateException e) {
+                LOG.error("Cannot load freemarker configuration: ",e);
+            }
+//            config = createConfiguration(servletContext);
 
             // store this configuration in the servlet context
             servletContext.setAttribute(CONFIG_SERVLET_CONTEXT_KEY, config);
+
+            config.setWhitespaceStripping(true);
         }
-        
-        config.setWhitespaceStripping(true);
+
 
         return config;
     }
+
+    public void init(ServletContext servletContext) throws TemplateException {
+        config = createConfiguration(servletContext);
+
+        // Set defaults:
+        config.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+        contentType = DEFAULT_CONTENT_TYPE;
+
+        // Process object_wrapper init-param out of order:
+        wrapper = createObjectWrapper(servletContext);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using object wrapper of class " + wrapper.getClass().getName());
+        }
+        config.setObjectWrapper(wrapper);
+
+        // Process TemplatePath init-param out of order:
+        templatePath = servletContext.getInitParameter(INITPARAM_TEMPLATE_PATH);
+        if (templatePath == null) {
+            templatePath = servletContext.getInitParameter("templatePath");
+        }
+        if (templatePath == null)
+            templatePath = "class://";
+        config.setTemplateLoader(createTemplateLoader(servletContext, templatePath));
+
+        loadSettings(servletContext);
+    }
+
+    /**
+     * Create the instance of the freemarker Configuration object.
+     * <p/>
+     * this implementation
+     * <ul>
+     * <li>obtains the default configuration from Configuration.getDefaultConfiguration()
+     * <li>sets up template loading from a ClassTemplateLoader and a WebappTemplateLoader
+     * <li>sets up the object wrapper to be the BeansWrapper
+     * <li>loads settings from the classpath file /freemarker.properties
+     * </ul>
+     *
+     * @param servletContext
+     */
+    protected freemarker.template.Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
+        freemarker.template.Configuration configuration = new freemarker.template.Configuration();
+
+        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+
+        if (mruMaxStrongSize > 0) {
+            configuration.setSetting(freemarker.template.Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
+        }
+
+        if (encoding != null) {
+            configuration.setDefaultEncoding(encoding);
+        }
+
+
+        configuration.setWhitespaceStripping(true);
+
+        return configuration;
+    }
+
 
     protected ScopesHashModel buildScopesHashModel(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper, ValueStack stack) {
         ScopesHashModel model = new ScopesHashModel(wrapper, servletContext, request, stack);
@@ -199,7 +331,7 @@ public class FreemarkerManager {
         // Create hash model wrapper for session
         HttpSession session = request.getSession(false);
         if (session != null) {
-            model.put(KEY_SESSION_MODEL, new HttpSessionHashModel(session, wrapper));
+            model.put(KEY_SESSION, new HttpSessionHashModel(session, wrapper));
         } else {
             // no session means no attributes ???
             //            model.put(KEY_SESSION_MODEL, new SimpleHash());
@@ -213,7 +345,7 @@ public class FreemarkerManager {
             request.setAttribute(ATTR_REQUEST_MODEL, requestModel);
         }
 
-        model.put(KEY_REQUEST_MODEL, requestModel);
+        model.put(KEY_REQUEST, requestModel);
 
 
         // Create hash model wrapper for request parameters
@@ -222,10 +354,149 @@ public class FreemarkerManager {
             reqParametersModel = new HttpRequestParametersHashModel(request);
             request.setAttribute(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
         }
-        model.put(KEY_REQUEST_PARAMETER_MODEL, reqParametersModel);
+        model.put(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
 
         return model;
     }
+
+    protected ObjectWrapper createObjectWrapper(ServletContext servletContext) {
+        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper);
+        wrapper.setUseCache(cacheBeanWrapper);
+        return wrapper;
+    }
+
+
+     /**
+     * Create the template loader. The default implementation will create a
+     * {@link ClassTemplateLoader} if the template path starts with "class://",
+     * a {@link FileTemplateLoader} if the template path starts with "file://",
+     * and a {@link WebappTemplateLoader} otherwise.
+     * @param templatePath the template path to create a loader for
+     * @return a newly created template loader
+     * @throws IOException
+     */
+    protected TemplateLoader createTemplateLoader(ServletContext servletContext, String templatePath) {
+        TemplateLoader templatePathLoader = null;
+
+         try {
+             if (templatePath.startsWith("class://")) {
+                 // substring(7) is intentional as we "reuse" the last slash
+                 templatePathLoader = new ClassTemplateLoader(getClass(), templatePath.substring(7));
+             } else if (templatePath.startsWith("file://")) {
+                 templatePathLoader = new FileTemplateLoader(new File(templatePath));
+             }
+         } catch (IOException e) {
+             LOG.error("Invalid template path specified: " + e.getMessage(), e);
+         }
+
+         // presume that most apps will require the class and webapp template loader
+         // if people wish to
+         return templatePathLoader != null ?
+                 new MultiTemplateLoader(new TemplateLoader[]{
+                         templatePathLoader,
+                         new WebappTemplateLoader(servletContext),
+                         new StrutsClassTemplateLoader()
+                 })
+                 : new MultiTemplateLoader(new TemplateLoader[]{
+                 new WebappTemplateLoader(servletContext),
+                 new StrutsClassTemplateLoader()
+         });
+     }
+
+
+    /**
+     * Load the settings from the /freemarker.properties file on the classpath
+     *
+     * @see freemarker.template.Configuration#setSettings for the definition of valid settings
+     */
+    protected void loadSettings(ServletContext servletContext) {
+        InputStream in = null;
+
+        try {
+            in = FileManager.loadFile("freemarker.properties", FreemarkerManager.class);
+
+            if (in != null) {
+                Properties p = new Properties();
+                p.load(in);
+
+                Iterator i = p.keySet().iterator();
+                while (i.hasNext()) {
+                    String name = (String) i.next();
+                    String value = (String) p.get(name);
+
+                    if (name == null) {
+                        throw new IOException(
+                                "init-param without param-name.  Maybe the freemarker.properties is not well-formed?");
+                    }
+                    if (value == null) {
+                        throw new IOException(
+                                "init-param without param-value.  Maybe the freemarker.properties is not well-formed?");
+                    }
+                    addSetting(name, value);
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
+        } catch (TemplateException e) {
+            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(IOException io) {
+                    LOG.warn("Unable to close input stream", io);
+                }
+            }
+        }
+    }
+
+    public void addSetting(String name, String value) throws TemplateException {
+        // Process all other init-params:
+        if (name.equals(INITPARAM_NOCACHE)) {
+            nocache = StringUtil.getYesNo(value);
+        } else if (name.equals(INITPARAM_DEBUG)) {
+            debug = StringUtil.getYesNo(value);
+        } else if (name.equals(INITPARAM_CONTENT_TYPE)) {
+            contentType = value;
+        } else {
+            config.setSetting(name, value);
+        }
+
+        if (contentType != null && !contentTypeEvaluated) {
+            int i = contentType.toLowerCase().indexOf("charset=");
+            contentTypeEvaluated = true;
+            if (i != -1) {
+                char c = ' ';
+                i--;
+                while (i >= 0) {
+                    c = contentType.charAt(i);
+                    if (!Character.isWhitespace(c)) break;
+                    i--;
+                }
+                if (i == -1 || c == ';') {
+                    noCharsetInContentType = false;
+                }
+            }
+        }
+    }
+
+
+
+    public ScopesHashModel buildTemplateModel(ValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
+        ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
+        populateContext(model, stack, action, request, response);
+        if (tagLibraries != null) {
+            for (String prefix : tagLibraries.keySet()) {
+                model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
+            }
+        }
+
+        //place the model in the request using the special parameter.  This can be retrieved for freemarker and velocity.
+        request.setAttribute(ATTR_TEMPLATE_MODEL, model);
+
+        return model;
+    }
+
 
     protected void populateContext(ScopesHashModel model, ValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
         // put the same objects into the context that the velocity result uses
@@ -244,127 +515,19 @@ public class FreemarkerManager {
         }
     }
 
-    protected BeansWrapper getObjectWrapper() {
-        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper);
-        wrapper.setUseCache(cacheBeanWrapper);
-        return wrapper;
-    }
-
-    /**
-     * The default template loader is a MultiTemplateLoader which includes
-     * a ClassTemplateLoader and a WebappTemplateLoader (and a FileTemplateLoader depending on
-     * the init-parameter 'TemplatePath').
-     * <p/>
-     * The ClassTemplateLoader will resolve fully qualified template includes
-     * that begin with a slash. for example /com/company/template/common.ftl
-     * <p/>
-     * The WebappTemplateLoader attempts to resolve templates relative to the web root folder
+      /**
+     * If the parameter "nocache" was set to true, generate a set of headers
+     * that will advise the HTTP client not to cache the returned page.
      */
-    protected TemplateLoader getTemplateLoader(ServletContext servletContext) {
-        // construct a FileTemplateLoader for the init-param 'TemplatePath'
-        FileTemplateLoader templatePathLoader = null;
-
-        String templatePath = servletContext.getInitParameter("TemplatePath");
-        if (templatePath == null) {
-            templatePath = servletContext.getInitParameter("templatePath");
-        }
-
-        if (templatePath != null) {
-            try {
-                templatePathLoader = new FileTemplateLoader(new File(templatePath));
-            } catch (IOException e) {
-                LOG.error("Invalid template path specified: " + e.getMessage(), e);
-            }
-        }
-
-        // presume that most apps will require the class and webapp template loader
-        // if people wish to
-        return templatePathLoader != null ?
-                new MultiTemplateLoader(new TemplateLoader[]{
-                        templatePathLoader,
-                        new WebappTemplateLoader(servletContext),
-                        new StrutsClassTemplateLoader()
-                })
-                : new MultiTemplateLoader(new TemplateLoader[]{
-                new WebappTemplateLoader(servletContext),
-                new StrutsClassTemplateLoader()
-        });
-    }
-
-    /**
-     * Create the instance of the freemarker Configuration object.
-     * <p/>
-     * this implementation
-     * <ul>
-     * <li>obtains the default configuration from Configuration.getDefaultConfiguration()
-     * <li>sets up template loading from a ClassTemplateLoader and a WebappTemplateLoader
-     * <li>sets up the object wrapper to be the BeansWrapper
-     * <li>loads settings from the classpath file /freemarker.properties
-     * </ul>
-     *
-     * @param servletContext
-     */
-    protected freemarker.template.Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
-        freemarker.template.Configuration configuration = new freemarker.template.Configuration();
-
-        configuration.setTemplateLoader(getTemplateLoader(servletContext));
-
-        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
-
-        configuration.setObjectWrapper(getObjectWrapper());
-        
-        if( mruMaxStrongSize > 0 ) {
-            configuration.setSetting(freemarker.template.Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
-        }
-
-        if (encoding != null) {
-            configuration.setDefaultEncoding(encoding);
-        }
-
-        loadSettings(servletContext, configuration);
-
-        return configuration;
-    }
-
-    /**
-     * Load the settings from the /freemarker.properties file on the classpath
-     *
-     * @see freemarker.template.Configuration#setSettings for the definition of valid settings
-     */
-    protected void loadSettings(ServletContext servletContext, freemarker.template.Configuration configuration) {
-        InputStream in = null;
-
-        try {
-            in = FileManager.loadFile("freemarker.properties", FreemarkerManager.class);
-
-            if (in != null) {
-                Properties p = new Properties();
-                p.load(in);
-                configuration.setSettings(p);
-            }
-        } catch (IOException e) {
-            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
-        } catch (TemplateException e) {
-            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch(IOException io) {
-                    LOG.warn("Unable to close input stream", io);
-                }
-            }
-        }
-    }
-
-    public SimpleHash buildTemplateModel(ValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
-        ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
-        populateContext(model, stack, action, request, response);
-        if (tagLibraries != null) {
-            for (String prefix : tagLibraries.keySet()) {
-                model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
-            }
-        }
-        return model;
-    }
+      private void setBrowserCachingPolicy(HttpServletResponse res) {
+          if (nocache) {
+              // HTTP/1.1 + IE extensions
+              res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, "
+                      + "post-check=0, pre-check=0");
+              // HTTP/1.0
+              res.setHeader("Pragma", "no-cache");
+              // Last resort for those that ignore all of the above
+              res.setHeader("Expires", EXPIRATION_DATE);
+          }
+      }
 }

@@ -52,6 +52,7 @@ import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.view.ToolboxManager;
 import org.apache.velocity.tools.view.context.ChainedContext;
 import org.apache.velocity.tools.view.servlet.ServletToolboxManager;
+import org.apache.commons.lang.xwork.StringUtils;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Container;
@@ -69,6 +70,8 @@ public class VelocityManager {
     private static final Logger LOG = LoggerFactory.getLogger(VelocityManager.class);
     public static final String STRUTS = "struts";
     private ObjectFactory objectFactory;
+
+    public static final String KEY_VELOCITY_STRUTS_CONTEXT = ".KEY_velocity.struts2.context";
 
     /**
      * the parent JSP tag
@@ -100,9 +103,6 @@ public class VelocityManager {
 
     private List<TagLibrary> tagLibraries;
 
-    public VelocityManager() {
-    }
-
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
@@ -117,35 +117,6 @@ public class VelocityManager {
         }
         this.tagLibraries = Collections.unmodifiableList(list);
     }
-
-    /**
-     * retrieve an instance to the current VelocityManager
-     */
-    /*public synchronized static VelocityManager getInstance() {
-        if (instance == null) {
-            String classname = VelocityManager.class.getName();
-
-            if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME)) {
-                classname = Settings.get(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME).trim();
-            }
-
-            if (!classname.equals(VelocityManager.class.getName())) {
-                try {
-                    log.info("Instantiating VelocityManager!, " + classname);
-                    // singleton instances shouldn't be built accessing request or session-specific context data
-                    instance = (VelocityManager) ObjectFactory.getObjectFactory().buildBean(classname, null);
-                } catch (Exception e) {
-                    log.fatal("Fatal exception occurred while trying to instantiate a VelocityManager instance, " + classname, e);
-                    instance = new VelocityManager();
-                }
-            } else {
-                instance = new VelocityManager();
-            }
-        }
-
-        return instance;
-    }
-    */
 
     /**
      * @return a reference to the VelocityEngine used by <b>all</b> struts velocity thingies with the exception of
@@ -171,6 +142,7 @@ public class VelocityManager {
      * @return a new StrutsVelocityContext
      */
     public Context createContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        Context result = null;
         VelocityContext[] chainedContexts = prepareChainedContexts(req, res, stack.getContext());
         StrutsVelocityContext context = new StrutsVelocityContext(chainedContexts, stack);
         Map standardMap = ContextUtil.getStandardContext(stack, req, res);
@@ -192,11 +164,13 @@ public class VelocityManager {
         if (toolboxManager != null && ctx != null) {
             ChainedContext chained = new ChainedContext(context, velocityEngine, req, res, ctx);
             chained.setToolbox(toolboxManager.getToolbox(chained));
-            return chained;
+            result = chained;
         } else {
-            return context;
+            result = context;
         }
 
+        req.setAttribute(KEY_VELOCITY_STRUTS_CONTEXT, result);
+        return result;
     }
 
     /**
@@ -389,6 +363,10 @@ public class VelocityManager {
         this.toolBoxLocation = toolboxLocation;
     }
 
+    public ToolboxManager getToolboxManager() {
+        return toolboxManager;
+    }
+
     /**
      * allow users to specify via the struts.properties file a set of additional VelocityContexts to chain to the
      * the StrutsVelocityContext.  The intent is to allow these contexts to store helper objects that the ui
@@ -418,7 +396,7 @@ public class VelocityManager {
      */
     protected void initToolbox(ServletContext context) {
         /* if we have a toolbox, get a manager for it */
-        if (toolBoxLocation != null) {
+        if (StringUtils.isNotBlank(toolBoxLocation)) {
             toolboxManager = ServletToolboxManager.getInstance(context, toolBoxLocation);
         } else {
             Velocity.info("VelocityViewServlet: No toolbox entry in configuration.");

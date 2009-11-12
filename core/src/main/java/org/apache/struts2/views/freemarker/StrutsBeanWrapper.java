@@ -30,11 +30,9 @@ import freemarker.ext.beans.MapModel;
 import freemarker.ext.util.ModelFactory;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleSequence;
-import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -54,7 +52,7 @@ import freemarker.template.TemplateModelException;
 public class StrutsBeanWrapper extends BeansWrapper {
     private boolean altMapWrapper;
 
-    StrutsBeanWrapper(boolean altMapWrapper) {
+    public StrutsBeanWrapper(boolean altMapWrapper) {
         this.altMapWrapper = altMapWrapper;
     }
 

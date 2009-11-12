@@ -21,6 +21,8 @@
 package org.apache.struts2.dispatcher.ng.listener;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.ng.InitOperations;
 import org.apache.struts2.dispatcher.ng.PrepareOperations;
@@ -46,6 +48,7 @@ public class StrutsListener implements ServletContextListener {
             init.initStaticContentLoader(config, dispatcher);
 
             prepare = new PrepareOperations(config.getServletContext(), dispatcher);
+            sce.getServletContext().setAttribute(StrutsStatics.SERVLET_DISPATCHER, dispatcher);
         } finally {
             init.cleanup();
         }

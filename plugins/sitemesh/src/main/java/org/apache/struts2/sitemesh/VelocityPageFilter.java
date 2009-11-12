@@ -18,92 +18,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.sitemesh;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
+import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
+import com.opensymphony.sitemesh.DecoratorSelector;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.xwork2.inject.Inject;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
 
 import org.apache.struts2.views.velocity.VelocityManager;
-import org.apache.velocity.Template;
-import org.apache.velocity.context.Context;
-
-import com.opensymphony.module.sitemesh.Decorator;
-import com.opensymphony.module.sitemesh.HTMLPage;
-import com.opensymphony.module.sitemesh.Page;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-
 
 /**
- *  Applies Velocity-based decorators
- *
+ * Core Filter for integrating SiteMesh into a Java web application.
  */
-public class VelocityPageFilter extends TemplatePageFilter {
-    private static final Logger LOG = LoggerFactory.getLogger(VelocityPageFilter.class);
+public class VelocityPageFilter extends SiteMeshFilter {
 
-    private static VelocityManager velocityManager;
-    
     @Inject(required=false)
     public static void setVelocityManager(VelocityManager mgr) {
-        velocityManager = mgr;
+        OldDecorator2NewStrutsVelocityDecorator.setVelocityManager(mgr);
     }
-        
-    /**
-     *  Applies the decorator, using the relevent contexts
-     *
-     * @param page The page
-     * @param decorator The decorator
-     * @param req The servlet request
-     * @param res The servlet response
-     * @param servletContext The servlet context
-     * @param ctx The action context for this request, populated with the server state
-     */
-    protected void applyDecorator(Page page, Decorator decorator,
-                                  HttpServletRequest req, HttpServletResponse res,
-                                  ServletContext servletContext, ActionContext ctx)
-            throws ServletException, IOException {
-        
-        if (velocityManager == null) {
-            throw new ServletException("Missing freemarker dependency");
-        }
-        
-        try {
 
-            // init (if needed)
-            velocityManager.init(servletContext);
+    private FilterConfig filterConfig;
 
-            // get encoding
-            String encoding = getEncoding();
+     public void init(FilterConfig filterConfig) {
+         this.filterConfig = filterConfig;
+        super.init(filterConfig);
+     }
 
-            // get the template and context
-            Template template = velocityManager.getVelocityEngine().getTemplate(decorator.getPage(), encoding);
-            Context context = velocityManager.createContext(ctx.getValueStack(), req, res);
-
-            // put the page in the context
-            context.put("page", page);
-            if (page instanceof HTMLPage) {
-                HTMLPage htmlPage = ((HTMLPage) page);
-                context.put("head", htmlPage.getHead());
-            }
-            context.put("title",page.getTitle());
-            context.put("body",page.getBody());
-
-            // finally, render it
-            PrintWriter writer = res.getWriter();
-            template.merge(context, writer);
-            writer.flush();
-        } catch (Exception e) {
-            String msg = "Error applying decorator: " + e.getMessage();
-            LOG.error(msg, e);
-            throw new ServletException(msg, e);
-        }
+    protected DecoratorSelector initDecoratorSelector(SiteMeshWebAppContext webAppContext) {
+        // TODO: Remove heavy coupling on horrible SM2 Factory
+        Factory factory = Factory.getInstance(new Config(filterConfig));
+        factory.refresh();
+        return new FreeMarkerMapper2DecoratorSelector(factory.getDecoratorMapper());
     }
+
 }
+

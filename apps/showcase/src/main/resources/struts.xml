@@ -19,6 +19,8 @@
     <constant name="struts.serve.static" value="true" />
     <constant name="struts.serve.static.browserCache" value="false" />
 
+    <constant name="actionPackages" value="org.apache.struts2.showcase.person"/>
+
     <include file="struts-chat.xml" />
     
     <include file="struts-interactive.xml" />

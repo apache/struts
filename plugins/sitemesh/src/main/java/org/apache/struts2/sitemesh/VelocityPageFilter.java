@@ -52,7 +52,7 @@ public class VelocityPageFilter extends SiteMeshFilter {
         // TODO: Remove heavy coupling on horrible SM2 Factory
         Factory factory = Factory.getInstance(new Config(filterConfig));
         factory.refresh();
-        return new FreeMarkerMapper2DecoratorSelector(factory.getDecoratorMapper());
+        return new FreemarkerMapper2DecoratorSelector(factory.getDecoratorMapper());
     }
 
 }

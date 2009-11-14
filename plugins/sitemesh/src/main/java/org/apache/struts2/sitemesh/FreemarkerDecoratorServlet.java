@@ -77,10 +77,11 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
     public static final String KEY_APPLICATION_PRIVATE = "__FreeMarkerServlet.Application__";
     public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
 
+    private static final String ATTR_REQUEST_PARAMETERS_MODEL = "Parameters";
+
     // Note these names start with dot, so they're essentially invisible from
     // a freemarker script.
     private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
-    private static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
     private static final String ATTR_SESSION_MODEL = ".freemarker.Session";
     private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
     private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";

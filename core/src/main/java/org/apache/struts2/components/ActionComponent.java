@@ -34,6 +34,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -286,6 +287,7 @@ public class ActionComponent extends ContextBean {
             proxy = actionProxyFactory.createActionProxy(namespace, actionName, methodName, createExtraContext(), executeResult, true);
             // set the new stack into the request for the taglib to use
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
+            req.setAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION, Boolean.TRUE);
             proxy.execute();
 
         } catch (Exception e) {
@@ -295,6 +297,7 @@ public class ActionComponent extends ContextBean {
                 throw new StrutsException(message, e);
             }
         } finally {
+            req.removeAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION);
             // set the old stack back on the request
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             if (inv != null) {

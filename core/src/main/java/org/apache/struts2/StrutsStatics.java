@@ -66,4 +66,10 @@ public interface StrutsStatics {
 
     /** Constant for the PortletContext object */
     public static final String STRUTS_PORTLET_CONTEXT = "struts.portlet.context";
+
+    /**
+     * Set as an attribute in the request to let other parts of the framework know that the invocation is happening inside an
+     * action tag
+     */
+    public static final String STRUTS_ACTION_TAG_INVOCATION= "struts.actiontag.invocation";
 }

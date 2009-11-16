@@ -29,7 +29,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.views.util.UrlHelper;
+import org.apache.commons.lang.xwork.ObjectUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -144,10 +146,13 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 return;
             }
 
+            //if we are inside an action tag, we always need to do an include
+            Boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
+
             // If we're included, then include the view
             // Otherwise do forward
             // This allow the page to, for example, set content type
-            if (!response.isCommitted() && (request.getAttribute("javax.servlet.include.servlet_path") == null)) {
+            if (!insideActionTag && !response.isCommitted() && (request.getAttribute("javax.servlet.include.servlet_path") == null)) {
                 request.setAttribute("struts.view_uri", finalLocation);
                 request.setAttribute("struts.request_uri", request.getRequestURI());
 

@@ -223,6 +223,66 @@ public class PropertyTagTest extends StrutsTestCase {
         pageContext.verify();
     }
 
+     public void testEscapeXml() throws Exception {
+        // setups
+        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
+
+        Foo foo = new Foo();
+        foo.setTitle("<>'\"&");
+        stack.push(foo);
+
+        MockJspWriter jspWriter = new MockJspWriter();
+        jspWriter.setExpectedData("Foo is: &lt;&gt;&apos;&quot;&amp;");
+
+        MockPageContext pageContext = new MockPageContext();
+        pageContext.setJspWriter(jspWriter);
+        pageContext.setRequest(request);
+
+        // test
+        {PropertyTag tag = new PropertyTag();
+        tag.setEscape(false);
+        tag.setEscapeXml(true);
+        tag.setPageContext(pageContext);
+        tag.setValue("%{toString()}");
+        tag.doStartTag();
+        tag.doEndTag();}
+
+        // verify test
+        request.verify();
+        jspWriter.verify();
+        pageContext.verify();
+    }
+
+     public void testEscapeCsv() throws Exception {
+        // setups
+        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
+
+        Foo foo = new Foo();
+        foo.setTitle("\"something,\",\"");
+        stack.push(foo);
+
+        MockJspWriter jspWriter = new MockJspWriter();
+        jspWriter.setExpectedData("\"Foo is: \"\"something,\"\",\"\"\"");
+
+        MockPageContext pageContext = new MockPageContext();
+        pageContext.setJspWriter(jspWriter);
+        pageContext.setRequest(request);
+
+        // test
+        {PropertyTag tag = new PropertyTag();
+        tag.setEscape(false);
+        tag.setEscapeCsv(true);
+        tag.setPageContext(pageContext);
+        tag.setValue("%{toString()}");
+        tag.doStartTag();
+        tag.doEndTag();}
+
+        // verify test
+        request.verify();
+        jspWriter.verify();
+        pageContext.verify();
+    }
+
     public void testWithAltSyntax2() throws Exception {
         // setups
         initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});

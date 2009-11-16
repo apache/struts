@@ -41,6 +41,8 @@ public class PropertyTag extends ComponentTagSupport {
     private String value;
     private boolean escape = true;
     private boolean escapeJavaScript = false;
+    private boolean escapeXml = false;
+    private boolean escapeCsv = false;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Property(stack);
@@ -54,6 +56,8 @@ public class PropertyTag extends ComponentTagSupport {
         tag.setValue(value);
         tag.setEscape(escape);
         tag.setEscapeJavaScript(escapeJavaScript);
+        tag.setEscapeXml(escapeXml);
+        tag.setEscapeCsv(escapeCsv);
     }
 
     public void setDefault(String defaultValue) {
@@ -70,5 +74,17 @@ public class PropertyTag extends ComponentTagSupport {
     
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public void setEscapeCsv(boolean escapeCsv) {
+        this.escapeCsv = escapeCsv;
+    }
+
+    public void setEscapeXml(boolean escapeXml) {
+        this.escapeXml = escapeXml;
     }
 }

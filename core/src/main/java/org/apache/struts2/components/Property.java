@@ -102,6 +102,8 @@ public class Property extends Component {
     private String value;
     private boolean escape = true;
     private boolean escapeJavaScript = false;
+    private boolean escapeXml = false;
+    private boolean escapeCsv = false;
 
     @StrutsTagAttribute(description="The default value to be used if <u>value</u> attribute is null")
     public void setDefault(String defaultValue) {
@@ -121,6 +123,20 @@ public class Property extends Component {
     @StrutsTagAttribute(description="Value to be displayed", type="Object", defaultValue="&lt;top of stack&gt;")
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    @StrutsTagAttribute(description="Whether to escape CSV (useful to escape a value for a column)", type="Boolean", defaultValue="false")
+    public void setEscapeCsv(boolean escapeCsv) {
+        this.escapeCsv = escapeCsv;
+    }
+
+    @StrutsTagAttribute(description="Whether to escape XML", type="Boolean", defaultValue="false")
+    public void setEscapeXml(boolean escapeXml) {
+        this.escapeXml = escapeXml;
     }
 
     public boolean start(Writer writer) {
@@ -161,6 +177,13 @@ public class Property extends Component {
         if (escapeJavaScript) {
         	result = StringEscapeUtils.escapeJavaScript(result);
         }
+        if (escapeXml) {
+        	result = StringEscapeUtils.escapeXml(result);
+        }
+        if (escapeCsv) {
+            result = StringEscapeUtils.escapeCsv(result);
+        }
+
         return result;
     }
 }

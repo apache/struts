@@ -100,7 +100,7 @@ public class Property extends Component {
 
     private String defaultValue;
     private String value;
-    private boolean escape = true;
+    private boolean escapeHtml = true;
     private boolean escapeJavaScript = false;
     private boolean escapeXml = false;
     private boolean escapeCsv = false;
@@ -110,9 +110,14 @@ public class Property extends Component {
         this.defaultValue = defaultValue;
     }
 
-    @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
+    @StrutsTagAttribute(description="Deprecated. Use 'escapeHtml'. Whether to escape HTML", type="Boolean", defaultValue="true")
     public void setEscape(boolean escape) {
-        this.escape = escape;
+        this.escapeHtml = escape;
+    }
+
+    @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="true")
+    public void setEscapeHtml(boolean escape) {
+        this.escapeHtml = escape;
     }
 
     @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
@@ -171,7 +176,7 @@ public class Property extends Component {
 
     private String prepare(String value) {
     	String result = value;
-        if (escape) {
+        if (escapeHtml) {
         	result = StringEscapeUtils.escapeHtml(result);
         }
         if (escapeJavaScript) {

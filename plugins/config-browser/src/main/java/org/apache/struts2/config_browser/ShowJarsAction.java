@@ -23,6 +23,7 @@ package org.apache.struts2.config_browser;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,8 +42,18 @@ public class ShowJarsAction extends ActionNamesAction {
     List<Properties> poms;
     
     @Inject
-    public void setContainer(Container container) throws IOException {
-        poms = configHelper.getJarProperties();
+    public void setContainer(Container container) {
+        try {
+            poms = configHelper.getJarProperties();
+        }
+        catch (IOException ioe) {
+            // this is the config browser, so it doesn't seem necessary to do more than just
+            // send up a debug message
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("IOException caught while retrieving jar properties - " + ioe.getMessage());
+            }
+            poms = Collections.EMPTY_LIST; // maybe avoiding NPE later
+        }
     }
     
     public List<Properties> getJarPoms()

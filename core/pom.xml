@@ -261,12 +261,6 @@
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
             <version>2.7.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- Velocity -->

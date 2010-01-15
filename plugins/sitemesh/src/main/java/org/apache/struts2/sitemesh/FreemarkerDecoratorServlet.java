@@ -66,26 +66,8 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
 
     public static final long serialVersionUID = -2440216393145762479L;
 
-    private static final String INITPARAM_TEMPLATE_PATH = "TemplatePath";
 
-    public static final String KEY_REQUEST = "Request";
-    public static final String KEY_INCLUDE = "include_page";
-    public static final String KEY_REQUEST_PRIVATE = "__FreeMarkerServlet.Request__";
-    public static final String KEY_REQUEST_PARAMETERS = "RequestParameters";
-    public static final String KEY_SESSION = "Session";
-    public static final String KEY_APPLICATION = "Application";
-    public static final String KEY_APPLICATION_PRIVATE = "__FreeMarkerServlet.Application__";
-    public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
-
-    private static final String ATTR_REQUEST_PARAMETERS_MODEL = "Parameters";
-
-    // Note these names start with dot, so they're essentially invisible from
-    // a freemarker script.
-    private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
-    private static final String ATTR_SESSION_MODEL = ".freemarker.Session";
-    private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
-    private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
-
+/*
     private static final String EXPIRATION_DATE;
 
     static {
@@ -95,7 +77,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
         SimpleDateFormat httpDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.US);
         EXPIRATION_DATE = httpDate.format(expiration.getTime());
     }
-
+*/
     protected String templatePath;
     protected boolean nocache;
     protected boolean debug;
@@ -132,7 +114,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
                 }
 
                 // template path is already handled!
-                if (!INITPARAM_TEMPLATE_PATH.equals(name)) freemarkerManager.addSetting(name, value);
+                if (!FreemarkerManager.INITPARAM_TEMPLATE_PATH.equals(name)) freemarkerManager.addSetting(name, value);
             }
             nocache = freemarkerManager.getNocache();
             debug = freemarkerManager.getDebug();
@@ -194,8 +176,6 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
                 ActionContext ctx = ServletActionContext.getActionContext(request);
                 model = freemarkerManager.buildTemplateModel(ctx.getValueStack(), ctx.getActionInvocation().getAction(), servletContext, request, response, wrapper);
             }
-
-            populateModel(model, wrapper, servletContext, request, response);
 
             // Give subclasses a chance to hook into preprocessing
             if (preTemplateProcess(request, response, template, model)) {
@@ -352,58 +332,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
             // HTTP/1.0
             res.setHeader("Pragma", "no-cache");
             // Last resort for those that ignore all of the above
-            res.setHeader("Expires", EXPIRATION_DATE);
-        }
-    }
-
-    protected ScopesHashModel populateModel(ScopesHashModel params, ObjectWrapper wrapper, ServletContext servletContext, final HttpServletRequest request, final HttpServletResponse response) throws TemplateModelException {
-        try {
-            // Create hash model wrapper for servlet context (the application)
-            ServletContextHashModel servletContextModel = (ServletContextHashModel) servletContext.getAttribute(ATTR_APPLICATION_MODEL);
-            if (servletContextModel == null) {
-                servletContextModel = new ServletContextHashModel(this, wrapper);
-                servletContext.setAttribute(ATTR_APPLICATION_MODEL, servletContextModel);
-                TaglibFactory taglibs = new TaglibFactory(servletContext);
-                servletContext.setAttribute(ATTR_JSP_TAGLIBS_MODEL, taglibs);
-                initializeServletContext(request, response);
-            }
-            params.putUnlistedModel(KEY_APPLICATION, servletContextModel);
-            params.putUnlistedModel(KEY_APPLICATION_PRIVATE, servletContextModel);
-            params.putUnlistedModel(KEY_JSP_TAGLIBS, (TemplateModel) servletContext.getAttribute(ATTR_JSP_TAGLIBS_MODEL));
-            // Create hash model wrapper for session
-            HttpSessionHashModel sessionModel;
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                sessionModel = (HttpSessionHashModel) session.getAttribute(ATTR_SESSION_MODEL);
-                if (sessionModel == null) {
-                    sessionModel = new HttpSessionHashModel(session, wrapper);
-                    session.setAttribute(ATTR_SESSION_MODEL, sessionModel);
-                    initializeSession(request, response);
-                }
-            } else {
-                sessionModel = new HttpSessionHashModel(this, request, response, wrapper);
-            }
-            params.putUnlistedModel(KEY_SESSION, sessionModel);
-
-            // Create hash model wrapper for request
-            HttpRequestHashModel requestModel = (HttpRequestHashModel) request.getAttribute(ATTR_REQUEST_MODEL);
-            if (requestModel == null || requestModel.getRequest() != request) {
-                requestModel = new HttpRequestHashModel(request, response, wrapper);
-                request.setAttribute(ATTR_REQUEST_MODEL, requestModel);
-                request.setAttribute(ATTR_REQUEST_PARAMETERS_MODEL, createRequestParametersHashModel(request));
-            }
-            params.putUnlistedModel(KEY_REQUEST, requestModel);
-            params.putUnlistedModel(KEY_INCLUDE, new IncludePage(request, response));
-            params.putUnlistedModel(KEY_REQUEST_PRIVATE, requestModel);
-
-            // Create hash model wrapper for request parameters
-            HttpRequestParametersHashModel requestParametersModel = (HttpRequestParametersHashModel) request.getAttribute(ATTR_REQUEST_PARAMETERS_MODEL);
-            params.putUnlistedModel(KEY_REQUEST_PARAMETERS, requestParametersModel);
-            return params;
-        } catch (ServletException e) {
-            throw new TemplateModelException(e);
-        } catch (IOException e) {
-            throw new TemplateModelException(e);
+            res.setHeader("Expires", freemarkerManager.EXPIRATION_DATE);
         }
     }
 }

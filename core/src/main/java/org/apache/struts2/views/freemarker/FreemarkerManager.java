@@ -99,11 +99,11 @@ import freemarker.template.utility.StringUtil;
 public class FreemarkerManager {
 
     // coppied from freemarker servlet - so that there is no dependency on it
-    private static final String INITPARAM_TEMPLATE_PATH = "TemplatePath";
-     private static final String INITPARAM_NOCACHE = "NoCache";
-     private static final String INITPARAM_CONTENT_TYPE = "ContentType";
-     private static final String DEFAULT_CONTENT_TYPE = "text/html";
-     private static final String INITPARAM_DEBUG = "Debug";
+     public static final String INITPARAM_TEMPLATE_PATH = "TemplatePath";
+     public static final String INITPARAM_NOCACHE = "NoCache";
+     public static final String INITPARAM_CONTENT_TYPE = "ContentType";
+     public static final String DEFAULT_CONTENT_TYPE = "text/html";
+     public static final String INITPARAM_DEBUG = "Debug";
 
      public static final String KEY_REQUEST = "Request";
      public static final String KEY_INCLUDE = "include_page";
@@ -115,16 +115,21 @@ public class FreemarkerManager {
      public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
 
      // Note these names start with dot, so they're essentially invisible from  a freemarker script.
-     public static final String ATTR_TEMPLATE_MODEL = ".freemarker.TemplateModel";  // template model stored in request for siteMesh
      private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
      private static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
      private static final String ATTR_SESSION_MODEL = ".freemarker.Session";
      private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
      private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
 
+    // for sitemesh
+    public static final String ATTR_TEMPLATE_MODEL = ".freemarker.TemplateModel";  // template model stored in request for siteMesh
+
+    // for Struts
+    public static final String KEY_REQUEST_PARAMETERS_STRUTS = "Parameters";
+
     public static final String KEY_HASHMODEL_PRIVATE = "__FreeMarkerManager.Request__";
 
-    private static final String EXPIRATION_DATE;
+    public static final String EXPIRATION_DATE;
 
     /**
      * Adds individual settings.
@@ -305,32 +310,36 @@ public class FreemarkerManager {
     protected ScopesHashModel buildScopesHashModel(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper, ValueStack stack) {
         ScopesHashModel model = new ScopesHashModel(wrapper, servletContext, request, stack);
 
-        // Create hash model wrapper for servlet context (the application)
-        // only need one thread to do this once, per servlet context
+        // Create hash model wrapper for servlet context (the application). We need one thread, once per servlet context
         synchronized (servletContext) {
             ServletContextHashModel servletContextModel = (ServletContextHashModel) servletContext.getAttribute(ATTR_APPLICATION_MODEL);
-
             if (servletContextModel == null) {
-
+                // first try a JSP support servlet.  If it fails, default to the servlet.
                 GenericServlet servlet = JspSupportServlet.jspSupportServlet;
-                // TODO if the jsp support  servlet isn't load-on-startup then it won't exist
-                // if it hasn't been accessed, and a JSP page is accessed
                 if (servlet != null) {
                     servletContextModel = new ServletContextHashModel(servlet, wrapper);
                     servletContext.setAttribute(ATTR_APPLICATION_MODEL, servletContextModel);
-                    TaglibFactory taglibs = new TaglibFactory(servletContext);
-                    servletContext.setAttribute(ATTR_JSP_TAGLIBS_MODEL, taglibs);
+                } else {
+                    servletContextModel = new ServletContextHashModel(servletContext, wrapper);
+                    servletContext.setAttribute(ATTR_APPLICATION_MODEL, servletContextModel);
                 }
-
+                TaglibFactory taglibs = new TaglibFactory(servletContext);
+                servletContext.setAttribute(ATTR_JSP_TAGLIBS_MODEL, taglibs);
             }
-
             model.put(KEY_APPLICATION, servletContextModel);
-            model.put(KEY_JSP_TAGLIBS, (TemplateModel) servletContext.getAttribute(ATTR_JSP_TAGLIBS_MODEL));
+            model.putUnlistedModel(KEY_APPLICATION_PRIVATE, servletContextModel);
         }
+        model.put(KEY_JSP_TAGLIBS, (TemplateModel) servletContext.getAttribute(ATTR_JSP_TAGLIBS_MODEL));
 
         // Create hash model wrapper for session
         HttpSession session = request.getSession(false);
+        HttpSessionHashModel sessionModel;
         if (session != null) {
+            sessionModel = (HttpSessionHashModel) session.getAttribute(ATTR_SESSION_MODEL);
+            if (sessionModel == null) {
+                sessionModel = new HttpSessionHashModel(session, wrapper);
+                session.setAttribute(ATTR_SESSION_MODEL, sessionModel);
+            }
             model.put(KEY_SESSION, new HttpSessionHashModel(session, wrapper));
         } else {
             // no session means no attributes ???
@@ -355,6 +364,7 @@ public class FreemarkerManager {
             request.setAttribute(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
         }
         model.put(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
+        model.put(KEY_REQUEST_PARAMETERS_STRUTS,reqParametersModel);
 
         return model;
     }

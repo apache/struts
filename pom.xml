@@ -58,6 +58,7 @@
     </distributionManagement>
 
     <modules>
+        <module>xwork-core</module>
         <module>core</module>
         <module>apps</module>
         <module>plugins</module>
@@ -98,7 +99,7 @@
         <profile>
             <id>xwork</id>
             <modules>
-                <module>../xwork</module>
+                <module>xwork-core</module>
             </modules>
         </profile>
         <profile>

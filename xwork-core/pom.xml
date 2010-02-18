@@ -3,35 +3,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-parent</artifactId>
+        <version>2.2.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>com.opensymphony</groupId>
     <artifactId>xwork-core</artifactId>
     <packaging>jar</packaging>
     <name>XWork: Core</name>
-    
-    <parent>
-        <groupId>com.opensymphony</groupId>
-        <artifactId>xwork-parent</artifactId>
-        <version>2.1.7-SNAPSHOT</version>
-    </parent>
+
 
     <scm>
-        <connection>scm:svn:http://svn.opensymphony.com/svn/xwork/trunk/core</connection>
-        <developerConnection>
-            scm:svn:https://svn.opensymphony.com/svn/xwork/trunk/core
-        </developerConnection>
-        <url>https://svn.opensymphony.com/svn/xwork/trunk/core</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/xwork-core/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/xwork-core/</developerConnection>
+        <url>http://svn.apache.org/repos/asf/struts/struts2/trunk/xwork-core/</url>
     </scm>
 
-    <licenses>
-        <license>
-            <name>The OpenSymphony Software License 1.1</name>
-            <url>../src/resources/LICENSE.txt</url>
-            <comments>
-                This license is derived and fully compatible with the Apache Software
-                License - see http://www.apache.org/LICENSE.txt
-            </comments>
-        </license>
-    </licenses>
+    <properties>
+        <currentVersion>${pom.version}</currentVersion>
+        <struts2.springPlatformVersion>2.5.6</struts2.springPlatformVersion>
+        <asm.version>3.1</asm.version>
+        <ognl.version>2.7.3</ognl.version>
+    </properties>
 
     <profiles>
         <profile>
@@ -246,7 +241,117 @@
         <defaultGoal>install</defaultGoal>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.4</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>${ognl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${asm.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>${asm.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${struts2.springPlatformVersion}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>2.1_3</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <optional>true</optional>
+        </dependency>
 
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.1</version>
+            <optional>true</optional>
+            <classifier>jdk15</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-core</artifactId>
+            <version>0.09</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>

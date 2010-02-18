@@ -21,13 +21,12 @@
 
 package org.apache.struts2.dispatcher;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -81,7 +80,7 @@ public class RequestMap extends AbstractMap implements Serializable {
                 entries.add(new Entry() {
                     public boolean equals(Object obj) {
                         if (!(obj instanceof Entry)) {
-                          return false;
+                            return false;
                         }
                         Entry entry = (Entry) obj;
 
@@ -130,10 +129,10 @@ public class RequestMap extends AbstractMap implements Serializable {
      * @return the object that was just set.
      */
     public Object put(Object key, Object value) {
+        Object oldValue = get(key);
         entries = null;
         request.setAttribute(key.toString(), value);
-
-        return get(key);
+        return oldValue;
     }
 
     /**

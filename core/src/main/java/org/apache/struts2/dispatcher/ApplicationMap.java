@@ -21,6 +21,7 @@
 
 package org.apache.struts2.dispatcher;
 
+import javax.servlet.ServletContext;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Enumeration;
@@ -28,15 +29,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of attributes and
  * init parameters in a {@link javax.servlet.ServletContext} object. The {@link #entrySet()} method
  * enumerates over all servlet context attributes and init parameters and returns a collection of both.
  * Note, this will occur lazily - only when the entry set is asked for.
- *
  */
 public class ApplicationMap extends AbstractMap implements Serializable {
 
@@ -87,7 +85,7 @@ public class ApplicationMap extends AbstractMap implements Serializable {
                 entries.add(new Map.Entry() {
                     public boolean equals(Object obj) {
                         if (!(obj instanceof Map.Entry)) {
-                          return false;
+                            return false;
                         }
                         Map.Entry entry = (Map.Entry) obj;
 
@@ -123,7 +121,7 @@ public class ApplicationMap extends AbstractMap implements Serializable {
                 entries.add(new Map.Entry() {
                     public boolean equals(Object obj) {
                         if (!(obj instanceof Map.Entry)) {
-                          return false;
+                            return false;
                         }
                         Map.Entry entry = (Map.Entry) obj;
 
@@ -178,10 +176,10 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      * @return the attribute that was just set.
      */
     public Object put(Object key, Object value) {
+        Object oldValue = get(key);
         entries = null;
         context.setAttribute(key.toString(), value);
-
-        return get(key);
+        return oldValue;
     }
 
     /**

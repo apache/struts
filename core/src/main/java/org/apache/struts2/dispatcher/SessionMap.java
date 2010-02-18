@@ -21,6 +21,8 @@
 
 package org.apache.struts2.dispatcher;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -29,22 +31,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of HTTP session
  * attributes. The {@link #entrySet()} method enumerates over all session attributes and creates a Set of entries.
  * Note, this will occur lazily - only when the entry set is asked for.
- *
  */
-public class SessionMap<K, V> extends AbstractMap<K,V> implements Serializable {
+public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable {
 
     private static final long serialVersionUID = 4678843241638046854L;
 
     protected HttpSession session;
-    protected Set<Map.Entry<K,V>> entries;
+    protected Set<Map.Entry<K, V>> entries;
     protected HttpServletRequest request;
 
 
@@ -82,14 +80,14 @@ public class SessionMap<K, V> extends AbstractMap<K,V> implements Serializable {
      * map.
      */
     public void clear() {
-        if (session == null ) {
+        if (session == null) {
             return;
         }
 
         synchronized (session) {
             entries = null;
             Enumeration<String> attributeNamesEnum = session.getAttributeNames();
-            while(attributeNamesEnum.hasMoreElements()) {
+            while (attributeNamesEnum.hasMoreElements()) {
                 session.removeAttribute(attributeNamesEnum.nextElement());
             }
         }
@@ -101,24 +99,24 @@ public class SessionMap<K, V> extends AbstractMap<K,V> implements Serializable {
      *
      * @return a Set of attributes from the http session.
      */
-    public Set<java.util.Map.Entry<K,V>> entrySet() {
+    public Set<java.util.Map.Entry<K, V>> entrySet() {
         if (session == null) {
             return Collections.emptySet();
         }
 
         synchronized (session) {
             if (entries == null) {
-                entries = new HashSet<Map.Entry<K,V>>();
+                entries = new HashSet<Map.Entry<K, V>>();
 
                 Enumeration<? extends Object> enumeration = session.getAttributeNames();
 
                 while (enumeration.hasMoreElements()) {
                     final String key = enumeration.nextElement().toString();
                     final Object value = session.getAttribute(key);
-                    entries.add(new Map.Entry<K,V>() {
+                    entries.add(new Map.Entry<K, V>() {
                         public boolean equals(Object obj) {
                             if (!(obj instanceof Map.Entry)) {
-                              return false;
+                                return false;
                             }
                             Map.Entry<K, V> entry = (Map.Entry<K, V>) obj;
 
@@ -179,12 +177,11 @@ public class SessionMap<K, V> extends AbstractMap<K,V> implements Serializable {
                 session = request.getSession(true);
             }
         }
-
         synchronized (session) {
+            V oldValue = get(key);
             entries = null;
             session.setAttribute(key.toString(), value);
-
-            return get(key);
+            return oldValue;
         }
     }
 
@@ -209,7 +206,7 @@ public class SessionMap<K, V> extends AbstractMap<K,V> implements Serializable {
         }
     }
 
-    
+
     /**
      * Checks if the specified session attribute with the given key exists.
      *

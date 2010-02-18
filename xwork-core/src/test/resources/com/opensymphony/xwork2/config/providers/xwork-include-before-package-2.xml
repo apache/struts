@@ -1,0 +1,14 @@
+<!DOCTYPE xwork PUBLIC
+    "-//OpenSymphony Group//XWork 2.0//EN"
+    "http://www.opensymphony.com/xwork/xwork-2.0.dtd"
+ >
+
+<xwork>
+    <package name="namespace2" extends="namespace1" namespace="/namespace2">
+        <action name="action2" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="chain"/>
+            <interceptor-ref name="params"/>
+        </action>
+    </package>
+
+</xwork>

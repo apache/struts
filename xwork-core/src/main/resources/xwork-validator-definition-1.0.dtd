@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  XWork Validators Definition DTD.
+  Used the following DOCTYPE.
+
+  <!DOCTYPE validators PUBLIC
+  		"-//OpenSymphony Group//XWork Validator Definition 1.0//EN"
+  		"http://www.opensymphony.com/xwork/xwork-validator-definition-1.0.dtd">
+-->
+
+<!ELEMENT validators (validator*)>
+
+<!ELEMENT validator (#PCDATA)>
+<!ATTLIST validator
+    name CDATA #REQUIRED
+    class CDATA #REQUIRED
+>
+

@@ -1,0 +1,3 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="5" verbose="1" name="Failed suite [Command line suite]" parallel="false" annotations="JDK5">
+</suite>

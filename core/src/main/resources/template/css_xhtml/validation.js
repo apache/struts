@@ -117,15 +117,18 @@ function findWWGrpNode(elem) {
 }
 
 function findWWCtrlNode(enclosingDiv) {
-    for(var elem in enclosingDiv.getElementsByTagName("div")) {
-        if (elem.className && elem.className.match(/(wwlbl|wwctrl)/))
-            return elem
-    }
-    for(var elem in enclosingDiv.getElementsByTagName("span")) {
-        if (elem.className && elem.className.match(/(wwlbl|wwctrl)/))
-            return elem
-    }
-    return enclosingDiv.getElementsByTagName("span")[0];
+   var elems = enclosingDiv.getElementsByTagName("div");
+   for(i = 0; i < elems.length; ++i ) {
+       if (elems[i].className && elems[i].className.match(/(wwlbl|wwctrl)/))
+           return elems[i];
+   }
+
+   elems = enclosingDiv.getElementsByTagName("span");
+   for(i = 0; i < elems.length; ++i ) {
+       if (elems[i].className && elems[i].className.match(/(wwlbl|wwctrl)/))
+           return elems[i];
+   }
+   return enclosingDiv.getElementsByTagName("span")[0];
 }
 
 //find field position in the form

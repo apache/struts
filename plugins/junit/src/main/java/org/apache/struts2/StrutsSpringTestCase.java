@@ -28,18 +28,22 @@ import org.springframework.web.context.WebApplicationContext;
  * Base class for Spring JUnit actions
  */
 public abstract class StrutsSpringTestCase extends StrutsTestCase {
+
     private static final String DEFAULT_CONTEXT_LOCATION = "classpath*:applicationContext.xml";
     protected static ApplicationContext applicationContext;
 
-
     protected void setupBeforeInitDispatcher() throws Exception {
-        //init context
-        GenericXmlContextLoader xmlContextLoader = new GenericXmlContextLoader();
-        applicationContext = xmlContextLoader.loadContext(getContextLocations());
+        // only load beans from spring once
+        if (applicationContext == null) {
+            GenericXmlContextLoader xmlContextLoader = new GenericXmlContextLoader();
+            applicationContext = xmlContextLoader.loadContext(getContextLocations());
+        }
+
         servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     }
 
     protected String getContextLocations() {
         return DEFAULT_CONTEXT_LOCATION;
     }
+
 }

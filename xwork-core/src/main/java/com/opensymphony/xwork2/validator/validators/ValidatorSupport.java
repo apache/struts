@@ -19,12 +19,15 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.validator.*;
+import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
+import com.opensymphony.xwork2.validator.ShortCircuitableValidator;
+import com.opensymphony.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.Validator;
+import com.opensymphony.xwork2.validator.ValidatorContext;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -52,7 +55,9 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
     }
 
     public void setDefaultMessage(String message) {
-        this.defaultMessage = message;
+        if (StringUtils.isNotEmpty(message)) {
+            this.defaultMessage = message;
+        }
     }
 
     public String getDefaultMessage() {

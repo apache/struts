@@ -105,6 +105,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private boolean slashesInActionNames;
 
     private static final String DEFAULT_METHOD = "execute";
+    private boolean eagerLoading = false;
 
     /**
      * Constructs actions based on a list of packages.
@@ -279,6 +280,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject(value = "struts.convention.action.mapAllMatches", required = false)
     public void setMapAllMatches(String mapAllMatches) {
         this.mapAllMatches = "true".equals(mapAllMatches);
+    }
+
+    /**
+     * @param eagerLoading (Optional) If set, found action classes will be instantiated by the ObjectFactory to accelerate future use
+     *                      setting it up can clash with Spring managed beans
+     */
+    @Inject(value = "struts.convention.action.eagerLoading", required = false)
+    public void setEagerLoading(String eagerLoading) {
+        this.eagerLoading = "true".equals(eagerLoading);
     }
 
     protected void initReloadClassLoader() {
@@ -567,13 +577,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 continue;
             }
 
-            // Tell the ObjectFactory about this class
-            try {
-                objectFactory.getClassInstance(actionClass.getName());
-            } catch (ClassNotFoundException e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Object Factory was unable to load class [#0]", e, actionClass.getName());
-                throw new StrutsException("Object Factory was unable to load class " + actionClass.getName(), e);
+            if (eagerLoading) {
+                // Tell the ObjectFactory about this class
+                try {
+                    objectFactory.getClassInstance(actionClass.getName());
+                } catch (ClassNotFoundException e) {
+                    if (LOG.isErrorEnabled())
+                        LOG.error("Object Factory was unable to load class [#0]", e, actionClass.getName());
+                    throw new StrutsException("Object Factory was unable to load class " + actionClass.getName(), e);
+                }
             }
 
             // Determine the action package

@@ -20,12 +20,11 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -145,4 +144,10 @@ public class Set extends Component {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public boolean usesBody() {
+        return true;
+    }
+
 }

@@ -21,13 +21,12 @@
 
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Date;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see Date
@@ -39,6 +38,7 @@ public class DateTag extends ContextBeanTag {
     protected String name;
     protected String format;
     protected boolean nice;
+    protected String timezone;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Date(stack);
@@ -50,7 +50,7 @@ public class DateTag extends ContextBeanTag {
         d.setName(name);
         d.setFormat(format);
         d.setNice(nice);
-
+        d.setTimezone(timezone);
     }
 
     public void setFormat(String format) {
@@ -64,4 +64,9 @@ public class DateTag extends ContextBeanTag {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
 }

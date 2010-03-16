@@ -21,15 +21,15 @@
 
 package org.apache.struts2.views.jsp.ui;
 
+import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.views.jsp.AbstractTagTest;
+import org.apache.struts2.views.jsp.DateTag;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.struts2.views.jsp.AbstractTagTest;
-import org.apache.struts2.views.jsp.DateTag;
-
-import com.opensymphony.xwork2.ActionContext;
+import java.util.TimeZone;
 
 /**
  * Unit test for {@link org.apache.struts2.components.Date}.
@@ -52,7 +52,24 @@ public class DateTagTest extends AbstractTagTest {
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
     }
-    
+
+    public void testCustomFormatWithTimezone() throws Exception {
+        String format = "yyyy/MM/dd hh:mm:ss";
+        Date now = Calendar.getInstance(TimeZone.getTimeZone("UTC+1")).getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+        String formatted = sdf.format(now);
+        context.put("myDate", now);
+
+        tag.setName("myDate");
+        tag.setNice(false);
+        tag.setFormat(format);
+        tag.setTimezone("UTC+1");
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(formatted, writer.toString());
+    }
+
     public void testCustomFormatCalendar() throws Exception {
         String format = "yyyy/MM/dd hh:mm:ss";
         Calendar calendar = Calendar.getInstance();

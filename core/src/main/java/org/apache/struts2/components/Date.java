@@ -21,6 +21,14 @@
 
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -29,15 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.util.TimeZone;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -193,6 +193,8 @@ public class Date extends ContextBean {
 
     private boolean nice;
 
+    private String timezone;
+
     public Date(ValueStack stack) {
         super(stack);
     }
@@ -300,6 +302,11 @@ public class Date extends ContextBean {
                 if (nice) {
                     msg = formatTime(tp, date);
                 } else {
+                    TimeZone tz = TimeZone.getDefault();
+                    if (timezone != null) {
+                        tz = TimeZone.getTimeZone(timezone);
+                    }
+
                     if (format == null) {
                         String globalFormat = null;
 
@@ -312,18 +319,22 @@ public class Date extends ContextBean {
                         // DATETAG_PROPERTY
                         if (globalFormat != null
                                 && !DATETAG_PROPERTY.equals(globalFormat)) {
-                            msg = new SimpleDateFormat(globalFormat,
-                                    ActionContext.getContext().getLocale())
-                                    .format(date);
+                            SimpleDateFormat sdf = new SimpleDateFormat(globalFormat,
+                                    ActionContext.getContext().getLocale());
+                            sdf.setTimeZone(tz);
+                            msg = sdf.format(date);
                         } else {
-                            msg = DateFormat.getDateTimeInstance(
+                            DateFormat df = DateFormat.getDateTimeInstance(
                                     DateFormat.MEDIUM, DateFormat.MEDIUM,
-                                    ActionContext.getContext().getLocale())
-                                    .format(date);
+                                    ActionContext.getContext().getLocale());
+                            df.setTimeZone(tz);
+                            msg = df.format(date);
                         }
                     } else {
-                        msg = new SimpleDateFormat(format, ActionContext
-                                .getContext().getLocale()).format(date);
+                        SimpleDateFormat sdf = new SimpleDateFormat(format, ActionContext
+                                .getContext().getLocale());
+                        sdf.setTimeZone(tz);
+                        msg = sdf.format(date);
                     }
                 }
                 if (msg != null) {
@@ -377,4 +388,17 @@ public class Date extends ContextBean {
     public boolean isNice() {
         return nice;
     }
+
+    /**
+     * @return Returns the name.
+     */
+    public String getTimezone() {
+        return timezone;
+    }
+
+    @StrutsTagAttribute(description = "The specific timezone in which to format the date", required = false)
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
 }

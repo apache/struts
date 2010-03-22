@@ -21,47 +21,42 @@
 
 package org.apache.struts2.osgi;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.servlet.ServletContext;
-
-import org.apache.struts2.osgi.loaders.FreeMarkerBundleResourceLoader;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-import org.apache.struts2.views.freemarker.StrutsClassTemplateLoader;
-
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
+import org.apache.struts2.osgi.loaders.FreeMarkerBundleResourceLoader;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.views.freemarker.StrutsClassTemplateLoader;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This class extends FreemarkerManager in core to add a template loader
  * (that finds resources inside bundles) to MultiTemplateLoader
  */
 public class BundleFreemarkerManager extends FreemarkerManager {
+
     private static final Logger LOG = LoggerFactory.getLogger(BundleFreemarkerManager.class);
 
-    protected TemplateLoader getTemplateLoader(ServletContext servletContext) {
-        // construct a FileTemplateLoader for the init-param 'TemplatePath'
-        FileTemplateLoader templatePathLoader = null;
+    protected TemplateLoader createTemplateLoader(ServletContext servletContext, String templatePath) {
+        TemplateLoader templatePathLoader = null;
 
-        String templatePath = servletContext.getInitParameter("TemplatePath");
-        if (templatePath == null) {
-            templatePath = servletContext.getInitParameter("templatePath");
-        }
-
-        if (templatePath != null) {
-            try {
-                templatePathLoader = new FileTemplateLoader(new File(templatePath));
-            } catch (IOException e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Invalid template path specified: [#0]", e, e.getMessage());
-            }
-        }
+        try {
+             if (templatePath.startsWith("class://")) {
+                 // substring(7) is intentional as we "reuse" the last slash
+                 templatePathLoader = new ClassTemplateLoader(getClass(), templatePath.substring(7));
+             } else if (templatePath.startsWith("file://")) {
+                 templatePathLoader = new FileTemplateLoader(new File(templatePath));
+             }
+         } catch (IOException e) {
+             LOG.error("Invalid template path specified: " + e.getMessage(), e);
+         }
 
         // presume that most apps will require the class and webapp template loader
         // if people wish to

@@ -343,11 +343,12 @@ public class UrlHelperTest extends StrutsTestCase {
 
 
     public void testParseQuery() throws Exception {
-        Map result = UrlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=");
+        Map result = UrlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E");
 
         assertEquals(result.get("aaa"), "aaaval");
         assertEquals(result.get("bbb"), "bbbval");
         assertEquals(result.get("ccc"), "");
+        assertEquals(result.get("<a\">"), "<val>");
     }
 
     public void testParseEmptyQuery() throws Exception {

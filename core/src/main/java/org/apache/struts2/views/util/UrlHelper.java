@@ -326,6 +326,7 @@ public class UrlHelper {
                         paramValue = tmpParams[1];
                     }
                     if (paramName != null) {
+                        paramName = translateAndDecode(paramName);
                         String translatedParamValue = translateAndDecode(paramValue);
 
                         if(queryParams.containsKey(paramName) || forceValueArray) {

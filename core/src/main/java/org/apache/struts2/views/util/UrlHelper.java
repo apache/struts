@@ -247,7 +247,7 @@ public class UrlHelper {
 
     private static String buildParameterSubstring(String name, String value) {
         StringBuilder builder = new StringBuilder();
-        builder.append(name);
+        builder.append(translateAndEncode(name));
         builder.append('=');
         builder.append(translateAndEncode(value));
 

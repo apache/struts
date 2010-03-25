@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor name="struts2-archetype-blank">
+  <fileSets>
+    <fileSet filtered="true" packaged="true">
+      <directory>src/main/java</directory>
+      <includes>
+        <include>**/*.java</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet filtered="true" packaged="true">
+      <directory>src/test/java</directory>
+      <includes>
+        <include>**/*.java</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet filtered="false" packaged="true">
+      <directory>src/main/resources</directory>
+      <includes>
+        <include>**/*package*.properties</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet filtered="false" packaged="true">
+      <directory>src/main/resources</directory>
+      <includes>
+        <include>**/*-validation.xml</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet filtered="true" packaged="false">
+      <directory>src/main/resources</directory>
+      <includes>
+        <include>**/struts.xml</include>
+        <include>**/example.xml</include>
+      </includes>
+    </fileSet>
+
+    <fileSet filtered="false" packaged="false">
+      <directory>src/main/webapp/example</directory>
+      <includes>
+        <include>**/*.jsp</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet filtered="false" packaged="false">
+      <directory>src/main/webapp</directory>
+      <includes>
+        <include>**/index.html</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet filtered="false" packaged="false">
+      <directory>src/main/webapp/WEB-INF</directory>
+      <includes>
+        <include>**/web.xml</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</archetype-descriptor>

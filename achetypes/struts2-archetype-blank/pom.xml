@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-parent</artifactId>
+        <version>2.2.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>struts2-archetype-blank</artifactId>
+    <version>2.2.0-SNAPSHOT</version>
+    <name>Struts 2 Archetypes - Blank</name>
+
+    <scm>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/maven/trunk/struts2-archetype-blank/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/maven/trunk/struts2-archetype-blank/</developerConnection>
+        <url>http://svn.apache.org/viewvc/struts/maven/trunk/struts2-archetype-blank/</url>
+    </scm>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

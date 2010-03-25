@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<archetype>
+  <id>struts2-archetype-starter</id>
+  <sources>
+    <source>src/main/java/HelloWorldAction.java</source>
+    <source>src/main/java/IndexAction.java</source>
+    <source>src/main/java/DateConverter.java</source>
+  </sources>
+  <resources>
+  	<resource>src/main/resources/struts.xml</resource>
+  	<resource>src/main/resources/xwork-conversion.properties</resource>
+  	<resource>src/main/resources/struts.properties</resource>
+  	<resource>src/main/resources/applicationContext.xml</resource>
+  	<resource>src/main/resources/log4j.properties</resource>
+  	<resource>src/main/webapp/jsp/index.jsp</resource>
+	<resource>src/main/webapp/jsp/helloWorld.jsp</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/main.jsp</resource>
+	<resource>src/main/webapp/WEB-INF/decorators.xml</resource>
+	<resource>src/main/webapp/styles/main.css</resource>
+	<resource>src/main/webapp/styles/forms.css</resource>
+	<resource>src/main/webapp/styles/layout.css</resource>
+	<resource>src/main/webapp/styles/layout-1col.css</resource>
+	<resource>src/main/webapp/styles/layout-navleft-1col.css</resource>
+	<resource>src/main/webapp/styles/layout-navleft-2col.css</resource>
+	<resource>src/main/webapp/styles/layout-navtop-1col.css</resource>
+	<resource>src/main/webapp/styles/layout-navtop-3col.css</resource>
+	<resource>src/main/webapp/styles/layout-navtop-localleft.css</resource>
+	<resource>src/main/webapp/styles/layout-navtop-subright.css</resource>
+	<resource>src/main/webapp/styles/nav-horizontal.css</resource>
+	<resource>src/main/webapp/styles/nav-vertical.css</resource>
+	<resource>src/main/webapp/styles/tools.css</resource>
+	<resource>src/main/webapp/styles/typo.css</resource>
+	<resource>src/main/webapp/WEB-INF/dwr.xml</resource>
+	<resource>src/main/webapp/WEB-INF/sitemesh.xml</resource>
+	<resource>src/main/webapp/WEB-INF/web.xml</resource>
+	<resource>src/main/webapp/index.jsp</resource>  	
+  </resources>
+  <testSources>
+    <source>src/test/java/HelloWorldActionTest.java</source>
+    <source>src/test/java/IndexActionTest.java</source>
+  </testSources>
+  <testResources>
+  	<resource>src/test/resources/test.properties</resource>
+  </testResources>
+</archetype>
+

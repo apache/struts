@@ -100,7 +100,11 @@ function addErrorCSS(e, errorText) {
         errorDiv.setAttribute("className", "errorMessage");//ie hack cause ie does not support setAttribute
         errorDiv.setAttribute("errorFor", elem.id);
         errorDiv.appendChild(error);
-        enclosingDiv.insertBefore(errorDiv, firstCtrNode);
+        if(!firstCtrNode && navigator.appName == 'Microsoft Internet Explorer') {
+          enclosingDiv.insertBefore(errorDiv);
+        } else {
+          enclosingDiv.insertBefore(errorDiv, firstCtrNode);
+        }
     } catch (err) {
         alert("An exception occurred: " + err.name + ". Error message: " + err.message);
     }

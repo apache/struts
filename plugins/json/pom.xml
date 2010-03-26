@@ -68,6 +68,7 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
             <version>${pom.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

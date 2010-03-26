@@ -67,6 +67,32 @@ public class PrepareInterceptorTest extends TestCase {
         interceptor.intercept(mai);
     }
 
+    public void testFirstCallPrepareDoIsTrue() throws Exception {
+        MockActionInvocation mai = new MockActionInvocation();
+        MockActionProxy mockActionProxy = new MockActionProxy();
+        mockActionProxy.setMethod("submit");
+        mai.setProxy(mockActionProxy);
+        mai.setAction(mock.proxy());
+        mock.expect("prepareSubmit");
+        mock.expect("prepare");
+
+        interceptor.setFirstCallPrepareDo("true");
+        interceptor.intercept(mai);
+    }
+
+    public void testFirstCallPrepareDoIsFalse() throws Exception {
+        MockActionInvocation mai = new MockActionInvocation();
+        MockActionProxy mockActionProxy = new MockActionProxy();
+        mockActionProxy.setMethod("submit");
+        mai.setProxy(mockActionProxy);
+        mai.setAction(mock.proxy());
+        mock.expect("prepare");
+        mock.expect("prepareSubmit");
+
+        interceptor.setFirstCallPrepareDo("false");
+        interceptor.intercept(mai);
+    }
+
     public void testNoPrepareCalled() throws Exception {
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(new SimpleFooAction());
@@ -153,7 +179,7 @@ public class PrepareInterceptorTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        mock = new Mock(Preparable.class);
+        mock = new Mock(ActionInterface.class);
         interceptor = new PrepareInterceptor();
     }
 

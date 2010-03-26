@@ -105,6 +105,7 @@ public class PrepareInterceptor extends MethodFilterInterceptor {
     private final static String ALT_PREPARE_PREFIX = "prepareDo";
 
     private boolean alwaysInvokePrepare = true;
+    private boolean firstCallPrepareDo = false;
 
     /**
      * Sets if the <code>preapare</code> method should always be executed.
@@ -117,14 +118,30 @@ public class PrepareInterceptor extends MethodFilterInterceptor {
         this.alwaysInvokePrepare = Boolean.parseBoolean(alwaysInvokePrepare);
     }
 
+    /**
+     * Sets if the <code>prepareDoXXX</code> method should be called first
+     * <p/>
+     * Default is <tt>false</tt> for backward compatibility
+     *
+     * @param firstCallPrepareDo if <code>prepareDoXXX</code> should be called first
+     */
+    public void setFirstCallPrepareDo(String firstCallPrepareDo) {
+        this.firstCallPrepareDo = Boolean.parseBoolean(firstCallPrepareDo);
+    }
+
     @Override
     public String doIntercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
         if (action instanceof Preparable) {
             try {
-                PrefixMethodInvocationUtil.invokePrefixMethod(invocation,
-                        new String[]{PREPARE_PREFIX, ALT_PREPARE_PREFIX});
+                String[] prefixes;
+                if (firstCallPrepareDo) {
+                    prefixes = new String[] {ALT_PREPARE_PREFIX, PREPARE_PREFIX};
+                } else {
+                    prefixes = new String[] {PREPARE_PREFIX, ALT_PREPARE_PREFIX};
+                }
+                PrefixMethodInvocationUtil.invokePrefixMethod(invocation, prefixes);
             }
             catch (InvocationTargetException e) {
                 // just in case there's an exception while doing reflection,

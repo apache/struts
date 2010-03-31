@@ -302,11 +302,7 @@ public class Date extends ContextBean {
                 if (nice) {
                     msg = formatTime(tp, date);
                 } else {
-                    TimeZone tz = TimeZone.getDefault();
-                    if (timezone != null) {
-                        tz = TimeZone.getTimeZone(timezone);
-                    }
-
+                    TimeZone tz = getTimeZone();
                     if (format == null) {
                         String globalFormat = null;
 
@@ -351,6 +347,19 @@ public class Date extends ContextBean {
             }
         }
         return super.end(writer, "");
+    }
+
+    private TimeZone getTimeZone() {
+        TimeZone tz = TimeZone.getDefault();
+        if (timezone != null) {
+            timezone = stripExpressionIfAltSyntax(timezone);
+            String actualTimezone = (String) getStack().findValue(timezone, String.class);
+            if (actualTimezone != null) {
+                timezone = actualTimezone;
+            }
+            tz = TimeZone.getTimeZone(timezone);
+        }
+        return tz;
     }
 
     @StrutsTagAttribute(description="Date or DateTime format pattern", rtexprvalue=false)

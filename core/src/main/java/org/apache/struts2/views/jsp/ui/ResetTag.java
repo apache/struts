@@ -21,13 +21,12 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Reset;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see org.apache.struts2.components.Reset
@@ -40,6 +39,7 @@ public class ResetTag extends AbstractUITag {
     protected String method;
     protected String align;
     protected String type;
+    protected String src;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Reset(stack, req, res);
@@ -53,6 +53,7 @@ public class ResetTag extends AbstractUITag {
         reset.setMethod(method);
         reset.setAlign(align);
         reset.setType(type);
+        reset.setSrc(src);
     }
 
     public void setAction(String action) {
@@ -69,6 +70,10 @@ public class ResetTag extends AbstractUITag {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
     }
 
 }

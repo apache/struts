@@ -21,13 +21,12 @@
 
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -65,10 +64,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class Reset extends FormButton {
     final public static String TEMPLATE = "reset";
 
-    protected String action;
-    protected String method;
-    protected String align;
-    protected String type;
+    protected String src;
 
     public Reset(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -77,12 +73,18 @@ public class Reset extends FormButton {
     public String getDefaultOpenTemplate() {
         return "empty";
     }
+
     protected String getDefaultTemplate() {
         return Reset.TEMPLATE;
     }
 
-    public void evaluateParams() {
+    public void evaluateExtraParams() {
+        super.evaluateExtraParams();
+        if (src != null)
+            addParameter("src", findString(src));
+    }
 
+    public void evaluateParams() {
         if ((key == null) && (value == null)) {
             value = "Reset";
         }
@@ -90,9 +92,7 @@ public class Reset extends FormButton {
         if (((key != null)) && (value == null)) {
             this.value = "%{getText('"+key +"')}";
         }
-
         super.evaluateParams();
-
     }
 
     /**
@@ -108,6 +108,11 @@ public class Reset extends FormButton {
                 "<i>input</i> type reset, since button text will always be the value parameter.")
     public void setLabel(String label) {
         super.setLabel(label);
+    }
+
+    @StrutsTagAttribute(description="Supply an image src for <i>image</i> type reset button. Will have no effect for types <i>input</i> and <i>button</i>.")
+    public void setSrc(String src) {
+        this.src = src;
     }
 
 }

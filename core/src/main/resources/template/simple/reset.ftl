@@ -40,7 +40,15 @@
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
-><#if parameters.label??><@s.property value="parameters.label"/><#rt/></#if></button>
+><#if parameters.src??>
+<img<#rt/>
+<#if parameters.label??>
+ alt="${parameters.label?html}"<#rt/>
+</#if>
+<#if parameters.src??>
+ src="${parameters.src?html}"<#rt/>
+</#if>
+/><#else><#if parameters.label??><@s.property value="parameters.label"/><#rt/></#if></#if></button>
 <#else>
 <input type="reset"<#rt/>
 <#if parameters.name??>

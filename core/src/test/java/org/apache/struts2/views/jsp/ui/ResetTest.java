@@ -21,11 +21,11 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Reset Component Test.
@@ -42,6 +42,7 @@ public class ResetTest extends AbstractUITagTest {
         tag.setLabel("mylabel");
         tag.setName("myname");
         tag.setTitle("mytitle");
+        tag.setSrc("/images/test.png");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -100,6 +101,119 @@ public class ResetTest extends AbstractUITagTest {
         verify(TextFieldTag.class.getResource("Reset-4.txt"));
     }
 
+    public void testImageSimple() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        ResetTag tag = new ResetTag();
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+        tag.setDisabled("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Reset-5.txt"));
+    }
+
+    public void testImageWithSrc() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        ResetTag tag = new ResetTag();
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setValue("%{foo}");
+        tag.setSrc("some.gif");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Reset-6.txt"));
+    }
+
+    public void testImageWithExpressionSrc() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        ResetTag tag = new ResetTag();
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setValue("%{foo}");
+        tag.setSrc("%{getText(\"some.image.from.properties\")}");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Reset-6.txt"));
+    }
+
+    public void testSimpleThemeImageUsingActionAndMethod() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        ResetTag tag = new ResetTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("simple");
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setAction("manager");
+        tag.setMethod("update");
+        tag.setAlign("left");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Reset-7.txt"));
+    }
+
+    public void testSimpleThemeImageUsingActionOnly() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        ResetTag tag = new ResetTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("simple");
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setAction("manager");
+        tag.setMethod(null); // no method
+        tag.setAlign("left");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Reset-8.txt"));
+    }
+
+    public void testSimpleThemeImageUsingMethodOnly() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        ResetTag tag = new ResetTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("simple");
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setAction(null); // no action
+        tag.setMethod("update");
+        tag.setAlign("left");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Reset-9.txt"));
+    }
+    
     /**
      * Initialize a map of {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder} for generic tag
      * property testing. Will be used when calling {@link #verifyGenericProperties(AbstractUITag,

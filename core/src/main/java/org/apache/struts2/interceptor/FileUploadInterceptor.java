@@ -21,14 +21,6 @@
 
 package org.apache.struts2.interceptor;
 
-import java.io.File;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
@@ -38,6 +30,19 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -383,7 +388,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      * @param filename            - filename to check.
      * @return true if the filename has an allowed extension, false otherwise.
      */
-    private static boolean hasAllowedExtension(Collection<String> extensionCollection, String filename) {
+    private boolean hasAllowedExtension(Collection<String> extensionCollection, String filename) {
         if (filename == null) {
             return false;
         }
@@ -403,11 +408,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      * @param item           - Item to search for.
      * @return true if itemCollection contains the item, false otherwise.
      */
-    private static boolean containsItem(Collection<String> itemCollection, String item) {
+    private boolean containsItem(Collection<String> itemCollection, String item) {
         return itemCollection.contains(item.toLowerCase());
     }
 
-    private static boolean isNonEmpty(Object[] objArray) {
+    private boolean isNonEmpty(Object[] objArray) {
         boolean result = false;
         for (int index = 0; index < objArray.length && !result; index++) {
             if (objArray[index] != null) {

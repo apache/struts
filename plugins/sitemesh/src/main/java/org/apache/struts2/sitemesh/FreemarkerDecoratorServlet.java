@@ -25,9 +25,12 @@ import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import freemarker.core.InvalidReferenceException;
-import freemarker.ext.jsp.TaglibFactory;
-import freemarker.ext.servlet.*;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -40,14 +43,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Enumeration;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
@@ -195,7 +194,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
 
             StringBuilder msgBuf = new StringBuilder("Error applying freemarker template to\n       request: ");
             msgBuf.append(req.getRequestURL());
-            if (req.getQueryString() == null) msgBuf.append("?").append(req.getQueryString());
+            if (req.getQueryString() != null) msgBuf.append("?").append(req.getQueryString());
             msgBuf.append(" with resultCode: ").append(resultCode).append(".\n\n").append(x.getMessage());
             String msg = msgBuf.toString();
             LOG.error(msg, x);

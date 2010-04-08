@@ -21,6 +21,19 @@
 
 package org.apache.struts2.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ValidationAwareSupport;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -29,22 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 
 /**
@@ -183,7 +180,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
 
         Map param = new HashMap();
         ActionContext.getContext().setParameters(param);
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest((HttpServletRequest) req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
 

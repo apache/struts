@@ -21,18 +21,9 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.RequestContext;
@@ -41,9 +32,17 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
@@ -62,7 +61,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     protected List<String> errors = new ArrayList<String>();
     
     protected long maxSize;
-    
+
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
     public void setMaxSize(String maxSize) {
         this.maxSize = Long.parseLong(maxSize);
@@ -73,72 +72,87 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
      * multipart classes (see class description).
      *
      * @param saveDir        the directory to save off the file
-     * @param servletRequest the request containing the multipart
+     * @param request the request containing the multipart
      * @throws java.io.IOException  is thrown if encoding fails.
      */
-    public void parse(HttpServletRequest servletRequest, String saveDir)
-            throws IOException {
+    public void parse(HttpServletRequest request, String saveDir) throws IOException {
+        try {
+            processUpload(request, saveDir);
+        } catch (FileUploadException e) {
+            LOG.warn("Unable to parse request", e);
+            errors.add(e.getMessage());
+        }
+    }
+
+    private void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
+        for (FileItem item : parseRequest(request, saveDir)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Found item " + item.getFieldName());
+            }
+            if (item.isFormField()) {
+                processNormalFormField(item, request.getCharacterEncoding());
+            } else {
+                processFileField(item);
+            }
+        }
+    }
+
+    private void processFileField(FileItem item) {
+        LOG.debug("Item is a file upload");
+
+        // Skip file uploads that don't have a file name - meaning that no file was selected.
+        if (item.getName() == null || item.getName().trim().length() < 1) {
+            LOG.debug("No file has been uploaded for the field: " + item.getFieldName());
+            return;
+        }
+
+        List<FileItem> values;
+        if (files.get(item.getFieldName()) != null) {
+            values = files.get(item.getFieldName());
+        } else {
+            values = new ArrayList<FileItem>();
+        }
+
+        values.add(item);
+        files.put(item.getFieldName(), values);
+    }
+
+    private void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
+        LOG.debug("Item is a normal form field");
+        List<String> values;
+        if (params.get(item.getFieldName()) != null) {
+            values = params.get(item.getFieldName());
+        } else {
+            values = new ArrayList<String>();
+        }
+
+        // note: see http://jira.opensymphony.com/browse/WW-633
+        // basically, in some cases the charset may be null, so
+        // we're just going to try to "other" method (no idea if this
+        // will work)
+        if (charset != null) {
+            values.add(item.getString(charset));
+        } else {
+            values.add(item.getString());
+        }
+        params.put(item.getFieldName(), values);
+    }
+
+    private List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
+        DiskFileItemFactory fac = createDiskFileItemFactory(saveDir);
+        ServletFileUpload upload = new ServletFileUpload(fac);
+        upload.setSizeMax(maxSize);
+        return upload.parseRequest(createRequestContext(servletRequest));
+    }
+
+    private DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
         DiskFileItemFactory fac = new DiskFileItemFactory();
         // Make sure that the data is written to file
         fac.setSizeThreshold(0);
         if (saveDir != null) {
             fac.setRepository(new File(saveDir));
         }
-
-        // Parse the request
-        try {
-            ServletFileUpload upload = new ServletFileUpload(fac);
-            upload.setSizeMax(maxSize);
-
-            List items = upload.parseRequest(createRequestContext(servletRequest));
-
-            for (Object item1 : items) {
-                FileItem item = (FileItem) item1;
-                if (LOG.isDebugEnabled()) LOG.debug("Found item " + item.getFieldName());
-                if (item.isFormField()) {
-                    LOG.debug("Item is a normal form field");
-                    List<String> values;
-                    if (params.get(item.getFieldName()) != null) {
-                        values = params.get(item.getFieldName());
-                    } else {
-                        values = new ArrayList<String>();
-                    }
-
-                    // note: see http://jira.opensymphony.com/browse/WW-633
-                    // basically, in some cases the charset may be null, so
-                    // we're just going to try to "other" method (no idea if this
-                    // will work)
-                    String charset = servletRequest.getCharacterEncoding();
-                    if (charset != null) {
-                        values.add(item.getString(charset));
-                    } else {
-                        values.add(item.getString());
-                    }
-                    params.put(item.getFieldName(), values);
-                } else {
-                    LOG.debug("Item is a file upload");
-
-                    // Skip file uploads that don't have a file name - meaning that no file was selected.
-                    if (item.getName() == null || item.getName().trim().length() < 1) {
-                        LOG.debug("No file has been uploaded for the field: " + item.getFieldName());
-                        continue;
-                    }
-
-                    List<FileItem> values;
-                    if (files.get(item.getFieldName()) != null) {
-                        values = files.get(item.getFieldName());
-                    } else {
-                        values = new ArrayList<FileItem>();
-                    }
-
-                    values.add(item);
-                    files.put(item.getFieldName(), values);
-                }
-            }
-        } catch (FileUploadException e) {
-            LOG.warn("Unable to parse request", e);
-            errors.add(e.getMessage());
-        }
+        return fac;
     }
 
     /* (non-Javadoc)

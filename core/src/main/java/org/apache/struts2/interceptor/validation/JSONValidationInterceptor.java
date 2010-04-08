@@ -21,18 +21,6 @@
 
 package org.apache.struts2.interceptor.validation;
 
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.commons.lang.xwork.StringEscapeUtils;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
@@ -40,6 +28,15 @@ import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.xwork.StringEscapeUtils;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Serializes validation and action errors into JSON. This interceptor does not
@@ -64,14 +61,22 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <p>If the request has a parameter 'struts.validateOnly' execution will return after
  * validation (action won't be executed).</p>
  *
- * <p>A request parameter named 'enableJSONValidation' must be set to 'true' to
+ * <p>A request parameter named 'struts.enableJSONValidation' must be set to 'true' to
  * use this interceptor</p>
+ *
+ * <p>If the request has a parameter 'struts.JSONValidation.set.encoding' set to true
+ * the character encoding will NOT be set on the response - is needed in portlet environment
+ * - for more details see issue WW-3237</p>
  */
 public class JSONValidationInterceptor extends MethodFilterInterceptor {
+
     private static final Logger LOG = LoggerFactory.getLogger(JSONValidationInterceptor.class);
 
     private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
     private static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
+    private static final String NO_ENCODING_SET_PARAM = "struts.JSONValidation.no.encoding";
+
+    private static final String DEFAULT_ENCODING = "UTF-8";
 
     private int validationFailedStatus = -1;
 
@@ -89,26 +94,18 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
         HttpServletRequest request = ServletActionContext.getRequest();
 
         Object action = invocation.getAction();
-        String jsonEnabled = request.getParameter(VALIDATE_JSON_PARAM);
 
-        if (jsonEnabled != null && "true".equals(jsonEnabled)) {
+        if (isJsonEnabled(request)) {
             if (action instanceof ValidationAware) {
                 // generate json
                 ValidationAware validationAware = (ValidationAware) action;
                 if (validationAware.hasErrors()) {
-                    if (validationFailedStatus >= 0)
-                        response.setStatus(validationFailedStatus);
-                    response.setCharacterEncoding("UTF-8");
-                    response.getWriter().print(buildResponse(validationAware));
-                    response.setContentType("application/json");
-                    return Action.NONE;
+                    return generateJSON(request, response, validationAware);
                 }
             }
-
-            String validateOnly = request.getParameter(VALIDATE_ONLY_PARAM);
-            if (validateOnly != null && "true".equals(validateOnly)) {
+            if (isValidateOnly(request)) {
                 //there were no errors
-                response.setCharacterEncoding("UTF-8");
+                setupEncoding(response, request);
                 response.getWriter().print("/* {} */");
                 response.setContentType("application/json");
                 return Action.NONE;
@@ -117,6 +114,40 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             }
         } else
             return invocation.invoke();
+    }
+
+    private void setupEncoding(HttpServletResponse response, HttpServletRequest request) {
+        if (isSetEncoding(request)) {
+            LOG.debug("Default encoding not set!");
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Setting up encoding to: [" + DEFAULT_ENCODING + "]!");
+            }
+            response.setCharacterEncoding(DEFAULT_ENCODING);
+        }
+    }
+
+    private String generateJSON(HttpServletRequest request, HttpServletResponse response, ValidationAware validationAware)
+            throws IOException {
+        if (validationFailedStatus >= 0) {
+            response.setStatus(validationFailedStatus);
+        }
+        setupEncoding(response, request);
+        response.getWriter().print(buildResponse(validationAware));
+        response.setContentType("application/json");
+        return Action.NONE;
+    }
+
+    private boolean isJsonEnabled(HttpServletRequest request) {
+        return "true".equals(request.getParameter(VALIDATE_JSON_PARAM));
+    }
+
+    private boolean isValidateOnly(HttpServletRequest request) {
+        return "true".equals(request.getParameter(VALIDATE_ONLY_PARAM));
+    }
+
+    private boolean isSetEncoding(HttpServletRequest request) {
+        return "true".equals(request.getParameter(NO_ENCODING_SET_PARAM));
     }
 
     /**

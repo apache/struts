@@ -21,39 +21,6 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.config.BeanSelectionProvider;
-import org.apache.struts2.config.DefaultPropertiesProvider;
-import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.apache.struts2.util.AttributeMap;
-import org.apache.struts2.util.ClassLoaderUtils;
-import org.apache.struts2.util.ObjectFactoryDestroyable;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
@@ -81,8 +48,38 @@ import com.opensymphony.xwork2.util.location.LocationUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
-
 import freemarker.template.Template;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.config.BeanSelectionProvider;
+import org.apache.struts2.config.DefaultPropertiesProvider;
+import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.util.AttributeMap;
+import org.apache.struts2.util.ClassLoaderUtils;
+import org.apache.struts2.util.ObjectFactoryDestroyable;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -495,8 +492,12 @@ public class Dispatcher {
         } catch (ConfigurationException e) {
         	// WW-2874 Only log error if in devMode
         	if(devMode) {
-        		LOG.error("Could not find action or result", e);
-        	}
+                String reqStr = request.getRequestURI();
+                if (request.getQueryString() != null) {
+                    reqStr = reqStr + "?" + request.getQueryString();
+                }
+                LOG.error("Could not find action or result\n" + reqStr, e);
+            }
         	else {
         		LOG.warn("Could not find action or result", e);
         	}

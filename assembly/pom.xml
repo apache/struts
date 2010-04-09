@@ -259,7 +259,7 @@
                                     <groupId>com.opensymphony</groupId>
                                     <artifactId>xwork-core</artifactId>
                                     <classifier>javadoc</classifier>
-                                    <version>2.1.6</version>
+                                    <version>${version}</version>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/xwork-apidocs</outputDirectory>

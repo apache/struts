@@ -20,6 +20,10 @@
  */
 package org.apache.struts2.json;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.json.annotations.JSON;
+
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -37,11 +41,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Pattern;
-
-import org.apache.struts2.json.annotations.JSON;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p>
@@ -195,6 +194,14 @@ class JSONWriter {
                         baseAccessor = Class.forName(
                                 clazz.getName().substring(0, clazz.getName().indexOf("$$"))).getMethod(
                                 accessor.getName(), accessor.getParameterTypes());
+                    } catch (Exception ex) {
+                        LOG.debug(ex.getMessage(), ex);
+                    }
+                } else if (clazz.getName().indexOf("$$_javassist") > -1) {
+                	try {
+                        baseAccessor = Class.forName(
+                                clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
+                                .getMethod(accessor.getName(), accessor.getParameterTypes());
                     } catch (Exception ex) {
                         LOG.debug(ex.getMessage(), ex);
                     }

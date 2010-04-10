@@ -28,9 +28,12 @@ function addOption(objTextBox, objTargetElement) {
 }
 
 function removeOptions(objTargetElement) {
-    for(var i=0;i<objTargetElement.options.length;i++) {
-        if(objTargetElement.options[i].selected) {
-            objTargetElement.options[i] = null;
+    var i = 0;
+    while(objTargetElement.options.length > i) {
+        if (objTargetElement.options[i].selected) {
+            objTargetElement.options.remove(i);
+        } else {
+            i++;
         }
     }
 }

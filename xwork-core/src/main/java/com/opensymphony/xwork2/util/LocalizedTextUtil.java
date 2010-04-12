@@ -219,7 +219,7 @@ public class LocalizedTextUtil {
         String defaultText = findDefaultText(aTextName, locale);
         if (defaultText != null) {
             MessageFormat mf = buildMessageFormat(defaultText, locale);
-            return mf.format(params);
+            return formatWithNullDetection(mf, params);
         }
         return null;
     }
@@ -662,7 +662,7 @@ public class LocalizedTextUtil {
             String message = TextParseUtil.translateVariables(bundle.getString(aTextName), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
 
-            return mf.format(args);
+            return formatWithNullDetection(mf, args);
         } catch (MissingResourceException ex) {
             // ignore
         }
@@ -698,7 +698,7 @@ public class LocalizedTextUtil {
             if (message != null) {
                 MessageFormat mf = buildMessageFormat(TextParseUtil.translateVariables(message, valueStack), locale);
 
-                String msg = mf.format(args);
+                String msg = formatWithNullDetection(mf, args);
                 result = new GetDefaultMessageReturnArg(msg, found);
             }
         }
@@ -725,9 +725,18 @@ public class LocalizedTextUtil {
         try {
             String message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
-            return mf.format(args);
+            return formatWithNullDetection(mf, args);
         } catch (MissingResourceException e) {
             return null;
+        }
+    }
+
+    private static String formatWithNullDetection(MessageFormat mf, Object[] args) {
+        String message = mf.format(args);
+        if ("null".equals(message)) {
+            return null;
+        } else {
+            return message;
         }
     }
 

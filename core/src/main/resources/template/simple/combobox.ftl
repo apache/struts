@@ -39,6 +39,7 @@
 <br />
 <#if parameters.list??>
 <select onChange="autoPopulate_${parameters.escapedId?html}(this);"<#rt/>
+<#include "/${parameters.templateDir}/simple/css.ftl" />
     <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
     </#if>

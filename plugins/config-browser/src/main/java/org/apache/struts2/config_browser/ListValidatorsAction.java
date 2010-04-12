@@ -21,15 +21,15 @@
 
 package org.apache.struts2.config_browser;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.struts2.util.ClassLoaderUtils;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
+import com.opensymphony.xwork2.validator.Validator;
+import org.apache.struts2.util.ClassLoaderUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ListValidatorsAction loads the validations for a given class and context
@@ -41,7 +41,7 @@ public class ListValidatorsAction extends ActionSupport {
 
     private String clazz;
     private String context;
-    List validators = Collections.EMPTY_LIST;
+    List<Validator> validators = Collections.EMPTY_LIST;
     private ActionValidatorManager actionValidatorManager;
 
     

@@ -34,8 +34,11 @@
     <#foreach prop in properties>
     	<tr <#if prop_index%2 gt 0>class="b"<#else>class="a"</#if>>
             <td>${prop.name}</td>
-            <td><#if prop.value?exists> ${prop.value?string} <#else> <b>null</b> </#if></td>
-            <td>${prop.type.name}</td>
+            <td><#if prop.value?exists>
+                    <#if prop.value?is_collection>(size = ${prop.value?size})<#foreach v in prop.value>${v.value}, </#foreach>
+                    <#else>${prop.value?string}</#if>
+                <#else> <b>null</b> </#if></td>
+            <td><#if prop.value?exists && prop.value?is_collection>(collection)<#else>${prop.type.name}</#if></td>
         </tr>
     </#foreach></table>
 <#call endPage>

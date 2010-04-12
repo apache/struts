@@ -21,16 +21,13 @@
 
 package org.apache.struts2.config_browser;
 
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.struts2.StrutsConstants;
-
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.StrutsConstants;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * ActionNamesAction
@@ -79,7 +76,10 @@ public class ActionNamesAction extends ActionSupport {
 
     public String getExtension() {
         if ( extension == null) {
-            extension = "action";
+            return "action";
+        }
+        if (extension.indexOf(",") > -1) {
+            return extension.substring(0, extension.indexOf(","));
         }
         return extension;
     }

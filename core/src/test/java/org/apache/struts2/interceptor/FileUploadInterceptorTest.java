@@ -82,6 +82,26 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
         assertTrue(validation.hasErrors());
     }
 
+
+    public void testAcceptFileWithWildcardContent() throws Exception {
+        interceptor.setAllowedTypes("text/*");
+
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+        boolean ok = interceptor.acceptFile(null, new File(""), "filename.txt", "text/plain", "inputName", validation, Locale.getDefault());
+
+        assertTrue(ok);
+        assertTrue(validation.getFieldErrors().isEmpty());
+        assertFalse(validation.hasErrors());
+
+        interceptor.setAllowedTypes("text/h*");
+        validation = new ValidationAwareSupport();
+        boolean notOk = interceptor.acceptFile(null, new File(""), "filename.html", "text/plain", "inputName", validation, Locale.getDefault());
+
+        assertFalse(notOk);
+        assertFalse(validation.getFieldErrors().isEmpty());
+        assertTrue(validation.hasErrors());
+    }
+
     public void testAcceptFileWithoutEmptyExtensions() throws Exception {
         interceptor.setAllowedExtensions(".txt");
 

@@ -226,6 +226,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
+
     public String intercept(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
 
@@ -243,7 +244,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         ValidationAware validation = null;
 
         Object action = invocation.getAction();
-        
+
         if (action instanceof ValidationAware) {
             validation = (ValidationAware) action;
         }
@@ -323,7 +324,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
                 if ((currentFile != null) && currentFile.isFile()) {
                     if (currentFile.delete() == false) {
-                        LOG.warn("Resource Leaking:  Could not remove uploaded file '"+currentFile.getCanonicalPath()+"'.");
+                        LOG.warn("Resource Leaking:  Could not remove uploaded file '" + currentFile.getCanonicalPath() + "'.");
                     }
                 }
             }
@@ -369,7 +370,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             }
 
             LOG.warn(errMsg);
-        } else if ((! allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
+        } else if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
             String errMsg = getTextMessage(action, "struts.messages.error.file.extension.not.allowed", new Object[]{inputName, filename, file.getName(), contentType}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
@@ -409,7 +410,43 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      * @return true if itemCollection contains the item, false otherwise.
      */
     private boolean containsItem(Collection<String> itemCollection, String item) {
-        return itemCollection.contains(item.toLowerCase());
+        for (String pattern : itemCollection)
+            if (matchesWildcard(pattern, item))
+                return true;
+        return false;
+    }
+
+    private boolean matchesWildcard(String pattern, String text) {
+        text += '\0';
+        pattern += '\0';
+
+        int N = pattern.length();
+
+        boolean[] states = new boolean[N + 1];
+        boolean[] old = new boolean[N + 1];
+        old[0] = true;
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            states = new boolean[N + 1];
+            for (int j = 0; j < N; j++) {
+                char p = pattern.charAt(j);
+
+                if (old[j] && (p == '*'))
+                    old[j + 1] = true;
+
+                if (old[j] && (p == c))
+                    states[j + 1] = true;
+                if (old[j] && (p == '?'))
+                    states[j + 1] = true;
+                if (old[j] && (p == '*'))
+                    states[j] = true;
+                if (old[j] && (p == '*'))
+                    states[j + 1] = true;
+            }
+            old = states;
+        }
+        return states[N];
     }
 
     private boolean isNonEmpty(Object[] objArray) {
@@ -425,15 +462,15 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     private String getTextMessage(String messageKey, Object[] args, Locale locale) {
         return getTextMessage(null, messageKey, args, locale);
     }
-    
+
     private String getTextMessage(Object action, String messageKey, Object[] args, Locale locale) {
         if (args == null || args.length == 0) {
-            if ( action != null && useActionMessageBundle) {
+            if (action != null && useActionMessageBundle) {
                 return LocalizedTextUtil.findText(action.getClass(), messageKey, locale);
             }
-            return LocalizedTextUtil.findText(this.getClass(), messageKey, locale);                        
+            return LocalizedTextUtil.findText(this.getClass(), messageKey, locale);
         } else {
-            if ( action != null && useActionMessageBundle) {
+            if (action != null && useActionMessageBundle) {
                 return LocalizedTextUtil.findText(action.getClass(), messageKey, locale, DEFAULT_MESSAGE, args);
             }
             return LocalizedTextUtil.findText(this.getClass(), messageKey, locale, DEFAULT_MESSAGE, args);

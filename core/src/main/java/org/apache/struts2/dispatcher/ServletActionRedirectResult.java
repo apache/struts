@@ -21,22 +21,15 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.views.util.UrlHelper;
-
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -137,15 +130,20 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     }
 
     public ServletActionRedirectResult(String actionName) {
-        this(null, actionName, null);
+        this(null, actionName, null, null);
     }
 
     public ServletActionRedirectResult(String actionName, String method) {
-        this(null, actionName, method);
+        this(null, actionName, method, null);
     }
 
+
     public ServletActionRedirectResult(String namespace, String actionName, String method) {
-        super(null);
+        this(namespace, actionName, method, null);
+    }
+
+    public ServletActionRedirectResult(String namespace, String actionName, String method, String anchor) {
+        super(null, anchor);
         this.namespace = namespace;
         this.actionName = actionName;
         this.method = method;
@@ -206,6 +204,6 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     protected List<String> getProhibitedResultParams() {
         return Arrays.asList(new String[]{
                 DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
-                "prependServletContext", "supressEmptyParameters"});
+                "prependServletContext", "supressEmptyParameters", "anchor"});
     }
 }

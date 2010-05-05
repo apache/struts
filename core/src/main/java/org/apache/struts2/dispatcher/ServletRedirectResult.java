@@ -21,15 +21,6 @@
 
 package org.apache.struts2.dispatcher;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import static javax.servlet.http.HttpServletResponse.*;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.util.UrlHelper;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
@@ -38,13 +29,21 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.views.util.UrlHelper;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static javax.servlet.http.HttpServletResponse.SC_FOUND;
 
 
 /**
@@ -72,6 +71,8 @@ import java.util.Arrays;
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
  *
+ * <li><b>anchor</b> - optional, you can specify an anchor for result.</li>
+ *
  * </ul>
  *
  * <p>
@@ -86,6 +87,7 @@ import java.util.Arrays;
  * &lt;result name="success" type="redirect"&gt;
  *   &lt;param name="location"&gt;foo.jsp&lt;/param&gt;
  *   &lt;param name="parse"&gt;false&lt;/param&gt;
+ *   &lt;param name="anchor"&gt;FRAGMENT&lt;/param&gt;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
@@ -105,13 +107,20 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     protected boolean supressEmptyParameters = false;
 
     protected Map<String, String> requestParameters = new LinkedHashMap<String, String>();
+    
+    protected String anchor;
 
     public ServletRedirectResult() {
         super();
     }
 
     public ServletRedirectResult(String location) {
+        this(location, null);
+    }
+    
+    public ServletRedirectResult(String location, String anchor) {
         super(location);
+        this.anchor = anchor;
     }
     
     @Inject
@@ -124,6 +133,14 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     }
 
     /**
+     * Set the optional anchor value.
+     * @param anchor
+     */
+    public void setAnchor(String anchor) {
+        this.anchor = anchor;
+    }
+
+    /**
      * Sets whether or not to prepend the servlet context path to the redirected URL.
      *
      * @param prependServletContext <tt>true</tt> to prepend the location with the servlet context path,
@@ -131,6 +148,14 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      */
     public void setPrependServletContext(boolean prependServletContext) {
         this.prependServletContext = prependServletContext;
+    }
+    
+    public void execute(ActionInvocation invocation) throws Exception {
+        if (anchor != null) {
+            anchor = conditionalParse(anchor, invocation);
+        }
+
+        super.execute(invocation);
     }
 
     /**
@@ -187,6 +212,11 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             StringBuilder tmpLocation = new StringBuilder(finalLocation);
             UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
+            // add the anchor
+            if (anchor != null) {
+                tmpLocation.append('#').append(anchor);
+            }
+
             finalLocation = response.encodeRedirectURL(tmpLocation.toString());
         }
 
@@ -200,7 +230,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     protected List<String> getProhibitedResultParams() {
         return Arrays.asList(new String[]{
                 DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
-                "prependServletContext", "supressEmptyParameters"});
+                "prependServletContext", "supressEmptyParameters", "anchor"});
     }
 
 

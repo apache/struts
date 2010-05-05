@@ -31,14 +31,15 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import static org.easymock.EasyMock.createControl;
-import static org.easymock.EasyMock.expect;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.easymock.EasyMock.createControl;
+import static org.easymock.EasyMock.expect;
 
 
 /**
@@ -59,6 +60,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
             .addParam("param1", "${#value1}")
             .addParam("param2", "${#value2}")
             .addParam("param3", "${#value3}")
+            .addParam("anchor", "${#fragment}")
             .build();
 
 
@@ -86,6 +88,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         result.setParse(true);
         result.setEncode(false);
         result.setPrependServletContext(false);
+        result.setAnchor("fragment");
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
@@ -99,7 +102,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
-        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3", res.getRedirectedUrl());
+        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
 
         control.verify();
     }
@@ -117,6 +120,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
             .addParam("param1", "value 1")
             .addParam("param2", "value 2")
             .addParam("param3", "value 3")
+            .addParam("anchor", "fragment")
             .build();
 
         ActionContext context = ActionContext.getContext();
@@ -138,6 +142,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         result.setParse(false);
         result.setEncode(false);
         result.setPrependServletContext(false);
+        result.setAnchor("fragment");
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
@@ -150,7 +155,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
-        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3", res.getRedirectedUrl());
+        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
 
         control.verify();
     }
@@ -168,10 +173,12 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
             .addParam("param1", "value 1")
             .addParam("param2", "value 2")
             .addParam("param3", "value 3")
+            .addParam("anchor", "fragment")
             .build();
 
         ObjectFactory factory = container.getInstance(ObjectFactory.class);
         ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, new HashMap());
         assertNotNull(result);
     }
+    
 }

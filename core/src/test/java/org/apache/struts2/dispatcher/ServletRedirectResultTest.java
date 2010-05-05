@@ -94,6 +94,21 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         assertEquals("/context/bar/foo.jsp", writer.toString());
     }
 
+    public void testAbsoluteRedirectAnchor() {
+        view.setLocation("/bar/foo.jsp");
+        view.setAnchor("fragment");
+        responseMock.expectAndReturn("encodeRedirectURL", "/context/bar/foo.jsp#fragment", "/context/bar/foo.jsp#fragment");
+        responseMock.expect("sendRedirect", C.args(C.eq("/context/bar/foo.jsp#fragment")));
+
+        try {
+            view.execute(ai);
+            requestMock.verify();
+            responseMock.verify();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
     public void testPrependServletContextFalse() {
         view.setLocation("/bar/foo.jsp");
         view.setPrependServletContext(false);
@@ -172,6 +187,7 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         result.setParse(false);
         result.setEncode(false);
         result.setPrependServletContext(false);
+        result.setAnchor("fragment");
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
@@ -184,7 +200,7 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
-        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3", res.getRedirectedUrl());
+        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
 
         control.verify();
     }

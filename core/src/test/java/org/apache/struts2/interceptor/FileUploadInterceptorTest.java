@@ -362,6 +362,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         interceptor = new FileUploadInterceptor();
+        container.inject(interceptor);
         tempDir = File.createTempFile("struts", "fileupload");
         tempDir.delete();
         tempDir.mkdirs();

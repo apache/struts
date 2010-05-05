@@ -25,8 +25,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -35,14 +37,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -191,6 +186,13 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     protected Long maximumSize;
     protected Set<String> allowedTypesSet = Collections.emptySet();
     protected Set<String> allowedExtensionsSet = Collections.emptySet();
+
+    private PatternMatcher matcher;
+
+    @Inject
+    public void setMatcher(PatternMatcher matcher) {
+        this.matcher = matcher;
+    }
 
     public void setUseActionMessageBundle(String value) {
         this.useActionMessageBundle = Boolean.valueOf(value);
@@ -417,36 +419,8 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     }
 
     private boolean matchesWildcard(String pattern, String text) {
-        text += '\0';
-        pattern += '\0';
-
-        int N = pattern.length();
-
-        boolean[] states = new boolean[N + 1];
-        boolean[] old = new boolean[N + 1];
-        old[0] = true;
-
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            states = new boolean[N + 1];
-            for (int j = 0; j < N; j++) {
-                char p = pattern.charAt(j);
-
-                if (old[j] && (p == '*'))
-                    old[j + 1] = true;
-
-                if (old[j] && (p == c))
-                    states[j + 1] = true;
-                if (old[j] && (p == '?'))
-                    states[j + 1] = true;
-                if (old[j] && (p == '*'))
-                    states[j] = true;
-                if (old[j] && (p == '*'))
-                    states[j + 1] = true;
-            }
-            old = states;
-        }
-        return states[N];
+        Object o = matcher.compilePattern(pattern);
+        return matcher.match(new HashMap<String, String>(), text, o);
     }
 
     private boolean isNonEmpty(Object[] objArray) {

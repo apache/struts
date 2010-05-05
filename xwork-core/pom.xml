@@ -25,7 +25,7 @@
         <currentVersion>${pom.version}</currentVersion>
         <struts2.springPlatformVersion>2.5.6</struts2.springPlatformVersion>
         <asm.version>3.1</asm.version>
-        <ognl.version>2.7.3</ognl.version>
+        <ognl.version>3.0</ognl.version>
     </properties>
 
     <profiles>
@@ -199,6 +199,10 @@
                                         <include>org/apache/commons/lang/UnhandledException.class</include>
                                         <include>org/apache/commons/lang/IntHashMap*class</include>
                                     </includes>
+                                    <artifact>commons-io:commons-io</artifact>
+                                    <includes>
+                                        <include>org/apache/commons/io/FileUtils.class</include>
+                                    </includes>
                                 </filter>
                             </filters>
                             <relocations>
@@ -210,6 +214,10 @@
                                     <pattern>org.apache.commons.lang</pattern>
                                     <shadedPattern>org.apache.commons.lang.xwork</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons.lang</pattern>
+                                    <shadedPattern>org.apache.commons.io.xwork</shadedPattern>
+                                </relocation>
                             </relocations>
                             <transformers>
                                 <transformer
@@ -219,6 +227,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -252,6 +261,12 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.4</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -317,6 +332,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${struts2.springPlatformVersion}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -352,6 +368,14 @@
             <version>2.4</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.10.0.GA</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

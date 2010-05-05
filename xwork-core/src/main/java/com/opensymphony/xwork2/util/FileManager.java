@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -279,16 +280,13 @@ public class FileManager {
                 entry = null;
             }
 
-            if (entry != null) {
-                return (this.lastModified < entry.getTime());
-            } else {
-                return false;
-            }
+            return entry != null && (lastModified < entry.getTime());
         }
 
         public static Revision build(URL fileUrl) {
             // File within a Jar
             // Find separator index of jar filename and filename within jar
+            String jarFileName = "";
             try {
                 String fileName = fileUrl.toString();
                 int separatorIndex = fileName.indexOf(JAR_FILE_NAME_SEPARATOR);
@@ -300,19 +298,20 @@ public class FileManager {
                     return null;
                 }
                 // Split file name
-                String jarFileName = fileName.substring(0, separatorIndex);
-                String fileNameInJar = fileName.substring(separatorIndex + JAR_FILE_NAME_SEPARATOR.length()).replaceAll("%20", " ");
+                jarFileName = fileName.substring(0, separatorIndex);
+                int index = separatorIndex + JAR_FILE_NAME_SEPARATOR.length();
+                String fileNameInJar = fileName.substring(index).replaceAll("%20", " ");
 
                 URL url = URLUtil.normalizeToFileProtocol(fileUrl);
                 if (url != null) {
-                    JarFile jarFile = new JarFile(new File(url.getPath().replaceAll("%20", " ")));
+                    JarFile jarFile = new JarFile(FileUtils.toFile(url));
                     ZipEntry entry = jarFile.getEntry(fileNameInJar);
                     return new JarEntryRevision(jarFileName.toString(), fileNameInJar, entry.getTime());
                 } else {
                     return null;
                 }
             } catch (Throwable e) {
-                LOG.warn("Could not create JarEntryRevision!", e);
+                LOG.warn("Could not create JarEntryRevision for [" + jarFileName + "]!", e);
                 return null;
             }
         }

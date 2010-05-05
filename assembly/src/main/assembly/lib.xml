@@ -54,7 +54,6 @@
       <includes>
         <include>FREEMARKER-LICENSE.txt</include>
         <include>OGNL-LICENSE.txt</include>
-        <include>XWORK-LICENSE.txt</include>
       </includes>
     </fileSet>
     <fileSet>

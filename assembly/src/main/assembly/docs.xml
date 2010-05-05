@@ -30,7 +30,7 @@
 
     <!-- Include the XWork Javadoc in the assembly -->
     <fileSet>
-      <directory>target/xwork-apidocs</directory>
+      <directory>../xwork-core/target/site/apidocs</directory>
       <outputDirectory>docs/xwork-apidocs</outputDirectory>
     </fileSet>
 

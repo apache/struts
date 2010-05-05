@@ -121,11 +121,22 @@
         </includes>
       </fileSet>
       <fileSet>
+        <directory>../xwork-core</directory>
+        <outputDirectory>src/xwork-core</outputDirectory>
+        <includes>
+          <include>pom.xml</include>
+          <include>src/</include>
+        </includes>
+      </fileSet>
+      <fileSet>
         <directory>../plugins</directory>
         <outputDirectory>src/plugins</outputDirectory>
         <excludes>
           <exclude>*/target/**</exclude>
           <exclude>target/**</exclude>
+          <exclude>*.iml</exclude>
+          <exclude>*.ipr</exclude>
+          <exclude>*.iws</exclude>
         </excludes>
       </fileSet>
       <fileSet>

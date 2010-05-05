@@ -54,7 +54,6 @@
       <includes>
         <include>FREEMARKER-LICENSE.txt</include>
         <include>OGNL-LICENSE.txt</include>
-        <include>XWORK-LICENSE.txt</include>
       </includes>
     </fileSet>
     <fileSet>
@@ -104,7 +103,7 @@
 
     <!-- Include the XWork Javadoc in the assembly -->
     <fileSet>
-      <directory>target/xwork-apidocs</directory>
+      <directory>../xwork-core/target/site/apidocs</directory>
       <outputDirectory>docs/xwork-apidocs</outputDirectory>
     </fileSet>
 
@@ -307,6 +306,14 @@
     <fileSet>
       <directory>../core</directory>
       <outputDirectory>src/core</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../xwork-core</directory>
+      <outputDirectory>src/xwork-core</outputDirectory>
       <includes>
         <include>pom.xml</include>
         <include>src/</include>

@@ -72,7 +72,7 @@
                     <dependency>
                         <groupId>com.opensymphony</groupId>
                         <artifactId>xwork-core</artifactId>
-                        <version>2.1.6</version>
+                        <version>${version}</version>
                         <type>jar</type>
                         <classifier>jdk14</classifier>
                         <scope>runtime</scope>
@@ -247,26 +247,9 @@
                             <outputDirectory>${project.build.directory}/apps</outputDirectory>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>xwork-core-javadoc</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.opensymphony</groupId>
-                                    <artifactId>xwork-core</artifactId>
-                                    <classifier>javadoc</classifier>
-                                    <version>${version}</version>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${project.build.directory}/xwork-apidocs</outputDirectory>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -276,19 +259,17 @@
                         <configuration>
                             <tasks>
                                 <mkdir dir="${project.build.directory}/cwiki" />
-<!--
                                 <exec executable="ssh" failonerror="true" >
                                     <arg line="${username}@people.apache.org /www/struts.apache.org/2.x/docs-zip2.sh" />
                                 </exec>
                                 <unzip src="${project.build.directory}/docs.zip" dest="${project.build.directory}/cwiki" />
--->
                                 <exec executable="wget">
                                     <arg value="-erobots=off" />
                                     <arg value="-nH" />
                                     <arg value="-nv" />
                                     <arg value="-E" />
                                     <arg value="-L" />
-                                    <arg value="--directory-prefix=${project.build.directory}/cwiki" />
+                                    <arg value="- -directory-prefix=${project.build.directory}/cwiki" />
                                     <arg value="-r" />
                                     <arg value="http://cwiki.apache.org/WW/" />
                                 </exec>
@@ -300,6 +281,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2-beta-1</version>

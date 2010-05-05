@@ -41,6 +41,7 @@
 
     <properties>
         <tlib.version>2.2</tlib.version>
+        <ognl.version>3.0</ognl.version>
     </properties>
 
     <build>
@@ -241,7 +242,7 @@
         <dependency>
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
-            <version>2.7.3</version>
+            <version>${ognl.version}</version>
         </dependency>
 
         <!-- Velocity -->
@@ -261,6 +262,10 @@
                 <exclusion>
                     <groupId>struts</groupId>
                     <artifactId>struts</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>velocity</groupId>
+                    <artifactId>velocity</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -392,7 +397,6 @@
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
-
 
     </dependencies>
 </project>

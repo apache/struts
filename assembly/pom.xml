@@ -259,10 +259,12 @@
                         <configuration>
                             <tasks>
                                 <mkdir dir="${project.build.directory}/cwiki" />
+<!--
                                 <exec executable="ssh" failonerror="true" >
                                     <arg line="${username}@people.apache.org /www/struts.apache.org/2.x/docs-zip2.sh" />
                                 </exec>
                                 <unzip src="${project.build.directory}/docs.zip" dest="${project.build.directory}/cwiki" />
+-->
                                 <exec executable="wget">
                                     <arg value="-erobots=off" />
                                     <arg value="-nH" />

@@ -272,6 +272,7 @@
                                     <arg value="-E" />
                                     <arg value="-L" />
                                     <arg value="--directory-prefix=${project.build.directory}/cwiki" />
+                                    <arg value="--no-check-certificate" />
                                     <arg value="-r" />
                                     <arg value="http://cwiki.apache.org/WW/" />
                                 </exec>

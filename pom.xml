@@ -404,4 +404,13 @@
         </dependency>
       </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.8.0.GA</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

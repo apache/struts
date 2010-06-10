@@ -21,29 +21,26 @@
 
 package org.apache.struts2.views.freemarker.tags;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.components.Component;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-
-import freemarker.template.DefaultObjectWrapper;
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
+import org.apache.struts2.components.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public abstract class TagModel implements TemplateTransformModel {
     private static final Logger LOG = LoggerFactory.getLogger(TagModel.class);
@@ -74,7 +71,7 @@ public abstract class TagModel implements TemplateTransformModel {
 
     protected Map unwrapParameters(Map params) {
         Map map = new HashMap(params.size());
-        DefaultObjectWrapper objectWrapper = new DefaultObjectWrapper();
+        BeansWrapper objectWrapper = BeansWrapper.getDefaultInstance();
         for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
 

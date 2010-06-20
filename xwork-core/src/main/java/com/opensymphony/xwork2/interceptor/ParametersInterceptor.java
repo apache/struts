@@ -135,7 +135,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     static boolean devMode = false;
 
     // Allowed names of parameters
-    private String acceptedParamNames = "[a-zA-Z0-9\\.\\]\\[_'\\s]+";
+    private String acceptedParamNames = "[a-zA-Z0-9\\.\\]\\[\\(\\)_'\\s]+";
     private Pattern acceptedPattern = Pattern.compile(acceptedParamNames);
 
     private ValueStackFactory valueStackFactory;

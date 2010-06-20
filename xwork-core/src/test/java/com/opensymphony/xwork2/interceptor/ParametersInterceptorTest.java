@@ -15,15 +15,6 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import ognl.PropertyAccessor;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
@@ -43,6 +34,14 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import ognl.PropertyAccessor;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -53,10 +52,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 public class ParametersInterceptorTest extends XWorkTestCase {
 
     public void testParameterNameAware() {
-        ParametersInterceptor pi = new ParametersInterceptor();
-        container.inject(pi);
-        final Map actual = new HashMap();
-        pi.setValueStackFactory(createValueStackFactory(actual));
+        ParametersInterceptor pi = createParametersInterceptor();
+        final Map actual = injectValueStackFactory(pi);
         ValueStack stack = createStubValueStack(actual);
         final Map expected = new HashMap() {
             {
@@ -147,6 +144,31 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertNull(session.get("user3"));
         assertNull(session.get("user4"));
         assertNull(session.get("user5"));
+    }
+
+    public void testAccessToOgnlInternals() throws Exception {
+        // given
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("blah", "This is blah");
+        params.put("('\\u0023_memberAccess[\\'allowStaticMethodAccess\\']')(meh)", "true");
+        params.put("('(aaa)(('\\u0023context[\\'xwork.MethodAccessor.denyMethodExecution\\']\\u003d\\u0023foo')(\\u0023foo\\u003dnew java.lang.Boolean(\"false\")))", "");
+        params.put("(asdf)(('\\u0023rt.exit(1)')(\\u0023rt\\u003d@java.lang.Runtime@getRuntime()))", "1");
+
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        extraContext.put(ActionContext.PARAMETERS, params);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, "", extraContext);
+        ValueStack stack = proxy.getInvocation().getStack();
+
+        // when
+        proxy.execute();
+        proxy.getAction();
+
+        //then
+        assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
+        Object allowMethodAccess = stack.findValue("\u0023_memberAccess['allowStaticMethodAccess']");
+        assertNotNull(allowMethodAccess);
+        assertEquals(Boolean.FALSE, allowMethodAccess);
     }
 
     public void testParameters() throws Exception {
@@ -339,8 +361,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testNoOrdered() throws Exception {
-        ParametersInterceptor pi = new ParametersInterceptor();
-        container.inject(pi);
+        ParametersInterceptor pi = createParametersInterceptor();
         final Map<String, Object> actual = new LinkedHashMap<String, Object>();
         pi.setValueStackFactory(createValueStackFactory(actual));
         ValueStack stack = createStubValueStack(actual);
@@ -390,21 +411,17 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testSetOrdered() throws Exception {
-        ParametersInterceptor pi = new ParametersInterceptor();
-        container.inject(pi);
+        ParametersInterceptor pi = createParametersInterceptor();
         assertEquals("ordered should be false by default", false, pi.isOrdered());
         pi.setOrdered(true);
         assertEquals(true, pi.isOrdered());
     }
 
     public void testExcludedParametersAreIgnored() throws Exception {
-        ParametersInterceptor pi = new ParametersInterceptor();
-        container.inject(pi);
+        ParametersInterceptor pi = createParametersInterceptor();
         pi.setExcludeParams("dojo\\..*");
-        final Map actual = new HashMap();
-        pi.setValueStackFactory(createValueStackFactory(actual));
-        ValueStack stack = createStubValueStack(actual);
-        container.inject(stack);
+        final Map actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
 
         final Map<String, Object> expected = new HashMap<String, Object>() {
             {
@@ -420,6 +437,57 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         };
         pi.setParameters(new NoParametersAction(), stack, parameters);
         assertEquals(expected, actual);
+    }
+
+    public void testInternalParametersAreIgnored() throws Exception {
+        // given
+        ParametersInterceptor interceptor = createParametersInterceptor();
+        final Map actual = injectValueStackFactory(interceptor);
+        ValueStack stack = injectValueStack(actual);
+
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+                put("ordinary.bean", "value");
+            }
+        };
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("ordinary.bean", "value");
+                put("#some.internal.object", "true");
+                put("(bla)#some.internal.object", "true");
+                put("#some.internal.object(bla)#some.internal.object", "true");
+                put("#_some.internal.object", "true");
+                put("\u0023_some.internal.object", "true");
+                put("\u0023_some.internal.object,[dfd],bla(\u0023_some.internal.object)", "true");
+                put("\\u0023_some.internal.object", "true");
+            }
+        };
+
+        // when
+        interceptor.setParameters(new NoParametersAction(), stack, parameters);
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    private ValueStack injectValueStack(Map actual) {
+        ValueStack stack = createStubValueStack(actual);
+        container.inject(stack);
+        return stack;
+    }
+
+    private Map injectValueStackFactory(ParametersInterceptor interceptor) {
+        final Map actual = new HashMap();
+        interceptor.setValueStackFactory(createValueStackFactory(actual));
+        return actual;
+    }
+
+    private ParametersInterceptor createParametersInterceptor() {
+        ParametersInterceptor pi = new ParametersInterceptor();
+        container.inject(pi);
+        return pi;
     }
 
     private ValueStackFactory createValueStackFactory(final Map<String, Object> context) {

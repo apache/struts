@@ -15,16 +15,6 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
@@ -40,6 +30,16 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -134,7 +134,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     Set<Pattern> acceptParams = Collections.emptySet();
     static boolean devMode = false;
 
-    private String acceptedParamNames = "[[\\p{Graph}\\s]&&[^,#:=]]*";
+    // Allowed names of parameters
+    private String acceptedParamNames = "[a-zA-Z0-9\\.\\]\\[_'\\s]+";
     private Pattern acceptedPattern = Pattern.compile(acceptedParamNames);
 
     private ValueStackFactory valueStackFactory;

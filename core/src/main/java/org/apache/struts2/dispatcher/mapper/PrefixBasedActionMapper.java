@@ -1,21 +1,20 @@
 package org.apache.struts2.dispatcher.mapper;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Arrays;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- *
+ * <!-- START SNIPPET: description -->
+ * 
  * A prefix based action mapper that is capable of delegating to other {@link ActionMapper}s based on the request's prefix
  *
  * It is configured through struts.xml
@@ -33,6 +32,8 @@ import org.apache.struts2.StrutsConstants;
  * {@link PrefixBasedActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} and
  * {@link PrefixBasedActionMapper#getUriFromActionMapping(ActionMapping)} methods.
  * <p/>
+ *
+ * <!-- END SNIPPET: description -->
  *
  * @see ActionMapper
  * @see ActionMapping

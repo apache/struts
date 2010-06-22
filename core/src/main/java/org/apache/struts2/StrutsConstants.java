@@ -150,6 +150,13 @@ public final class StrutsConstants {
     /** The org.apache.struts2.dispatcher.mapper.ActionMapper implementation class */
     public static final String STRUTS_MAPPER_CLASS = "struts.mapper.class";
 
+    /**
+     * A prefix based action mapper that is capable of delegating to other
+     * {@link org.apache.struts2.dispatcher.mapper.ActionMapper}s based on the request's prefix
+     * You can specify different prefixes that will be handled by different mappers
+     */
+    public static final String PREFIX_BASED_MAPPER_CONFIGURATION = "struts.mapper.prefixMapping";
+    
     /** Whether the Struts filter should serve static content or not */
     public static final String STRUTS_SERVE_STATIC_CONTENT = "struts.serve.static";
 

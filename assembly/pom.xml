@@ -27,7 +27,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.2-beta-1</version>
+                        <version>2.2-beta-5</version>
                         <executions>
                             <execution>
                                 <id>make-assembly</id>
@@ -287,7 +287,7 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-1</version>
+                <version>2.2-beta-5</version>
                 <executions>
                     <execution>
                         <id>make-assembly</id>

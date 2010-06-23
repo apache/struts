@@ -17,6 +17,10 @@
         <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/archetypes/struts2-archetype-blank/</developerConnection>
         <url>http://svn.apache.org/repos/asf/struts/struts2/trunk/archetypes/struts2-archetype-blank/</url>
     </scm>
+    
+    <properties>
+        <maven.test.skip>true</maven.test.skip>
+    </properties>
 
     <profiles>
         <profile>

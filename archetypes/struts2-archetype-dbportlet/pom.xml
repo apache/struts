@@ -18,6 +18,10 @@
         <url>svn.apache.org/repos/asf/struts/struts2/trunk/archetypes/struts2-archetype-dbportlet/</url>
     </scm>
 
+    <properties>
+        <maven.test.skip>true</maven.test.skip>
+    </properties>
+
     <profiles>
         <profile>
             <id>release</id>

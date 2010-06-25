@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite errors="0" failures="0" name="Command line test" tests="1" time="0.0"><properties/><testcase classname="com.opensymphony.xwork2.TestNGXWorkTestCaseTest$RunTest" name="testRun" time="0.0"/></testsuite>
+<?xml version="1.0" encoding="UTF-8"?><testsuite errors="0" failures="0" name="Command line test" tests="1" time="0.0020"><properties/><testcase classname="com.opensymphony.xwork2.TestNGXWorkTestCaseTest$RunTest" name="testRun" time="0.0010"/></testsuite>

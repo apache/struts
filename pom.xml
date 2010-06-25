@@ -40,17 +40,6 @@
 
     <ciManagement />
     <distributionManagement>
-        <repository>
-            <id>struts-staging</id>
-            <name>Apache Struts Staging Repository</name>
-            <url>scp://people.apache.org/www/people.apache.org/builds/struts/${pom.version}/m2-staging-repository</url>
-        </repository>
-        <snapshotRepository>
-           <id>apache.snapshots</id>
-           <uniqueVersion>false</uniqueVersion>
-           <name>Apache Maven Repository (Snapshots and Test Builds)</name>
-           <url>scp://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
-        </snapshotRepository>
         <site>
             <id>apache-site</id>
             <url>scp://people.apache.org/www/struts.apache.org/2.x/</url>

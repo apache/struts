@@ -40,17 +40,6 @@
 
     <ciManagement />
     <distributionManagement>
-        <repository>
-            <id>struts-staging</id>
-            <name>Apache Struts Staging Repository</name>
-            <url>scp://people.apache.org/www/people.apache.org/builds/struts/${pom.version}/m2-staging-repository</url>
-        </repository>
-        <snapshotRepository>
-           <id>apache.snapshots</id>
-           <uniqueVersion>false</uniqueVersion>
-           <name>Apache Maven Repository (Snapshots and Test Builds)</name>
-           <url>scp://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
-        </snapshotRepository>
         <site>
             <id>apache-site</id>
             <url>scp://people.apache.org/www/struts.apache.org/2.x/</url>
@@ -131,48 +120,6 @@
                                     <verbose>false</verbose>
                                     <destdir>${project.build.directory}/classes-retro</destdir>
                                 </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.2</version>
-                        <!--
-                        <configuration>
-                            <aggregate>true</aggregate>
-                        </configuration>
-                        -->
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
                             </execution>
                         </executions>
                     </plugin>

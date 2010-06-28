@@ -70,7 +70,7 @@
                     </dependency>
 
                     <dependency>
-                        <groupId>com.opensymphony</groupId>
+                        <groupId>org.apache.struts.xwork</groupId>
                         <artifactId>xwork-core</artifactId>
                         <version>${version}</version>
                         <type>jar</type>

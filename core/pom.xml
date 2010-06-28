@@ -208,7 +208,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.opensymphony</groupId>
+            <groupId>org.apache.struts.xwork</groupId>
             <artifactId>xwork-core</artifactId>
             <version>${version}</version>
         </dependency>

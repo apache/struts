@@ -9,7 +9,7 @@
         <version>2.2.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.opensymphony</groupId>
+    <groupId>org.apache.struts.xwork</groupId>
     <artifactId>xwork-core</artifactId>
     <packaging>jar</packaging>
     <name>XWork: Core</name>

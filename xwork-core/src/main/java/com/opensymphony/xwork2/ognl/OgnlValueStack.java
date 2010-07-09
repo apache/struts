@@ -16,7 +16,6 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
@@ -31,23 +30,22 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.LoggerUtils;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import ognl.*;
+import ognl.NoSuchPropertyException;
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.PropertyAccessor;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Ognl implementation of a value stack that allows for dynamic Ognl expressions to be evaluated against it. When
- * evaluating an expression, the stack will be searched down the stack, from the latest objects pushed in to the
- * earliest, looking for a bean with a getter or setter for the given property or a method of the given name (depending
- * on the expression being evaluated).
+ * Ognl implementation of a value stack that allows for dynamic Ognl expressions to be evaluated against it. When evaluating an expression,
+ * the stack will be searched down the stack, from the latest objects pushed in to the earliest, looking for a bean with a getter or setter
+ * for the given property or a method of the given name (depending on the expression being evaluated).
  *
  * @author Patrick Lightbody
  * @author tm_jee
@@ -55,26 +53,27 @@ import java.util.regex.Pattern;
  */
 public class OgnlValueStack implements Serializable, ValueStack, ClearableValueStack, MemberAccessValueStack {
 
+    public static final String THROW_EXCEPTION_ON_FAILURE = OgnlValueStack.class.getName() + ".throwExceptionOnFailure";
+
     private static final long serialVersionUID = 370737852934925530L;
 
-    private static Logger LOG = LoggerFactory.getLogger(OgnlValueStack.class);
-    private boolean devMode;
-    private boolean logMissingProperties;
-    public static final String THROW_EXCEPTION_ON_FAILURE = OgnlValueStack.class.getName() + ".throwExceptionOnFailure";
+    private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
+    private static final Logger LOG = LoggerFactory.getLogger(OgnlValueStack.class);
 
     CompoundRoot root;
     transient Map<String, Object> context;
     Class defaultType;
     Map<Object, Object> overrides;
     transient OgnlUtil ognlUtil;
-
     transient SecurityMemberAccess securityMemberAccess;
+
+    private boolean devMode;
+    private boolean logMissingProperties;
 
     protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticAccess) {
         setRoot(xworkConverter, accessor, new CompoundRoot(), allowStaticAccess);
         push(prov);
     }
-
 
     protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticAccess) {
         setRoot(xworkConverter, accessor, new CompoundRoot(vs.getRoot()), allowStaticAccess);
@@ -85,12 +84,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         this.ognlUtil = ognlUtil;
     }
 
-    protected void setRoot(XWorkConverter xworkConverter,
-                           CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticMethodAccess) {
+    protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot,
+                           boolean allowStaticMethodAccess) {
         this.root = compoundRoot;
-        this.securityMemberAccess =  new SecurityMemberAccess(allowStaticMethodAccess);
-        this.context = Ognl.createDefaultContext(this.root, accessor, new OgnlTypeConverterWrapper(xworkConverter),
-               securityMemberAccess);
+        this.securityMemberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
+        this.context = Ognl.createDefaultContext(this.root, accessor, new OgnlTypeConverterWrapper(xworkConverter), securityMemberAccess);
         context.put(VALUE_STACK, this);
         Ognl.setClassResolver(context, accessor);
         ((OgnlContext) context).setTraceEvaluations(false);
@@ -102,26 +100,26 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         devMode = "true".equalsIgnoreCase(mode);
     }
 
-    @Inject(value = "logMissingProperties", required = false )
+    @Inject(value = "logMissingProperties", required = false)
     public void setLogMissingProperties(String logMissingProperties) {
         this.logMissingProperties = "true".equalsIgnoreCase(logMissingProperties);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#getContext()
      */
     public Map<String, Object> getContext() {
         return context;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#setDefaultType(java.lang.Class)
      */
     public void setDefaultType(Class defaultType) {
         this.defaultType = defaultType;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#setExprOverrides(java.util.Map)
      */
     public void setExprOverrides(Map<Object, Object> overrides) {
@@ -132,84 +130,79 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         }
     }
 
-    /* (non-Javadoc)
-    * @see com.opensymphony.xwork2.util.ValueStack#getExprOverrides()
-    */
+    /**
+     * @see com.opensymphony.xwork2.util.ValueStack#getExprOverrides()
+     */
     public Map<Object, Object> getExprOverrides() {
         return this.overrides;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#getRoot()
      */
     public CompoundRoot getRoot() {
         return root;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
      */
     public void setValue(String expr, Object value) {
         setValue(expr, value, devMode);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object, boolean)
      */
     public void setValue(String expr, Object value, boolean throwExceptionOnFailure) {
         Map<String, Object> context = getContext();
-
         try {
-            context.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, expr);
-            context.put(REPORT_ERRORS_ON_NO_PROP, (throwExceptionOnFailure) ? Boolean.TRUE : Boolean.FALSE);
-            ognlUtil.setValue(expr, context, root, value);
+            trySetValue(expr, value, throwExceptionOnFailure, context);
         } catch (OgnlException e) {
-            String msg = "Error setting expression '" + expr + "' with value '" + value + "'";
-            if (LOG.isWarnEnabled()) {
-                LOG.warn(msg, e);
-            }
-            if (throwExceptionOnFailure) {
-                throw new XWorkException(msg, e);
-            }
+            handleOgnlException(expr, value, throwExceptionOnFailure, e);
         } catch (RuntimeException re) { //XW-281
-            if (throwExceptionOnFailure) {
-                StringBuilder msg = new StringBuilder();
-                msg.append("Error setting expression '");
-                msg.append(expr);
-                msg.append("' with value ");
-
-                if (value instanceof Object[]) {
-                    Object[] valueArray = (Object[]) value;
-                    msg.append("[");
-                    for (int index = 0; index < valueArray.length; index++) {
-                        msg.append("'");
-                        msg.append(valueArray[index]);
-                        msg.append("'");
-
-                        if (index < (valueArray.length + 1))
-                            msg.append(", ");
-                    }
-                    msg.append("]");
-                } else {
-                    msg.append("'");
-                    msg.append(value);
-                    msg.append("'");
-                }
-
-                throw new XWorkException(msg.toString(), re);
-            } else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Error setting value", re);
-                }
-            }
+            handleRuntimeException(expr, value, throwExceptionOnFailure, re);
         } finally {
-            ReflectionContextState.clear(context);
-            context.remove(XWorkConverter.CONVERSION_PROPERTY_FULLNAME);
-            context.remove(REPORT_ERRORS_ON_NO_PROP);
+            cleanUpContext(context);
         }
     }
 
-    /* (non-Javadoc)
+    private void trySetValue(String expr, Object value, boolean throwExceptionOnFailure, Map<String, Object> context) throws OgnlException {
+        context.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, expr);
+        context.put(REPORT_ERRORS_ON_NO_PROP, (throwExceptionOnFailure) ? Boolean.TRUE : Boolean.FALSE);
+        ognlUtil.setValue(expr, context, root, value);
+    }
+
+    private void cleanUpContext(Map<String, Object> context) {
+        ReflectionContextState.clear(context);
+        context.remove(XWorkConverter.CONVERSION_PROPERTY_FULLNAME);
+        context.remove(REPORT_ERRORS_ON_NO_PROP);
+    }
+
+    private void handleRuntimeException(String expr, Object value, boolean throwExceptionOnFailure, RuntimeException re) {
+        if (throwExceptionOnFailure) {
+            String message = ErrorMessageBuilder.create()
+                    .errorSettingExpressionWithValue(expr, value)
+                    .build();
+            throw new XWorkException(message, re);
+        } else {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Error setting value", re);
+            }
+        }
+    }
+
+    private void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
+        String msg = "Error setting expression '" + expr + "' with value '" + value + "'";
+        if (LOG.isWarnEnabled()) {
+            LOG.warn(msg, e);
+        }
+        if (throwExceptionOnFailure) {
+            throw new XWorkException(msg, e);
+        }
+    }
+
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#findString(java.lang.String)
      */
     public String findString(String expr) {
@@ -220,118 +213,133 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return (String) findValue(expr, String.class, throwExceptionOnFailure);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String)
      */
     public Object findValue(String expr, boolean throwExceptionOnFailure) {
         try {
-            if (expr == null) {
-                return null;
-            }
-
-            if ((overrides != null) && overrides.containsKey(expr)) {
-                expr = (String) overrides.get(expr);
-            }
-
-            if (defaultType != null) {
-                return findValue(expr, defaultType);
-            }
-
-            Object value = null;
-            try {
-                if (throwExceptionOnFailure)
-                    context.put(THROW_EXCEPTION_ON_FAILURE, true);
-                value = ognlUtil.getValue(expr, context, root);
-            } finally {
-                context.remove(THROW_EXCEPTION_ON_FAILURE);
-            }
-
-            if (value != null) {
-                return value;
-            } else {
-                return findInContext(expr);
-            }
+            setupExceptionOnFailure(throwExceptionOnFailure);
+            return tryFindValueWhenExpressionIsNotNull(expr);
         } catch (OgnlException e) {
-            Object ret = findInContext(expr);
-
-            if (ret != null)
-                return ret;
-            else {
-                if (e instanceof NoSuchPropertyException && devMode && logMissingProperties)
-                    LOG.warn("Could not find property [" + ((NoSuchPropertyException)e).getName() + "]");
-
-                if (throwExceptionOnFailure)
-                    throw new XWorkException(e);
-                else
-                    return null;
-            }
+            return handleOgnlException(expr, throwExceptionOnFailure, e);
         } catch (Exception e) {
-            logLookupFailure(expr, e);
-
-            if (throwExceptionOnFailure)
-                throw new XWorkException(e);
-
-            return findInContext(expr);
+            return handleOtherException(expr, throwExceptionOnFailure, e);
         } finally {
             ReflectionContextState.clear(context);
         }
     }
 
-     public Object findValue(String expr) {
-         return findValue(expr, false);
-     }
+    private void setupExceptionOnFailure(boolean throwExceptionOnFailure) {
+        if (throwExceptionOnFailure) {
+            context.put(THROW_EXCEPTION_ON_FAILURE, true);
+        }
+    }
 
-    /* (non-Javadoc)
+    private Object tryFindValueWhenExpressionIsNotNull(String expr) throws OgnlException {
+        if (expr == null) {
+            return null;
+        }
+        return tryFindValue(expr);
+    }
+
+    private Object handleOtherException(String expr, boolean throwExceptionOnFailure, Exception e) {
+        logLookupFailure(expr, e);
+
+        if (throwExceptionOnFailure)
+            throw new XWorkException(e);
+
+        return findInContext(expr);
+    }
+
+    private Object tryFindValue(String expr) throws OgnlException {
+        Object value;
+        expr = lookupForOverrides(expr);
+        if (defaultType != null) {
+            value = findValue(expr, defaultType);
+        } else {
+            value = getValueUsingOgnl(expr);
+            if (value == null) {
+                value = findInContext(expr);
+            }
+        }
+        return value;
+    }
+
+    private String lookupForOverrides(String expr) {
+        if ((overrides != null) && overrides.containsKey(expr)) {
+            expr = (String) overrides.get(expr);
+        }
+        return expr;
+    }
+
+    private Object getValueUsingOgnl(String expr) throws OgnlException {
+        try {
+            return ognlUtil.getValue(expr, context, root);
+        } finally {
+            context.remove(THROW_EXCEPTION_ON_FAILURE);
+        }
+    }
+
+    public Object findValue(String expr) {
+        return findValue(expr, false);
+    }
+
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String, java.lang.Class)
      */
     public Object findValue(String expr, Class asType, boolean throwExceptionOnFailure) {
         try {
-            if (expr == null) {
-                return null;
-            }
-
-            if ((overrides != null) && overrides.containsKey(expr)) {
-                expr = (String) overrides.get(expr);
-            }
-
-            Object value = null;
-            try {
-                if (throwExceptionOnFailure)
-                    context.put(THROW_EXCEPTION_ON_FAILURE, true);
-                value = ognlUtil.getValue(expr, context, root, asType);
-            } finally {
-                context.remove(THROW_EXCEPTION_ON_FAILURE);
-            }
-
-            if (value != null) {
-                return value;
-            } else {
-                return findInContext(expr);
-            }
+            setupExceptionOnFailure(throwExceptionOnFailure);
+            return tryFindValueWhenExpressionIsNotNull(expr, asType);
         } catch (OgnlException e) {
-            Object ret = findInContext(expr);
-
-            if (ret != null)
-                return ret;
-            else {
-                if (e instanceof NoSuchPropertyException && devMode && logMissingProperties)
-                    LOG.warn("Could not find property [" + ((NoSuchPropertyException)e).getName() + "]");
-                
-                if (throwExceptionOnFailure)
-                    throw new XWorkException(e);
-                else
-                    return null;
-            }
+            return handleOgnlException(expr, throwExceptionOnFailure, e);
         } catch (Exception e) {
-            logLookupFailure(expr, e);
-
-            if (throwExceptionOnFailure)
-                throw new XWorkException(e);
-            
-            return findInContext(expr);
+            return handleOtherException(expr, throwExceptionOnFailure, e);
         } finally {
             ReflectionContextState.clear(context);
         }
+    }
+
+    private Object tryFindValueWhenExpressionIsNotNull(String expr, Class asType) throws OgnlException {
+        if (expr == null) {
+            return null;
+        }
+        return tryFindValue(expr, asType);
+    }
+
+    private Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
+        Object ret = findInContext(expr);
+        if (ret == null) {
+            if (shouldLogNoSuchPropertyWarning(e)) {
+                LOG.warn("Could not find property [" + ((NoSuchPropertyException) e).getName() + "]");
+            }
+            if (throwExceptionOnFailure) {
+                throw new XWorkException(e);
+            }
+        }
+        return ret;
+    }
+
+    private boolean shouldLogNoSuchPropertyWarning(OgnlException e) {
+        return e instanceof NoSuchPropertyException && devMode && logMissingProperties;
+    }
+
+    private Object tryFindValue(String expr, Class asType) throws OgnlException {
+        Object value = null;
+        try {
+            expr = lookupForOverrides(expr);
+            value = getValue(expr, asType);
+            if (value == null) {
+                value = findInContext(expr);
+            }
+        } finally {
+            context.remove(THROW_EXCEPTION_ON_FAILURE);
+        }
+        return value;
+    }
+
+    private Object getValue(String expr, Class asType) throws OgnlException {
+        return ognlUtil.getValue(expr, context, root, asType);
     }
 
     private Object findInContext(String name) {
@@ -340,44 +348,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     public Object findValue(String expr, Class asType) {
         return findValue(expr, asType, false);
-    }
-
-    /**
-     * Look for available properties on an existing class.
-     *
-     * @param c                   the class to search on
-     * @param expr                the property expression
-     * @param availableProperties a set of properties found
-     * @param parent              a parent property
-     * @throws IntrospectionException when Ognl can't get property descriptors
-     */
-    private void findAvailableProperties(Class c, String expr, Set<String> availableProperties, String parent) throws IntrospectionException {
-        PropertyDescriptor[] descriptors = ognlUtil.getPropertyDescriptors(c);
-        for (PropertyDescriptor pd : descriptors) {
-            String name = pd.getDisplayName();
-            if (parent != null && expr.contains(".")) {
-                name = expr.substring(0, expr.indexOf(".") + 1) + name;
-            }
-            if (expr.startsWith(name)) {
-                availableProperties.add((parent != null) ? parent + "." + name : name);
-                if (expr.equals(name)) break; // no need to go any further
-                if (expr.contains(".")) {
-                    String property = expr.substring(expr.indexOf(".") + 1);
-                    // if there is a nested property (indicated by a dot), chop it off so we can look for method name
-                    String rawProperty = (property.contains(".")) ? property.substring(0, property.indexOf(".")) : property;
-                    String methodToLookFor = "get" + rawProperty.substring(0, 1).toUpperCase() + rawProperty.substring(1);
-                    Method[] methods = pd.getPropertyType().getMethods();
-                    for (Method method : methods) {
-                        if (method.getName().equals(methodToLookFor)) {
-                            availableProperties.add(name + "." + rawProperty);
-                            Class returnType = method.getReturnType();
-                            findAvailableProperties(returnType, property, availableProperties, name);
-                        }
-                    }
-
-                }
-            }
-        }
     }
 
     /**
@@ -396,65 +366,59 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#peek()
      */
     public Object peek() {
         return root.peek();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#pop()
      */
     public Object pop() {
         return root.pop();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#push(java.lang.Object)
      */
     public void push(Object o) {
         root.push(o);
     }
 
-    /* (non-Javadoc)
-    * @see com.opensymphony.xwork2.util.ValueStack#set(java.lang.String, java.lang.Object)
-    */
+    /**
+     * @see com.opensymphony.xwork2.util.ValueStack#set(java.lang.String, java.lang.Object)
+     */
     public void set(String key, Object o) {
-        //set basically is backed by a Map
-        //pushed on the stack with a key
-        //being put on the map and the
-        //Object being the value
+        //set basically is backed by a Map pushed on the stack with a key being put on the map and the Object being the value
+        Map setMap = retrieveSetMap();
+        setMap.put(key, o);
+    }
 
-        Map setMap = null;
-
-        //check if this is a Map
-        //put on the stack  for setting
-        //if so just use the old map (reduces waste)
+    private Map retrieveSetMap() {
+        Map setMap;
         Object topObj = peek();
-        if (topObj instanceof Map
-                && ((Map) topObj).get(MAP_IDENTIFIER_KEY) != null) {
-
+        if (shouldUseOldMap(topObj)) {
             setMap = (Map) topObj;
         } else {
             setMap = new HashMap();
-            //the map identifier key ensures
-            //that this map was put there
-            //for set purposes and not by a user
-            //whose data we don't want to touch
             setMap.put(MAP_IDENTIFIER_KEY, "");
             push(setMap);
         }
-        setMap.put(key, o);
-
+        return setMap;
     }
 
+    /**
+     * check if this is a Map put on the stack  for setting if so just use the old map (reduces waste)
+     */
+    private boolean shouldUseOldMap(Object topObj) {
+        return topObj instanceof Map && ((Map) topObj).get(MAP_IDENTIFIER_KEY) != null;
+    }
 
-    private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
-
-    /* (non-Javadoc)
-    * @see com.opensymphony.xwork2.util.ValueStack#size()
-    */
+    /**
+     * @see com.opensymphony.xwork2.util.ValueStack#size()
+     */
     public int size() {
         return root.size();
     }
@@ -478,7 +442,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     public void clearContextValues() {
         //this is an OGNL ValueStack so the context will be an OgnlContext
         //it would be better to make context of type OgnlContext
-       ((OgnlContext)context).getValues().clear();
+        ((OgnlContext) context).getValues().clear();
     }
 
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
@@ -486,6 +450,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     public void setExcludeProperties(Set<Pattern> excludeProperties) {
-       securityMemberAccess.setExcludeProperties(excludeProperties);
+        securityMemberAccess.setExcludeProperties(excludeProperties);
     }
+
 }

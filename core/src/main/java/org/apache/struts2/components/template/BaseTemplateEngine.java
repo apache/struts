@@ -21,6 +21,10 @@
 
 package org.apache.struts2.components.template;
 
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,10 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-
 /**
  * Base class for template engines.
  */
@@ -41,56 +41,98 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseTemplateEngine.class);
 
-    /** The default theme properties file name. Default is 'theme.properties' */
+    /**
+     * The default theme properties file name. Default is 'theme.properties'
+     */
     public static final String DEFAULT_THEME_PROPERTIES_FILE_NAME = "theme.properties";
 
     final Map<String, Properties> themeProps = new HashMap<String, Properties>();
 
     public Map getThemeProps(Template template) {
         synchronized (themeProps) {
-            Properties props = (Properties) themeProps.get(template.getTheme());
+            Properties props = themeProps.get(template.getTheme());
             if (props == null) {
-                String propName = template.getDir() + "/" + template.getTheme() + "/"+getThemePropertiesFileName();
-
-                // WW-1292
-                // let's try getting it from the filesystem
-                File propFile = new File(propName);
-                InputStream is = null;
-                try {
-                    if (propFile.exists()) {
-                        is = new FileInputStream(propFile);
-                    }
-                }
-                catch(FileNotFoundException e) {
-                    LOG.warn("Unable to find file in filesystem ["+propFile.getAbsolutePath()+"]");
-                }
-
-                if (is == null) {
-                    // if its not in filesystem. let's try the classpath
-                    is = ClassLoaderUtil.getResourceAsStream(propName, getClass());
-                }
-
-                props = new Properties();
-
-                if (is != null) {
-                    try {
-                        props.load(is);
-                    } catch (IOException e) {
-                        LOG.error("Could not load " + propName, e);
-                    } finally {
-                        try {
-                            is.close();
-                        } catch(IOException io) {
-                            LOG.warn("Unable to close input stream", io);
-                        }
-                    }
-                }
-
+                props = readNewProperties(template);
                 themeProps.put(template.getTheme(), props);
             }
-
             return props;
         }
+    }
+
+    private Properties readNewProperties(Template template) {
+        String propName = buildPropertyFilename(template);
+        return loadProperties(propName);
+    }
+
+    private Properties loadProperties(String propName) {
+        InputStream is = readProperty(propName);
+        Properties props = new Properties();
+        if (is != null) {
+            tryToLoadPropertiesFromStream(props, propName, is);
+        }
+        return props;
+    }
+
+    private InputStream readProperty(String propName) {
+        InputStream is = tryReadingPropertyFileFromFileSystem(propName);
+        if (is == null) {
+            is = readPropertyFromClasspath(propName);
+        }
+        return is;
+    }
+
+    /**
+     * if its not in filesystem. let's try the classpath
+     */
+    private InputStream readPropertyFromClasspath(String propName) {
+        return ClassLoaderUtil.getResourceAsStream(propName, getClass());
+    }
+
+    private void tryToLoadPropertiesFromStream(Properties props, String propName, InputStream is) {
+        try {
+            props.load(is);
+        } catch (IOException e) {
+            LOG.error("Could not load " + propName, e);
+        } finally {
+            tryCloseStream(is);
+        }
+    }
+
+    private void tryCloseStream(InputStream is) {
+        try {
+            is.close();
+        } catch (IOException io) {
+            LOG.warn("Unable to close input stream", io);
+        }
+    }
+
+    private String buildPropertyFilename(Template template) {
+        return new StringBuilder().append(template.getDir())
+                .append("/")
+                .append(template.getTheme())
+                .append("/")
+                .append(getThemePropertiesFileName()).toString();
+    }
+
+    /**
+     * WW-1292 let's try getting it from the filesystem
+     */
+    private InputStream tryReadingPropertyFileFromFileSystem(String propName) {
+        File propFile = new File(propName);
+        try {
+            return createFileInputStream(propFile);
+        } catch (FileNotFoundException e) {
+            LOG.warn("Unable to find file in filesystem [" + propFile.getAbsolutePath() + "]");
+            return null;
+        }
+    }
+
+    private InputStream createFileInputStream(File propFile) throws FileNotFoundException {
+        InputStream is = null;
+        if (propFile.exists()) {
+            is = new FileInputStream(propFile);
+        }
+        return is;
     }
 
     protected String getFinalTemplateName(Template template) {
@@ -98,7 +140,6 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         if (t.indexOf(".") <= 0) {
             return t + "." + getSuffix();
         }
-
         return t;
     }
 
@@ -107,4 +148,5 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
     }
 
     protected abstract String getSuffix();
+
 }

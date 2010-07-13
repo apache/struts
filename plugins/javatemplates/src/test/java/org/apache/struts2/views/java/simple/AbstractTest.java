@@ -23,6 +23,7 @@ import java.util.Stack;
 public abstract class AbstractTest extends TestCase {
     private Map<String, String> scriptingAttrs = new HashMap<String, String>();
     private Map<String, String> commonAttrs = new HashMap<String, String>();
+    private Map<String, Object> dynamicAttrs = new HashMap<String, Object>();
 
     protected SimpleTheme theme;
 
@@ -59,6 +60,9 @@ public abstract class AbstractTest extends TestCase {
         scriptingAttrs.put("onchange", "onchange_");
 
         commonAttrs.put("accesskey", "accesskey_");
+
+        dynamicAttrs.put("data-remote", "data-remote_");
+        dynamicAttrs.put("data-label", "data-label_");
 
         theme = new SimpleTheme();
         writer = new StringWriter();
@@ -132,6 +136,10 @@ public abstract class AbstractTest extends TestCase {
         bean.setAccesskey("accesskey_");
     }
 
+    protected void applyDynamicAttrs(UIBean bean) {
+    	bean.setDynamicAttributes(dynamicAttrs);
+    }
+
     protected void assertScriptingAttrs(String str) {
         for (Map.Entry<String, String> entry : scriptingAttrs.entrySet()) {
             String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
@@ -139,8 +147,15 @@ public abstract class AbstractTest extends TestCase {
         }
     }
 
-    protected void assertCommongAttrs(String str) {
+    protected void assertCommonAttrs(String str) {
         for (Map.Entry<String, String> entry : commonAttrs.entrySet()) {
+            String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
+            assertTrue("String [" + substr + "] was not found in [" + str + "]", str.indexOf(substr) >= 0);
+        }
+    }
+
+    protected void assertDynamicAttrs(String str) {
+        for (Map.Entry<String, Object> entry : dynamicAttrs.entrySet()) {
             String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
             assertTrue("String [" + substr + "] was not found in [" + str + "]", str.indexOf(substr) >= 0);
         }

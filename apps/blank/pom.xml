@@ -54,6 +54,13 @@
             <version>2.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>jboss</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.7.ga</version>
+        </dependency>        
+
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>struts2-junit-plugin</artifactId>

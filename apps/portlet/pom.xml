@@ -21,12 +21,13 @@
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-      <groupId>org.apache.struts</groupId>
-      <artifactId>struts2-apps</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-apps</artifactId>
+        <version>2.2.1-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-portlet</artifactId>
@@ -34,38 +35,39 @@
     <name>Portlet Webapp</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/portlet/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/
+        </developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/portlet/</url>
     </scm>
 
-	<profiles>
-		<profile>
-			<id>pluto</id>
-			<build>
-				<plugins>
-				  <!-- configure maven-war-plugin to use updated web.xml -->
-			      <plugin>
-			        <artifactId>maven-war-plugin</artifactId>
-			        <configuration>
-			          <webXml>${project.build.directory}/pluto-resources/web.xml</webXml>
-			        </configuration>
-			      </plugin>
-			      <!-- bind 'pluto:assemble' goal to 'process-resources' lifecycle -->
-			      <plugin>
-			        <groupId>org.apache.pluto</groupId>
-			        <artifactId>maven-pluto-plugin</artifactId>
-			        <version>1.1.3</version>
-			        <executions>
-			          <execution>
-			            <phase>generate-resources</phase>
-			            <goals>
-			              <goal>assemble</goal>
-			            </goals>
-			          </execution>
-			        </executions>
-			      </plugin>
-				<plugin>
+    <profiles>
+        <profile>
+            <id>pluto</id>
+            <build>
+                <plugins>
+                    <!-- configure maven-war-plugin to use updated web.xml -->
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <webXml>${project.build.directory}/pluto-resources/web.xml</webXml>
+                        </configuration>
+                    </plugin>
+                    <!-- bind 'pluto:assemble' goal to 'process-resources' lifecycle -->
+                    <plugin>
+                        <groupId>org.apache.pluto</groupId>
+                        <artifactId>maven-pluto-plugin</artifactId>
+                        <version>1.1.3</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>assemble</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.mortbay.jetty</groupId>
                         <artifactId>maven-jetty-plugin</artifactId>
                         <configuration>
@@ -79,18 +81,18 @@
                             </systemProperties>
                         </configuration>
                     </plugin>
-				</plugins>
-			</build>
-			<dependencies>
-				<dependency>
-					<groupId>com.bekk.boss</groupId>
-					<artifactId>maven-jetty-pluto-embedded</artifactId>
-					<version>1.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
-	
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.bekk.boss</groupId>
+                    <artifactId>maven-jetty-pluto-embedded</artifactId>
+                    <version>1.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>portlet-api</groupId>
@@ -98,7 +100,7 @@
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-spring-plugin</artifactId>
             <version>${pom.version}</version>
@@ -113,7 +115,7 @@
             <artifactId>struts2-portlet-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-dwr-plugin</artifactId>
             <version>${pom.version}</version>
@@ -129,56 +131,56 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-tools</artifactId>
             <version>1.3</version>
-			<exclusions>
+            <exclusions>
                 <exclusion>
                     <groupId>velocity</groupId>
                     <artifactId>velocity</artifactId>
                 </exclusion>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>struts</groupId>
                     <artifactId>struts</artifactId>
                 </exclusion>
-			</exclusions>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
             <version>1.8</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.9</version>
-    </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty</artifactId>
-			<version>6.1.4rc0</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty</artifactId>
+            <version>6.1.4rc0</version>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
+        <dependency>
             <groupId>net.sourceforge.jwebunit</groupId>
             <artifactId>jwebunit-htmlunit-plugin</artifactId>
             <version>1.4.1</version>
@@ -191,26 +193,32 @@
             </exclusions>
         </dependency>
 
-		<dependency>
-			<groupId>com.bekk.boss</groupId>
-			<artifactId>maven-jetty-pluto-embedded</artifactId>
-			<version>1.0</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.bekk.boss</groupId>
+            <artifactId>maven-jetty-pluto-embedded</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jsp-2.1</artifactId>
-			<version>6.1.4rc0</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.1</version>
-		</dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jsp-2.1</artifactId>
+            <version>6.1.4rc0</version>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jboss</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.7.ga</version>
+        </dependency>
+        
     </dependencies>
 
     <reporting>

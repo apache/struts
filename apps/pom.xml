@@ -34,6 +34,7 @@
     <name>Webapps</name>
     <modules>
         <module>blank</module>
+        <module>jboss-blank</module>
         <module>mailreader</module>
         <module>portlet</module>
         <module>showcase</module>

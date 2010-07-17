@@ -26,7 +26,6 @@ import java.util.StringTokenizer;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
-import org.apache.struts2.dispatcher.DefaultStaticContentLoader;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
@@ -222,6 +221,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
             props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
             props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE, "false");
+            props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, "0");
             // Convert struts properties into ones that xwork expects
             props.setProperty("devMode", "true");
         } else {

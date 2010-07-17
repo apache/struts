@@ -82,8 +82,12 @@ public final class StrutsConstants {
     /** The org.apache.struts2.views.freemarker.FreemarkerManager implementation class */
     public static final String STRUTS_FREEMARKER_MANAGER_CLASSNAME = "struts.freemarker.manager.classname";
     
-    /** Cache Freemarker templates */
+    @Deprecated
+    /** Cache Freemarker templates, this cache is managed by struts2,instead of native freemarker cache,set STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE >0&&STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY>0*/
     public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE = "struts.freemarker.templatesCache";
+    
+    /** Update freemarker templates cache in seconds*/
+    public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY = "struts.freemarker.templatesCache.updateDelay";
     
     /** Cache model instances at BeanWrapper level */
     public static final String STRUTS_FREEMARKER_BEANWRAPPER_CACHE = "struts.freemarker.beanwrapperCache";

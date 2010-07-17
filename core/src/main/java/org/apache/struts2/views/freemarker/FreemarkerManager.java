@@ -50,14 +50,12 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
-import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
 import freemarker.template.*;
-import freemarker.core.Configurable;
 import freemarker.template.utility.StringUtil;
 
 
@@ -117,7 +115,6 @@ public class FreemarkerManager {
      // Note these names start with dot, so they're essentially invisible from  a freemarker script.
      private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
      private static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
-     private static final String ATTR_SESSION_MODEL = ".freemarker.Session";
      private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
      private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
 
@@ -169,6 +166,7 @@ public class FreemarkerManager {
     protected boolean altMapWrapper;
     protected boolean cacheBeanWrapper;
     protected int mruMaxStrongSize;
+    protected String templateUpdateDelay;
     protected Map<String,TagLibrary> tagLibraries;
 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -189,6 +187,11 @@ public class FreemarkerManager {
     @Inject(StrutsConstants.STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE)
     public void setMruMaxStrongSize(String size) {
         mruMaxStrongSize = Integer.parseInt(size);
+    }
+    
+    @Inject(value = StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, required = false)
+    public void setTemplateUpdateDelay(String delay) {
+    	templateUpdateDelay = delay;
     }
     
     @Inject
@@ -229,7 +232,7 @@ public class FreemarkerManager {
         return contentType;
     }
 
-    public synchronized freemarker.template.Configuration getConfiguration(ServletContext servletContext) {
+    public synchronized Configuration getConfiguration(ServletContext servletContext) {
         if (config == null) {
             try {
                 init(servletContext);
@@ -287,15 +290,17 @@ public class FreemarkerManager {
      *
      * @param servletContext
      */
-    protected freemarker.template.Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
-        freemarker.template.Configuration configuration = new freemarker.template.Configuration();
+    protected Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
+        Configuration configuration = new Configuration();
 
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 
         if (mruMaxStrongSize > 0) {
-            configuration.setSetting(freemarker.template.Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
+            configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
         }
-
+        if (templateUpdateDelay != null) {
+            configuration.setSetting(Configuration.TEMPLATE_UPDATE_DELAY_KEY, templateUpdateDelay);
+        }
         if (encoding != null) {
             configuration.setDefaultEncoding(encoding);
         }
@@ -333,17 +338,8 @@ public class FreemarkerManager {
 
         // Create hash model wrapper for session
         HttpSession session = request.getSession(false);
-        HttpSessionHashModel sessionModel;
         if (session != null) {
-            sessionModel = (HttpSessionHashModel) session.getAttribute(ATTR_SESSION_MODEL);
-            if (sessionModel == null) {
-                sessionModel = new HttpSessionHashModel(session, wrapper);
-                session.setAttribute(ATTR_SESSION_MODEL, sessionModel);
-            }
             model.put(KEY_SESSION, new HttpSessionHashModel(session, wrapper));
-        } else {
-            // no session means no attributes ???
-            //            model.put(KEY_SESSION_MODEL, new SimpleHash());
         }
 
         // Create hash model wrapper for the request attributes
@@ -525,19 +521,4 @@ public class FreemarkerManager {
         }
     }
 
-      /**
-     * If the parameter "nocache" was set to true, generate a set of headers
-     * that will advise the HTTP client not to cache the returned page.
-     */
-      private void setBrowserCachingPolicy(HttpServletResponse res) {
-          if (nocache) {
-              // HTTP/1.1 + IE extensions
-              res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, "
-                      + "post-check=0, pre-check=0");
-              // HTTP/1.0
-              res.setHeader("Pragma", "no-cache");
-              // Last resort for those that ignore all of the above
-              res.setHeader("Expires", EXPIRATION_DATE);
-          }
-      }
 }

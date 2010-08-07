@@ -93,8 +93,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * <li>end - means that session scoped properties are removed from session after action is run</li>
  *
- * <li>any other value or no value means that it's in-the-middle action that is set with session properties before it's
- * executed, and it's properties are put back to session after execution</li>
+ * <li>any other value throws IllegalArgumentException</li>
  *
  * </ul>
  *

@@ -64,6 +64,7 @@
         <module>osgi</module>
         <module>json</module>
         <module>embeddedjsp</module>
+        <module>gxp</module>
     </modules>
 
     <dependencies>

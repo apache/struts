@@ -46,6 +46,9 @@ import java.util.*;
  * is through the use of the <b>chain</b> result type, which combines with this interceptor to make up the action
  * chaining feature.
  * <p/>
+ * <p>
+ * <b>Note:</b> By default actionErrors and actionMessages are excluded when copping object's properties.
+ * </p>
  * <!-- END SNIPPET: description -->
  * <p/>
  * <p/> <u>Interceptor parameters:</u>

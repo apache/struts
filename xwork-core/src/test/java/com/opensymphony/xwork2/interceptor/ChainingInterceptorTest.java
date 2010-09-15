@@ -19,10 +19,7 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.util.ValueStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 
 /**
@@ -45,12 +42,34 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action2);
         stack.push(action1);
         stack.push(action2);
+        interceptor.setCopyErrors("true");
+        interceptor.setCopyMessages("true");
+
         interceptor.intercept(invocation);
+
         assertEquals(action1.getActionErrors(), action2.getActionErrors());
         action2.addActionError("bar");
         assertEquals(1, action1.getActionErrors().size());
         assertEquals(2, action2.getActionErrors().size());
         assertTrue(action2.getActionErrors().contains("bar"));
+    }
+
+    public void testActionErrorsNotCopiedAfterChain() throws Exception {
+        SimpleAction action1 = new SimpleAction();
+        SimpleAction action2 = new SimpleAction();
+        action1.addActionError("foo");
+        mockInvocation.matchAndReturn("getAction", action2);
+        stack.push(action1);
+        stack.push(action2);
+
+        interceptor.intercept(invocation);
+
+        assertEquals(Collections.EMPTY_LIST, action2.getActionErrors());
+        action2.addActionError("bar");
+        assertEquals(1, action1.getActionErrors().size());
+        assertEquals(1, action2.getActionErrors().size());
+        assertTrue(action2.getActionErrors().contains("bar"));
+        assertFalse(action2.getActionErrors().contains("foo"));
     }
 
     public void testPropertiesChained() throws Exception {
@@ -62,7 +81,11 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         bean.setCount(1);
         stack.push(bean);
         stack.push(action);
+        interceptor.setCopyErrors("true");
+        interceptor.setCopyMessages("true");
+
         interceptor.intercept(invocation);
+
         assertEquals(bean.getBirth(), action.getBirth());
         assertEquals(bean.getName(), action.getName());
         assertEquals(bean.getCount(), action.getCount());
@@ -77,11 +100,15 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         bean.setCount(1);
         stack.push(bean);
         stack.push(action);
+        interceptor.setCopyErrors("true");
+        interceptor.setCopyMessages("true");
 
         Collection excludes = new ArrayList();
         excludes.add("count");
         interceptor.setExcludes(excludes);
+
         interceptor.intercept(invocation);
+
         assertEquals(bean.getBirth(), action.getBirth());
         assertEquals(bean.getName(), action.getName());
         assertEquals(0, action.getCount());

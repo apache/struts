@@ -26,12 +26,7 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -104,6 +99,12 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChainingInterceptor.class);
 
+    private static final String ACTION_ERRORS = "actionErrors";
+    private static final String ACTION_MESSAGES = "actionMessages";
+
+    private boolean copyMessages = false;
+    private boolean copyErrors = false;
+
     protected Collection<String> excludes;
     protected Collection<String> includes;
 
@@ -114,37 +115,67 @@ public class ChainingInterceptor extends AbstractInterceptor {
         this.reflectionProvider = prov;
     }
 
+    @Inject(value = "struts.xwork.chaining.copyErrors", required = false)
+    public void setCopyErrors(String copyErrors) {
+        this.copyErrors = "true".equalsIgnoreCase(copyErrors);
+    }
+
+    @Inject(value = "struts.xwork.chaining.copyMessages", required = false)
+    public void setCopyMessages(String copyMessages) {
+        this.copyMessages = "true".equalsIgnoreCase(copyMessages);
+    }
+
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         ValueStack stack = invocation.getStack();
         CompoundRoot root = stack.getRoot();
-
-        if (root.size() > 1 && isChainResult(invocation)) {
-            List<CompoundRoot> list = new ArrayList<CompoundRoot>(root);
-            list.remove(0);
-            Collections.reverse(list);
-
-            Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
-            Iterator<CompoundRoot> iterator = list.iterator();
-            int index = 1; // starts with 1, 0 has been removed
-            while (iterator.hasNext()) {
-                index = index + 1;
-                Object o = iterator.next();
-                if (o != null) {
-                    if (!(o instanceof Unchainable)) {
-                        reflectionProvider.copy(o, invocation.getAction(), ctxMap, excludes, includes);
-                    }
-                } else {
-                    LOG.warn("compound root element at index " + index + " is null");
-                }
-            }
+        if (shouldCopyStack(invocation, root)) {
+            copyStack(invocation, root);
         }
         return invocation.invoke();
     }
 
-    private boolean isChainResult(ActionInvocation invocation) throws Exception {
+    private void copyStack(ActionInvocation invocation, CompoundRoot root) {
+        List list = prepareList(root);
+        Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
+        for (Object object : list) {
+            if (shouldCopy(object)) {
+                reflectionProvider.copy(object, invocation.getAction(), ctxMap, prepareExcludes(), includes);
+            }
+        }
+    }
+
+    private Collection<String> prepareExcludes() {
+        Collection<String> localExcludes = excludes;
+        if (!copyErrors || !copyMessages) {
+            if (localExcludes == null) {
+                localExcludes = new HashSet<String>();
+                if (!copyErrors) {
+                    localExcludes.add(ACTION_ERRORS);
+                }
+                if (!copyMessages) {
+                    localExcludes.add(ACTION_MESSAGES);
+                }
+            }
+        }
+        return localExcludes;
+    }
+
+    private boolean shouldCopy(Object o) {
+        return o != null && !(o instanceof Unchainable);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List prepareList(CompoundRoot root) {
+        List list = new ArrayList(root);
+        list.remove(0);
+        Collections.reverse(list);
+        return list;
+    }
+
+    private boolean shouldCopyStack(ActionInvocation invocation, CompoundRoot root) throws Exception {
         Result result = invocation.getResult();
-        return result != null && ActionChainResult.class.isAssignableFrom(result.getClass());
+        return root.size() > 1 && (result == null || ActionChainResult.class.isAssignableFrom(result.getClass()));
     }
 
     /**
@@ -180,7 +211,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
      * @param includes the includes list
      */
     public void setIncludes(Collection<String> includes) {
-        this.includes = includes;
+        this.includes.addAll(includes);
     }
 
 }

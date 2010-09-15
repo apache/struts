@@ -211,7 +211,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
      * @param includes the includes list
      */
     public void setIncludes(Collection<String> includes) {
-        this.includes.addAll(includes);
+        this.includes = includes;
     }
 
 }

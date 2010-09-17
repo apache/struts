@@ -42,8 +42,8 @@ public abstract class StrutsSpringTestCase extends StrutsTestCase {
         servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     }
 
-    protected String getContextLocations() {
-        return DEFAULT_CONTEXT_LOCATION;
+    protected String[] getContextLocations() {
+        return new String[] {DEFAULT_CONTEXT_LOCATION};
     }
 
 }

@@ -41,6 +41,7 @@ public final class ResourceStoreClassLoader extends ClassLoader {
             for (final ResourceStore store : stores) {
                 final byte[] clazzBytes = store.read(fileName);
                 if (clazzBytes != null) {
+                    definePackage(name);
                     return defineClass(name, clazzBytes, 0, clazzBytes.length);
                 }
             }
@@ -79,5 +80,23 @@ public final class ResourceStoreClassLoader extends ClassLoader {
             throw new ClassNotFoundException(name);
         }
         return clazz;
+    }
+
+    /**
+     * Define the package information associated with a class.
+     *
+     * @param className the class name of for which the package information
+     *                  is to be determined.
+     */
+    protected void definePackage(String className){
+        int classIndex = className.lastIndexOf('.');
+        if (classIndex == -1) {
+            return;
+        }
+        String packageName = className.substring(0, classIndex);
+        if (getPackage(packageName) != null) {
+            return;
+        }
+        definePackage(packageName, null, null, null, null, null, null, null);
     }
 }

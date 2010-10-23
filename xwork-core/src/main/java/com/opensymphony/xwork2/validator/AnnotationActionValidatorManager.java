@@ -61,23 +61,25 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         this.validatorFileParser = parser;
     }
 
-    public synchronized List<Validator> getValidators(Class clazz, String context) {
+    public List<Validator> getValidators(Class clazz, String context) {
         return getValidators(clazz, context, null);
     }
 
-    public synchronized List<Validator> getValidators(Class clazz, String context, String method) {
+    public List<Validator> getValidators(Class clazz, String context, String method) {
         final String validatorKey = buildValidatorKey(clazz);
-
-        if (validatorCache.containsKey(validatorKey)) {
-            if (FileManager.isReloadingConfigs()) {
-                validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
+        final List<ValidatorConfig> cfgs;
+        synchronized (validatorCache) {
+            if (validatorCache.containsKey(validatorKey)) {
+                if (FileManager.isReloadingConfigs()) {
+                    validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
+                }
+            } else {
+                validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
             }
-        } else {
-            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
-        }
 
-        // get the set of validator configs
-        List<ValidatorConfig> cfgs = validatorCache.get(validatorKey);
+            // get the set of validator configs
+            cfgs = new ArrayList<ValidatorConfig>(validatorCache.get(validatorKey));
+        }
 
         ValueStack stack = ActionContext.getContext().getValueStack();
 
@@ -87,8 +89,8 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
             if (method == null || method.equals(cfg.getParams().get("methodName"))) {
                 Validator validator = validatorFactory.getValidator(
                         new ValidatorConfig.Builder(cfg)
-                            .removeParam("methodName")
-                            .build());
+                                .removeParam("methodName")
+                                .build());
                 validator.setValidatorType(cfg.getType());
                 validator.setValueStack(stack);
                 validators.add(validator);

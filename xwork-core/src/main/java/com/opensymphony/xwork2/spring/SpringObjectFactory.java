@@ -20,7 +20,6 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -137,9 +136,10 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     @Override
     public Object buildBean(String beanName, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
         Object o = null;
-        try {
+        
+        if (appContext.containsBeanDefinition(beanName)) {
             o = appContext.getBean(beanName);
-        } catch (NoSuchBeanDefinitionException e) {
+        } else {
             Class beanClazz = getClassInstance(beanName);
             o = buildBean(beanClazz, extraContext);
         }

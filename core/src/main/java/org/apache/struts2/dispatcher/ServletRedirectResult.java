@@ -198,9 +198,6 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                     Map.Entry e = (Map.Entry) i.next();
 
                     if (!getProhibitedResultParams().contains(e.getKey())) {
-                        requestParameters.put(e.getKey().toString(),
-                                e.getValue() == null ? "" :
-                                        conditionalParse(e.getValue().toString(), invocation));
                         String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue().toString(), invocation);
                         if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
                             requestParameters.put(e.getKey().toString(), potentialValue);

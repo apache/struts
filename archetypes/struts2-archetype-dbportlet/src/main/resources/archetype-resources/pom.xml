@@ -11,7 +11,7 @@
 	<description>Struts 2 Database Portlet</description>
 
     <properties>
-        <struts2.version>2.1.8.1</struts2.version>
+        <struts2.version>${project.version}</struts2.version>
     </properties>    
 
 	<dependencies>

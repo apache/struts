@@ -20,23 +20,6 @@
  */
 package org.apache.struts2.json;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.json.annotations.SMD;
-import org.apache.struts2.json.annotations.SMDMethod;
-import org.apache.struts2.json.annotations.SMDMethodParameter;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
@@ -44,6 +27,19 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.json.smd.SMDGenerator;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: description --> <p/> This result serializes an action
@@ -57,7 +53,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <p/>
  * </ul>
  * <p/> <!-- END SNIPPET: parameters --> <p/> <b>Example:</b> <p/>
- * 
+ * <p/>
  * <pre>
  * &lt;!-- START SNIPPET: example --&gt;
  * &lt;result name=&quot;success&quot; type=&quot;json&quot; /&gt;
@@ -65,7 +61,9 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * </pre>
  */
 public class JSONResult implements Result {
+
     private static final long serialVersionUID = 8624350183189931165L;
+
     private static final Logger LOG = LoggerFactory.getLogger(JSONResult.class);
 
     private String defaultEncoding = "ISO-8859-1";
@@ -96,7 +94,7 @@ public class JSONResult implements Result {
     /**
      * Gets a list of regular expressions of properties to exclude from the JSON
      * output.
-     * 
+     *
      * @return A list of compiled regular expression patterns
      */
     public List<Pattern> getExcludePropertiesList() {
@@ -106,9 +104,8 @@ public class JSONResult implements Result {
     /**
      * Sets a comma-delimited list of regular expressions to match properties
      * that should be excluded from the JSON output.
-     * 
-     * @param commaDelim
-     *            A comma-delimited list of regular expressions
+     *
+     * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setExcludeProperties(String commaDelim) {
         List<String> excludePatterns = JSONUtil.asList(commaDelim);
@@ -128,50 +125,62 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param includedProperties
-     *            the includeProperties to set
+     * @param commaDelim comma delimited include string patterns
      */
     public void setIncludeProperties(String commaDelim) {
         List<String> includePatterns = JSONUtil.asList(commaDelim);
         if (includePatterns != null) {
-            this.includeProperties = new ArrayList<Pattern>(includePatterns.size());
+            processIncludePatterns(includePatterns);
+        }
+    }
 
-            HashMap existingPatterns = new HashMap();
+    private void processIncludePatterns(List<String> includePatterns) {
+        includeProperties = new ArrayList<Pattern>(includePatterns.size());
+        Map<String, String> existingPatterns = new HashMap<String, String>();
+        for (String pattern : includePatterns) {
+            processPattern(existingPatterns, pattern);
+        }
+    }
 
-            for (String pattern : includePatterns) {
-                // Compile a pattern for each *unique* "level" of the object
-                // hierarchy specified in the regex.
-                String[] patternPieces = pattern.split("\\\\\\.");
+    private void processPattern(Map<String, String> existingPatterns, String pattern) {
+        // Compile a pattern for each *unique* "level" of the object
+        // hierarchy specified in the regex.
+        String[] patternPieces = pattern.split("\\\\\\.");
 
-                String patternExpr = "";
-                for (String patternPiece : patternPieces) {
-                    if (patternExpr.length() > 0) {
-                        patternExpr += "\\.";
-                    }
-                    patternExpr += patternPiece;
+        String patternExpr = "";
+        for (String patternPiece : patternPieces) {
+            patternExpr = processPatternPiece(existingPatterns, patternExpr, patternPiece);
+        }
+    }
 
-                    // Check for duplicate patterns so that there is no overlap.
-                    if (!existingPatterns.containsKey(patternExpr)) {
-                        existingPatterns.put(patternExpr, patternExpr);
+    private String processPatternPiece(Map<String, String> existingPatterns, String patternExpr, String patternPiece) {
+        if (patternExpr.length() > 0) {
+            patternExpr += "\\.";
+        }
+        patternExpr += patternPiece;
 
-                        // Add a pattern that does not have the indexed property
-                        // matching (ie. list\[\d+\] becomes list).
-                        if (patternPiece.endsWith("\\]")) {
-                            this.includeProperties.add(Pattern.compile(patternExpr.substring(0, patternPiece
-                                    .lastIndexOf("\\["))));
-
-                            if (LOG.isDebugEnabled())
-                                LOG.debug("Adding include property expression:  "
-                                        + patternExpr.substring(0, patternPiece.lastIndexOf("\\[")));
-                        }
-
-                        this.includeProperties.add(Pattern.compile(patternExpr));
-
-                        if (LOG.isDebugEnabled())
-                            LOG.debug("Adding include property expression:  " + patternExpr);
-                    }
-                }
+        // Check for duplicate patterns so that there is no overlap.
+        if (!existingPatterns.containsKey(patternExpr)) {
+            existingPatterns.put(patternExpr, patternExpr);
+            if (isIndexedProperty(patternPiece)) {
+                addPattern(patternExpr.substring(0, patternExpr.lastIndexOf("\\[")));
             }
+            addPattern(patternExpr);
+        }
+        return patternExpr;
+    }
+
+    /**
+     * Add a pattern that does not have the indexed property matching (ie. list\[\d+\] becomes list).
+     */
+    private boolean isIndexedProperty(String patternPiece) {
+        return patternPiece.endsWith("\\]");
+    }
+
+    private void addPattern(String pattern) {
+        this.includeProperties.add(Pattern.compile(pattern));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding include property expression:  " + pattern);
         }
     }
 
@@ -181,138 +190,60 @@ public class JSONResult implements Result {
         HttpServletResponse response = (HttpServletResponse) actionContext.get(StrutsStatics.HTTP_RESPONSE);
 
         try {
-            String json;
             Object rootObject;
-            if (this.enableSMD) {
-                // generate SMD
-                rootObject = this.writeSMD(invocation);
-            } else {
-                // generate JSON
-                if (this.root != null) {
-                    ValueStack stack = invocation.getStack();
-                    rootObject = stack.findValue(this.root);
-                } else {
-                    rootObject = invocation.getAction();
-                }
-            }
-            json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
-                    enumAsBean, excludeNullProperties);
-            json = addCallbackIfApplicable(request, json);
-
-            boolean writeGzip = enableGZIP && JSONUtil.isGzipInRequest(request);
-
-            writeToResponse(response, json, writeGzip);
-
+            rootObject = readRootObject(invocation);
+            writeToResponse(response, createJSONString(request, rootObject), enableGzip(request));
         } catch (IOException exception) {
             LOG.error(exception.getMessage(), exception);
             throw exception;
         }
     }
 
-    protected void writeToResponse(HttpServletResponse response, String json, boolean gzip)
-            throws IOException {
+    private Object readRootObject(ActionInvocation invocation) {
+        Object root = findRootObject(invocation);
+        if (enableSMD) {
+            return new SMDGenerator(root, excludeProperties, ignoreInterfaces).generate(invocation);
+        }
+        return root;
+    }
+
+    private Object findRootObject(ActionInvocation invocation) {
+        Object rootObject;
+        if (this.root != null) {
+            ValueStack stack = invocation.getStack();
+            rootObject = stack.findValue(root);
+        } else {
+            rootObject = invocation.getAction();
+        }
+        return rootObject;
+    }
+
+    private String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
+        String json;
+        json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
+                enumAsBean, excludeNullProperties);
+        json = addCallbackIfApplicable(request, json);
+        return json;
+    }
+
+    private boolean enableGzip(HttpServletRequest request) {
+        return enableGZIP && JSONUtil.isGzipInRequest(request);
+    }
+
+    protected void writeToResponse(HttpServletResponse response, String json, boolean gzip) throws IOException {
         JSONUtil.writeJSONToResponse(new SerializationParams(response, getEncoding(), isWrapWithComments(),
                 json, false, gzip, noCache, statusCode, errorCode, prefix, contentType, wrapPrefix,
                 wrapSuffix));
     }
 
     @SuppressWarnings("unchecked")
-    protected org.apache.struts2.json.smd.SMD writeSMD(ActionInvocation invocation) {
-        ActionContext actionContext = invocation.getInvocationContext();
-        HttpServletRequest request = (HttpServletRequest) actionContext.get(StrutsStatics.HTTP_REQUEST);
-
-        // root is based on OGNL expression (action by default)
-        Object rootObject = null;
-        if (this.root != null) {
-            ValueStack stack = invocation.getStack();
-            rootObject = stack.findValue(this.root);
-        } else {
-            rootObject = invocation.getAction();
-        }
-
-        Class clazz = rootObject.getClass();
-        org.apache.struts2.json.smd.SMD smd = new org.apache.struts2.json.smd.SMD();
-        // URL
-        smd.setServiceUrl(request.getRequestURI());
-
-        // customize SMD
-        SMD smdAnnotation = (SMD) clazz.getAnnotation(SMD.class);
-        if (smdAnnotation != null) {
-            smd.setObjectName(smdAnnotation.objectName());
-            smd.setServiceType(smdAnnotation.serviceType());
-            smd.setVersion(smdAnnotation.version());
-        }
-
-        // get public methods
-        Method[] methods = JSONUtil.listSMDMethods(clazz, ignoreInterfaces);
-
-        for (Method method : methods) {
-            SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
-
-            // SMDMethod annotation is required
-            if (((smdMethodAnnotation != null) && !this.shouldExcludeProperty(method.getName()))) {
-                String methodName = smdMethodAnnotation.name().length() == 0 ? method.getName()
-                        : smdMethodAnnotation.name();
-
-                org.apache.struts2.json.smd.SMDMethod smdMethod = new org.apache.struts2.json.smd.SMDMethod(
-                        methodName);
-                smd.addSMDMethod(smdMethod);
-
-                // find params for this method
-                int parametersCount = method.getParameterTypes().length;
-                if (parametersCount > 0) {
-                    Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-
-                    for (int i = 0; i < parametersCount; i++) {
-                        // are you ever going to pick shorter names? nope
-                        SMDMethodParameter smdMethodParameterAnnotation = this
-                                .getSMDMethodParameterAnnotation(parameterAnnotations[i]);
-
-                        String paramName = smdMethodParameterAnnotation != null ? smdMethodParameterAnnotation
-                                .name()
-                                : "p" + i;
-
-                        // goog thing this is the end of the hierarchy,
-                        // oitherwise I would need that 21'' LCD ;)
-                        smdMethod.addSMDMethodParameter(new org.apache.struts2.json.smd.SMDMethodParameter(
-                                paramName));
-                    }
-                }
-
-            } else {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("Ignoring property " + method.getName());
-            }
-        }
-        return smd;
-    }
-
-    /**
-     * Find an SMDethodParameter annotation on this array
-     */
-    private org.apache.struts2.json.annotations.SMDMethodParameter getSMDMethodParameterAnnotation(
-            Annotation[] annotations) {
-        for (Annotation annotation : annotations) {
-            if (annotation instanceof org.apache.struts2.json.annotations.SMDMethodParameter)
-                return (org.apache.struts2.json.annotations.SMDMethodParameter) annotation;
-        }
-
-        return null;
-    }
-
-    private boolean shouldExcludeProperty(String expr) {
-        if (this.excludeProperties != null) {
-            for (Pattern pattern : this.excludeProperties) {
-                if (pattern.matcher(expr).matches())
-                    return true;
-            }
-        }
-        return false;
+    protected org.apache.struts2.json.smd.SMD buildSMDObject(ActionInvocation invocation) {
+        return new SMDGenerator(readRootObject(invocation), excludeProperties, ignoreInterfaces).generate(invocation);
     }
 
     /**
      * Retrieve the encoding <p/>
-     * 
+     *
      * @return The encoding associated with this template (defaults to the value
      *         of 'struts.i18n.encoding' property)
      */
@@ -348,9 +279,8 @@ public class JSONResult implements Result {
 
     /**
      * Sets the root object to be serialized, defaults to the Action
-     * 
-     * @param root
-     *            OGNL expression of root object to be serialized
+     *
+     * @param root OGNL expression of root object to be serialized
      */
     public void setRoot(String root) {
         this.root = root;
@@ -365,7 +295,7 @@ public class JSONResult implements Result {
 
     /**
      * Wrap generated JSON with comments
-     * 
+     *
      * @param wrapWithComments
      */
     public void setWrapWithComments(boolean wrapWithComments) {
@@ -381,7 +311,7 @@ public class JSONResult implements Result {
 
     /**
      * Enable SMD generation for action, which can be used for JSON-RPC
-     * 
+     *
      * @param enableSMD
      */
     public void setEnableSMD(boolean enableSMD) {
@@ -405,7 +335,7 @@ public class JSONResult implements Result {
      * Controls how Enum's are serialized : If true, an Enum is serialized as a
      * name=value pair (name=name()) (default) If false, an Enum is serialized
      * as a bean with a special property _name=name()
-     * 
+     *
      * @param enumAsBean
      */
     public void setEnumAsBean(boolean enumAsBean) {
@@ -430,7 +360,7 @@ public class JSONResult implements Result {
 
     /**
      * Add headers to response to prevent the browser from caching the response
-     * 
+     *
      * @param noCache
      */
     public void setNoCache(boolean noCache) {
@@ -447,7 +377,7 @@ public class JSONResult implements Result {
 
     /**
      * Do not serialize properties with a null value
-     * 
+     *
      * @param excludeNullProperties
      */
     public void setExcludeNullProperties(boolean excludeNullProperties) {
@@ -456,7 +386,7 @@ public class JSONResult implements Result {
 
     /**
      * Status code to be set in the response
-     * 
+     *
      * @param statusCode
      */
     public void setStatusCode(int statusCode) {
@@ -465,7 +395,7 @@ public class JSONResult implements Result {
 
     /**
      * Error code to be set in the response
-     * 
+     *
      * @param errorCode
      */
     public void setErrorCode(int errorCode) {
@@ -482,7 +412,7 @@ public class JSONResult implements Result {
 
     /**
      * Prefix JSON with "{} &&"
-     * 
+     *
      * @param prefix
      */
     public void setPrefix(boolean prefix) {
@@ -491,7 +421,7 @@ public class JSONResult implements Result {
 
     /**
      * Content type to be set in the response
-     * 
+     *
      * @param contentType
      */
     public void setContentType(String contentType) {

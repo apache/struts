@@ -17,5 +17,6 @@
   indicator="l"
   scriptSeparation="true"
   value="i"
+  disabled="disabled"
   />
   <script language="JavaScript" type="text/javascript">djConfig.searchIds.push("a");</script>

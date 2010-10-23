@@ -5,6 +5,7 @@
   alt="i"
   src="j"
   value="Submit"
+  disabled="disabled"
   validate="true"
   ajaxAfterValidation="false"
   id="a"

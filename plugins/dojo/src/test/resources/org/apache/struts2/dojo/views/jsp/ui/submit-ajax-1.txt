@@ -3,6 +3,7 @@
   dojoType="struts:Bind"
   events="onclick"
   value="Submit"
+  disabled="disabled"
   validate="true"
   ajaxAfterValidation="true"
   id="a"

@@ -36,6 +36,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
 
         tag.setId("a");
         tag.setHref("b");
+        tag.setDisabled("true");
         tag.setLoadingText("c");
         tag.setErrorText("d");
         tag.setListenTopics("e");
@@ -70,6 +71,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
 
         tag.setId("a");
+        tag.setDisabled("true");
         tag.setTheme("ajax");
         tag.setHref("b");
         tag.setLoadingText("c");
@@ -100,6 +102,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
 
         tag.setId("a");
+        tag.setDisabled("true");
         tag.setTheme("ajax");
         tag.setHref("b");
         tag.setLoadingText("c");

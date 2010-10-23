@@ -50,6 +50,9 @@
   <#if parameters.label?if_exists != "">
      value="${parameters.label?html}"<#rt/>
   </#if>
+  <#if parameters.disabled?default(false)>
+    disabled="disabled"<#rt/>
+  </#if>
  />
 <#else>
   <#if parameters.type?exists && parameters.type=="image">
@@ -65,6 +68,9 @@
   </#if>
     <#if parameters.nameValue?if_exists != "">
      value="${parameters.nameValue?html}"<#rt/>
+    </#if>
+    <#if parameters.disabled?default(false)>
+     disabled="disabled"<#rt/>
     </#if>
     <#if parameters.value?if_exists != "">
      value="${parameters.value?html}"<#rt/>

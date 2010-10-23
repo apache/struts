@@ -40,6 +40,8 @@
 
     <constant name="struts.actionProxyFactory" value="rest" />
     <constant name="struts.rest.defaultExtension" value="xhtml" />
+    <constant name="struts.rest.logger" value="true" />
+    <constant name="struts.rest.defaultErrorResultName" value="default-error" />
     <constant name="struts.mapper.class" value="rest" />
     <constant name="struts.mapper.idParameterName" value="id" />
     <constant name="struts.action.extension" value="xhtml,,xml,json" />

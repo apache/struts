@@ -102,9 +102,6 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
         
         if (handler == null) {
             String extension = findExtension(req.getRequestURI());
-            if (extension == null) {
-                extension = defaultExtension;
-            }
             handler = handlersByExtension.get(extension);
         }
         return handler;
@@ -117,9 +114,6 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
      */
     public ContentTypeHandler getHandlerForResponse(HttpServletRequest req, HttpServletResponse res) {
         String extension = findExtension(req.getRequestURI());
-        if (extension == null) {
-            extension = defaultExtension;
-        }
         return handlersByExtension.get(extension);
     }
 
@@ -137,33 +131,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
         String resultCode = null;
         HttpServletRequest req = ServletActionContext.getRequest();
         HttpServletResponse res = ServletActionContext.getResponse();
-        if (target instanceof ModelDriven) {
-            target = ((ModelDriven)target).getModel();
-        }
-
-        boolean statusNotOk = false;
-        if (methodResult instanceof HttpHeaders) {
-            HttpHeaders info = (HttpHeaders) methodResult;
-            resultCode = info.apply(req, res, target);
-            if (info.getStatus() != SC_OK) {
-
-                // Don't return content on a not modified
-                if (info.getStatus() == SC_NOT_MODIFIED) {
-                    target = null;
-                } else {
-                    statusNotOk = true;
-                }
-
-            }
-        } else {
-            resultCode = (String) methodResult;
-        }
-        
-        // Don't return any content for PUT, DELETE, and POST where there are no errors
-        if (!statusNotOk && !"get".equalsIgnoreCase(req.getMethod())) {
-            target = null;
-        }
-
+		
         ContentTypeHandler handler = getHandlerForResponse(req, res);
         if (handler != null) {
             String extCode = resultCode+"-"+handler.getExtension();
@@ -192,12 +160,12 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
      * @param url The url
      * @return The extension
      */
-    protected String findExtension(String url) {
+    public String findExtension(String url) {
         int dotPos = url.lastIndexOf('.');
         int slashPos = url.lastIndexOf('/');
         if (dotPos > slashPos && dotPos > -1) {
             return url.substring(dotPos+1);
         }
-        return null;
+        return defaultExtension;
     }
 }

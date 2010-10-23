@@ -61,4 +61,12 @@ public interface ContentTypeHandlerManager {
      */
     String handleResult(ActionConfig actionConfig, Object methodResult, Object target)
             throws IOException;
+    
+    /**
+     * Finds the extension in the url
+     * 
+     * @param url The url
+     * @return The extension
+     */
+    String findExtension(String url);
 }

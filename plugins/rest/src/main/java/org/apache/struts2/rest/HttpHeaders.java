@@ -43,4 +43,15 @@ public interface HttpHeaders {
      * The HTTP status code
      */
     int getStatus();
+
+    /**
+     * The HTTP status code
+     */
+    void setStatus(int status);
+
+    /**
+     * The result code to process
+     */
+    String getResultCode();
+
 }

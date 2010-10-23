@@ -106,6 +106,9 @@ public class RestActionMapper extends DefaultActionMapper {
     private String newMethodName = "editNew";
     private String deleteMethodName = "destroy";
     private String putMethodName = "update";
+    private String optionsMethodName = "options";
+    private String postContinueMethodName = "createContinue";
+    private String putContinueMethodName = "updateContinue";
     
     public RestActionMapper() {
     }
@@ -152,6 +155,21 @@ public class RestActionMapper extends DefaultActionMapper {
     @Inject(required=false,value="struts.mapper.putMethodName")
     public void setPutMethodName(String putMethodName) {
         this.putMethodName = putMethodName;
+    }
+
+    @Inject(required=false,value="struts.mapper.optionsMethodName")
+    public void setOptionsMethodName(String optionsMethodName) {
+        this.optionsMethodName = optionsMethodName;
+    }
+
+    @Inject(required=false,value="struts.mapper.postContinueMethodName")
+    public void setPostContinueMethodName(String postContinueMethodName) {
+        this.postContinueMethodName = postContinueMethodName;
+    }
+
+    @Inject(required=false,value="struts.mapper.putContinueMethodName")
+    public void setPutContinueMethodName(String putContinueMethodName) {
+        this.putContinueMethodName = putContinueMethodName;
     }
 
     public ActionMapping getMapping(HttpServletRequest request,
@@ -209,8 +227,11 @@ public class RestActionMapper extends DefaultActionMapper {
             // If a method hasn't been explicitly named, try to guess using ReST-style patterns
             if (mapping.getMethod() == null) {
 
-                // Handle uris with no id, possibly ending in '/'
-                if (lastSlashPos == -1 || lastSlashPos == fullName.length() -1) {
+            	if (isOptions(request)) {
+                	mapping.setMethod(optionsMethodName);
+                
+            	// Handle uris with no id, possibly ending in '/'
+            	} else if (lastSlashPos == -1 || lastSlashPos == fullName.length() -1) {
 
                     // Index e.g. foo
                     if (isGet(request)) {
@@ -218,7 +239,11 @@ public class RestActionMapper extends DefaultActionMapper {
                         
                     // Creating a new entry on POST e.g. foo
                     } else if (isPost(request)) {
-                        mapping.setMethod(postMethodName);
+                    	if (isExpectContinue(request)) {
+                            mapping.setMethod(postContinueMethodName);
+                    	} else {
+                            mapping.setMethod(postMethodName);
+                    	}
                     }
 
                 // Handle uris with an id at the end
@@ -243,7 +268,11 @@ public class RestActionMapper extends DefaultActionMapper {
                     
                     // Updating an item e.g. foo/1    
                     }  else if (isPut(request)) {
-                        mapping.setMethod(putMethodName);
+                    	if (isExpectContinue(request)) {
+                            mapping.setMethod(putContinueMethodName);
+                    	} else {
+                            mapping.setMethod(putMethodName);
+                    	}
                     }
                 }
             }
@@ -332,6 +361,15 @@ public class RestActionMapper extends DefaultActionMapper {
         } else {
             return "delete".equalsIgnoreCase(request.getParameter(HTTP_METHOD_PARAM));
         }
+    }
+
+    protected boolean isOptions(HttpServletRequest request) {
+        return "options".equalsIgnoreCase(request.getMethod());
+    }
+    
+    protected boolean isExpectContinue(HttpServletRequest request) {
+    	String expect = request.getHeader("Expect");
+    	return (expect != null && expect.toLowerCase().contains("100-continue")); 
     }
 
 }

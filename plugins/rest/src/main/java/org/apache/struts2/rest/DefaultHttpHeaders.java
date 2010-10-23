@@ -152,6 +152,14 @@ public class DefaultHttpHeaders implements HttpHeaders {
         return status;
     }
     
+    public void setStatus(int s) {
+    	status = s;
+    }
+
+	public String getResultCode() {
+		return resultCode;
+	}
+    
     
     
     

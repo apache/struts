@@ -5,6 +5,9 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
+
+    <constant name="struts.enable.DynamicMethodInvocation" value="false"/>
+
 	<package name="myPackage" extends="struts-default">
 		<action name="index" class="${package}.IndexAction">
 			<result>/jsp/index.jsp</result>

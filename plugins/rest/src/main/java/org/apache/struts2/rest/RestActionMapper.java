@@ -37,56 +37,56 @@ import java.util.Iterator;
 
 /**
  * <!-- START SNIPPET: description -->
- *
- * This Restful action mapper enforces Ruby-On-Rails Rest-style mappings.  If the method 
- * is not specified (via '!' or 'method:' prefix), the method is "guessed" at using 
+ * <p/>
+ * This Restful action mapper enforces Ruby-On-Rails Rest-style mappings.  If the method
+ * is not specified (via '!' or 'method:' prefix), the method is "guessed" at using
  * ReST-style conventions that examine the URL and the HTTP method.  Special care has
  * been given to ensure this mapper works correctly with the codebehind plugin so that
  * XML configuration is unnecessary.
- *  
+ * <p/>
  * <p>
- *   This mapper supports the following parameters:
+ * This mapper supports the following parameters:
  * </p>
  * <ul>
- *   <li><code>struts.mapper.idParameterName</code> - If set, this value will be the name
- *       of the parameter under which the id is stored.  The id will then be removed
- *       from the action name.  Whether or not the method is specified, the mapper will 
- *       try to truncate the identifier from the url and store it as a parameter.
- *   </li>
- *   <li><code>struts.mapper.indexMethodName</code> - The method name to call for a GET
- *       request with no id parameter. Defaults to 'index'.
- *   </li>
- *   <li><code>struts.mapper.getMethodName</code> - The method name to call for a GET
- *       request with an id parameter. Defaults to 'show'.
- *   </li>
- *   <li><code>struts.mapper.postMethodName</code> - The method name to call for a POST
- *       request with no id parameter. Defaults to 'create'.
- *   </li>
- *   <li><code>struts.mapper.putMethodName</code> - The method name to call for a PUT
- *       request with an id parameter. Defaults to 'update'.
- *   </li>
- *   <li><code>struts.mapper.deleteMethodName</code> - The method name to call for a DELETE
- *       request with an id parameter. Defaults to 'destroy'.
- *   </li>
- *   <li><code>struts.mapper.editMethodName</code> - The method name to call for a GET
- *       request with an id parameter and the 'edit' view specified. Defaults to 'edit'.
- *   </li>
- *   <li><code>struts.mapper.newMethodName</code> - The method name to call for a GET
- *       request with no id parameter and the 'new' view specified. Defaults to 'editNew'.
- *   </li>
+ * <li><code>struts.mapper.idParameterName</code> - If set, this value will be the name
+ * of the parameter under which the id is stored.  The id will then be removed
+ * from the action name.  Whether or not the method is specified, the mapper will
+ * try to truncate the identifier from the url and store it as a parameter.
+ * </li>
+ * <li><code>struts.mapper.indexMethodName</code> - The method name to call for a GET
+ * request with no id parameter. Defaults to 'index'.
+ * </li>
+ * <li><code>struts.mapper.getMethodName</code> - The method name to call for a GET
+ * request with an id parameter. Defaults to 'show'.
+ * </li>
+ * <li><code>struts.mapper.postMethodName</code> - The method name to call for a POST
+ * request with no id parameter. Defaults to 'create'.
+ * </li>
+ * <li><code>struts.mapper.putMethodName</code> - The method name to call for a PUT
+ * request with an id parameter. Defaults to 'update'.
+ * </li>
+ * <li><code>struts.mapper.deleteMethodName</code> - The method name to call for a DELETE
+ * request with an id parameter. Defaults to 'destroy'.
+ * </li>
+ * <li><code>struts.mapper.editMethodName</code> - The method name to call for a GET
+ * request with an id parameter and the 'edit' view specified. Defaults to 'edit'.
+ * </li>
+ * <li><code>struts.mapper.newMethodName</code> - The method name to call for a GET
+ * request with no id parameter and the 'new' view specified. Defaults to 'editNew'.
+ * </li>
  * </ul>
  * <p>
  * The following URL's will invoke its methods:
  * </p>
- * <ul> 
- *  <li><code>GET:    /movies                => method="index"</code></li>
- *  <li><code>GET:    /movies/Thrillers      => method="show", id="Thrillers"</code></li>
- *  <li><code>GET:    /movies/Thrillers;edit => method="edit", id="Thrillers"</code></li>
- *  <li><code>GET:    /movies/Thrillers/edit => method="edit", id="Thrillers"</code></li>
- *  <li><code>GET:    /movies/new            => method="editNew"</code></li>
- *  <li><code>POST:   /movies                => method="create"</code></li>
- *  <li><code>PUT:    /movies/Thrillers      => method="update", id="Thrillers"</code></li>
- *  <li><code>DELETE: /movies/Thrillers      => method="destroy", id="Thrillers"</code></li>
+ * <ul>
+ * <li><code>GET:    /movies                => method="index"</code></li>
+ * <li><code>GET:    /movies/Thrillers      => method="show", id="Thrillers"</code></li>
+ * <li><code>GET:    /movies/Thrillers;edit => method="edit", id="Thrillers"</code></li>
+ * <li><code>GET:    /movies/Thrillers/edit => method="edit", id="Thrillers"</code></li>
+ * <li><code>GET:    /movies/new            => method="editNew"</code></li>
+ * <li><code>POST:   /movies                => method="create"</code></li>
+ * <li><code>PUT:    /movies/Thrillers      => method="update", id="Thrillers"</code></li>
+ * <li><code>DELETE: /movies/Thrillers      => method="destroy", id="Thrillers"</code></li>
  * </ul>
  * <p>
  * To simulate the HTTP methods PUT and DELETE, since they aren't supported by HTML,
@@ -106,56 +106,61 @@ public class RestActionMapper extends DefaultActionMapper {
     private String newMethodName = "editNew";
     private String deleteMethodName = "destroy";
     private String putMethodName = "update";
-    
+    private boolean allowDynamicMethodCalls = true;
+
     public RestActionMapper() {
     }
-    
+
     public String getIdParameterName() {
         return idParameterName;
     }
 
-    @Inject(required=false,value=StrutsConstants.STRUTS_ID_PARAMETER_NAME)
+    @Inject(required = false, value = StrutsConstants.STRUTS_ID_PARAMETER_NAME)
     public void setIdParameterName(String idParameterName) {
         this.idParameterName = idParameterName;
     }
 
-    @Inject(required=false,value="struts.mapper.indexMethodName")
+    @Inject(required = false, value = "struts.mapper.indexMethodName")
     public void setIndexMethodName(String indexMethodName) {
         this.indexMethodName = indexMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.getMethodName")
+    @Inject(required = false, value = "struts.mapper.getMethodName")
     public void setGetMethodName(String getMethodName) {
         this.getMethodName = getMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.postMethodName")
+    @Inject(required = false, value = "struts.mapper.postMethodName")
     public void setPostMethodName(String postMethodName) {
         this.postMethodName = postMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.editMethodName")
+    @Inject(required = false, value = "struts.mapper.editMethodName")
     public void setEditMethodName(String editMethodName) {
         this.editMethodName = editMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.newMethodName")
+    @Inject(required = false, value = "struts.mapper.newMethodName")
     public void setNewMethodName(String newMethodName) {
         this.newMethodName = newMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.deleteMethodName")
+    @Inject(required = false, value = "struts.mapper.deleteMethodName")
     public void setDeleteMethodName(String deleteMethodName) {
         this.deleteMethodName = deleteMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.putMethodName")
+    @Inject(required = false, value = "struts.mapper.putMethodName")
     public void setPutMethodName(String putMethodName) {
         this.putMethodName = putMethodName;
     }
 
-    public ActionMapping getMapping(HttpServletRequest request,
-            ConfigurationManager configManager) {
+    @Inject(required = false, value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
+    public void setAllowDynamicMethodCalls(String allowDynamicMethodCalls) {
+        this.allowDynamicMethodCalls = "true".equalsIgnoreCase(allowDynamicMethodCalls);
+    }
+
+    public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
 
@@ -173,12 +178,7 @@ public class RestActionMapper extends DefaultActionMapper {
         }
 
         // handle "name!method" convention.
-        String name = mapping.getName();
-        int exclamation = name.lastIndexOf("!");
-        if (exclamation != -1) {
-            mapping.setName(name.substring(0, exclamation));
-            mapping.setMethod(name.substring(exclamation + 1));
-        }
+        handleDynamicMethodInvocation(mapping, mapping.getName());
 
         String fullName = mapping.getName();
         // Only try something if the action name is specified
@@ -186,7 +186,7 @@ public class RestActionMapper extends DefaultActionMapper {
 
             // cut off any ;jsessionid= type appendix but allow the rails-like ;edit
             int scPos = fullName.indexOf(';');
-            if (scPos > -1 && !"edit".equals(fullName.substring(scPos+1))) {
+            if (scPos > -1 && !"edit".equals(fullName.substring(scPos + 1))) {
                 fullName = fullName.substring(0, scPos);
             }
 
@@ -197,52 +197,51 @@ public class RestActionMapper extends DefaultActionMapper {
                 // fun trickery to parse 'actionName/id/methodName' in the case of 'animals/dog/edit'
                 int prevSlashPos = fullName.lastIndexOf('/', lastSlashPos - 1);
                 if (prevSlashPos > -1) {
-                    mapping.setMethod(fullName.substring(lastSlashPos+1));
+                    mapping.setMethod(fullName.substring(lastSlashPos + 1));
                     fullName = fullName.substring(0, lastSlashPos);
                     lastSlashPos = prevSlashPos;
                 }
-                id = fullName.substring(lastSlashPos+1);
+                id = fullName.substring(lastSlashPos + 1);
             }
-
 
 
             // If a method hasn't been explicitly named, try to guess using ReST-style patterns
             if (mapping.getMethod() == null) {
 
                 // Handle uris with no id, possibly ending in '/'
-                if (lastSlashPos == -1 || lastSlashPos == fullName.length() -1) {
+                if (lastSlashPos == -1 || lastSlashPos == fullName.length() - 1) {
 
                     // Index e.g. foo
                     if (isGet(request)) {
                         mapping.setMethod(indexMethodName);
-                        
-                    // Creating a new entry on POST e.g. foo
+
+                        // Creating a new entry on POST e.g. foo
                     } else if (isPost(request)) {
                         mapping.setMethod(postMethodName);
                     }
 
-                // Handle uris with an id at the end
+                    // Handle uris with an id at the end
                 } else if (id != null) {
-                    
+
                     // Viewing the form to edit an item e.g. foo/1;edit
                     if (isGet(request) && id.endsWith(";edit")) {
                         id = id.substring(0, id.length() - ";edit".length());
                         mapping.setMethod(editMethodName);
-                        
-                    // Viewing the form to create a new item e.g. foo/new
+
+                        // Viewing the form to create a new item e.g. foo/new
                     } else if (isGet(request) && "new".equals(id)) {
                         mapping.setMethod(newMethodName);
 
-                    // Removing an item e.g. foo/1
+                        // Removing an item e.g. foo/1
                     } else if (isDelete(request)) {
                         mapping.setMethod(deleteMethodName);
-                        
-                    // Viewing an item e.g. foo/1
+
+                        // Viewing an item e.g. foo/1
                     } else if (isGet(request)) {
                         mapping.setMethod(getMethodName);
-                    
-                    // Updating an item e.g. foo/1    
-                    }  else if (isPut(request)) {
+
+                        // Updating an item e.g. foo/1
+                    } else if (isPut(request)) {
                         mapping.setMethod(putMethodName);
                     }
                 }
@@ -264,18 +263,28 @@ public class RestActionMapper extends DefaultActionMapper {
 
         return mapping;
     }
-    
+
+    private void handleDynamicMethodInvocation(ActionMapping mapping, String name) {
+        int exclamation = name.lastIndexOf("!");
+        if (exclamation != -1) {
+            mapping.setName(name.substring(0, exclamation));
+            if (allowDynamicMethodCalls) {
+                mapping.setMethod(name.substring(exclamation + 1));
+            } else {
+                mapping.setMethod(null);
+            }
+        }
+    }
+
     /**
-     * Parses the name and namespace from the uri.  Uses the configured package 
+     * Parses the name and namespace from the uri.  Uses the configured package
      * namespaces to determine the name and id parameter, to be parsed later.
      *
-     * @param uri
-     *            The uri
-     * @param mapping
-     *            The action mapping to populate
+     * @param uri     The uri
+     * @param mapping The action mapping to populate
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping,
-            ConfigurationManager configManager) {
+                                         ConfigurationManager configManager) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
         if (lastSlash == -1) {

@@ -35,6 +35,7 @@ public class RestActionMapperTest extends TestCase {
     private ConfigurationManager configManager;
     private Configuration config;
     private MockHttpServletRequest req;
+    private String allowDynamicMethodInvocation = "true";
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -184,9 +185,65 @@ public class RestActionMapperTest extends TestCase {
     public void testParseNameAndNamespaceWithEdit() {
         tryUri("/my/foo/23;edit", "/my", "foo/23;edit");
     }
-    
+
+    public void testShouldAllowExclamation() throws Exception {
+        req.setRequestURI("/myapp/animals/dog/fido!edit");
+        req.setServletPath("/animals/dog/fido!edit");
+        req.setMethod("GET");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/animals", mapping.getNamespace());
+        assertEquals("dog", mapping.getName());
+        assertEquals("fido", ((String[])mapping.getParams().get("id"))[0]);
+        assertEquals("edit", mapping.getMethod());
+    }
+
+    public void testShouldBlockDynamicMethodInvocationAnsUseShow() throws Exception {
+        req.setRequestURI("/myapp/animals/dog/fido!edit");
+        req.setServletPath("/animals/dog/fido!edit");
+        req.setMethod("GET");
+
+        mapper.setAllowDynamicMethodCalls("false");
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/animals", mapping.getNamespace());
+        assertEquals("dog", mapping.getName());
+        assertEquals("fido", ((String[])mapping.getParams().get("id"))[0]);
+        assertEquals("show", mapping.getMethod());
+    }
+
+    public void testShouldBlockDynamicMethodInvocationAnsUseDestroy() throws Exception {
+        req.setRequestURI("/myapp/animals/dog/fido!destroy");
+        req.setServletPath("/animals/dog/fido!destroy");
+        req.setMethod("DELETE");
+
+        mapper.setAllowDynamicMethodCalls("false");
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/animals", mapping.getNamespace());
+        assertEquals("dog", mapping.getName());
+        assertEquals("fido", ((String[])mapping.getParams().get("id"))[0]);
+        assertEquals("destroy", mapping.getMethod());
+    }
+
+    public void testShouldBlockDynamicMethodInvocationAndUseUpdate() throws Exception {
+        req.setRequestURI("/myapp/animals/dog/fido!update");
+        req.setServletPath("/animals/dog/fido!update");
+        req.setMethod("PUT");
+
+        mapper.setAllowDynamicMethodCalls("false");
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/animals", mapping.getNamespace());
+        assertEquals("dog", mapping.getName());
+        assertEquals("fido", ((String[])mapping.getParams().get("id"))[0]);
+        assertEquals("update", mapping.getMethod());
+    }
+
     private void tryUri(String uri, String expectedNamespace, String expectedName) {
         ActionMapping mapping = new ActionMapping();
+        mapper.setAllowDynamicMethodCalls(allowDynamicMethodInvocation);
         mapper.parseNameAndNamespace(uri, mapping, configManager);
         assertEquals(expectedName, mapping.getName());
         assertEquals(expectedNamespace, mapping.getNamespace());

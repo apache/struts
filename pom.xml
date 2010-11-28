@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-   <parent>
-      <groupId>org.apache.struts</groupId>
-      <artifactId>struts-master</artifactId>
-      <version>7</version>
-   </parent>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts-master</artifactId>
+        <version>7</version>
+    </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts</groupId>
@@ -28,9 +29,9 @@
     -->
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_2_1</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_2_1</url>
     </scm>
 
     <issueManagement>
@@ -38,7 +39,7 @@
         <url>http://issues.apache.org/struts/</url>
     </issueManagement>
 
-    <ciManagement />
+    <ciManagement/>
     <distributionManagement>
         <site>
             <id>apache-site</id>
@@ -60,7 +61,7 @@
             <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
-            <comments />
+            <comments/>
         </license>
     </licenses>
 
@@ -130,83 +131,81 @@
 
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-idea-plugin</artifactId>
-                    <configuration>
-                        <jdkName>1.5</jdkName>
-                        <exclude>target,test-output,.clover</exclude>
-                        <useShortDependencyNames>true</useShortDependencyNames>
-                        <!--
-                        <libraries>
-                            <library>
-                                <name>xwork</name>
-                                <sources>file://$xwork$/src/java</sources>
-                            </library>
-                            <library>
-                                <name>xwork-tiger</name>
-                                <sources>file://$xwork$/tiger/src/java</sources>
-                            </library>
-                        </libraries>
-                        -->
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>2.0-beta-7</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                      <source>1.5</source>
-                      <target>1.5</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.3</version>
-                    <configuration>
-                        <includes>
-                            <include>**/*Test.java</include>
-                        </includes>
-                        <excludes>
-                            <exclude>**/TestBean.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-                <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <configuration>
-                        <preparationGoals>clean verify install</preparationGoals>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
-              <artifactId>maven-jar-plugin</artifactId>
-              <configuration>
-                <archive>
-                  <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                </archive>
-              </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-idea-plugin</artifactId>
+                <configuration>
+                    <jdkName>1.5</jdkName>
+                    <exclude>target,test-output,.clover</exclude>
+                    <useShortDependencyNames>true</useShortDependencyNames>
+                    <!--
+                    <libraries>
+                        <library>
+                            <name>xwork</name>
+                            <sources>file://$xwork$/src/java</sources>
+                        </library>
+                        <library>
+                            <name>xwork-tiger</name>
+                            <sources>file://$xwork$/tiger/src/java</sources>
+                        </library>
+                    </libraries>
+                    -->
+                </configuration>
             </plugin>
             <plugin>
-              <groupId>org.apache.felix</groupId>
-              <artifactId>maven-bundle-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>bundle-manifest</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                    <goal>manifest</goal>
-                  </goals>
-                </execution>
-              </executions>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>2.1.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/TestBean.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <preparationGoals>clean verify install</preparationGoals>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!--
             <plugin>
@@ -291,7 +290,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-             </plugin>
+            </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.2</version>
@@ -341,15 +340,15 @@
     </reporting>
 
     <dependencyManagement>
-      <dependencies>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts-annotations</artifactId>
-            <version>1.0.5</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-      </dependencies>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts-annotations</artifactId>
+                <version>1.0.5</version>
+                <scope>compile</scope>
+                <optional>true</optional>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 
     <dependencies>

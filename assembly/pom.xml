@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.2.1</version>
+        <version>2.2.1.1-SNAPSHOT</version>
     </parent>
 
     <scm>
@@ -198,6 +198,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>dependency-maven-plugin</artifactId>
+                <version>1.0</version>
                 <executions>
                     <execution>
                         <id>copy-war</id>

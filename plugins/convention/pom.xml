@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.2.1</version>
+        <version>2.2.1.1-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-convention-plugin</artifactId>
@@ -50,30 +50,25 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-            <version>3.8.1</version>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>2.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
-            <version>2.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
-            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

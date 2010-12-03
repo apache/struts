@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.2.1.1-SNAPSHOT</version>
+        <version>2.2.1.1</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-plugins</artifactId>
@@ -34,9 +34,9 @@
     <name>Struts Plugins</name>
 
    <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/plugins</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/plugins</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/plugins</url>
+     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1_1/plugins</connection>
+     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1_1/plugins</developerConnection>
+     <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1_1/plugins</url>
    </scm>
 
     <modules>

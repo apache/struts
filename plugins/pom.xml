@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.2.1</version>
+        <version>2.2.1.1</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-plugins</artifactId>
@@ -34,9 +34,9 @@
     <name>Struts Plugins</name>
 
    <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/plugins</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/plugins</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/plugins</url>
+     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1_1/plugins</connection>
+     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1_1/plugins</developerConnection>
+     <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_2_1_1/plugins</url>
    </scm>
 
     <modules>
@@ -79,17 +79,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>compile</scope>
-            <version>3.8.2</version>
         </dependency>
-
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
             <scope>provided</scope>
         </dependency>
-
 
     </dependencies>
 

@@ -10,9 +10,9 @@
     <name>Struts 2 Archetypes - Blank Convention</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/archetypes/struts2-archetype-convention</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/archetypes/struts2-archetype-convention</developerConnection>
-        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_1/archetypes/struts2-archetype-convention</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_2_1_1/archetypes/struts2-archetype-convention</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_2_1_1/archetypes/struts2-archetype-convention</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_2_1_1/archetypes/struts2-archetype-convention</url>
     </scm>
 
     <properties>

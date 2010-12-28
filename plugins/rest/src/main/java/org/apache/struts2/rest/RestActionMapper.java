@@ -109,6 +109,7 @@ public class RestActionMapper extends DefaultActionMapper {
     private String optionsMethodName = "options";
     private String postContinueMethodName = "createContinue";
     private String putContinueMethodName = "updateContinue";
+    private boolean allowDynamicMethodCalls = true;    
     
     public RestActionMapper() {
     }
@@ -172,6 +173,11 @@ public class RestActionMapper extends DefaultActionMapper {
         this.putContinueMethodName = putContinueMethodName;
     }
 
+    @Inject(required = false, value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
+    public void setAllowDynamicMethodCalls(String allowDynamicMethodCalls) {
+        this.allowDynamicMethodCalls = "true".equalsIgnoreCase(allowDynamicMethodCalls);
+    }
+    
     public ActionMapping getMapping(HttpServletRequest request,
             ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
@@ -191,12 +197,7 @@ public class RestActionMapper extends DefaultActionMapper {
         }
 
         // handle "name!method" convention.
-        String name = mapping.getName();
-        int exclamation = name.lastIndexOf("!");
-        if (exclamation != -1) {
-            mapping.setName(name.substring(0, exclamation));
-            mapping.setMethod(name.substring(exclamation + 1));
-        }
+        handleDynamicMethodInvocation(mapping, mapping.getName());
 
         String fullName = mapping.getName();
         // Only try something if the action name is specified
@@ -204,7 +205,7 @@ public class RestActionMapper extends DefaultActionMapper {
 
             // cut off any ;jsessionid= type appendix but allow the rails-like ;edit
             int scPos = fullName.indexOf(';');
-            if (scPos > -1 && !"edit".equals(fullName.substring(scPos+1))) {
+            if (scPos > -1 && !"edit".equals(fullName.substring(scPos + 1))) {
                 fullName = fullName.substring(0, scPos);
             }
 
@@ -215,11 +216,11 @@ public class RestActionMapper extends DefaultActionMapper {
                 // fun trickery to parse 'actionName/id/methodName' in the case of 'animals/dog/edit'
                 int prevSlashPos = fullName.lastIndexOf('/', lastSlashPos - 1);
                 if (prevSlashPos > -1) {
-                    mapping.setMethod(fullName.substring(lastSlashPos+1));
+                    mapping.setMethod(fullName.substring(lastSlashPos + 1));
                     fullName = fullName.substring(0, lastSlashPos);
                     lastSlashPos = prevSlashPos;
                 }
-                id = fullName.substring(lastSlashPos+1);
+                id = fullName.substring(lastSlashPos + 1);
             }
 
 
@@ -293,7 +294,19 @@ public class RestActionMapper extends DefaultActionMapper {
 
         return mapping;
     }
-    
+
+    private void handleDynamicMethodInvocation(ActionMapping mapping, String name) {
+        int exclamation = name.lastIndexOf("!");
+        if (exclamation != -1) {
+            mapping.setName(name.substring(0, exclamation));
+            if (allowDynamicMethodCalls) {
+                mapping.setMethod(name.substring(exclamation + 1));
+            } else {
+                mapping.setMethod(null);
+            }
+        }
+    }
+
     /**
      * Parses the name and namespace from the uri.  Uses the configured package 
      * namespaces to determine the name and id parameter, to be parsed later.

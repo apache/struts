@@ -21,7 +21,8 @@
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -34,14 +35,13 @@
     <name>Struts 2 Core</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/core/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/core/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/core/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/core/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/core/</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/core/</url>
     </scm>
 
     <properties>
         <tlib.version>2.2</tlib.version>
-        <ognl.version>3.0</ognl.version>
     </properties>
 
     <build>
@@ -52,13 +52,13 @@
                 <version>1.0.15</version>
                 <configuration>
                     <A>uri=/struts-tags,tlibVersion=${tlib.version},jspVersion=2.0,shortName=s,displayName="Struts Tags",
-                    outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
-                    description="To make it easier to access dynamic data;
-                    the Apache Struts framework includes a library of custom tags.
-                    The tags interact with the framework's validation and internationalization features;
-                    to ensure that input is correct and output is localized.
-                    The Struts Tags can be used with JSP FreeMarker or Velocity.",
-                    outTemplatesDir=${basedir}/src/site/resources/tags
+                        outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
+                        description="To make it easier to access dynamic data;
+                        the Apache Struts framework includes a library of custom tags.
+                        The tags interact with the framework's validation and internationalization features;
+                        to ensure that input is correct and output is localized.
+                        The Struts Tags can be used with JSP FreeMarker or Velocity.",
+                        outTemplatesDir=${basedir}/src/site/resources/tags
                     </A>
                     <resourceTargetPath>target</resourceTargetPath>
                     <fork>false</fork>
@@ -77,7 +77,7 @@
                         <goals>
                             <goal>execute</goal>
                         </goals>
-                </execution>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -213,160 +213,117 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.apache.struts</groupId>-->
-            <!--<artifactId>struts2-api</artifactId>-->
-            <!--<version>${pom.version}</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.16</version>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
-            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
-            <version>${ognl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Velocity -->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
-            <version>1.6.3</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-tools</artifactId>
-            <version>1.3</version>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>struts</groupId>
-                    <artifactId>struts</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>velocity</groupId>
-                    <artifactId>velocity</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- File upload -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-            <version>1.2.1</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
         </dependency>
-        
+
         <!-- Mocks for unit testing (by Spring) -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${struts2.springPlatformVersion}</version>
             <scope>test</scope>
         </dependency>
-
-
-
 
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-              <scope>compile</scope>
+            <scope>compile</scope>
             <optional>true</optional>
-          <version>3.8.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>2.4</version>
             <scope>test</scope>
         </dependency>
-        <!--dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>1.1</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.easymock</groupId>
-                    <artifactId>easymock</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-jdk1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-alt-jdk1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-alt-jdk1.3-j2ee1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
-    <dependency>
+        <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock</artifactId>
-            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.9</version>
             <scope>test</scope>
         </dependency>
 
@@ -384,16 +341,14 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>5.1</version>
-             <scope>compile</scope>
+            <scope>compile</scope>
             <optional>true</optional>
-           <classifier>jdk15</classifier>
+            <classifier>jdk15</classifier>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>${struts2.springPlatformVersion}</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>

@@ -80,12 +80,6 @@
         </dependency>
 
         <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
             <scope>test</scope>

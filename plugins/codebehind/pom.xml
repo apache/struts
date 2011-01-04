@@ -78,11 +78,5 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <scope>test</scope>
-        </dependency>
-
    </dependencies>
 </project>

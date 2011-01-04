@@ -54,12 +54,6 @@
         </dependency>
 
         <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
             <version>${project.version}</version>

@@ -52,7 +52,6 @@
 >
 <#else>
 <#if parameters.type?? && parameters.type=="image">
-<@s.property value="parameters.body"/>
 <input type="image"<#rt/>
 <#if parameters.label??>
  alt="${parameters.label?html}"<#rt/>

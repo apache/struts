@@ -171,7 +171,7 @@ public class JSONUtil {
     public static Object deserialize(Reader reader) throws JSONException {
         // read content
         BufferedReader bufferReader = new BufferedReader(reader);
-        String line = null;
+        String line;
         StringBuilder buffer = new StringBuilder();
 
         try {
@@ -234,7 +234,7 @@ public class JSONUtil {
             InputStream in = null;
             try {
                 out = new GZIPOutputStream(response.getOutputStream());
-                in = new ByteArrayInputStream(json.getBytes());
+                in = new ByteArrayInputStream(json.getBytes(serializationParams.getEncoding()));
                 byte[] buf = new byte[1024];
                 int len;
                 while ((len = in.read(buf)) > 0) {

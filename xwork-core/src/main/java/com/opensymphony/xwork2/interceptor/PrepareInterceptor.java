@@ -1,4 +1,5 @@
 /*
+ * $Id$
  * Copyright 2002-2007,2009 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,8 +100,6 @@ public class PrepareInterceptor extends MethodFilterInterceptor {
 
     private static final long serialVersionUID = -5216969014510719786L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(PrepareInterceptor.class);
-
     private final static String PREPARE_PREFIX = "prepare";
     private final static String ALT_PREPARE_PREFIX = "prepareDo";
 
@@ -144,18 +143,24 @@ public class PrepareInterceptor extends MethodFilterInterceptor {
                 PrefixMethodInvocationUtil.invokePrefixMethod(invocation, prefixes);
             }
             catch (InvocationTargetException e) {
-                // just in case there's an exception while doing reflection,
-                // we still want prepare() to be able to get called.
-                LOG.warn("an exception occured while trying to execute prefixed method", e);
-            }
-            catch (IllegalAccessException e) {
-                // just in case there's an exception while doing reflection,
-                // we still want prepare() to be able to get called.
-                LOG.warn("an exception occured while trying to execute prefixed method", e);
-            } catch (Exception e) {
-                // just in case there's an exception while doing reflection,
-                // we still want prepare() to be able to get called.
-                LOG.warn("an exception occured while trying to execute prefixed method", e);
+                /*
+                 * The invoked method threw an exception and reflection wrapped it
+                 * in an InvocationTargetException.
+                 * If possible re-throw the original exception so that normal
+                 * exception handling will take place.
+                 */
+                Throwable cause = e.getCause();
+                if (cause instanceof Exception) {
+                    throw (Exception) cause;
+                } else if(cause instanceof Error) {
+                    throw (Error) cause;
+                } else {
+                    /*
+                     * The cause is not an Exception or Error (must be Throwable) so
+                     * just re-throw the wrapped exception.
+                     */
+                    throw e;
+                }
             }
 
             if (alwaysInvokePrepare) {

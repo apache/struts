@@ -1,4 +1,5 @@
 /*
+ * $Id$
  * Copyright 2002-2007,2009 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -175,7 +176,25 @@ public class PrepareInterceptorTest extends TestCase {
     	controlActionProxy.verify();
     	controlActionInvocation.verify();
     }
-    
+
+    public void testPrepareThrowException() throws Exception {
+        MockActionInvocation mai = new MockActionInvocation();
+        MockActionProxy mockActionProxy = new MockActionProxy();
+        mockActionProxy.setMethod("submit");
+        mai.setProxy(mockActionProxy);
+        mai.setAction(mock.proxy());
+
+        IllegalAccessException illegalAccessException = new IllegalAccessException();
+        mock.expectAndThrow("prepareSubmit", illegalAccessException);
+        mock.matchAndThrow("prepare", new RuntimeException());
+
+        try {
+            interceptor.intercept(mai);
+            fail("Should not have reached this point.");
+        } catch (Throwable t) {
+            assertSame(illegalAccessException, t);
+        }
+    }
 
     @Override
     protected void setUp() throws Exception {
@@ -196,7 +215,7 @@ public class PrepareInterceptorTest extends TestCase {
      * @author tm_jee
      */
     public interface ActionInterface extends Action, Preparable {
-    	void prepareSubmit();
+    	void prepareSubmit() throws Exception;
     }
 
 }

@@ -96,7 +96,7 @@ var $!struts.htmlEncode($parameters.name)Temp = document.$!struts.htmlEncode(${p
 $!{struts.htmlEncode($parameters.name)}Redirect($redirectTo);
 function $!{struts.htmlEncode($parameters.name)}Redirect(x) {
     for (m = $!{struts.htmlEncode($parameters.name)}Temp.options.length - 1; m >= 0; m--)
-        $!{struts.htmlEncode($parameters.name)}Temp.options[m] = null;
+        $!{struts.htmlEncode($parameters.name)}Temp.remove(m);
 
     for (i = 0; i < $!{parameters.name}Group[x].length; i++) {
         $!{struts.htmlEncode($parameters.name)}Temp.options[i] = new Option($!{struts.htmlEncode($parameters.name)}Group[x][i].text, $!{struts.htmlEncode($parameters.name)}Group[x][i].value);

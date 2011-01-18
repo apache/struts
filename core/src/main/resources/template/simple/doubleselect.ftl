@@ -126,7 +126,7 @@
     function ${parameters.id}Redirect(x) {
     	var selected = false;
         for (m = ${parameters.id}Temp.options.length - 1; m >= 0; m--) {
-            ${parameters.id}Temp.options[m] = null;
+            ${parameters.id}Temp.remove(m);
         }
 
         for (i = 0; i < ${parameters.id}Group[x].length; i++) {

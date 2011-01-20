@@ -30,6 +30,7 @@ public class URLUtil {
      */
     public static final String JBOSS5_VFSZIP = "vfszip";
     public static final String JBOSS5_VFSMEMORY = "vfsmemory";
+    public static final String JBOSS5_VFSFILE = "vfsfile";
 
     private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|.jar/)(.*)");
     private static final int JAR_FILE_PATH = 3;
@@ -99,7 +100,8 @@ public class URLUtil {
      */
     public static boolean isJBoss5Url(URL fileUrl) {
         final String protocol = fileUrl.getProtocol();
-        return JBOSS5_VFSZIP.equals(protocol) || JBOSS5_VFSMEMORY.equals(fileUrl.getProtocol());
+        return JBOSS5_VFSZIP.equals(protocol) || JBOSS5_VFSMEMORY.equals(fileUrl.getProtocol())
+                || ("true".equals(System.getProperty("jboss.vfs.forceVfsJar")) && JBOSS5_VFSFILE.equals(fileUrl.getProtocol()));
     }
 
 }

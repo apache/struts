@@ -1,7 +1,7 @@
 <tr>
     <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
     <td>
-<select name="foo" id="foo" class="c1" style="s1" onmousedown="window.status='onmousedown';" onmouseup="window.status='onmouseup';" onmouseover="window.status='onmouseover';" onmousemove="window.status='onmousemove';" onmouseout="window.status='onmouseout';" onchange="fooRedirect(this.options.selectedIndex);window.status='onchange';">
+<select name="foo" id="foo" class="c1" style="s1" onmousedown="window.status='onmousedown';" onmouseup="window.status='onmouseup';" onmouseover="window.status='onmouseover';" onmousemove="window.status='onmousemove';" onmouseout="window.status='onmouseout';" onchange="fooRedirect(this.selectedIndex);window.status='onchange';">
     <option value="BE">Belgium</option>
     <option value="FR">France</option>
 </select>
@@ -25,7 +25,7 @@
     function fooRedirect(x) {
     	var selected = false;
         for (m = fooTemp.options.length - 1; m >= 0; m--) {
-            fooTemp.options[m] = null;
+            fooTemp.remove(m);
         }
 
         for (i = 0; i < fooGroup[x].length; i++) {

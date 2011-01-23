@@ -192,7 +192,17 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
 
         List<File> fileList = new ArrayList<File>(items.size());
         for (FileItem fileItem : items) {
-            fileList.add(((DiskFileItem) fileItem).getStoreLocation());
+            File storeLocation = ((DiskFileItem) fileItem).getStoreLocation();
+            if(fileItem.isInMemory() && storeLocation!=null && !storeLocation.exists()) {
+                try {
+                    storeLocation.createNewFile();
+                } catch (IOException e) {
+                    if(LOG.isErrorEnabled()){
+                        LOG.error("Cannot write uploaded empty file to disk: " + storeLocation.getAbsolutePath(),e);
+                    }
+                }
+            }
+            fileList.add(storeLocation);
         }
 
         return fileList.toArray(new File[fileList.size()]);

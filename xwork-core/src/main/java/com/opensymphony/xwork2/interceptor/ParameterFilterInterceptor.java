@@ -115,7 +115,6 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
 
             boolean currentAllowed = !isDefaultBlock();
 
-            boolean foundApplicableRule = false;
             for (Object o1 : includesExcludesMap.keySet()) {
                 String currRule = (String) o1;
 
@@ -123,11 +122,6 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
                         && (param.length() == currRule.length()
                         || isPropSeperator(param.charAt(currRule.length())))) {
                     currentAllowed = includesExcludesMap.get(currRule).booleanValue();
-                } else {
-                    if (foundApplicableRule) {
-                        foundApplicableRule = false;
-                        break;
-                    }
                 }
             }
             if (!currentAllowed) {

@@ -253,7 +253,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<String, Object>();
         ActionContext.getContext().setParameters(param);
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest((HttpServletRequest) req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
 

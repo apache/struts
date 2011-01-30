@@ -42,7 +42,7 @@ import org.apache.struts2.json.rpc.RPCResponse;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -50,7 +50,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 /**
  * Populates an action from a JSON string
  */
-public class JSONInterceptor implements Interceptor {
+public class JSONInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = 4950170304212158803L;
     private static final Logger LOG = LoggerFactory.getLogger(JSONInterceptor.class);
     private boolean enableSMD = false;
@@ -70,12 +70,6 @@ public class JSONInterceptor implements Interceptor {
     private boolean excludeNullProperties;
     private String callbackParameter;
     private String contentType;
-
-    public void destroy() {
-    }
-
-    public void init() {
-    }
 
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -370,15 +364,18 @@ public class JSONInterceptor implements Interceptor {
     }
 
     /**
-     * Turns debugging on or off
-     * 
-     * @param debug
-     *            true or false
+     * @return true if debugging is turned on
      */
     public boolean getDebug() {
         return this.debug;
     }
 
+    /**
+     * Turns debugging on or off
+     * 
+     * @param debug
+     *            true or false
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }

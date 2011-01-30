@@ -110,14 +110,10 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
 
         Map<String, Boolean> includesExcludesMap = getIncludesExcludesMap();
 
-        for (Object o : parameters.keySet()) {
-            String param = o.toString();
-
+        for (String param : parameters.keySet()) {
             boolean currentAllowed = !isDefaultBlock();
 
-            for (Object o1 : includesExcludesMap.keySet()) {
-                String currRule = (String) o1;
-
+            for (String currRule : includesExcludesMap.keySet()) {
                 if (param.startsWith(currRule)
                         && (param.length() == currRule.length()
                         || isPropSeperator(param.charAt(currRule.length())))) {

@@ -219,7 +219,7 @@
                                     <shadedPattern>org.apache.commons.lang.xwork</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.apache.commons.lang</pattern>
+                                    <pattern>org.apache.commons.io</pattern>
                                     <shadedPattern>org.apache.commons.io.xwork</shadedPattern>
                                 </relocation>
                             </relocations>

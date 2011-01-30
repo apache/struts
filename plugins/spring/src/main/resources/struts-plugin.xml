@@ -38,7 +38,6 @@
     <package name="spring-default">
         <interceptors>
             <interceptor name="autowiring" class="com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
-            <interceptor name="sessionAutowiring" class="org.apache.struts2.spring.interceptor.SessionContextAutowiringInterceptor"/>
         </interceptors>
     </package>    
 </struts>

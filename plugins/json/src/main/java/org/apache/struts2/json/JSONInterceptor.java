@@ -83,7 +83,7 @@ public class JSONInterceptor extends AbstractInterceptor {
                 contentType = contentType.substring(0, iSemicolonIdx);
         }
 
-        Object rootObject;
+        Object rootObject = null;
         if (this.root != null) {
             ValueStack stack = invocation.getStack();
             rootObject = stack.findValue(this.root);
@@ -91,8 +91,6 @@ public class JSONInterceptor extends AbstractInterceptor {
             if (rootObject == null) {
                 throw new RuntimeException("Invalid root expression: '" + this.root + "'.");
             }
-        } else {
-            rootObject = invocation.getAction();
         }
 
         if ((contentType != null) && contentType.equalsIgnoreCase("application/json")) {
@@ -105,6 +103,9 @@ public class JSONInterceptor extends AbstractInterceptor {
                 // clean up the values
                 if (dataCleaner != null)
                     dataCleaner.clean("", json);
+
+                if (rootObject == null) // model overrides action
+                    rootObject = invocation.getStack().peek();
 
                 // populate fields
                 populator.populateObject(rootObject, json);
@@ -120,6 +121,9 @@ public class JSONInterceptor extends AbstractInterceptor {
 
                 if (obj instanceof Map) {
                     Map smd = (Map) obj;
+
+                    if (rootObject == null) // model makes no sense when using RPC
+                        rootObject = invocation.getAction();
 
                     // invoke method
                     try {

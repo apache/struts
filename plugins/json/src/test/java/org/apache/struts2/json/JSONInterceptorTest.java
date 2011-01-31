@@ -322,6 +322,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         TestAction action = new TestAction();
 
         this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
 
         interceptor.intercept(this.invocation);
 

@@ -311,28 +311,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         }
 
         // invoke action
-        String result = invocation.invoke();
-
-        // cleanup
-        fileParameterNames = multiWrapper.getFileParameterNames();
-        while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
-            String inputValue = (String) fileParameterNames.nextElement();
-            File[] files = multiWrapper.getFiles(inputValue);
-
-            for (File currentFile : files) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info(getTextMessage(action, "struts.messages.removing.file", new Object[]{inputValue, currentFile}, ac.getLocale()));
-                }
-
-                if ((currentFile != null) && currentFile.isFile()) {
-                    if (!currentFile.delete()) {
-                        LOG.warn("Resource Leaking:  Could not remove uploaded file '" + currentFile.getCanonicalPath() + "'.");
-                    }
-                }
-            }
-        }
-
-        return result;
+        return invocation.invoke();
     }
 
     /**

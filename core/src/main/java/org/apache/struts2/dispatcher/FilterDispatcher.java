@@ -421,6 +421,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             dispatcher.serviceAction(request, response, servletContext, mapping);
 
         } finally {
+            dispatcher.cleanUpRequest(request);
             try {
                 ActionContextCleanUp.cleanUp(req);
             } finally {

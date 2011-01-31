@@ -46,37 +46,37 @@ import java.util.*;
  * is through the use of the <b>chain</b> result type, which combines with this interceptor to make up the action
  * chaining feature.
  * <p/>
+ * <b>Note:</b> By default Errors, Field errors and Message aren't copied during chaining, to change the behaviour you can specify
+ * the below three constants in struts.properties or struts.xml:
+ * <ul>
+ * <li>struts.xwork.chaining.copyErrors - set to true to copy Action Errors</li>
+ * <li>struts.xwork.chaining.copyFieldErrors - set to true to copy Field Errors</li>
+ * <li>struts.xwork.chaining.copyMessages - set to true to copy Action Messages</li>
+ * </ul>
  * <p>
+ * <p>
+ * <u>Example:</u>
+ * <pre>
+ * &lt;constant name="struts.xwork.chaining.copyErrors" value="true"/&gt;
+ * </pre>
+ * </p>
  * <b>Note:</b> By default actionErrors and actionMessages are excluded when copping object's properties.
  * </p>
  * <!-- END SNIPPET: description -->
- * <p/>
- * <p/> <u>Interceptor parameters:</u>
- * <p/>
+ * <u>Interceptor parameters:</u>
  * <!-- START SNIPPET: parameters -->
- * <p/>
  * <ul>
- * <p/>
  * <li>excludes (optional) - the list of parameter names to exclude from copying (all others will be included).</li>
- * <p/>
  * <li>includes (optional) - the list of parameter names to include when copying (all others will be excluded).</li>
- * <p/>
  * </ul>
- * <p/>
  * <!-- END SNIPPET: parameters -->
- * <p/>
- * <p/> <u>Extending the interceptor:</u>
- * <p/>
- * <p/>
- * <p/>
+ * <u>Extending the interceptor:</u>
  * <!-- START SNIPPET: extending -->
- * <p/>
+ * <p>
  * There are no known extension points to this interceptor.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: extending -->
- * <p/>
- * <p/> <u>Example code:</u>
- * <p/>
+ * <u>Example code:</u>
  * <pre>
  * <!-- START SNIPPET: example -->
  * <p/>

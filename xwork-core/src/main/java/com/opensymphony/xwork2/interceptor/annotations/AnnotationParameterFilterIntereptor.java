@@ -37,12 +37,20 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
         final Object action = invocation.getAction();
         Map<String, Object> parameters = invocation.getInvocationContext().getParameters();
 
+        Object model = invocation.getStack().peek();
+        if (model == action) {
+            model = null;
+        }
+
         boolean blockByDefault = action.getClass().isAnnotationPresent(BlockByDefault.class);
         List<Field> annotatedFields = new ArrayList<Field>();
         HashSet<String> paramsToRemove = new HashSet<String>();
 
         if (blockByDefault) {
             AnnotationUtils.addAllFields(Allowed.class, action.getClass(), annotatedFields);
+            if (model != null) {
+                AnnotationUtils.addAllFields(Allowed.class, model.getClass(), annotatedFields);
+            }
 
             for (String paramName : parameters.keySet()) {
                 boolean allowed = false;
@@ -61,6 +69,9 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
             }
         } else {
             AnnotationUtils.addAllFields(Blocked.class, action.getClass(), annotatedFields);
+            if (model != null) {
+                AnnotationUtils.addAllFields(Blocked.class, model.getClass(), annotatedFields);
+            }
 
             for (String paramName : parameters.keySet()) {
 

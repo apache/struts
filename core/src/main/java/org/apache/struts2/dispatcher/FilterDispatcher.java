@@ -170,9 +170,14 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     protected Dispatcher dispatcher;
 
     /**
-     * Loads stattic resources, set by injection
+     * Loads static resources, set by injection.
      */
     protected StaticContentLoader staticResourceLoader;
+
+    /**
+     * Maintains per-request override of devMode configuration.
+     */
+    private static ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<Boolean>();
 
     /**
      * Initializes the filter by creating a default dispatcher
@@ -235,6 +240,27 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 ActionContext.setContext(null);
             }
         }
+    }
+
+    /**
+     * Set an override of the static devMode value.  Do not set this via a
+     * request parameter or any other unprotected method.  Using a signed
+     * cookie is one safe way to turn it on per request.
+     * 
+     * @param devMode   the override value
+     */
+    public static void overrideDevMode(
+        boolean devMode)
+    {
+        devModeOverride.set(Boolean.valueOf(devMode));
+    }
+
+    /**
+     * @return Boolean override value, or null if no override
+     */
+    public static Boolean getDevModeOverride()
+    {
+        return devModeOverride.get();
     }
 
     /**
@@ -400,6 +426,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             } finally {
                 UtilTimerStack.pop(timerKey);
             }
+            devModeOverride.remove();
         }
     }
 }

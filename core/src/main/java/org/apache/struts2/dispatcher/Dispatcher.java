@@ -725,7 +725,8 @@ public class Dispatcher {
      */
     public void sendError(HttpServletRequest request, HttpServletResponse response,
             ServletContext ctx, int code, Exception e) {
-        if (devMode) {
+        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
+        if (devModeOverride != null ? devModeOverride.booleanValue() : devMode) {
             response.setContentType("text/html");
 
             try {

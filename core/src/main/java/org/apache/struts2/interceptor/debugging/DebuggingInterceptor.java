@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.FilterDispatcher;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
@@ -157,6 +158,8 @@ public class DebuggingInterceptor implements Interceptor {
     public String intercept(ActionInvocation inv) throws Exception {
         boolean actionOnly = false;
         boolean cont = true;
+        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
+        boolean devMode = devModeOverride != null ? devModeOverride.booleanValue() : this.devMode;
         if (devMode) {
             final ActionContext ctx = ActionContext.getContext();
             String type = getParameter(DEBUG_PARAM);

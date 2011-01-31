@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.FilterDispatcher;
 import org.apache.struts2.json.annotations.SMDMethod;
 import org.apache.struts2.json.rpc.RPCError;
 import org.apache.struts2.json.rpc.RPCErrorCode;
@@ -126,7 +127,7 @@ public class JSONInterceptor extends AbstractInterceptor {
                     } catch (Exception e) {
                         RPCResponse rpcResponse = new RPCResponse();
                         rpcResponse.setId(smd.get("id").toString());
-                        rpcResponse.setError(new RPCError(e, RPCErrorCode.EXCEPTION, debug));
+                        rpcResponse.setError(new RPCError(e, RPCErrorCode.EXCEPTION, getDebug()));
 
                         result = rpcResponse;
                     }
@@ -164,9 +165,8 @@ public class JSONInterceptor extends AbstractInterceptor {
             return Action.NONE;
         } else {
             if (LOG.isDebugEnabled()) {
-                LOG
-                        .debug("Content type must be 'application/json' or 'application/json-rpc'. Ignoring request with content type "
-                                + contentType);
+                LOG.debug("Content type must be 'application/json' or 'application/json-rpc'. " +
+                          "Ignoring request with content type " + contentType);
             }
         }
 
@@ -367,7 +367,8 @@ public class JSONInterceptor extends AbstractInterceptor {
      * @return true if debugging is turned on
      */
     public boolean getDebug() {
-        return this.debug;
+        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
+        return devModeOverride != null ? devModeOverride.booleanValue() : this.debug;
     }
 
     /**
@@ -378,6 +379,13 @@ public class JSONInterceptor extends AbstractInterceptor {
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public void setDevMode(
+        String mode)
+    {
+        setDebug("true".equalsIgnoreCase(mode));
     }
 
     /**

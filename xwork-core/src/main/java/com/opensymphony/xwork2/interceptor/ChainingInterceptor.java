@@ -103,14 +103,16 @@ public class ChainingInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(ChainingInterceptor.class);
 
     private static final String ACTION_ERRORS = "actionErrors";
+    private static final String FIELD_ERRORS = "fieldErrors";
     private static final String ACTION_MESSAGES = "actionMessages";
 
     private boolean copyMessages = false;
     private boolean copyErrors = false;
+    private boolean copyFieldErrors = false;
 
     protected Collection<String> excludes;
-    protected Collection<String> includes;
 
+    protected Collection<String> includes;
     protected ReflectionProvider reflectionProvider;
 
     @Inject
@@ -121,6 +123,11 @@ public class ChainingInterceptor extends AbstractInterceptor {
     @Inject(value = "struts.xwork.chaining.copyErrors", required = false)
     public void setCopyErrors(String copyErrors) {
         this.copyErrors = "true".equalsIgnoreCase(copyErrors);
+    }
+
+    @Inject(value = "struts.xwork.chaining.copyFieldErrors", required = false)
+    public void setCopyFieldErrors(String copyFieldErrors) {
+        this.copyErrors = "true".equalsIgnoreCase(copyFieldErrors);
     }
 
     @Inject(value = "struts.xwork.chaining.copyMessages", required = false)
@@ -150,7 +157,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     private Collection<String> prepareExcludes() {
         Collection<String> localExcludes = excludes;
-        if (!copyErrors || !copyMessages) {
+        if (!copyErrors || !copyMessages ||!copyFieldErrors) {
             if (localExcludes == null) {
                 localExcludes = new HashSet<String>();
                 if (!copyErrors) {
@@ -158,6 +165,9 @@ public class ChainingInterceptor extends AbstractInterceptor {
                 }
                 if (!copyMessages) {
                     localExcludes.add(ACTION_MESSAGES);
+                }
+                if (!copyFieldErrors) {
+                    localExcludes.add(FIELD_ERRORS);
                 }
             }
         }

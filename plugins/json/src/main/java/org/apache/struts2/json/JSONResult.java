@@ -213,7 +213,7 @@ public class JSONResult implements Result {
             ValueStack stack = invocation.getStack();
             rootObject = stack.findValue(root);
         } else {
-            rootObject = invocation.getAction();
+            rootObject = invocation.getStack().peek(); // model overrides action
         }
         return rootObject;
     }

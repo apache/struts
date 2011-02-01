@@ -75,6 +75,7 @@ public class JSONResultTest extends StrutsTestCase {
     public void testSMDDisabledSMD() throws Exception {
         JSONResult result = new JSONResult();
         SMDActionTest1 action = new SMDActionTest1();
+        stack.push(action);
 
         this.invocation.setAction(action);
         result.execute(this.invocation);
@@ -90,6 +91,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
+        stack.push(action);
 
         this.invocation.setAction(action);
         result.execute(this.invocation);
@@ -106,6 +108,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setEnableSMD(true);
         SMDActionTest2 action = new SMDActionTest2();
+        stack.push(action);
 
         this.invocation.setAction(action);
         result.execute(this.invocation);
@@ -122,6 +125,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setExcludeNullProperties(true);
         TestAction action = new TestAction();
+        stack.push(action);
         action.setFoo("fool");
 
         this.invocation.setAction(action);
@@ -138,6 +142,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setWrapPrefix("_prefix_");
         TestAction2 action = new TestAction2();
+        stack.push(action);
 
         this.invocation.setAction(action);
         result.execute(this.invocation);
@@ -153,6 +158,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setWrapSuffix("_suffix_");
         TestAction2 action = new TestAction2();
+        stack.push(action);
 
         this.invocation.setAction(action);
         result.execute(this.invocation);
@@ -169,6 +175,7 @@ public class JSONResultTest extends StrutsTestCase {
         result.setWrapPrefix("_prefix_");
         result.setWrapSuffix("_suffix_");
         TestAction2 action = new TestAction2();
+        stack.push(action);
 
         this.invocation.setAction(action);
         result.execute(this.invocation);
@@ -185,6 +192,7 @@ public class JSONResultTest extends StrutsTestCase {
         result.setExcludeNullProperties(true);
         result.setPrefix(true);
         TestAction action = new TestAction();
+        stack.push(action);
         action.setFoo("fool");
 
         this.invocation.setAction(action);
@@ -202,6 +210,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
 
         TestAction action = new TestAction();
+        stack.push(action);
 
         // test scape characters
         action.setArray(new String[] { "a", "a", "\"", "\\", "/", "\b", "\f", "\n", "\r", "\t" });
@@ -284,6 +293,7 @@ public class JSONResultTest extends StrutsTestCase {
         result.setIgnoreHierarchy(false);
 
         TestAction3 action = new TestAction3();
+        stack.push(action);
         this.invocation.setAction(action);
         result.execute(this.invocation);
 
@@ -299,6 +309,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
 
         TestAction action = new TestAction();
+        stack.push(action);
 
         // test scape characters
         action.setArray(new String[] { "a", "a", "\"", "\\", "/", "\b", "\f", "\n", "\r", "\t" });
@@ -376,6 +387,7 @@ public class JSONResultTest extends StrutsTestCase {
 
     private void executeTest2Action(JSONResult result) throws Exception {
         TestAction action = new TestAction();
+        stack.push(action);
 
         // beans
         Bean bean1 = new Bean();
@@ -481,6 +493,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("foo");
         TestAction action = new TestAction();
+        stack.push(action);
         action.setFoo("fooValue");
         action.setBean(new Bean());
         this.invocation.setAction(action);
@@ -497,6 +510,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("^list\\[\\d+\\]\\.booleanField");
         TestAction action = new TestAction();
+        stack.push(action);
 
         List list = new ArrayList();
 
@@ -530,5 +544,6 @@ public class JSONResultTest extends StrutsTestCase {
         this.context.put(StrutsStatics.SERVLET_CONTEXT, this.servletContext);
         this.invocation = new MockActionInvocation();
         this.invocation.setInvocationContext(this.context);
+        this.invocation.setStack(this.stack);
     }
 }

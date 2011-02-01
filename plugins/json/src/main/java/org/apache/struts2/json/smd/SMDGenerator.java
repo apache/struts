@@ -67,7 +67,7 @@ public class SMDGenerator {
             smd.addSMDMethod(smdMethod);
 
             // find params for this method
-            processMethodsParametrs(method, smdMethod);
+            processMethodsParameters(method, smdMethod);
 
         } else {
             if (LOG.isDebugEnabled())
@@ -75,7 +75,7 @@ public class SMDGenerator {
         }
     }
 
-    private void processMethodsParametrs(Method method, org.apache.struts2.json.smd.SMDMethod smdMethod) {
+    private void processMethodsParameters(Method method, org.apache.struts2.json.smd.SMDMethod smdMethod) {
         int parametersCount = method.getParameterTypes().length;
         if (parametersCount > 0) {
 

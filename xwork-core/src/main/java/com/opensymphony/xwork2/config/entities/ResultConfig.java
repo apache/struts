@@ -33,10 +33,9 @@ import java.util.Map;
  */
 public class ResultConfig extends Located implements Serializable {
 
-    private Map<String,String> params;
-    private String className;
-    private String name;
-
+    protected Map<String,String> params;
+    protected String className;
+    protected String name;
 
     protected ResultConfig(String name, String className) {
         this.name = name;
@@ -61,7 +60,6 @@ public class ResultConfig extends Located implements Serializable {
     public Map<String,String> getParams() {
         return params;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -106,7 +104,7 @@ public class ResultConfig extends Located implements Serializable {
      * After setting any values you need, call the {@link #build()} method to create the object.
      */
     public static final class Builder {
-        private ResultConfig target;
+        protected ResultConfig target;
 
         public Builder(String name, String className) {
             target = new ResultConfig(name, className);
@@ -142,10 +140,14 @@ public class ResultConfig extends Located implements Serializable {
         }
 
         public ResultConfig build() {
-            target.params = Collections.unmodifiableMap(target.params);
+            embalmTarget();
             ResultConfig result = target;
             target = new ResultConfig(target);
             return result;
+        }
+
+        protected void embalmTarget() {
+            target.params = Collections.unmodifiableMap(target.params);
         }
     }
 }

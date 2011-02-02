@@ -40,9 +40,8 @@ public class InterceptorStackConfig extends Located implements Serializable {
     /**
      * A list of InterceptorMapping object
      */
-    private List<InterceptorMapping> interceptors;
-    private String name;
-
+    protected List<InterceptorMapping> interceptors;
+    protected String name;
 
     /**
      * Creates an InterceptorStackConfig object.
@@ -130,7 +129,7 @@ public class InterceptorStackConfig extends Located implements Serializable {
      * After setting any values you need, call the {@link #build()} method to create the object.
      */
     public static class Builder implements InterceptorListHolder {
-        private InterceptorStackConfig target;
+        protected InterceptorStackConfig target;
 
         public Builder(String name) {
             target = new InterceptorStackConfig();
@@ -164,10 +163,14 @@ public class InterceptorStackConfig extends Located implements Serializable {
         }
 
         public InterceptorStackConfig build() {
-            target.interceptors = Collections.unmodifiableList(target.interceptors);
+            embalmTarget();
             InterceptorStackConfig result = target;
             target = new InterceptorStackConfig(target);
             return result;
+        }
+
+        protected void embalmTarget() {
+            target.interceptors = Collections.unmodifiableList(target.interceptors);
         }
     }
 }

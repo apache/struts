@@ -214,7 +214,7 @@ public class ActionConfig extends Located implements Serializable {
      */
     public static class Builder implements InterceptorListHolder{
 
-        private ActionConfig target;
+        protected ActionConfig target;
 
         public Builder(ActionConfig toClone) {
             target = new ActionConfig(toClone);
@@ -240,12 +240,12 @@ public class ActionConfig extends Located implements Serializable {
         }
 
         public Builder defaultClassName(String name) {
-        	if (StringUtils.isEmpty(target.className)) {
-        	  	target.className = name;
-        	}
+            if (StringUtils.isEmpty(target.className)) {
+                target.className = name;
+            }
             return this;
         }
-        
+
         public Builder methodName(String method) {
             target.methodName = method;
             return this;
@@ -326,14 +326,18 @@ public class ActionConfig extends Located implements Serializable {
         }
 
         public ActionConfig build() {
+            embalmTarget();
+            ActionConfig result = target;
+            target = new ActionConfig(target);
+            return result;
+        }
+
+        protected void embalmTarget() {
             target.params = Collections.unmodifiableMap(target.params);
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);
             target.exceptionMappings = Collections.unmodifiableList(target.exceptionMappings);
             target.allowedMethods = Collections.unmodifiableSet(target.allowedMethods);
-            ActionConfig result = target;
-            target = new ActionConfig(target);
-            return result;
         }
     }
 }

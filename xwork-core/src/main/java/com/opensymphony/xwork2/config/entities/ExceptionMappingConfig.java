@@ -32,11 +32,10 @@ import java.util.Map;
  */
 public class ExceptionMappingConfig extends Located implements Serializable {
 
-    private String name;
-    private String exceptionClassName;
-    private String result;
-    private Map<String,String> params;
-
+    protected String name;
+    protected String exceptionClassName;
+    protected String result;
+    protected Map<String,String> params;
 
     protected ExceptionMappingConfig(String name, String exceptionClassName, String result) {
         this.name = name;
@@ -67,7 +66,6 @@ public class ExceptionMappingConfig extends Located implements Serializable {
     public Map<String,String> getParams() {
         return params;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -121,7 +119,7 @@ public class ExceptionMappingConfig extends Located implements Serializable {
      */
     public static class Builder{
 
-        private ExceptionMappingConfig target;
+        protected ExceptionMappingConfig target;
 
         public Builder(ExceptionMappingConfig toClone) {
             target = new ExceptionMappingConfig(toClone);
@@ -162,10 +160,14 @@ public class ExceptionMappingConfig extends Located implements Serializable {
         }
 
         public ExceptionMappingConfig build() {
-            target.params = Collections.unmodifiableMap(target.params);
+            embalmTarget();
             ExceptionMappingConfig result = target;
             target = new ExceptionMappingConfig(target);
             return result;
+        }
+
+        protected void embalmTarget() {
+            target.params = Collections.unmodifiableMap(target.params);
         }
     }
 

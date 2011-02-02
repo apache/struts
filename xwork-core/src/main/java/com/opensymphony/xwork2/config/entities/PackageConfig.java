@@ -36,21 +36,20 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
     private static final Logger LOG = LoggerFactory.getLogger(PackageConfig.class);
 
-    private Map<String, ActionConfig> actionConfigs;
-    private Map<String, ResultConfig> globalResultConfigs;
-    private Map<String, Object> interceptorConfigs;
-    private Map<String, ResultTypeConfig> resultTypeConfigs;
-    private List<ExceptionMappingConfig> globalExceptionMappingConfigs;
-    private List<PackageConfig> parents;
-    private String defaultInterceptorRef;
-    private String defaultActionRef;
-    private String defaultResultType;
-    private String defaultClassRef;
-    private String name;
-    private String namespace = "";
-    private boolean isAbstract = false;
-    private boolean needsRefresh;
-
+    protected Map<String, ActionConfig> actionConfigs;
+    protected Map<String, ResultConfig> globalResultConfigs;
+    protected Map<String, Object> interceptorConfigs;
+    protected Map<String, ResultTypeConfig> resultTypeConfigs;
+    protected List<ExceptionMappingConfig> globalExceptionMappingConfigs;
+    protected List<PackageConfig> parents;
+    protected String defaultInterceptorRef;
+    protected String defaultActionRef;
+    protected String defaultResultType;
+    protected String defaultClassRef;
+    protected String name;
+    protected String namespace = "";
+    protected boolean isAbstract = false;
+    protected boolean needsRefresh;
 
     protected PackageConfig(String name) {
         this.name = name;
@@ -61,7 +60,6 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         globalExceptionMappingConfigs = new ArrayList<ExceptionMappingConfig>();
         parents = new ArrayList<PackageConfig>();
     }
-
 
     protected PackageConfig(PackageConfig orig) {
         this.defaultInterceptorRef = orig.defaultInterceptorRef;
@@ -444,7 +442,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      */
     public static class Builder implements InterceptorLocator {
 
-        private PackageConfig target;
+        protected PackageConfig target;
 
         public Builder(String name) {
             target = new PackageConfig(name);
@@ -588,23 +586,24 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
             return target.getAllResultTypeConfigs().get(type);
         }
 
-
-
         public Object getInterceptorConfig(String name) {
             return target.getAllInterceptorConfigs().get(name);
         }
 
         public PackageConfig build() {
+            embalmTarget();
+            PackageConfig result = target;
+            target = new PackageConfig(result);
+            return result;
+        }
+
+        protected void embalmTarget() {
             target.actionConfigs = Collections.unmodifiableMap(target.actionConfigs);
             target.globalResultConfigs = Collections.unmodifiableMap(target.globalResultConfigs);
             target.interceptorConfigs = Collections.unmodifiableMap(target.interceptorConfigs);
             target.resultTypeConfigs = Collections.unmodifiableMap(target.resultTypeConfigs);
             target.globalExceptionMappingConfigs = Collections.unmodifiableList(target.globalExceptionMappingConfigs);
             target.parents = Collections.unmodifiableList(target.parents);
-
-            PackageConfig result = target;
-            target = new PackageConfig(result);
-            return result;
         }
 
         @Override

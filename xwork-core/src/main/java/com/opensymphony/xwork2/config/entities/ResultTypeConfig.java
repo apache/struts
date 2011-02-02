@@ -35,11 +35,10 @@ import java.util.Map;
  */
 public class ResultTypeConfig extends Located implements Serializable {
 
-    private String className;
-    private String name;
-    private String defaultResultParam;
-
-    private Map<String,String> params;
+    protected String className;
+    protected String name;
+    protected String defaultResultParam;
+    protected Map<String,String> params;
 
     protected ResultTypeConfig(String name, String className) {
         this.name = name;
@@ -54,13 +53,12 @@ public class ResultTypeConfig extends Located implements Serializable {
         this.params = orig.params;
     }
 
-
     public void setDefaultResultParam(String defaultResultParam) {
-    	this.defaultResultParam = defaultResultParam;
+        this.defaultResultParam = defaultResultParam;
     }
     
     public String getDefaultResultParam() {
-    	return this.defaultResultParam;
+        return this.defaultResultParam;
     }
 
     /**
@@ -111,7 +109,7 @@ public class ResultTypeConfig extends Located implements Serializable {
      * After setting any values you need, call the {@link #build()} method to create the object.
      */
     public static final class Builder {
-        private ResultTypeConfig target;
+        protected ResultTypeConfig target;
 
         public Builder(String name, String className) {
             target = new ResultTypeConfig(name, className);
@@ -152,10 +150,14 @@ public class ResultTypeConfig extends Located implements Serializable {
         }
 
         public ResultTypeConfig build() {
-            target.params = Collections.unmodifiableMap(target.params);
+            embalmTarget();
             ResultTypeConfig result = target;
             target = new ResultTypeConfig(target);
             return result;
+        }
+
+        protected void embalmTarget() {
+            target.params = Collections.unmodifiableMap(target.params);
         }
     }
 }

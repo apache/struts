@@ -32,10 +32,9 @@ import java.util.Map;
  */
 public class InterceptorConfig extends Located implements Serializable {
 
-    Map<String,String> params;
-    String className;
-    String name;
-
+    protected Map<String,String> params;
+    protected String className;
+    protected String name;
 
     protected InterceptorConfig(String name, String className) {
         this.params = new LinkedHashMap<String,String>();
@@ -48,7 +47,6 @@ public class InterceptorConfig extends Located implements Serializable {
         this.className = orig.className;
         this.params = new LinkedHashMap<String,String>(orig.params);
     }
-
 
     public String getClassName() {
         return className;
@@ -106,7 +104,7 @@ public class InterceptorConfig extends Located implements Serializable {
      * After setting any values you need, call the {@link #build()} method to create the object.
      */
     public static final class Builder {
-        private InterceptorConfig target;
+        protected InterceptorConfig target;
 
         public Builder(String name, String className) {
             target = new InterceptorConfig(name, className);
@@ -142,10 +140,14 @@ public class InterceptorConfig extends Located implements Serializable {
         }
 
         public InterceptorConfig build() {
-            target.params = Collections.unmodifiableMap(target.params);
+            embalmTarget();
             InterceptorConfig result = target;
             target = new InterceptorConfig(target);
             return result;
+        }
+
+        protected void embalmTarget() {
+            target.params = Collections.unmodifiableMap(target.params);
         }
     }
 }

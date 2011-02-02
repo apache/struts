@@ -61,7 +61,7 @@ public class ConfigurationManager {
      */
     public synchronized Configuration getConfiguration() {
         if (configuration == null) {
-            setConfiguration(new DefaultConfiguration(defaultFrameworkBeanName));
+            setConfiguration(createConfiguration(defaultFrameworkBeanName));
             try {
                 configuration.reloadContainer(getContainerProviders());
             } catch (ConfigurationException e) {
@@ -73,6 +73,10 @@ public class ConfigurationManager {
         }
 
         return configuration;
+    }
+
+    protected Configuration createConfiguration(String beanName) {
+        return new DefaultConfiguration(beanName);
     }
 
     public synchronized void setConfiguration(Configuration configuration) {

@@ -321,14 +321,22 @@ public class Dispatcher {
         for (String file : files) {
             if (file.endsWith(".xml")) {
                 if ("xwork.xml".equals(file)) {
-                    configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
+                    configurationManager.addConfigurationProvider(createXmlConfigurationProvider(file, false));
                 } else {
-                    configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false, servletContext));
+                    configurationManager.addConfigurationProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
                 }
             } else {
                 throw new IllegalArgumentException("Invalid configuration file name");
             }
         }
+    }
+
+    protected XmlConfigurationProvider createXmlConfigurationProvider(String filename, boolean errorIfMissing) {
+        return new XmlConfigurationProvider(filename, errorIfMissing);
+    }
+
+    protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
+        return new StrutsXmlConfigurationProvider(filename, errorIfMissing, ctx);
     }
 
     private void init_CustomConfigurationProviders() {
@@ -402,7 +410,7 @@ public class Dispatcher {
     public void init() {
 
     	if (configurationManager == null) {
-    		configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
+    		configurationManager = createConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
     	}
 
         try {
@@ -428,6 +436,10 @@ public class Dispatcher {
                 LOG.error("Dispatcher initialization failed", ex);
             throw new StrutsException(ex);
         }
+    }
+
+    protected ConfigurationManager createConfigurationManager(String name) {
+        return new ConfigurationManager(name);
     }
 
     /**

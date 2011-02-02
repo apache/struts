@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.WildcardUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
@@ -36,8 +37,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -108,11 +109,27 @@ public class JSONResult implements Result {
      * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setExcludeProperties(String commaDelim) {
-        List<String> excludePatterns = JSONUtil.asList(commaDelim);
+        Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
         if (excludePatterns != null) {
             this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
             for (String pattern : excludePatterns) {
                 this.excludeProperties.add(Pattern.compile(pattern));
+            }
+        }
+    }
+
+    /**
+     * Sets a comma-delimited list of wildcard expressions to match properties
+     * that should be excluded from the JSON output.
+     * 
+     * @param commaDelim A comma-delimited list of wildcard patterns
+     */
+    public void setExcludeWildcards(String commaDelim) {
+        Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
+        if (excludePatterns != null) {
+            this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
+            for (String pattern : excludePatterns) {
+                this.excludeProperties.add(WildcardUtil.compileWildcardPattern(pattern));
             }
         }
     }
@@ -125,63 +142,23 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param commaDelim comma delimited include string patterns
+     * Sets a comma-delimited list of regular expressions to match properties
+     * that should be included in the JSON output.
+     *
+     * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setIncludeProperties(String commaDelim) {
-        List<String> includePatterns = JSONUtil.asList(commaDelim);
-        if (includePatterns != null) {
-            processIncludePatterns(includePatterns);
-        }
-    }
-
-    private void processIncludePatterns(List<String> includePatterns) {
-        includeProperties = new ArrayList<Pattern>(includePatterns.size());
-        Map<String, String> existingPatterns = new HashMap<String, String>();
-        for (String pattern : includePatterns) {
-            processPattern(existingPatterns, pattern);
-        }
-    }
-
-    private void processPattern(Map<String, String> existingPatterns, String pattern) {
-        // Compile a pattern for each *unique* "level" of the object
-        // hierarchy specified in the regex.
-        String[] patternPieces = pattern.split("\\\\\\.");
-
-        String patternExpr = "";
-        for (String patternPiece : patternPieces) {
-            patternExpr = processPatternPiece(existingPatterns, patternExpr, patternPiece);
-        }
-    }
-
-    private String processPatternPiece(Map<String, String> existingPatterns, String patternExpr, String patternPiece) {
-        if (patternExpr.length() > 0) {
-            patternExpr += "\\.";
-        }
-        patternExpr += patternPiece;
-
-        // Check for duplicate patterns so that there is no overlap.
-        if (!existingPatterns.containsKey(patternExpr)) {
-            existingPatterns.put(patternExpr, patternExpr);
-            if (isIndexedProperty(patternPiece)) {
-                addPattern(patternExpr.substring(0, patternExpr.lastIndexOf("\\[")));
-            }
-            addPattern(patternExpr);
-        }
-        return patternExpr;
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.REGEXP_PATTERN, JSONUtil.getIncludePatternData());
     }
 
     /**
-     * Add a pattern that does not have the indexed property matching (ie. list\[\d+\] becomes list).
+     * Sets a comma-delimited list of wildcard expressions to match properties
+     * that should be included in the JSON output.
+     *
+     * @param commaDelim A comma-delimited list of wildcard patterns
      */
-    private boolean isIndexedProperty(String patternPiece) {
-        return patternPiece.endsWith("\\]");
-    }
-
-    private void addPattern(String pattern) {
-        this.includeProperties.add(Pattern.compile(pattern));
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Adding include property expression:  " + pattern);
-        }
+    public void setIncludeWildcards(String commaDelim) {
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.WILDCARD_PATTERN, JSONUtil.getIncludePatternData());
     }
 
     public void execute(ActionInvocation invocation) throws Exception {

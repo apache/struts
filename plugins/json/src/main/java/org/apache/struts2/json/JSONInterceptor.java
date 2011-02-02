@@ -25,8 +25,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +47,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.WildcardUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -142,14 +145,6 @@ public class JSONInterceptor extends AbstractInterceptor {
                     rpcResponse.setError(new RPCError(message, RPCErrorCode.INVALID_PROCEDURE_CALL));
                     result = rpcResponse;
                 }
-
-                String json = JSONUtil.serialize(result, excludeProperties, includeProperties,
-                        ignoreHierarchy, excludeNullProperties);
-                json = addCallbackIfApplicable(request, json);
-                JSONUtil.writeJSONToResponse(new SerializationParams(response, this.defaultEncoding,
-                        this.wrapWithComments, json, true, false, noCache, -1, -1, prefix, contentType));
-
-                return Action.NONE;
             } else {
                 String message = "Request with content type of 'application/json-rpc' was received but SMD is "
                         + "not enabled for this interceptor. Set 'enableSMD' to true to enable it";
@@ -159,8 +154,8 @@ public class JSONInterceptor extends AbstractInterceptor {
                 result = rpcResponse;
             }
 
-            String json = JSONUtil.serialize(result, excludeProperties, includeProperties, ignoreHierarchy,
-                    excludeNullProperties);
+            String json = JSONUtil.serialize(result, excludeProperties, getIncludeProperties(),
+                    ignoreHierarchy, excludeNullProperties);
             json = addCallbackIfApplicable(request, json);
             boolean writeGzip = enableGZIP && JSONUtil.isGzipInRequest(request);
             JSONUtil.writeJSONToResponse(new SerializationParams(response, this.defaultEncoding,
@@ -400,7 +395,7 @@ public class JSONInterceptor extends AbstractInterceptor {
      *            A comma-delimited list of regular expressions
      */
     public void setExcludeProperties(String commaDelim) {
-        List<String> excludePatterns = JSONUtil.asList(commaDelim);
+        Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
         if (excludePatterns != null) {
             this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
             for (String pattern : excludePatterns) {
@@ -417,12 +412,44 @@ public class JSONInterceptor extends AbstractInterceptor {
      *            A comma-delimited list of regular expressions
      */
     public void setIncludeProperties(String commaDelim) {
-        List<String> includePatterns = JSONUtil.asList(commaDelim);
-        if (includePatterns != null) {
-            this.includeProperties = new ArrayList<Pattern>(includePatterns.size());
-            for (String pattern : includePatterns) {
-                this.includeProperties.add(Pattern.compile(pattern));
-            }
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.REGEXP_PATTERN, JSONUtil.getIncludePatternData());
+    }
+
+    /**
+     * Sets a comma-delimited list of wildcard expressions to match
+     * properties that should be included from the JSON output.  Since the
+     * patterns are only used for the JSON-RPC response, you only need to
+     * specify the elements inside your result object (and "result." is
+     * automatically prepended).
+     * 
+     * @param commaDelim
+     *            A comma-delimited list of regular expressions
+     */
+    public void setIncludeWildcards(String commaDelim) {
+        Map<String, Map<String, String>> includePatternData = JSONUtil.getIncludePatternData();
+        includePatternData.get(JSONUtil.PATTERN_PREFIX).put(JSONUtil.WILDCARD_PATTERN, "result.");
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.WILDCARD_PATTERN, includePatternData);
+
+        if (includeProperties != null) {
+            includeProperties.add(Pattern.compile("id"));
+            includeProperties.add(Pattern.compile("result"));
+            includeProperties.add(Pattern.compile("error"));
+            includeProperties.add(WildcardUtil.compileWildcardPattern("error.code"));
+        }
+    }
+
+    /**
+     * Returns the appropriate set of includes.
+     */
+    private List getIncludeProperties()
+    {
+        if (includeProperties != null && getDebug()) {
+            List<Pattern> list = new ArrayList<Pattern>(includeProperties);
+            list.add(WildcardUtil.compileWildcardPattern("error.*"));
+            return list;
+        }
+        else {
+            return includeProperties;
         }
     }
 

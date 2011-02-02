@@ -31,7 +31,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -41,6 +44,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.xwork.StringUtils;
 import org.apache.struts2.json.annotations.SMDMethod;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.WildcardUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -256,18 +261,10 @@ public class JSONUtil {
         }
     }
 
-    public static List<String> asList(String commaDelim) {
+    public static Set<String> asSet(String commaDelim) {
         if ((commaDelim == null) || (commaDelim.trim().length() == 0))
             return null;
-        List<String> list = new ArrayList<String>();
-        String[] split = commaDelim.split(",");
-        for (int i = 0; i < split.length; i++) {
-            String trimmed = split[i].trim();
-            if (trimmed.length() > 0) {
-                list.add(trimmed);
-            }
-        }
-        return list;
+        return TextParseUtil.commaDelimitedStringToSet(commaDelim);
     }
 
     /**
@@ -391,5 +388,104 @@ public class JSONUtil {
     public static boolean isGzipInRequest(HttpServletRequest request) {
         String header = request.getHeader("Accept-Encoding");
         return (header != null) && (header.indexOf("gzip") >= 0);
+    }
+
+    /* package */ static final String REGEXP_PATTERN = "regexp";
+    /* package */ static final String WILDCARD_PATTERN = "wildcard";
+    /* package */ static final String SPLIT_PATTERN = "split";
+    /* package */ static final String JOIN_STRING = "join";
+    /* package */ static final String ARRAY_BEGIN_STRING = "array-begin";
+    /* package */ static final String ARRAY_END_STRING = "array-end";
+    /* package */ static final String PATTERN_PREFIX = "pattern-prefix";
+
+    /* package */ static Map<String, Map<String, String>> getIncludePatternData()
+    {
+        Map<String, Map<String, String>> includePatternData = new HashMap<String, Map<String, String>>();
+
+        Map<String, String> data = new HashMap<String, String>();
+        data.put(REGEXP_PATTERN, "\\\\\\.");
+        data.put(WILDCARD_PATTERN, "\\.");
+        includePatternData.put(SPLIT_PATTERN, data);
+
+        data = new HashMap<String, String>();
+        data.put(REGEXP_PATTERN, "\\.");
+        data.put(WILDCARD_PATTERN, ".");
+        includePatternData.put(JOIN_STRING, data);
+
+        data = new HashMap<String, String>();
+        data.put(REGEXP_PATTERN, "\\[");
+        data.put(WILDCARD_PATTERN, "[");
+        includePatternData.put(ARRAY_BEGIN_STRING, data);
+
+        data = new HashMap<String, String>();
+        data.put(REGEXP_PATTERN, "\\]");
+        data.put(WILDCARD_PATTERN, "]");
+        includePatternData.put(ARRAY_END_STRING, data);
+
+        data = new HashMap<String, String>();
+        data.put(REGEXP_PATTERN, "");
+        data.put(WILDCARD_PATTERN, "");
+        includePatternData.put(PATTERN_PREFIX, data);
+
+        return includePatternData;
+    }
+
+    /* package */ static List<Pattern> processIncludePatterns(Set<String> includePatterns, String type, Map<String, Map<String, String>> includePatternData) {
+        if (includePatterns != null) {
+            List<Pattern> results = new ArrayList<Pattern>(includePatterns.size());
+            Map<String, String> existingPatterns = new HashMap<String, String>();
+            for (String pattern : includePatterns) {
+                processPattern(results, existingPatterns, pattern, type, includePatternData);
+            }
+            return results;
+        } else {
+            return null;
+        }
+    }
+
+    private static void processPattern(List<Pattern> results, Map<String, String> existingPatterns, String pattern, String type, Map<String, Map<String, String>> includePatternData) {
+        // Compile a pattern for each *unique* "level" of the object
+        // hierarchy specified in the regex.
+        String[] patternPieces = pattern.split(includePatternData.get(SPLIT_PATTERN).get(type));
+
+        String patternExpr = "";
+        for (String patternPiece : patternPieces) {
+            patternExpr = processPatternPiece(results, existingPatterns, patternExpr, patternPiece, type, includePatternData);
+        }
+    }
+
+    private static String processPatternPiece(List<Pattern> results, Map<String, String> existingPatterns, String patternExpr, String patternPiece, String type, Map<String, Map<String, String>> includePatternData) {
+        if (patternExpr.length() > 0) {
+            patternExpr += includePatternData.get(JOIN_STRING).get(type);
+        }
+        patternExpr += patternPiece;
+
+        // Check for duplicate patterns so that there is no overlap.
+        if (!existingPatterns.containsKey(patternExpr)) {
+            existingPatterns.put(patternExpr, patternExpr);
+            if (isIndexedProperty(patternPiece, type, includePatternData)) {
+                addPattern(results, patternExpr.substring(0, patternExpr.lastIndexOf(includePatternData.get(ARRAY_BEGIN_STRING).get(type))), type, includePatternData);
+            }
+            addPattern(results, patternExpr, type, includePatternData);
+        }
+        return patternExpr;
+    }
+
+    /**
+     * Add a pattern that does not have the indexed property matching (ie. list\[\d+\] becomes list).
+     */
+    private static boolean isIndexedProperty(String patternPiece, String type, Map<String, Map<String, String>> includePatternData) {
+        return patternPiece.endsWith(includePatternData.get(ARRAY_END_STRING).get(type));
+    }
+
+    private static void addPattern(List<Pattern> results, String pattern, String type, Map<String, Map<String, String>> includePatternData) {
+        pattern = includePatternData.get(PATTERN_PREFIX).get(type) + pattern;
+        results.add(
+            type == REGEXP_PATTERN ?
+                Pattern.compile(pattern) :
+                WildcardUtil.compileWildcardPattern(pattern));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding include " + (type == REGEXP_PATTERN ? "property" : "wildcard") + " expression:  " + pattern);
+        }
     }
 }

@@ -226,7 +226,11 @@
         <directory>../plugins/embeddedjsp/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin</outputDirectory>
       </fileSet>
-      
+      <fileSet>
+        <directory>../plugins/gxp/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-gxp-plugin</outputDirectory>
+      </fileSet>
+
     <!-- bundles -->
     <fileSet>
        <directory>../bundles/admin/target/site</directory>

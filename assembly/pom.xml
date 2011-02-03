@@ -189,6 +189,13 @@
                         <version>${version}</version>
                         <classifier>jdk14</classifier>
                     </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-gxp-plugin</artifactId>
+                        <version>${version}</version>
+                        <classifier>jdk14</classifier>
+                    </dependency>
             </dependencies>
         </profile>
     </profiles>
@@ -453,6 +460,12 @@
             <version>${version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-gxp-plugin</artifactId>
+            <version>${version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-plugin</artifactId>

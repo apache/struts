@@ -27,6 +27,7 @@ public class RPCResponse {
     private String id;
     private Object result;
     private RPCError error;
+    private String debug;
 
     public String getId() {
         return id;
@@ -50,5 +51,13 @@ public class RPCResponse {
 
     public void setError(RPCError error) {
         this.error = error;
+    }
+
+    public String getDebug() {
+        return debug;
+    }
+
+    public void setDebug(String debugInfo) {
+        this.debug = debug;
     }
 }

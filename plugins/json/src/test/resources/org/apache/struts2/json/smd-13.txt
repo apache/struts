@@ -1,4 +1,5 @@
 {
+    "debug": null,
     "error": {
         "code":100,
         "message": "'method' is required for JSON RPC",

@@ -277,7 +277,20 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             String value = filterConfig.getInitParameter(name);
             params.put(name, value);
         }
-        return new Dispatcher(filterConfig.getServletContext(), params);
+        return createDispatcher(filterConfig.getServletContext(), params);
+    }
+
+    /**
+     * Create a default {@link Dispatcher} that subclasses can override
+     * with a custom Dispatcher, if needed.  Called by
+     * createDispatcher(FilterConfig).
+     *
+     * @param ctx ServletContext
+     * @param params parameters from FilterConfig
+     * @return Initialized Dispatcher
+     */
+    protected Dispatcher createDispatcher(ServletContext ctx, Map<String, String> params) {
+        return new Dispatcher(ctx, params);
     }
 
     /**

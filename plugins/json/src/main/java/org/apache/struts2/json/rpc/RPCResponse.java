@@ -57,7 +57,7 @@ public class RPCResponse {
         return debug;
     }
 
-    public void setDebug(String debugInfo) {
+    public void setDebug(String debug) {
         this.debug = debug;
     }
 }

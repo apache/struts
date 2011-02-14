@@ -390,13 +390,12 @@ public class JSONUtil {
         return (header != null) && (header.indexOf("gzip") >= 0);
     }
 
-    /* package */ static final String REGEXP_PATTERN = "regexp";
-    /* package */ static final String WILDCARD_PATTERN = "wildcard";
+    public static final String REGEXP_PATTERN = "regexp";
+    public static final String WILDCARD_PATTERN = "wildcard";
     /* package */ static final String SPLIT_PATTERN = "split";
     /* package */ static final String JOIN_STRING = "join";
     /* package */ static final String ARRAY_BEGIN_STRING = "array-begin";
     /* package */ static final String ARRAY_END_STRING = "array-end";
-    /* package */ static final String PATTERN_PREFIX = "pattern-prefix";
 
     /* package */ static Map<String, Map<String, String>> getIncludePatternData()
     {
@@ -422,12 +421,13 @@ public class JSONUtil {
         data.put(WILDCARD_PATTERN, "]");
         includePatternData.put(ARRAY_END_STRING, data);
 
-        data = new HashMap<String, String>();
-        data.put(REGEXP_PATTERN, "");
-        data.put(WILDCARD_PATTERN, "");
-        includePatternData.put(PATTERN_PREFIX, data);
-
         return includePatternData;
+    }
+
+	private static final Map<String, Map<String, String>> defaultIncludePatternData = getIncludePatternData();
+
+    public static List<Pattern> processIncludePatterns(Set<String> includePatterns, String type) {
+        return processIncludePatterns(includePatterns, type, defaultIncludePatternData);
     }
 
     /* package */ static List<Pattern> processIncludePatterns(Set<String> includePatterns, String type, Map<String, Map<String, String>> includePatternData) {
@@ -479,7 +479,6 @@ public class JSONUtil {
     }
 
     private static void addPattern(List<Pattern> results, String pattern, String type, Map<String, Map<String, String>> includePatternData) {
-        pattern = includePatternData.get(PATTERN_PREFIX).get(type) + pattern;
         results.add(
             type == REGEXP_PATTERN ?
                 Pattern.compile(pattern) :

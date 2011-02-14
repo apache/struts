@@ -148,7 +148,7 @@ public class JSONResult implements Result {
      * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setIncludeProperties(String commaDelim) {
-        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.REGEXP_PATTERN, JSONUtil.getIncludePatternData());
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.REGEXP_PATTERN);
     }
 
     /**
@@ -158,7 +158,7 @@ public class JSONResult implements Result {
      * @param commaDelim A comma-delimited list of wildcard patterns
      */
     public void setIncludeWildcards(String commaDelim) {
-        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.WILDCARD_PATTERN, JSONUtil.getIncludePatternData());
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.WILDCARD_PATTERN);
     }
 
     public void execute(ActionInvocation invocation) throws Exception {

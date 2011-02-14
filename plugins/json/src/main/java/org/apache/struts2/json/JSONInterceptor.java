@@ -189,8 +189,8 @@ public class JSONInterceptor extends AbstractInterceptor {
         // could be a numeric value
         response.setId(id.toString());
 
-        // the map is going to have: 'params', 'method' and 'id' (what is the id
-        // for?)
+        // the map is going to have: 'params', 'method' and 'id' (for the
+        // client to identify the response)
         Class clazz = object.getClass();
 
         // parameters
@@ -405,6 +405,23 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     /**
+     * Sets a comma-delimited list of wildcard expressions to match
+     * properties that should be excluded from the JSON output.
+     * 
+     * @param commaDelim
+     *            A comma-delimited list of wildcard expressions
+     */
+    public void setExcludeWildcards(String commaDelim) {
+        Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
+        if (excludePatterns != null) {
+            this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
+            for (String pattern : excludePatterns) {
+                this.excludeProperties.add(WildcardUtil.compileWildcardPattern(pattern));
+            }
+        }
+    }
+
+    /**
      * Sets a comma-delimited list of regular expressions to match properties
      * that should be included from the JSON output.
      * 
@@ -412,24 +429,21 @@ public class JSONInterceptor extends AbstractInterceptor {
      *            A comma-delimited list of regular expressions
      */
     public void setIncludeProperties(String commaDelim) {
-        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.REGEXP_PATTERN, JSONUtil.getIncludePatternData());
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.REGEXP_PATTERN);
     }
 
     /**
      * Sets a comma-delimited list of wildcard expressions to match
-     * properties that should be included from the JSON output.  Since the
-     * patterns are only used for the JSON-RPC response, you only need to
-     * specify the elements inside your result object (and "result." is
-     * automatically prepended).
+     * properties that should be included from the JSON output.  The
+     * standard boilerplate (id, error, debug) are automatically included,
+     * as appropriate, so you only need to provide patterns for the
+     * contents of "result".
      * 
      * @param commaDelim
-     *            A comma-delimited list of regular expressions
+     *            A comma-delimited list of wildcard expressions
      */
     public void setIncludeWildcards(String commaDelim) {
-        Map<String, Map<String, String>> includePatternData = JSONUtil.getIncludePatternData();
-        includePatternData.get(JSONUtil.PATTERN_PREFIX).put(JSONUtil.WILDCARD_PATTERN, "result.");
-        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.WILDCARD_PATTERN, includePatternData);
-
+        includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet(commaDelim), JSONUtil.WILDCARD_PATTERN);
         if (includeProperties != null) {
             includeProperties.add(Pattern.compile("id"));
             includeProperties.add(Pattern.compile("result"));
@@ -439,16 +453,17 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Returns the appropriate set of includes.
+     * Returns the appropriate set of includes, based on debug setting.
+     * Derived classes can override if there are additional, custom
+     * debug-only parameters.
      */
-    private List getIncludeProperties()
-    {
+    protected List getIncludeProperties() {
         if (includeProperties != null && getDebug()) {
             List<Pattern> list = new ArrayList<Pattern>(includeProperties);
+            list.add(Pattern.compile("debug"));
             list.add(WildcardUtil.compileWildcardPattern("error.*"));
             return list;
-        }
-        else {
+        } else {
             return includeProperties;
         }
     }

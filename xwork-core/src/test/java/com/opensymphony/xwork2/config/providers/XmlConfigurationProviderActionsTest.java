@@ -175,8 +175,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         // assertions
         assertEquals(1, actionConfigs.size());
         assertEquals(barWithPackageDefaultClassRefConfig, actionConfigs.get("Bar"));
-
-
     }
 
     public void testDefaultActionClass() throws Exception {
@@ -201,7 +199,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         // assertions
         assertEquals(7, actionConfigs.size());
         assertEquals(barWithoutClassNameConfig, actionConfigs.get("BarWithoutClassName"));
-
     }
 
 

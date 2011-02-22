@@ -5,7 +5,7 @@
 
 <struts>
 
-    <package name="example" namespace="/example" extends="struts-default">
+    <package name="example" namespace="/example" extends="default">
 
         <action name="HelloWorld" class="example.HelloWorld">
             <result>/example/HelloWorld.jsp</result>

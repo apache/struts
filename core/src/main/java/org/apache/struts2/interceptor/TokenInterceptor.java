@@ -21,16 +21,12 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.Map;
-
-import org.apache.struts2.util.TokenHelper;
-import org.apache.struts2.ServletActionContext;
-
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.util.TokenHelper;
 
 import javax.servlet.http.HttpSession;
 

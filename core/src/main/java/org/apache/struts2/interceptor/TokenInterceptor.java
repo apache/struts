@@ -140,9 +140,8 @@ public class TokenInterceptor extends MethodFilterInterceptor {
             if (!TokenHelper.validToken()) {
                 return handleInvalidToken(invocation);
             }
-
-            return handleValidToken(invocation);
         }
+        return handleValidToken(invocation);
     }
 
     /**

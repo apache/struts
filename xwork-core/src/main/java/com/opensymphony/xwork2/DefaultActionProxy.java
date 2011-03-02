@@ -23,11 +23,11 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -74,10 +74,10 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 			LOG.debug("Creating an DefaultActionProxy for namespace " + namespace + " and action name " + actionName);
 		}
 
-		this.actionName = actionName;
-		this.namespace = namespace;
-		this.executeResult = executeResult;
-        this.method = methodName;
+        this.actionName = StringEscapeUtils.escapeHtml(actionName);
+        this.namespace = namespace;
+        this.executeResult = executeResult;
+        this.method = StringEscapeUtils.escapeJavaScript(StringEscapeUtils.escapeHtml(methodName));
     }
     
     @Inject

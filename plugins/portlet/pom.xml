@@ -59,6 +59,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
         <!-- Velocity -->
         <dependency>
             <groupId>org.apache.velocity</groupId>

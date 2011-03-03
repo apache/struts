@@ -150,88 +150,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <shadedArtifactId>xwork-core</shadedArtifactId>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>junit:junit</exclude>
-                                    <exclude>commons-logging:commons-logging</exclude>
-                                    <exclude>opensymphony:ognl</exclude>
-                                    <exclude>ognl:ognl</exclude>
-                                    <exclude>javassist:javassist</exclude>
-                                    <exclude>jboss:javassist</exclude>
-                                    <exclude>org.springframework:spring-core</exclude>
-                                    <exclude>org.springframework:spring-aop</exclude>
-                                    <exclude>org.springframework:spring-aspects</exclude>
-                                    <exclude>org.springframework:spring-beans</exclude>
-                                    <exclude>org.springframework:spring-context</exclude>
-                                    <exclude>org.springframework:spring-context-support</exclude>
-                                    <exclude>org.springframework:spring-web</exclude>
-                                    <exclude>org.springframework:spring-test</exclude>
-                                    <exclude>mockobjects:mockobjects-core</exclude>
-                                    <exclude>org.easymock:easymock</exclude>
-                                    <exclude>aopalliance:aopalliance</exclude>
-                                    <exclude>aspectwerkz:aspectwerkz-core</exclude>
-                                    <exclude>org.aspectj:aspectjrt</exclude>
-                                    <exclude>org.aspectj:aspectjweaver</exclude>
-                                    <exclude>cglib:cglib</exclude>
-                                    <exclude>cglib:cglib-nodep</exclude>
-                                    <exclude>asm:asm-util</exclude>
-                                    <exclude>org.testng:testng:jdk15</exclude>
-                                </excludes>
-                            </artifactSet>
-                            <filters>
-                                <filter>
-                                    <artifact>commons-lang:commons-lang</artifact>
-                                    <includes>
-                                        <include>org/apache/commons/lang/StringUtils.class</include>
-                                        <include>org/apache/commons/lang/math/NumberUtils.class</include>
-                                        <include>org/apache/commons/lang/ObjectUtils*.class</include>
-                                        <include>org/apache/commons/lang/StringEscapeUtils.class</include>
-                                        <include>org/apache/commons/lang/exception/NestableRuntimeException.class</include>
-                                        <include>org/apache/commons/lang/exception/Nestable.class</include>
-                                        <include>org/apache/commons/lang/Entities*class</include>
-                                        <include>org/apache/commons/lang/UnhandledException.class</include>
-                                        <include>org/apache/commons/lang/IntHashMap*class</include>
-                                    </includes>
-                                    <artifact>commons-io:commons-io</artifact>
-                                    <includes>
-                                        <include>org/apache/commons/io/FileUtils.class</include>
-                                    </includes>
-                                </filter>
-                            </filters>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.objectweb.asm</pattern>
-                                    <shadedPattern>org.objectweb.asm.xwork</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.apache.commons.lang</pattern>
-                                    <shadedPattern>org.apache.commons.lang.xwork</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.apache.commons.io</pattern>
-                                    <shadedPattern>org.apache.commons.io.xwork</shadedPattern>
-                                </relocation>
-                            </relocations>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
@@ -262,7 +180,6 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -276,12 +193,10 @@
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm-commons</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

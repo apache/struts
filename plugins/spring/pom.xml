@@ -72,9 +72,13 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-jci-fam</artifactId>
-            <version>1.0</version>
             <optional>true</optional>
         </dependency>
 
@@ -82,13 +86,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-            <version>3.8.2</version>
         </dependency>
 		
 		 <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>2.4</version>
             <scope>test</scope>
         </dependency>
 

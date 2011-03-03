@@ -41,6 +41,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>3.1.2</version>

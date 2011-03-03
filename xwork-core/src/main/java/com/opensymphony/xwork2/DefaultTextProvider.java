@@ -56,7 +56,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
         return text;
     }
 
-    public String getText(String key, List<Object> args) {
+    public String getText(String key, List<?> args) {
         Object[] params;
         if (args != null) {
             params = args.toArray();
@@ -78,7 +78,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
         return LocalizedTextUtil.findDefaultText(key, ActionContext.getContext().getLocale(), params);
     }
 
-    public String getText(String key, String defaultValue, List<Object> args) {
+    public String getText(String key, String defaultValue, List<?> args) {
         String text = getText(key, args);
         if(text == null && defaultValue == null) {
             defaultValue = key;
@@ -124,7 +124,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
         return getText(key, defaultValue, args);
     }
 
-    public String getText(String key, String defaultValue, List<Object> args, ValueStack stack) {
+    public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         //we're not using the value stack here
         return getText(key, defaultValue, args);
     }

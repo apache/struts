@@ -98,7 +98,7 @@ public interface TextProvider {
      * @param args a list args to be used in a {@link java.text.MessageFormat} message
      * @return the message as found in the resource bundle, or null if none is found.
      */
-    String getText(String key, List<Object> args);
+    String getText(String key, List<?> args);
 
     /**
      * Gets a message based on a key using the supplied args, as defined in
@@ -120,7 +120,7 @@ public interface TextProvider {
      * @param args         a list args to be used in a {@link java.text.MessageFormat} message
      * @return the message as found in the resource bundle, or defaultValue if none is found
      */
-    String getText(String key, String defaultValue, List<Object> args);
+    String getText(String key, String defaultValue, List<?> args);
 
     /**
      * Gets a message based on a key using the supplied args, as defined in
@@ -146,7 +146,7 @@ public interface TextProvider {
      * @param stack        the value stack to use for finding the text
      * @return the message as found in the resource bundle, or defaultValue if none is found
      */
-    String getText(String key, String defaultValue, List<Object> args, ValueStack stack);
+    String getText(String key, String defaultValue, List<?> args, ValueStack stack);
 
     /**
      * Gets a message based on a key using the supplied args, as defined in

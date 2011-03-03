@@ -118,7 +118,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return textProvider.getText(aTextName, defaultValue, obj);
     }
 
-    public String getText(String aTextName, List<Object> args) {
+    public String getText(String aTextName, List<?> args) {
         return textProvider.getText(aTextName, args);
     }
 
@@ -126,7 +126,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return textProvider.getText(key, args);
     }
 
-    public String getText(String aTextName, String defaultValue, List<Object> args) {
+    public String getText(String aTextName, String defaultValue, List<?> args) {
         return textProvider.getText(aTextName, defaultValue, args);
     }
 
@@ -138,7 +138,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return textProvider.getTexts(aBundleName);
     }
 
-    public String getText(String key, String defaultValue, List<Object> args, ValueStack stack) {
+    public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         return textProvider.getText(key, defaultValue, args, stack);
     }
 

@@ -73,7 +73,7 @@ public class TestAction extends ActionSupport {
 
     /** This is the method invoked by the {@link org.apache.struts2.util.TextProviderHelper}.
      * Returns the test value if defined otherwise delegates to the default TextProvider */
-    public String getText(String key, String defaultValue, List args, ValueStack stack) {
+    public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         if (this.texts.containsKey(key)) {
             return this.texts.get(key);
         } else {

@@ -163,7 +163,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param args      a List of args to be used in a MessageFormat message
      * @return value of named text
      */
-    public String getText(String key, List<Object> args) {
+    public String getText(String key, List<?> args) {
         return getText(key, key, args);
     }
 
@@ -196,7 +196,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param args         a List of args to be used in a MessageFormat message
      * @return value of named text
      */
-    public String getText(String key, String defaultValue, List<Object> args) {
+    public String getText(String key, String defaultValue, List<?> args) {
         Object[] argsArray = ((args != null && !args.equals(Collections.emptyList())) ? args.toArray() : null);
         if (clazz != null) {
             return LocalizedTextUtil.findText(clazz, key, getLocale(), defaultValue, argsArray);
@@ -238,7 +238,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param stack        the value stack to use for finding the text
      * @return the message as found in the resource bundle, or defaultValue if none is found
      */
-    public String getText(String key, String defaultValue, List<Object> args, ValueStack stack) {
+    public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         Object[] argsArray = ((args != null) ? args.toArray() : null);
         Locale locale;
         if (stack == null){

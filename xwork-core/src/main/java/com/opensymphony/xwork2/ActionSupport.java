@@ -108,7 +108,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         return getTextProvider().getText(aTextName, defaultValue, obj);
     }
 
-    public String getText(String aTextName, List<Object> args) {
+    public String getText(String aTextName, List<?> args) {
         return getTextProvider().getText(aTextName, args);
     }
 
@@ -116,7 +116,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         return getTextProvider().getText(key, args);
     }
 
-    public String getText(String aTextName, String defaultValue, List<Object> args) {
+    public String getText(String aTextName, String defaultValue, List<?> args) {
         return getTextProvider().getText(aTextName, defaultValue, args);
     }
 
@@ -124,7 +124,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         return getTextProvider().getText(key, defaultValue, args);
     }
 
-    public String getText(String key, String defaultValue, List<Object> args, ValueStack stack) {
+    public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         return getTextProvider().getText(key, defaultValue, args, stack);
     }
 

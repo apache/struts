@@ -111,7 +111,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return
      * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, java.util.List)}
      */
-    public String getText(String key, List<Object> args) {
+    public String getText(String key, List<?> args) {
         return getText(key, key, args);
     }
 
@@ -139,7 +139,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return
      * @see {@link com.opensymphony.xwork2.TextProvider#getText#getText(String, String, java.util.List)}
      */
-    public String getText(String key, String defaultValue, List<Object> args) {
+    public String getText(String key, String defaultValue, List<?> args) {
         // if there's one text provider that gives us a msg not the same as defaultValue
         // for this key, we are ok, else try the next
         // text provider
@@ -186,9 +186,9 @@ public class CompositeTextProvider implements TextProvider {
      * @param args
      * @param stack
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String, java.util.List, com.opensymphony.xwork2.util.OgnlValueStack)}
+     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String, java.util.List, com.opensymphony.xwork2.util.ValueStack)}
      */
-    public String getText(String key, String defaultValue, List<Object> args, ValueStack stack) {
+    public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         // if there's one text provider that gives us a msg not the same as defaultValue
         // for this key, we are ok, else try the next
         // text provider

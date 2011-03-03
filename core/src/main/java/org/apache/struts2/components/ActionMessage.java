@@ -21,17 +21,15 @@
 
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.commons.lang.xwork.StringUtils;
 
-import com.opensymphony.xwork2.util.ValueStack;
-
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->

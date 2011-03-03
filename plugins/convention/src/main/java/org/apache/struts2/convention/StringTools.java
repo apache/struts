@@ -20,11 +20,10 @@
  */
 package org.apache.struts2.convention;
 
+import com.opensymphony.xwork2.config.ConfigurationException;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.opensymphony.xwork2.config.ConfigurationException;
-import org.apache.commons.lang.xwork.StringUtils;
 
 /**
  * <p>

@@ -21,21 +21,19 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.util.Map;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.views.util.UrlHelper;
-import org.apache.commons.lang.xwork.ObjectUtils;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.util.Map;
 
 
 /**

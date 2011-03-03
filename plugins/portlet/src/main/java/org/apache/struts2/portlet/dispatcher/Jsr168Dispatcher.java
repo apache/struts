@@ -62,7 +62,7 @@ import org.apache.struts2.portlet.servlet.PortletServletContext;
 import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
 import org.apache.struts2.util.AttributeMap;
-import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;

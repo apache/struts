@@ -23,7 +23,7 @@ package org.apache.struts2.portlet.util;
 
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;

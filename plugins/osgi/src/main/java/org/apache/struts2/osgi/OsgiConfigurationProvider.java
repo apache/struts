@@ -27,26 +27,22 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.osgi.loaders.VelocityBundleResourceLoader;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.Velocity;
-import org.apache.commons.lang.xwork.StringUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleListener;
 import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 
 import javax.servlet.ServletContext;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 

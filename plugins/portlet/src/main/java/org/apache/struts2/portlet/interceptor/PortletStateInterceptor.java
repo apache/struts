@@ -21,21 +21,19 @@
 
 package org.apache.struts2.portlet.interceptor;
 
-import java.util.Map;
-
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
-import org.apache.commons.lang.xwork.StringUtils;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
+
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import java.util.Map;
 
 public class PortletStateInterceptor extends AbstractInterceptor implements PortletActionConstants {
 

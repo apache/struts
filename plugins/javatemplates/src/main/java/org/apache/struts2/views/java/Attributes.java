@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.views.java;
 
-import org.apache.commons.lang.xwork.StringEscapeUtils;
-import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.LinkedHashMap;
 

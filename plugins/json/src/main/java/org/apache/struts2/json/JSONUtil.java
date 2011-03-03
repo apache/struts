@@ -20,6 +20,15 @@
  */
 package org.apache.struts2.json;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.WildcardUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.json.annotations.SMDMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,24 +39,13 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.xwork.StringUtils;
-import org.apache.struts2.json.annotations.SMDMethod;
-
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Wrapper for JSONWriter with some utility methods.

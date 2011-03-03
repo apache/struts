@@ -20,14 +20,13 @@
  */
 package org.apache.struts2.util;
 
+import com.opensymphony.xwork2.util.PatternMatcher;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.xwork.StringUtils;
-
-import com.opensymphony.xwork2.util.PatternMatcher;
 
 /**
  * Allows regular expressions to be used in action names. The regular expressions

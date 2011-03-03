@@ -21,18 +21,15 @@
 
 package org.apache.struts2.components;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.StrutsConstants;
-import org.apache.commons.lang.xwork.StringEscapeUtils;
-
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->

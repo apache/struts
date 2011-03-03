@@ -21,7 +21,7 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>

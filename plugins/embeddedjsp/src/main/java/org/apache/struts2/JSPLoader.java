@@ -27,20 +27,26 @@ import com.opensymphony.xwork2.util.finder.UrlSet;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.xwork.ObjectUtils;
-import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.compiler.MemoryClassLoader;
 import org.apache.struts2.compiler.MemoryJavaFileObject;
 import org.apache.struts2.jasper.JasperException;
 import org.apache.struts2.jasper.JspC;
-import org.apache.struts2.jasper.compiler.JspUtil;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspPage;
-import javax.servlet.jsp.HttpJspPage;
-import javax.tools.*;
+import javax.tools.DiagnosticCollector;
+import javax.tools.FileObject;
+import javax.tools.ForwardingJavaFileManager;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -48,9 +54,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Uses jasper to extract a JSP from the classpath to a file and compile it. The classpath used for

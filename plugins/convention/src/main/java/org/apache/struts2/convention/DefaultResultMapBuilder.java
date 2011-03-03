@@ -20,6 +20,26 @@
  */
 package org.apache.struts2.convention;
 
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
+import com.opensymphony.xwork2.util.finder.ResourceFinder;
+import com.opensymphony.xwork2.util.finder.Test;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -27,28 +47,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.ServletContext;
-
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
-import org.apache.commons.lang.xwork.StringUtils;
-import org.apache.commons.lang.xwork.ObjectUtils;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.finder.ResourceFinder;
-import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p>

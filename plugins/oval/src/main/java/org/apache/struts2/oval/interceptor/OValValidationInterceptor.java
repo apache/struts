@@ -20,34 +20,30 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.validator.ValidatorContext;
-import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.ValueStack;
-import net.sf.oval.Validator;
+import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
+import com.opensymphony.xwork2.validator.ValidatorContext;
 import net.sf.oval.ConstraintViolation;
+import net.sf.oval.Validator;
 import net.sf.oval.configuration.Configurer;
 import net.sf.oval.context.FieldContext;
-import net.sf.oval.context.OValContext;
 import net.sf.oval.context.MethodReturnValueContext;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
-
+import net.sf.oval.context.OValContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.oval.annotation.Profiles;
-import org.apache.commons.lang.xwork.StringUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /*
  This interceptor provides validation using the OVal validation framework

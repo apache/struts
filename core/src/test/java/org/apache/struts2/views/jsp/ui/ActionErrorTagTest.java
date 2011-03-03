@@ -21,14 +21,17 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.*;
-
-import org.apache.struts2.views.jsp.AbstractUITagTest;
-import org.apache.struts2.TestAction;
-import org.apache.commons.lang.xwork.StringUtils;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ActionErrorTag test case.

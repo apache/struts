@@ -21,8 +21,8 @@
 package org.apache.struts2.views.java;
 
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.commons.lang.xwork.StringUtils;
-import org.apache.commons.lang.xwork.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.Writer;

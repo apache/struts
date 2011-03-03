@@ -35,15 +35,22 @@ import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.ResolverUtil.ClassTest;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.ServletContext;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
-
-import org.apache.commons.lang.xwork.StringUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * ClasspathPackageProvider loads the configuration

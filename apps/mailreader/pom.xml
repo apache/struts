@@ -48,7 +48,7 @@
         </dependency>
 
         <dependency>
-           <groupId>${pom.groupId}</groupId>
+           <groupId>${project.groupId}</groupId>
            <artifactId>struts-mailreader-dao</artifactId>
            <version>1.3.5</version>
         </dependency>

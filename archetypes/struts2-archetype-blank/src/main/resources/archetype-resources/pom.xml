@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
-    <version>${version}</version>
+    <version>${project.version}</version>
     <packaging>war</packaging>
     <name>Struts 2 Blank Webapp</name>
 

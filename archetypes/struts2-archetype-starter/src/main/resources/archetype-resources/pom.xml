@@ -5,7 +5,7 @@
 	<groupId>${groupId}</groupId>
 	<artifactId>${artifactId}</artifactId>
 	<packaging>war</packaging>
-	<version>${version}</version>
+	<version>${project.version}</version>
 	<name>Struts 2 Starter</name>
 	<url>http://www.myComp.com</url>
 	<description>Struts 2 Starter</description>

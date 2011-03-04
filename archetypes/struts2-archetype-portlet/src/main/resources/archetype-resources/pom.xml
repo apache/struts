@@ -7,7 +7,7 @@
     <artifactId>${artifactId}</artifactId>
     <packaging>war</packaging>
     <name>My Portlet Application</name>
-    <version>${version}</version>
+    <version>${project.version}</version>
 
     <properties>
         <struts2.version>${project.version}</struts2.version>

@@ -5,7 +5,7 @@
 
    <groupId>${groupId}</groupId>
    <artifactId>${artifactId}</artifactId>
-   <version>${version}</version>
+   <version>${project.version}</version>
    <name>Struts 2 Plugin</name>
 
     <dependencies>

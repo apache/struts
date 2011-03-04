@@ -21,25 +21,11 @@
 
 package org.apache.struts2.views.freemarker;
 
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Locale;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
-import org.apache.struts2.views.util.ResourceUtil;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -47,6 +33,19 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.views.util.ResourceUtil;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Locale;
 
 
 /**
@@ -330,9 +329,17 @@ public class FreemarkerResult extends StrutsResultSupport {
 
                 response.setContentType(contentType);
             }
+        } else if(isInsideActionTag()){
+             //trigger com.opensymphony.module.sitemesh.filter.PageResponseWrapper.deactivateSiteMesh()
+            response.setContentType(response.getContentType());
         }
 
         return true;
+    }
+
+    private boolean isInsideActionTag() {
+        Object attribute = ServletActionContext.getRequest().getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION);
+        return (Boolean) ObjectUtils.defaultIfNull(attribute, Boolean.FALSE);
     }
 
     /**

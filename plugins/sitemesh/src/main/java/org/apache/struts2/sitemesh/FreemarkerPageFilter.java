@@ -21,16 +21,16 @@
 
 package org.apache.struts2.sitemesh;
 
-import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
-import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
-import com.opensymphony.sitemesh.DecoratorSelector;
-import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.sitemesh.DecoratorSelector;
+import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
+import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.xwork2.inject.Inject;
-
-import javax.servlet.*;
-
 import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 
 /**
  * Core Filter for integrating SiteMesh + Freemarker into
@@ -38,17 +38,27 @@ import org.apache.struts2.views.freemarker.FreemarkerManager;
  */
 public class FreemarkerPageFilter extends SiteMeshFilter {
 
-    @Inject(required=false)
+    /*
+      * @see com.opensymphony.module.sitemesh.Factory.SITEMESH_FACTORY
+      */
+    private static final String SITEMESH_FACTORY = "sitemesh.factory";
+
+    @Inject(required = false)
     public static void setFreemarkerManager(FreemarkerManager mgr) {
         OldDecorator2NewStrutsFreemarkerDecorator.setFreemarkerManager(mgr);
     }
 
     private FilterConfig filterConfig;
 
-     public void init(FilterConfig filterConfig) {
-         this.filterConfig = filterConfig;
+    public void init(FilterConfig filterConfig) {
+        this.filterConfig = filterConfig;
         super.init(filterConfig);
-     }
+        ServletContext sc = filterConfig.getServletContext();
+        Factory instance = (Factory) sc.getAttribute(SITEMESH_FACTORY);
+        if (instance == null) {
+            sc.setAttribute(SITEMESH_FACTORY, new StrutsSiteMeshFactory(new Config(filterConfig)));
+        }
+    }
 
     protected DecoratorSelector initDecoratorSelector(SiteMeshWebAppContext webAppContext) {
         Factory factory = Factory.getInstance(new Config(filterConfig));

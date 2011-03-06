@@ -21,7 +21,8 @@
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -34,9 +35,9 @@
     <name>Blank Webapp</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/blank/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/blank/</url>
     </scm>
 
     <dependencies>
@@ -69,10 +70,15 @@
                 <version>6.0.1</version>
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanTargets>
+                        <scanTarget>src/main/webapp/WEB-INF</scanTarget>
+                        <scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
+                        <scanTarget>src/main/resources/struts.xml</scanTarget>
+                        <scanTarget>src/main/resources/example.xml</scanTarget>
+                    </scanTargets>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 
 </project>

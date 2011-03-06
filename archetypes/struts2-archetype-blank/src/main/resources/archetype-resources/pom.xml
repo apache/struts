@@ -84,6 +84,12 @@
                 <version>6.1.21</version>
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanTargets>
+                        <scanTarget>src/main/webapp/WEB-INF</scanTarget>
+                        <scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
+                        <scanTarget>src/main/resources/struts.xml</scanTarget>
+                        <scanTarget>src/main/resources/example.xml</scanTarget>
+                    </scanTargets>
                 </configuration>
             </plugin>
         </plugins>

@@ -110,6 +110,12 @@
                                     <value>HelloPortlet</value>
                                 </systemProperty>
                             </systemProperties>
+                            <scanIntervalSeconds>10</scanIntervalSeconds>
+                            <scanTargets>
+                                <scanTarget>src/main/webapp/WEB-INF</scanTarget>
+                                <scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
+                                <scanTarget>src/main/resources/struts.xml</scanTarget>
+                            </scanTargets>
                         </configuration>
                         <dependencies>
                             <dependency>

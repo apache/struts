@@ -28,7 +28,14 @@ import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * AnnotationActionValidatorManager is the entry point into XWork's annotations-based validator framework.
@@ -68,18 +75,17 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     public List<Validator> getValidators(Class clazz, String context, String method) {
         final String validatorKey = buildValidatorKey(clazz);
         final List<ValidatorConfig> cfgs;
-        synchronized (validatorCache) {
-            if (validatorCache.containsKey(validatorKey)) {
-                if (FileManager.isReloadingConfigs()) {
-                    validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
-                }
-            } else {
-                validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
-            }
 
-            // get the set of validator configs
-            cfgs = new ArrayList<ValidatorConfig>(validatorCache.get(validatorKey));
+        if (validatorCache.containsKey(validatorKey)) {
+            if (FileManager.isReloadingConfigs()) {
+                validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
+            }
+        } else {
+            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
         }
+
+        // get the set of validator configs
+        cfgs = new ArrayList<ValidatorConfig>(validatorCache.get(validatorKey));
 
         ValueStack stack = ActionContext.getContext().getValueStack();
 
@@ -117,7 +123,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         List<Validator> validators = getValidators(object.getClass(), context, method);
         Set<String> shortcircuitedFields = null;
 
-        for (final Validator validator: validators) {
+        for (final Validator validator : validators) {
             try {
                 validator.setValidatorContext(validatorContext);
 
@@ -141,8 +147,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
                     }
                 }
 
-                if (validator instanceof ShortCircuitableValidator && ((ShortCircuitableValidator) validator).isShortCircuit())
-                {
+                if (validator instanceof ShortCircuitableValidator && ((ShortCircuitableValidator) validator).isShortCircuit()) {
                     // get number of existing errors
                     List<String> errs = null;
 
@@ -197,7 +202,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
 
                 validator.validate(object);
             } finally {
-                validator.setValidatorContext( null );
+                validator.setValidatorContext(null);
             }
 
         }
@@ -206,7 +211,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     /**
      * Builds a key for validators - used when caching validators.
      *
-     * @param clazz   the action.
+     * @param clazz the action.
      * @return a validator key which is the class name plus context.
      */
     protected static String buildValidatorKey(Class clazz) {
@@ -224,7 +229,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         return sb.toString();
     }
 
-    private  List<ValidatorConfig> buildAliasValidatorConfigs(Class aClass, String context, boolean checkFile) {
+    private List<ValidatorConfig> buildAliasValidatorConfigs(Class aClass, String context, boolean checkFile) {
         String fileName = aClass.getName().replace('.', '/') + "-" + context.replace('/', '-') + VALIDATION_CONFIG_SUFFIX;
 
         return loadFile(fileName, aClass, checkFile);
@@ -371,11 +376,10 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     }
 
 
-
     /**
      * An {@link com.opensymphony.xwork2.validator.ValidatorContext} wrapper that
      * returns the full field name
-     * {@link com.opensymphony.xwork2.validator.AbstractActionValidatorManager.InternalValidatorContextWrapper#getFullFieldName(String)}
+     * {@link AnnotationActionValidatorManager.InternalValidatorContextWrapper#getFullFieldName(String)}
      * by consulting it's parent if its an {@link com.opensymphony.xwork2.validator.validators.VisitorFieldValidator.AppendingValidatorContext}.
      * <p/>
      * Eg. if we have nested Visitor
@@ -396,6 +400,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
          * Get the full field name by consulting the parent, so that when we are using nested visitors (
          * visitor nested inside visitor etc.) we still get the full field name including its parents.
          * See XW-571 for more details.
+         *
          * @param field
          * @return String
          */
@@ -408,5 +413,5 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
             return validatorContext.getFullFieldName(field);
         }
 
-    }    
+    }
 }

@@ -32,24 +32,50 @@ StrutsUtils.getValidationErrors = function(data) {
 };
 
 StrutsUtils.clearValidationErrors = function(form) {
-  var firstNode = StrutsUtils.firstElement(form);
-  var xhtml = firstNode.tagName.toLowerCase() == "table";
-  
-  if(xhtml) {
-    clearErrorMessagesXHTML(form);
-    clearErrorLabelsXHTML(form);
-  } else {
-    clearErrorMessagesCSS(form);
-    clearErrorLabelsCSS(form);
-  }
-};  
+    var firstNode = StrutsUtils.firstElement(form);
+    var xhtml = firstNode.tagName.toLowerCase() == "table";
+
+    if(xhtml) {
+        clearErrorMessagesXHTML(form);
+        clearErrorLabelsXHTML(form);
+    } else {
+        clearErrorMessagesCSS(form);
+        clearErrorLabelsCSS(form);
+    }
+
+    //clear previous global error messages
+	if(StrutsUtils.errorLists[form] && StrutsUtils.errorLists[form] !== null) {
+		form.parentNode.removeChild(StrutsUtils.errorLists[form]);
+		StrutsUtils.errorLists[form] = null;
+	}
+
+};
+
+StrutsUtils.errorLists = [];
 
 // shows validation errors using functions from xhtml/validation.js
 // or css_xhtml/validation.js
 StrutsUtils.showValidationErrors = function(form, errors) {
-  StrutsUtils.clearValidationErrors(form, errors);
+    StrutsUtils.clearValidationErrors(form, errors);
 
-  var firstNode = StrutsUtils.firstElement(form);
+	if (errors.errors) {
+		var errorList = document.createElement("ul");
+		errorList.setAttribute("class", "errorMessage");
+		errorList.setAttribute("className", "errorMessage"); // ie hack cause ie does not support setAttribute
+
+		for ( var l = 0; l < errors.errors.length; l++) {
+			var item = document.createElement("li");
+			var itemText = document.createTextNode(errors.errors[l]);
+			item.appendChild(itemText);
+
+			errorList.appendChild(item);
+		}
+		
+		form.parentNode.insertBefore(errorList, form);
+		StrutsUtils.errorLists[form] = errorList;
+	}
+
+	var firstNode = StrutsUtils.firstElement(form);
   var xhtml = firstNode.tagName.toLowerCase() == "table";  
   if(errors.fieldErrors) {
     for(var fieldName in errors.fieldErrors) {

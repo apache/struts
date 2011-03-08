@@ -23,6 +23,10 @@ package org.apache.struts2.json;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.json.annotations.JSON;
+import org.apache.struts2.json.annotations.JSONFieldBridge;
+import org.apache.struts2.json.annotations.JSONParameter;
+import org.apache.struts2.json.bridge.FieldBridge;
+import org.apache.struts2.json.bridge.ParameterizedBridge;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -33,13 +37,7 @@ import java.text.CharacterIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -70,8 +68,7 @@ class JSONWriter {
     private boolean excludeNullProperties;
 
     /**
-     * @param object
-     *            Object to be serialized into JSON
+     * @param object Object to be serialized into JSON
      * @return JSON string for object
      * @throws JSONException
      */
@@ -80,13 +77,12 @@ class JSONWriter {
     }
 
     /**
-     * @param object
-     *            Object to be serialized into JSON
+     * @param object Object to be serialized into JSON
      * @return JSON string for object
      * @throws JSONException
      */
     public String write(Object object, Collection<Pattern> excludeProperties,
-            Collection<Pattern> includeProperties, boolean excludeNullProperties) throws JSONException {
+                        Collection<Pattern> includeProperties, boolean excludeNullProperties) throws JSONException {
         this.excludeNullProperties = excludeNullProperties;
         this.buf.setLength(0);
         this.root = object;
@@ -139,7 +135,7 @@ class JSONWriter {
         if (object instanceof Class) {
             this.string(object);
         } else if (object instanceof Boolean) {
-            this.bool(((Boolean) object).booleanValue());
+            this.bool((Boolean) object);
         } else if (object instanceof Number) {
             this.add(object);
         } else if (object instanceof String) {
@@ -184,42 +180,22 @@ class JSONWriter {
             PropertyDescriptor[] props = info.getPropertyDescriptors();
 
             boolean hasData = false;
-            for (int i = 0; i < props.length; ++i) {
-                PropertyDescriptor prop = props[i];
+            for (PropertyDescriptor prop : props) {
                 String name = prop.getName();
                 Method accessor = prop.getReadMethod();
-                Method baseAccessor = null;
-                if (clazz.getName().indexOf("$$EnhancerByCGLIB$$") > -1) {
-                    try {
-                        baseAccessor = Class.forName(
-                                clazz.getName().substring(0, clazz.getName().indexOf("$$"))).getMethod(
-                                accessor.getName(), accessor.getParameterTypes());
-                    } catch (Exception ex) {
-                        LOG.debug(ex.getMessage(), ex);
-                    }
-                } else if (clazz.getName().indexOf("$$_javassist") > -1) {
-                	try {
-                        baseAccessor = Class.forName(
-                                clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
-                                .getMethod(accessor.getName(), accessor.getParameterTypes());
-                    } catch (Exception ex) {
-                        LOG.debug(ex.getMessage(), ex);
-                    }
-                } else
-                    baseAccessor = accessor;
+                Method baseAccessor = findBaseAccessor(clazz, accessor);
 
                 if (baseAccessor != null) {
+                    if (baseAccessor.isAnnotationPresent(JSON.class)) {
+                        JSONAnnotationFinder jsonFinder = new JSONAnnotationFinder(baseAccessor).invoke();
 
-                    JSON json = baseAccessor.getAnnotation(JSON.class);
-                    if (json != null) {
-                        if (!json.serialize())
-                            continue;
-                        else if (json.name().length() > 0)
-                            name = json.name();
+                        if (!jsonFinder.shouldSerialize()) continue;
+                        if (jsonFinder.getName() != null) {
+                            name = jsonFinder.getName();
+                        }
                     }
-
                     // ignore "class" and others
-                    if (this.shouldExcludeProperty(clazz, prop)) {
+                    if (this.shouldExcludeProperty(prop)) {
                         continue;
                     }
                     String expr = null;
@@ -231,7 +207,11 @@ class JSONWriter {
                         expr = this.setExprStack(expr);
                     }
 
-                    Object value = accessor.invoke(object, new Object[0]);
+                    Object value = accessor.invoke(object);
+                    if (baseAccessor.isAnnotationPresent(JSONFieldBridge.class)) {
+                        value = getBridgedValue(baseAccessor, value);
+                    }
+
                     boolean propertyPrinted = this.add(name, value, accessor, hasData);
                     hasData = hasData || propertyPrinted;
                     if (this.buildExpr) {
@@ -253,6 +233,48 @@ class JSONWriter {
         this.add("}");
     }
 
+    private Object getBridgedValue(Method baseAccessor, Object value) throws InstantiationException, IllegalAccessException {
+        JSONFieldBridge fieldBridgeAnn = baseAccessor.getAnnotation(JSONFieldBridge.class);
+        if (fieldBridgeAnn != null) {
+            Class impl = fieldBridgeAnn.impl();
+            FieldBridge instance = (FieldBridge) impl.newInstance();
+
+            if (fieldBridgeAnn.params().length > 0 && ParameterizedBridge.class.isAssignableFrom(impl)) {
+                Map<String, String> params = new HashMap<String, String>(fieldBridgeAnn.params().length);
+                for (JSONParameter param : fieldBridgeAnn.params()) {
+                    params.put(param.name(), param.value());
+                }
+                ((ParameterizedBridge) instance).setParameterValues(params);
+            }
+            value = instance.objectToString(value);
+        }
+        return value;
+    }
+
+    private Method findBaseAccessor(Class clazz, Method accessor) {
+        Method baseAccessor = null;
+        if (clazz.getName().indexOf("$$EnhancerByCGLIB$$") > -1) {
+            try {
+                baseAccessor = Class.forName(
+                        clazz.getName().substring(0, clazz.getName().indexOf("$$"))).getMethod(
+                        accessor.getName(), accessor.getParameterTypes());
+            } catch (Exception ex) {
+                LOG.debug(ex.getMessage(), ex);
+            }
+        } else if (clazz.getName().indexOf("$$_javassist") > -1) {
+            try {
+                baseAccessor = Class.forName(
+                        clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
+                        .getMethod(accessor.getName(), accessor.getParameterTypes());
+            } catch (Exception ex) {
+                LOG.debug(ex.getMessage(), ex);
+            }
+        } else {
+            return accessor;
+        }
+        return baseAccessor;
+    }
+
     /**
      * Instrospect an Enum and serialize it as a name/value pair or as a bean
      * including all its own properties
@@ -265,19 +287,13 @@ class JSONWriter {
         }
     }
 
-    /**
-     * Ignore "class" field
-     */
-    private boolean shouldExcludeProperty(Class clazz, PropertyDescriptor prop) throws SecurityException,
+    private boolean shouldExcludeProperty(PropertyDescriptor prop) throws SecurityException,
             NoSuchFieldException {
         String name = prop.getName();
 
-        if (name.equals("class") || name.equals("declaringClass") || name.equals("cachedSuperClass")
-                || name.equals("metaClass")) {
-            return true;
-        }
+        return name.equals("class") || name.equals("declaringClass") || name.equals("cachedSuperClass")
+                || name.equals("metaClass");
 
-        return false;
     }
 
     private String expandExpr(int i) {
@@ -520,9 +536,8 @@ class JSONWriter {
 
     /**
      * Represent as unicode
-     * 
-     * @param c
-     *            character to be encoded
+     *
+     * @param c character to be encoded
      */
     private void unicode(char c) {
         this.add("\\u");
@@ -545,12 +560,39 @@ class JSONWriter {
      * If true, an Enum is serialized as a bean with a special property
      * _name=name() as all as all other properties defined within the enum.<br/>
      * If false, an Enum is serialized as a name=value pair (name=name())
-     * 
-     * @param enumAsBean
-     *            true to serialize an enum as a bean instead of as a name=value
-     *            pair (default=false)
+     *
+     * @param enumAsBean true to serialize an enum as a bean instead of as a name=value
+     *                   pair (default=false)
      */
     public void setEnumAsBean(boolean enumAsBean) {
         this.enumAsBean = enumAsBean;
+    }
+
+    private static class JSONAnnotationFinder {
+        private boolean serialize = true;
+        private Method accessor;
+        private String name;
+
+        public JSONAnnotationFinder(Method accessor) {
+            this.accessor = accessor;
+        }
+
+        boolean shouldSerialize() {
+            return serialize;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+
+        public JSONAnnotationFinder invoke() {
+            JSON json = accessor.getAnnotation(JSON.class);
+            serialize = json.serialize();
+            if (serialize && json.name().length() > 0) {
+                name = json.name();
+            }
+            return this;
+        }
     }
 }

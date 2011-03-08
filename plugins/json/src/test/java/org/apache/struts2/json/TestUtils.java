@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.json;
 
+import org.junit.Assert;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.StringTokenizer;
@@ -73,6 +75,12 @@ public class TestUtils {
         String bufferString = TestUtils.normalize(readContent(url), true);
 
         return bufferString.equals(writerString);
+    }
+
+    public static void assertEquals(URL source, String text) throws Exception {
+        String writerString = TestUtils.normalize(text, true);
+        String bufferString = TestUtils.normalize(readContent(source), true);
+        Assert.assertEquals(bufferString,writerString);
     }
 
     public static String readContent(URL url) throws Exception {

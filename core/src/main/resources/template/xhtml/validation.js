@@ -19,64 +19,60 @@
  * under the License.
  */
 
-function clearErrorMessages(form) {
-    clearErrorMessagesXHTML(form);
-}
-
 function clearErrorMessagesXHTML(form) {
 
     // get field table
-    var table;
-    for (var i = 0; i < form.childNodes.length; i++) {
-        if (form.childNodes[i].tagName != null && form.childNodes[i].tagName.toLowerCase() == 'table') {
+    var table, i, r;
+    for (i = 0; i < form.childNodes.length; i++) {
+        if (form.childNodes[i].tagName !== undefined && form.childNodes[i].tagName.toLowerCase() === 'table') {
             table = form.childNodes[i];
             break;
         }
     }
 
-    if (table == null) {
+    if (table === null) {
         return;
     }
 
     // clear out any rows with an "errorFor" attribute
     var rows = table.rows;
-    if (rows == null){
+    if (rows === null){
         return;
     }
 
-    var rowsToDelete = new Array();
-    for(var i = 0; i < rows.length; i++) {
-        var r = rows[i];
+    var rowsToDelete = [];
+    for(i = 0; i < rows.length; i++) {
+        r = rows[i];
         // allow blank errorFor values on dojo markup
-        if (r.getAttribute("errorFor") != null) {
+        if (r.getAttribute("errorFor") !== null) {
             rowsToDelete.push(r);
         }
     }
 
     // now delete the rows
-    for (var i = 0; i < rowsToDelete.length; i++) {
-        var r = rowsToDelete[i];
+    for (i = 0; i < rowsToDelete.length; i++) {
+        r = rowsToDelete[i];
         table.deleteRow(r.rowIndex);
-        //table.removeChild(rowsToDelete[i]); 
+        //table.removeChild(rowsToDelete[i]);
     }
 }
 
-function clearErrorLabels(form) {
-    clearErrorLabelsXHTML(form);
+function clearErrorMessages(form) {
+    clearErrorMessagesXHTML(form);
 }
 
 function clearErrorLabelsXHTML(form) {
     // set all labels back to the normal class
-    var elements = form.elements;
-    for (var i = 0; i < elements.length; i++) {
+    var i, elements = form.elements;
+    for (i = 0; i < elements.length; i++) {
 
         var parentEl = elements[i];
         // search for the parent table row, abort if the form is reached
         // the form may contain "non-wrapped" inputs inserted by Dojo
-        while (parentEl.nodeName.toUpperCase() != "TR" && parentEl.nodeName.toUpperCase() != "FORM") {
+        while (parentEl.nodeName.toUpperCase() !== "TR" && parentEl.nodeName.toUpperCase() !== "FORM") {
             parentEl = parentEl.parentNode;
         }
-        if (parentEl.nodeName.toUpperCase() == "FORM") {
+        if (parentEl.nodeName.toUpperCase() === "FORM") {
             parentEl = null;
         }
 
@@ -98,14 +94,14 @@ function clearErrorLabelsXHTML(form) {
 
 }
 
-function addError(e, errorText) {
-    addErrorXHTML(e, errorText);
+function clearErrorLabels(form) {
+    clearErrorLabelsXHTML(form);
 }
 
 function addErrorXHTML(e, errorText) {
     try {
         var row = (e.type ? e : e[0]);
-        while(row.nodeName.toUpperCase() != "TR") {
+        while(row.nodeName.toUpperCase() !== "TR") {
             row = row.parentNode;
         }
         var table = row.parentNode;
@@ -132,7 +128,12 @@ function addErrorXHTML(e, errorText) {
             label.setAttribute("class", "errorLabel");
             label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
         }
-    } catch (e) {
-        alert(e);
+    } catch (err) {
+        alert(err);
     }
 }
+
+function addError(e, errorText) {
+    addErrorXHTML(e, errorText);
+}
+

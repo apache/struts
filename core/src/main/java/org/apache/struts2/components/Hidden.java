@@ -40,7 +40,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;-- example one --&gt;
  * &lt;s:hidden name="foo" /&gt;
  * &lt;-- example two --&gt;
- * &lt;s:hidden name="foo" value="bar" /&gt;
+ * &lt;s:hidden name="foo" value="%{bar}" /&gt;
  *
  * Example One Resulting HTML (if foo evaluates to bar):
  * &lt;input type="hidden" name="foo" value="bar" /&gt;

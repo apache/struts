@@ -49,6 +49,8 @@ public class SimpleTheme extends DefaultTheme {
                 put("submit", new FactoryList(SubmitHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("submit-close", new FactoryList(SubmitHandler.CloseHandler.class));
                 put("textarea", new FactoryList(TextAreaHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
+                put("radiomap", new FactoryList(RadioHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
+                put("checkboxlist", new FactoryList(CheckboxListHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("actionerror", new FactoryList(ActionErrorHandler.class));
                 put("token", new FactoryList(TokenHandler.class));
                 put("actionmessage", new FactoryList(ActionMessageHandler.class));
@@ -65,7 +67,7 @@ public class SimpleTheme extends DefaultTheme {
 
     private class FactoryList extends ArrayList<TagHandlerFactory> {
 
-        private static final long serialVersionUID = -1551895041394434032L; 
+        private static final long serialVersionUID = -1551895041394434032L;
 
         public FactoryList(Class... classes) {
             super();

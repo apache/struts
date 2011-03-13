@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -49,9 +49,11 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
         } else if ("image".equals(type)) {
             attrs.addIfExists("src", params.get("src"), false)
                     .add("type", "image")
-                    .addIfExists("alt", params.get("label"));
-
-            start("input", attrs);
+            		.addIfExists("alt", params.get("label"))
+            		.addIfExists("id", params.get("id"))
+                    .addIfExists("class", params.get("cssClass"))
+            		.addIfExists("style", params.get("cssStyle"));
+             start("input", attrs);
         } else {
             attrs.addIfExists("name", params.get("name"))
                     .add("type", "submit")
@@ -69,7 +71,6 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
     public static class CloseHandler extends AbstractTagHandler implements TagGenerator {
         public void generate() throws IOException {
             Map<String, Object> params = context.getParameters();
-            Attributes attrs = new Attributes();
             String body = (String) params.get("body");
 
             String type = StringUtils.defaultString((String) params.get("type"), "input");

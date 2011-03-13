@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,21 +18,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.java.simple;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
-import org.apache.struts2.ServletActionContext;
 
 import java.io.IOException;
-import java.util.Map;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class HeadHandler extends AbstractTagHandler implements TagGenerator {
 
     public void generate() throws IOException {
-        Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
         attrs.put("type", "text/javascript");
 

@@ -20,9 +20,8 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import org.apache.struts2.components.TextField;
-import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.TextArea;
+import org.apache.struts2.components.UIBean;
 
 public class TextAreaTest extends AbstractCommonAttributesTest {
     private TextArea tag;

@@ -20,9 +20,8 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import org.apache.struts2.components.File;
-import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.Reset;
+import org.apache.struts2.components.UIBean;
 
 public class ResetTest extends AbstractCommonAttributesTest {
     private Reset tag;

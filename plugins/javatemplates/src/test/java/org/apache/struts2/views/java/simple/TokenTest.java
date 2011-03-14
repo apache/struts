@@ -20,10 +20,9 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import org.apache.struts2.components.TextField;
-import org.apache.struts2.components.UIBean;
-import org.apache.struts2.components.Token;
 import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.components.Token;
+import org.apache.struts2.components.UIBean;
 
 import java.util.HashMap;
 import java.util.Map;

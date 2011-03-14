@@ -20,10 +20,8 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import org.apache.struts2.components.File;
-import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.Password;
-import org.easymock.EasyMock;
+import org.apache.struts2.components.UIBean;
 
 public class PasswordTest extends AbstractCommonAttributesTest {
     private Password tag;

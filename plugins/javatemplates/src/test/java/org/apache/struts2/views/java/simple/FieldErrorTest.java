@@ -23,12 +23,7 @@ package org.apache.struts2.views.java.simple;
 import org.apache.struts2.components.FieldError;
 import org.apache.struts2.components.UIBean;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 public class FieldErrorTest extends AbstractTest {
     private FieldError tag;

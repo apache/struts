@@ -1,5 +1,5 @@
 /*
- * $Id: Bean.java 726216 2008-12-13 14:58:16Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

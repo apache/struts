@@ -20,9 +20,8 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import org.apache.struts2.components.Hidden;
-import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.Label;
+import org.apache.struts2.components.UIBean;
 
 public class LabelTest extends AbstractCommonAttributesTest {
     private Label tag;

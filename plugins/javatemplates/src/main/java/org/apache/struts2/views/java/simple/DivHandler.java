@@ -1,5 +1,5 @@
 /*
- * $Id: CommonAttributesHandler.java 726340 2008-12-14 02:45:05Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

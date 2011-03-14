@@ -1,5 +1,5 @@
 /*
- * $Id: JSONFieldBridge.java 2010-10-28 10:25:38Z maurizio.cucchiara $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

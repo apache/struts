@@ -1,5 +1,5 @@
 /*
- * $Id: JSONParameter.java 2010-10-28 10:23:32Z maurizio.cucchiara $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

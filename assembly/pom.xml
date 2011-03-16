@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-assembly</artifactId>
@@ -19,7 +20,7 @@
         <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/assembly</developerConnection>
         <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/assembly</url>
     </scm>
-    
+
     <profiles>
         <profile>
             <id>j4</id>
@@ -27,13 +28,13 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.2-beta-5</version>
+                        <version>2.2</version>
                         <executions>
                             <execution>
                                 <id>make-assembly</id>
                                 <phase>package</phase>
                                 <goals>
-                                     <goal>attached</goal>
+                                    <goal>attached</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -55,151 +56,151 @@
             </build>
             <dependencies>
                 <!-- Backported JDK 1.4 jars -->
-                    <dependency>
-                        <groupId>net.sf.retrotranslator</groupId>
-                        <artifactId>retrotranslator-runtime</artifactId>
-                        <version>1.2.1</version>
-                        <scope>runtime</scope>
-                    </dependency>
+                <dependency>
+                    <groupId>net.sf.retrotranslator</groupId>
+                    <artifactId>retrotranslator-runtime</artifactId>
+                    <version>1.2.1</version>
+                    <scope>runtime</scope>
+                </dependency>
 
-                    <dependency>
-                        <groupId>backport-util-concurrent</groupId>
-                        <artifactId>backport-util-concurrent</artifactId>
-                        <version>3.0</version>
-                        <scope>runtime</scope>
-                    </dependency>
+                <dependency>
+                    <groupId>backport-util-concurrent</groupId>
+                    <artifactId>backport-util-concurrent</artifactId>
+                    <version>3.0</version>
+                    <scope>runtime</scope>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts.xwork</groupId>
-                        <artifactId>xwork-core</artifactId>
-                        <version>${project.version}</version>
-                        <type>jar</type>
-                        <classifier>jdk14</classifier>
-                        <scope>runtime</scope>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts.xwork</groupId>
+                    <artifactId>xwork-core</artifactId>
+                    <version>${project.version}</version>
+                    <type>jar</type>
+                    <classifier>jdk14</classifier>
+                    <scope>runtime</scope>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-core</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-core</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-config-browser-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-config-browser-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-jasperreports-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-jasperreports-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-jfreechart-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-jfreechart-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-jsf-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-jsf-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-pell-multipart-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-pell-multipart-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-plexus-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-plexus-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-sitegraph-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-sitegraph-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-sitemesh-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-sitemesh-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-struts1-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-struts1-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-tiles-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-tiles-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-rest-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
-                    
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-oval-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
-                    
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-osgi-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
-                    
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-json-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
-                    
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-embeddedjsp-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-rest-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
 
-                    <dependency>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-gxp-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <classifier>jdk14</classifier>
-                    </dependency>
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-oval-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-osgi-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-json-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-embeddedjsp-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-gxp-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>jdk14</classifier>
+                </dependency>
             </dependencies>
         </profile>
     </profiles>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -266,23 +267,17 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <tasks>
-                                <mkdir dir="${project.build.directory}/cwiki" />
-<!--
-                                <exec executable="ssh" failonerror="true" >
-                                    <arg line="${username}@people.apache.org /www/struts.apache.org/2.x/docs-zip2.sh" />
-                                </exec>
-                                <unzip src="${project.build.directory}/docs.zip" dest="${project.build.directory}/cwiki" />
--->
+                                <mkdir dir="${project.build.directory}/cwiki"/>
                                 <exec executable="wget">
-                                    <arg value="-erobots=off" />
-                                    <arg value="-nH" />
-                                    <arg value="-nv" />
-                                    <arg value="-E" />
-                                    <arg value="-L" />
-                                    <arg value="--directory-prefix=${project.build.directory}/cwiki" />
-                                    <arg value="--no-check-certificate" />
-                                    <arg value="-r" />
-                                    <arg value="https://cwiki.apache.org/WW/" />
+                                    <arg value="-erobots=off"/>
+                                    <arg value="-nH"/>
+                                    <arg value="-nv"/>
+                                    <arg value="-E"/>
+                                    <arg value="-L"/>
+                                    <arg value="--directory-prefix=${project.build.directory}/cwiki"/>
+                                    <arg value="--no-check-certificate"/>
+                                    <arg value="-r"/>
+                                    <arg value="https://cwiki.apache.org/WW/"/>
                                 </exec>
                             </tasks>
                         </configuration>
@@ -295,13 +290,13 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-5</version>
+                <version>2.2</version>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                             <goal>attached</goal>
+                            <goal>attached</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -328,13 +323,13 @@
             <artifactId>struts2-codebehind-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-convention-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-javatemplates-plugin</artifactId>
@@ -352,7 +347,7 @@
             <artifactId>struts2-dojo-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
- 
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-dwr-plugin</artifactId>
@@ -413,12 +408,12 @@
             <version>${project.version}</version>
         </dependency>
 
-         <dependency>
+        <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-sitemesh-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-spring-plugin</artifactId>
             <version>${project.version}</version>
@@ -441,25 +436,25 @@
             <artifactId>struts2-tiles-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-oval-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-json-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-embeddedjsp-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-gxp-plugin</artifactId>
@@ -471,19 +466,19 @@
             <artifactId>struts2-osgi-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-admin-bundle</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-demo-bundle</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
 
     </dependencies>
 

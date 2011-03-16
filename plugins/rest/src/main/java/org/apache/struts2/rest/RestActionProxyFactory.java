@@ -24,6 +24,7 @@ package org.apache.struts2.rest;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.inject.Inject;
 
 import java.util.Map;
 
@@ -33,11 +34,24 @@ import java.util.Map;
  */
 public class RestActionProxyFactory extends DefaultActionProxyFactory {
 
+    public static final String STRUTS_REST_NAMESPACE = "struts.rest.namespace";
+
+    protected String namespace = "/";
+
+    @Inject(STRUTS_REST_NAMESPACE)
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
     @Override
     public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map extraContext, boolean executeResult, boolean cleanupContext) {
-        ActionInvocation inv = new RestActionInvocation(extraContext, true);
-        container.inject(inv);
-        return createActionProxy(inv, namespace, actionName, methodName, executeResult, cleanupContext);
+        if (namespace.startsWith(this.namespace)) {
+            ActionInvocation inv = new RestActionInvocation(extraContext, true);
+            container.inject(inv);
+            return createActionProxy(inv, namespace, actionName, methodName, executeResult, cleanupContext);
+        } else {
+            return super.createActionProxy(namespace, actionName, methodName, extraContext, executeResult, cleanupContext);
+        }
     }
 
 }

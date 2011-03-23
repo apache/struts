@@ -33,46 +33,49 @@ public class FieldErrorHandler extends AbstractTagHandler implements TagGenerato
         Map<String, List<String>> errors = (Map<String, List<String>>) findValue("fieldErrors");
         List<String> fieldErrorFieldNames = (List<String>) params.get("errorFieldNames");
 
-        if (fieldErrorFieldNames != null && !fieldErrorFieldNames.isEmpty()) {
-            //wrapping ul
-            Attributes attrs = new Attributes();
-            attrs.addIfExists("style", params.get("cssStyle"))
-                    .add("class", params.containsKey("cssClass") ? (String) params.get("cssClass") : "errorMessage");
-            start("ul", attrs);
+        if (fieldErrorFieldNames != null && !fieldErrorFieldNames.isEmpty() && errors != null && !errors.isEmpty()) {
+            startUL(params);
 
             //iterate over field error names
             for (String fieldErrorFieldName : fieldErrorFieldNames) {
                 List<String> fieldErrors = errors.get(fieldErrorFieldName);
                 if (fieldErrors != null) {
                     for (String fieldError : fieldErrors) {
-                        start("li", null);
-                        start("span", null);
-                        characters(fieldError);
-                        end("span");
-                        end("li");
+                        writeError(params, fieldError);
                     }
                 }
             }
 
-            end("ul");
+            endUL();
         } else if (errors != null && !errors.isEmpty()) {
-            //wrapping ul
-            Attributes attrs = new Attributes();
-            attrs.addIfExists("style", params.get("cssStyle"))
-                    .add("class", params.containsKey("cssClass") ? (String) params.get("cssClass") : "errorMessage");
-            start("ul", attrs);
+            startUL(params);
 
             for (Map.Entry<String, List<String>> errorEntry : errors.entrySet()) {
                 for (String fieldError : errorEntry.getValue()) {
-                    start("li", null);
-                    start("span", null);
-                    characters(fieldError);
-                    end("span");
-                    end("li");
+                    writeError(params, fieldError);
                 }
             }
 
-            end("ul");
+            endUL();
         }
+    }
+
+    private void endUL() throws IOException {
+        end("ul");
+    }
+
+    private void writeError(Map<String, Object> params, String fieldError) throws IOException {
+        start("li", null);
+        start("span", null);
+        characters(fieldError, params.containsKey("escape") ? (Boolean) params.get("escape") : true);
+        end("span");
+        end("li");
+    }
+
+    private void startUL(Map<String, Object> params) throws IOException {
+        Attributes attrs = new Attributes();
+        attrs.addIfExists("style", params.get("cssStyle"))
+                .add("class", params.containsKey("cssClass") ? (String) params.get("cssClass") : "errorMessage");
+        start("ul", attrs);
     }
 }

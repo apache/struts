@@ -34,7 +34,7 @@ public class HiddenHandler extends AbstractTagHandler implements TagGenerator {
 
         a.addDefaultToEmpty("name", params.get("name"))
                 .add("type", "hidden")
-                .addIfExists("value", params.get("nameValue"), false)
+                .addIfExists("value", params.get("nameValue"))
                 .addIfTrue("disabled", params.get("disabled"))
                 .addIfExists("id", params.get("id"))
                 .addIfExists("class", params.get("cssClass"))

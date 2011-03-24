@@ -79,7 +79,7 @@ public class RadioHandler extends AbstractTagHandler implements TagGenerator {
                 a.add("type", "radio")
                         .addDefaultToEmpty("name", params.get("name"))
                         .addIfTrue("checked", checked)
-                        .addIfExists("value", itemKeyStr, false)
+                        .addIfExists("value", itemKeyStr)
                         .addIfTrue("disabled", params.get("disabled"))
                         .addIfExists("tabindex", params.get("tabindex"))
                         .addIfExists("id", id);

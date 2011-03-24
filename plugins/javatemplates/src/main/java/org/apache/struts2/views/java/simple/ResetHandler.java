@@ -37,7 +37,7 @@ public class ResetHandler extends AbstractTagHandler implements TagGenerator {
 
         attrs.addDefaultToEmpty("name", params.get("name"))
                 .add("type", "reset")
-                .addIfExists("value", params.get("nameValue"), false)
+                .addIfExists("value", params.get("nameValue"))
                 .addIfExists("tabindex", params.get("tabindex"))
                 .addIfExists("id", params.get("id"))
                 .addIfExists("class", params.get("cssClass"))

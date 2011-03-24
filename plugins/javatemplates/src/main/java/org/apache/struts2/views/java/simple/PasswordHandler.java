@@ -34,7 +34,7 @@ public class PasswordHandler extends AbstractTagHandler implements TagGenerator 
 
         Boolean showPassword = (Boolean) params.get("showPassword");
         if (showPassword != null && showPassword)
-           attrs.addIfExists("value",  params.get("nameValue"), false);
+           attrs.addIfExists("value",  params.get("nameValue"));
 
         attrs.addDefaultToEmpty("name", params.get("name"))
                 .add("type", "password")

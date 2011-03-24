@@ -38,7 +38,7 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
         if ("button".equals(type)) {
             attrs.addIfExists("name", params.get("name"))
                     .add("type", "submit")
-                    .addIfExists("value", params.get("nameValue"), false)
+                    .addIfExists("value", params.get("nameValue"))
                     .addIfTrue("disabled", params.get("disabled"))
                     .addIfExists("tabindex", params.get("tabindex"))
                     .addIfExists("id", params.get("id"))
@@ -47,7 +47,7 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
 
             start("button", attrs);
         } else if ("image".equals(type)) {
-            attrs.addIfExists("src", params.get("src"), false)
+            attrs.addIfExists("src", params.get("src"))
                     .add("type", "image")
             		.addIfExists("alt", params.get("label"))
             		.addIfExists("id", params.get("id"))
@@ -57,7 +57,7 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
         } else {
             attrs.addIfExists("name", params.get("name"))
                     .add("type", "submit")
-                    .addIfExists("value", params.get("nameValue"), false)
+                    .addIfExists("value", params.get("nameValue"))
                     .addIfTrue("disabled", params.get("disabled"))
                     .addIfExists("tabindex", params.get("tabindex"))
                     .addIfExists("id", params.get("id"))

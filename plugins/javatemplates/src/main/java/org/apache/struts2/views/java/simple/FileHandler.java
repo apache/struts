@@ -35,7 +35,7 @@ public class FileHandler extends AbstractTagHandler implements TagGenerator {
         a.addDefaultToEmpty("name", params.get("name"))
                 .add("type", "file")
                 .addIfExists("size", params.get("size"))
-                .addIfExists("value", params.get("nameValue"), false)
+                .addIfExists("value", params.get("nameValue"))
                 .addIfTrue("disabled", params.get("disabled"))
                 .addIfExists("accept", params.get("accept"))
                 .addIfExists("tabindex", params.get("tabindex"))

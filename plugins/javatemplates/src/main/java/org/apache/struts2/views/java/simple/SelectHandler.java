@@ -43,7 +43,7 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
 
         a.addDefaultToEmpty("name", params.get("name"))
                 .addIfExists("size", params.get("size"))
-                .addIfExists("value", value, false)
+                .addIfExists("value", value)
                 .addIfTrue("disabled", params.get("disabled"))
                 .addIfTrue("readonly", params.get("readonly"))
                 .addIfTrue("multiple", params.get("multiple"))

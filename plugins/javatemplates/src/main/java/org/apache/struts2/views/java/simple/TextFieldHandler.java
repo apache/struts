@@ -36,7 +36,7 @@ public class TextFieldHandler extends AbstractTagHandler implements TagGenerator
                 .addDefaultToEmpty("name", params.get("name"))
                 .addIfExists("size", params.get("size"))
                 .addIfExists("maxlength", params.get("maxlength"))
-                .addIfExists("value", params.get("nameValue"), false)
+                .addIfExists("value", params.get("nameValue"))
                 .addIfTrue("disabled", params.get("disabled"))
                 .addIfTrue("readonly", params.get("readonly"))
                 .addIfExists("tabindex", params.get("tabindex"))

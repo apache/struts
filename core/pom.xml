@@ -86,31 +86,6 @@
     <reporting>
         <plugins>
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <sourcepath>${basedir}/src/main/java;${basedir}/../xwork-core/src/main/java</sourcepath>
-                    <encoding>UTF-8</encoding>
-                    <groups>
-                        <group>
-                            <title>Struts Packages</title>
-                            <packages>org.apache.struts2*</packages>
-                        </group>
-                        <group>
-                            <title>XWork Packages</title>
-                            <packages>com.opensymphony.xwork2*</packages>
-                        </group>
-                    </groups>
-                    <show>private</show>
-                    <links>
-                        <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-                        <link>http://java.sun.com/javaee/5/docs/api/</link>
-                        <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-                        <link>http://logging.apache.org/log4j/docs/api/</link>
-                    </links>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>rat-maven-plugin</artifactId>
                 <version>1.0-alpha-2</version>
@@ -210,7 +185,6 @@
         <dependency>
             <groupId>org.apache.struts.xwork</groupId>
             <artifactId>xwork-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

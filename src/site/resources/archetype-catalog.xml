@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-catalog xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0
+                                       http://maven.apache.org/xsd/archetype-catalog-1.0.0.xsd">
+    <archetypes>
+        <archetype>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-archetype-blank</artifactId>
+            <version>2.2.2</version>
+            <description>Struts 2 Archetypes - Blank</description>
+        </archetype>
+        <archetype>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-archetype-convention</artifactId>
+            <version>2.2.2</version>
+            <description>Struts 2 Archetypes - Blank Convention</description>
+        </archetype>
+        <archetype>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-archetype-dbportlet</artifactId>
+            <version>2.2.2</version>
+            <description>Struts 2 Archetypes - Database Portlet</description>
+        </archetype>
+        <archetype>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-archetype-plugin</artifactId>
+            <version>2.2.2</version>
+            <description>Struts 2 Archetypes - Plugin</description>
+        </archetype>
+        <archetype>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-archetype-portlet</artifactId>
+            <version>2.2.2</version>
+            <description>Struts 2 Archetypes - Portlet</description>
+        </archetype>
+        <archetype>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-archetype-starter</artifactId>
+            <version>2.2.2</version>
+            <description>Struts 2 Archetypes - Starter</description>
+        </archetype>
+    </archetypes>
+</archetype-catalog>

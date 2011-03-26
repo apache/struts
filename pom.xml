@@ -91,12 +91,6 @@
             </modules>
         </profile>
         <profile>
-            <id>xwork</id>
-            <modules>
-                <module>xwork-core</module>
-            </modules>
-        </profile>
-        <profile>
             <id>struts-annotations</id>
             <modules>
                 <module>../maven/struts-annotations</module>
@@ -159,7 +153,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>2.1.1</version>
+                    <version>3.0-beta-3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -195,15 +189,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
@@ -309,19 +294,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
             </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.2</version>
-                <!--
-                <configuration>
-                    <aggregate>true</aggregate>
-                </configuration>
-                -->
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
             <!--
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -329,31 +301,10 @@
                   <configLocation>http://svn.apache.org/repos/asf/struts/maven/trunk/build/struts_checks.xml</configLocation>
                 </configuration>
             </plugin>
-            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jxr-maven-plugin</artifactId>
                 <version>2.0-beta-1</version>
-            </plugin>
-            <!--
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-            </plugin>
-            -->
-            <!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>rat-maven-plugin</artifactId>
-                <version>1.0-alpha-2</version>
-                <configuration>
-                    <includes>
-                        <include>pom.xml</include>
-                        <include>src/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>assembly/src/main/resources/backport/RETROTRANSLATOR-LICENSE.txt</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
             -->
         </plugins>
@@ -366,6 +317,27 @@
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-annotations</artifactId>
                 <version>1.0.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.struts.xwork</groupId>
+                <artifactId>xwork-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-spring-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-portlet-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-dwr-plugin</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -473,6 +445,18 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.tiles</groupId>
+                <artifactId>tiles-core</artifactId>
+                <version>2.0.6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tiles</groupId>
+                <artifactId>tiles-jsp</artifactId>
+                <version>2.0.6</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>jsp-api</artifactId>
                 <version>2.0</version>
@@ -504,6 +488,11 @@
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
                 <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-fileupload</groupId>
@@ -655,7 +644,7 @@
                 <version>1.31</version>
             </dependency>
 
-             <dependency>
+            <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
                 <version>1.2.2</version>
@@ -665,7 +654,17 @@
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>
                 <version>1.0</version>
-                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty</artifactId>
+                <version>6.1.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jsp-2.1</artifactId>
+                <version>6.1.9</version>
             </dependency>
 
             <!-- Portlet -->
@@ -673,14 +672,12 @@
                 <groupId>portlet-api</groupId>
                 <artifactId>portlet-api</artifactId>
                 <version>1.0</version>
-                <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
                 <version>2.2</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>

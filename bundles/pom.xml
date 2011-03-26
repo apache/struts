@@ -57,7 +57,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>compile</scope>
-            <version>3.8.2</version>
         </dependency>
 
 

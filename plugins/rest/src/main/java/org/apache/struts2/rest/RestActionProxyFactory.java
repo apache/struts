@@ -38,7 +38,7 @@ public class RestActionProxyFactory extends DefaultActionProxyFactory {
 
     protected String namespace = "/";
 
-    @Inject(STRUTS_REST_NAMESPACE)
+    @Inject(value = STRUTS_REST_NAMESPACE, required = false)
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }

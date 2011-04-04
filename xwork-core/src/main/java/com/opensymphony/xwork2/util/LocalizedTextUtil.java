@@ -777,8 +777,8 @@ public class LocalizedTextUtil {
     private static void reloadBundles() {
         if (reloadBundles) {
             try {
+                bundlesMap.clear();
                 clearMap(ResourceBundle.class, null, "cacheList");
-
                 // now, for the true and utter hack, if we're running in tomcat, clear
                 // it's class loader resource cache as well.
                 clearTomcatCache();

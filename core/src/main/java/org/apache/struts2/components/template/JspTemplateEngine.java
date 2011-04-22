@@ -23,10 +23,13 @@ package org.apache.struts2.components.template;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
 
@@ -39,6 +42,13 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class JspTemplateEngine extends BaseTemplateEngine {
     private static final Logger LOG = LoggerFactory.getLogger(JspTemplateEngine.class);
+
+	String encoding;
+
+	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
 
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
         Template template = templateContext.getTemplate();
@@ -56,7 +66,7 @@ public class JspTemplateEngine extends BaseTemplateEngine {
         for (Template t : templates) {
             try {
                 Include.include(getFinalTemplateName(t), pageContext.getOut(),
-                        pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+                        pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse(), encoding);
                 success = true;
                 break;
             } catch (Exception e) {

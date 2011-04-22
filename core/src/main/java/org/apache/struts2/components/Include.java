@@ -57,7 +57,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <p>Include a servlet's output (result of servlet or a JSP page).</p>
  * <p>Note: Any additional params supplied to the included page are <b>not</b>
  * accessible within the rendered page through the &lt;s:property...&gt; tag
- * since no valuestack will be created. You can, however, access them in a 
+ * since no valuestack will be created. You can, however, access them in a
  * servlet via the HttpServletRequest object or from a JSP page via
  * a scriptlet.</p>
  * <!-- END SNIPPET: javadoc -->
@@ -103,8 +103,7 @@ public class Include extends Component {
 
     private static final Logger LOG = LoggerFactory.getLogger(Include.class);
 
-    private static String encoding;
-    private static boolean encodingDefined = true;
+    private static String systemEncoding = System.getProperty("file.encoding");
 
     protected String value;
     private HttpServletRequest req;
@@ -163,7 +162,7 @@ public class Include extends Component {
 
         // Include
         try {
-            include(result, writer, req, res);
+            include(result, writer, req, res, defaultEncoding);
         } catch (Exception e) {
             LOG.warn("Exception thrown during include of " + result, e);
         }
@@ -240,8 +239,32 @@ public class Include extends Component {
         }
     }
 
-    public static void include(String aResult, Writer writer, ServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String resourcePath = getContextRelativePath(request, aResult);
+    /**
+     * @deprecated use {@link #include(String, java.io.Writer, javax.servlet.ServletRequest,
+     *             javax.servlet.http.HttpServletResponse, String)} instead with correct encoding specified
+     */
+    public static void include( String relativePath, Writer writer, ServletRequest request,
+                                HttpServletResponse response ) throws ServletException, IOException {
+        include(relativePath, writer, request, response, null);
+    }
+
+    /**
+     * Include a resource in a response.
+     *
+     * @param relativePath the relative path of the resource to include; resolves to {@link #getContextRelativePath(javax.servlet.ServletRequest,
+     *                     String)}
+     * @param writer       the Writer to write output to
+     * @param request      the current request
+     * @param response     the response to write to
+     * @param encoding     the file encoding to use for including the resource; if <tt>null</tt>, it will default to the
+     *                     platform encoding
+     *
+     * @throws ServletException
+     * @throws IOException
+     */
+    public static void include( String relativePath, Writer writer, ServletRequest request,
+                                HttpServletResponse response, String encoding ) throws ServletException, IOException {
+        String resourcePath = getContextRelativePath(request, relativePath);
         RequestDispatcher rd = request.getRequestDispatcher(resourcePath);
 
         if (rd == null) {
@@ -251,49 +274,16 @@ public class Include extends Component {
         PageResponse pageResponse = new PageResponse(response);
 
         // Include the resource
-        rd.include((HttpServletRequest) request, pageResponse);
-
-        //write the response back to the JspWriter, using the correct encoding.
-        String encoding = getEncoding();
+        rd.include(request, pageResponse);
 
         if (encoding != null) {
-            //use the encoding specified in the property file
+            // Use given encoding
             pageResponse.getContent().writeTo(writer, encoding);
         } else {
             //use the platform specific encoding
-            pageResponse.getContent().writeTo(writer, null);
+            pageResponse.getContent().writeTo(writer, systemEncoding);
         }
     }
-
-    /**
-     * Get the encoding specified by the property 'struts.i18n.encoding' in struts.properties,
-     * or return the default platform encoding if not specified.
-     * <p/>
-     * Note that if the property is not initially defined, this will return the system default,
-     * even if the property is later defined.  This is mainly for performance reasons.  Undefined
-     * properties throw exceptions, which are a costly operation.
-     * <p/>
-     * If the property is initially defined, it is read every time, until is is undefined, and then
-     * the system default is used.
-     * <p/>
-     * Why not cache it completely?  Some applications will wish to be able to dynamically set the
-     * encoding at runtime.
-     *
-     * @return The encoding to be used.
-     */
-    private static String getEncoding() {
-        if (encodingDefined) {
-            try {
-                encoding = defaultEncoding;
-            } catch (IllegalArgumentException e) {
-                encoding = System.getProperty("file.encoding");
-                encodingDefined = false;
-            }
-        }
-
-        return encoding;
-    }
-
 
     /**
      * Implementation of ServletOutputStream that stores all data written

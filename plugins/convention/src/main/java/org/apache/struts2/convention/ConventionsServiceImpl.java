@@ -110,6 +110,7 @@ public class ConventionsServiceImpl implements ConventionsService {
 
         Map<String, ResultTypeConfig> resultsByExtension = new HashMap<String, ResultTypeConfig>();
         resultsByExtension.put("jsp", results.get("dispatcher"));
+        resultsByExtension.put("jspf", results.get("dispatcher"));
         resultsByExtension.put("jspx", results.get("dispatcher"));
         resultsByExtension.put("vm", results.get("velocity"));
         resultsByExtension.put("ftl", results.get("freemarker"));

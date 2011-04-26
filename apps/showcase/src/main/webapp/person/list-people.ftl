@@ -21,8 +21,8 @@ There are ${peopleCount} people...
 </table>
 
 <ul>
-    <li><a href="editPerson.action">Edit people</a></li>
-    <li><a href="newPerson!input.action">Create</a> a new person</li>
+    <li><a href="edit-person.action">Edit people</a></li>
+    <li><a href="new-person!input.action">Create</a> a new person</li>
 </ul>
 </body>
 </html>

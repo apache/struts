@@ -5,8 +5,8 @@
 
 <body>
 <ul>
-    <li><a href="newPerson!input.action">Create</a> a new person</li>
-    <li><a href="listPeople.action">List</a> all people</li>
+    <li><a href="new-person!input.action">Create</a> a new person</li>
+    <li><a href="list-people.action">List</a> all people</li>
 </ul>
 </body>
 </html>

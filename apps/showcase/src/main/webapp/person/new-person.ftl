@@ -4,15 +4,15 @@
 </head>
 
 <body>
-<@s.form action="newPerson">
+<@s.form action="new-person">
     <@s.textfield label="First Name" name="person.name"/>
     <@s.textfield label="Last Name" name="person.lastName"/>
     <@s.submit value="Create person"/>
 </@s.form>
 
 <ul>
-    <li><a href="editPerson.action">Edit people</a></li>
-    <li><a href="listPeople.action">List</a> all people</li>
+    <li><a href="edit-person.action">Edit people</a></li>
+    <li><a href="list-people.action">List</a> all people</li>
 </ul>
 
 </body>

@@ -24,17 +24,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.struts2.config.Result;
-import org.apache.struts2.config.Results;
-import org.apache.struts2.dispatcher.ServletRedirectResult;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.convention.annotation.Results;
 
 /**
  * <code>EditPerson</code>
  *
  */
-@Result(name="list", value="listPeople.action", type=ServletRedirectResult.class)
+@Results({
+    @Result(name="list", location="list-people.action", type="redirect"),
+    @Result(name="input", location="new-person.ftl", type="freemarker")
+})
 public class EditPersonAction extends ActionSupport {
 
     private static final long serialVersionUID = 7699491775215130850L;

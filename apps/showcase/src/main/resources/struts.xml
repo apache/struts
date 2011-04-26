@@ -14,12 +14,12 @@
     <constant name="struts.custom.i18n.resources" value="globalMessages" />
     <constant name="struts.action.extension" value="action,," />
 
-    <constant name="struts.codebehind.defaultPackage" value="person" />
+    <constant name="struts.convention.package.locators.basePackage" value="org.apache.struts2.showcase.person" />
+    <constant name="struts.convention.result.path" value="/" />
+
     <constant name="struts.freemarker.manager.classname" value="customFreemarkerManager" />
     <constant name="struts.serve.static" value="true" />
     <constant name="struts.serve.static.browserCache" value="false" />
-
-    <constant name="actionPackages" value="org.apache.struts2.showcase.person"/>
 
     <include file="struts-chat.xml" />
     

@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<s:form action="editPerson" theme="simple" validate="false">
+<s:form action="edit-person" theme="simple" validate="false">
 
     <table>
         <tr>
@@ -33,8 +33,8 @@
 </s:form>
 
 <ul>
-    <li><a href="newPerson!input.action">Create</a> a new person</li>
-    <li><a href="listPeople.action">List</a> all people</li>
+    <li><a href="new-person!input.action">Create</a> a new person</li>
+    <li><a href="list-people.action">List</a> all people</li>
 </ul>
 
 </body>

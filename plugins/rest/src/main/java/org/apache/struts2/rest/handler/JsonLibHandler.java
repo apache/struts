@@ -21,19 +21,26 @@
 
 package org.apache.struts2.rest.handler;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+
+import org.apache.struts2.StrutsConstants;
+
+import com.opensymphony.xwork2.inject.Inject;
+
 /**
  * Handles JSON content using json-lib
  */
 public class JsonLibHandler implements ContentTypeHandler {
+
+    private static final String DEFAULT_CONTENT_TYPE = "application/json";
+    private String defaultEncoding = "ISO-8859-1";
 
     public void toObject(Reader in, Object target) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -76,10 +83,15 @@ public class JsonLibHandler implements ContentTypeHandler {
     }
 
     public String getContentType() {
-        return "text/javascript";
+        return DEFAULT_CONTENT_TYPE+";charset=" + this.defaultEncoding;
     }
     
     public String getExtension() {
         return "json";
+    }
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public void setDefaultEncoding(String val) {
+        this.defaultEncoding = val;
     }
 }

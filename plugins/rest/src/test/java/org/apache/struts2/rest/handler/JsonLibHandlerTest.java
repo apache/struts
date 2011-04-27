@@ -21,12 +21,12 @@
 
 package org.apache.struts2.rest.handler;
 
-import junit.framework.TestCase;
-
-import java.io.StringWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
+
+import junit.framework.TestCase;
 
 public class JsonLibHandlerTest extends TestCase {
 
@@ -66,5 +66,16 @@ public class JsonLibHandlerTest extends TestCase {
         handler.toObject(reader, target);
 
         assertEquals(contact, target);
+    }
+
+    public void testContentType() throws IOException {
+        JsonLibHandler handler = new JsonLibHandler();
+        assertEquals(handler.getContentType(), "application/json;charset=ISO-8859-1");
+    }
+    
+    public void testDefaultEncoding() throws IOException {
+        JsonLibHandler handler = new JsonLibHandler();
+        handler.setDefaultEncoding("UTF-8");
+        assertEquals(handler.getContentType(), "application/json;charset=UTF-8");
     }
 }

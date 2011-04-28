@@ -21,12 +21,12 @@
 package org.apache.struts2.convention;
 
 import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 
+import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.Action;
@@ -38,10 +38,6 @@ import com.opensymphony.xwork2.UnknownHandler;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -219,16 +215,14 @@ public class ConventionUnknownHandler implements UnknownHandler {
         }
         params.put(resultTypeConfig.getDefaultResultParam(), path);
 
-//        PackageConfig pkg = configuration.getPackageConfig(defaultParentPackageName);
-//        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg,
-//            pkg.getFullDefaultInterceptorRef(), Collections.EMPTY_MAP, null, objectFactory);
+        PackageConfig pkg = configuration.getPackageConfig(defaultParentPackageName);
+        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), Collections.EMPTY_MAP, null, objectFactory);
         ResultConfig config = new ResultConfig.Builder(Action.SUCCESS, resultTypeConfig.getClassName()).
             addParams(params).build();
         results.put(Action.SUCCESS, config);
 
-        //addInterceptors(interceptors).
         return new ActionConfig.Builder(defaultParentPackageName, "execute", ActionSupport.class.getName()).
-            addResultConfigs(results).build();
+            addInterceptors(interceptors).addResultConfigs(results).build();
     }
 
     private Result scanResultsByExtension(String ns, String actionName, String pathPrefix,

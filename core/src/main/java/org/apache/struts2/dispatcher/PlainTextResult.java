@@ -21,16 +21,16 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -141,24 +141,22 @@ public class PlainTextResult extends StrutsResultSupport {
         PrintWriter writer = response.getWriter();
         InputStreamReader reader = null;
         try {
+        	InputStream resourceAsStream = servletContext.getResourceAsStream(finalLocation);
             if (charset != null) {
-                reader = new InputStreamReader(servletContext.getResourceAsStream(finalLocation), charset);
+                reader = new InputStreamReader(resourceAsStream, charset);
+            } else {
+                reader = new InputStreamReader(resourceAsStream);
             }
-            else {
-                reader = new InputStreamReader(servletContext.getResourceAsStream(finalLocation));
-            }
-            if (reader == null) {
-                LOG.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
-            }
-            else {
+            if (resourceAsStream == null) {
+            	LOG.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
+            } else {
                 char[] buffer = new char[BUFFER_SIZE];
-                int charRead = 0;
+                int charRead;
                 while((charRead = reader.read(buffer)) != -1) {
                     writer.write(buffer, 0, charRead);
                 }
             }
-        }
-        finally {
+        } finally {
             if (reader != null)
                 reader.close();
             if (writer != null) {

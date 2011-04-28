@@ -64,6 +64,7 @@ public class FormTag extends AbstractClosingTag {
         form.setMethod(method);
         form.setNamespace(namespace);
         form.setValidate(validate);
+        form.setOnreset(onreset);
         form.setOnsubmit(onsubmit);
         form.setPortletMode(portletMode);
         form.setWindowState(windowState);

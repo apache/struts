@@ -36,7 +36,7 @@ public class RestActionProxyFactory extends DefaultActionProxyFactory {
 
     public static final String STRUTS_REST_NAMESPACE = "struts.rest.namespace";
 
-    protected String namespace = "/";
+    protected String namespace;
 
     @Inject(value = STRUTS_REST_NAMESPACE, required = false)
     public void setNamespace(String namespace) {
@@ -45,7 +45,7 @@ public class RestActionProxyFactory extends DefaultActionProxyFactory {
 
     @Override
     public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map extraContext, boolean executeResult, boolean cleanupContext) {
-        if (namespace.startsWith(this.namespace)) {
+        if (this.namespace == null || namespace.startsWith(this.namespace)) {
             ActionInvocation inv = new RestActionInvocation(extraContext, true);
             container.inject(inv);
             return createActionProxy(inv, namespace, actionName, methodName, executeResult, cleanupContext);

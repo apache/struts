@@ -33,7 +33,6 @@ import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -335,9 +334,8 @@ public class RestActionMapper extends DefaultActionMapper {
             String prefix = uri.substring(0, lastSlash);
             namespace = "";
             // Find the longest matching namespace, defaulting to the default
-            for (Iterator i = config.getPackageConfigs().values().iterator(); i
-                    .hasNext();) {
-                String ns = ((PackageConfig) i.next()).getNamespace();
+            for (Object o : config.getPackageConfigs().values()) {
+                String ns = ((PackageConfig) o).getNamespace();
                 if (ns != null && prefix.startsWith(ns) && (prefix.length() == ns.length() || prefix.charAt(ns.length()) == '/')) {
                     if (ns.length() > namespace.length()) {
                         namespace = ns;

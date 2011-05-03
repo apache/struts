@@ -73,7 +73,9 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
           
         super();
         boolean useClassCache = "true".equals(useClassCacheStr);
-        LOG.info("Initializing Struts-Spring integration...");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Initializing Struts-Spring integration...");
+        }
 
         Object rootWebApplicationContext =  servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
@@ -109,7 +111,9 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
             ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext;
             reloadingContext.setupReloading(watchList.split(","), acceptClasses, servletContext, "true".equals(reloadConfig));
-            LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!", watchList);
+            if (LOG.isInfoEnabled()) {
+        	LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!", watchList);
+            }
 
             setClassLoader(reloadingContext.getReloadingClassLoader());
 
@@ -137,6 +141,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
         this.setAlwaysRespectAutowireStrategy("true".equalsIgnoreCase(alwaysAutoWire));
 
-        LOG.info("... initialized Struts-Spring integration successfully");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("... initialized Struts-Spring integration successfully");
+        }
     }
 }

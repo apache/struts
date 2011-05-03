@@ -95,7 +95,9 @@ public abstract class JSONCleaner {
             if (allow(key)) {
                 e.setValue(clean(key, e.getValue()));
             } else {
-                LOG.debug("blocked: " + key);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("blocked: " + key);
+                }
                 iter.remove();
             }
         }

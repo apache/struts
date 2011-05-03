@@ -69,9 +69,8 @@ public class SMDGenerator {
             // find params for this method
             processMethodsParameters(method, smdMethod);
 
-        } else {
-            if (LOG.isDebugEnabled())
-                LOG.debug("Ignoring property " + method.getName());
+        } else if(LOG.isDebugEnabled()) {
+            LOG.debug("Ignoring property " + method.getName());
         }
     }
 

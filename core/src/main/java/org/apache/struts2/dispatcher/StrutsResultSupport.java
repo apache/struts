@@ -206,7 +206,9 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
                                         return URLEncoder.encode(parsedValue.toString(), "UTF-8");
                                     }
                                     catch(UnsupportedEncodingException e) {
-                                        LOG.warn("error while trying to encode ["+parsedValue+"]", e);
+                                        if (LOG.isWarnEnabled()) {
+                                            LOG.warn("error while trying to encode ["+parsedValue+"]", e);
+                                        }
                                     }
                                 }
                             }

@@ -266,7 +266,9 @@ public class UrlHelper {
         try {
             return URLEncoder.encode(translatedInput, encoding);
         } catch (UnsupportedEncodingException e) {
-            LOG.warn("Could not encode URL parameter '" + input + "', returning value un-encoded");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Could not encode URL parameter '" + input + "', returning value un-encoded");
+            }
             return translatedInput;
         }
     }
@@ -278,7 +280,9 @@ public class UrlHelper {
         try {
             return URLDecoder.decode(translatedInput, encoding);
         } catch (UnsupportedEncodingException e) {
-            LOG.warn("Could not encode URL parameter '" + input + "', returning value un-encoded");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Could not encode URL parameter '" + input + "', returning value un-encoded");
+            }
             return translatedInput;
         }
     }

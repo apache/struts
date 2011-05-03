@@ -155,7 +155,9 @@ public class MergeIterator extends ContextBean implements UnnamedParametric {
         for (Iterator parametersIterator = _parameters.iterator(); parametersIterator.hasNext(); ) {
             Object iteratorEntryObj = parametersIterator.next();
             if (! MakeIterator.isIterable(iteratorEntryObj)) {
-                LOG.warn("param with value resolved as "+iteratorEntryObj+" cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("param with value resolved as "+iteratorEntryObj+" cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator");
+                }
                 continue;
             }
             mergeIteratorFilter.setSource(MakeIterator.convert(iteratorEntryObj));

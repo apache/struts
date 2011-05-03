@@ -817,7 +817,9 @@ public abstract class UIBean extends Component {
                 }
             }
             else {
-                LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
+                }
             }
 
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
@@ -902,7 +904,9 @@ public abstract class UIBean extends Component {
         if (form != null) {
             form.addParameter("customOnsubmitEnabled", Boolean.TRUE);
         } else {
-            LOG.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
+            }
         }
     }
 
@@ -932,7 +936,9 @@ public abstract class UIBean extends Component {
                     tooltipConfig.put(key, value);
                 }
                 else {
-                    LOG.warn("component "+component+" tooltip config param "+key+" has no value defined, skipped");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("component "+component+" tooltip config param "+key+" has no value defined, skipped");
+                    }
                 }
             }
         }

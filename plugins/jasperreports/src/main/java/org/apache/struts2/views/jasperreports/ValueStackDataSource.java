@@ -70,7 +70,9 @@ public class ValueStackDataSource implements JRDataSource {
                 iterator = MakeIterator.convert(array);
             }
         } else {
-            LOG.warn("Data source value for data source " + dataSource + " was null");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Data source value for data source " + dataSource + " was null");
+            }
         }
     }
 
@@ -128,11 +130,15 @@ public class ValueStackDataSource implements JRDataSource {
 
         if ((iterator != null) && (iterator.hasNext())) {
             valueStack.push(iterator.next());
-            LOG.debug("Pushed next value: " + valueStack.findValue("."));
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("Pushed next value: " + valueStack.findValue("."));
+            }
 
             return true;
         } else {
-            LOG.debug("No more values");
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("No more values");
+            }
 
             return false;
         }

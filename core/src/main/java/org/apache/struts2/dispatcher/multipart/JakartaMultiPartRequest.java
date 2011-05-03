@@ -79,7 +79,9 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         try {
             processUpload(request, saveDir);
         } catch (FileUploadException e) {
-            LOG.warn("Unable to parse request", e);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Unable to parse request", e);
+            }
             errors.add(e.getMessage());
         }
     }
@@ -98,7 +100,9 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     }
 
     private void processFileField(FileItem item) {
-        LOG.debug("Item is a file upload");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Item is a file upload");
+        }
 
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().length() < 1) {
@@ -118,7 +122,9 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     }
 
     private void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
-        LOG.debug("Item is a normal form field");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Item is a normal form field");
+        }
         List<String> values;
         if (params.get(item.getFieldName()) != null) {
             values = params.get(item.getFieldName());

@@ -387,8 +387,10 @@ class JSONWriter {
             }
             hasData = true;
             if (!warnedNonString && !(key instanceof String)) {
-                LOG.warn("JavaScript doesn't support non-String keys, using toString() on "
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on "
                         + key.getClass().getName());
+                }
                 warnedNonString = true;
             }
             this.value(key.toString(), method);

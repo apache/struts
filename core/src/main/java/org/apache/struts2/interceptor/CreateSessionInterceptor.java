@@ -88,7 +88,10 @@ public class CreateSessionInterceptor extends AbstractInterceptor {
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
-        LOG.debug("Creating HttpSession");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating HttpSession");
+        }
+        
         ServletActionContext.getRequest().getSession(true);
         return invocation.invoke();
     }

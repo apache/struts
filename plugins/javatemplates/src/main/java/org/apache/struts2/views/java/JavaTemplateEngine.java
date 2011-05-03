@@ -86,8 +86,9 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
         while (customThemes.hasMoreTokens()) {
             String themeClass = customThemes.nextToken().trim();
             try {
-                LOG.info("Registering custom theme '" + themeClass + "' to javatemplates engine");
-
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("Registering custom theme '" + themeClass + "' to javatemplates engine");
+                }
 
                 //FIXME: This means Themes must have no-arg constructor - should use object factory here
                 //ObjectFactory.getObjectFactory().buildBean(ClassLoaderUtil.loadClass(themeClass, getClass()), null);

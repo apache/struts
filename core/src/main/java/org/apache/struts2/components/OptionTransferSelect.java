@@ -332,7 +332,9 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
         }
         else {
-            LOG.warn("form enclosing optiontransferselect "+this+" not found, auto select upon form submit of optiontransferselect will not work");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("form enclosing optiontransferselect "+this+" not found, auto select upon form submit of optiontransferselect will not work");
+            }
         }
     }
 

@@ -120,7 +120,9 @@ public class PlainTextResult extends StrutsResultSupport {
                 charset = Charset.forName(charSet);
             }
             else {
-                LOG.warn("charset ["+charSet+"] is not recognized ");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("charset ["+charSet+"] is not recognized ");
+                }
                 charset = null;
             }
         }
@@ -148,7 +150,9 @@ public class PlainTextResult extends StrutsResultSupport {
                 reader = new InputStreamReader(resourceAsStream);
             }
             if (resourceAsStream == null) {
-            	LOG.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
+                if (LOG.isWarnEnabled()) {
+            		LOG.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
+                }
             } else {
                 char[] buffer = new char[BUFFER_SIZE];
                 int charRead;

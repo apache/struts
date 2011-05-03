@@ -183,7 +183,9 @@ public class AliasInterceptor extends AbstractInterceptor {
                 if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
                     stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
             } else {
-                LOG.debug("invalid alias expression:" + aliasesKey);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("invalid alias expression:" + aliasesKey);
+                }
             }
         }
         

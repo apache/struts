@@ -97,7 +97,9 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
                     WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
             if (applicationContext == null) {
-                LOG.warn("ApplicationContext could not be found.  Action classes will not be autowired.");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("ApplicationContext could not be found.  Action classes will not be autowired.");
+                }
             } else {
                 setApplicationContext(applicationContext);
                 factory = new SpringObjectFactory();

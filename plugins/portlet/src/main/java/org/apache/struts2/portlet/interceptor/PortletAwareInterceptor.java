@@ -79,7 +79,9 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Port
             
             // Check if running in a servlet environment
             if (request == null) {
-                LOG.warn("This portlet preferences implementation should only be used during development");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("This portlet preferences implementation should only be used during development");
+                }
                 ((PortletPreferencesAware)action).setPortletPreferences(new ServletPortletPreferences(ActionContext.getContext().getSession()));
             } else {
             	((PortletPreferencesAware)action).setPortletPreferences(request.getPreferences());

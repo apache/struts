@@ -358,11 +358,10 @@ public class RestActionInvocation extends DefaultActionInvocation {
         	ResultConfig resultConfig = this.proxy.getConfig().getResults()
         		.get(defaultErrorResultName);
         	if (resultConfig != null) {
-        		this.result = objectFactory.buildResult(resultConfig, 
-            			invocationContext.getContextMap());
-        		if (LOG.isDebugEnabled()) {
-	                LOG.debug("Found default error result.");
-	            }
+        	    this.result = objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
+        	    if (LOG.isDebugEnabled()) {
+        		LOG.debug("Found default error result.");
+        	    }
         	}
         }
 		
@@ -446,7 +445,9 @@ public class RestActionInvocation extends DefaultActionInvocation {
 		     message += "] took " + total + " ms (execution: " + executionTime 
 		     	+ " ms, result: " + processResult + " ms)";
 		     
-		     LOG.info(message);
+		     if (LOG.isInfoEnabled()) {
+			 LOG.info(message);
+		     }
 	     }
 	}
 	

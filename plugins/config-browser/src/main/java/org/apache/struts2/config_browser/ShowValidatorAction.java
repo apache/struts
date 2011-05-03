@@ -112,7 +112,9 @@ public class ShowValidatorAction extends ListValidatorsAction {
                 properties.add(new PropertyInfo(name, pd.getPropertyType(), value));
             }
         } catch (Exception e) {
-            LOG.warn("Unable to retrieve properties.", e);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Unable to retrieve properties.", e);
+            }
             addActionError("Unable to retrieve properties: " + e.toString());
         }
 

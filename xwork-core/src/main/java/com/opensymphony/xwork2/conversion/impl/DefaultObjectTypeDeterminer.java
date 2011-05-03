@@ -131,7 +131,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
             clazz = (Class) xworkConverter
                     .getConverter(parentClass, DEPRECATED_ELEMENT_PREFIX + property);
 
-            if (clazz != null) {
+            if (LOG.isInfoEnabled() && clazz != null) {
                 LOG.info("The Collection_xxx pattern for collection type conversion is deprecated. Please use Element_xxx!");
             }
         }

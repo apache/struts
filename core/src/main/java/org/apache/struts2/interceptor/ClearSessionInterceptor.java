@@ -83,7 +83,10 @@ public class ClearSessionInterceptor extends AbstractInterceptor {
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
-        LOG.debug("Clearing HttpSession");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Clearing HttpSession");
+        }
+        
         ActionContext ac = invocation.getInvocationContext();
         Map session = ac.getSession();
  

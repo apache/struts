@@ -44,7 +44,9 @@ public class PreparatorServlet extends HttpServlet implements StrutsStatics {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
+            if (LOG.isWarnEnabled()) {
 		LOG.warn("The preparator servlet has been deprecated. It can safely be removed from your web.xml file");
+            }
 	}
 
 }

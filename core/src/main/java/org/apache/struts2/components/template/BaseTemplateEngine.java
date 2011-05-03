@@ -102,7 +102,9 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         try {
             is.close();
         } catch (IOException io) {
-            LOG.warn("Unable to close input stream", io);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Unable to close input stream", io);
+            }
         }
     }
 
@@ -122,7 +124,9 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         try {
             return createFileInputStream(propFile);
         } catch (FileNotFoundException e) {
-            LOG.warn("Unable to find file in filesystem [" + propFile.getAbsolutePath() + "]");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Unable to find file in filesystem [" + propFile.getAbsolutePath() + "]");
+            }
             return null;
         }
     }

@@ -78,8 +78,10 @@ public class PortletUrlHelper {
     	StringBuffer resultingAction = new StringBuffer();
         RenderRequest request = PortletActionContext.getRenderRequest();
         RenderResponse response = PortletActionContext.getRenderResponse();
-        LOG.debug("Creating url. Action = " + action + ", Namespace = "
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating url. Action = " + action + ", Namespace = "
                 + namespace + ", Type = " + type);
+        }
         namespace = prependNamespace(namespace, portletMode);
         if (StringUtils.isEmpty(portletMode)) {
             portletMode = PortletActionContext.getRenderRequest().getPortletMode().toString();

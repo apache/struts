@@ -199,7 +199,9 @@ public class ConfigurationManager {
                 containerProvider.destroy();
             }
             catch(Exception e) {
-                LOG.warn("error while destroying container provider ["+containerProvider+"]", e);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("error while destroying container provider ["+containerProvider+"]", e);
+                }
             }
         }
         containerProviders.clear();
@@ -261,7 +263,9 @@ public class ConfigurationManager {
                 		containerProvider.destroy();
                 	}
                 	catch(Exception e) {
+                            if (LOG.isWarnEnabled()) {
                 		LOG.warn("error while destroying configuration provider ["+containerProvider+"]", e);
+                            }
                 	}
                 }
                 packageProviders = configuration.reloadContainer(providers);

@@ -198,13 +198,18 @@ public class MessageStoreInterceptor implements Interceptor {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
-        LOG.debug("entering MessageStoreInterceptor ...");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("entering MessageStoreInterceptor ...");
+        }
 
         before(invocation);
         String result = invocation.invoke();
         after(invocation, result);
 
-        LOG.debug("exit executing MessageStoreInterceptor");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("exit executing MessageStoreInterceptor");
+        }
+        
         return result;
     }
 
@@ -228,7 +233,9 @@ public class MessageStoreInterceptor implements Interceptor {
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
                 ValidationAware validationAwareAction = (ValidationAware) action;
 
-                LOG.debug("retrieve error / message from session to populate into action ["+action+"]");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("retrieve error / message from session to populate into action ["+action+"]");
+                }
 
                 Collection actionErrors = (Collection) session.get(actionErrorsSessionKey);
                 Collection actionMessages = (Collection) session.get(actionMessagesSessionKey);
@@ -276,15 +283,17 @@ public class MessageStoreInterceptor implements Interceptor {
                 // store error / messages into session
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
 
-                LOG.debug("store action ["+action+"] error/messages into session ");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("store action ["+action+"] error/messages into session ");
+                }
 
                 ValidationAware validationAwareAction = (ValidationAware) action;
                 session.put(actionErrorsSessionKey, validationAwareAction.getActionErrors());
                 session.put(actionMessagesSessionKey, validationAwareAction.getActionMessages());
                 session.put(fieldErrorsSessionKey, validationAwareAction.getFieldErrors());
             }
-            else {
-                LOG.debug("Action ["+action+"] is not ValidationAware, no message / error that are storeable");
+            else if(LOG.isDebugEnabled()) {
+        	LOG.debug("Action ["+action+"] is not ValidationAware, no message / error that are storeable");
             }
         }
     }

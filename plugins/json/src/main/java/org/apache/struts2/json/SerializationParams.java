@@ -20,9 +20,9 @@
  */
 package org.apache.struts2.json;
 
-import org.apache.commons.lang.StringUtils;
-
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 
 public class SerializationParams {
     private static final String DEFAULT_CONTENT_TYPE = "application/json";

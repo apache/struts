@@ -53,7 +53,9 @@ public class ServletContextHolderListener implements ServletContextListener {
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     public void contextInitialized(ServletContextEvent event) {
-    	LOG.warn("The ServletContextHolderListener has been deprecated. It can safely be removed from your web.xml file");
+        if (LOG.isWarnEnabled()) {
+    		LOG.warn("The ServletContextHolderListener has been deprecated. It can safely be removed from your web.xml file");
+        }
         context = event.getServletContext();
     }
 

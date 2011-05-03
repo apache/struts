@@ -66,7 +66,9 @@ public class SpringProxyableObjectFactory extends SpringObjectFactory {
                         try {
                             return anAppContext.getBean(beanName);
                         } catch (NoSuchBeanDefinitionException e2) {
-                            LOG.warn("Could not register new bean definition for bean " + beanName);
+                            if (LOG.isWarnEnabled()) {
+                        	LOG.warn("Could not register new bean definition for bean " + beanName);
+                            }
                             skipBeanNames.add(beanName);
                         }
                     } catch (ClassNotFoundException e1) {

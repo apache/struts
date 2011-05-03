@@ -206,7 +206,9 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
                     count = Integer.parseInt((String)countObj);
                 }
                 catch(NumberFormatException e) {
-                    LOG.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
+                    }
                 }
             }
         }

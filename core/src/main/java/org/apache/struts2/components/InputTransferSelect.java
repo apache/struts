@@ -201,7 +201,9 @@ public class InputTransferSelect extends ListUIBean {
 
         }
         else {
-            LOG.warn("form enclosing inputtransferselect "+this+" not found, auto select upon form submit of inputtransferselect will not work");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("form enclosing inputtransferselect "+this+" not found, auto select upon form submit of inputtransferselect will not work");
+            }
         }
     }
 

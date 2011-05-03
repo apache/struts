@@ -294,7 +294,9 @@ public class PlexusObjectFactory extends ObjectFactory {
             return pc.lookup(role, roleHint);
         }
         catch (Exception e) {
-            LOG.debug("Can't load component (" + role + "/" + roleHint + ") with plexus, try now with struts.", e);
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("Can't load component (" + role + "/" + roleHint + ") with plexus, try now with struts.", e);
+            }
             Object o = super.buildBean(super.getClassInstance(role), extraContext);
             pc.autowire(o);
             return o;

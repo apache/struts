@@ -223,7 +223,9 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                     count = Integer.parseInt((String)countObj);
                 }
                 catch(NumberFormatException e) {
-                    LOG.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
+                    }
                 }
             }
         }
@@ -249,7 +251,9 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                     start = Integer.parseInt((String)startObj);
                 }
                 catch(NumberFormatException e) {
-                    LOG.warn("unable to convert count attribute ["+startObj+"] to number, ignore count attribute", e);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("unable to convert count attribute ["+startObj+"] to number, ignore count attribute", e);
+                    }
                 }
             }
         }

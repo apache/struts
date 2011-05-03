@@ -192,7 +192,9 @@ public class VelocityManager {
                 VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, null);
                 contextList.add(velocityContext);
             } catch (Exception e) {
-                LOG.warn("Warning.  " + e.getClass().getName() + " caught while attempting to instantiate a chained VelocityContext, " + className + " -- skipping");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Warning.  " + e.getClass().getName() + " caught while attempting to instantiate a chained VelocityContext, " + className + " -- skipping");
+                }
             }
         }
         if (contextList.size() > 0) {
@@ -299,11 +301,15 @@ public class VelocityManager {
 
             // if we've got something, load 'er up
             if (in != null) {
-                LOG.info("Initializing velocity using " + resourceLocation);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("Initializing velocity using " + resourceLocation);
+                }
                 properties.load(in);
             }
         } catch (IOException e) {
-            LOG.warn("Unable to load velocity configuration " + resourceLocation, e);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Unable to load velocity configuration " + resourceLocation, e);
+            }
         } finally {
             if (in != null) {
                 try {

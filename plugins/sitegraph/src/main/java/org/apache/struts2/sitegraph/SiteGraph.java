@@ -66,7 +66,9 @@ public class SiteGraph {
     }
 
     public static void main(String[] args) throws IOException {
-        LOG.info("SiteGraph starting...");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("SiteGraph starting...");
+        }
 
         if (args.length != 8 && args.length != 6) {
             InputStream is = SiteGraph.class.getResourceAsStream("sitegraph-usage.txt");

@@ -188,9 +188,10 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled())
+        if (LOG.isDebugEnabled()) {
             LOG.debug("start interception");
-
+        }
+        
         // contains selected cookies
         final Map<String, String> cookiesMap = new LinkedHashMap<String, String>();
 
@@ -203,8 +204,9 @@ public class CookieInterceptor extends AbstractInterceptor {
                 String value = cookie.getValue();
 
                 if (cookiesNameSet.contains("*")) {
-                    if (LOG.isDebugEnabled())
+                    if (LOG.isDebugEnabled()) {
                         LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name [" + name + "] with value [" + value + "] will be injected");
+                    }
                     populateCookieValueIntoStack(name, value, cookiesMap, stack);
                 } else if (cookiesNameSet.contains(cookie.getName())) {
                     populateCookieValueIntoStack(name, value, cookiesMap, stack);
@@ -246,8 +248,10 @@ public class CookieInterceptor extends AbstractInterceptor {
             // if cookiesValues is specified, the cookie's value must match before we
             // inject them into Struts' action
             if (cookiesValueSet.contains(cookieValue)) {
-                if (LOG.isDebugEnabled())
+                if (LOG.isDebugEnabled()) {
                     LOG.debug("both configured cookie name and value matched, cookie ["+cookieName+"] with value ["+cookieValue+"] will be injected");
+                }
+                
                 cookiesMap.put(cookieName, cookieValue);
                 stack.setValue(cookieName, cookieValue);
             }
@@ -263,8 +267,9 @@ public class CookieInterceptor extends AbstractInterceptor {
      */
     protected void injectIntoCookiesAwareAction(Object action, Map<String, String> cookiesMap) {
         if (action instanceof CookiesAware) {
-            if (LOG.isDebugEnabled())
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("action ["+action+"] implements CookiesAware, injecting cookies map ["+cookiesMap+"]");
+            }
             ((CookiesAware)action).setCookiesMap(cookiesMap);
         }
     }

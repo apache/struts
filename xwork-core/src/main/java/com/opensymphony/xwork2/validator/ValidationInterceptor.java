@@ -240,7 +240,9 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
             catch(Exception e) {
                 // If any exception occurred while doing reflection, we want 
                 // validate() to be executed
-                LOG.warn("an exception occured while executing the prefix method", e);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("an exception occured while executing the prefix method", e);
+                }
                 exception = e;
             }
             

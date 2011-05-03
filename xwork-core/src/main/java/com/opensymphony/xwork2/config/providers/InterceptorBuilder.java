@@ -70,9 +70,11 @@ public class InterceptorBuilder {
                     inter = objectFactory.buildInterceptor(config, refParams);
                     result.add(new InterceptorMapping(refName, inter));
                 } catch (ConfigurationException ex) {
-                    LOG.warn("Unable to load config class " + config.getClassName() + " at " +
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("Unable to load config class " + config.getClassName() + " at " +
                             ex.getLocation() + " probably due to a missing jar, which might " +
                             "be fine if you never plan to use the " + config.getName() + " interceptor");
+                    }
                     LOG.error("Actual exception", ex);
                 }
 
@@ -147,7 +149,9 @@ public class InterceptorBuilder {
                 params.put(name, map);
 
             } catch (Exception e) {
-                LOG.warn("No interceptor found for name = " + key);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("No interceptor found for name = " + key);
+                }
             }
         }
 

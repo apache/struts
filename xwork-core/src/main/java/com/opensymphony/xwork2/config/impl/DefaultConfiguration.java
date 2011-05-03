@@ -467,7 +467,7 @@ public class DefaultConfiguration implements Configuration {
         @Override
         public Object setProperty(String key, String value) {
             String oldValue = getProperty(key);
-            if (oldValue != null && !oldValue.equals(value) && !defaultFrameworkBeanName.equals(oldValue)) {
+            if (LOG.isInfoEnabled() && oldValue != null && !oldValue.equals(value) && !defaultFrameworkBeanName.equals(oldValue)) {
                 LOG.info("Overriding property "+key+" - old value: "+oldValue+" new value: "+value);
             }
             return super.setProperty(key, value);

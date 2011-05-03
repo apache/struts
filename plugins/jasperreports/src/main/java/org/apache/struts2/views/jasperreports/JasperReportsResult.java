@@ -309,7 +309,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Add any report parameters from action to param map.
         Map reportParams = (Map) stack.findValue(reportParameters);
         if (reportParams != null) {
-            LOG.debug("Found report parameters; adding to parameters...");
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("Found report parameters; adding to parameters...");
+            }
             parameters.putAll(reportParams);
         }
 
@@ -382,7 +384,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
             Map exportParams = (Map) stack.findValue(exportParameters);
             if (exportParams != null) {
-                LOG.debug("Found export parameters; adding to exporter parameters...");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Found export parameters; adding to exporter parameters...");
+                }
                 exporter.getParameters().putAll(exportParams);
             }
 

@@ -258,7 +258,9 @@ public class Dispatcher {
     	// clean up ObjectFactory
         ObjectFactory objectFactory = getContainer().getInstance(ObjectFactory.class);
         if (objectFactory == null) {
-            LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
+            }
         }
         if (objectFactory instanceof ObjectFactoryDestroyable) {
             try {
@@ -395,7 +397,9 @@ public class Dispatcher {
         // test whether param-access workaround needs to be enabled
         if (servletContext != null && servletContext.getServerInfo() != null
                 && servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
-            LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
+            if (LOG.isInfoEnabled()) {
+        	LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
+            }
             paramsWorkaroundEnabled = true;
         } else {
             paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
@@ -512,7 +516,9 @@ public class Dispatcher {
                 LOG.error("Could not find action or result\n" + reqStr, e);
             }
         	else {
+                    if (LOG.isWarnEnabled()) {
         		LOG.warn("Could not find action or result", e);
+                    }
         	}
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
@@ -616,7 +622,9 @@ public class Dispatcher {
 
         if (saveDir.equals("")) {
             File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+            if (LOG.isInfoEnabled()) {
+        	LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+            }
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -637,7 +645,9 @@ public class Dispatcher {
                         LOG.error(logMessage);
         	    }
         	    else {
-                        LOG.warn(logMessage);
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn(logMessage);
+                        }
         	    }
                 }
             }
@@ -754,7 +764,9 @@ public class Dispatcher {
 
                 if ((currentFile != null) && currentFile.isFile()) {
                     if (!currentFile.delete()) {
-                        LOG.warn("Resource Leaking:  Could not remove uploaded file '" + currentFile.getCanonicalPath() + "'.");
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("Resource Leaking:  Could not remove uploaded file '" + currentFile.getCanonicalPath() + "'.");
+                        }
                     }
                 }
             }

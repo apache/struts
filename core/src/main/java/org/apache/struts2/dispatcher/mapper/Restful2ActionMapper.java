@@ -210,7 +210,9 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.getParams().putAll(parameters);
                     }
                 } catch (Exception e) {
-                    LOG.warn("Unable to determine parameters from the url", e);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("Unable to determine parameters from the url", e);
+                    }
                 }
                 mapping.setName(actionName.substring(actionSlashPos+1));
             }

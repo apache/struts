@@ -263,10 +263,12 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
                 Map results = proxy.getConfig().getResults();
                 if (!results.containsKey(WAIT)) {
-                    LOG.warn("ExecuteAndWait interceptor has detected that no result named 'wait' is available. " +
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("ExecuteAndWait interceptor has detected that no result named 'wait' is available. " +
                             "Defaulting to a plain built-in wait page. It is highly recommend you " +
                             "provide an action-specific or global result named '" + WAIT +
                             "'.");
+                    }
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
 
                     //we used to add a fake "wait" result here, since the configuration is unmodifiable, that is no longer

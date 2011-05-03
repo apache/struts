@@ -118,7 +118,9 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
     private void setupEncoding(HttpServletResponse response, HttpServletRequest request) {
         if (isSetEncoding(request)) {
-            LOG.debug("Default encoding not set!");
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("Default encoding not set!");
+            }
         } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Setting up encoding to: [" + DEFAULT_ENCODING + "]!");

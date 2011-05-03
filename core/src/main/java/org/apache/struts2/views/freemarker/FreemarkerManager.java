@@ -450,7 +450,9 @@ public class FreemarkerManager {
                 try {
                     in.close();
                 } catch(IOException io) {
-                    LOG.warn("Unable to close input stream", io);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("Unable to close input stream", io);
+                    }
                 }
             }
         }

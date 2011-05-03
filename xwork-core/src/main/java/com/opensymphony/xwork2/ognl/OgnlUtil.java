@@ -244,7 +244,9 @@ public class OgnlUtil {
      */
     public void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
         if (from == null || to == null) {
-            LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
+            }
 
             return;
         }

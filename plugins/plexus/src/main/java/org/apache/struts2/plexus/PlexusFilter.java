@@ -82,7 +82,9 @@ public class PlexusFilter implements Filter {
                 }
 
                 if (parent.hasChildContainer(CHILD_CONTAINER_NAME)) {
-                    LOG.warn("Plexus container (scope: request) alredy exist.");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("Plexus container (scope: request) alredy exist.");
+                    }
                     child = parent.getChildContainer(CHILD_CONTAINER_NAME);
                 } else {
                     child = parent.createChildContainer(CHILD_CONTAINER_NAME, Collections.EMPTY_LIST, Collections.EMPTY_MAP);

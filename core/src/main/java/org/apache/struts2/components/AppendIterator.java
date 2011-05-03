@@ -141,7 +141,9 @@ public class AppendIterator extends ContextBean implements UnnamedParametric {
 
             Object iteratorEntryObj = paramEntries.next();
             if (! MakeIterator.isIterable(iteratorEntryObj)) {
-                LOG.warn("param with value resolved as "+iteratorEntryObj+" cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("param with value resolved as "+iteratorEntryObj+" cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator");
+                }
                 continue;
             }
             appendIteratorFilter.setSource(MakeIterator.convert(iteratorEntryObj));

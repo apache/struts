@@ -251,7 +251,9 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             while (customBundles.hasMoreTokens()) {
                 String name = customBundles.nextToken();
                 try {
-                    LOG.info("Loading global messages from " + name);
+                    if (LOG.isInfoEnabled()) {
+                	LOG.info("Loading global messages from " + name);
+                    }
                     LocalizedTextUtil.addDefaultResourceBundle(name);
                 } catch (Exception e) {
                     LOG.error("Could not find messages file " + name + ".properties. Skipping");
@@ -268,7 +270,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         if (!builder.contains(type)) {
             String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
             if (builder.contains(type, foundName)) {
-                if (LOG.isDebugEnabled()) {
+                if (LOG.isInfoEnabled()) {
                     LOG.info("Choosing bean ("+foundName+") for "+type);
                 }
                 builder.alias(type, foundName, Container.DEFAULT_NAME);
@@ -296,7 +298,9 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                 }
             }
         } else {
-            LOG.warn("Unable to alias bean type "+type+", default mapping already assigned.");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Unable to alias bean type "+type+", default mapping already assigned.");
+            }
         }
     }
 

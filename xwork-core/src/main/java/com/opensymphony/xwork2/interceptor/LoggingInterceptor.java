@@ -79,7 +79,9 @@ public class LoggingInterceptor extends AbstractInterceptor {
             }
 
             message.append(invocation.getProxy().getActionName());
-            LOG.info(message.toString());
+            if (LOG.isInfoEnabled()) {
+        	LOG.info(message.toString());
+            }
         }
     }
 

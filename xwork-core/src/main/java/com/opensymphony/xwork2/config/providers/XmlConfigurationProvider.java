@@ -160,7 +160,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     }
 
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
-        LOG.info("Parsing configuration file [" + configFileName + "]");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Parsing configuration file [" + configFileName + "]");
+        }
         Map<String, Node> loadedBeans = new HashMap<String, Node>();
         for (Document doc : documents) {
             Element rootElement = doc.getDocumentElement();
@@ -346,7 +348,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         Location location = DomHelper.getLocationObject(actionElement);
 
         if (location == null) {
-            LOG.warn("location null for " + className);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("location null for " + className);
+            }
         }
         //methodName should be null if it's not set
         methodName = (methodName.trim().length() > 0) ? methodName.trim() : null;
@@ -425,7 +429,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             throw new ConfigurationException("Action class [" + className + "] does not have a public no-arg constructor", e, loc);
         } catch (RuntimeException ex) {
             // Probably not a big deal, like request or session-scoped Spring 2 beans that need a real request
-            LOG.info("Unable to verify action class [" + className + "] exists at initialization");
+            if (LOG.isInfoEnabled()) {
+        	LOG.info("Unable to verify action class [" + className + "] exists at initialization");
+            }
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Action verification cause", ex);
             }
@@ -529,11 +535,15 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         try {
             return objectFactory.getClassInstance(className);
         } catch (ClassNotFoundException e) {
-            LOG.warn("Result class [" + className + "] doesn't exist (ClassNotFoundException) at " +
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Result class [" + className + "] doesn't exist (ClassNotFoundException) at " +
                     loc.toString() + ", ignoring", e);
+            }
         } catch (NoClassDefFoundError e) {
-            LOG.warn("Result class [" + className + "] doesn't exist (NoClassDefFoundError) at " +
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Result class [" + className + "] doesn't exist (NoClassDefFoundError) at " +
                     loc.toString() + ", ignoring", e);
+            }
         }
 
         return null;
@@ -665,7 +675,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                                 resultParams.put(paramName, val);
                             }
                         } else {
-                            LOG.warn("no default parameter defined for result of type " + config.getName());
+                            if (LOG.isWarnEnabled()) {
+                        	LOG.warn("no default parameter defined for result of type " + config.getName());
+                            }
                         }
                     }
                 }
@@ -885,8 +897,10 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 if (errorIfMissing) {
                     throw new ConfigurationException("Could not open files of the name " + fileName, ioException);
                 } else {
-                    LOG.info("Unable to locate configuration files of the name "
+                    if (LOG.isInfoEnabled()) {
+                	LOG.info("Unable to locate configuration files of the name "
                             + fileName + ", skipping");
+                    }
                     return docs;
                 }
             }

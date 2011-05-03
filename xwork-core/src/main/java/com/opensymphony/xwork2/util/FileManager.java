@@ -294,7 +294,9 @@ public class FileManager {
                     separatorIndex = fileName.lastIndexOf(JAR_FILE_EXTENSION_END);
                 }
                 if (separatorIndex == -1) {
-                    LOG.warn("Could not find end of jar file!");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("Could not find end of jar file!");
+                    }
                     return null;
                 }
                 // Split file name
@@ -311,7 +313,9 @@ public class FileManager {
                     return null;
                 }
             } catch (Throwable e) {
-                LOG.warn("Could not create JarEntryRevision for [" + jarFileName + "]!", e);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Could not create JarEntryRevision for [" + jarFileName + "]!", e);
+                }
                 return null;
             }
         }

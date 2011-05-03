@@ -158,7 +158,9 @@ public class PellMultiPartRequest implements MultiPartRequest {
                 http.utils.multipartrequest.MultipartRequest.setEncoding("UTF-8");
             }
         } catch (IllegalArgumentException e) {
-            LOG.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
+            if (LOG.isInfoEnabled()) {
+        	LOG.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
+            }
         } catch (UnsupportedEncodingException e) {
             LOG.error("Encoding " + encoding + " is not a valid encoding.  Please check your struts.properties file.");
         }

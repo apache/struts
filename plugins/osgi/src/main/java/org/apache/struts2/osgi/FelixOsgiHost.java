@@ -228,8 +228,9 @@ public class FelixOsgiHost implements OsgiHost {
                         //add all the bundles to the list
                         for (File bundle : bundles) {
                             String externalForm = bundle.toURI().toURL().toExternalForm();
-                            if (LOG.isDebugEnabled())
+                            if (LOG.isDebugEnabled()) {
                                 LOG.debug("Adding bundle [#0]", externalForm);
+                            }
                             bundleJars.add(externalForm);
                         }
 

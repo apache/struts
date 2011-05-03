@@ -63,7 +63,9 @@ public class StrutsTilesListener extends TilesListener {
             context = decorate(context);
         }
         else {
-            LOG.warn("Tiles container factory is explicitly set.  Not injecting struts configuration.");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Tiles container factory is explicitly set.  Not injecting struts configuration.");
+            }
         }
         return super.createContainer(context);
     }

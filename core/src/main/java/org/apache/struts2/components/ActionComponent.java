@@ -167,7 +167,9 @@ public class ActionComponent extends ContextBean {
                 try {
                     writer.flush();
                 } catch (IOException e) {
-                    LOG.warn("error while trying to flush writer ", e);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("error while trying to flush writer ", e);
+                    }
                 }
             }
             executeAction();

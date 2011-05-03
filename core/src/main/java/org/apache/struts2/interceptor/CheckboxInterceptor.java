@@ -77,7 +77,9 @@ public class CheckboxInterceptor implements Interceptor {
                 Object values = entry.getValue();
                 iterator.remove();
                 if (values != null && values instanceof String[] && ((String[])values).length > 1) {
-                    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: #1", name);
+                    if (LOG.isDebugEnabled()) {
+                	LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: #1", name);
+                    }
                     continue;
                 }
 

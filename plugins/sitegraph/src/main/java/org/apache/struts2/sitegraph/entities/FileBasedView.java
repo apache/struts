@@ -104,7 +104,9 @@ public abstract class FileBasedView implements View {
 
             return buffer.toString();
         } catch (FileNotFoundException e) {
-            LOG.warn("File not found");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("File not found");
+            }
         } catch (IOException e) {
             LOG.error("Cannot read file: "+file, e);
         }

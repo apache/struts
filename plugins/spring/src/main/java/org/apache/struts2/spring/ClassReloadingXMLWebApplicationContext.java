@@ -109,7 +109,9 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
                 classLoader.addResourceStore(new JarResourceStore(file));
                 //register with the fam
                 fam.addListener(file, this);
-                LOG.debug("Watching [#0] for changes", file.getAbsolutePath());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Watching [#0] for changes", file.getAbsolutePath());
+                }
             } else {
                 //get all subdirs
                 List<File> dirs = new ArrayList<File>();
@@ -120,7 +122,9 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
                 for (File dir : dirs) {
                     //register with the fam
                     fam.addListener(dir, this);
-                    LOG.debug("Watching [#0] for changes", dir.getAbsolutePath());
+                    if (LOG.isDebugEnabled()) {
+                	LOG.debug("Watching [#0] for changes", dir.getAbsolutePath());
+                    }
                 }
             }
         }

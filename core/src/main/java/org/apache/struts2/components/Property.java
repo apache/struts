@@ -165,7 +165,9 @@ public class Property extends Component {
                 writer.write(prepare(defaultValue));
             }
         } catch (IOException e) {
-            LOG.info("Could not print out value '" + value + "'", e);
+            if (LOG.isInfoEnabled()) {
+        	LOG.info("Could not print out value '" + value + "'", e);
+            }
         }
 
         return result;

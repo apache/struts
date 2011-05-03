@@ -407,7 +407,9 @@ public class LocalizedTextUtil {
                                   ValueStack valueStack) {
         String indexedTextName = null;
         if (aTextName == null) {
-            LOG.warn("Trying to find text with null key!");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Trying to find text with null key!");
+            }
             aTextName = "";
         }
         // calculate indexedTextName (collection[*]) if applicable
@@ -537,7 +539,7 @@ public class LocalizedTextUtil {
         }
 
         // could we find the text, if not log a warn
-        if (unableToFindTextForKey(result)) {
+        if (unableToFindTextForKey(result) && LOG.isDebugEnabled()) {
             String warn = "Unable to find text for key '" + aTextName + "' ";
             if (indexedTextName != null) {
                 warn += " or indexed key '" + indexedTextName + "' ";
@@ -632,7 +634,7 @@ public class LocalizedTextUtil {
         }
 
         GetDefaultMessageReturnArg result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
-        if (unableToFindTextForKey(result)) {
+        if (LOG.isWarnEnabled() && unableToFindTextForKey(result)) {
             LOG.warn("Unable to find text for key '" + aTextName + "' in ResourceBundles for locale '" + locale + "'");
         }
         return result != null ? result.message : null;
@@ -803,7 +805,9 @@ public class LocalizedTextUtil {
                 }
             }
         } catch (Exception e) {
-            LOG.warn("couldn't clear tomcat cache", e);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("couldn't clear tomcat cache", e);
+            }
         }
     }
 

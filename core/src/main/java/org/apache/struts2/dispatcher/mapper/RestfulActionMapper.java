@@ -106,7 +106,9 @@ public class RestfulActionMapper implements ActionMapper {
                 }
             }
         } catch (Exception e) {
-            LOG.warn("Cannot determine url parameters", e);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Cannot determine url parameters", e);
+            }
         }
 
         return new ActionMapping(actionName, "", "", parameters);

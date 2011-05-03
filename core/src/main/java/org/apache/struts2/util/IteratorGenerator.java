@@ -93,7 +93,9 @@ public class IteratorGenerator implements Iterator, Action {
                             values.add(convertedObj);
                         }
                         catch(Exception e) { // make sure things, goes on, we just ignore the bad ones
-                            LOG.warn("unable to convert ["+token+"], skipping this token, it will not appear in the generated iterator", e);
+                            if (LOG.isWarnEnabled()) {
+                        	LOG.warn("unable to convert ["+token+"], skipping this token, it will not appear in the generated iterator", e);
+                            }
                         }
                     }
                     else {

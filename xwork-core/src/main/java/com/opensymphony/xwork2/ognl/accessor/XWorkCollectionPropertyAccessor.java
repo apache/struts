@@ -81,7 +81,9 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     public Object getProperty(Map context, Object target, Object key)
             throws OgnlException {
 
-        LOG.debug("Entering getProperty()");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Entering getProperty()");
+        }
 
         //check if it is a generic type property.
         //if so, return the value from the
@@ -185,13 +187,19 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
       */
     private Map getSetMap(Map context, Collection collection, String property, Class valueClass)
             throws OgnlException {
-        LOG.debug("getting set Map");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getting set Map");
+        }
+        
         String path = ReflectionContextState.getCurrentPropertyPath(context);
         Map map = ReflectionContextState.getSetMap(context,
                 path);
 
         if (map == null) {
-            LOG.debug("creating set Map");
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("creating set Map");
+            }
+            
             map = new HashMap();
             map.put(null, new SurrugateList(collection));
             for (Object currTest : collection) {

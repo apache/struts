@@ -322,7 +322,9 @@ public class ResolverUtil<T> {
             urls = loader.getResources(packageName);
         }
         catch (IOException ioe) {
-            LOG.warn("Could not read package: " + packageName, ioe);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Could not read package: " + packageName, ioe);
+            }
             return;
         }
 
@@ -341,7 +343,9 @@ public class ResolverUtil<T> {
                     urlPath = urlPath.substring(0, urlPath.indexOf('!'));
                 }
 
-                LOG.info("Scanning for classes in [" + urlPath + "] matching criteria: " + test);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("Scanning for classes in [" + urlPath + "] matching criteria: " + test);
+                }
                 File file = new File(urlPath);
                 if ( file.isDirectory() ) {
                     loadImplementationsInDirectory(test, packageName, file);
@@ -351,7 +355,9 @@ public class ResolverUtil<T> {
                 }
             }
             catch (IOException ioe) {
-                LOG.warn("could not read entries", ioe);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("could not read entries", ioe);
+                }
             }
         }
     }
@@ -451,8 +457,10 @@ public class ResolverUtil<T> {
             }
         }
         catch (Throwable t) {
-            LOG.warn("Could not examine class '" + fqn + "' due to a " +
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Could not examine class '" + fqn + "' due to a " +
                      t.getClass().getName() + " with message: " + t.getMessage());
+            }
         }
     }
 }

@@ -358,7 +358,9 @@ public class XSLTResult implements Result {
 
                 public void warning(TransformerException exception)
                         throws TransformerException {
-                    LOG.warn(exception.getMessage(), exception);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn(exception.getMessage(), exception);
+                    }
                 }
                 
             });
@@ -384,7 +386,9 @@ public class XSLTResult implements Result {
             Source xmlSource = getDOMSourceForStack(result);
 
             // Transform the source XML to System.out.
-            LOG.debug("xmlSource = " + xmlSource);
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("xmlSource = " + xmlSource);
+            }
             transformer.transform(xmlSource, new StreamResult(writer));
 
             writer.flush(); // ...and flush...
@@ -437,7 +441,9 @@ public class XSLTResult implements Result {
                     throw new TransformerException("Stylesheet " + path + " not found in resources.");
                 }
 
-                LOG.debug("Preparing XSLT stylesheet templates: " + path);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Preparing XSLT stylesheet templates: " + path);
+                }
 
                 TransformerFactory factory = TransformerFactory.newInstance();
                 factory.setURIResolver(getURIResolver());

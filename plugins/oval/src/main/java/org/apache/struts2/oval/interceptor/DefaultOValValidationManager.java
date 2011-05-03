@@ -55,8 +55,9 @@ public class DefaultOValValidationManager implements OValValidationManager {
         configurers.add(annotationsConfigurer);
 
         if (validateJPAAnnotations) {
-            if (LOG.isDebugEnabled())
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Adding support for JPA annotations validations in OVal");
+            }
             configurers.add(new JPAAnnotationsConfigurer());
         }
     }
@@ -139,8 +140,9 @@ public class DefaultOValValidationManager implements OValValidationManager {
                 is = FileManager.loadFile(fileName, clazz);
 
                 if (is != null) {
-                    if (LOG.isDebugEnabled())
+                    if (LOG.isDebugEnabled()) {
                         LOG.debug("Loading validation xml file [#0]", fileName);
+                    }
                     XMLConfigurer configurer = new XMLConfigurer();
                     configurer.fromXML(is);
                     validatorFileCache.put(fileName, configurer);

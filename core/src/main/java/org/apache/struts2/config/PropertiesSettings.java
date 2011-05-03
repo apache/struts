@@ -57,7 +57,9 @@ class PropertiesSettings extends Settings {
         URL settingsUrl = ClassLoaderUtils.getResource(name + ".properties", getClass());
         
         if (settingsUrl == null) {
-            LOG.debug(name + ".properties missing");
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug(name + ".properties missing");
+            }
             settings = new LocatableProperties();
             return;
         }
@@ -76,7 +78,9 @@ class PropertiesSettings extends Settings {
                 try {
                     in.close();
                 } catch(IOException io) {
-                    LOG.warn("Unable to close input stream", io);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("Unable to close input stream", io);
+                    }
                 }
             }
         }

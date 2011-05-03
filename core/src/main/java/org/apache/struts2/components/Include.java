@@ -150,7 +150,9 @@ public class Include extends Component {
                     try {
                         urlBuf.append(URLEncoder.encode(values.get(i).toString(), "UTF-8"));
                     } catch (Exception e) {
-                        LOG.warn("unable to url-encode "+values.get(i).toString()+", it will be ignored");
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("unable to url-encode "+values.get(i).toString()+", it will be ignored");
+                        }
                     }
 
                     concat = "&";
@@ -164,7 +166,9 @@ public class Include extends Component {
         try {
             include(result, writer, req, res, defaultEncoding);
         } catch (Exception e) {
-            LOG.warn("Exception thrown during include of " + result, e);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Exception thrown during include of " + result, e);
+            }
         }
 
         return super.end(writer, body);

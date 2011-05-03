@@ -259,7 +259,9 @@ public class StreamResult extends StrutsResultSupport {
                     }
                 }
                 catch(NumberFormatException e) {
-                    LOG.warn("failed to recongnize "+_contentLength+" as a number, contentLength header will not be set", e);
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("failed to recongnize "+_contentLength+" as a number, contentLength header will not be set", e);
+                    }
                 }
             }
 
@@ -283,14 +285,18 @@ public class StreamResult extends StrutsResultSupport {
             }
 
             // Copy input to output
-            LOG.debug("Streaming to output buffer +++ START +++");
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("Streaming to output buffer +++ START +++");
+            }
             byte[] oBuff = new byte[bufferSize];
             int iSize;
             while (-1 != (iSize = inputStream.read(oBuff))) {
                 oOutput.write(oBuff, 0, iSize);
             }
-            LOG.debug("Streaming to output buffer +++ END +++");
-
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("Streaming to output buffer +++ END +++");
+            }
+            
             // Flush
             oOutput.flush();
         }

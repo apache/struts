@@ -231,7 +231,9 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
                 if (messageParams != null && (messageParams.size() > 0)) {
                     // we are i18n message parameters defined but no i18n message,
                     // let's warn the user.
-                    LOG.warn("validator of type ["+validatorType+"] have i18n message parameters defined but no i18n message key, it's parameters will be ignored");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("validator of type ["+validatorType+"] have i18n message parameters defined but no i18n message key, it's parameters will be ignored");
+                    }
                 }
             }
 

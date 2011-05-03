@@ -442,8 +442,9 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                     sessionMap, applicationMap, request, response, servletRequest, servletResponse,
                     servletContext, getPortletConfig(), phase);
             extraContext.put(PortletActionConstants.ACTION_MAPPING, mapping);
-            LOG.debug("Creating action proxy for name = " + actionName
-                    + ", namespace = " + namespace);
+            if (LOG.isDebugEnabled()) {
+        	LOG.debug("Creating action proxy for name = " + actionName + ", namespace = " + namespace);
+            }
             ActionProxy proxy = factory.createActionProxy(namespace,
                     actionName, mapping.getMethod(), extraContext);
             request.setAttribute("struts.valueStack", proxy.getInvocation()
@@ -609,7 +610,9 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
 
     public void destroy() {
         if (dispatcherUtils == null) {
-            LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
+            }
         } else {
             dispatcherUtils.cleanup();
         }

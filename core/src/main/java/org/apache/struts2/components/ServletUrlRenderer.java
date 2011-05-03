@@ -182,7 +182,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
             // Warn user that the specified namespace/action combo
             // was not found in the configuration.
-            if (namespace != null) {
+            if (namespace != null && LOG.isWarnEnabled()) {
               LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
             }
 
@@ -246,10 +246,14 @@ public class ServletUrlRenderer implements UrlRenderer {
                 includeGetParameters(urlComponent);
                 includeExtraParameters(urlComponent);
             } else if (includeParams != null) {
-                LOG.warn("Unknown value for includeParams parameter to URL tag: " + includeParams);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Unknown value for includeParams parameter to URL tag: " + includeParams);
+                }
             }
         } catch (Exception e) {
-            LOG.warn("Unable to put request parameters (" + urlComponent.getHttpServletRequest().getQueryString() + ") into parameter map.", e);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Unable to put request parameters (" + urlComponent.getHttpServletRequest().getQueryString() + ") into parameter map.", e);
+            }
         }
 
 		

@@ -89,7 +89,9 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
                         }
                         locale = new Locale(lang, country);
                     } else {
-                        LOG.info("No locale define, substituting the default VM locale");
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("No locale define, substituting the default VM locale");
+                        }
                         locale = Locale.getDefault();
                     }
                 }

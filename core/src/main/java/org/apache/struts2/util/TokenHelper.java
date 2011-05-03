@@ -105,7 +105,9 @@ public class TokenHelper {
         String token;
 
         if ((tokens == null) || (tokens.length < 1)) {
-            LOG.warn("Could not find token mapped to token name " + tokenName);
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Could not find token mapped to token name " + tokenName);
+            }
 
             return null;
         }
@@ -124,7 +126,9 @@ public class TokenHelper {
         Map params = ActionContext.getContext().getParameters();
 
         if (!params.containsKey(TOKEN_NAME_FIELD)) {
-            LOG.warn("Could not find token name in params.");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Could not find token name in params.");
+            }
 
             return null;
         }
@@ -133,7 +137,9 @@ public class TokenHelper {
         String tokenName;
 
         if ((tokenNames == null) || (tokenNames.length < 1)) {
-            LOG.warn("Got a null or empty token name.");
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn("Got a null or empty token name.");
+            }
 
             return null;
         }
@@ -153,16 +159,18 @@ public class TokenHelper {
         String tokenName = getTokenName();
 
         if (tokenName == null) {
-            if (LOG.isDebugEnabled())
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("no token name found -> Invalid token ");
+            }
             return false;
         }
 
         String token = getToken(tokenName);
 
         if (token == null) {
-            if (LOG.isDebugEnabled())
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("no token found for token name "+tokenName+" -> Invalid token ");
+            }
             return false;
         }
 
@@ -170,9 +178,11 @@ public class TokenHelper {
         String sessionToken = (String) session.get(tokenName);
 
         if (!token.equals(sessionToken)) {
-            LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
-                    token, sessionToken
-            }));
+            if (LOG.isWarnEnabled()) {
+                LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
+                        token, sessionToken
+                }));
+            }
 
             return false;
         }

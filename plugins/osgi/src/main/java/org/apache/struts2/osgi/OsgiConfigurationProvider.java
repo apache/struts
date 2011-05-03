@@ -107,8 +107,9 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
      */
     protected void loadConfigFromBundle(Bundle bundle) {
         String bundleName = bundle.getSymbolicName();
-        if (LOG.isDebugEnabled())
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Loading packages from bundle [#0]", bundleName);
+        }
 
         //init action context
         ActionContext ctx = ActionContext.getContext();
@@ -123,8 +124,9 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
             ctx.put(ClassLoaderInterface.CLASS_LOADER_INTERFACE, new BundleClassLoaderInterface());
             ctx.put(BundleAccessor.CURRENT_BUNDLE_NAME, bundleName);
 
-            if (LOG.isTraceEnabled())
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("Loading XML config from bundle [#0]", bundleName);
+            }
 
             //XML config
             PackageLoader loader = new BundlePackageLoader();

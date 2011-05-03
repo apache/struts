@@ -94,14 +94,22 @@ public class TextProviderHelper {
 
             if (LOG.isWarnEnabled()) {
                 if (tp != null) {
-                    LOG.warn("The first TextProvider in the ValueStack ("+tp.getClass().getName()+") could not locate the message resource with key '"+key+"'");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("The first TextProvider in the ValueStack ("+tp.getClass().getName()+") could not locate the message resource with key '"+key+"'");
+                    }
                 } else {
-                    LOG.warn("Could not locate the message resource '"+key+"' as there is no TextProvider in the ValueStack.");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("Could not locate the message resource '"+key+"' as there is no TextProvider in the ValueStack.");
+                    }
                 }
                 if (msg.equals(defaultMessage)) {
-                    LOG.warn("The default value expression '"+defaultMessage+"' was evaluated and did not match a property.  The literal value '"+defaultMessage+"' will be used.");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("The default value expression '"+defaultMessage+"' was evaluated and did not match a property.  The literal value '"+defaultMessage+"' will be used.");
+                    }
                 } else {
-                    LOG.warn("The default value expression '"+defaultMessage+"' evaluated to '"+msg+"'");
+                    if (LOG.isWarnEnabled()) {
+                	LOG.warn("The default value expression '"+defaultMessage+"' evaluated to '"+msg+"'");
+                    }
                 }
             }
         }

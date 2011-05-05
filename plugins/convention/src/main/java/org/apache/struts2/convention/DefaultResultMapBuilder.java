@@ -20,6 +20,21 @@
  */
 package org.apache.struts2.convention;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -34,19 +49,6 @@ import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
-
-import javax.servlet.ServletContext;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * <p>
@@ -261,6 +263,15 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                     if (LOG.isTraceEnabled())
                         LOG.trace("Ignoring file without name [#0]", path);
                     continue;
+                }
+                else if(fileName.lastIndexOf(".") > 0){
+                    String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
+                    
+                    if(conventionsService.getResultTypesByExtension(packageConfig).get(suffix) == null) {
+                        if (LOG.isDebugEnabled())
+                            LOG.debug("No result type defined for file suffix : [#0]. Ignoring file #1", suffix, fileName);
+                	continue;
+                    }
                 }
 
                 makeResults(actionClass, path, resultPrefix, results, packageConfig, resultsByExtension);

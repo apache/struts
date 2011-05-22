@@ -38,6 +38,7 @@ public class MockActionProxy implements ActionProxy {
     boolean executedCalled;
     String returnedResult;
     Configuration configuration;
+    boolean methodSpecified;
 
     public void prepare() throws Exception {}
     
@@ -109,6 +110,17 @@ public class MockActionProxy implements ActionProxy {
 
     public void setMethod(String method) {
         this.method = method;
+        methodSpecified=method!=null && !"".equals(method);
+    }
+
+    public boolean isMethodSpecified()
+    {
+        return methodSpecified;
+    }
+
+    public void setMethodSpecified(boolean methodSpecified)
+    {
+        this.methodSpecified = methodSpecified;
     }
 
 }

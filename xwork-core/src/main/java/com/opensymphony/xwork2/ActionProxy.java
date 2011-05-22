@@ -92,5 +92,12 @@ public interface ActionProxy {
      * @return the method to execute
      */
     String getMethod();
+
+    /**
+     * Gets status of the method value's initialization.
+     *
+     * @return true if the method returned by getMethod() is not a default initializer value.
+     */
+    boolean isMethodSpecified();
     
 }

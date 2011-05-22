@@ -77,7 +77,8 @@ public class ServletUrlRenderer implements UrlRenderer {
 
 	                final String action = ai.getProxy().getActionName();
 	                final String namespace = ai.getProxy().getNamespace();
-	                result = urlComponent.determineActionURL(action, namespace, urlComponent.getMethod(),urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
+	                final String method = urlComponent.getMethod() != null || !ai.getProxy().isMethodSpecified() ? urlComponent.getMethod() : ai.getProxy().getMethod();
+	                result = urlComponent.determineActionURL(action, namespace, method, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
 	        } else {
 	                String _value = urlComponent.getValue();
 

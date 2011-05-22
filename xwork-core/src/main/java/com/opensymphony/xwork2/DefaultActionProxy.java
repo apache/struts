@@ -60,6 +60,8 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     protected ActionEventListener actionEventListener;
 
+    private boolean methodSpecified=true;
+
     /**
      * This constructor is private so the builder methods (create*) should be used to create an DefaultActionProxy.
      * <p/>
@@ -162,6 +164,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
             if (StringUtils.isEmpty(this.method)) {
                 this.method = "execute";
             }
+            methodSpecified=false;
         }
     }
 
@@ -200,5 +203,11 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
         } finally {
             UtilTimerStack.pop(profileKey);
         }
+    }
+
+    @Override
+    public boolean isMethodSpecified()
+    {
+        return methodSpecified;
     }
 }

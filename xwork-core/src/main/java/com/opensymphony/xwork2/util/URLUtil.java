@@ -32,7 +32,7 @@ public class URLUtil {
     public static final String JBOSS5_VFSMEMORY = "vfsmemory";
     public static final String JBOSS5_VFSFILE = "vfsfile";
 
-    private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|.jar/)(.*)");
+    private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|\\.jar/)(.*)");
     private static final int JAR_FILE_PATH = 3;
 
     /**
@@ -64,7 +64,7 @@ public class URLUtil {
      * @param url The url string to verify.
      * @return a boolean indicating whether the URL seems to be incorrect.
      */
-    public final static boolean verifyUrl(String url) {
+    public static boolean verifyUrl(String url) {
         if (url == null) {
             return false;
         }

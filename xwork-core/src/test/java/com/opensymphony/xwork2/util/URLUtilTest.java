@@ -34,6 +34,22 @@ public class URLUtilTest extends TestCase {
         assertEquals("file:c:/somefile.jar", outputURL.toExternalForm());
     }
 
+    public void testJarFileWithJarWordInsidePath() throws MalformedURLException {
+        URL url = new URL("jar:file:/c:/workspace/projar/somefile.jar!/");
+        URL outputURL = URLUtil.normalizeToFileProtocol(url);
+
+        assertNotNull(outputURL);
+        assertEquals("file:/c:/workspace/projar/somefile.jar", outputURL.toExternalForm());
+
+        url = new URL("jar:file:/c:/workspace/projar/somefile.jar!/somestuf/bla/bla");
+        outputURL = URLUtil.normalizeToFileProtocol(url);
+        assertEquals("file:/c:/workspace/projar/somefile.jar", outputURL.toExternalForm());
+
+        url = new URL("jar:file:c:/workspace/projar/somefile.jar!/somestuf/bla/bla");
+        outputURL = URLUtil.normalizeToFileProtocol(url);
+        assertEquals("file:c:/workspace/projar/somefile.jar", outputURL.toExternalForm());
+    }
+
     public void testZipFile() throws MalformedURLException {
         URL url = new URL("zip:/c:/somefile.zip!/");
         URL outputURL = URLUtil.normalizeToFileProtocol(url);

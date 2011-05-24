@@ -20,6 +20,16 @@
  */
 package org.apache.struts2.dispatcher;
 
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.ng.HostConfig;
+import org.apache.struts2.util.ClassLoaderUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,18 +40,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.ng.HostConfig;
-import org.apache.struts2.util.ClassLoaderUtils;
-
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 public class DefaultStaticContentLoader implements StaticContentLoader {
     /**
@@ -342,7 +340,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     public boolean canHandle(String resourcePath) {
-        return serveStatic && (resourcePath.startsWith("/struts") || resourcePath.startsWith("/static"));
+        return serveStatic && (resourcePath.startsWith("/struts/") || resourcePath.startsWith("/static/"));
     }
 
     /**

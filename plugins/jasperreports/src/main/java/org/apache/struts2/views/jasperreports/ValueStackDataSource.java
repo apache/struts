@@ -21,23 +21,20 @@
 
 package org.apache.struts2.views.jasperreports;
 
-import java.util.Iterator;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
-
-import org.apache.struts2.util.MakeIterator;
-
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
+import net.sf.jasperreports.engine.JRRewindableDataSource;
+import org.apache.struts2.util.MakeIterator;
+
+import java.util.Iterator;
 
 /**
  * Ported to Struts.
- *
  */
-public class ValueStackDataSource implements JRDataSource {
+public class ValueStackDataSource implements JRRewindableDataSource {
 
     /**
      * Logger for this class
@@ -47,18 +44,20 @@ public class ValueStackDataSource implements JRDataSource {
 
     Iterator iterator;
     ValueStack valueStack;
+    String dataSource;
     boolean firstTimeThrough = true;
 
 
     /**
      * Create a value stack data source on the given iterable property
      *
-     * @param valueStack The value stack to base the data source on
-     * @param dataSource The property to iterate over for the report
+     * @param valueStack      The value stack to base the data source on
+     * @param dataSourceParam The property to iterate over for the report
      */
-    public ValueStackDataSource(ValueStack valueStack, String dataSource) {
+    public ValueStackDataSource(ValueStack valueStack, String dataSourceParam) {
         this.valueStack = valueStack;
 
+        dataSource = dataSourceParam;
         Object dataSourceValue = valueStack.findValue(dataSource);
 
         if (dataSourceValue != null) {
@@ -71,7 +70,7 @@ public class ValueStackDataSource implements JRDataSource {
             }
         } else {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("Data source value for data source " + dataSource + " was null");
+                LOG.warn("Data source value for data source " + dataSource + " was null");
             }
         }
     }
@@ -114,6 +113,29 @@ public class ValueStackDataSource implements JRDataSource {
     }
 
     /**
+     * Move to the first item.
+     *
+     * @throws JRException if there is a problem with moving to the first
+     *                     data element
+     */
+    public void moveFirst() throws JRException {
+        Object dataSourceValue = valueStack.findValue(dataSource);
+        if (dataSourceValue != null) {
+            if (MakeIterator.isIterable(dataSourceValue)) {
+                iterator = MakeIterator.convert(dataSourceValue);
+            } else {
+                Object[] array = new Object[1];
+                array[0] = dataSourceValue;
+                iterator = MakeIterator.convert(array);
+            }
+        } else {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Data source value for data source [" + dataSource + "] was null");
+            }
+        }
+    }
+
+    /**
      * Is there any more data
      *
      * @return <code>true</code> if there are more elements to iterate over and
@@ -131,13 +153,13 @@ public class ValueStackDataSource implements JRDataSource {
         if ((iterator != null) && (iterator.hasNext())) {
             valueStack.push(iterator.next());
             if (LOG.isDebugEnabled()) {
-        	LOG.debug("Pushed next value: " + valueStack.findValue("."));
+                LOG.debug("Pushed next value: " + valueStack.findValue("."));
             }
 
             return true;
         } else {
             if (LOG.isDebugEnabled()) {
-        	LOG.debug("No more values");
+                LOG.debug("No more values");
             }
 
             return false;

@@ -56,7 +56,7 @@ public class JSONUtil {
 
     /**
      * Serializes an object into JSON.
-     * 
+     *
      * @param object
      *            to be serialized
      * @return JSON string
@@ -71,7 +71,7 @@ public class JSONUtil {
     /**
      * Serializes an object into JSON, excluding any properties matching any of
      * the regular expressions in the given collection.
-     * 
+     *
      * @param object
      *            to be serialized
      * @param excludeProperties
@@ -93,7 +93,7 @@ public class JSONUtil {
     /**
      * Serializes an object into JSON, excluding any properties matching any of
      * the regular expressions in the given collection.
-     * 
+     *
      * @param object
      *            to be serialized
      * @param excludeProperties
@@ -117,7 +117,7 @@ public class JSONUtil {
 
     /**
      * Serializes an object into JSON to the given writer.
-     * 
+     *
      * @param writer
      *            Writer to serialize the object to
      * @param object
@@ -133,7 +133,7 @@ public class JSONUtil {
      * Serializes an object into JSON to the given writer, excluding any
      * properties matching any of the regular expressions in the given
      * collection.
-     * 
+     *
      * @param writer
      *            Writer to serialize the object to
      * @param object
@@ -151,7 +151,7 @@ public class JSONUtil {
 
     /**
      * Deserializes a object from JSON
-     * 
+     *
      * @param json
      *            string in JSON
      * @return desrialized object
@@ -164,7 +164,7 @@ public class JSONUtil {
 
     /**
      * Deserializes a object from JSON
-     * 
+     *
      * @param reader
      *            Reader to read a JSON string from
      * @return deserialized object
@@ -219,11 +219,8 @@ public class JSONUtil {
             response.sendError(serializationParams.getErrorCode());
 
         // content type
-        if (serializationParams.isSmd())
-            response.setContentType("application/json-rpc;charset=" + serializationParams.getEncoding());
-        else
-            response.setContentType(serializationParams.getContentType() + ";charset="
-                    + serializationParams.getEncoding());
+        response.setContentType(serializationParams.getContentType() + ";charset="
+                + serializationParams.getEncoding());
 
         if (serializationParams.isNoCache()) {
             response.setHeader("Cache-Control", "no-cache");
@@ -267,9 +264,9 @@ public class JSONUtil {
 
     /**
      * List visible methods carrying the
-     * 
+     *
      * @SMDMethod annotation
-     * 
+     *
      * @param ignoreInterfaces
      *            if true, only the methods of the class are examined. If false,
      *            annotations on every interfaces' methods are examined.
@@ -312,7 +309,7 @@ public class JSONUtil {
 
         /**
          * Called when a new interface/class is encountered
-         * 
+         *
          * @param aClass
          *            the encountered class/interface
          * @return true if the recursion should continue, false to stop
@@ -330,7 +327,7 @@ public class JSONUtil {
      * interface's superclasses (interfaces) super-superclass and so on <p/> The
      * Object base class is base excluded. Classes/interfaces are only visited
      * once each
-     * 
+     *
      * @param aClass
      *            the class to start recursing upwards from
      * @param visitor
@@ -348,7 +345,7 @@ public class JSONUtil {
      * Recursive method to visit all the interfaces of a class (and its
      * superclasses and super-interfaces) if they haven't already been visited.
      * <p/> Always visits itself if it hasn't already been visited
-     * 
+     *
      * @param thisClass
      *            the current class to visit (if not already done so)
      * @param classesVisited
@@ -422,7 +419,7 @@ public class JSONUtil {
         return includePatternData;
     }
 
-	private static final Map<String, Map<String, String>> defaultIncludePatternData = getIncludePatternData();
+    private static final Map<String, Map<String, String>> defaultIncludePatternData = getIncludePatternData();
 
     public static List<Pattern> processIncludePatterns(Set<String> includePatterns, String type) {
         return processIncludePatterns(includePatterns, type, defaultIncludePatternData);

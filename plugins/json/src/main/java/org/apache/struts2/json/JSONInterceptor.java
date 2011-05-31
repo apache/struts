@@ -159,7 +159,7 @@ public class JSONInterceptor extends AbstractInterceptor {
             json = addCallbackIfApplicable(request, json);
             boolean writeGzip = enableGZIP && JSONUtil.isGzipInRequest(request);
             JSONUtil.writeJSONToResponse(new SerializationParams(response, this.defaultEncoding,
-                    this.wrapWithComments, json, true, writeGzip, noCache, -1, -1, prefix, contentType));
+                    this.wrapWithComments, json, true, writeGzip, noCache, -1, -1, prefix, "application/json"));
 
             return Action.NONE;
         } else {

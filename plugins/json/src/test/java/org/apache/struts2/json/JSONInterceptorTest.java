@@ -221,7 +221,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("smd-11.txt"));
         assertEquals(normalizedExpected, normalizedActual);
 
-        assertEquals("application/json-rpc;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
     }
 
     public void testSMDReturnObject() throws Exception {
@@ -245,7 +245,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("smd-12.txt"));
         assertEquals(normalizedExpected, normalizedActual);
 
-        assertEquals("application/json-rpc;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
     }
 
     @SuppressWarnings("unchecked")
@@ -293,7 +293,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("smd-11.txt"));
         assertEquals(normalizedExpected, normalizedActual);
 
-        assertEquals("application/json-rpc;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
     }
 
     @SuppressWarnings( { "unchecked", "unchecked" })

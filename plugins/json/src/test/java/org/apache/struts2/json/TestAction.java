@@ -23,6 +23,7 @@ package org.apache.struts2.json;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -37,6 +38,7 @@ public class TestAction extends ActionSupport {
     private List collection;
     private List collection2;
     private Map map;
+    private Set set;
     private String foo;
     private String result;
     private String[] array;
@@ -80,6 +82,14 @@ public class TestAction extends ActionSupport {
 
     public void setMap(Map map) {
         this.map = map;
+    }
+
+    public Set getSet() {
+        return this.set;
+    }
+
+    public void setSet(Set set) {
+        this.set = set;
     }
 
     public String getFoo() {

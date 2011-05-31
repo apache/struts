@@ -28,8 +28,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
@@ -526,6 +528,47 @@ public class JSONResultTest extends StrutsTestCase {
         String json = response.getContentAsString();
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-10.txt"));
+        assertEquals(normalizedExpected, normalizedActual);
+        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+    }
+
+    public void testIncludePropertiesWithSetList() throws Exception {
+        JSONResult result = new JSONResult();
+        result.setIncludeProperties("^set\\[\\d+\\]\\.list\\[\\d+\\]\\.booleanField");
+        TestAction action = new TestAction();
+        stack.push(action);
+
+        Set set = new LinkedHashSet();
+
+        TestAction a1 = new TestAction();
+
+        List list = new ArrayList();
+
+        list.add(new Bean());
+        list.add(new Bean());
+        list.add(new Bean());
+
+        a1.setList(list);
+        set.add(a1);
+
+        TestAction a2 = new TestAction();
+
+        list = new ArrayList();
+
+        list.add(new Bean());
+        list.add(new Bean());
+
+        a2.setList(list);
+        set.add(a2);
+
+        action.setSet(set);
+
+        this.invocation.setAction(action);
+        result.execute(this.invocation);
+
+        String json = response.getContentAsString();
+        String normalizedActual = TestUtils.normalize(json, true);
+        String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-11.txt"));
         assertEquals(normalizedExpected, normalizedActual);
         assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
     }

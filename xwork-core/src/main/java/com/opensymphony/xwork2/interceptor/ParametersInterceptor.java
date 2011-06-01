@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2007,2009 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -160,18 +160,22 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
     }
 
+    static private int countOGNLCharacters(String s) {
+        int count = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            char c = s.charAt(i);
+            if (c == '.' || c == '[') count++;
+        }
+        return count;
+    }
+
     /**
-     * Compares based on number of '.' characters (fewer is higher)
+     * Compares based on number of '.' and '[' characters (fewer is higher)
      */
     static final Comparator<String> rbCollator = new Comparator<String>() {
         public int compare(String s1, String s2) {
-            int l1 = 0, l2 = 0;
-            for (int i = s1.length() - 1; i >= 0; i--) {
-                if (s1.charAt(i) == '.') l1++;
-            }
-            for (int i = s2.length() - 1; i >= 0; i--) {
-                if (s2.charAt(i) == '.') l2++;
-            }
+            int l1 = countOGNLCharacters(s1),
+                l2 = countOGNLCharacters(s2);
             return l1 < l2 ? -1 : (l2 < l1 ? 1 : s1.compareTo(s2));
         }
 
@@ -328,7 +332,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             if (entry.getValue() instanceof Object[]) {
                 Object[] valueArray = (Object[]) entry.getValue();
                 logEntry.append("[ ");
-		        if (valueArray.length > 0 ) {
+                if (valueArray.length > 0 ) {
                     for (int indexA = 0; indexA < (valueArray.length - 1); indexA++) {
                         Object valueAtIndex = valueArray[indexA];
                         logEntry.append(String.valueOf(valueAtIndex));

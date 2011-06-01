@@ -342,18 +342,18 @@ class JSONWriter {
      * Add name/value pair to buffer
      */
     private boolean add(String name, Object value, Method method, boolean hasData) throws JSONException {
-        if (!excludeNullProperties || (value != null)) {
-            if (hasData) {
-                this.add(',');
-            }
-            this.add('"');
-            this.add(name);
-            this.add("\":");
-            this.value(value, method);
-            return true;
+        if (excludeNullProperties && value == null) {
+            return false;
         }
 
-        return false;
+        if (hasData) {
+            this.add(',');
+        }
+        this.add('"');
+        this.add(name);
+        this.add("\":");
+        this.value(value, method);
+        return true;
     }
 
     /**
@@ -368,6 +368,10 @@ class JSONWriter {
         boolean hasData = false;
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
+            if (excludeNullProperties && entry.getValue() == null) {
+                continue;
+            }
+
             Object key = entry.getKey();
             String expr = null;
             if (this.buildExpr) {

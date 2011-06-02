@@ -1,6 +1,6 @@
 <!DOCTYPE xwork PUBLIC
-    "-//OpenSymphony Group//XWork 1.1.1//EN"
-    "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd"
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
  >
 
 <xwork>

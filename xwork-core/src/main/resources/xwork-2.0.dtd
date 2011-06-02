@@ -7,8 +7,8 @@
    Use the following DOCTYPE
    
    <!DOCTYPE xwork PUBLIC 
-	"-//OpenSymphony Group//XWork 2.0//EN"
-	"http://www.opensymphony.com/xwork/xwork-2.0.dtd">
+	"-//Apache Struts//XWork 2.0//EN"
+	"http://struts.apache.org/dtds/xwork-2.0.dtd">
 -->
 
 <!ELEMENT xwork (package|include|bean|constant)*>

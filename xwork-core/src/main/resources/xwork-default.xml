@@ -1,4 +1,6 @@
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 2.0//EN" "http://www.opensymphony.com/xwork/xwork-2.0.dtd">
+<!DOCTYPE xwork PUBLIC
+        "-//Apache Struts//XWork 2.0//EN"
+        "http://struts.apache.org/dtds/xwork-2.0.dtd">
 
 <xwork>
     <package name="xwork-default" abstract="true">

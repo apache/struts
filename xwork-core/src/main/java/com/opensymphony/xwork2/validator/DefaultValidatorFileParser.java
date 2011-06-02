@@ -73,9 +73,9 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
         in.setSystemId(resourceName);
 
         Map<String, String> dtdMappings = new HashMap<String, String>();
-        dtdMappings.put("-//OpenSymphony Group//XWork Validator 1.0//EN", "xwork-validator-1.0.dtd");
-        dtdMappings.put("-//OpenSymphony Group//XWork Validator 1.0.2//EN", "xwork-validator-1.0.2.dtd");
-        dtdMappings.put("-//OpenSymphony Group//XWork Validator 1.0.3//EN", "xwork-validator-1.0.3.dtd");
+        dtdMappings.put("-//Apache Struts//XWork Validator 1.0//EN", "xwork-validator-1.0.dtd");
+        dtdMappings.put("-//Apache Struts//XWork Validator 1.0.2//EN", "xwork-validator-1.0.2.dtd");
+        dtdMappings.put("-//Apache Struts//XWork Validator 1.0.3//EN", "xwork-validator-1.0.3.dtd");
 
         Document doc = DomHelper.parse(in, dtdMappings);
 
@@ -111,7 +111,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
         in.setSystemId(resourceName);
 
         Map<String, String> dtdMappings = new HashMap<String, String>();
-        dtdMappings.put("-//OpenSymphony Group//XWork Validator Config 1.0//EN", "xwork-validator-config-1.0.dtd");
+        dtdMappings.put("-//Apache Struts//XWork Validator Config 1.0//EN", "xwork-validator-config-1.0.dtd");
 
         Document doc = DomHelper.parse(in, dtdMappings);
 

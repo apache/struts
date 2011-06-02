@@ -30,7 +30,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * These attributes are typically setup using {@link com.opensymphony.xwork2.util.location.LocationAttributes.Pipe}
  * which augments the SAX stream with additional attributes, e.g.:
  * <pre>
- * &lt;root xmlns:loc="http://opensymphony.com/xwork/location"
+ * &lt;root xmlns:loc="http://struts.apache.org/xwork/location"
  *       loc:src="file://path/to/file.xml"
  *       loc:line="1" loc:column="1"&gt;
  *   &lt;foo loc:src="file://path/to/file.xml" loc:line="2" loc:column="3"/&gt;
@@ -45,7 +45,7 @@ public class LocationAttributes {
     /** Prefix for the location namespace */
     public static final String PREFIX = "loc";
     /** Namespace URI for location attributes */
-    public static final String URI = "http://opensymphony.com/xwork/location";
+    public static final String URI = "http://struts.apache.org/xwork/location";
 
     /** Attribute name for the location URI */
     public static final String SRC_ATTR  = "src";

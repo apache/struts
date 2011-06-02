@@ -86,12 +86,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         this.errorIfMissing = errorIfMissing;
 
         Map<String, String> mappings = new HashMap<String, String>();
-        mappings.put("-//OpenSymphony Group//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
-        mappings.put("-//OpenSymphony Group//XWork 2.1//EN", "xwork-2.1.dtd");
-        mappings.put("-//OpenSymphony Group//XWork 2.0//EN", "xwork-2.0.dtd");
-        mappings.put("-//OpenSymphony Group//XWork 1.1.1//EN", "xwork-1.1.1.dtd");
-        mappings.put("-//OpenSymphony Group//XWork 1.1//EN", "xwork-1.1.dtd");
-        mappings.put("-//OpenSymphony Group//XWork 1.0//EN", "xwork-1.0.dtd");
+        mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
+        mappings.put("-//Apache Struts//XWork 2.1//EN", "xwork-2.1.dtd");
+        mappings.put("-//Apache Struts//XWork 2.0//EN", "xwork-2.0.dtd");
+        mappings.put("-//Apache Struts//XWork 1.1.1//EN", "xwork-1.1.1.dtd");
+        mappings.put("-//Apache Struts//XWork 1.1//EN", "xwork-1.1.dtd");
+        mappings.put("-//Apache Struts//XWork 1.0//EN", "xwork-1.0.dtd");
         setDtdMappings(mappings);
     }
 

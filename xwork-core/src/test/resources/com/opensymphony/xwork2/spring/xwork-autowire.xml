@@ -1,4 +1,4 @@
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 2.0//EN" "http://www.opensymphony.com/xwork/xwork-2.0.dtd">
+<!DOCTYPE xwork PUBLIC "-//Apache Struts//XWork 2.0//EN" "http://struts.apache.org/dtds/xwork-2.0.dtd">
 <xwork>
 	<bean type="com.opensymphony.xwork2.ActionProxyFactory" name="default" class="com.opensymphony.xwork2.DefaultActionProxyFactory" />
 	<bean type="com.opensymphony.xwork2.ObjectFactory" name="default" class="com.opensymphony.xwork2.spring.SpringObjectFactory" />

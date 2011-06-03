@@ -47,7 +47,7 @@ import org.apache.struts2.views.freemarker.FreemarkerResult;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -89,7 +89,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
  * Result has a chance to execute.
  * <!-- END SNIPPET: remarks -->
  */
-public class DebuggingInterceptor implements Interceptor {
+public class DebuggingInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -3097324155953078783L;
 
@@ -135,20 +135,6 @@ public class DebuggingInterceptor implements Interceptor {
     public void setReflectionProvider(ReflectionProvider reflectionProvider) {
         this.reflectionProvider = reflectionProvider;
     }
-
-    /**
-     * Unused.
-     */
-    public void init() {
-    }
-
-
-    /**
-     * Unused.
-     */
-    public void destroy() {
-    }
-
 
     /*
      * (non-Javadoc)

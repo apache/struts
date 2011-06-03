@@ -31,7 +31,7 @@ import org.apache.struts2.dispatcher.ServletRedirectResult;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -145,7 +145,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * @version $Date$ $Id$
  */
-public class MessageStoreInterceptor implements Interceptor {
+public class MessageStoreInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 4491997514314242420L;
 
@@ -164,15 +164,12 @@ public class MessageStoreInterceptor implements Interceptor {
     public static final String actionErrorsSessionKey = "__MessageStoreInterceptor_ActionErrors_SessionKey";
     public static final String actionMessagesSessionKey = "__MessageStoreInterceptor_ActionMessages_SessionKey";
 
-
-
     public void setAllowRequestParameterSwitch(boolean allowRequestParameterSwitch) {
         this.allowRequestParameterSwitch = allowRequestParameterSwitch;
     }
     public boolean getAllowRequestParameterSwitch() {
         return this.allowRequestParameterSwitch;
     }
-
 
     public void setRequestParameterSwitch(String requestParameterSwitch) {
         this.requestParameterSwitch = requestParameterSwitch;
@@ -181,20 +178,11 @@ public class MessageStoreInterceptor implements Interceptor {
         return this.requestParameterSwitch;
     }
 
-
-
     public void setOperationMode(String operationMode) {
         this.operationMode = operationMode;
     }
     public String getOperationModel() {
         return this.operationMode;
-    }
-
-
-    public void destroy() {
-    }
-
-    public void init() {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {

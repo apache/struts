@@ -17,7 +17,7 @@ package com.opensymphony.xwork2.interceptor.annotations;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 
@@ -103,7 +103,7 @@ import java.util.List;
  * @author Rainer Hermanns
  * @author Dan Oxlade, dan d0t oxlade at gmail d0t c0m
  */
-public class AnnotationWorkflowInterceptor implements Interceptor, PreResultListener {
+public class AnnotationWorkflowInterceptor extends AbstractInterceptor implements PreResultListener {
 
     /**
      * Discovers annotated methods on the action and calls them according to the workflow
@@ -151,12 +151,6 @@ public class AnnotationWorkflowInterceptor implements Interceptor, PreResultList
         }
 
         return invocationResult;
-    }
-
-    public void destroy() {
-    }
-
-    public void init() {
     }
 
     protected static int comparePriorities(int val1, int val2) {

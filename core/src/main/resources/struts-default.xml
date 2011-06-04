@@ -268,7 +268,6 @@
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
-                <interceptor-ref name="debugging"/>
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload"/>
@@ -286,6 +285,7 @@
                 <interceptor-ref name="workflow">
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>
+                <interceptor-ref name="debugging"/>
             </interceptor-stack>
 
             <!-- The completeStack is here for backwards compatibility for

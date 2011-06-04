@@ -31,7 +31,7 @@
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-mailreader</artifactId>
     <packaging>war</packaging>
-    <name>Starter Webapp</name>
+    <name>Mail Reader Webapp</name>
 
     <scm>
        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/mailreader/</connection>

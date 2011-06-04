@@ -777,7 +777,7 @@ public class LocalizedTextUtil {
     }
 
     private static void reloadBundles() {
-        reloadBundles(ActionContext.getContext().getContextMap());
+        reloadBundles(ActionContext.getContext() != null ? ActionContext.getContext().getContextMap() : null);
     }
 
     private static void reloadBundles(Map<String, Object> context) {

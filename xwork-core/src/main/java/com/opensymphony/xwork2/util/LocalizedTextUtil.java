@@ -22,19 +22,14 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
+import org.apache.commons.lang.ObjectUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -94,6 +89,7 @@ public class LocalizedTextUtil {
     private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<MessageFormatKey, MessageFormat>();
 
     private static ClassLoader delegatedClassLoader;
+    private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
 
     static {
         clearDefaultResourceBundles();
@@ -623,7 +619,7 @@ public class LocalizedTextUtil {
     public static String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args,
                                   ValueStack valueStack) {
         try {
-            reloadBundles();
+            reloadBundles(valueStack.getContext());
 
             String message = TextParseUtil.translateVariables(bundle.getString(aTextName), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
@@ -676,9 +672,7 @@ public class LocalizedTextUtil {
         if (bundle == null) {
             return null;
         }
-
-        reloadBundles();
-
+            reloadBundles(valueStack.getContext());
         try {
             String message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
@@ -777,13 +771,30 @@ public class LocalizedTextUtil {
     }
 
     private static void reloadBundles() {
+        reloadBundles(ActionContext.getContext().getContextMap());
+    }
+
+    private static void reloadBundles(Map<String, Object> context) {
         if (reloadBundles) {
             try {
-                bundlesMap.clear();
-                clearMap(ResourceBundle.class, null, "cacheList");
-                // now, for the true and utter hack, if we're running in tomcat, clear
-                // it's class loader resource cache as well.
-                clearTomcatCache();
+                Boolean reloaded;
+                if (context != null) {
+                    reloaded = (Boolean) ObjectUtils.defaultIfNull(context.get(RELOADED), Boolean.FALSE);
+                }else {
+                    reloaded = Boolean.FALSE;
+                }
+                if (!reloaded) {
+                    bundlesMap.clear();
+                    clearMap(ResourceBundle.class, null, "cacheList");
+                    // now, for the true and utter hack, if we're running in tomcat, clear
+                    // it's class loader resource cache as well.
+                    clearTomcatCache();
+                    if(context!=null)
+                        context.put(RELOADED, true);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.debug("Resource bundles reloaded");
+                    }
+                }
             } catch (Exception e) {
                 LOG.error("Could not reload resource bundles", e);
             }

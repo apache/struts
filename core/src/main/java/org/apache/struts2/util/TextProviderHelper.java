@@ -21,15 +21,13 @@
 
 package org.apache.struts2.util;
 
+import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.TextProvider;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Helper methods to access text from TextProviders
@@ -71,9 +69,7 @@ public class TextProviderHelper {
         String msg = null;
         TextProvider tp = null;
 
-        for (Iterator iterator = stack.getRoot().iterator(); iterator.hasNext();) {
-            Object o = iterator.next();
-
+        for (Object o : stack.getRoot()) {
             if (o instanceof TextProvider) {
                 tp = (TextProvider) o;
                 msg = tp.getText(key, null, args, stack);
@@ -94,22 +90,14 @@ public class TextProviderHelper {
 
             if (LOG.isWarnEnabled()) {
                 if (tp != null) {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("The first TextProvider in the ValueStack ("+tp.getClass().getName()+") could not locate the message resource with key '"+key+"'");
-                    }
                 } else {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("Could not locate the message resource '"+key+"' as there is no TextProvider in the ValueStack.");
-                    }
                 }
                 if (msg.equals(defaultMessage)) {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("The default value expression '"+defaultMessage+"' was evaluated and did not match a property.  The literal value '"+defaultMessage+"' will be used.");
-                    }
                 } else {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("The default value expression '"+defaultMessage+"' evaluated to '"+msg+"'");
-                    }
                 }
             }
         }

@@ -127,7 +127,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     @Inject(value = "struts.xwork.chaining.copyFieldErrors", required = false)
     public void setCopyFieldErrors(String copyFieldErrors) {
-        this.copyErrors = "true".equalsIgnoreCase(copyFieldErrors);
+        this.copyFieldErrors = "true".equalsIgnoreCase(copyFieldErrors);
     }
 
     @Inject(value = "struts.xwork.chaining.copyMessages", required = false)

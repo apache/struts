@@ -21,14 +21,13 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.struts2.components.UIBean;
+import org.apache.struts2.views.jsp.ComponentTagSupport;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.DynamicAttributes;
-
-import org.apache.struts2.components.UIBean;
-import org.apache.struts2.views.jsp.ComponentTagSupport;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -292,6 +291,11 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     }
 
     public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
-        dynamicAttributes.put(localName, value);
+        if (value != null && value instanceof String) {
+            dynamicAttributes.put(localName, findValue(value.toString()));
+        } else {
+            dynamicAttributes.put(localName, value);
+        }
     }
+
 }

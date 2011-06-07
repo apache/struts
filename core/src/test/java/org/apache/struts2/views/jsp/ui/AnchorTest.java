@@ -76,4 +76,22 @@ public class AnchorTest extends AbstractUITagTest {
 
         verify(AnchorTest.class.getResource("Anchor-2.txt"));
     }
+
+    public void testDynamicAttributeAsExpression() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        AnchorTag tag = new AnchorTag();
+        tag.setPageContext(pageContext);
+
+        tag.setId("mylink");
+        tag.setHref("a");
+
+        tag.setDynamicAttribute("uri", "placeholder", "foo");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(AnchorTest.class.getResource("Anchor-3.txt"));
+    }
 }

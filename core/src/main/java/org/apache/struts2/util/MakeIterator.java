@@ -21,18 +21,18 @@
 
 package org.apache.struts2.util;
 
+import org.apache.struts2.util.IteratorFilterSupport.EnumerationIterator;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 
 /**
  * MakeIterator.
- *
  */
 public class MakeIterator {
 
@@ -91,18 +91,9 @@ public class MakeIterator {
 
             iterator = list.iterator();
         } else if (value instanceof Enumeration) {
-            Enumeration enumeration = (Enumeration) value;
-            ArrayList list = new ArrayList();
-
-            while (enumeration.hasMoreElements()) {
-                list.add(enumeration.nextElement());
-            }
-
-            iterator = list.iterator();
+            iterator = new EnumerationIterator((Enumeration) value);
         } else {
-            List list = new ArrayList(1);
-            list.add(value);
-            iterator = list.iterator();
+            iterator = Arrays.asList(value).iterator();
         }
 
         return iterator;

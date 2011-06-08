@@ -56,7 +56,8 @@ public class DefaultActionInvocation implements ActionInvocation {
     //}
     private static final Logger LOG = LoggerFactory.getLogger(DefaultActionInvocation.class);
 
-    private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
+    private static final Class[] EMPTY_CLASS_ARRAY   = new Class[0];
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     protected Object action;
     protected ActionProxy proxy;
@@ -449,18 +450,10 @@ public class DefaultActionInvocation implements ActionInvocation {
             }
 
             if (!methodCalled) {
-                methodResult = method.invoke(action, new Object[0]);
+                methodResult = method.invoke(action, EMPTY_OBJECT_ARRAY);
             }
 
-            if (methodResult instanceof Result) {
-                this.explicitResult = (Result) methodResult;
-
-                // Wire the result automatically
-                container.inject(explicitResult);
-                return null;
-            } else {
-                return (String) methodResult;
-            }
+            return saveResult(actionConfig, methodResult);
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("The " + methodName + "() is not defined in action " + getAction().getClass() + "");
         } catch (InvocationTargetException e) {
@@ -483,5 +476,22 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
     }
 
+    /**
+     * Save the result to be used later.
+     * @param actionConfig
+     * @param methodResult the result of the action.
+     * @return the result code to process.
+     */
+    protected String saveResult(ActionConfig actionConfig, Object methodResult) {
+        if (methodResult instanceof Result) {
+            this.explicitResult = (Result) methodResult;
+
+            // Wire the result automatically
+            container.inject(explicitResult);
+            return null;
+        } else {
+            return (String) methodResult;
+        }
+    }
 
 }

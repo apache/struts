@@ -32,7 +32,6 @@ import java.util.Map;
 
 /**
  * Abstract base class for all UI tags.
- *
  */
 public abstract class AbstractUITag extends ComponentTagSupport implements DynamicAttributes {
     protected String cssClass;
@@ -80,7 +79,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String tooltipIconPath;
 
     // dynamic attributes.
-    protected Map<String,Object> dynamicAttributes = new HashMap<String,Object>();
+    protected Map<String, Object> dynamicAttributes = new HashMap<String, Object>();
 
     protected void populateParams() {
         super.populateParams();
@@ -292,7 +291,16 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
 
     public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
         if (value != null && value instanceof String) {
-            dynamicAttributes.put(localName, findValue(value.toString()));
+            evaluateValue(localName, value);
+        } else {
+            dynamicAttributes.put(localName, value);
+        }
+    }
+
+    private void evaluateValue(String localName, Object value) {
+        Object evaluatedValue = findValue(value.toString());
+        if (evaluatedValue != null) {
+            dynamicAttributes.put(localName, evaluatedValue);
         } else {
             dynamicAttributes.put(localName, value);
         }

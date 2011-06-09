@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ActionConfig extends Located implements Serializable {
 
+    public static final String DEFAULT_METHOD = "execute";
     public static final String WILDCARD = "*";
 
     protected List<InterceptorMapping> interceptors; // a list of interceptorMapping Objects eg. List<InterceptorMapping>
@@ -63,7 +64,6 @@ public class ActionConfig extends Located implements Serializable {
         interceptors = new ArrayList<InterceptorMapping>();
         exceptionMappings = new ArrayList<ExceptionMappingConfig>();
         allowedMethods = new HashSet<String>();
-        allowedMethods.add(WILDCARD);
     }
 
     /**
@@ -131,7 +131,7 @@ public class ActionConfig extends Located implements Serializable {
         if (allowedMethods.size() == 1 && WILDCARD.equals(allowedMethods.iterator().next())) {
             return true;
         } else {
-            return allowedMethods.contains(method);
+            return method.equals(methodName != null ? methodName : DEFAULT_METHOD) || allowedMethods.contains(method);
         }
     }
 
@@ -178,7 +178,6 @@ public class ActionConfig extends Located implements Serializable {
         return true;
     }
 
-
     @Override public int hashCode() {
         int result;
         result = (interceptors != null ? interceptors.hashCode() : 0);
@@ -215,6 +214,7 @@ public class ActionConfig extends Located implements Serializable {
     public static class Builder implements InterceptorListHolder{
 
         protected ActionConfig target;
+        private boolean gotMethods;
 
         public Builder(ActionConfig toClone) {
             target = new ActionConfig(toClone);
@@ -316,7 +316,10 @@ public class ActionConfig extends Located implements Serializable {
         }
 
         public Builder addAllowedMethod(Collection<String> methods) {
-            target.allowedMethods.addAll(methods);
+            if (methods != null) {
+                gotMethods = true;
+                target.allowedMethods.addAll(methods);
+            }
             return this;
         }
 
@@ -333,6 +336,10 @@ public class ActionConfig extends Located implements Serializable {
         }
 
         protected void embalmTarget() {
+            if (!gotMethods && target.allowedMethods.isEmpty()) {
+                target.allowedMethods.add(WILDCARD);
+            }
+
             target.params = Collections.unmodifiableMap(target.params);
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);

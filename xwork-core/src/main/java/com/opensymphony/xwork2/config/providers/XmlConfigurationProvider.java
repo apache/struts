@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -86,6 +86,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         this.errorIfMissing = errorIfMissing;
 
         Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("-//Apache Struts//XWork 2.3//EN", "xwork-2.3.dtd");
         mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
         mappings.put("-//Apache Struts//XWork 2.1//EN", "xwork-2.1.dtd");
         mappings.put("-//Apache Struts//XWork 2.0//EN", "xwork-2.0.dtd");
@@ -349,7 +350,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         if (location == null) {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("location null for " + className);
+            LOG.warn("location null for " + className);
             }
         }
         //methodName should be null if it's not set
@@ -373,8 +374,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             }
         }
 
-
-
         Map<String, ResultConfig> results;
         try {
             results = buildResults(actionElement, packageContext);
@@ -386,12 +385,15 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement, packageContext);
 
+        Set<String> allowedMethods = buildAllowedMethods(actionElement, packageContext);
+
         ActionConfig actionConfig = new ActionConfig.Builder(packageContext.getName(), name, className)
                 .methodName(methodName)
                 .addResultConfigs(results)
                 .addInterceptors(interceptorList)
                 .addExceptionMappings(exceptionMappings)
                 .addParams(XmlHelper.getParams(actionElement))
+                .addAllowedMethod(allowedMethods)
                 .location(location)
                 .build();
         packageContext.addActionConfig(name, actionConfig);
@@ -430,7 +432,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         } catch (RuntimeException ex) {
             // Probably not a big deal, like request or session-scoped Spring 2 beans that need a real request
             if (LOG.isInfoEnabled()) {
-        	LOG.info("Unable to verify action class [" + className + "] exists at initialization");
+            LOG.info("Unable to verify action class [" + className + "] exists at initialization");
             }
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Action verification cause", ex);
@@ -536,12 +538,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             return objectFactory.getClassInstance(className);
         } catch (ClassNotFoundException e) {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("Result class [" + className + "] doesn't exist (ClassNotFoundException) at " +
+            LOG.warn("Result class [" + className + "] doesn't exist (ClassNotFoundException) at " +
                     loc.toString() + ", ignoring", e);
             }
         } catch (NoClassDefFoundError e) {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("Result class [" + className + "] doesn't exist (NoClassDefFoundError) at " +
+            LOG.warn("Result class [" + className + "] doesn't exist (NoClassDefFoundError) at " +
                     loc.toString() + ", ignoring", e);
             }
         }
@@ -573,10 +575,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     protected PackageConfig.Builder buildPackageContext(Element packageElement) {
         String parent = packageElement.getAttribute("extends");
         String abstractVal = packageElement.getAttribute("abstract");
-        boolean isAbstract = Boolean.valueOf(abstractVal).booleanValue();
+        boolean isAbstract = Boolean.parseBoolean(abstractVal);
         String name = StringUtils.defaultString(packageElement.getAttribute("name"));
         String namespace = StringUtils.defaultString(packageElement.getAttribute("namespace"));
-
+        String strictDMIVal = StringUtils.defaultString(packageElement.getAttribute("strict-method-invocation"));
+        boolean strictDMI = Boolean.parseBoolean(strictDMIVal);
 
         if (StringUtils.isNotEmpty(packageElement.getAttribute("externalReferenceResolver"))) {
             throw new ConfigurationException("The 'externalReferenceResolver' attribute has been removed.  Please use " +
@@ -586,8 +589,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
                 .namespace(namespace)
                 .isAbstract(isAbstract)
+                .strictMethodInvocation(strictDMI)
                 .location(DomHelper.getLocationObject(packageElement));
-
 
         if (StringUtils.isNotEmpty(StringUtils.defaultString(parent))) { // has parents, let's look it up
 
@@ -676,7 +679,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             }
                         } else {
                             if (LOG.isWarnEnabled()) {
-                        	LOG.warn("no default parameter defined for result of type " + config.getName());
+                            LOG.warn("no default parameter defined for result of type " + config.getName());
                             }
                         }
                     }
@@ -754,6 +757,26 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         return exceptionMappings;
     }
 
+    protected Set<String> buildAllowedMethods(Element element, PackageConfig.Builder packageContext) {
+        NodeList allowedMethodsEls = element.getElementsByTagName("allowed-methods");
+
+        Set<String> allowedMethods = null;
+
+        if (allowedMethodsEls.getLength() > 0) {
+            allowedMethods = new HashSet<String>();
+            Node n = allowedMethodsEls.item(0).getFirstChild();
+            if (n != null) {
+                String s = n.getNodeValue().trim();
+                if (s.length() > 0) {
+                    allowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+                }
+            }
+        } else if (packageContext.isStrictMethodInvocation()) {
+            allowedMethods = new HashSet<String>();
+        }
+
+        return allowedMethods;
+    }
 
     protected void loadDefaultInterceptorRef(PackageConfig.Builder packageContext, Element element) {
         NodeList resultTypeList = element.getElementsByTagName("default-interceptor-ref");
@@ -898,7 +921,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     throw new ConfigurationException("Could not open files of the name " + fileName, ioException);
                 } else {
                     if (LOG.isInfoEnabled()) {
-                	LOG.info("Unable to locate configuration files of the name "
+                    LOG.info("Unable to locate configuration files of the name "
                             + fileName + ", skipping");
                     }
                     return docs;

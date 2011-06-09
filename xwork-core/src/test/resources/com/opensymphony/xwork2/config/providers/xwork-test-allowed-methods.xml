@@ -1,0 +1,48 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.3//EN"
+    "http://struts.apache.org/dtds/xwork-2.3.dtd"
+ >
+
+<xwork>
+    <package name="default">
+        <action name="Default">
+        </action>
+
+        <action name="Boring">
+            <allowed-methods> </allowed-methods>
+        </action>
+
+        <action name="Foo">
+            <allowed-methods>foo</allowed-methods>
+        </action>
+
+        <action name="Bar">
+            <allowed-methods>foo,bar</allowed-methods>
+        </action>
+
+        <action name="Baz" method="baz">
+            <allowed-methods>foo,bar</allowed-methods>
+        </action>
+    </package>
+
+    <package name="strict" strict-method-invocation="true">
+        <action name="Default">
+        </action>
+
+        <action name="Boring">
+            <allowed-methods></allowed-methods>
+        </action>
+
+        <action name="Foo">
+            <allowed-methods>foo</allowed-methods>
+        </action>
+
+        <action name="Bar">
+            <allowed-methods>foo,bar</allowed-methods>
+        </action>
+
+        <action name="Baz" method="baz">
+            <allowed-methods>foo,bar</allowed-methods>
+        </action>
+    </package>
+</xwork>

@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -202,17 +202,17 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     }
 
     public String getDefaultClassRef() {
-    	if((defaultClassRef == null) && !parents.isEmpty()) {
+        if((defaultClassRef == null) && !parents.isEmpty()) {
             for (PackageConfig parent : parents) {
                 String parentDefault = parent.getDefaultClassRef();
                 if (parentDefault != null) {
                     return parentDefault;
                 }
             }
-    	}
-    	return defaultClassRef;
+        }
+        return defaultClassRef;
     }
-    
+
     /**
      * Returns the default result type for this package.
      */
@@ -443,6 +443,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     public static class Builder implements InterceptorLocator {
 
         protected PackageConfig target;
+        private boolean strictDMI;
 
         public Builder(String name) {
             target = new PackageConfig(name);
@@ -588,6 +589,15 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
         public Object getInterceptorConfig(String name) {
             return target.getAllInterceptorConfigs().get(name);
+        }
+
+        public Builder strictMethodInvocation(boolean strict) {
+            strictDMI = strict;
+            return this;
+        }
+
+        public boolean isStrictMethodInvocation() {
+            return strictDMI;
         }
 
         public PackageConfig build() {

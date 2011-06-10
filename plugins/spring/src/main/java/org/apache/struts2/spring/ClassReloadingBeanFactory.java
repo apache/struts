@@ -37,7 +37,7 @@ import java.lang.reflect.Constructor;
 public class ClassReloadingBeanFactory extends DefaultListableBeanFactory {
     @Override
     protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, Object[] args) {
-        Class beanClass = resolveBeanClass(mbd, beanName);
+        Class beanClass = resolveBeanClass(mbd, beanName, null);
 
         if (mbd.getFactoryMethodName() != null) {
             return instantiateUsingFactoryMethod(beanName, mbd, args);

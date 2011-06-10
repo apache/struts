@@ -85,7 +85,7 @@
 
     <properties>
         <currentVersion>${project.version}</currentVersion>
-        <struts2.springPlatformVersion>2.5.6</struts2.springPlatformVersion>
+        <struts2.springPlatformVersion>3.0.5.RELEASE</struts2.springPlatformVersion>
         <ognl.version>3.0.1</ognl.version>
         <asm.version>3.1</asm.version>
         <tiles.version>2.0.6</tiles.version>
@@ -178,7 +178,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>2.3.1</version>
                     <configuration>
                         <includes>
                             <include>**/*Test.java</include>
@@ -547,7 +547,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring</artifactId>
+                <artifactId>spring-core</artifactId>
                 <version>${struts2.springPlatformVersion}</version>
             </dependency>
             <dependency>

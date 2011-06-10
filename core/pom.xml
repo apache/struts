@@ -315,7 +315,7 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
+            <artifactId>spring-core</artifactId>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>

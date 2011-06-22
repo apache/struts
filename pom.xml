@@ -86,7 +86,7 @@
     <properties>
         <currentVersion>${project.version}</currentVersion>
         <struts2.springPlatformVersion>3.0.5.RELEASE</struts2.springPlatformVersion>
-        <ognl.version>3.0.1</ognl.version>
+        <ognl.version>3.0.2</ognl.version>
         <asm.version>3.1</asm.version>
         <tiles.version>2.0.6</tiles.version>
     </properties>
@@ -390,9 +390,9 @@
             </dependency>
 
             <dependency>
-                <groupId>ognl</groupId>
-                <artifactId>ognl</artifactId>
-                <version>${ognl.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-ognl</artifactId>
+                <version>4.0-incubating-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>asm</groupId>
@@ -702,4 +702,17 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>apache-snapshot</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
 </project>

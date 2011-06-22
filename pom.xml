@@ -390,9 +390,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-ognl</artifactId>
-                <version>4.0-incubating-SNAPSHOT</version>
+                <groupId>ognl</groupId>
+                <artifactId>ognl</artifactId>
+                <version>${ognl.version}</version>
             </dependency>
             <dependency>
                 <groupId>asm</groupId>

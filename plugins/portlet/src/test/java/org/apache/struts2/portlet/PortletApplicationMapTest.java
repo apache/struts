@@ -18,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet;
 
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class PortletApplicationMapTest extends MockObjectTestCase {
 
         Enumeration names = new Enumeration() {
 
-            List keys = Arrays.asList(new Object[] { "key1", "key2" });
+            List keys = Arrays.asList("key1", "key2");
 
             Iterator it = keys.iterator();
 
@@ -110,7 +109,7 @@ public class PortletApplicationMapTest extends MockObjectTestCase {
         };
         Enumeration initParamNames = new Enumeration() {
 
-            List keys = Arrays.asList(new Object[] { "key3" });
+            List keys = Arrays.asList("key3");
 
             Iterator it = keys.iterator();
 
@@ -157,7 +156,7 @@ public class PortletApplicationMapTest extends MockObjectTestCase {
         mockPortletContext.expects(once()).method("removeAttribute").with(eq("key1"));
         mockPortletContext.expects(once()).method("removeAttribute").with(eq("key2"));
 
-        ArrayList dummy = new ArrayList();
+        ArrayList<String> dummy = new ArrayList<String>();
         dummy.add("key1");
         dummy.add("key2");
 

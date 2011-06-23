@@ -18,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.interceptor;
 
 import org.apache.struts2.interceptor.PrincipalProxy;

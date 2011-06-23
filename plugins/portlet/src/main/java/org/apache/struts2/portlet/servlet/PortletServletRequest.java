@@ -18,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.servlet;
 
 import java.io.BufferedReader;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
@@ -42,12 +42,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.PortletActionContext;
-
-import com.opensymphony.xwork2.inject.Inject;
+import static org.apache.struts2.portlet.PortletConstants.*;
 
 /**
  * Wrapper object exposing a {@link PortletRequest} as a
@@ -55,17 +50,24 @@ import com.opensymphony.xwork2.inject.Inject;
  * will in fact operate on the {@link PortletRequest} object wrapped by this
  * request object.
  */
-public class PortletServletRequest implements HttpServletRequest, PortletActionConstants {
+public class PortletServletRequest implements HttpServletRequest {
 
 	private PortletRequest portletRequest;
 
 	private PortletContext portletContext;
 
-	private String extension;
+	private Map<String, String[]> extraParams;
 
-	public PortletServletRequest(PortletRequest portletRequest, PortletContext portletContext) {
-		this.portletRequest = portletRequest;
+	public PortletServletRequest(PortletRequest portletRequest,
+			PortletContext portletContext) {
+		this(portletRequest, portletContext, Collections.EMPTY_MAP);
+	}
+
+	public PortletServletRequest(PortletRequest portletRequest,
+			PortletContext portletContext, Map<String, String[]> extraParams) {
 		this.portletContext = portletContext;
+		this.portletRequest = portletRequest;
+		this.extraParams = extraParams;
 	}
 
 	/*
@@ -236,15 +238,10 @@ public class PortletServletRequest implements HttpServletRequest, PortletActionC
 	 */
 	public String getServletPath() {
 		String actionPath = getParameter(ACTION_PARAM);
-		if (!hasExtension(actionPath)) {
-			actionPath += "." + extension;
+		if (actionPath != null && !actionPath.endsWith(".action")) {
+			actionPath += ".action";
 		}
 		return actionPath;
-	}
-
-	private boolean hasExtension(String actionPath) {
-		return extension == null || "".equals(extension)
-				|| (actionPath != null && actionPath.endsWith("." + extension));
 	}
 
 	/**
@@ -402,7 +399,8 @@ public class PortletServletRequest implements HttpServletRequest, PortletActionC
 	 */
 	public ServletInputStream getInputStream() throws IOException {
 		if (portletRequest instanceof ActionRequest) {
-			return new PortletServletInputStream(((ActionRequest) portletRequest).getPortletInputStream());
+			return new PortletServletInputStream(
+					((ActionRequest) portletRequest).getPortletInputStream());
 		} else {
 			throw new IllegalStateException("Not allowed in render phase");
 		}
@@ -471,6 +469,13 @@ public class PortletServletRequest implements HttpServletRequest, PortletActionC
 	 * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
 	 */
 	public String getParameter(String name) {
+		// Check if the parameter is overriden in the extra params
+		if (extraParams.containsKey(name)) {
+			String[] values = extraParams.get(name);
+			if (values != null && values.length > 0) {
+				return values[0];
+			}
+		}
 		return portletRequest.getParameter(name);
 	}
 
@@ -584,7 +589,8 @@ public class PortletServletRequest implements HttpServletRequest, PortletActionC
 	 * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
 	 */
 	public RequestDispatcher getRequestDispatcher(String path) {
-		return new PortletServletRequestDispatcher(portletContext.getRequestDispatcher(path));
+		return new PortletServletRequestDispatcher(portletContext
+				.getRequestDispatcher(path));
 	}
 
 	/*
@@ -653,7 +659,8 @@ public class PortletServletRequest implements HttpServletRequest, PortletActionC
 	 * @throws IllegalStateException
 	 *             If the portlet is not in the event phase.
 	 */
-	public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
+	public void setCharacterEncoding(String env)
+			throws UnsupportedEncodingException {
 		if (portletRequest instanceof ActionRequest) {
 			((ActionRequest) portletRequest).setCharacterEncoding(env);
 		} else {
@@ -668,12 +675,5 @@ public class PortletServletRequest implements HttpServletRequest, PortletActionC
 	 */
 	public PortletRequest getPortletRequest() {
 		return portletRequest;
-	}
-
-	@Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
-	public void setExtension(String extension) {
-		if (extension != null) {
-			this.extension = extension.split(",")[0];
-		}
 	}
 }

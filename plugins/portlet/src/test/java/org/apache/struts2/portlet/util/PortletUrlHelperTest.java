@@ -18,22 +18,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.util;
 
+import static org.apache.struts2.portlet.PortletConstants.*;
+
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.PortletMode;
+import javax.portlet.PortletModeException;
+import javax.portlet.PortletSecurityException;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
 
 import junit.framework.TestCase;
 
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.easymock.MockControl;
+import org.easymock.EasyMock;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -45,116 +50,154 @@ public class PortletUrlHelperTest extends TestCase {
 
     RenderRequest renderRequest;
 
-    PortletURL url;
-
-    MockControl renderResponseControl;
-
-    MockControl renderRequestControl;
-
-    MockControl portletUrlControl;
+    MockUrl url;
 
     public void setUp() throws Exception {
         super.setUp();
 
-        renderRequestControl = MockControl.createControl(RenderRequest.class);
-        renderResponseControl = MockControl.createControl(RenderResponse.class);
-        portletUrlControl = MockControl.createControl(PortletURL.class);
+        renderResponse = EasyMock.createMock(RenderResponse.class);
+        renderRequest = EasyMock.createMock(RenderRequest.class);
+        url = new MockUrl();
+        
+        EasyMock.expect(renderRequest.getPortletMode()).andReturn(PortletMode.VIEW).anyTimes();
+        EasyMock.expect(renderRequest.getWindowState()).andReturn(WindowState.NORMAL).anyTimes();
 
-        renderRequest = (RenderRequest) renderRequestControl.getMock();
-        renderResponse = (RenderResponse) renderResponseControl.getMock();
-        url = (PortletURL) portletUrlControl.getMock();
-
-        renderRequestControl.expectAndDefaultReturn(renderRequest
-                .getPortletMode(), PortletMode.VIEW);
-        renderRequestControl.expectAndDefaultReturn(renderRequest
-                .getWindowState(), WindowState.NORMAL);
-
-        Map modeNamespaceMap = new HashMap();
+        Map<String, String> modeNamespaceMap = new HashMap<String, String>();
         modeNamespaceMap.put("view", "/view");
         modeNamespaceMap.put("edit", "/edit");
         modeNamespaceMap.put("help", "/help");
 
-        Map context = new HashMap();
-        context.put(PortletActionContext.REQUEST, renderRequest);
-        context.put(PortletActionContext.RESPONSE, renderResponse);
-        context.put(PortletActionContext.PHASE,
-                PortletActionContext.RENDER_PHASE);
-        context.put(PortletActionContext.MODE_NAMESPACE_MAP, modeNamespaceMap);
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put(REQUEST, renderRequest);
+        context.put(RESPONSE, renderResponse);
+        context.put(PHASE, RENDER_PHASE);
+        context.put(MODE_NAMESPACE_MAP, modeNamespaceMap);
 
         ActionContext.setContext(new ActionContext(context));
 
     }
 
     public void testCreateRenderUrlWithNoModeOrState() throws Exception {
-        renderResponseControl.expectAndReturn(renderResponse.createRenderURL(),
-                url);
+    	EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
 
-        url.setPortletMode(PortletMode.VIEW);
-        url.setWindowState(WindowState.NORMAL);
-        url.setParameters(null);
-        portletUrlControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        renderRequestControl.replay();
-        renderResponseControl.replay();
-        portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null, null,
+        EasyMock.replay(renderRequest);
+        EasyMock.replay(renderResponse);
+
+        (new PortletUrlHelper()).buildUrl("testAction", null, null,
                 new HashMap(), null, null, null);
-        portletUrlControl.verify();
-        renderRequestControl.verify();
-        renderResponseControl.verify();
+        assertEquals(PortletMode.VIEW, url.getPortletMode());
+        assertEquals(WindowState.NORMAL, url.getWindowState());
+        assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
+        assertEquals("view", url.getParameterMap().get(MODE_PARAM)[0]);
     }
 
     public void testCreateRenderUrlWithDifferentPortletMode() throws Exception {
-        renderResponseControl.expectAndReturn(renderResponse.createRenderURL(),
-                url);
+    	EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
 
-        url.setPortletMode(PortletMode.EDIT);
-        url.setWindowState(WindowState.NORMAL);
-        url.setParameters(null);
-        portletUrlControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        renderRequestControl.replay();
-        renderResponseControl.replay();
-        portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null, null,
+        EasyMock.replay(renderRequest);
+        EasyMock.replay(renderResponse);
+
+        (new PortletUrlHelper()).buildUrl("testAction", null, null,
                 new HashMap(), null, "edit", null);
-        portletUrlControl.verify();
-        renderRequestControl.verify();
-        renderResponseControl.verify();
+        
+        assertEquals(PortletMode.EDIT, url.getPortletMode());
+        assertEquals(WindowState.NORMAL, url.getWindowState());
+        assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
+        assertEquals("edit", url.getParameterMap().get(MODE_PARAM)[0]);
     }
 
     public void testCreateRenderUrlWithDifferentWindowState() throws Exception {
-        renderResponseControl.expectAndReturn(renderResponse.createRenderURL(),
-                url);
-
-        url.setPortletMode(PortletMode.VIEW);
-        url.setWindowState(WindowState.MAXIMIZED);
-        url.setParameters(null);
-        portletUrlControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        renderRequestControl.replay();
-        renderResponseControl.replay();
-        portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null, null,
+    	EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
+        
+        EasyMock.replay(renderRequest);
+        EasyMock.replay(renderResponse);
+        
+        (new PortletUrlHelper()).buildUrl("testAction", null, null,
                 new HashMap(), null, null, "maximized");
-        portletUrlControl.verify();
-        renderRequestControl.verify();
-        renderResponseControl.verify();
+        
+        assertEquals(PortletMode.VIEW, url.getPortletMode());
+        assertEquals(WindowState.MAXIMIZED, url.getWindowState());
+        assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
+        assertEquals("view", url.getParameterMap().get(MODE_PARAM)[0]);
     }
 
     public void testCreateActionUrl() throws Exception {
-        renderResponseControl.expectAndReturn(renderResponse.createActionURL(),
-                url);
-
-        url.setPortletMode(PortletMode.VIEW);
-        url.setWindowState(WindowState.NORMAL);
-        url.setParameters(null);
-        portletUrlControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        renderRequestControl.replay();
-        renderResponseControl.replay();
-        portletUrlControl.replay();
-        PortletUrlHelper.buildUrl("testAction", null, null,
+    	EasyMock.expect(renderResponse.createActionURL()).andReturn(url);
+        
+        EasyMock.replay(renderResponse);
+        EasyMock.replay(renderRequest);
+        
+        (new PortletUrlHelper()).buildUrl("testAction", null, null,
                 new HashMap(), "action", null, null);
-        portletUrlControl.verify();
-        renderRequestControl.verify();
-        renderResponseControl.verify();
+        
+        assertEquals(PortletMode.VIEW, url.getPortletMode());
+        assertEquals(WindowState.NORMAL, url.getWindowState());
+        assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
+        assertEquals("view", url.getParameterMap().get(MODE_PARAM)[0]);
+    }
+    
+    @Override
+    public void tearDown() {
+    	EasyMock.verify(renderResponse);
+    	EasyMock.verify(renderRequest);
+    }
+    
+    private class MockUrl implements PortletURL {
+
+    	private PortletMode portletMode;
+		private WindowState windowState;
+		private Map<String, String[]> parameters;
+    	
+		public PortletMode getPortletMode() {
+			return portletMode;
+		}
+
+		public WindowState getWindowState() {
+			return windowState;
+		}
+
+		public void removePublicRenderParameter(String name) {
+		}
+
+		public void setPortletMode(PortletMode portletMode) throws PortletModeException {
+			this.portletMode = portletMode;
+		}
+
+		public void setWindowState(WindowState windowState) throws WindowStateException {
+			this.windowState = windowState;
+		}
+
+		public void addProperty(String arg0, String arg1) {
+		}
+
+		public Map<String, String[]> getParameterMap() {
+			return parameters;
+		}
+
+		public void setParameter(String name, String value) {
+			parameters.put(name, new String[]{value});
+		}
+
+		public void setParameter(String name, String[] values) {
+			parameters.put(name, values);
+		}
+
+		public void setParameters(Map<String, String[]> parameters) {
+			this.parameters = parameters;
+		}
+
+		public void setProperty(String arg0, String arg1) {
+		}
+
+		public void setSecure(boolean arg0) throws PortletSecurityException {
+		}
+
+		public void write(Writer arg0) throws IOException {
+		}
+
+		public void write(Writer arg0, boolean arg1) throws IOException {
+		}
+    	
     }
 
 }

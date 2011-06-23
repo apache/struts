@@ -18,8 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.interceptor;
+
+import static org.apache.struts2.portlet.PortletConstants.ACTION_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.EVENT_ACTION;
+import static org.apache.struts2.portlet.PortletConstants.PHASE;
+import static org.apache.struts2.portlet.PortletConstants.RENDER_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.REQUEST;
+import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
+import static org.apache.struts2.portlet.PortletConstants.STACK_FROM_EVENT_PHASE;
+
+import java.util.Map;
+
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
@@ -27,15 +42,8 @@ import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
 
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-import java.util.Map;
-
-public class PortletStateInterceptor extends AbstractInterceptor implements PortletActionConstants {
+public class PortletStateInterceptor extends AbstractInterceptor {
 
 	private final static Logger LOG = LoggerFactory.getLogger(PortletStateInterceptor.class);
 
@@ -47,7 +55,7 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 		if (RENDER_PHASE.equals(phase)) {
 			restoreStack(invocation);
 			return invocation.invoke();
-		} else if (EVENT_PHASE.equals(phase)) {
+		} else if (ACTION_PHASE.equals(phase)) {
 			try {
 				return invocation.invoke();
 			} finally {
@@ -78,7 +86,7 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 					CompoundRoot oldRoot = oldStack.getRoot();
 					ValueStack currentStack = invocation.getStack();
 					CompoundRoot root = currentStack.getRoot();
-					root.addAll(0, oldRoot);
+					root.addAll(oldRoot);
 					if (LOG.isDebugEnabled()) LOG.debug("Restored stack");
 				}
 			}

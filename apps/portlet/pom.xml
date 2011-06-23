@@ -93,8 +93,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>portlet-api</groupId>
-            <artifactId>portlet-api</artifactId>
+            <groupId>javax.portlet</groupId>
+             <artifactId>portlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

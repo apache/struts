@@ -18,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.servlet;
 
 import java.io.IOException;
@@ -33,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PortletServletResponse implements HttpServletResponse {
 
-	private PortletResponse portletResponse;
+	protected PortletResponse portletResponse;
 	
 	public PortletServletResponse(PortletResponse portletResponse) {
 		this.portletResponse = portletResponse;
@@ -48,7 +47,7 @@ public class PortletServletResponse implements HttpServletResponse {
 	}
 
 	public void addHeader(String name, String value) {
-		throw new IllegalStateException("Not allowed in a portlet");
+		portletResponse.addProperty(name, value);
 	}
 
 	public void addIntHeader(String name, int value) {
@@ -107,125 +106,125 @@ public class PortletServletResponse implements HttpServletResponse {
 		throw new IllegalStateException("Not allowed in a portlet");
 	}
 
-	public void flushBuffer() throws IOException {
-		if(portletResponse instanceof RenderResponse) {
-			((RenderResponse)portletResponse).flushBuffer();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public void flushBuffer() throws IOException {
+        if(portletResponse instanceof RenderResponse) {
+            ((RenderResponse)portletResponse).flushBuffer();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public int getBufferSize() {
-		if(portletResponse instanceof RenderResponse) {
-			return ((RenderResponse)portletResponse).getBufferSize();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public int getBufferSize() {
+        if(portletResponse instanceof RenderResponse) {
+            return ((RenderResponse)portletResponse).getBufferSize();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public String getCharacterEncoding() {
-		if(portletResponse instanceof RenderResponse) {
-			return ((RenderResponse)portletResponse).getCharacterEncoding();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public String getCharacterEncoding() {
+        if(portletResponse instanceof RenderResponse) {
+            return ((RenderResponse)portletResponse).getCharacterEncoding();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public String getContentType() {
-		if(portletResponse instanceof RenderResponse) {
-			return ((RenderResponse)portletResponse).getContentType();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public String getContentType() {
+        if(portletResponse instanceof RenderResponse) {
+            return ((RenderResponse)portletResponse).getContentType();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public Locale getLocale() {
-		if(portletResponse instanceof RenderResponse) {
-			return ((RenderResponse)portletResponse).getLocale();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public Locale getLocale() {
+        if(portletResponse instanceof RenderResponse) {
+            return ((RenderResponse)portletResponse).getLocale();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public ServletOutputStream getOutputStream() throws IOException {
-		if(portletResponse instanceof RenderResponse) {
-			return new PortletServletOutputStream(((RenderResponse)portletResponse).getPortletOutputStream());
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public ServletOutputStream getOutputStream() throws IOException {
+        if(portletResponse instanceof RenderResponse) {
+            return new PortletServletOutputStream(((RenderResponse)portletResponse).getPortletOutputStream());
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public PrintWriter getWriter() throws IOException {
-		if(portletResponse instanceof RenderResponse) {
-			return ((RenderResponse)portletResponse).getWriter();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public PrintWriter getWriter() throws IOException {
+        if(portletResponse instanceof RenderResponse) {
+            return ((RenderResponse)portletResponse).getWriter();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public boolean isCommitted() {
-		if(portletResponse instanceof RenderResponse) {
-			return ((RenderResponse)portletResponse).isCommitted();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public boolean isCommitted() {
+        if(portletResponse instanceof RenderResponse) {
+            return ((RenderResponse)portletResponse).isCommitted();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public void reset() {
-		if(portletResponse instanceof RenderResponse) {
-			((RenderResponse)portletResponse).reset();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public void reset() {
+        if(portletResponse instanceof RenderResponse) {
+            ((RenderResponse)portletResponse).reset();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public void resetBuffer() {
-		if(portletResponse instanceof RenderResponse) {
-			((RenderResponse)portletResponse).resetBuffer();
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public void resetBuffer() {
+        if(portletResponse instanceof RenderResponse) {
+            ((RenderResponse)portletResponse).resetBuffer();
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public void setBufferSize(int size) {
-		if(portletResponse instanceof RenderResponse) {
-			((RenderResponse)portletResponse).setBufferSize(size);
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public void setBufferSize(int size) {
+        if(portletResponse instanceof RenderResponse) {
+            ((RenderResponse)portletResponse).setBufferSize(size);
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public void setCharacterEncoding(String charset) {
-		throw new IllegalStateException("Not allowed in a portlet");
-	}
+    public void setCharacterEncoding(String charset) {
+        throw new IllegalStateException("Not allowed in a portlet");
+    }
 
-	public void setContentLength(int len) {
-		throw new IllegalStateException("Not allowed in a portlet");
-	}
+    public void setContentLength(int len) {
+        throw new IllegalStateException("Not allowed in a portlet");
+    }
 
-	public void setContentType(String type) {
-		if(portletResponse instanceof RenderResponse) {
-			((RenderResponse)portletResponse).setContentType(type);
-		}
-		else {
-			throw new IllegalStateException("Not allowed in event phase");
-		}
-	}
+    public void setContentType(String type) {
+        if(portletResponse instanceof RenderResponse) {
+            ((RenderResponse)portletResponse).setContentType(type);
+        }
+        else {
+            throw new IllegalStateException("Not allowed in event phase");
+        }
+    }
 
-	public void setLocale(Locale loc) {
-		throw new IllegalStateException("Not allowed in a portlet");
-	}
+    public void setLocale(Locale loc) {
+        throw new IllegalStateException("Not allowed in a portlet");
+    }
 
 	public PortletResponse getPortletResponse() {
 		return portletResponse;

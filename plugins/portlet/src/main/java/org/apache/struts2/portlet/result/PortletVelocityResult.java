@@ -18,15 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+import javax.portlet.ActionResponse;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspFactory;
+import javax.servlet.jsp.PageContext;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
@@ -38,15 +42,12 @@ import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
-import javax.portlet.ActionResponse;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspFactory;
-import javax.servlet.jsp.PageContext;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -95,7 +96,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     private String defaultEncoding;
     private VelocityManager velocityManager;
     private JspFactory jspFactory = JspFactory.getDefaultFactory();
-
+    
     public PortletVelocityResult() {
         super();
     }
@@ -119,7 +120,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
      */
     public void doExecute(String location, ActionInvocation invocation)
             throws Exception {
-        if (PortletActionContext.isEvent()) {
+        if (PortletActionContext.isAction()) {
             executeActionResult(location, invocation);
         } else if (PortletActionContext.isRender()) {
             executeRenderResult(location, invocation);
@@ -136,12 +137,8 @@ public class PortletVelocityResult extends StrutsResultSupport {
             ActionInvocation invocation) {
         ActionResponse res = PortletActionContext.getActionResponse();
         // View is rendered outside an action...uh oh...
-        String namespace = invocation.getProxy().getNamespace();
-        if ( namespace != null && namespace.length() > 0 && !namespace.endsWith("/")) {
-            namespace += "/";
-
-        }
-        res.setRenderParameter(PortletActionConstants.ACTION_PARAM, namespace + "freemarkerDirect");
+        res.setRenderParameter(PortletActionConstants.ACTION_PARAM,
+                "freemarkerDirect");
         res.setRenderParameter("location", location);
         res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
                 .getRequest().getPortletMode().toString());

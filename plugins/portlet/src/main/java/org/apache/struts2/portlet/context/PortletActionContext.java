@@ -18,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.context;
 
 import java.util.Map;
@@ -34,9 +33,10 @@ import javax.portlet.RenderResponse;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.PortletActionConstants;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import static org.apache.struts2.portlet.PortletConstants.*;
 
 
 /**
@@ -44,7 +44,7 @@ import com.opensymphony.xwork2.ActionContext;
  *
  * @version $Revision$ $Date$
  */
-public class PortletActionContext implements PortletActionConstants {
+public class PortletActionContext {
 
     /**
      * Get the PortletConfig of the portlet that is executing.
@@ -90,7 +90,7 @@ public class PortletActionContext implements PortletActionConstants {
      * @throws IllegalStateException If the method is invoked in the wrong phase.
      */
     public static ActionRequest getActionRequest() {
-        if (!isEvent()) {
+        if (!isAction()) {
             throw new IllegalStateException(
                     "ActionRequest cannot be obtained in render phase");
         }
@@ -104,7 +104,7 @@ public class PortletActionContext implements PortletActionConstants {
      * @throws IllegalStateException If the method is invoked in the wrong phase.
      */
     public static ActionResponse getActionResponse() {
-        if (!isEvent()) {
+        if (!isAction()) {
             throw new IllegalStateException(
                     "ActionResponse cannot be obtained in render phase");
         }
@@ -129,14 +129,6 @@ public class PortletActionContext implements PortletActionConstants {
     public static PortletRequest getRequest() {
         return (PortletRequest) getContext().get(REQUEST);
     }
-    
-    /**
-     * Convenience setter for the portlet request.
-     * @param request
-     */
-    public static void setRequest(PortletRequest request) {
-    	getContext().put(REQUEST, request);
-    }
 
     /**
      * Get the current PortletResponse
@@ -146,20 +138,12 @@ public class PortletActionContext implements PortletActionConstants {
     public static PortletResponse getResponse() {
         return (PortletResponse) getContext().get(RESPONSE);
     }
-    
-    /**
-     * Convenience setter for the portlet response.
-     * @param response
-     */
-    public static void setResponse(PortletResponse response) {
-    	getContext().put(RESPONSE, response);
-    }
 
     /**
      * Get the phase that the portlet is executing in.
      *
      * @return {@link PortletActionConstants#RENDER_PHASE} in render phase, and
-     * {@link PortletActionConstants#EVENT_PHASE} in the event phase.
+     * {@link PortletActionConstants#ACTION_PHASE} in the event phase.
      */
     public static Integer getPhase() {
         return (Integer) getContext().get(PHASE);
@@ -169,14 +153,21 @@ public class PortletActionContext implements PortletActionConstants {
      * @return <code>true</code> if the Portlet is executing in render phase.
      */
     public static boolean isRender() {
-        return PortletActionConstants.RENDER_PHASE.equals(getPhase());
+        return RENDER_PHASE.equals(getPhase());
     }
 
     /**
      * @return <code>true</code> if the Portlet is executing in the event phase.
      */
-    public static boolean isEvent() {
-        return PortletActionConstants.EVENT_PHASE.equals(getPhase());
+    public static boolean isAction() {
+        return ACTION_PHASE.equals(getPhase());
+    }
+
+    /**
+     * @return <code>true</code> if the Portlet is executing in the resource phase.
+     */
+    public static boolean isResource() {
+        return SERVE_RESOURCE_PHASE.equals(getPhase());
     }
 
     /**
@@ -220,22 +211,18 @@ public class PortletActionContext implements PortletActionConstants {
     public static PortletContext getPortletContext() {
     	return (PortletContext)getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
     }
-    
+
+	public static boolean isEvent() {
+		return EVENT_PHASE.equals(getPhase());
+	}
+
     /**
-     * Convenience setter for the portlet context.
-     * @param context
-     */
-    public static void setPortletContext(PortletContext context) {
-    	getContext().put(StrutsStatics.STRUTS_PORTLET_CONTEXT, context);
-    }
-    
-    /**
-     * Gets the action mapping for this context
+     * Whether JSR286 features are supported.
      *
-     * @return The action mapping
+     * @return <code>true</code> if {@link javax.portlet.PortletContext#getMajorVersion()} returns a value greater than 1
      */
-    public static ActionMapping getActionMapping() {
-        return (ActionMapping) getContext().get(ACTION_MAPPING);
+    public static boolean isJSR268Supported() {
+        return getPortletContext().getMajorVersion() > 1;
     }
 
 }

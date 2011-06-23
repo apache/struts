@@ -57,10 +57,10 @@ public interface PortletActionConstants {
     Integer RENDER_PHASE = new Integer(1);
 
     /**
-     * Constant used for the event phase (
+     * Constant used for the action phase (
      * {@link javax.portlet.Portlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)})
      */
-    Integer EVENT_PHASE = new Integer(2);
+    Integer ACTION_PHASE = new Integer(2);
 
     /**
      * Key used for looking up and storing the
@@ -107,22 +107,22 @@ public interface PortletActionConstants {
      * {@link org.apache.struts2.portlet.context.PortletActionContext}.
      */
     String DEFAULT_ACTION_FOR_MODE = "struts.portlet.defaultActionForMode";
-    
+
     /**
-     * Key for request attribute indicating if the action has been reset. 
+     * Key for request attribute indicating if the action has been reset.
      */
     String ACTION_RESET = "struts.portlet.actionReset";
-    
+
     /**
      * Key for session attribute indicating the location of the render direct action.
      */
     String RENDER_DIRECT_LOCATION = "struts.portlet.renderDirectLocation";
-    
+
     /**
      * Key for the dispatch instruction for the {@link DispatcherServlet}
      */
 	String DISPATCH_TO = "struts.portlet.dispatchTo";
-	
+
 	/**
 	 * Session key where the value stack from the event phase is stored.
 	 */
@@ -132,7 +132,7 @@ public interface PortletActionConstants {
 	 * Default name of dispatcher servlet in web.xml
 	 */
 	String DEFAULT_DISPATCHER_SERVLET_NAME = "Struts2PortletDispatcherServlet";
-	
+
 	/**
 	 * Key for the action mapping in the context
     */

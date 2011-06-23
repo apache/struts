@@ -180,7 +180,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         action.setThrowException(true);
         try {
-            stack.findValue("exceptionMethod1()", true);
+            stack.findValue("exceptionMethod12()", true);
             fail("Failed to throw exception on EL method exception");
         } catch (Exception ex) {
             //ok

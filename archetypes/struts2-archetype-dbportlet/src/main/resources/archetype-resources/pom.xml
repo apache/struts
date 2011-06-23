@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>2.5.6</version>
+            <version>3.0.5.RELEASE</version>
         </dependency>
 
         <!-- Database driver (change for your specific database) -->
@@ -85,9 +85,9 @@
 		</dependency>
 
         <dependency>
-            <groupId>portlet-api</groupId>
+            <groupId>javax.portlet</groupId>
             <artifactId>portlet-api</artifactId>
-            <version>1.0</version>
+            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -117,9 +117,9 @@
                 </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>portlet-api</groupId>
+                        <groupId>javax.portlet</groupId>
                         <artifactId>portlet-api</artifactId>
-                        <version>1.0</version>
+                        <version>2.0</version>
                     </dependency>
                 </dependencies>
     		</plugin>

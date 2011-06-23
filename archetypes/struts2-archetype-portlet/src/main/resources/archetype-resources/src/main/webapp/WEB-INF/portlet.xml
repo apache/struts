@@ -12,7 +12,7 @@
         <portlet-name>HelloPortlet</portlet-name>
         <display-name xml:lang="EN">${artifactId}</display-name>
     
-        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
+        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr286Dispatcher</portlet-class>
 
 		<!-- The namespace for the actions configured for view mode -->
 		<init-param>

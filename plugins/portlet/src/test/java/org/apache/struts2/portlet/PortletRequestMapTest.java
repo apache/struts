@@ -83,25 +83,27 @@ public class PortletRequestMapTest extends MockObjectTestCase {
         PortletRequestMap map = new PortletRequestMap(request);
         Set entries = map.entrySet();
 
-        assertEquals(2, entries.size());
+        assertEquals(3, entries.size());
         Iterator it = entries.iterator();
-        Map.Entry entry = (Map.Entry)it.next();
-        checkEntry(entry);
-        entry = (Map.Entry)it.next();
-        checkEntry(entry);
-
+        for (Iterator iterator = entries.iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            checkEntry(entry);
+	}
     }
     
-	private void checkEntry(Map.Entry entry) {
-		if(entry.getKey().equals("testAttribute1")) {
+    private void checkEntry(Map.Entry entry) {
+	if(entry.getKey().equals("testAttribute1")) {
         	assertEquals("testValue1", entry.getValue());
         }
         else if(entry.getKey().equals("testAttribute2")) {
         	assertEquals("testValue2", entry.getValue());
         }
-        else {
-        	fail("Unexpected entry in etry set: " + entry);
+        else if(entry.getKey().equals("javax.portlet.lifecycle_phase")) {
+    		assertNull(entry.getValue());
         }
-	}
+        else {
+        	fail("Unexpected entry in entry set: " + entry);
+        }
+    }
 
 }

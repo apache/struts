@@ -18,8 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.portlet.interceptor;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -68,12 +70,18 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Port
             PortletContext portletContext = (PortletContext) context.get(STRUTS_PORTLET_CONTEXT);
             ((PortletContextAware) action).setPortletContext(portletContext);
         }
+        if (action instanceof PortletConfigAware) {
+        	PortletConfig portletConfig = (PortletConfig)context.get(PORTLET_CONFIG);
+        	((PortletConfigAware) action).setPortletConfig(portletConfig);
+        }
         if (action instanceof PortletPreferencesAware) {
         	PortletRequest request = (PortletRequest) context.get(REQUEST);
             
             // Check if running in a servlet environment
             if (request == null) {
-                LOG.warn("This portlet preferences implementation should only be used during development");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("This portlet preferences implementation should only be used during development");
+                }
                 ((PortletPreferencesAware)action).setPortletPreferences(new ServletPortletPreferences(ActionContext.getContext().getSession()));
             } else {
             	((PortletPreferencesAware)action).setPortletPreferences(request.getPreferences());

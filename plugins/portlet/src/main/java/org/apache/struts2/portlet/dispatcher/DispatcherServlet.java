@@ -18,18 +18,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.portlet.dispatcher;
 
-import java.io.IOException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.dispatcher.StrutsRequestWrapper;
+import org.apache.struts2.portlet.PortletActionConstants;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.dispatcher.StrutsRequestWrapper;
-import org.apache.struts2.portlet.PortletActionConstants;
+import java.io.IOException;
 
 public class DispatcherServlet extends HttpServlet implements PortletActionConstants {
 

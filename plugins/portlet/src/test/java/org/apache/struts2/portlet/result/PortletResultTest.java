@@ -18,16 +18,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.portlet.result;
 
-import static org.apache.struts2.portlet.PortletConstants.*;
-import static com.opensymphony.xwork2.ActionContext.*;
+package org.apache.struts2.portlet.result;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletRequestDispatcher;
@@ -36,19 +35,24 @@ import javax.portlet.RenderResponse;
 
 import junit.textui.TestRunner;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.portlet.PortletActionConstants;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.mock.MockActionProxy;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**
  * PortletResultTest. Insert description.
  *
  */
-public class PortletResultTest extends MockObjectTestCase implements StrutsStatics {
+public class PortletResultTest extends MockObjectTestCase implements PortletActionConstants {
 
     Mock mockInvocation = null;
     Mock mockConfig = null;
@@ -59,13 +63,13 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         mockInvocation = mock(ActionInvocation.class);
         mockCtx = mock(PortletContext.class);
 
-        Map<String, String[]> paramMap = new HashMap<String, String[]>();
-        Map<String, Object> sessionMap = new HashMap<String, Object>();
+        Map paramMap = new HashMap();
+        Map sessionMap = new HashMap();
 
-        Map<String, Object> context = new HashMap<String, Object>();
-        context.put(SESSION, sessionMap);
-        context.put(PARAMETERS, paramMap);
-        context.put(STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
+        Map context = new HashMap();
+        context.put(ActionContext.SESSION, sessionMap);
+        context.put(ActionContext.PARAMETERS, paramMap);
+        context.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
 
         ActionContext.setContext(new ActionContext(context));
 
@@ -87,16 +91,15 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
-        mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
         mockResponse.expects(once()).method("setContentType").with(eq("text/html"));
 
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
 
         ActionContext ctxMap = ActionContext.getContext();
-        ctxMap.put(RESPONSE, res);
-        ctxMap.put(REQUEST, req);
-        ctxMap.put(SERVLET_CONTEXT, ctx);
-        ctxMap.put(PHASE, RENDER_PHASE);
+        ctxMap.put(PortletActionConstants.RESPONSE, res);
+        ctxMap.put(PortletActionConstants.REQUEST, req);
+        ctxMap.put(StrutsStatics.SERVLET_CONTEXT, ctx);
+        ctxMap.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
 
         PortletResult result = new PortletResult();
         try {
@@ -114,17 +117,16 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         Mock mockRequest = mock(ActionRequest.class);
         Mock mockResponse = mock(ActionResponse.class);
 
-        Constraint[] params = new Constraint[]{eq(ACTION_PARAM), eq("testView")};
+        Constraint[] params = new Constraint[]{eq(PortletActionConstants.ACTION_PARAM), eq("testView")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
-        params = new Constraint[]{eq(MODE_PARAM), eq(PortletMode.VIEW.toString())};
+        params = new Constraint[]{eq(PortletActionConstants.MODE_PARAM), eq(PortletMode.VIEW.toString())};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
-        mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
         ActionContext ctx = ActionContext.getContext();
 
-        ctx.put(REQUEST, mockRequest.proxy());
-        ctx.put(RESPONSE, mockResponse.proxy());
-        ctx.put(PHASE, ACTION_PHASE);
+        ctx.put(PortletActionConstants.REQUEST, mockRequest.proxy());
+        ctx.put(PortletActionConstants.RESPONSE, mockResponse.proxy());
+        ctx.put(PortletActionConstants.PHASE, PortletActionConstants.EVENT_PHASE);
 
         PortletResult result = new PortletResult();
         try {
@@ -140,21 +142,24 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
     public void testDoExecute_event_locationIsJsp() {
         Mock mockRequest = mock(ActionRequest.class);
         Mock mockResponse = mock(ActionResponse.class);
+        Mock mockProxy = mock(ActionProxy.class);
 
-        Constraint[] params = new Constraint[]{eq(ACTION_PARAM), eq("renderDirect")};
+        Constraint[] params = new Constraint[]{eq(PortletActionConstants.ACTION_PARAM), eq("renderDirect")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
-        params = new Constraint[]{eq(MODE_PARAM), eq(PortletMode.VIEW.toString())};
+        params = new Constraint[]{eq(PortletActionConstants.MODE_PARAM), eq(PortletMode.VIEW.toString())};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
-        mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
- 
+        mockProxy.stubs().method("getNamespace").will(returnValue(""));
+
+        mockInvocation.stubs().method("getProxy").will(returnValue(mockProxy.proxy()));
+
         ActionContext ctx = ActionContext.getContext();
 
         Map session = new HashMap();
         
-        ctx.put(REQUEST, mockRequest.proxy());
-        ctx.put(RESPONSE, mockResponse.proxy());
-        ctx.put(PHASE, ACTION_PHASE);
+        ctx.put(PortletActionConstants.REQUEST, mockRequest.proxy());
+        ctx.put(PortletActionConstants.RESPONSE, mockResponse.proxy());
+        ctx.put(PortletActionConstants.PHASE, PortletActionConstants.EVENT_PHASE);
         ctx.put(ActionContext.SESSION, session);
 
         PortletResult result = new PortletResult();
@@ -172,22 +177,21 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         Mock mockRequest = mock(ActionRequest.class);
         Mock mockResponse = mock(ActionResponse.class);
 
-        Constraint[] params = new Constraint[]{eq(ACTION_PARAM), eq("testView")};
+        Constraint[] params = new Constraint[]{eq(PortletActionConstants.ACTION_PARAM), eq("testView")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         params = new Constraint[]{eq("testParam1"), eq("testValue1")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         params = new Constraint[]{eq("testParam2"), eq("testValue2")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
-        params = new Constraint[]{eq(MODE_PARAM), eq(PortletMode.VIEW.toString())};
+        params = new Constraint[]{eq(PortletActionConstants.MODE_PARAM), eq(PortletMode.VIEW.toString())};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
-        mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
 
         ActionContext ctx = ActionContext.getContext();
 
-        ctx.put(REQUEST, mockRequest.proxy());
-        ctx.put(RESPONSE, mockResponse.proxy());
-        ctx.put(PHASE, ACTION_PHASE);
+        ctx.put(PortletActionConstants.REQUEST, mockRequest.proxy());
+        ctx.put(PortletActionConstants.RESPONSE, mockResponse.proxy());
+        ctx.put(PortletActionConstants.PHASE, PortletActionConstants.EVENT_PHASE);
 
         PortletResult result = new PortletResult();
         try {
@@ -212,15 +216,14 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
-        mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
 
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
 
         ActionContext ctxMap = ActionContext.getContext();
-        ctxMap.put(RESPONSE, res);
-        ctxMap.put(REQUEST, req);
-        ctxMap.put(SERVLET_CONTEXT, ctx);
-        ctxMap.put(PHASE, RENDER_PHASE);
+        ctxMap.put(PortletActionConstants.RESPONSE, res);
+        ctxMap.put(PortletActionConstants.REQUEST, req);
+        ctxMap.put(StrutsStatics.SERVLET_CONTEXT, ctx);
+        ctxMap.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
 
         mockResponse.expects(atLeastOnce()).method("setTitle").with(eq("testTitle"));
         mockResponse.expects(atLeastOnce()).method("setContentType").with(eq("testContentType"));

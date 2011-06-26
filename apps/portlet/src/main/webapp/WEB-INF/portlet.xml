@@ -73,7 +73,7 @@
         <portlet-name>StrutsPortlet2</portlet-name>
         <display-name xml:lang="EN">Struts Test Portlet2</display-name>
     
-        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr286Dispatcher</portlet-class>
+        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 
         <!-- The view mode namespace. Maps to a namespace in the Struts 2 config file. -->
         <init-param>

@@ -21,10 +21,9 @@
  * under the License.
  */
 -->
-
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
-    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
 	
@@ -33,7 +32,8 @@
 	<constant name="struts.urlRenderer" value="portlet" />
 	<constant name="struts.portlet.useDispatcherServlet" value="false" />
 	<constant name="struts.portlet.dispatcherServletName" value="Struts2PortletDispatcherServlet" />
-	
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect" value="false" />
+
     <package name="struts-portlet-default" extends="struts-default">
 
 	   <result-types>

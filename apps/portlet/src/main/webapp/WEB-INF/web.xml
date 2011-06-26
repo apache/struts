@@ -8,8 +8,11 @@
 			/WEB-INF/applicationContext*.xml
 		</param-value>
 	</context-param>
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
 
+	<!-- Uncomment to use the dispatcher servlet -->
+	<!--<servlet id="Struts2PortletDispatcherServlet">
+		<servlet-name>Struts2PortletDispatcherServlet</servlet-name>
+		<servlet-class>org.apache.struts2.portlet.dispatcher.DispatcherServlet</servlet-class>
+	</servlet>-->
+	
 </web-app>

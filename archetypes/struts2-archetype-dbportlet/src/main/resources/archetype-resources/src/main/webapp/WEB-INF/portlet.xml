@@ -6,7 +6,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
     <portlet-name>StrutsDBPortlet</portlet-name>
     <display-name xml:lang="EN">Struts Database Portlet</display-name>
     
-    <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr286Dispatcher</portlet-class>
+    <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 
     <init-param>
         <name>actionPackages</name>

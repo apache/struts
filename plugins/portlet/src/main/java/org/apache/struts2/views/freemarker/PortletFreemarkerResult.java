@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.freemarker;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ import freemarker.template.TemplateModelException;
 
 /**
  */
-public class PortletFreemarkerResult extends StrutsResultSupport implements PortletActionConstants {
+public class PortletFreemarkerResult extends StrutsResultSupport implements PortletActionConstants{
 
     private static final long serialVersionUID = -5570612389289887543L;
 
@@ -104,7 +105,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport implements Port
      */
     public void doExecute(String location, ActionInvocation invocation)
             throws IOException, TemplateException, PortletException {
-        if (PortletActionContext.isAction()) {
+        if (PortletActionContext.isEvent()) {
             executeActionResult(location, invocation);
         } else if (PortletActionContext.isRender()) {
             executeRenderResult(location, invocation);
@@ -119,9 +120,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport implements Port
                                      ActionInvocation invocation) {
         ActionResponse res = PortletActionContext.getActionResponse();
         // View is rendered outside an action...uh oh...
-        invocation.getInvocationContext().getSession().put(RENDER_DIRECT_LOCATION, location);
+		invocation.getInvocationContext().getSession().put(RENDER_DIRECT_LOCATION, location);
         res.setRenderParameter(PortletActionConstants.ACTION_PARAM, "freemarkerDirect");
-        res.setRenderParameter("location", location);
         res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
                 .getRequest().getPortletMode().toString());
 

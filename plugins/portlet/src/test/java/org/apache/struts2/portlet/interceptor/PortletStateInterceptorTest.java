@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.portlet.interceptor;
 
 import java.util.HashMap;
@@ -26,8 +27,11 @@ import java.util.Map;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 
+import junit.framework.TestCase;
+
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.DefaultActionSupport;
+import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
 import org.easymock.EasyMock;
 
@@ -36,9 +40,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
-import static org.apache.struts2.portlet.PortletConstants.*;
-
-public class PortletStateInterceptorTest extends StrutsTestCase {
+public class PortletStateInterceptorTest extends StrutsTestCase implements PortletActionConstants {
 
 	private PortletStateInterceptor interceptor;
 	
@@ -52,7 +54,7 @@ public class PortletStateInterceptorTest extends StrutsTestCase {
 		ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
 		
 		Map<String, Object> ctxMap = new HashMap<String, Object>();
-		ctxMap.put(PHASE, ACTION_PHASE);
+		ctxMap.put(PHASE, EVENT_PHASE);
 		ctxMap.put(RESPONSE, actionResponse);
 		Map<String, Object> session = new HashMap<String, Object>();
 		

@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.portlet;
 
 import java.util.Iterator;
@@ -83,27 +84,25 @@ public class PortletRequestMapTest extends MockObjectTestCase {
         PortletRequestMap map = new PortletRequestMap(request);
         Set entries = map.entrySet();
 
-        assertEquals(3, entries.size());
+        assertEquals(2, entries.size());
         Iterator it = entries.iterator();
-        for (Iterator iterator = entries.iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            checkEntry(entry);
-	}
+        Map.Entry entry = (Map.Entry)it.next();
+        checkEntry(entry);
+        entry = (Map.Entry)it.next();
+        checkEntry(entry);
+
     }
     
-    private void checkEntry(Map.Entry entry) {
-	if(entry.getKey().equals("testAttribute1")) {
+	private void checkEntry(Map.Entry entry) {
+		if(entry.getKey().equals("testAttribute1")) {
         	assertEquals("testValue1", entry.getValue());
         }
         else if(entry.getKey().equals("testAttribute2")) {
         	assertEquals("testValue2", entry.getValue());
         }
-        else if(entry.getKey().equals("javax.portlet.lifecycle_phase")) {
-    		assertNull(entry.getValue());
-        }
         else {
-        	fail("Unexpected entry in entry set: " + entry);
+        	fail("Unexpected entry in etry set: " + entry);
         }
-    }
+	}
 
 }

@@ -18,11 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.portlet.interceptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 
 import junit.framework.TestCase;
@@ -36,10 +38,22 @@ import com.opensymphony.xwork2.ActionInvocation;
 public class PortletAwareInterceptorTest extends TestCase implements PortletActionConstants {
 
 	private PortletAwareInterceptor interceptor;
+	private TestAction action;
+	private PortletRequest portletRequest;
+	private PortletConfig portletConfig;
+	private Map<String, Object> contextMap;
+	private ActionInvocation invocation;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
 		interceptor = new PortletAwareInterceptor();
+		action = new TestAction();
+		portletRequest = EasyMock.createNiceMock(PortletRequest.class);
+		portletConfig = EasyMock.createNiceMock(PortletConfig.class);
+		contextMap = new HashMap<String, Object>();
+		invocation = EasyMock.createNiceMock(ActionInvocation.class);
+		EasyMock.expect(invocation.getAction()).andReturn(action);
+		EasyMock.expect(invocation.getInvocationContext()).andReturn(new ActionContext(contextMap));
 	}
 	
 	protected void tearDown() throws Exception {
@@ -47,21 +61,39 @@ public class PortletAwareInterceptorTest extends TestCase implements PortletActi
 	}
 	
 	public void testPortletRequestIsSet() throws Exception {
-		PortletRequest request = EasyMock.createMock(PortletRequest.class);
-		Map<String, Object> ctx = new HashMap<String, Object>();
-		ctx.put(REQUEST, request);
-		PortletRequestAware action = EasyMock.createMock(PortletRequestAware.class);
-		action.setPortletRequest(request);
-		
-		ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
-		EasyMock.expect(invocation.getInvocationContext()).andReturn(new ActionContext(ctx));
-		EasyMock.expect(invocation.getAction()).andReturn(action);
-		
-		EasyMock.replay(action);
+		contextMap.put(REQUEST, portletRequest);
 		EasyMock.replay(invocation);
-		
 		interceptor.intercept(invocation);
+		assertEquals(portletRequest, action.getPortletRequest());
+	}
+	
+	public void testPortletConfigIsSet() throws Exception {
+		contextMap.put(PORTLET_CONFIG, portletConfig);
+		EasyMock.replay(invocation);
+		interceptor.intercept(invocation);
+		assertEquals(portletConfig, action.getPortletConfig());
+	}
+	
+	public static class TestAction implements PortletRequestAware, PortletConfigAware {
+
+		private PortletRequest request;
+		private PortletConfig config;
+
+		public void setPortletRequest(PortletRequest request) {
+			this.request = request;
+		}
+
+		public void setPortletConfig(PortletConfig portletConfig) {
+			this.config = portletConfig;
+		}
+
+		public PortletConfig getPortletConfig() {
+			return config;
+		}
+
+		public PortletRequest getPortletRequest() {
+			return request;
+		}
 		
-		EasyMock.verify(action);
 	}
 }

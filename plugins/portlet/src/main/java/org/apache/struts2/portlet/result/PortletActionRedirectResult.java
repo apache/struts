@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.portlet.result;
 
 import java.util.Arrays;
@@ -35,15 +36,19 @@ import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 
 /**
- * 
+ *
  * Portlet modification of the {@link ServletActionRedirectResult}.
- * 
+ *
  * <!-- START SNIPPET: description -->
- * 
+ *
  * This result uses the {@link ActionMapper} provided by the
  * {@link ActionMapperFactory} to instruct the render phase to invoke the
  * specified action and (optional) namespace. This is better than the
@@ -53,63 +58,63 @@ import com.opensymphony.xwork2.inject.Inject;
  * and your application will still work. It is strongly recommended that if you
  * are redirecting to another action, you use this result rather than the
  * standard redirect result.
- * 
+ *
  * See examples below for an example of how request parameters could be passed
  * in.
- * 
+ *
  * <!-- END SNIPPET: description -->
- * 
+ *
  * <b>This result type takes the following parameters:</b>
- * 
+ *
  * <!-- START SNIPPET: params -->
- * 
+ *
  * <ul>
- * 
+ *
  * <li><b>actionName (default)</b> - the name of the action that will be
  * redirect to</li>
- * 
+ *
  * <li><b>namespace</b> - used to determine which namespace the action is in
  * that we're redirecting to . If namespace is null, this defaults to the
  * current namespace</li>
- * 
+ *
  * </ul>
- * 
+ *
  * <!-- END SNIPPET: params -->
- * 
+ *
  * <b>Example:</b>
- * 
+ *
  * <pre>
  * &lt;!-- START SNIPPET: example --&gt;
  *  &lt;package name=&quot;public&quot; extends=&quot;struts-default&quot;&gt;
  *      &lt;action name=&quot;login&quot; class=&quot;...&quot;&gt;
  *          &lt;!-- Redirect to another namespace --&gt;
- *          &lt;result type=&quot;redirect-action&quot;&gt;
+ *          &lt;result type=&quot;redirectAction&quot;&gt;
  *              &lt;param name=&quot;actionName&quot;&gt;dashboard&lt;/param&gt;
  *              &lt;param name=&quot;namespace&quot;&gt;/secure&lt;/param&gt;
  *          &lt;/result&gt;
  *      &lt;/action&gt;
  *  &lt;/package&gt;
- * 
+ *
  *  &lt;package name=&quot;secure&quot; extends=&quot;struts-default&quot; namespace=&quot;/secure&quot;&gt;
  *      &lt;-- Redirect to an action in the same namespace --&gt;
  *      &lt;action name=&quot;dashboard&quot; class=&quot;...&quot;&gt;
  *          &lt;result&gt;dashboard.jsp&lt;/result&gt;
- *          &lt;result name=&quot;error&quot; type=&quot;redirect-action&quot;&gt;error&lt;/result&gt;
+ *          &lt;result name=&quot;error&quot; type=&quot;redirectAction&quot;&gt;error&lt;/result&gt;
  *      &lt;/action&gt;
- * 
+ *
  *      &lt;action name=&quot;error&quot; class=&quot;...&quot;&gt;
  *          &lt;result&gt;error.jsp&lt;/result&gt;
  *      &lt;/action&gt;
  *  &lt;/package&gt;
- * 
+ *
  *  &lt;package name=&quot;passingRequestParameters&quot; extends=&quot;struts-default&quot; namespace=&quot;/passingRequestParameters&quot;&gt;
  *     &lt;-- Pass parameters (reportType, width and height) --&gt;
  *     &lt;!--
- *     The redirect-action url generated will be :
+ *     The redirectAction url generated will be :
  *     /genReport/generateReport.action?reportType=pie&amp;width=100&amp;height=100
  *     --&gt;
  *     &lt;action name=&quot;gatherReportInfo&quot; class=&quot;...&quot;&gt;
- *        &lt;result name=&quot;showReportResult&quot; type=&quot;redirect-action&quot;&gt;
+ *        &lt;result name=&quot;showReportResult&quot; type=&quot;redirectAction&quot;&gt;
  *           &lt;param name=&quot;actionName&quot;&gt;generateReport&lt;/param&gt;
  *           &lt;param name=&quot;namespace&quot;&gt;/genReport&lt;/param&gt;
  *           &lt;param name=&quot;reportType&quot;&gt;pie&lt;/param&gt;
@@ -118,18 +123,20 @@ import com.opensymphony.xwork2.inject.Inject;
  *        &lt;/result&gt;
  *     &lt;/action&gt;
  *  &lt;/package&gt;
- * 
- * 
+ *
+ *
  *  &lt;!-- END SNIPPET: example --&gt;
  * </pre>
- * 
+ *
  * @see ActionMapper
  */
-public class PortletActionRedirectResult extends PortletResult {
+public class PortletActionRedirectResult extends PortletResult implements ReflectionExceptionHandler {
 
 	private static final long serialVersionUID = -7627388936683562557L;
 
-	/** The default parameter */
+    private static final Logger LOG = LoggerFactory.getLogger(PortletActionRedirectResult.class);
+
+    /** The default parameter */
 	public static final String DEFAULT_PARAM = "actionName";
 
 	protected String actionName;
@@ -174,7 +181,6 @@ public class PortletActionRedirectResult extends PortletResult {
 	 */
 	public void execute(ActionInvocation invocation) throws Exception {
 		actionName = conditionalParse(actionName, invocation);
-		String portletNamespace = (String)invocation.getInvocationContext().get(PortletActionConstants.PORTLET_NAMESPACE);
 		if (portletMode != null) {
 			Map<PortletMode, String> namespaceMap = (Map<PortletMode, String>) invocation.getInvocationContext().get(
 					PortletActionConstants.MODE_NAMESPACE_MAP);
@@ -205,7 +211,7 @@ public class PortletActionRedirectResult extends PortletResult {
 		}
 
 		StringBuilder tmpLocation = new StringBuilder(actionMapper.getUriFromActionMapping(new ActionMapping(actionName,
-				(portletNamespace == null ? namespace : portletNamespace + namespace), method, null)));
+                namespace, method, null)));
 		UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
 		setLocation(tmpLocation.toString());
@@ -215,7 +221,7 @@ public class PortletActionRedirectResult extends PortletResult {
 
 	/**
 	 * Sets the action name
-	 * 
+	 *
 	 * @param actionName
 	 *            The name
 	 */
@@ -225,7 +231,7 @@ public class PortletActionRedirectResult extends PortletResult {
 
 	/**
 	 * Sets the namespace
-	 * 
+	 *
 	 * @param namespace
 	 *            The namespace
 	 */
@@ -235,7 +241,7 @@ public class PortletActionRedirectResult extends PortletResult {
 
 	/**
 	 * Sets the method
-	 * 
+	 *
 	 * @param method
 	 *            The method
 	 */
@@ -245,7 +251,7 @@ public class PortletActionRedirectResult extends PortletResult {
 
 	/**
 	 * Adds a request parameter to be added to the redirect url
-	 * 
+	 *
 	 * @param key
 	 *            The parameter name
 	 * @param value
@@ -256,4 +262,8 @@ public class PortletActionRedirectResult extends PortletResult {
 		return this;
 	}
 
+    public void handle(ReflectionException ex) {
+        // Only log as debug as they are probably parameters to be appended to the url
+        if (LOG.isDebugEnabled()) LOG.debug(ex.getMessage(), ex);
+    }
 }

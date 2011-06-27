@@ -1,3 +1,5 @@
+<%@ taglib prefix="s" uri="/struts-tags" %>
+
 <html>
 <head>
     <title>Acme Corp</title>
@@ -5,8 +7,10 @@
 
 <body>
 <ul>
-    <li><a href="new-person!input.action">Create</a> a new person</li>
-    <li><a href="list-people.action">List</a> all people</li>
+    <s:url id="newpersonurl" action="new-person" method="input" />
+    <li><s:a href="%{newpersonurl}">Create</s:a> a new person</li>
+    <s:url id="listpeopleurl" action="list-people" />
+    <li><s:a href="%{listpeopleurl}">List</s:a> all people</li>
 </ul>
 </body>
 </html>

@@ -11,8 +11,10 @@
 </@s.form>
 
 <ul>
-    <li><a href="edit-person.action">Edit people</a></li>
-    <li><a href="list-people.action">List</a> all people</li>
+    <@s.url id="editpersonurl" action="edit-person" />
+    <li><@s.a href="%{editpersonurl}">Edit people</@s.a></li>
+    <@s.url id="listpeopleurl" action="list-people" />
+    <li><@s.a href="%{listpeopleurl}">List</@s.a> all people</li>
 </ul>
 
 </body>

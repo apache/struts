@@ -20,9 +20,9 @@
  * under the License.
  */
 -->
-<#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#t/>
-    <#assign aKeys = parameters.dynamicAttributes.keySet()><#t/>
-    <#list aKeys as aKey><#t/>
+<#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
+<#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
+<#list aKeys as aKey><#rt/>
  ${aKey}="${parameters.dynamicAttributes[aKey]?html}"<#rt/>
-    </#list><#t/> 
-</#if><#t/>
+</#list><#rt/>
+</#if><#rt/>

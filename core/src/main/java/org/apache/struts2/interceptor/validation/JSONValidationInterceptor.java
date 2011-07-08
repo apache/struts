@@ -106,7 +106,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             if (isValidateOnly(request)) {
                 //there were no errors
                 setupEncoding(response, request);
-                response.getWriter().print("/* {} */");
+                response.getWriter().print("{}");
                 response.setContentType("application/json");
                 return Action.NONE;
             } else {
@@ -159,7 +159,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
     protected String buildResponse(ValidationAware validationAware) {
         //should we use FreeMarker here?
         StringBuilder sb = new StringBuilder();
-        sb.append("/* { ");
+        sb.append("{ ");
 
         if (validationAware.hasErrors()) {
             //action errors
@@ -192,7 +192,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             }
         }
 
-        sb.append("} */");
+        sb.append("}");
         /*response should be something like:
          * {
          *      "errors": ["this", "that"],

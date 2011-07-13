@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.interceptor.validation;
+package org.apache.struts2.json;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
@@ -33,10 +33,8 @@ import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validation;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.TestUtils;
-import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
-import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
-import org.apache.struts2.views.jsp.StrutsMockServletContext;
+import org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor;
+import org.apache.struts2.interceptor.validation.SkipValidation;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -45,6 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JSONValidationInterceptorTest extends StrutsTestCase {
+
     private MockActionInvocation invocation;
     private StringWriter stringWriter;
     private TestAction action;
@@ -69,7 +68,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
 
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils
-            .normalize(JSONValidationInterceptorTest.class.getResource("json-1.txt"));
+            .normalize(JSONValidationInterceptorTest.class.getResource("json-validation-1.txt"));
         //json
         assertEquals(normalizedExpected, normalizedActual);
         //execution

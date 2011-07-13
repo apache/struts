@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.interceptor.validation;
+package org.apache.struts2.json;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;

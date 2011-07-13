@@ -151,7 +151,6 @@
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />
             <interceptor name="profiling" class="org.apache.struts2.interceptor.ProfilingActivationInterceptor" />
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
-            <interceptor name="jsonValidation" class="org.apache.struts2.interceptor.validation.JSONValidationInterceptor" />
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
 
@@ -173,16 +172,6 @@
             <interceptor-stack name="validationWorkflowStack">
                 <interceptor-ref name="basicStack"/>
                 <interceptor-ref name="validation"/>
-                <interceptor-ref name="workflow"/>
-            </interceptor-stack>
-
-            <!-- Sample JSON validation stack -->
-            <interceptor-stack name="jsonValidationWorkflowStack">
-                <interceptor-ref name="basicStack"/>
-                <interceptor-ref name="validation">
-                    <param name="excludeMethods">input,back,cancel</param>
-                </interceptor-ref>
-                <interceptor-ref name="jsonValidation"/>
                 <interceptor-ref name="workflow"/>
             </interceptor-stack>
 

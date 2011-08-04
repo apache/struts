@@ -54,7 +54,7 @@ import java.util.logging.Logger;
 import static org.junit.Assert.assertNotNull;
 
 
-public class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
+public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
     protected MockHttpServletResponse response;
     protected MockHttpServletRequest request;
     protected MockPageContext pageContext;

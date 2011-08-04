@@ -31,7 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
  * Date: 04/08/11
  * Time: 16.50
  */
-public class StrutsSpringJUnit4TestCase<T> extends StrutsJUnit4TestCase<T> implements ApplicationContextAware {
+public abstract class StrutsSpringJUnit4TestCase<T> extends StrutsJUnit4TestCase<T> implements ApplicationContextAware {
     protected ApplicationContext applicationContext;
 
     @Override

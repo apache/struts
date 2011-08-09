@@ -54,7 +54,7 @@
         </action>
     </package>
 
-    <package name="ajaxNoDecorate" namespace="/nodecorate" extends="struts-default">
+    <package name="ajaxNoDecorate" namespace="/nodecorate" extends="json-default">
     	<!--  example 4 -->
         <action name="panel1" class="org.apache.struts2.showcase.ajax.Example4ShowPanelAction" method="panel1">
     		<result type="freemarker">/ajax/tabbedpanel/nodecorate/panel1.ftl</result>

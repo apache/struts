@@ -38,10 +38,6 @@
         <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/dojo/</url>
     </scm>
 
-    <properties>
-        <tlib.version>2.2</tlib.version>
-    </properties>
-
     <profiles>
         <profile>
             <id>release</id>

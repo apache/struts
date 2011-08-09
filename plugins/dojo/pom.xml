@@ -88,6 +88,10 @@
         </profile>
     </profiles>
 
+    <properties>
+        <tlib.version>2.2</tlib.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -96,8 +100,8 @@
                 <version>1.0.15</version>
                 <configuration>
                     <A>
-                        uri=/struts-dojo-tags,tlibVersion=${tlib.version},jspVersion=2.0,shortName=sx,displayName="Struts
-                        Dojo Tags",
+                        uri=/struts-dojo-tags,tlibVersion=${tlib.version},jspVersion=2.0,shortName=sx,
+                        displayName="Struts Dojo Tags",
                         outFile=${basedir}/target/classes/META-INF/struts-dojo-tags.tld,
                         description="Struts AJAX tags based on Dojo.",
                         outTemplatesDir=${basedir}/../../core/src/site/resources/tags/ajax

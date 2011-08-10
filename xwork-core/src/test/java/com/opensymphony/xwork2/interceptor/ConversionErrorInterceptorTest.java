@@ -35,13 +35,13 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
     protected ActionContext context;
     protected ActionInvocation invocation;
     protected ConversionErrorInterceptor interceptor;
-    protected Map conversionErrors;
+    protected Map<String,Object> conversionErrors;
     protected Mock mockInvocation;
     protected ValueStack stack;
 
 
     public void testFieldErrorAdded() throws Exception {
-        conversionErrors.put("foo", new Long(123));
+        conversionErrors.put("foo", 123L);
 
         SimpleAction action = new SimpleAction();
         mockInvocation.expectAndReturn("getAction", action);
@@ -69,19 +69,12 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
     public void testWithPreResultListener() throws Exception {
         conversionErrors.put("foo", "Hello");
 
-        ActionContext ac = new ActionContext(stack.getContext());
-        ac.setConversionErrors(conversionErrors);
-        ac.setValueStack(stack);
+        ActionContext ac = createActionContext();
+        MockActionInvocation mai = createActionInvocation(ac);
+        SimpleAction action = createAction(mai);
 
-        MockActionInvocation mai = new MockActionInvocation();
-        mai.setInvocationContext(ac);
-        mai.setStack(stack);
-        SimpleAction action = new SimpleAction();
-        action.setFoo(55);
-        mai.setAction(action);
-        stack.push(action);
         assertNull(action.getFieldErrors().get("foo"));
-        assertEquals(new Integer(55), stack.findValue("foo"));
+        assertEquals(55, stack.findValue("foo"));
 
         interceptor.intercept(mai);
 
@@ -89,6 +82,51 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         assertNotNull(action.getFieldErrors().get("foo"));
 
         assertEquals("Hello", stack.findValue("foo")); // assume that the original value is reset
+    }
+
+    /**
+     * See WW-3668
+     * @throws Exception
+     */
+    public void testWithPreResultListenerAgainstMaliciousCode() throws Exception {
+        conversionErrors.put("foo", "' + #root + '");
+
+        ActionContext ac = createActionContext();
+
+        MockActionInvocation mai = createActionInvocation(ac);
+
+        SimpleAction action = createAction(mai);
+        assertNull(action.getFieldErrors().get("foo"));
+        assertEquals(55, stack.findValue("foo"));
+
+        interceptor.intercept(mai);
+
+        assertTrue(action.hasFieldErrors());
+        assertNotNull(action.getFieldErrors().get("foo"));
+
+        assertEquals("' + #root + '", stack.findValue("foo"));
+    }
+
+    private MockActionInvocation createActionInvocation(ActionContext ac) {
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setInvocationContext(ac);
+        mai.setStack(stack);
+        return mai;
+    }
+
+    private SimpleAction createAction(MockActionInvocation mai) {
+        SimpleAction action = new SimpleAction();
+        action.setFoo(55);
+        mai.setAction(action);
+        stack.push(action);
+        return action;
+    }
+
+    private ActionContext createActionContext() {
+        ActionContext ac = new ActionContext(stack.getContext());
+        ac.setConversionErrors(conversionErrors);
+        ac.setValueStack(stack);
+        return ac;
     }
 
     @Override
@@ -99,7 +137,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         invocation = (ActionInvocation) mockInvocation.proxy();
         stack = ActionContext.getContext().getValueStack();
         context = new ActionContext(stack.getContext());
-        conversionErrors = new HashMap();
+        conversionErrors = new HashMap<String,Object>();
         context.setConversionErrors(conversionErrors);
         mockInvocation.matchAndReturn("getInvocationContext", context);
         mockInvocation.expect("addPreResultListener", C.isA(PreResultListener.class));

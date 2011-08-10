@@ -350,10 +350,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean acceptableName(String name) {
-        if (isAccepted(name) && !isExcluded(name)) {
-            return true;
-        }
-        return false;
+        return isAccepted(name) && !isExcluded(name);
     }
 
     protected boolean isAccepted(String paramName) {

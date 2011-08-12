@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +85,11 @@ public class ConversionErrorInterceptor extends AbstractInterceptor {
     public static final String ORIGINAL_PROPERTY_OVERRIDE = "original.property.override";
 
     protected Object getOverrideExpr(ActionInvocation invocation, Object value) {
-        return "'" + value + "'";
+        return escape(value);
+    }
+
+    protected String escape(Object value) {
+        return "\"" + StringEscapeUtils.escapeJava(String.valueOf(value)) + "\"";
     }
 
     @Override

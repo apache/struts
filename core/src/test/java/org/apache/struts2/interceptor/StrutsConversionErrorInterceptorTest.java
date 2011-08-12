@@ -21,11 +21,6 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.struts2.StrutsTestCase;
-
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.Action;
@@ -33,7 +28,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.StrutsTestCase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -44,14 +42,14 @@ public class StrutsConversionErrorInterceptorTest extends StrutsTestCase {
 
     protected ActionContext context;
     protected ActionInvocation invocation;
-    protected Map conversionErrors;
+    protected Map<String, Object> conversionErrors;
     protected Mock mockInvocation;
     protected ValueStack stack;
     protected StrutsConversionErrorInterceptor interceptor;
 
 
     public void testEmptyValuesDoNotSetFieldErrors() throws Exception {
-        conversionErrors.put("foo", new Long(123));
+        conversionErrors.put("foo", 123L);
         conversionErrors.put("bar", "");
         conversionErrors.put("baz", new String[]{""});
 
@@ -70,7 +68,7 @@ public class StrutsConversionErrorInterceptorTest extends StrutsTestCase {
     }
 
     public void testFieldErrorAdded() throws Exception {
-        conversionErrors.put("foo", new Long(123));
+        conversionErrors.put("foo", 123L);
 
         ActionSupport action = new ActionSupport();
         mockInvocation.expectAndReturn("getAction", action);
@@ -89,7 +87,7 @@ public class StrutsConversionErrorInterceptorTest extends StrutsTestCase {
         invocation = (ActionInvocation) mockInvocation.proxy();
         stack = ActionContext.getContext().getValueStack();
         context = new ActionContext(stack.getContext());
-        conversionErrors = new HashMap();
+        conversionErrors = new HashMap<String, Object>();
         context.setConversionErrors(conversionErrors);
         mockInvocation.matchAndReturn("getInvocationContext", context);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);

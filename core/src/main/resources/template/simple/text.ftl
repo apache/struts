@@ -29,7 +29,7 @@
  maxlength="${parameters.maxlength?html}"<#rt/>
 </#if>
 <#if parameters.nameValue??>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
+ value="${parameters.nameValue?html}"<#rt/>
 </#if>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>

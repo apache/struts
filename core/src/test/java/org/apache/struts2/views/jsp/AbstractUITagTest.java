@@ -21,26 +21,19 @@
 
 package org.apache.struts2.views.jsp;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.jsp.ui.AbstractUITag;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.jsp.ui.AbstractUITag;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.util.*;
 
 
 /**
@@ -255,38 +248,14 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
     }
 
     /**
-     * Attempt to verify the contents of this.writer against the contents of the URL specified.  verify() performs a
+     * Attempt to verify the contents of this.writer against the contents of the resource specified.  verify() performs a
      * trim on both ends
      *
-     * @param url the HTML snippet that we want to validate against
+     * @param resource the HTML snippet that we want to validate against
      * @throws Exception if the validation failed
      */
-    public void verify(URL url) throws Exception {
-        if (url == null) {
-            fail("unable to verify a null URL");
-        } else if (this.writer == null) {
-            fail("AbstractJspWriter.writer not initialized.  Unable to verify");
-        }
-
-        StringBuilder buffer = new StringBuilder(128);
-        InputStream in = url.openStream();
-        byte[] buf = new byte[4096];
-        int nbytes;
-
-        while ((nbytes = in.read(buf)) > 0) {
-            buffer.append(new String(buf, 0, nbytes));
-        }
-
-        in.close();
-
-        /**
-         * compare the trimmed values of each buffer and make sure they're equivalent.  however, let's make sure to
-         * normalize the strings first to account for line termination differences between platforms.
-         */
-        String writerString = normalize(writer.toString(), true);
-        String bufferString = normalize(buffer.toString(), true);
-
-        assertEquals(bufferString, writerString);
+    public void verifyResource(String resource) throws Exception {
+        verify(this.getClass().getResource(resource));
     }
 
     /**
@@ -296,8 +265,20 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * @param url the HTML snippet that we want to validate against
      * @throws Exception if the validation failed
      */
+    public void verify(URL url) throws Exception {
+        verify(url,null);
+    }
+
+    /**
+     * Attempt to verify the contents of this.writer against the contents of the URL specified.  verify() performs a
+     * trim on both ends
+     *
+     * @param url the HTML snippet that we want to validate against
+     * @param excluded
+     * @throws Exception if the validation failed
+     */
     public void verify(URL url, String[] excluded) throws Exception {
-        if (url == null) {
+         if (url == null) {
             fail("unable to verify a null URL");
         } else if (this.writer == null) {
             fail("AbstractJspWriter.writer not initialized.  Unable to verify");

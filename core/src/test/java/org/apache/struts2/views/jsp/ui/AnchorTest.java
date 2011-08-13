@@ -30,43 +30,31 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 public class AnchorTest extends AbstractUITagTest {
 
     public void testSimple() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("bar");
+        createAction();
 
-        AnchorTag tag = new AnchorTag();
-        tag.setPageContext(pageContext);
-
-        tag.setId("mylink");
+        AnchorTag tag = createTag();
         tag.setHref("a");
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(AnchorTest.class.getResource("href-1.txt"));
+        verifyResource("href-1.txt");
     }
 
     public void testSimpleBadQuote() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("bar");
+        createAction();
 
-        AnchorTag tag = new AnchorTag();
-        tag.setPageContext(pageContext);
-
-        tag.setId("mylink");
+        AnchorTag tag = createTag();
         tag.setHref("a\"");
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(AnchorTest.class.getResource("href-2.txt"));
+        verifyResource("href-2.txt");
     }
 
     public void testDynamicAttribute() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("bar");
+        createAction();
 
-        AnchorTag tag = new AnchorTag();
-        tag.setPageContext(pageContext);
-
-        tag.setId("mylink");
+        AnchorTag tag = createTag();
         tag.setHref("a");
 
         tag.setDynamicAttribute("uri", "dynAttrName", "dynAttrValue");
@@ -74,17 +62,13 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(AnchorTest.class.getResource("Anchor-2.txt"));
+        verifyResource("Anchor-2.txt");
     }
 
     public void testDynamicAttributeAsExpression() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("bar");
+        createAction();
 
-        AnchorTag tag = new AnchorTag();
-        tag.setPageContext(pageContext);
-
-        tag.setId("mylink");
+        AnchorTag tag = createTag();
         tag.setHref("a");
 
         tag.setDynamicAttribute("uri", "placeholder", "foo");
@@ -92,6 +76,19 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(AnchorTest.class.getResource("Anchor-3.txt"));
+        verifyResource("Anchor-3.txt");
+    }
+
+    private void createAction() {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+    }
+
+    private AnchorTag createTag() {
+        AnchorTag tag = new AnchorTag();
+        tag.setPageContext(pageContext);
+
+        tag.setId("mylink");
+        return tag;
     }
 }

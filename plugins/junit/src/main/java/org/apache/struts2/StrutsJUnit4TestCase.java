@@ -152,7 +152,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
                 namespace, name, method, new HashMap<String, Object>(), true, false);
 
         ActionContext invocationContext = proxy.getInvocation().getInvocationContext();
-        invocationContext.setParameters(new HashMap(request.getParameterMap()));
+        invocationContext.setParameters(new HashMap<String,Object>(request.getParameterMap()));
         // set the action context to the one used by the proxy
         ActionContext.setContext(invocationContext);
 

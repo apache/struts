@@ -20,15 +20,12 @@
  */
 package org.apache.struts2;
 
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import java.util.HashMap;
-import java.io.UnsupportedEncodingException;
-
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.Action;
-
 import javax.servlet.ServletException;
+import java.io.UnsupportedEncodingException;
 
 public class StrutsTestCaseTest extends StrutsSpringTestCase {
     public void testGetActionMapping() {

@@ -24,12 +24,10 @@ package org.apache.struts2.views.jsp;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -100,7 +98,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
          *
          * @param map The map to place this instance in.
          */
-        public void addToMap(Map map) {
+        public void addToMap(Map<String, PropertyHolder> map) {
             if (map != null) {
                 map.put(this.name, this);
             }
@@ -114,32 +112,17 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * TODO: Check how we can remove this crap again.
      *
      * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
+     * @deprecated use BeanUtils#setProperty
      */
     public class BeanHelper {
-        Map propDescriptors;
         Object bean;
 
         public BeanHelper(Object bean) {
             this.bean = bean;
-
-            try {
-                PropertyDescriptor[] pds;
-                pds = Introspector.getBeanInfo(bean.getClass()).getPropertyDescriptors();
-                propDescriptors = new HashMap(pds.length + 1, 1f);
-                for (int i = 0; i < pds.length; i ++) {
-                    propDescriptors.put(pds[i].getName(), pds[i]);
-                }
-            } catch (IntrospectionException e) {
-                e.printStackTrace();
-            }
         }
 
         public void set(String name, Object value) throws IllegalAccessException, InvocationTargetException {
-            PropertyDescriptor pd = (PropertyDescriptor) propDescriptors.get(name);
-
-            if (pd != null) {
-                pd.getWriteMethod().invoke(bean, new Object[]{value});
-            }
+            BeanUtils.setProperty(this.bean, name, value);
         }
 
     }
@@ -153,8 +136,8 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
-    protected Map initializedGenericTagTestProperties() {
-        Map result = new HashMap();
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = new HashMap<String, PropertyHolder>();
         new PropertyHolder("name", "someName").addToMap(result);
         new PropertyHolder("id", "someId").addToMap(result);
         new PropertyHolder("cssClass", "cssClass1", "class=\"cssClass1\"").addToMap(result);
@@ -193,7 +176,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * @param exclude          Names of properties to exclude from particular test.
      * @throws Exception
      */
-    public void verifyGenericProperties(AbstractUITag tag, String theme, Map propertiesToTest, String[] exclude) throws Exception {
+    public void verifyGenericProperties(AbstractUITag tag, String theme, Map<String, PropertyHolder> propertiesToTest, String[] exclude) throws Exception {
         if (tag != null && propertiesToTest != null) {
             List excludeList;
             if (exclude != null) {
@@ -207,12 +190,9 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
                 tag.setTheme(theme);
             }
 
-            BeanHelper beanHelper = new BeanHelper(tag);
-            Iterator it = propertiesToTest.values().iterator();
-            while (it.hasNext()) {
-                PropertyHolder propertyHolder = (PropertyHolder) it.next();
-                if (! excludeList.contains(propertyHolder.getName())) {
-                    beanHelper.set(propertyHolder.getName(), propertyHolder.getValue());
+            for (PropertyHolder propertyHolder : propertiesToTest.values()) {
+                if (!excludeList.contains(propertyHolder.getName())) {
+                    BeanUtils.setProperty(tag, propertyHolder.getName(), propertyHolder.getValue());
                 }
             }
             tag.doStartTag();
@@ -222,13 +202,11 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
                 LOG.info("AbstractUITagTest - [verifyGenericProperties]: Tag output is " + writerString);
             }
 
-            assertTrue("Freemarker error detected in tag output: " + writerString, writerString.indexOf(FREEMARKER_ERROR_EXPECTATION) == -1);
+            assertFalse("Freemarker error detected in tag output: " + writerString, writerString.contains(normalize(FREEMARKER_ERROR_EXPECTATION)));
 
-            it = propertiesToTest.values().iterator();
-            while (it.hasNext()) {
-                PropertyHolder propertyHolder = (PropertyHolder) it.next();
-                if (! excludeList.contains(propertyHolder.getName())) {
-                    assertTrue("Expected to find: " + propertyHolder.getExpectation() + " in resulting String: " + writerString, writerString.indexOf(propertyHolder.getExpectation()) > -1);
+            for (PropertyHolder propertyHolder : propertiesToTest.values()) {
+                if (!excludeList.contains(propertyHolder.getName())) {
+                    assertTrue("Expected to find: " + propertyHolder.getExpectation() + " in resulting String: " + writerString, writerString.contains(propertyHolder.getExpectation()));
                 }
             }
         }
@@ -238,9 +216,9 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * Do a generic verification that setting certain properties on a tag causes expected output regarding this
      * property. Which properties to test with which expectations will be determined by the Map retrieved by {@link #initializedGenericTagTestProperties()}.
      *
-     * @param tag              The fresh created tag instance to test.
-     * @param theme            The theme to use. If <tt>null</tt>, use configured default theme.
-     * @param exclude          Names of properties to exclude from particular test.
+     * @param tag     The fresh created tag instance to test.
+     * @param theme   The theme to use. If <tt>null</tt>, use configured default theme.
+     * @param exclude Names of properties to exclude froObjectm particular test.
      * @throws Exception
      */
     public void verifyGenericProperties(AbstractUITag tag, String theme, String[] exclude) throws Exception {
@@ -266,19 +244,19 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * @throws Exception if the validation failed
      */
     public void verify(URL url) throws Exception {
-        verify(url,null);
+        verify(url, null);
     }
 
     /**
      * Attempt to verify the contents of this.writer against the contents of the URL specified.  verify() performs a
      * trim on both ends
      *
-     * @param url the HTML snippet that we want to validate against
+     * @param url      the HTML snippet that we want to validate against
      * @param excluded
      * @throws Exception if the validation failed
      */
     public void verify(URL url, String[] excluded) throws Exception {
-         if (url == null) {
+        if (url == null) {
             fail("unable to verify a null URL");
         } else if (this.writer == null) {
             fail("AbstractJspWriter.writer not initialized.  Unable to verify");
@@ -321,6 +299,17 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * space, tab, \r, and \n characters are converted to a single space character
      *
      * @param obj the object to be normalized.  normalize will perform its operation on obj.toString().trim() ;
+     * @return the normalized string
+     */
+    public static String normalize(Object obj) {
+        return normalize(obj, false);
+    }
+
+    /**
+     * normalizes a string so that strings generated on different platforms can be compared.  any group of one or more
+     * space, tab, \r, and \n characters are converted to a single space character
+     *
+     * @param obj         the object to be normalized.  normalize will perform its operation on obj.toString().trim() ;
      * @param appendSpace
      * @return the normalized string
      */

@@ -42,7 +42,7 @@ public class StrutsTestCaseTest extends StrutsSpringTestCase {
         ActionProxy proxy = getActionProxy("/test/testAction.action");
         assertNotNull(proxy);
 
-        TestAction action = (TestAction) proxy.getAction();
+        JunitTestAction action = (JunitTestAction) proxy.getAction();
         assertNotNull(action);
 
         String result = proxy.execute();

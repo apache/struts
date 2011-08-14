@@ -34,7 +34,7 @@ import java.io.UnsupportedEncodingException;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"classpath*:applicationContext.xml"})
-public class StrutsSpringJUnit4TestCaseTest extends StrutsSpringJUnit4TestCase<TestAction> {
+public class StrutsSpringJUnit4TestCaseTest extends StrutsSpringJUnit4TestCase<JunitTestAction> {
 	
 	@Test
     public void getActionMapping() {
@@ -52,7 +52,7 @@ public class StrutsSpringJUnit4TestCaseTest extends StrutsSpringJUnit4TestCase<T
         ActionProxy proxy = getActionProxy("/test/testAction.action");
         Assert.assertNotNull(proxy);
 
-        TestAction action = (TestAction) proxy.getAction();
+        JunitTestAction action = (JunitTestAction) proxy.getAction();
         Assert.assertNotNull(action);
 
         String result = proxy.execute();

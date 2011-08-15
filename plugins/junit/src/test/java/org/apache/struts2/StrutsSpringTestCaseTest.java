@@ -23,7 +23,7 @@ package org.apache.struts2;
 public class StrutsSpringTestCaseTest extends StrutsSpringTestCase {
     public void testApplicationContext() {
         assertNotNull(applicationContext);
-        JunitTestAction action = (JunitTestAction) applicationContext.getBean("testAction");
+        JUnitTestAction action = (JUnitTestAction) applicationContext.getBean("testAction");
         assertNotNull(action);
     }
 }

@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.interceptor.annotations.After;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -45,11 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -101,6 +98,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
 
     /**
      * gets an object from the stack after an action is executed
+     *
      * @return The executed action
      */
     @SuppressWarnings("unchecked")
@@ -110,7 +108,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
 
     protected boolean containsErrors() {
         T action = this.getAction();
-        if(action instanceof ValidationAware) {
+        if (action instanceof ValidationAware) {
             return ((ValidationAware) action).hasActionErrors();
         }
         throw new UnsupportedOperationException("Current action does not implement ValidationAware interface");
@@ -152,7 +150,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
                 namespace, name, method, new HashMap<String, Object>(), true, false);
 
         ActionContext invocationContext = proxy.getInvocation().getInvocationContext();
-        invocationContext.setParameters(new HashMap<String,Object>(request.getParameterMap()));
+        invocationContext.setParameters(new HashMap<String, Object>(request.getParameterMap()));
         // set the action context to the one used by the proxy
         ActionContext.setContext(invocationContext);
 
@@ -211,7 +209,15 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         super.setUp();
         initServletMockObjects();
         setupBeforeInitDispatcher();
+        initDispatcherParams();
         initDispatcher(dispatcherInitParams);
+    }
+
+    protected void initDispatcherParams() {
+        if (StringUtils.isNotBlank(getConfigPath())) {
+            dispatcherInitParams = new HashMap<String, String>();
+            dispatcherInitParams.put("config", "struts-default.xml," + getConfigPath());
+        }
     }
 
     protected Dispatcher initDispatcher(Map<String, String> params) {
@@ -220,6 +226,10 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
         return du;
+    }
+
+    protected String getConfigPath() {
+        return null;
     }
 
     @After

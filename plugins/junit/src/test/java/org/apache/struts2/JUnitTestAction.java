@@ -22,7 +22,7 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-public class JunitTestAction extends ActionSupport {
+public class JUnitTestAction extends ActionSupport {
     private String name;
 
     public String getName() {

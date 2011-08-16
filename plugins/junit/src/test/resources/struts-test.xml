@@ -26,9 +26,9 @@
     "http://struts.apache.org/dtds/struts-2.1.dtd">
 
 <struts>
-    <package name="test2" namespace="/test2" extends="struts-default">
-        <action name="testAction2" class="org.apache.struts2.JUnitTestAction">
-            <result type="freemarker">/template2.ftl</result>
+    <package name="test" namespace="/test" extends="struts-default">
+        <action name="testAction-2" class="org.apache.struts2.JUnitTestAction">
+            <result type="freemarker">/template-2.ftl</result>
         </action>
     </package>
 </struts>

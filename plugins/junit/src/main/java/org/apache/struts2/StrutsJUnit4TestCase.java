@@ -228,6 +228,12 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         return du;
     }
 
+    /**
+	 * Override this method to return a comma separated list of paths to a configuration
+	 * file.
+	 * <p>The default implementation simply returns <code>null</code>.
+	 * @return a comma separated list of config locations
+	 */
     protected String getConfigPath() {
         return null;
     }

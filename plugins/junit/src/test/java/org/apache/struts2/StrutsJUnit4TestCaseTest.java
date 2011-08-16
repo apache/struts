@@ -1,5 +1,5 @@
 /*
- * $Id: $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,8 +32,8 @@ import org.junit.Test;
 public class StrutsJUnit4TestCaseTest extends StrutsJUnit4TestCase<JUnitTestAction>{
     @Test
     public void testExecuteActionAgainstCustomStrutsConfigFile() throws Exception {
-        String output = executeAction("/test2/testAction2.action");
-        Assert.assertEquals("Test2", output);
+        String output = executeAction("/test/testAction-2.action");
+        Assert.assertEquals("Test-2", output);
     }
 
     @Override

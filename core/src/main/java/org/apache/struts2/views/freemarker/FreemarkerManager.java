@@ -21,35 +21,13 @@
 
 package org.apache.struts2.views.freemarker;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.text.SimpleDateFormat;
-
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.views.JspSupportServlet;
-import org.apache.struts2.views.TagLibrary;
-import org.apache.struts2.views.util.ContextUtil;
-
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.MultiTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.cache.WebappTemplateLoader;
+import freemarker.cache.*;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
@@ -57,6 +35,21 @@ import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
 import freemarker.template.*;
 import freemarker.template.utility.StringUtil;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.views.JspSupportServlet;
+import org.apache.struts2.views.TagLibrary;
+import org.apache.struts2.views.util.ContextUtil;
+
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -270,8 +263,7 @@ public class FreemarkerManager {
         if (templatePath == null) {
             templatePath = servletContext.getInitParameter("templatePath");
         }
-        if (templatePath == null)
-            templatePath = "class://";
+
         config.setTemplateLoader(createTemplateLoader(servletContext, templatePath));
 
         loadSettings(servletContext);
@@ -385,11 +377,13 @@ public class FreemarkerManager {
         TemplateLoader templatePathLoader = null;
 
          try {
-             if (templatePath.startsWith("class://")) {
-                 // substring(7) is intentional as we "reuse" the last slash
-                 templatePathLoader = new ClassTemplateLoader(getClass(), templatePath.substring(7));
-             } else if (templatePath.startsWith("file://")) {
-                 templatePathLoader = new FileTemplateLoader(new File(templatePath));
+             if(templatePath!=null){
+                 if (templatePath.startsWith("class://")) {
+                     // substring(7) is intentional as we "reuse" the last slash
+                     templatePathLoader = new ClassTemplateLoader(getClass(), templatePath.substring(7));
+                 } else if (templatePath.startsWith("file://")) {
+                     templatePathLoader = new FileTemplateLoader(new File(templatePath));
+                 }
              }
          } catch (IOException e) {
              LOG.error("Invalid template path specified: " + e.getMessage(), e);
@@ -425,9 +419,8 @@ public class FreemarkerManager {
                 Properties p = new Properties();
                 p.load(in);
 
-                Iterator i = p.keySet().iterator();
-                while (i.hasNext()) {
-                    String name = (String) i.next();
+                for (Object o : p.keySet()) {
+                    String name = (String) o;
                     String value = (String) p.get(name);
 
                     if (name == null) {
@@ -451,7 +444,7 @@ public class FreemarkerManager {
                     in.close();
                 } catch(IOException io) {
                     if (LOG.isWarnEnabled()) {
-                	LOG.warn("Unable to close input stream", io);
+                	    LOG.warn("Unable to close input stream", io);
                     }
                 }
             }

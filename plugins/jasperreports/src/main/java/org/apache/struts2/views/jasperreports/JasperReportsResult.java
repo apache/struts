@@ -352,7 +352,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
                 response.setContentType("application/pdf");
                 exporter = new JRPdfExporter();
             } else if (format.equals(FORMAT_CSV)) {
-                response.setContentType("text/plain");
+                response.setContentType("text/csv");
                 exporter = new JRCsvExporter();
             } else if (format.equals(FORMAT_HTML)) {
                 response.setContentType("text/html");

@@ -255,7 +255,7 @@ class JSONWriter {
         Method baseAccessor = null;
         if (clazz.getName().indexOf("$$EnhancerByCGLIB$$") > -1) {
             try {
-                baseAccessor = Class.forName(
+                baseAccessor = Thread.currentThread().getContextClassLoader().loadClass(
                         clazz.getName().substring(0, clazz.getName().indexOf("$$"))).getMethod(
                         accessor.getName(), accessor.getParameterTypes());
             } catch (Exception ex) {

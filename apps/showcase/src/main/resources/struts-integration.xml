@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+  <package name="integration" extends="struts1-default" namespace="/integration">
+
+    <interceptors>
+      <interceptor name="gangsterForm" class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor">
+        <param name="className">org.apache.struts2.showcase.integration.GangsterForm</param>
+        <param name="name">gangsterForm</param>
+      </interceptor>
+      <interceptor name="gangsterValidation" class="org.apache.struts2.s1.ActionFormValidationInterceptor">
+        <param name="pathnames">/org/apache/struts/validator/validator-rules.xml,/WEB-INF/validation.xml</param>
+      </interceptor>
+
+      <interceptor-stack name="integration">
+        <interceptor-ref name="staticParams"/>
+        <interceptor-ref name="gangsterForm"/>
+        <interceptor-ref name="modelDriven"/>
+        <interceptor-ref name="actionForm-reset"/>
+        <interceptor-ref name="basicStack"/>
+        <interceptor-ref name="gangsterValidation"/>
+        <interceptor-ref name="workflow"/>
+      </interceptor-stack>
+    </interceptors>
+
+    <default-interceptor-ref name="integration"/>
+    <default-action-ref name="editGangster"/>
+
+    <!-- Display entry page that uses Model-Driven technique -->
+    <action name="editGangster" class="org.apache.struts2.s1.Struts1Action">
+      <param name="className">org.apache.struts2.showcase.integration.EditGangsterAction</param>
+      <result>modelDriven.jsp</result>
+    </action>
+
+    <!-- Display the result page whose content is populated using the Model-Driven technique -->
+    <action name="saveGangster" class="org.apache.struts2.s1.Struts1Action">
+      <param name="className">org.apache.struts2.showcase.integration.SaveGangsterAction</param>
+      <param name="validate">true</param>
+      <result name="input">modelDriven.jsp</result>
+      <result>modelDrivenResult.jsp</result>
+    </action>
+
+  </package>
+</struts>

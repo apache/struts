@@ -1,0 +1,7 @@
+<linkrel="stylesheet" href="/struts/TabbedPanel.css" type="text/css"/>
+<div
+  dojoType="struts:StrutsTabContainer"
+  id="a"
+  doLayout="false">
+</div>
+<script language="JavaScript" type="text/javascript">djConfig.searchIds.push("a");</script>

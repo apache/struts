@@ -1,0 +1,18 @@
+<linkrel="stylesheet" href="/struts/TabbedPanel.css" type="text/css"/>
+<script type="text/javascript">
+dojo.require("dojo.io.cookie");
+dojo.addOnLoad(function(){
+    var tabContainer=dojo.widget.byId("foo");
+    var selectedTab=dojo.io.cookie.getCookie("Struts2TabbedPanel_selectedTab_foo");
+    if( selectedTab ){
+        tabContainer.selectChild(selectedTab,tabContainer.correspondingPageButton);
+    }
+    dojo.event.connect(tabContainer,"selectChild",function(evt){
+        dojo.io.cookie.setCookie("Struts2TabbedPanel_selectedTab_foo",evt.widgetId,1,null,null,null);
+        }
+    )
+});
+</script>
+<div dojoType="struts:StrutsTabContainer" id="foo" doLayout="false">
+</div>
+<script language="JavaScript" type="text/javascript">djConfig.searchIds.push("foo");</script>

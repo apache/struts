@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="modelDriven" extends="struts-default" namespace="/modelDriven">
+	    <!-- Diplay entry page that uses Model-Driven technique -->
+		<action name="modelDriven" class="org.apache.struts2.showcase.modelDriven.ModelDrivenAction" method="input">
+			<result>modelDriven.jsp</result>
+		</action>
+		
+		<!-- Display the result page whose content is populated using the Model-Driven technique -->
+		<action name="modelDrivenResult" class="org.apache.struts2.showcase.modelDriven.ModelDrivenAction">
+			<result>modelDrivenResult.jsp</result>
+		</action>
+	</package>
+</struts>	
+	

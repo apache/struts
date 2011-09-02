@@ -1,0 +1,8 @@
+{
+    "booleanField": true,
+    "stringField" : "test",
+    "intField" : 10,
+    "charField": "s",
+    "doubleField": 10.1,
+    "byteField": 3
+}

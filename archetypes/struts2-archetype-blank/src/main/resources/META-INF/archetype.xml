@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype>
+  <id>struts2-archetype-blank</id>
+
+<!--  
+  <sources>
+    <source>src/main/java/example/ExampleSupport.java</source>
+    <source>src/main/java/example/HelloWorld.java</source>
+    <source>src/main/java/example/Login.java</source>
+  </sources>
+  
+  <resources>
+  	<resource>src/main/resources/example/Login-validation.xml</resource>
+  	<resource filtered="false">src/main/resources/example/package.properties</resource>
+  	<resource filtered="false">src/main/resources/example/package_es.properties</resource>
+  
+  	<resource>src/main/resources/example.xml</resource>
+  	<resource>src/main/resources/struts.xml</resource>
+
+    <resource>src/main/webapp/index.html</resource>
+    <resource>src/main/webapp/example/HelloWorld.jsp</resource>
+    <resource>src/main/webapp/example/Login.jsp</resource>
+    <resource>src/main/webapp/example/Menu.jsp</resource>
+    <resource>src/main/webapp/example/Missing.jsp</resource>
+    <resource>src/main/webapp/example/Register.jsp</resource>
+    <resource>src/main/webapp/example/Welcome.jsp</resource>
+    <resource>src/main/webapp/WEB-INF/web.xml</resource>
+  </resources>
+  
+  <testSources>
+    <source>src/test/java/example/ConfigTest.java</source>
+    <source>src/test/java/example/HelloWorldTest.java</source>
+    <source>src/test/java/example/LoginTest.java</source>
+  </testSources>
+-->
+</archetype>

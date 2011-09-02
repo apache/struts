@@ -1,0 +1,10 @@
+<!DOCTYPE xwork PUBLIC
+    "-//OpenSymphony Group//XWork 1.1.1//EN"
+    "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+    <package name="includeTest" extends="default" namespace="includeTest">
+        <action name="includeTest" class="com.opensymphony.xwork2.SimpleAction"></action>
+    </package>
+</xwork>

@@ -1,0 +1,21 @@
+<tr> <td class="tdLabel"></td> <td>
+<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
+<table>
+<tr><td>
+<select name="myName" size="5" id="myId" multiple="multiple">
+	<option value="-1">--- Please Order ---</option>
+	<option value=""></option>
+    <option value="england">England</option>
+    <option value="america" selected="selected">America</option>
+    <option value="australia">Australia</option>
+    <option value="germany" selected="selected">Germany</option>
+</select>
+<input type="hidden" id="__multiselect_myId" name="__multiselect_myName" value=""/>
+</td></tr>
+<tr><td>
+		&nbsp;<input type="button" value="^" onclick="moveOptionUp(document.getElementById('myId'), 'key', '-1');" />&nbsp;
+		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myId'), 'key', '-1');" />&nbsp;
+		&nbsp;<input type="button" value="*" onclick="selectAllOptionsExceptSome(document.getElementById('myId'), 'key', '-1');" />&nbsp;
+</td></tr>
+</table>
+</td> </tr>

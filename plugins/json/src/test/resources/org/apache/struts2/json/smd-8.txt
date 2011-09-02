@@ -1,0 +1,16 @@
+{
+    "addWasCalled":false,
+    "beanParam":null,
+    "booleanParam":false,
+    "byteParam":0,
+    "charParam":"\u0000",
+    "doubleParam":0.0,
+    "floatParam":0.0,
+    "intParam":0,
+    "listParam":null,
+    "longParam":0,
+    "mapParam":null,
+    "objectParam":null,
+    "shortParam":0,
+    "stringParam":null
+}

@@ -1,0 +1,14 @@
+ <tr>
+     <td class="tdLabel"><label for="cb.bc" class="label">mylabel:</label></td>
+     <td>
+ <script type="text/javascript">
+    function autoPopulate_cb_bc(targetElement) {
+        targetElement.form.elements['foo'].value=targetElement.options[targetElement.selectedIndex].value;
+    }
+ </script>
+ <input type="text" name="foo" value="hello" id="cb.bc"/><br/>
+ <select onChange="autoPopulate_cb_bc(this);">
+     <option value="foo">foo</option>
+ </select>
+     </td>
+ </tr>

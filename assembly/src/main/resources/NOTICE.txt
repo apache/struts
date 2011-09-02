@@ -1,0 +1,20 @@
+Apache Struts
+Copyright 2000-2011 The Apache Software Foundation
+
+This product includes software developed by
+The Apache Software Foundation (http://www.apache.org/).
+Dojo (http://dojotoolkit.org/).
+domTT (http://www.mojavelinux.com/projects/domtooltip/).
+
+The binary distributions includes the following third party software:
+ANTLR (http://www.antlr.org/).
+Classworlds (http://classworlds.codehaus.org/).
+EZMorph (http://ezmorph.sourceforge.net/)
+FreeMarker (http://freemarker.org/).
+JSON-lib (http://json-lib.sourceforge.net/).
+OGNL (http://www.opensymphony.com/ognl/).
+Plexus (http://plexus.codehaus.org/).
+SiteMesh (http://www.opensymphony.com/sitemesh/).
+XWork (http://www.opensymphony.com/xwork/).
+XPP3 (http://www.extreme.indiana.edu/xgws/xsoap/xpp/).
+XStream (http://xstream.codehaus.org/).

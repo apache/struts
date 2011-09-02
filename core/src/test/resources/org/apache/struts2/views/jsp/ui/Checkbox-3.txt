@@ -1,0 +1,16 @@
+<tr errorFor="foo">
+    <td align="left" valign="top" colspan="2"><span class="errorMessage">Some Foo Error</span></td>
+</tr>
+<tr errorFor="foo">
+    <td align="left" valign="top" colspan="2"><span class="errorMessage">Another Foo Error</span></td>
+</tr>
+<tr>
+	<td valign="top" align="right">
+	
+	</td>
+    <td valign="top" align="left">
+          <input type="checkbox" name="foo" value="baz" checked="checked" id="foo" class="myErrorClass" title="mytitle" onclick="test();" ondblclick="test();"/>
+          <input type="hidden" id="__checkbox_foo" name="__checkbox_foo" value="baz"/>
+          <label for="foo" class="checkboxErrorLabel">mylabel</label>
+    </td>
+</tr>

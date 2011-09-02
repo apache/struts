@@ -1,0 +1,4 @@
+<ul id="someid" class="errorMessage">
+	<li><span>field error message number 1</span></li>
+	<li><span>field error message number 3</span></li>
+</ul>

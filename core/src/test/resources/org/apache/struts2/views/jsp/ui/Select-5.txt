@@ -1,0 +1,10 @@
+<tr>
+    <td class="tdLabel"><label for="myId" class="label">media1:</label></td>
+    <td><select name="myName" id="myId" multiple="multiple">
+    <option value=""></option>
+    <option value="aaa">aaa</option>
+    <option value="bbb">bbb</option>
+</select>
+<input type="hidden" id="__multiselect_myId" name="__multiselect_myName" value=""/>
+</td>
+</tr>

@@ -1,0 +1,13 @@
+<form id="testAction" name="testAction" action="/testAction.action" method="post">
+<table class="wwFormTable">
+</table>
+</form>
+
+<script type="text/javascript">
+    StrutsUtils.addOnLoad(function() {
+        var element = document.getElementById("felement");
+        if(element) {
+            element.focus();
+        }
+    });
+</script>

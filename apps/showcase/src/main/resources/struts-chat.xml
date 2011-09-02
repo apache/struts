@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+  <package name="chat" extends="struts-default" namespace="/chat">
+    <interceptors>
+      <interceptor name="chatAuthentication"
+             class="org.apache.struts2.showcase.chat.ChatAuthenticationInterceptor" />
+      <interceptor-stack name="chatAuthenticationStack">
+        <interceptor-ref name="createSession" />
+        <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="chatAuthentication" />
+      </interceptor-stack>
+    </interceptors>
+
+    <global-results>
+      <result name="login" type="freemarker">/chat/chatLogin.ftl</result>
+    </global-results>
+
+    <action name="main">
+      <interceptor-ref name="chatAuthentication" />
+      <result type="freemarker">/chat/roomSelection.ftl</result>
+    </action>
+
+    <action name="login" class="chatLoginAction">
+      <interceptor-ref name="defaultStack" />
+      <result type="redirect">/chat/showRooms.action</result>
+      <result name="input" type="freemarker">/chat/chatLogin.ftl</result>
+    </action>
+
+    <action name="logout" class="chatLogoutAction">
+      <interceptor-ref name="defaultStack" />
+      <result type="redirect">/chat/main.action</result>
+    </action>
+
+    <action name="showRooms">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/roomSelection.ftl</result>
+    </action>
+
+    <action name="enterRoom" class="enterRoomAction">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/showRoom.ftl</result>
+    </action>
+
+    <action name="exitRoom" class="exitRoomAction">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="redirect">/chat/showRooms.action</result>
+    </action>
+
+  </package>
+
+  <package name="chat-remote" extends="struts-default" namespace="/chat/ajax">
+    <interceptors>
+      <interceptor name="chatAuthentication"
+             class="org.apache.struts2.showcase.chat.ChatAuthenticationInterceptor" />
+      <interceptor-stack name="chatAuthenticationStack">
+        <interceptor-ref name="createSession" />
+        <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="chatAuthentication" />
+      </interceptor-stack>
+    </interceptors>
+
+
+    <action name="usersAvailable" class="usersAvailableAction">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/usersAvailable.ftl</result>
+    </action>
+
+    <action name="roomsAvailable" class="roomsAvailableAction">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/roomsAvailable.ftl</result>
+    </action>
+
+    <action name="createRoom" class="crudRoomAction" method="create">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/createRoom.ftl</result>
+      <result name="input" type="freemarker">/chat/createRoom.ftl</result>
+    </action>
+
+    <action name="messagesAvailableInRoom" class="messagesAvailableInRoomAction">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/messagesAvailableInRoom.ftl</result>
+      <result name="input" type="freemarker">/chat/messagesAvailableInRoom.ftl</result>
+    </action>
+
+    <action name="sendMessageToRoom" class="sendMessageToRoomAction">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/sendMessageToRoomResult.ftl</result>
+      <result name="input" type="freemarker">/chat/sendMessageToRoomResult.ftl</result>
+    </action>
+
+    <action name="usersAvailableInRoom" class="usersAvailableInRoomAction">
+      <interceptor-ref name="chatAuthenticationStack" />
+      <result type="freemarker">/chat/usersAvailableInRoom.ftl</result>
+    </action>
+  </package>
+</struts>
+

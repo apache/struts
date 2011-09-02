@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<archetype>
+  <id>struts2-archetype-portlet</id>
+  <sources>
+    <source>src/main/java/HelloAction.java</source>
+    <source>src/main/java/UpdateNameAction.java</source>
+  </sources>
+  <testSources>
+	  <source>src/test/java/JettyPlutoLauncher.java</source>
+  </testSources>
+  <resources>
+  	<resource>src/main/resources/struts.xml</resource>
+	<resource>src/main/webapp/WEB-INF/jsp/view/index.jsp</resource>
+	<resource>src/main/webapp/WEB-INF/jsp/edit/index.jsp</resource>
+	<resource>src/main/webapp/WEB-INF/web.xml</resource>
+	<resource>src/main/webapp/WEB-INF/portlet.xml</resource>
+  </resources>
+</archetype>
+

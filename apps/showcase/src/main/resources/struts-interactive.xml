@@ -1,0 +1,15 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="ognl" namespace="/nodecorate" extends="struts-default">
+        <action name="jspEval" class="org.apache.struts2.showcase.action.JSPEvalAction">
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="debugging"/>
+            <interceptor-ref name="annotationWorkflow" />
+            <result>/interactive/demo.jsp</result>
+        </action>
+        <action name="example" class="org.apache.struts2.showcase.action.ExampleAction" />
+    </package>
+</struts>    

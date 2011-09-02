@@ -1,0 +1,4 @@
+<form id="test" name="test" action="test.html" method="post">
+<table class="wwFormTable">
+</table>
+</form>

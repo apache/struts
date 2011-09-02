@@ -1,0 +1,3 @@
+{
+    "list":[{"booleanField":false},{"booleanField":false},{"booleanField":false}]
+}

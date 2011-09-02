@@ -1,0 +1,21 @@
+<form id="myFormId" name="myForm" action="/testAction.action" method="post">
+ <tableclass="wwFormTable">
+		<tr>
+			<td class="tdLabel">
+				<labelfor="myId"class="label">
+					MyLabel:<img
+								src='/struts/tooltip/myTooltip2.gif'
+								onmouseover="domTT_activate(this,event,'content','myTooltip','delay','5000','styleClass','StrutsTTClassic')"/>
+				</label>
+			</td>
+			<td>
+				<input type="text" name="" id="myId"/>
+			</td>
+		</tr>
+	</table>
+</form>
+
+<!--javascript that is needed for tooltips-->
+<script type="text/javascript" src='/struts/domTT.js'></script>
+<link rel="stylesheet" type="text/css" href="/struts/domTT.css"/>
+

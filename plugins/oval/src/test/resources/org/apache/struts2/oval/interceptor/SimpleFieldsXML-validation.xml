@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oval xmlns="http://oval.sf.net/oval-configuration" xmlns:xsi="http://http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://oval.sf.net/oval-configuration http://oval.sourceforge.net/oval-configuration-1.3.xsd">
+    <class type="org.apache.struts2.oval.interceptor.SimpleFieldsXML" overwrite="false"
+           applyFieldConstraintsToSetters="true">
+        <field name="firstName">
+            <notNull/>
+        </field>
+    </class>
+</oval>

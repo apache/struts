@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="mailreader-support" namespace="/" extends="mailreader-default">
+
+        <action name="Tour">
+            <result>/tour.html</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="Welcome" class="mailreader2.Welcome">
+            <result>/Welcome.jsp</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="Logout" class="mailreader2.Logout">
+            <result type="redirectAction">Welcome</result>
+        </action>
+
+        <action name="Login_*"  method="{1}" class="mailreader2.Login">
+            <result name="input">/Login.jsp</result>
+            <result name="cancel" type="redirectAction">Welcome</result>
+            <result type="redirectAction">MainMenu</result>
+            <result name="expired" type="chain">ChangePassword</result>
+            <exception-mapping
+                    exception="org.apache.struts.apps.mailreader.dao.ExpiredPasswordException"
+                    result="expired"/>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="Registration_*" method="{1}" class="mailreader2.Registration">
+            <result name="input">/Registration.jsp</result>
+            <result type="redirectAction">MainMenu</result>
+            <interceptor-ref name="guest"/>
+        </action>
+    </package>
+
+    <package name="subscription" namespace="/" extends="mailreader-support">
+
+        <global-results>
+            <result name="input">/Subscription.jsp</result>
+            <result type="redirectAction">Registration_input</result>
+        </global-results>
+
+        <action name="Subscription_save" method="save" class="mailreader2.Subscription">
+            <interceptor-ref name="user-submit" />
+        </action>
+
+        <action name="Subscription_*" method="{1}" class="mailreader2.Subscription" />
+
+    </package>
+
+    <package name="wildcard" namespace="/" extends="mailreader-support">
+
+        <action name="*" class="mailreader2.MailreaderSupport">
+            <result>/{1}.jsp</result>
+        </action>
+        
+    </package>
+</struts>

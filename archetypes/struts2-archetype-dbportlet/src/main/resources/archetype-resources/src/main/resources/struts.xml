@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+ 
+<struts>
+    <constant name="struts.convention.default.parent.package" value="struts-portlet-default" />
+    <constant name="struts.convention.result.path" value="/WEB-INF/" />
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.convention.package.locators.basePackage" value="${package}"/>
+
+	<include file="struts-portlet-default.xml" />
+
+    <package name="${artifactId}-package" extends="struts-portlet-default" namespace="/">
+        <action name="*">
+            <result type="redirectAction">
+                <param name="actionName">index</param>
+                <param name="namespace">/view</param>
+            </result>
+        </action>
+    </package>
+</struts>

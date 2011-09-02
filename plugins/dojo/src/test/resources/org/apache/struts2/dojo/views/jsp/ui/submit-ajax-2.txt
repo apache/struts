@@ -1,0 +1,22 @@
+<input
+  type="button"
+  dojoType="struts:Bind"
+  events="onclick"
+  id="a"
+  tabindex="1"
+  label="i"
+  href="b"
+  loadingText="c"
+  errorText="d"
+  listenTopics="e"
+  notifyTopics="k"
+  beforeNotifyTopics="f"
+  afterNotifyTopics="g"
+  errorNotifyTopics="m"
+  handler="h"
+  indicator="l"
+  scriptSeparation="true"
+  value="i"
+  disabled="disabled"
+  />
+  <script language="JavaScript" type="text/javascript">djConfig.searchIds.push("a");</script>

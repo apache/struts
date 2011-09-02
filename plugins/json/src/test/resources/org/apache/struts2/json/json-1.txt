@@ -1,0 +1,49 @@
+{
+    "date": "1999-12-31T23:59:59",
+    "date2": "31\/12\/99",
+  	"array": ["str0", "str1"],
+  	"intArray": [1, 2],
+  	"beanArray": [ {
+  						"stringField": "bean1"
+  					},
+  					{
+  					    "stringField": "bean2"
+  					}
+  	],
+	"list": ["a", "a", "\"", "\\", "\/", "\b", "\f", "\n", "\r", "\t"],
+	"collection": ["b", 1, [10, 12]],
+	"collection2": [{
+						"booleanField": true,
+						"charField": "s",
+						"doubleField": 10.1,
+						"floatField": 1.5,
+						"intField": 10,
+						"longField": 100,
+						"objectField": {
+							"booleanField": false,
+							"charField": "\u0000",
+							"doubleField": 2.2,
+							"floatField": 1.1,
+							"intField": 0,
+							"longField":0,
+							"objectField":null,
+							"stringField":"  "
+					    },
+					    "stringField": "str"
+	}],
+	"foo": "foo",
+	"map": {
+		"a": 1,
+		"c": [1.0, 2.0]
+	},
+	"result": null,
+	"bean": {
+	    "booleanField": true,
+		"stringField" : "test",
+		"intField" : 10,
+		"charField": "s",
+		"doubleField": 10.1,
+		"byteField": 3
+	},
+	"foo2" : "ignoreme"
+}

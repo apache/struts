@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-archetypes</artifactId>
+    <version>2.2.3</version>
+  </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>struts2-archetype-dbportlet</artifactId>
+    <version>2.2.3</version>
+    <name>Struts 2 Archetypes - Database Portlet</name>
+
+    <scm>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_3/archetypes/struts2-archetype-dbportlet</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_3/archetypes/struts2-archetype-dbportlet</developerConnection>
+        <url>svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_2_3/archetypes/struts2-archetype-dbportlet</url>
+    </scm>
+
+    <properties>
+        <maven.test.skip>true</maven.test.skip>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

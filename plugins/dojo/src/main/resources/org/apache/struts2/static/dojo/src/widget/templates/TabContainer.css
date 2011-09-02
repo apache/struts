@@ -1,0 +1,163 @@
+.dojoTabContainer {
+	position : relative;
+}
+
+.dojoTabPaneWrapper {
+	border : 1px solid #6290d2;
+	_zoom: 1; /* force IE6 layout mode so top border doesnt disappear */
+	display: block;
+	clear: both;
+	overflow: hidden;
+}
+
+.dojoTabLabels-top {
+	position : relative;
+	top : 0px;
+	left : 0px;
+	overflow : visible;
+	margin-bottom : -1px;
+	width : 100%;
+	z-index: 2;	/* so the bottom of the tab label will cover up the border of dojoTabPaneWrapper */
+}
+
+.dojoTabNoLayout.dojoTabLabels-top .dojoTab {
+	margin-bottom: -1px;
+	_margin-bottom: 0px; /* IE filter so top border lines up correctly */
+}
+
+.dojoTab {
+	position : relative;
+	float : left;
+	padding-left : 9px;
+	border-bottom : 1px solid #6290d2;
+	background : url(images/tab_left.gif) no-repeat left top;
+	cursor: pointer;
+	white-space: nowrap;
+	z-index: 3;
+}
+
+.dojoTab div {
+	display : block;
+	padding : 4px 15px 4px 6px;
+	background : url(images/tab_top_right.gif) no-repeat right top;
+	color : #333;
+	font-size : 90%;
+}
+
+.dojoTab .close {
+	display : inline-block;
+	height : 12px;
+	width : 12px;
+	padding : 0 12px 0 0;
+	margin : 0 -10px 0 10px;
+	cursor : default;
+	font-size: small;
+}
+
+.dojoTab .closeImage {
+	background : url(images/tab_close.gif) no-repeat right top;
+}
+
+.dojoTab .closeHover {
+	background-image : url(images/tab_close_h.gif);
+}
+
+.dojoTab.current {
+	padding-bottom : 1px;
+	border-bottom : 0;
+	background-position : 0 -150px;
+}
+
+.dojoTab.current div {
+	padding-bottom : 5px;
+	margin-bottom : -1px;
+	background-position : 100% -150px;
+}
+
+/* bottom tabs */
+
+.dojoTabLabels-bottom {
+	position : relative;
+	bottom : 0px;
+	left : 0px;
+	overflow : visible;
+	margin-top : -1px;
+	width : 100%;
+	z-index: 2;
+}
+
+.dojoTabNoLayout.dojoTabLabels-bottom {
+	position : relative;
+}
+
+.dojoTabLabels-bottom .dojoTab {
+	border-top :  1px solid #6290d2;
+	border-bottom : 0;
+	background : url(images/tab_bot_left.gif) no-repeat left bottom;
+}
+
+.dojoTabLabels-bottom .dojoTab div {
+	background : url(images/tab_bot_right.gif) no-repeat right bottom;
+}
+
+.dojoTabLabels-bottom .dojoTab.current {
+	border-top : 0;
+	background : url(images/tab_bot_left_curr.gif) no-repeat left bottom;
+}
+
+.dojoTabLabels-bottom .dojoTab.current div {
+	padding-top : 4px;
+	background : url(images/tab_bot_right_curr.gif) no-repeat right bottom;
+}
+
+/* right-h tabs */
+
+.dojoTabLabels-right-h {
+	overflow : visible;
+	margin-left : -1px;
+	z-index: 2;
+}
+
+.dojoTabLabels-right-h .dojoTab {
+	padding-left : 0;
+	border-left :  1px solid #6290d2;
+	border-bottom : 0;
+	background : url(images/tab_bot_right.gif) no-repeat right bottom;
+	float : none;
+}
+
+.dojoTabLabels-right-h .dojoTab div {
+	padding : 4px 15px 4px 15px;
+}
+
+.dojoTabLabels-right-h .dojoTab.current {
+	border-left :  0;
+	border-bottom :  1px solid #6290d2;
+}
+
+/* left-h tabs */
+
+.dojoTabLabels-left-h {
+	overflow : visible;
+	margin-right : -1px;
+	z-index: 2;
+}
+
+.dojoTabLabels-left-h .dojoTab {
+	border-right :  1px solid #6290d2;
+	border-bottom : 0;
+	float : none;
+	background : url(images/tab_top_left.gif) no-repeat left top;
+}
+
+.dojoTabLabels-left-h .dojoTab.current {
+	border-right : 0;
+	border-bottom :  1px solid #6290d2;
+	padding-bottom : 0;
+	background : url(images/tab_top_left.gif) no-repeat 0 -150px;
+}
+
+.dojoTabLabels-left-h .dojoTab div {
+	background : 0;
+	border-bottom :  1px solid #6290d2;
+}

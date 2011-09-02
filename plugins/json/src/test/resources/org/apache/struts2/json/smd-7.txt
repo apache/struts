@@ -1,0 +1,19 @@
+{
+    "params": [
+        {
+            "booleanField": true,
+            "stringField" : "test",
+            "intField" : 10,
+            "charField": "s",
+            "doubleField": 10.1,
+            "byteField": 3
+        },
+        {
+            "a": 1,
+            "c": [1.0, 2.0]
+        },
+        ["str0", "str1"]
+    ],
+    "method": "doSomethingObjects",
+    "id":"2"
+}

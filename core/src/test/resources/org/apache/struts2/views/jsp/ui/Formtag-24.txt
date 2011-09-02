@@ -1,0 +1,56 @@
+<script type="text/javascript" src="/struts/xhtml/validation.js"></script>
+<script type="text/javascript "src="/struts/utils.js"></script>
+<form id="myAction" name="myForm" onsubmit="submitMe(); return validateForm_myAction();" action="/myAction.action" method="post" enctype="myEncType" title="mytitle" accept-charset="UTF-8" onreset="clearErrorMessages(this);clearErrorLabels(this);">
+<table class="wwFormTable"> <tr>
+    <td class="tdLabel"></td>
+    <td>	<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
+<table>
+<tr><td>
+<select name="myUpDownSelectTag" size="5" id="myAction_myUpDownSelectTag" multiple="multiple">
+</select>
+<input type="hidden" id="__multiselect_myAction_myUpDownSelectTag" name="__multiselect_myUpDownSelectTag"value=""/>
+</td></tr>
+<tr><td>
+		&nbsp;<input type="button" value="^" onclick="moveOptionUp(document.getElementById('myAction_myUpDownSelectTag'), 'key', '');" />&nbsp;
+		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myAction_myUpDownSelectTag'), 'key', '');" />&nbsp;
+		&nbsp;<input type="button" value="*" onclick="selectAllOptions(document.getElementById('myAction_myUpDownSelectTag'), 'key', '');" />&nbsp;
+</td></tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+
+
+<script type="text/javascript">
+	var containingForm = document.getElementById("myAction");
+	StrutsUtils.addEventListener(containingForm, "submit",
+			function(evt) {
+				var updownselectObj = document.getElementById("myAction_myUpDownSelectTag");
+				selectAllOptionsExceptSome(updownselectObj, "key", "");
+			}, true);
+</script>
+
+<script type="text/javascript">
+    function validateForm_myAction() {
+        form = document.getElementById("myAction");
+        clearErrorMessages(form);
+        clearErrorLabels(form);
+        var errors = false;
+        var continueValidation = true;
+         //fieldname:myUpDownSelectTag
+         //validatorname:double
+         if(form.elements['myUpDownSelectTag']){
+            field=form.elements['myUpDownSelectTag'];
+            var error="bar must be between 6000.10 and 10000.10.";
+            if(continueValidation && field.value!=null){
+                var value = parseFloat(field.value);
+                if(value<6000.10||value>10000.10||false||false){
+                    addError(field,error);
+                    errors=true;
+                 }
+             }
+          }
+          return!errors;
+      }</script>
+

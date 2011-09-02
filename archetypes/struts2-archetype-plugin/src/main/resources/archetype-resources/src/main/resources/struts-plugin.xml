@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+    
+<struts>
+
+    <!-- 
+       Define new Struts beans that implement key interfaces or extend existing objects.
+       
+       This is an example of a bean that provides a new ObjectFactory:
+    
+    <bean type="com.opensymphony.xwork2.ObjectFactory" name="myObjectFactory" class="com.mycompany.myapp.MyObjectFactory" />
+
+       This example adds a new template engine for the Struts UI tags:
+
+    <bean type="org.apache.struts2.components.template.TemplateEngine" name="myEngine" class="com.mycompany.myapp.MyTemplateEngine" />
+    
+    -->
+
+    <!-- 
+       You can also define or override constants to plug in your custom beans into the Struts framework or provide customization
+       options for plugin users.
+
+       This is an example of making your new ObjectFactory, defined above, the default ObjectFactory for the framework:
+
+    <constant name="struts.objectFactory" value="myObjectFactory" />
+
+       Or perhaps you want to provide a configuration option for the plugin user.  Define a constant here, then have it injected
+       into your bean:
+
+    <constant name="my.configuration.option" value="myValue" />
+
+    -->
+
+    <!--
+       Finally, you can define your own interceptors, results, and action packages.
+
+       In this example, we create a package that defines a result: -->
+
+    <package name="myPlugin-default">
+        <result-types>
+            <result-type name="myResult" class="${package}.MyResult"/>
+        </result-types>
+    </package>    
+
+</struts>

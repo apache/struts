@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<!--
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!--
+// ======================================================================== 78
+-->
+<document>
+
+    <properties>
+        <title>Welcome</title>
+    </properties>
+
+    <body>
+
+        <section name="About Apache Struts 2">
+            <a name="Welcome"/>
+
+        <div style="text-align:left;height:200px">
+            <div style="float:left;margin-left:16px;margin-right:16px">
+                <a href="docs/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger"/></a>
+            </div>
+
+        <p>
+         <strong>Apache Struts 2 is an elegant, extensible framework</strong> for creating enterprise-ready Java web applications.
+         The framework is designed to streamline the full development cycle,
+         from building, to deploying, to maintaining applications over time.
+        </p>
+
+        <p>
+         Apache Struts 2 was originally known as WebWork 2.
+         After working independently for several years,
+         the WebWork and Struts communities joined forces to create Struts<sup>2</sup>.
+         This new version of Struts is simpler to use and
+         closer to how Struts was always meant to be.
+        </p>
+        </div>
+        <div>
+        <table><tr><td>
+        #set($aname=$currentVersion.replaceAll('\.', "")) 
+        <a href="http://struts.apache.org/download.cgi#struts${aname}">
+          <div style="background:url(images/download.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
+            <span style="top:15px;position:absolute;color:white;padding-left:10px">
+              <small>version ${currentVersion}</small>
+              <br />
+              <span style="font-weight: bold; font-size:140%">Download Now</span>
+            </span>
+          </div>
+        </a>
+        </td><td>
+        <a href="docs/home.html" style="margin:10px">
+          <div style="background:url(images/help.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
+            <span style="top:15px;position:absolute;color:white;padding-left:10px">
+              <span style="font-weight: bold; font-size:140%">Get Started</span>
+            </span>
+          </div>
+        </a>
+        </td><td>
+        <a href="http://cwiki.apache.org/S2PLUGINS/home.html" style="margin:10px">
+          <div style="background:url(images/plugins.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
+            <span style="top:15px;position:absolute;color:white;padding-left:10px">
+              <span style="font-weight: bold; font-size:140%">Plugin Registry</span>
+            </span>
+          </div>
+        </a>
+        </td></tr>
+        </table></div>
+        </section>
+
+        <section name="Build! Deploy! Maintain!">
+            <ul>
+            <li>
+                <em>Build!</em>
+                <ul>
+                <li>
+                    <strong>Easy startup</strong> - Jumpstart new projects with our bootstrap tutorial and template application or Maven archetype.
+                </li>
+                <li>
+                    <strong>Improved Design</strong> - Code clean against HTTP-independant framework interfaces.
+                </li>
+                <li>
+                    <strong>Enhanced Tags</strong> - Code less with stylesheet-driven form tags that provide their own markup.
+                </li>
+                <li>
+                    <strong>Stateful Checkboxes</strong> - Avoid special handling with smart checkboxes that know when they are toggled.
+                </li>
+                <li>
+                    <strong>Flexible Cancel Buttons</strong> - Go directly to a different action on cancel.
+                </li>
+                <li>
+                    <strong>First-class AJAX support</strong> - Add interactivity and flexibility with AJAX tags that look and feel just like standard Struts tags.
+                </li>
+                <li>
+                    <strong>Easy Spring integration</strong> - Inject dependencies into Actions using Spring without glue code or red tape. (Plexus support also available.)
+                </li>
+                <li>
+                    <strong>Enhanced Results</strong> - Do more with speciality results for JasperReports, JFreeChart, Action chaining, and file downloading.
+                </li>
+                <li>
+                    <strong>POJO forms</strong> -  No more ActionForms! Use any JavaBean to capture form input or
+                    put properties directly on an Action class. Use both binary and String properties!
+                </li>
+                <li>
+                    <strong>POJO Actions</strong> - Use any class as an Action class -- even the
+                    interface is optional!
+                </li>
+                <!-- Experimental
+                <li>
+                    strong>Zero Configuration</strong> - Optionally, replace XML configuration with convention and annotation.
+                </li>
+                -->
+                </ul></li>
+
+                <li>
+                    <em>Deploy!</em>
+                <ul>
+                <li>
+                    <strong>Easy plugins</strong> - Add framework extensions by dropping in a JAR.
+                    No manual configuration required! Bundled plugins add support for JavaServer Faces,
+                    JasperReports, JFreeChart, Tiles, and more ...
+                </li>
+                <li>
+                    <strong>Integrated profiling</strong> - Peek inside Struts<sup>2</sup> to find where the cycles are going!
+                </li>
+                <li>
+                    <strong>Precise Error Reporting</strong> - Flip directly to the location and line of an error.
+                </li>
+                <!-- Experimental
+                <li>
+                    <strong>Easy portlets</strong> - Automatic portlet support allows portal and servlet
+                    deployments with no code changes.
+                </li>
+                <li>
+                    <strong>REST-ful URLs</strong> - Use search-engine friendly URLs, like category/action/movie/Thrillers.
+                </li>
+                -->
+                </ul></li>
+                <li>
+                <em>Maintain!</em>
+                <ul>
+                <li>
+                    <strong>Easy-to-test Actions</strong> - Test Struts<sup>2</sup> Actions directly,
+                    without resorting to mock HTTP objects.
+                </li>
+                <li>
+                    <strong>Intelligent Defaults</strong> - Skip obvious and redundant settings. Most framework configuration
+                    elements have a default value that we can set and forget. Say it once!
+                </li>
+                <li>
+                    <strong>Easy-to-customize controller</strong> - Customize the request handling
+                    per action, if desired. Struts<sup>2</sup> only does what you want it to do!
+                </li>
+                <li>
+                    <strong>Integrating Debugging</strong> - Research problem reports with built-in
+                    debugging tools.
+                </li>
+                <li>
+                    <strong>Easy-to-tweak tags</strong> - Customize tag markup by editing a FreeMarker
+                    template. No need to grok the taglib API!
+                    <em>JSP, FreeMarker, and Velocity tags are fully supported.</em>
+                </li>
+                </ul></li></ul>
+
+            <subsection>
+            <p>
+            To download the framework, visit
+            <a href="http://struts.apache.org/download.cgi#struts210">
+               Apache Struts Distributions.
+            </a>
+            For more about Apache Struts 2, visit
+            <a href="docs/home.html">
+              Getting Started.
+            </a>
+            For more about framework extensions, visit the
+            <a href="http://cwiki.apache.org/S2PLUGINS/home.html">
+              Struts 2 Plugin Registry.
+            </a>
+            For help with migrating, visit our
+            <a href="docs/migration-guide.html">
+               Migration Guide.
+            </a>
+            </p>
+            </subsection>
+        </section>
+
+        <section name="Platform Requirements">
+
+        <p>
+        Apache Struts 2 requires:
+        </p>
+
+        <ul>
+            <li>Servlet API 2.4</li>
+            <li>JSP API 2.0</li>
+            <li>Java 5</li>
+        </ul>
+
+        <p>
+         An alternate set of JARs for Java 4 are also available.
+         See the "J4" distribution.
+        </p>
+
+        <p>
+         For a full list of requirements, including dependencies used by optional plugins,
+         see <a href="struts2-core/dependencies.html">Project Dependencies</a>
+        </p>
+
+        </section>
+
+        <section name="Licensing of Apache Struts Distributions">
+        <p>
+            Apache Struts 2 source code and documentation is
+            licensed to the Apache Software Foundation (ASF) under one
+            or more contributor license agreements. See the NOTICE file
+            included in distribution for additional information
+            regarding copyright ownership. The ASF licenses the source
+            code and documentation files in our Apache Struts distribution
+            to you under the Apache License, Version 2.0 (the "License");
+            you may not use the Apache Struts product except in compliance
+            with the License.
+        </p>
+
+        <p>
+            You may obtain a copy of the License at
+            <a href="http://www.apache.org/licenses/LICENSE-2.0">
+            http://www.apache.org/licenses/LICENSE-2.0</a>.
+        </p>
+
+        <p>
+            Unless required by applicable law or agreed to in writing,
+            software distributed under the License is distributed on an
+            "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+            KIND, either express or implied.  See the License for the
+            specific language governing permissions and limitations
+            under the License.
+        </p>
+
+        </section>
+    </body>
+</document>

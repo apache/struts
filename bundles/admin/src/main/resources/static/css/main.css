@@ -1,0 +1,103 @@
+.right {
+    clear: both;
+    float: right;
+}
+
+.left {
+    clear: both;
+    float: left;
+}
+
+.bundleDetails td {
+    border: 1px solid #C8C8C8;
+}
+
+.rowTitle {
+    width: 141px;
+    font-weight: bold;
+    vertical-align: top;
+}
+
+table.properties {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3366CC;
+}
+
+table.properties td {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3366CC;
+}
+
+table.properties td.name {
+    background-color: #C3D9FF;
+    vertical-align: top;
+}
+
+table.properties th {
+    background-color: #C3D9FF;
+}
+
+img {
+    border-style: none;
+}
+
+.fg-button {
+    outline: 0;
+    margin: 0 4px 0 0;
+    padding: .4em 1em;
+    text-decoration: none !important;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    zoom: 1;
+}
+
+.fg-button .ui-icon {
+    margin-left: -3px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+}
+
+.fg-button-small {
+    outline: 0;
+    margin: 0 4px 0 0;
+    padding: 0em 1em;
+    text-decoration: none !important;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+}
+
+.fg-button-small .ui-icon {
+    margin-left: -3px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+}
+
+.fg-button-icon-left .ui-icon {
+    left: 0em;
+    margin-left: 0;
+    right: auto;
+}
+
+.menu {
+    clear: both;
+    padding-bottom: 10px;
+    height:25px;
+}
+
+.tabs {
+    clear: both;
+}
+
+.propertyValue {
+    width: 600px;
+    overflow: auto;
+}
+
+
+

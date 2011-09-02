@@ -1,0 +1,20 @@
+{
+    "debug":null,
+    "error":null,
+    "id":"15",
+    "result": {
+        "bigDecimal": null,
+        "bigInteger": null,
+        "booleanField": true,
+        "byteField": 0,
+        "charField": "s",
+        "doubleField": 10.1,
+        "enumBean": null,
+        "enumField": null,        
+        "floatField": 1.5,
+        "intField": 10,
+        "longField": 100,
+        "objectField": null,
+        "stringField": "str"
+    }
+}    

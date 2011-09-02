@@ -1,0 +1,335 @@
+<!--
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+
+<assembly>
+  <id>all</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <scope>runtime</scope>
+      <excludes>
+        <exclude>net.sf.retrotranslator:retrotranslator-runtime</exclude>
+        <exclude>backport-util-concurrent:backport-util-concurrent</exclude>
+        <exclude>junit:junit</exclude>
+        <exclude>*:jdk14</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+        <directory>src/main/resources</directory>
+        <outputDirectory></outputDirectory>
+      <includes>
+        <include>README*</include>
+        <include>LICENSE*</include>
+        <include>NOTICE*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../core/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>FREEMARKER-LICENSE.txt</include>
+        <include>OGNL-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../plugins/plexus/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>CLASSWORLDS-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../plugins/rest/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>XSTREAM-LICENSE.txt</include>
+        <include>XPP3-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../plugins/sitemesh/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>SITEMESH-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../plugins/struts1/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>ANTLR-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../plugins/oval/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>OVAL-LICENSE.txt</include>
+        <include>XSTREAM-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>target/apps</directory>
+      <outputDirectory>apps</outputDirectory>
+      <includes>
+        <include>*.war</include>
+      </includes>
+    </fileSet>
+
+    <!-- Include the XWork Javadoc in the assembly -->
+    <fileSet>
+      <directory>../xwork-core/target/site/apidocs</directory>
+      <outputDirectory>docs/xwork-apidocs</outputDirectory>
+    </fileSet>
+
+      <!-- Include the website in the assembly -->
+      <fileSet>
+        <directory>../target/site</directory>
+        <outputDirectory>docs</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../core/target/site</directory>
+        <outputDirectory>docs/struts2-core</outputDirectory>
+      </fileSet>
+
+      <!-- Include the Confluence docs in the assembly -->
+      <fileSet>
+        <directory>target/cwiki</directory>
+        <outputDirectory>docs</outputDirectory>
+      </fileSet>
+
+      <!-- Plugins -->
+      <!-- 
+      <fileSet>
+        <directory>../plugins/$plugin/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-$plugin-plugin</outputDirectory>
+      </fileSet>
+      -->
+      <fileSet>
+        <directory>../plugins/codebehind/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/codebehind/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-javatemplates-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/convention/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-convention-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/config-browser/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-config-browser-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/dojo/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-dojo-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/dojo/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-dwr-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/jasperreports/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jasperreports-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/jfreechart/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jfreechart-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/jsf/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jsf-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/junit/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-junit-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/pell-multipart/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-pell-multipart-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/plexus/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/portlet/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-portlet-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/rest/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-rest-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/struts1/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-struts1-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/sitegraph/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-sitegraph-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/spring/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-spring-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/sitemesh/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/testng/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-testng-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/tiles/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/oval/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-oval-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/osgi/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/json/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-json-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/embeddedjsp/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/gxp/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-gxp-plugin</outputDirectory>
+      </fileSet>
+
+    <!-- bundles -->
+    <fileSet>
+       <directory>../bundles/admin/target/site</directory>
+       <outputDirectory>docs/struts2-bundles/admin</outputDirectory>
+    </fileSet>  
+    
+    <fileSet>
+       <directory>../bundles/demo/target/site</directory>
+       <outputDirectory>docs/struts2-bundles/demo</outputDirectory>
+    </fileSet>  
+
+    <!-- Include the source code in the assembly -->
+    <fileSet>
+      <directory>../</directory>
+      <outputDirectory>src/</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+     </fileSet>
+    <fileSet>
+      <directory>../apps</directory>
+      <outputDirectory>src/apps</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../apps/blank</directory>
+      <outputDirectory>src/apps/blank</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../apps/portlet</directory>
+      <outputDirectory>src/apps/portlet</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../apps/showcase</directory>
+      <outputDirectory>src/apps/showcase</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../apps/rest-showcase</directory>
+      <outputDirectory>src/apps/rest-showcase</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../apps/mailreader</directory>
+      <outputDirectory>src/apps/mailreader</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../assembly</directory>
+      <outputDirectory>src/assembly</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../core</directory>
+      <outputDirectory>src/core</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../xwork-core</directory>
+      <outputDirectory>src/xwork-core</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+        <include>src/</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../plugins</directory>
+      <outputDirectory>src/plugins</outputDirectory>
+      <excludes>
+        <exclude>*/target/**</exclude>
+        <exclude>target/**</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+</assembly>

@@ -80,7 +80,7 @@ public class StrutsConversionErrorInterceptor extends ConversionErrorInterceptor
         try {
             stack.push(value);
 
-            return "'" + stack.findValue("top", String.class) + "'";
+            return escape(stack.findString("top"));
         } finally {
             stack.pop();
         }

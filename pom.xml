@@ -43,7 +43,7 @@
     <distributionManagement>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.2.3.1-SNAPSHOT/</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.2.3.1/</url>
         </site>
     </distributionManagement>
 

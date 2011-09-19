@@ -65,6 +65,7 @@
         <module>json</module>
         <module>embeddedjsp</module>
         <module>gxp</module>
+        <module>cdi</module>
     </modules>
 
     <dependencies>

@@ -700,6 +700,25 @@
                 <version>2.1</version>
             </dependency>
 
+            <!-- CDI & Weld -->
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>1.0-SP1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-core</artifactId>
+                <version>1.0.1-Final</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-se</artifactId>
+                <version>1.0.1-Final</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

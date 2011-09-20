@@ -15,30 +15,29 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.impl.MockConfiguration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.impl.MockConfiguration;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.ObjectFactory;
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-
-import org.w3c.dom.Document;
 
 
 public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     public void testLoadOrder() throws Exception {
         configuration = new MockConfiguration();
-        ((MockConfiguration)configuration).selfRegister();
+        ((MockConfiguration) configuration).selfRegister();
         container = configuration.getContainer();
 
         XmlConfigurationProvider prov = new XmlConfigurationProvider("xwork-test-load-order.xml", true) {
@@ -54,11 +53,23 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         prov.setObjectFactory(container.getInstance(ObjectFactory.class));
         prov.init(configuration);
         List<Document> docs = prov.getDocuments();
-        assertEquals(3, docs.size() );
+        assertEquals(3, docs.size());
 
         assertEquals(1, XmlHelper.getLoadOrder(docs.get(0)).intValue());
         assertEquals(2, XmlHelper.getLoadOrder(docs.get(1)).intValue());
         assertEquals(3, XmlHelper.getLoadOrder(docs.get(2)).intValue());
+    }
+
+    public static final long FILE_TS_WAIT_IN_MS = 3600000;
+
+    private static void changeFileTime(File f) throws Exception {
+        final long orig = f.lastModified();
+        final long maxwait = orig + FILE_TS_WAIT_IN_MS;
+        long curr;
+        while (!f.setLastModified(curr = System.currentTimeMillis()) || orig == f.lastModified()) {
+            Thread.sleep(500);
+            assertTrue("Waited more than " + FILE_TS_WAIT_IN_MS + " ms to update timestamp on file: " + f, maxwait > curr);
+        }
     }
 
     public void testNeedsReload() throws Exception {
@@ -68,9 +79,9 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
         assertTrue(!provider.needsReload());
 
-        File file = new File(getClass().getResource("/"+filename).getFile());
-        assertTrue(file.exists());
-        file.setLastModified(System.currentTimeMillis());
+        File file = new File(getClass().getResource("/" + filename).toURI());
+        assertTrue("not exists: " + file.toString(), file.exists());
+        changeFileTime(file);
 
         assertTrue(provider.needsReload());
     }
@@ -148,7 +159,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         File file = new File(uri);
 
         assertTrue(file.exists());
-        file.setLastModified(System.currentTimeMillis());
+        changeFileTime(file);
 
         assertTrue(provider.needsReload());
     }
@@ -175,14 +186,14 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         int startIndex = fullPath.indexOf(":file:/");
         int endIndex = fullPath.indexOf("!/");
 
-        String jar = fullPath.substring(startIndex + (":file:/".length() -1 ), endIndex).replaceAll("%20", " ");
+        String jar = fullPath.substring(startIndex + (":file:/".length() - 1), endIndex).replaceAll("%20", " ");
 
         File file = new File(jar);
-        
+
         assertTrue("File [" + file + "] doesn't exist!", file.exists());
         file.setLastModified(System.currentTimeMillis());
 
         assertTrue(!provider.needsReload());
     }
-         
+
 }

@@ -60,9 +60,6 @@ public class Main {
             return;
         }
 
-        // check the JDK version
-        String version = System.getProperty("java.version");
-        boolean jdk15 = version.contains("1.5");
 
         String javaHome = System.getProperty("java.home");
         ArrayList<URL> urls = new ArrayList<URL>();

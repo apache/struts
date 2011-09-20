@@ -21,15 +21,13 @@
 
 package org.apache.struts2.sitegraph;
 
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.StrutsTestCase;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
-
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.Dispatcher;
-
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 
 /**
  */
@@ -39,7 +37,7 @@ public class SiteGraphTest extends StrutsTestCase {
         // working directory being an assumed value when
         // running the test:  so let's get this class's parent dir
         URL url = ClassLoaderUtil.getResource("org/apache/struts2/sitegraph/struts.xml", SiteGraphTest.class);
-        File file = new File(url.toString().substring(5));
+        File file = new File(url.toURI());
         String dir = file.getParent();
 
         SiteGraph siteGraph = new SiteGraph(dir, dir, dir, "");

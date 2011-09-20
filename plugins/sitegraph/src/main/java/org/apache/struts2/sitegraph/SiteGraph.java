@@ -21,17 +21,12 @@
 
 package org.apache.struts2.sitegraph;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.sitegraph.renderers.DOTRenderer;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.io.*;
 
 /**
  * // START SNIPPET: javadocs-intro
@@ -122,7 +117,7 @@ public class SiteGraph {
             }
         }
 
-        StrutsConfigRetriever.setConfiguration(configDir, views.split("[, ]+"));
+        StrutsConfigRetriever.setConfiguration(configDir, views.split("[,]+"));
         DOTRenderer renderer = new DOTRenderer(writer);
         renderer.render(namespace);
     }

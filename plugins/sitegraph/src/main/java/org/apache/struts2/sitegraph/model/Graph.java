@@ -31,12 +31,12 @@ import java.util.TreeSet;
 /**
  */
 public class Graph extends SubGraph {
-    private Set links;
+    private Set<Link> links;
     public static Map nodeMap = new LinkedHashMap();
 
     public Graph() {
         super("");
-        this.links = new TreeSet();
+        this.links = new TreeSet<Link>();
     }
 
     public void addLink(Link link) {

@@ -21,13 +21,12 @@
 
 package org.apache.struts2.sitegraph;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.config.BeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
@@ -37,12 +36,12 @@ import org.apache.struts2.sitegraph.entities.JspView;
 import org.apache.struts2.sitegraph.entities.VelocityView;
 import org.apache.struts2.sitegraph.entities.View;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Initializes and retrieves XWork config elements
@@ -53,7 +52,7 @@ public class StrutsConfigRetriever {
     private static String configDir;
     private static String[] views;
     private static boolean isXWorkStarted = false;
-    private static Map viewCache = new LinkedHashMap();
+    private static Map<String, View> viewCache = new LinkedHashMap<String, View>();
     private static ConfigurationManager cm;
 
     /**
@@ -61,7 +60,7 @@ public class StrutsConfigRetriever {
      *
      * @return Map of all action names/configs
      */
-    public static Map getActionConfigs() {
+    public static Map<String, Map<String,ActionConfig>> getActionConfigs() {
         if (!isXWorkStarted)
             initXWork();
         return cm.getConfiguration().getRuntimeConfiguration().getActionConfigs();
@@ -84,9 +83,9 @@ public class StrutsConfigRetriever {
         }
     }
 
-    public static Set getNamespaces() {
-        Set namespaces = Collections.EMPTY_SET;
-        Map allActionConfigs = getActionConfigs();
+    public static Set<String> getNamespaces() {
+        Set<String> namespaces= Collections.emptySet();
+        Map<String, Map<String, ActionConfig>> allActionConfigs = getActionConfigs();
         if (allActionConfigs != null) {
             namespaces = allActionConfigs.keySet();
         }
@@ -99,11 +98,11 @@ public class StrutsConfigRetriever {
      * @param namespace
      * @return Set of the action names for this namespace.
      */
-    public static Set getActionNames(String namespace) {
-        Set actionNames = Collections.EMPTY_SET;
-        Map allActionConfigs = getActionConfigs();
+    public static Set<String> getActionNames(String namespace) {
+        Set<String> actionNames = Collections.emptySet();
+        Map<String, Map<String, ActionConfig>> allActionConfigs = getActionConfigs();
         if (allActionConfigs != null) {
-            Map actionMappings = (Map) allActionConfigs.get(namespace);
+            Map<String, ActionConfig> actionMappings = allActionConfigs.get(namespace);
             if (actionMappings != null) {
                 actionNames = actionMappings.keySet();
             }
@@ -143,9 +142,8 @@ public class StrutsConfigRetriever {
 
     public static File getViewFile(String namespace, String actionName, String resultName) {
         ResultConfig result = getResultConfig(namespace, actionName, resultName);
-        String location = (String) result.getParams().get("location");
-        for (int i = 0; i < views.length; i++) {
-            String viewRoot = views[i];
+        String location = result.getParams().get("location");
+        for (String viewRoot : views) {
             File viewFile = getViewFileInternal(viewRoot, location, namespace);
             if (viewFile != null) {
                 return viewFile;
@@ -156,9 +154,9 @@ public class StrutsConfigRetriever {
     }
 
     private static File getViewFileInternal(String root, String location, String namespace) {
-        StringBuffer filePath = new StringBuffer(root);
+        StringBuilder filePath = new StringBuilder(root);
         if (!location.startsWith("/")) {
-            filePath.append(namespace + "/");
+            filePath.append(namespace).append('/');
         }
         filePath.append(location);
         File viewFile = new File(filePath.toString());
@@ -171,7 +169,7 @@ public class StrutsConfigRetriever {
 
     public static View getView(String namespace, String actionName, String resultName, int type) {
         String viewId = namespace + "/" + actionName + "/" + resultName;
-        View view = (View) viewCache.get(viewId);
+        View view = viewCache.get(viewId);
         if (view == null) {
             File viewFile = StrutsConfigRetriever.getViewFile(namespace, actionName, resultName);
             if (viewFile != null) {
@@ -199,6 +197,5 @@ public class StrutsConfigRetriever {
         StrutsConfigRetriever.configDir = configDir;
         StrutsConfigRetriever.views = views;
         isXWorkStarted = false;
-        viewCache = new LinkedHashMap();
     }
 }

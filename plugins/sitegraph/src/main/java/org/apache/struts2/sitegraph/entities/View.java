@@ -43,5 +43,5 @@ public interface View {
      *
      * @return a set of Targets
      */
-    public Set getTargets();
+    public Set<Target> getTargets();
 }

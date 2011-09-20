@@ -21,31 +21,17 @@
 
 package org.apache.struts2.sitegraph.renderers;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.sitegraph.StrutsConfigRetriever;
-import org.apache.struts2.sitegraph.entities.Target;
-import org.apache.struts2.sitegraph.entities.View;
-import org.apache.struts2.sitegraph.model.ActionNode;
-import org.apache.struts2.sitegraph.model.Graph;
-import org.apache.struts2.sitegraph.model.IndentWriter;
-import org.apache.struts2.sitegraph.model.Link;
-import org.apache.struts2.sitegraph.model.SiteGraphNode;
-import org.apache.struts2.sitegraph.model.SubGraph;
-import org.apache.struts2.sitegraph.model.ViewNode;
-
 import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.sitegraph.StrutsConfigRetriever;
+import org.apache.struts2.sitegraph.entities.Target;
+import org.apache.struts2.sitegraph.entities.View;
+import org.apache.struts2.sitegraph.model.*;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.*;
 
 /**
  * Renders flow diagram to the console at info level
@@ -53,7 +39,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 public class DOTRenderer {
 
     private Writer writer;
-    private List links = new ArrayList();
+    private List<TempLink> links = new ArrayList<TempLink>();
 
     public DOTRenderer(Writer writer) {
         this.writer = writer;
@@ -62,50 +48,44 @@ public class DOTRenderer {
     public void render(String ns) {
         Graph graph = new Graph();
 
-        TreeMap viewMap = new TreeMap(new Comparator() {
-            public int compare(Object o1, Object o2) {
-                ViewNode v1 = (ViewNode) o1;
-                ViewNode v2 = (ViewNode) o2;
+        TreeMap<ViewNode, View> viewMap = new TreeMap<ViewNode, View>(new Comparator<ViewNode>() {
+            public int compare(ViewNode v1, ViewNode v2) {
 
                 return v1.getFullName().compareTo(v2.getFullName());
             }
         });
 
-        Set namespaces = StrutsConfigRetriever.getNamespaces();
-        for (Iterator iter = namespaces.iterator(); iter.hasNext();) {
-            String namespace = (String) iter.next();
-
+        Set<String> namespaces = StrutsConfigRetriever.getNamespaces();
+        for (String namespace : namespaces) {
             if (!namespace.startsWith(ns)) {
                 continue;
             }
 
             SubGraph subGraph = graph.create(namespace);
 
-            Set actionNames = StrutsConfigRetriever.getActionNames(namespace);
-            for (Iterator iterator = actionNames.iterator(); iterator.hasNext();) {
-                String actionName = (String) iterator.next();
+            Set<String> actionNames = StrutsConfigRetriever.getActionNames(namespace);
+            for (String actionName : actionNames) {
                 ActionConfig actionConfig = StrutsConfigRetriever.getActionConfig(namespace,
                         actionName);
 
                 ActionNode action = new ActionNode(actionName);
                 subGraph.addNode(action);
 
-                Set resultNames = actionConfig.getResults().keySet();
-                for (Iterator iterator2 = resultNames.iterator(); iterator2.hasNext();) {
-                    String resultName = (String) iterator2.next();
-                    ResultConfig resultConfig = ((ResultConfig) actionConfig.getResults().get(resultName));
+                Set<String> resultNames = actionConfig.getResults().keySet();
+                for (String resultName : resultNames) {
+                    ResultConfig resultConfig = actionConfig.getResults().get(resultName);
                     String resultClassName = resultConfig.getClassName();
 
                     if (resultClassName.equals(ActionChainResult.class.getName())) {
 
-                    } else if (resultClassName.indexOf("Dispatcher") != -1
-                            || resultClassName.indexOf("Velocity") != -1
-                            || resultClassName.indexOf("Freemarker") != -1) {
+                    } else if (resultClassName.contains("Dispatcher")
+                            || resultClassName.contains("Velocity")
+                            || resultClassName.contains("Freemarker")) {
                         if (resultConfig.getParams().get("location") == null) {
                             continue;
                         }
 
-                        String location = getViewLocation((String) resultConfig.getParams().get("location"), namespace);
+                        String location = getViewLocation(resultConfig.getParams().get("location"), namespace);
                         //  FIXME: work with new configuration style                        
                         if (location.endsWith("action")) {
                             addTempLink(action, location, Link.TYPE_RESULT, resultConfig.getName());
@@ -120,15 +100,15 @@ public class DOTRenderer {
                                 viewMap.put(view, viewFile);
                             }
                         }
-                    } else if (resultClassName.indexOf("Jasper") != -1) {
+                    } else if (resultClassName.contains("Jasper")) {
 
-                    } else if (resultClassName.indexOf("XSLT") != -1) {
+                    } else if (resultClassName.contains("XSLT")) {
 
-                    } else if (resultClassName.indexOf("Redirect") != -1) {
+                    } else if (resultClassName.contains("Redirect")) {
                         // check if the redirect is to an action -- if so, link it
-                        String locationConfig = (String) resultConfig.getParams().get("location");
+                        String locationConfig = resultConfig.getParams().get("location");
                         if (locationConfig == null) {
-                            locationConfig = (String) resultConfig.getParams().get("actionName");
+                            locationConfig = resultConfig.getParams().get("actionName");
                         }
                         String location = getViewLocation(locationConfig, namespace);
                         //  FIXME: work with new configuration style
@@ -151,23 +131,20 @@ public class DOTRenderer {
         }
 
         // now look for links in the view
-        for (Iterator iterator = viewMap.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            ViewNode view = (ViewNode) entry.getKey();
-            View viewFile = (View) entry.getValue();
-            Set targets = viewFile.getTargets();
-            for (Iterator iterator1 = targets.iterator(); iterator1.hasNext();) {
-                Target target = (Target) iterator1.next();
+        for (Map.Entry<ViewNode, View> viewNodeViewEntry : viewMap.entrySet()) {
+            ViewNode view = viewNodeViewEntry.getKey();
+            View viewFile = viewNodeViewEntry.getValue();
+            Set<Target> targets = viewFile.getTargets();
+            for (Target target : targets) {
                 String viewTarget = target.getTarget();
                 addTempLink(view, viewTarget, target.getType(), "");
             }
         }
 
         // finally, let's match up these links as real Link objects
-        for (Iterator iterator = links.iterator(); iterator.hasNext();) {
-            TempLink temp = (TempLink) iterator.next();
+        for (TempLink temp : links) {
             String location = temp.location;
-            
+
             // FIXME: work with new configuration style
             if (location.endsWith("action")) {
                 location = location.substring(0, location.indexOf("action") - 1);
@@ -212,7 +189,7 @@ public class DOTRenderer {
     }
 
     private String getViewLocation(String location, String namespace) {
-        String view = null;
+        String view;
         if (!location.startsWith("/")) {
             view = namespace + "/" + location;
         } else {

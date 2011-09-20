@@ -21,20 +21,15 @@
 
 package org.apache.struts2.sitegraph.entities;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.sitegraph.model.Link;
+
+import java.io.*;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.struts2.sitegraph.model.Link;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  */
@@ -54,8 +49,8 @@ public abstract class FileBasedView implements View {
         return name;
     }
 
-    public Set getTargets() {
-        TreeSet targets = new TreeSet();
+    public Set<Target> getTargets() {
+        TreeSet<Target> targets = new TreeSet<Target>();
 
         // links
         matchPatterns(getLinkPattern(), targets, Link.TYPE_HREF);
@@ -77,7 +72,7 @@ public abstract class FileBasedView implements View {
         return Pattern.compile(actionRegex);
     }
 
-    private void matchPatterns(Pattern pattern, Set targets, int type) {
+    private void matchPatterns(Pattern pattern, Set<Target> targets, int type) {
         Matcher matcher = pattern.matcher(contents);
         while (matcher.find()) {
             String target = matcher.group(1);
@@ -93,11 +88,11 @@ public abstract class FileBasedView implements View {
         try {
             BufferedReader in = new BufferedReader(new FileReader(file));
 
-            String s = new String();
-            StringBuffer buffer = new StringBuffer();
+            String s;
+            StringBuilder buffer = new StringBuilder();
 
             while ((s = in.readLine()) != null) {
-                buffer.append(s + "\n");
+                buffer.append(s).append('\n');
             }
 
             in.close();

@@ -62,7 +62,7 @@ public class Main {
 
         // check the JDK version
         String version = System.getProperty("java.version");
-        boolean jdk15 = version.indexOf("1.5") != -1;
+        boolean jdk15 = version.contains("1.5");
 
         String javaHome = System.getProperty("java.home");
         ArrayList<URL> urls = new ArrayList<URL>();
@@ -73,11 +73,10 @@ public class Main {
             File wd = new File(".");
             File[] jars = wd.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    return name.endsWith(".jar") && name.indexOf("-src.") == -1;
+                    return name.endsWith(".jar") && !name.contains("-src.");
                 }
             });
-            for (int i = 0; i < jars.length; i++) {
-                File jar = jars[i];
+            for (File jar : jars) {
                 urls.add(jar.toURL());
             }
 
@@ -181,8 +180,7 @@ public class Main {
             return;
         }
 
-        for (int i = 0; i < files.length; i++) {
-            File f = files[i];
+        for (File f : files) {
             if (f.isDirectory()) {
                 findJars(f, urls);
             } else if (f.getName().endsWith(".jar")) {

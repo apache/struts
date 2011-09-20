@@ -97,7 +97,7 @@ public class SubGraph implements Render {
             return this;
         }
 
-        String[] parts = namespace.split("\\/");
+        String[] parts = namespace.split("/");
         SubGraph last = this;
         for (String part : parts) {
             if (part.equals("")) {

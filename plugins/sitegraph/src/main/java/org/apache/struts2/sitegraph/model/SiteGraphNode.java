@@ -57,7 +57,7 @@ public abstract class SiteGraphNode implements Render, Comparable {
     }
 
     private String cleanName() {
-        return name.replaceAll("[\\.\\/\\-\\$\\{\\}]", "_");
+        return name.replaceAll("[\\./\\-\\$\\{\\}]", "_");
     }
 
     public abstract String getColor();

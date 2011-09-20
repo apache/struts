@@ -68,7 +68,7 @@ public abstract class FileBasedView implements View {
         // FIXME: work with new configuration style
         //Object ext = Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
         String ext = "action";
-        String actionRegex = "([A-Za-z0-9\\._\\-\\!]+\\." + ext + ")";
+        String actionRegex = "([A-Za-z0-9\\._\\-!]+\\." + ext + ")";
         return Pattern.compile(actionRegex);
     }
 

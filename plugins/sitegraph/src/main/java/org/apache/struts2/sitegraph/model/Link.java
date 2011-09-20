@@ -90,6 +90,6 @@ public class Link implements Render, Comparable {
             return result;
         }
 
-        return new Integer(type).compareTo(new Integer(other.type));
+        return new Integer(type).compareTo(other.type);
     }
 }

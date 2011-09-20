@@ -46,7 +46,7 @@ public class SiteGraphTest extends StrutsTestCase {
         siteGraph.prepare();
 
         URL compare = SiteGraphTest.class.getResource("out.txt");
-        StringBuffer buffer = new StringBuffer(128);
+        StringBuilder buffer = new StringBuilder(128);
         InputStream in = compare.openStream();
         byte[] buf = new byte[4096];
         int nbytes;

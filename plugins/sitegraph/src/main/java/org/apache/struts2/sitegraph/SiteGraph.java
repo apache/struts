@@ -68,7 +68,7 @@ public class SiteGraph {
         if (args.length != 8 && args.length != 6) {
             InputStream is = SiteGraph.class.getResourceAsStream("sitegraph-usage.txt");
             byte[] buffer = new byte[2048];
-            int length = -1;
+            int length;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             while ((length = is.read(buffer)) != -1) {
                 baos.write(buffer, 0, length);

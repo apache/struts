@@ -72,11 +72,11 @@ public class StrutsConfigRetriever {
         try {
             ConfigurationProvider configProvider = new StrutsXmlConfigurationProvider(configFile.getCanonicalPath(), true, null);
             cm = new ConfigurationManager();
-            cm.addConfigurationProvider(new DefaultPropertiesProvider());
-            cm.addConfigurationProvider(new StrutsXmlConfigurationProvider("struts-default.xml", false, null));
-            cm.addConfigurationProvider(configProvider);
-            cm.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());
-            cm.addConfigurationProvider(new BeanSelectionProvider());
+            cm.addContainerProvider(new DefaultPropertiesProvider());
+            cm.addContainerProvider(new StrutsXmlConfigurationProvider("struts-default.xml", false, null));
+            cm.addContainerProvider(configProvider);
+            cm.addContainerProvider(new LegacyPropertiesConfigurationProvider());
+            cm.addContainerProvider(new BeanSelectionProvider());
             isXWorkStarted = true;
         } catch (IOException e) {
             LOG.error("IOException", e);

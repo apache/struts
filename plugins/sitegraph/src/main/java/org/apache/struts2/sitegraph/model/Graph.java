@@ -22,7 +22,6 @@
 package org.apache.struts2.sitegraph.model;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -57,14 +56,12 @@ public class Graph extends SubGraph {
         }
 
         // render all the nodes
-        for (Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-            SiteGraphNode siteGraphNode = (SiteGraphNode) iterator.next();
+        for (SiteGraphNode siteGraphNode : nodes) {
             siteGraphNode.render(writer);
         }
 
         // finally, render the links
-        for (Iterator iterator = links.iterator(); iterator.hasNext();) {
-            Link link = (Link) iterator.next();
+        for (Link link : links) {
             link.render(writer);
         }
 

@@ -74,15 +74,15 @@ public class Graph extends SubGraph {
             location = location.substring(1);
         } else {
             // not absolute, so use the reference node
-            String prefix = null;
+            String prefix;
             if (ref.getParent() != null) {
                 prefix = ref.getParent().getPrefix();
                 location = prefix + "_" + location;
             }
         }
 
-        location = location.replaceAll("[\\.\\/\\-\\$\\{\\}]", "_");
+        location = location.replaceAll("[\\./\\-\\$\\{\\}]", "_");
 
-        return (SiteGraphNode) nodeMap.get(location);
+        return nodeMap.get(location);
     }
 }

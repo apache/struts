@@ -211,7 +211,7 @@ public class ConfigurationManager {
      * Destroy its managing Configuration instance
      */
     public synchronized void destroyConfiguration() {
-        clearConfigurationProviders(); // let's destroy the ConfigurationProvider first
+        clearContainerProviders(); // let's destroy the ConfigurationProvider first
         containerProviders = new CopyOnWriteArrayList<ContainerProvider>();
         if (configuration != null)
             configuration.destroy(); // let's destroy it first, before nulling it.

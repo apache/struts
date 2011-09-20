@@ -71,7 +71,7 @@ public class XWorkTestCaseHelper {
             if (prov instanceof XmlConfigurationProvider) {
                 ((XmlConfigurationProvider)prov).setThrowExceptionOnDuplicateBeans(false);
             }
-            configurationManager.addConfigurationProvider(prov);
+            configurationManager.addContainerProvider(prov);
         }
         Container container = configurationManager.getConfiguration().getContainer();
         

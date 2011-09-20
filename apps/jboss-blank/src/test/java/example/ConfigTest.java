@@ -26,11 +26,10 @@ import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-
-import java.util.Map;
-import java.util.List;
-
 import org.apache.struts2.StrutsTestCase;
+
+import java.util.List;
+import java.util.Map;
 
 public class ConfigTest extends StrutsTestCase {
 
@@ -62,7 +61,7 @@ public class ConfigTest extends StrutsTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         XmlConfigurationProvider c = new XmlConfigurationProvider("struts.xml");
-        configurationManager.addConfigurationProvider(c);
+        configurationManager.addContainerProvider(c);
         configurationManager.reload();
     }
 

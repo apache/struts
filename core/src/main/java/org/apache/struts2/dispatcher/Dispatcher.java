@@ -267,7 +267,7 @@ public class Dispatcher {
                 ((ObjectFactoryDestroyable)objectFactory).destroy();
             }
             catch(Exception e) {
-                // catch any exception that may occured during destroy() and log it
+                // catch any exception that may occurred during destroy() and log it
                 LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
             }
         }
@@ -307,11 +307,11 @@ public class Dispatcher {
     }
 
     private void init_DefaultProperties() {
-        configurationManager.addConfigurationProvider(new DefaultPropertiesProvider());
+        configurationManager.addContainerProvider(new DefaultPropertiesProvider());
     }
     
     private void init_LegacyStrutsProperties() {
-        configurationManager.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());
+        configurationManager.addContainerProvider(new LegacyPropertiesConfigurationProvider());
     }
 
     private void init_TraditionalXmlConfigurations() {
@@ -323,9 +323,9 @@ public class Dispatcher {
         for (String file : files) {
             if (file.endsWith(".xml")) {
                 if ("xwork.xml".equals(file)) {
-                    configurationManager.addConfigurationProvider(createXmlConfigurationProvider(file, false));
+                    configurationManager.addContainerProvider(createXmlConfigurationProvider(file, false));
                 } else {
-                    configurationManager.addConfigurationProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
+                    configurationManager.addContainerProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
                 }
             } else {
                 throw new IllegalArgumentException("Invalid configuration file name");
@@ -349,7 +349,7 @@ public class Dispatcher {
                 try {
                     Class cls = ClassLoaderUtils.loadClass(cname, this.getClass());
                     ConfigurationProvider prov = (ConfigurationProvider)cls.newInstance();
-                    configurationManager.addConfigurationProvider(prov);
+                    configurationManager.addContainerProvider(prov);
                 } catch (InstantiationException e) {
                     throw new ConfigurationException("Unable to instantiate provider: "+cname, e);
                 } catch (IllegalAccessException e) {
@@ -362,11 +362,19 @@ public class Dispatcher {
     }
 
     private void init_FilterInitParameters() {
-        configurationManager.addConfigurationProvider(new ConfigurationProvider() {
-            public void destroy() {}
-            public void init(Configuration configuration) throws ConfigurationException {}
-            public void loadPackages() throws ConfigurationException {}
-            public boolean needsReload() { return false; }
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+            }
+
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+
+            public void loadPackages() throws ConfigurationException {
+            }
+
+            public boolean needsReload() {
+                return false;
+            }
 
             public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
                 props.putAll(initParams);
@@ -375,7 +383,7 @@ public class Dispatcher {
     }
 
     private void init_AliasStandardObjects() {
-        configurationManager.addConfigurationProvider(new BeanSelectionProvider());
+        configurationManager.addContainerProvider(new BeanSelectionProvider());
     }
 
     private Container init_PreloadConfiguration() {
@@ -396,7 +404,7 @@ public class Dispatcher {
     private void init_CheckWebLogicWorkaround(Container container) {
         // test whether param-access workaround needs to be enabled
         if (servletContext != null && servletContext.getServerInfo() != null
-                && servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
+                && servletContext.getServerInfo().contains("WebLogic")) {
             if (LOG.isInfoEnabled()) {
         	LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             }
@@ -634,7 +642,7 @@ public class Dispatcher {
             File multipartSaveDir = new File(saveDir);
 
             if (!multipartSaveDir.exists()) {
-                if (multipartSaveDir.mkdir() == false) {
+                if (!multipartSaveDir.mkdir()) {
                     String logMessage;
         	    try {
                         logMessage = "Could not find create multipart save directory '"+multipartSaveDir.getCanonicalPath()+"'.";
@@ -715,7 +723,7 @@ public class Dispatcher {
         }
 
         String content_type = request.getContentType();
-        if (content_type != null && content_type.indexOf("multipart/form-data") != -1) {
+        if (content_type != null && content_type.contains("multipart/form-data")) {
             MultiPartRequest mpr = null;
             //check for alternate implementations of MultiPartRequest
             Set<String> multiNames = getContainer().getInstanceNames(MultiPartRequest.class);
@@ -785,7 +793,7 @@ public class Dispatcher {
     public void sendError(HttpServletRequest request, HttpServletResponse response,
             ServletContext ctx, int code, Exception e) {
         Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
-        if (devModeOverride != null ? devModeOverride.booleanValue() : devMode) {
+        if (devModeOverride != null ? devModeOverride : devMode) {
             response.setContentType("text/html");
 
             try {

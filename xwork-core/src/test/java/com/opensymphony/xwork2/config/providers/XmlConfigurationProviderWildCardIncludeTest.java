@@ -41,7 +41,7 @@ public class XmlConfigurationProviderWildCardIncludeTest extends ConfigurationTe
         assertNotNull(defaultTwoPackage);
         assertEquals("default-2", defaultTwoPackage.getName());       
 
-        configurationManager.addConfigurationProvider(provider);
+        configurationManager.addContainerProvider(provider);
         configurationManager.reload();
 
     }

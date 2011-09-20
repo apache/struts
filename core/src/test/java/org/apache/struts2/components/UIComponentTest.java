@@ -269,8 +269,8 @@ public class UIComponentTest extends AbstractUITagTest {
 
     // form
     public void testFormComponentDisposeItselfFromComponentStack() throws Exception {
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearContainerProviders();
+        configurationManager.addContainerProvider(new TestConfigurationProvider());
         ActionContext.getContext().setValueStack(stack);
 
         request.setupGetServletPath("/testAction");

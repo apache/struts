@@ -20,20 +20,20 @@ public class XmlConfigurationProviderGlobalResultInheritenceTest extends Configu
         ConfigurationProvider provider = buildConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-global-result-inheritence.xml");
 
         ConfigurationManager configurationManager = new ConfigurationManager();
-        configurationManager.addConfigurationProvider(new XWorkConfigurationProvider());
-        configurationManager.addConfigurationProvider(provider);
+        configurationManager.addContainerProvider(new XWorkConfigurationProvider());
+        configurationManager.addContainerProvider(provider);
         Configuration configuration = configurationManager.getConfiguration();
 
         ActionConfig parentActionConfig = configuration.getRuntimeConfiguration().getActionConfig("/base", "parentAction");
         ActionConfig anotherActionConfig = configuration.getRuntimeConfiguration().getActionConfig("/base", "anotherAction");
         ActionConfig childActionConfig = configuration.getRuntimeConfiguration().getActionConfig("/base", "childAction");
 
-        ResultConfig parentResultConfig1 = (ResultConfig) parentActionConfig.getResults().get("mockResult1");
-        ResultConfig parentResultConfig2 = (ResultConfig) parentActionConfig.getResults().get("mockResult2");
-        ResultConfig anotherResultConfig1 = (ResultConfig) anotherActionConfig.getResults().get("mockResult1");
-        ResultConfig anotherResultConfig2 = (ResultConfig) anotherActionConfig.getResults().get("mockResult2");
-        ResultConfig childResultConfig1 = (ResultConfig) childActionConfig.getResults().get("mockResult1");
-        ResultConfig childResultConfig2 = (ResultConfig) childActionConfig.getResults().get("mockResult2");
+        ResultConfig parentResultConfig1 = parentActionConfig.getResults().get("mockResult1");
+        ResultConfig parentResultConfig2 = parentActionConfig.getResults().get("mockResult2");
+        ResultConfig anotherResultConfig1 = anotherActionConfig.getResults().get("mockResult1");
+        ResultConfig anotherResultConfig2 = anotherActionConfig.getResults().get("mockResult2");
+        ResultConfig childResultConfig1 = childActionConfig.getResults().get("mockResult1");
+        ResultConfig childResultConfig2 = childActionConfig.getResults().get("mockResult2");
 
         System.out.println(parentResultConfig1.getParams().get("identity"));
         System.out.println(parentResultConfig2.getParams().get("identity"));

@@ -21,28 +21,9 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
-import org.apache.struts2.views.jsp.StrutsMockHttpSession;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
@@ -52,6 +33,14 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
+import org.apache.struts2.views.jsp.StrutsMockHttpSession;
+
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Test case for ExecuteAndWaitInterceptor.
@@ -193,7 +182,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected void tearDown() throws Exception {
-        configurationManager.clearConfigurationProviders();
+        configurationManager.clearContainerProviders();
         configurationManager.destroyConfiguration();
         ActionContext.setContext(null);
     }

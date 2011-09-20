@@ -188,7 +188,7 @@ public class ConfigurationTest extends XWorkTestCase {
     }
 
     public void testMultipleConfigProviders() {
-        configurationManager.addConfigurationProvider(new MockConfigurationProvider());
+        configurationManager.addContainerProvider(new MockConfigurationProvider());
 
         try {
             configurationManager.reload();

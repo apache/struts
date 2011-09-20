@@ -103,7 +103,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         assertTrue(multipleParents.contains(abstractPackage));
         assertTrue(multipleParents.contains(singlePackage));
 
-        configurationManager.addConfigurationProvider(provider);
+        configurationManager.addContainerProvider(provider);
         configurationManager.reload();
 
         RuntimeConfiguration runtimeConfiguration = configurationManager.getConfiguration().getRuntimeConfiguration();

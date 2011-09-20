@@ -127,7 +127,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         assertEquals(1, namespace5.getParents().size());
         assertEquals(namespace4, namespace5.getParents().get(0));
 
-        configurationManager.addConfigurationProvider(provider);
+        configurationManager.addContainerProvider(provider);
         configurationManager.reload();
 
         RuntimeConfiguration runtimeConfiguration = configurationManager.getConfiguration().getRuntimeConfiguration();

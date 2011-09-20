@@ -71,11 +71,11 @@ public class ConfigurationManagerTest extends XWorkTestCase {
     	class State {
     		public boolean isDestroyed1 =false;
     		public boolean isDestroyed2 =false;
-    	};
+    	}
     	
     	final State state = new State();
     	ConfigurationManager configurationManager = new ConfigurationManager();
-    	configurationManager.addConfigurationProvider(new ConfigurationProvider() {
+    	configurationManager.addContainerProvider(new ConfigurationProvider() {
 			public void destroy() { 
 				throw new RuntimeException("testing testing 123");
 			}
@@ -90,7 +90,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
 			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
 			}
     	});
-    	configurationManager.addConfigurationProvider(new ConfigurationProvider() {
+    	configurationManager.addContainerProvider(new ConfigurationProvider() {
 			public void destroy() { 
 				state.isDestroyed1 = true;
 			}
@@ -105,7 +105,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
 			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
 			}
     	});
-    	configurationManager.addConfigurationProvider(new ConfigurationProvider() {
+    	configurationManager.addContainerProvider(new ConfigurationProvider() {
 			public void destroy() { 
 				throw new RuntimeException("testing testing 123");
 			}
@@ -120,7 +120,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
 			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
 			}
     	});
-    	configurationManager.addConfigurationProvider(new ConfigurationProvider() {
+    	configurationManager.addContainerProvider(new ConfigurationProvider() {
 			public void destroy() { 
 				state.isDestroyed2 = true;
 			}
@@ -139,7 +139,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
     	assertFalse(state.isDestroyed1);
     	assertFalse(state.isDestroyed2);
     	
-    	configurationManager.clearConfigurationProviders();
+    	configurationManager.clearContainerProviders();
     	
     	assertTrue(state.isDestroyed1);
     	assertTrue(state.isDestroyed2);
@@ -147,7 +147,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
 
     public void testClearConfigurationProviders() throws Exception {
         configProviderMock.expect("destroy");
-        configurationManager.clearConfigurationProviders();
+        configurationManager.clearContainerProviders();
         configProviderMock.verify();
     }
 
@@ -160,8 +160,8 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         configProviderMock.matchAndReturn("equals", C.ANY_ARGS, false);
 
         ConfigurationProvider mockProvider = (ConfigurationProvider) configProviderMock.proxy();
-        configurationManager.addConfigurationProvider(new XWorkConfigurationProvider());
-        configurationManager.addConfigurationProvider(mockProvider);
+        configurationManager.addContainerProvider(new XWorkConfigurationProvider());
+        configurationManager.addContainerProvider(mockProvider);
         
         //the first time it always inits
         configProviderMock.expect("init", C.isA(Configuration.class));

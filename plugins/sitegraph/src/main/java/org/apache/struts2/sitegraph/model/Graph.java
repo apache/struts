@@ -32,7 +32,7 @@ import java.util.TreeSet;
  */
 public class Graph extends SubGraph {
     private Set<Link> links;
-    public static Map nodeMap = new LinkedHashMap();
+    public static Map<String,SiteGraphNode> nodeMap = new LinkedHashMap<String,SiteGraphNode>();
 
     public Graph() {
         super("");
@@ -52,8 +52,7 @@ public class Graph extends SubGraph {
         writer.write("edge [fontsize=10, fontname=helvetica]");
 
         // render all the subgraphs
-        for (Iterator iterator = subGraphs.iterator(); iterator.hasNext();) {
-            SubGraph subGraph = (SubGraph) iterator.next();
+        for (SubGraph subGraph : subGraphs) {
             subGraph.render(new IndentWriter(writer));
         }
 

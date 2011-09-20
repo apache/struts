@@ -23,7 +23,6 @@ package org.apache.struts2.sitegraph.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,13 +30,13 @@ import java.util.List;
 public class SubGraph implements Render {
     protected String name;
     protected SubGraph parent;
-    protected List subGraphs;
-    protected List nodes;
+    protected List<SubGraph> subGraphs;
+    protected List<SiteGraphNode> nodes;
 
     public SubGraph(String name) {
         this.name = name;
-        this.subGraphs = new ArrayList();
-        this.nodes = new ArrayList();
+        this.subGraphs = new ArrayList<SubGraph>();
+        this.nodes = new ArrayList<SiteGraphNode>();
     }
 
     public String getName() {
@@ -67,14 +66,12 @@ public class SubGraph implements Render {
         writer.write("label=\"" + name + "\";");
 
         // write out the subgraphs
-        for (Iterator iterator = subGraphs.iterator(); iterator.hasNext();) {
-            SubGraph subGraph = (SubGraph) iterator.next();
+        for (SubGraph subGraph : subGraphs) {
             subGraph.render(new IndentWriter(writer));
         }
 
         // write out the actions
-        for (Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-            SiteGraphNode siteGraphNode = (SiteGraphNode) iterator.next();
+        for (SiteGraphNode siteGraphNode : nodes) {
             siteGraphNode.render(writer);
         }
 
@@ -102,8 +99,7 @@ public class SubGraph implements Render {
 
         String[] parts = namespace.split("\\/");
         SubGraph last = this;
-        for (int i = 0; i < parts.length; i++) {
-            String part = parts[i];
+        for (String part : parts) {
             if (part.equals("")) {
                 continue;
             }
@@ -121,8 +117,7 @@ public class SubGraph implements Render {
     }
 
     private SubGraph findSubGraph(String name) {
-        for (Iterator iterator = subGraphs.iterator(); iterator.hasNext();) {
-            SubGraph subGraph = (SubGraph) iterator.next();
+        for (SubGraph subGraph : subGraphs) {
             if (subGraph.getName().equals(name)) {
                 return subGraph;
             }

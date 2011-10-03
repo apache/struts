@@ -91,7 +91,7 @@ END SNIPPET: supported-validators
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
             <#elseif validator.validatorType = "url">
-            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match(/(^(ftp|http|https):\/\/(\.[_A-Za-z0-9-]+)*(@?([A-Za-z0-9-])+)?(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))(:[0-9]+)?([/A-Za-z0-9?#_-]*)?$)/gi)==null) {
+            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match(/^(ftp|http|https):\/\/((%[A-F0-9]{2}|[A-Z0-9-._~!$&'()*+,;=:])+@)?((%[A-F0-9]{2}|[A-Z0-9-._~!$&'()*+,;=])+)(:[0-9]+)?((\/(%[A-F0-9]{2}|[A-Z0-9-._~!$&'()*+,;=:@])*)*)(\?(%[A-F0-9]{2}|[A-Z0-9-._~!$&'()*+,;=:@/?])*)?(#(%[A-F0-9]{2}|[A-Z0-9-._~!$&'()*+,;=:@/?])*)?$/gi)==null) {
                 addError(field, error);
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>

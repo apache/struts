@@ -101,7 +101,7 @@
         <#else>
             <#assign doubleItemValue = stack.findString('top')/>
         </#if>
-    ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue}", "${doubleItemKeyStr}");
+    ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue?js_string}", "${doubleItemKeyStr?js_string}");
 
         <#assign doubleItemCount = doubleItemCount + 1/>
     </@s.iterator>
@@ -134,13 +134,13 @@
             <#if parameters.doubleNameValue?exists>
                    <#if parameters.doubleMultiple?exists>
                          for (j = 0; j < ${parameters.doubleNameValue}.length; j++) {
-                             if (${parameters.id}Temp.options[i].value == ${parameters.doubleNameValue}[j]) {
+                             if (${parameters.id}Temp.options[i].value == ${parameters.doubleNameValue?js_string}[j]) {
                                ${parameters.id}Temp.options[i].selected = true;
                                 selected = true;
                              }
                         }
                    <#else>
-                        if (${parameters.id}Temp.options[i].value == '${parameters.doubleNameValue}') {
+                        if (${parameters.id}Temp.options[i].value == '${parameters.doubleNameValue?js_string}') {
                             ${parameters.id}Temp.options[i].selected = true;
                             selected = true;
                         }

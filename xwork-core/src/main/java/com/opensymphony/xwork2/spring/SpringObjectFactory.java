@@ -145,9 +145,9 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
      */
     @Override
     public Object buildBean(String beanName, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
-        Object o = null;
+        Object o;
         
-        if (appContext.containsBeanDefinition(beanName)) {
+        if (appContext.containsBean(beanName)) {
             o = appContext.getBean(beanName);
         } else {
             Class beanClazz = getClassInstance(beanName);

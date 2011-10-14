@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
@@ -39,6 +40,7 @@ public abstract class AbstractMessageListHandler extends AbstractTagHandler impl
         if (errorsObj != null) {
             Iterator itt = MakeIterator.convert(errorsObj);
             if (itt.hasNext()) {
+                boolean escape = BooleanUtils.toBooleanDefaultIfNull((Boolean) params.get("escape"), false);
                 Attributes attrs = new Attributes();
                 attrs.addIfExists("style", params.get("cssStyle"))
                         .add("class", params.containsKey("cssClass") ? (String) params.get("cssClass") : getDefaultClass());
@@ -51,7 +53,7 @@ public abstract class AbstractMessageListHandler extends AbstractTagHandler impl
 
                     //span for error
                     start("span", null);
-                    characters(error);
+                    characters(error, escape);
                     end("span");
                     end("li");
 

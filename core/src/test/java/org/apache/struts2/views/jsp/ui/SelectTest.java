@@ -21,13 +21,14 @@
 
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.struts2.TestAction;
-import org.apache.struts2.views.jsp.AbstractUITagTest;
+import java.util.Locale;
 
 
 /**
@@ -272,6 +273,9 @@ public class SelectTest extends AbstractUITagTest {
      * @throws Exception
      */
     public void testMultipleWithLists() throws Exception {
+        Locale defaultLocale = Locale.getDefault();
+        Locale.setDefault(Locale.US);
+
         TestAction testAction = (TestAction) action;
         Collection collection = new ArrayList(2);
 
@@ -303,6 +307,8 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-12.txt"));
+
+        Locale.setDefault(defaultLocale);
     }
 
     public void testSimple() throws Exception {

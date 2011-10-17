@@ -21,12 +21,19 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
@@ -35,14 +42,12 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 import org.easymock.EasyMock;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -366,6 +371,9 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled3() throws Exception {
 
+        Locale defaultLocale = Locale.getDefault();
+        Locale.setDefault(Locale.US);
+
         final Container cont = container;
         // used to determined if the form action needs js validation
         configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
@@ -440,6 +448,8 @@ public class FormTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FormTag.class.getResource("Formtag-22.txt"));
+
+        Locale.setDefault(defaultLocale);
     }
 
 /**

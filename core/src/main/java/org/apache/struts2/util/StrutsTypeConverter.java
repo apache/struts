@@ -21,9 +21,9 @@
 
 package org.apache.struts2.util;
 
-import java.util.Map;
-
 import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
+
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->

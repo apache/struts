@@ -15,16 +15,29 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.test.TestBean2;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.Bar;
+import com.opensymphony.xwork2.util.BarJunior;
+import com.opensymphony.xwork2.util.Cat;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.Dog;
 import com.opensymphony.xwork2.util.Foo;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.PropertyAccessor;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -118,7 +131,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         vs.findValue("barJunior.title", true);
     }
 
-     public void testSuccessFailOnErrorOnInheritedPropertiesWithMethods() {
+    public void testSuccessFailOnErrorOnInheritedPropertiesWithMethods() {
         //this shuld not fail as the property is defined on a parent class
         OgnlValueStack vs = createValueStack();
 
@@ -560,16 +573,9 @@ public class OgnlValueStackTest extends XWorkTestCase {
         stack.setDevMode("true");
         stack.push(action);
 
-        try {
-            stack.setValue("bar", "3x");
-            fail("Attempt to set 'bar' int property to '3x' should result in RuntimeException");
-        }
-        catch (RuntimeException re) {
-            assertTrue(true);
-        }
+        stack.setValue("bar", "3x");
 
-        Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
-        assertTrue(conversionErrors.containsKey("bar"));
+        assertEquals(3, action.getBar());
     }
 
     public void testPrimitiveSettingWithInvalidValueAddsFieldErrorInNonDevMode() {
@@ -580,8 +586,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         stack.push(action);
         stack.setValue("bar", "3x");
 
-        Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
-        assertTrue(conversionErrors.containsKey("bar"));
+        assertEquals(3, action.getBar());
     }
 
 

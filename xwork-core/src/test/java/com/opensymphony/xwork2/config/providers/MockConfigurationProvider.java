@@ -142,7 +142,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
         params.put("date", new java.util.Date(2002 - 1900, 11, 20));
 
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
-        params.put("percentage", new Double(100.0123));
+        params.put("percentage", 100.0123);
 
         ActionConfig validationActionConfig = new ActionConfig.Builder("defaultPackage", VALIDATION_ACTION_NAME, SimpleAction.class.getName())
             .addInterceptors(interceptors)

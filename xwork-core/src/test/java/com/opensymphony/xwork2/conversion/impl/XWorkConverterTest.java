@@ -15,7 +15,12 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.User;
@@ -25,7 +30,6 @@ import com.opensymphony.xwork2.util.Foo;
 import com.opensymphony.xwork2.util.FurColor;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
-import ognl.OgnlRuntime;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -35,7 +39,16 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -122,7 +135,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         ognlStackContext.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, "bean.birth");
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action.getBean(), null, "birth", value, Date.class));
+        assertEquals("Conversion should have failed.", TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(ognlStackContext, action.getBean(), null, "birth", value, Date.class));
         stack.pop();
 
         Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
@@ -141,7 +154,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "date", value, Date.class));
+        assertEquals("Conversion should have failed.", TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(ognlStackContext, action, null, "date", value, Date.class));
         stack.pop();
 
         Map conversionErrors = (Map) ognlStackContext.get(ActionContext.CONVERSION_ERRORS);
@@ -160,7 +173,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "birth", value, Date.class));
+        assertEquals("Conversion should have failed.", TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(ognlStackContext, action, null, "birth", value, Date.class));
         stack.pop();
         stack.pop();
 
@@ -175,18 +188,18 @@ public class XWorkConverterTest extends XWorkTestCase {
         // see XW-341
         String dateStr = "13/01/2005"; // us date format is used in context
         Object res = converter.convertValue(context, null, null, null, dateStr, Date.class);
-        assertEquals(res, OgnlRuntime.NoConversionPossible);
+        assertEquals(res, TypeConverter.NO_CONVERSION_POSSIBLE);
 
         dateStr = "02/30/2005"; // us date format is used in context
         res = converter.convertValue(context, null, null, null, dateStr, Date.class);
-        assertEquals(res, OgnlRuntime.NoConversionPossible);
+        assertEquals(res, TypeConverter.NO_CONVERSION_POSSIBLE);
 
         // and test a date that is passable
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         dateStr = "12/31/2005"; // us date format
         res = converter.convertValue(context, null, null, null, dateStr, Date.class);
         Date date = format.parse(dateStr);
-        assertNotSame(res, OgnlRuntime.NoConversionPossible);
+        assertNotSame(res, TypeConverter.NO_CONVERSION_POSSIBLE);
         assertEquals(date, res);
     }
 
@@ -240,12 +253,11 @@ public class XWorkConverterTest extends XWorkTestCase {
         Map ognlStackContext = stack.getContext();
         ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action.getBean(), null, "count", "111.1", int.class));
+        assertEquals("Conversion should have failed.", 111, converter.convertValue(ognlStackContext, action.getBean(), null, "count", "111.1", int.class));
         stack.pop();
 
         Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
-        assertNotNull(conversionErrors);
-        assertTrue(conversionErrors.size() == 1);
+        assertNull(conversionErrors);
     }
 
     public void testStringArrayToCollection() {
@@ -432,128 +444,128 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testOverflows() {
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Double.MAX_VALUE + "1", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Double.MIN_VALUE + "-1", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Double.MAX_VALUE + "1", Double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Double.MIN_VALUE + "-1", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Double.MAX_VALUE + "1", double.class));
+        assertEquals(Double.MIN_VALUE, converter.convertValue(context, null, null, null, Double.MIN_VALUE + "-1", double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Double.MAX_VALUE + "1", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Double.MIN_VALUE + "-1", Double.class));
 
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Float.MAX_VALUE + "1", float.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Float.MIN_VALUE + "-1", float.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Float.MAX_VALUE + "1", Float.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Float.MIN_VALUE + "-1", Float.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Float.MAX_VALUE + "1", float.class));
+        assertEquals(Float.MIN_VALUE, converter.convertValue(context, null, null, null, Float.MIN_VALUE + "-1", float.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Float.MAX_VALUE + "1", Float.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Float.MIN_VALUE + "-1", Float.class));
 
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Integer.MAX_VALUE + "1", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Integer.MIN_VALUE + "-1", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Integer.MAX_VALUE + "1", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Integer.MIN_VALUE + "-1", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Integer.MAX_VALUE + "1", int.class));
+        assertEquals(Integer.MIN_VALUE, converter.convertValue(context, null, null, null, Integer.MIN_VALUE + "-1", int.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Integer.MAX_VALUE + "1", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Integer.MIN_VALUE + "-1", Integer.class));
 
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Byte.MAX_VALUE + "1", byte.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Byte.MIN_VALUE + "-1", byte.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Byte.MAX_VALUE + "1", Byte.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Byte.MIN_VALUE + "-1", Byte.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Byte.MAX_VALUE + "1", byte.class));
+        assertEquals(Byte.MIN_VALUE, converter.convertValue(context, null, null, null, Byte.MIN_VALUE + "-1", byte.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Byte.MAX_VALUE + "1", Byte.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Byte.MIN_VALUE + "-1", Byte.class));
 
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Short.MAX_VALUE + "1", short.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Short.MIN_VALUE + "-1", short.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Short.MAX_VALUE + "1", Short.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Short.MIN_VALUE + "-1", Short.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Short.MAX_VALUE + "1", short.class));
+        assertEquals(Short.MIN_VALUE, converter.convertValue(context, null, null, null, Short.MIN_VALUE + "-1", short.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Short.MAX_VALUE + "1", Short.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Short.MIN_VALUE + "-1", Short.class));
 
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Long.MAX_VALUE + "1", long.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Long.MIN_VALUE + "-1", long.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Long.MAX_VALUE + "1", Long.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, Long.MIN_VALUE + "-1", Long.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Long.MAX_VALUE + "1", long.class));
+        assertEquals(Long.MIN_VALUE, converter.convertValue(context, null, null, null, Long.MIN_VALUE + "-1", long.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Long.MAX_VALUE + "1", Long.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, Long.MIN_VALUE + "-1", Long.class));
     }
 
     public void testStringToInt() {
-        assertEquals(new Integer(123), converter.convertValue(context, null, null, null, "123", int.class));
+        assertEquals(123, converter.convertValue(context, null, null, null, "123", int.class));
         context.put(ActionContext.LOCALE, Locale.US);
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,23", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", int.class));
+        assertEquals(123, converter.convertValue(context, null, null, null, "123.12", int.class));
+        assertEquals(123, converter.convertValue(context, null, null, null, "123aa", int.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", int.class));
+        assertEquals(1234, converter.convertValue(context, null, null, null, "1,234", int.class));
+        assertEquals(123, converter.convertValue(context, null, null, null, "1,23", int.class));
+        assertEquals(1234, converter.convertValue(context, null, null, null, "1,234.12", int.class));
+        assertEquals(1, converter.convertValue(context, null, null, null, "1.234", int.class));
+        assertEquals(1, converter.convertValue(context, null, null, null, "1.234,12", int.class));
         context.put(ActionContext.LOCALE, Locale.GERMANY);
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,23", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234", int.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", int.class));
+        assertEquals(12312, converter.convertValue(context, null, null, null, "123.12", int.class));
+        assertEquals(123, converter.convertValue(context, null, null, null, "123aa", int.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", int.class));
+        assertEquals(1, converter.convertValue(context, null, null, null, "1,234", int.class));
+        assertEquals(1, converter.convertValue(context, null, null, null, "1,23", int.class));
+        assertEquals(1, converter.convertValue(context, null, null, null, "1,234.12", int.class));
+        assertEquals(1234, converter.convertValue(context, null, null, null, "1.234", int.class));
+        assertEquals(1234, converter.convertValue(context, null, null, null, "1.234,12", int.class));
     }
 
 
     public void testStringToInteger() {
         assertEquals(new Integer(123), converter.convertValue(context, null, null, null, "123", Integer.class));
         context.put(ActionContext.LOCALE, Locale.US);
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "123.12", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "123aa", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", Integer.class));
         assertEquals(new Integer(1234), converter.convertValue(context, null, null, null, "1,234", Integer.class));
         // WRONG: locale separator is wrongly placed
         assertEquals(new Integer(123), converter.convertValue(context, null, null, null, "1,23", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1,234.12", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1.234", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1.234,12", Integer.class));
 
         context.put(ActionContext.LOCALE, Locale.GERMANY);
         // WRONG: locale separator is wrongly placed
         assertEquals(new Integer(12312), converter.convertValue(context, null, null, null, "123.12", Integer.class));
         assertEquals(new Integer(1234), converter.convertValue(context, null, null, null, "1.234", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,23", Integer.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "123aa", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1,234", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1,234.12", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1,23", Integer.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1.234,12", Integer.class));
     }
 
     public void testStringToPrimitiveDouble() {
-        assertEquals(new Double(123), converter.convertValue(context, null, null, null, "123", double.class));
+        assertEquals(123.0, converter.convertValue(context, null, null, null, "123", double.class));
         context.put(ActionContext.LOCALE, Locale.US);
-        assertEquals(new Double(123.12), converter.convertValue(context, null, null, null, "123.12", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,23", double.class));
-        assertEquals(new Double(1.234), converter.convertValue(context, null, null, null, "1.234", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", double.class));
+        assertEquals(123.12, converter.convertValue(context, null, null, null, "123.12", double.class));
+        assertEquals(123.0, converter.convertValue(context, null, null, null, "123aa", double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", double.class));
+        assertEquals(1234.0, converter.convertValue(context, null, null, null, "1,234", double.class));
+        assertEquals(1234.12, converter.convertValue(context, null, null, null, "1,234.12", double.class));
+        assertEquals(123.0, converter.convertValue(context, null, null, null, "1,23", double.class));
+        assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234", double.class));
+        assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234,12", double.class));
 
         context.put(ActionContext.LOCALE, Locale.GERMANY);
-        assertEquals(new Double(123.12), converter.convertValue(context, null, null, null, "123.12", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,23", double.class));
-        assertEquals(new Double(1.234), converter.convertValue(context, null, null, null, "1.234", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", double.class));
+        assertEquals(12312.0, converter.convertValue(context, null, null, null, "123.12", double.class));
+        assertEquals(123.0, converter.convertValue(context, null, null, null, "123aa", double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", double.class));
+        assertEquals(1.234, converter.convertValue(context, null, null, null, "1,234", double.class));
+        assertEquals(1.234, converter.convertValue(context, null, null, null, "1,234.12", double.class));
+        assertEquals(1.23, converter.convertValue(context, null, null, null, "1,23", double.class));
+        assertEquals(1234.0, converter.convertValue(context, null, null, null, "1.234", double.class));
+        assertEquals(1234.12, converter.convertValue(context, null, null, null, "1.234,12", double.class));
     }
 
     public void testStringToDouble() {
         assertEquals(new Double(123), converter.convertValue(context, null, null, null, "123", Double.class));
         context.put(ActionContext.LOCALE, Locale.US);
         assertEquals(new Double(123.12), converter.convertValue(context, null, null, null, "123.12", Double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "123aa", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", Double.class));
         assertEquals(new Double(1234), converter.convertValue(context, null, null, null, "1,234", Double.class));
         assertEquals(new Double(1234.12), converter.convertValue(context, null, null, null, "1,234.12", Double.class));
         // WRONG: locale separator is wrongly placed 
         assertEquals(new Double(123), converter.convertValue(context, null, null, null, "1,23", Double.class));
         assertEquals(new Double(1.234), converter.convertValue(context, null, null, null, "1.234", Double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1.234,12", Double.class));
 
         context.put(ActionContext.LOCALE, Locale.GERMANY);
         // WRONG: locale separator is wrongly placed
         assertEquals(new Double(12312), converter.convertValue(context, null, null, null, "123.12", Double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "123aa", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "aa123", Double.class));
         assertEquals(new Double(1.234), converter.convertValue(context, null, null, null, "1,234", Double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", Double.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "1,234.12", Double.class));
         assertEquals(new Double(1.23), converter.convertValue(context, null, null, null, "1,23", Double.class));
         assertEquals(new Double(1234), converter.convertValue(context, null, null, null, "1.234", Double.class));
         assertEquals(new Double(1234.12), converter.convertValue(context, null, null, null, "1.234,12", Double.class));
@@ -562,8 +574,8 @@ public class XWorkConverterTest extends XWorkTestCase {
     
     public void testStringToEnum() {
         assertEquals(FurColor.BLACK, converter.convertValue(context, null, null, null, "BLACK", FurColor.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "black", FurColor.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "red", FurColor.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "black", FurColor.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, null, null, null, "red", FurColor.class));
     }
 
     // Testing for null result on non-primitive Number types supplied as empty String or 
@@ -614,9 +626,9 @@ public class XWorkConverterTest extends XWorkTestCase {
         Class clazz2 = (Class) converter.convertValue(context, "com.opensymphony.xwork2.util.Bar", Class.class);
         assertEquals(Bar.class.getName(), clazz2.getName());
 
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, "com.opensymphony.xwork2.util.IDoNotExist", Class.class));
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, "com.opensymphony.xwork2.util.IDoNotExist", Class.class));
 
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, new Bar(), Class.class)); // only supports string values
+        assertEquals(TypeConverter.NO_CONVERSION_POSSIBLE, converter.convertValue(context, new Bar(), Class.class)); // only supports string values
     }
 
     public void testConvertBoolean() {

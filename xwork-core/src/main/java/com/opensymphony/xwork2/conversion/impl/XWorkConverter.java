@@ -343,7 +343,7 @@ public class XWorkConverter extends DefaultTypeConverter {
             try {
                 if (LOG.isDebugEnabled())
                     LOG.debug("falling back to Ognl's default type conversion");
-                return super.convertValue(value, toClass);
+                return super.convertValue(null, value, toClass);
             } catch (Exception e) {
                 if (LOG.isDebugEnabled())
                     LOG.debug("unable to convert value using type converter [#0]", e, super.getClass().getName());

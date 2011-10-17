@@ -21,11 +21,11 @@
 
 package org.apache.struts2.util;
 
+import junit.framework.TestCase;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 
 /**

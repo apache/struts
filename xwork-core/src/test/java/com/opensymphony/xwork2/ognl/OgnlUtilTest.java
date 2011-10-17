@@ -286,7 +286,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         props.put("aLong", "123a");
 
         ognlUtil.setProperties(props, foo, context);
-        assertEquals(0, foo.getALong());
+        assertEquals(123L, foo.getALong());
     }
 
     /**

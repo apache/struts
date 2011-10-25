@@ -21,12 +21,12 @@
 
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-
-import org.apache.struts2.TestAction;
-import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 
 /**
@@ -43,8 +43,8 @@ public class CheckboxListTest extends AbstractUITagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
-    protected Map initializedGenericTagTestProperties() {
-        Map result = super.initializedGenericTagTestProperties();
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = super.initializedGenericTagTestProperties();
         new PropertyHolder("value", "hello").addToMap(result);
         return result;
     }
@@ -63,7 +63,7 @@ public class CheckboxListTest extends AbstractUITagTest {
 
     private void prepareTagGeneric(CheckboxListTag tag) {
         TestAction testAction = (TestAction) action;
-        Collection collection = new ArrayList(2);
+        Collection<String> collection = new ArrayList<String>(2);
         collection.add("hello");
         collection.add("foo");
         testAction.setCollection(collection);
@@ -79,7 +79,7 @@ public class CheckboxListTest extends AbstractUITagTest {
 
     public void testMultiple() throws Exception {
         TestAction testAction = (TestAction) action;
-        Collection collection = new ArrayList(2);
+        Collection<String> collection = new ArrayList<String>(2);
         collection.add("hello");
         collection.add("foo");
         testAction.setCollection(collection);
@@ -105,7 +105,7 @@ public class CheckboxListTest extends AbstractUITagTest {
 
     public void testMultipleWithDisabledOn() throws Exception {
         TestAction testAction = (TestAction) action;
-        Collection collection = new ArrayList(2);
+        Collection<String> collection = new ArrayList<String>(2);
         collection.add("hello");
         collection.add("foo");
         testAction.setCollection(collection);

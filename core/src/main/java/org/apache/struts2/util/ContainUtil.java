@@ -22,7 +22,6 @@
 package org.apache.struts2.util;
 
 import java.lang.reflect.Array;
-import java.util.Iterator;
 import java.util.Map;
 
 
@@ -81,13 +80,11 @@ public class ContainUtil {
                 return true;
             }
         } if (obj1 instanceof Iterable) {
-        	Iterator iter = ((Iterable) obj1).iterator();
-        	while(iter.hasNext()) {
-        		Object value = iter.next();
-        		if (obj2.equals(value) || obj2.toString().equals(value)) {
-        			return true;
-        		}
-        	}
+            for (Object value : ((Iterable) obj1)) {
+                if (obj2.equals(value) || obj2.toString().equals(value)) {
+                    return true;
+                }
+            }
         } else if (obj1.getClass().isArray()) {
             for (int i = 0; i < Array.getLength(obj1); i++) {
                 Object value = null;

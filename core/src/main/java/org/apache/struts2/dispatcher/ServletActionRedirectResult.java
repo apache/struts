@@ -56,17 +56,22 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  * 
  * <ul>
  * 
- * <li><b>actionName (default)</b> - the name of the action that will be
- * redirect to</li>
+ * <li><b>actionName (default)</b> - The name of the action that will be
+ * redirected to.</li>
  * 
- * <li><b>namespace</b> - used to determine which namespace the action is in
- * that we're redirecting to . If namespace is null, this defaults to the
- * current namespace</li>
+ * <li><b>namespace</b> - Used to determine which namespace the action is in
+ * that we're redirecting to.  If namespace is null, the default will be the
+ * current namespace.</li>
  * 
- * <li><b>suppressEmptyParameters</b> - optional boolean (defaults to false) that
+ * <li><b>suppressEmptyParameters</b> - Optional boolean (defaults to false) that
  * can prevent parameters with no values from being included in the redirect
  * URL.</li>
- * 
+ *
+ * <li><b>parse</b> - Boolean, true by default.  If set to false, the actionName 
+ * param will not be parsed for Ognl expressions.</li>
+ *
+ * <li><b>anchor</b> - Optional.  Also known as "fragment" or colloquially as 
+ * "hash".  You can specify an anchor for a result.</li>
  * </ul>
  * 
  * <!-- END SNIPPET: params -->
@@ -98,10 +103,10 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  * &lt;/package&gt;
  * 
  * &lt;package name="passingRequestParameters" extends="struts-default" namespace="/passingRequestParameters"&gt;
- *    &lt;-- Pass parameters (reportType, width and height) --&gt;
+ *    &lt;!-- Pass parameters (reportType, width and height) --&gt;
  *    &lt;!--
  *    The redirectAction url generated will be :
- *    /genReport/generateReport.action?reportType=pie&width=100&height=100
+ *    /genReport/generateReport.action?reportType=pie&width=100&height=100#summary
  *    --&gt;
  *    &lt;action name="gatherReportInfo" class="..."&gt;
  *       &lt;result name="showReportResult" type="redirectAction"&gt;
@@ -112,6 +117,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  *          &lt;param name="height"&gt;100&lt;/param&gt;
  *          &lt;param name="empty"&gt;&lt;/param&gt;
  *          &lt;param name="suppressEmptyParameters"&gt;true&lt;/param&gt;
+ *          &lt;param name="anchor"&gt;summary&lt;/param&gt;
  *       &lt;/result&gt;
  *    &lt;/action&gt;
  * &lt;/package&gt;

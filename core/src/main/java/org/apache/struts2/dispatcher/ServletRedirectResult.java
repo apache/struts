@@ -72,8 +72,8 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
  * 
- * <li><b>anchor</b> - optional, you can specify an anchor for result.</li>
- * 
+ * <li><b>anchor</b> - Optional.  Also known as "fragment" or colloquially as 
+ * "hash".  You can specify an anchor for a result.</li>
  * </ul>
  * 
  * <p>
@@ -86,6 +86,10 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  * 
  * <pre>
  * <!-- START SNIPPET: example -->
+ * &lt;!--
+ *   The redirect URL generated will be:
+ *   /foo.jsp#FRAGMENT
+ * --&gt;
  * &lt;result name="success" type="redirect"&gt;
  *   &lt;param name="location"&gt;foo.jsp&lt;/param&gt;
  *   &lt;param name="parse"&gt;false&lt;/param&gt;

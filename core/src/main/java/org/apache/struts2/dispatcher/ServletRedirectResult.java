@@ -21,23 +21,6 @@
 
 package org.apache.struts2.dispatcher;
 
-import static javax.servlet.http.HttpServletResponse.SC_FOUND;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.views.util.UrlHelper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
@@ -46,6 +29,17 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.views.util.UrlHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
+
+import static javax.servlet.http.HttpServletResponse.SC_FOUND;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -221,17 +215,16 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(invocation.getResultCode());
             if (resultConfig != null)
             {
-                Map resultConfigParams = resultConfig.getParams();
-                for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext();)
-                {
-                    Map.Entry e = (Map.Entry) i.next();
+                Map<String, String> resultConfigParams = resultConfig.getParams();
 
+                for (Map.Entry<String, String> e : resultConfigParams.entrySet())
+                {
                     if (!getProhibitedResultParams().contains(e.getKey()))
                     {
-                        String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue().toString(), invocation);
+                        String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue(), invocation);
                         if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0)))
                         {
-                            requestParameters.put(e.getKey().toString(), potentialValue);
+                            requestParameters.put(e.getKey(), potentialValue);
                         }
                     }
                 }
@@ -259,9 +252,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     protected List<String> getProhibitedResultParams()
     {
-        return Arrays.asList(new String[] {
-                DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", "prependServletContext", "suppressEmptyParameters", "anchor"
-        });
+        return Arrays.asList(DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", "prependServletContext", "suppressEmptyParameters", "anchor");
     }
 
     /**

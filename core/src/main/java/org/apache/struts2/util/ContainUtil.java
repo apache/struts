@@ -87,8 +87,7 @@ public class ContainUtil {
             }
         } else if (obj1.getClass().isArray()) {
             for (int i = 0; i < Array.getLength(obj1); i++) {
-                Object value = null;
-                value = Array.get(obj1, i);
+                Object value = Array.get(obj1, i);
 
                 if (obj2.equals(value)) {
                     //log.debug("obj1 is an array and contains obj2");

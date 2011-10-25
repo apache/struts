@@ -135,8 +135,6 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     /** The default parameter */
     public static final String DEFAULT_PARAM = "actionName";
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServletActionRedirectResult.class);
-
     protected String actionName;
     protected String namespace;
     protected String method;
@@ -229,8 +227,6 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
 
     protected List<String> getProhibitedResultParams()
     {
-        return Arrays.asList(new String[] {
-                DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", "prependServletContext", "suppressEmptyParameters", "anchor"
-        });
+        return Arrays.asList(DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", "prependServletContext", "suppressEmptyParameters", "anchor");
     }
 }

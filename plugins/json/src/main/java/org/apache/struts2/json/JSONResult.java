@@ -35,11 +35,9 @@ import org.apache.struts2.json.smd.SMDGenerator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -177,11 +175,10 @@ public class JSONResult implements Result {
     }
 
     private Object readRootObject(ActionInvocation invocation) {
-        Object root = findRootObject(invocation);
         if (enableSMD) {
-            return new SMDGenerator(root, excludeProperties, ignoreInterfaces).generate(invocation);
+            return buildSMDObject(invocation);
         }
-        return root;
+        return findRootObject(invocation);
     }
 
     private Object findRootObject(ActionInvocation invocation) {
@@ -215,7 +212,7 @@ public class JSONResult implements Result {
 
     @SuppressWarnings("unchecked")
     protected org.apache.struts2.json.smd.SMD buildSMDObject(ActionInvocation invocation) {
-        return new SMDGenerator(readRootObject(invocation), excludeProperties, ignoreInterfaces).generate(invocation);
+        return new SMDGenerator(findRootObject(invocation), excludeProperties, ignoreInterfaces).generate(invocation);
     }
 
     /**

@@ -19,12 +19,14 @@ package com.opensymphony.xwork2.validator;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -217,13 +219,18 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     protected static String buildValidatorKey(Class clazz) {
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
         ActionProxy proxy = invocation.getProxy();
+        ActionConfig config = proxy.getConfig();
 
         //the key needs to use the name of the action from the config file,
         //instead of the url, so wild card actions will have the same validator
         //see WW-2996
         StringBuilder sb = new StringBuilder(clazz.getName());
         sb.append("/");
-        sb.append(proxy.getConfig().getName());
+        if (StringUtils.isNotBlank(config.getPackageName())) {
+            sb.append(config.getPackageName());
+            sb.append("/");
+        }
+        sb.append(config.getName());
         sb.append("|");
         sb.append(proxy.getMethod());
         return sb.toString();

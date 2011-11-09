@@ -23,10 +23,10 @@ import com.opensymphony.xwork2.test.SimpleAnnotationAction2;
 import com.opensymphony.xwork2.test.SimpleAnnotationAction3;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.validator.validators.*;
+import org.easymock.EasyMock;
 
 import java.util.List;
 
-import org.easymock.EasyMock;
 
 
 /**
@@ -47,7 +47,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
         super.setUp();
         annotationActionValidatorManager = (AnnotationActionValidatorManager) container.getInstance(ActionValidatorManager.class);
 
-        ActionConfig config = new ActionConfig.Builder("", "name", "").build();
+        ActionConfig config = new ActionConfig.Builder("packageName", "name", "").build();
         ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
         ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
 
@@ -71,7 +71,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
 
     public void testBuildValidatorKey() {
         String validatorKey = AnnotationActionValidatorManager.buildValidatorKey(SimpleAnnotationAction.class);
-        assertEquals(SimpleAnnotationAction.class.getName() + "/name|execute", validatorKey);
+        assertEquals(SimpleAnnotationAction.class.getName() + "/packageName/name|execute", validatorKey);
     }
 
     public void testBuildsValidatorsForAlias() {

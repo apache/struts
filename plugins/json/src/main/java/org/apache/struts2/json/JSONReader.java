@@ -40,14 +40,14 @@ class JSONReader {
     private static Map<Character, Character> escapes = new HashMap<Character, Character>();
 
     static {
-        escapes.put(new Character('"'), new Character('"'));
-        escapes.put(new Character('\\'), new Character('\\'));
-        escapes.put(new Character('/'), new Character('/'));
-        escapes.put(new Character('b'), new Character('\b'));
-        escapes.put(new Character('f'), new Character('\f'));
-        escapes.put(new Character('n'), new Character('\n'));
-        escapes.put(new Character('r'), new Character('\r'));
-        escapes.put(new Character('t'), new Character('\t'));
+        escapes.put('"', '"');
+        escapes.put('\\', '\\');
+        escapes.put('/', '/');
+        escapes.put('b', '\b');
+        escapes.put('f', '\f');
+        escapes.put('n', '\n');
+        escapes.put('r', '\r');
+        escapes.put('t', '\t');
     }
 
     private CharacterIterator it;
@@ -75,7 +75,7 @@ class JSONReader {
     }
 
     private Object read() throws JSONException {
-        Object ret = null;
+        Object ret;
 
         this.skipWhiteSpace();
 
@@ -198,8 +198,8 @@ class JSONReader {
             this.addDigits();
         }
 
-        return (this.buf.indexOf(".") >= 0) ? (Object) Double.parseDouble(this.buf.toString())
-                : (Object) Long.parseLong(this.buf.toString());
+        return (this.buf.indexOf(".") >= 0) ? Double.parseDouble(this.buf.toString()) :
+                Long.parseLong(this.buf.toString());
     }
 
     private Object string(char quote) {
@@ -212,10 +212,10 @@ class JSONReader {
                 if (this.c == 'u') {
                     this.add(this.unicode());
                 } else {
-                    Object value = escapes.get(new Character(this.c));
+                    Object value = escapes.get(this.c);
 
                     if (value != null) {
-                        this.add(((Character) value).charValue());
+                        this.add((Character) value);
                     }
                 }
             } else {

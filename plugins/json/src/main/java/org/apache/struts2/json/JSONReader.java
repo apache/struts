@@ -198,8 +198,8 @@ class JSONReader {
             this.addDigits();
         }
 
-        return (this.buf.indexOf(".") >= 0) ? Double.parseDouble(this.buf.toString()) :
-                Long.parseLong(this.buf.toString());
+        return (this.buf.indexOf(".") >= 0) ? (Object) Double.parseDouble(this.buf.toString())
+                : (Object) Long.parseLong(this.buf.toString());
     }
 
     private Object string(char quote) {

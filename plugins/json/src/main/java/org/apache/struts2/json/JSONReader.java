@@ -176,6 +176,7 @@ class JSONReader {
 
     private Object number() {
         this.buf.setLength(0);
+        boolean toDouble = false;
 
         if (this.c == '-') {
             this.add();
@@ -184,11 +185,13 @@ class JSONReader {
         this.addDigits();
 
         if (this.c == '.') {
+            toDouble = true;
             this.add();
             this.addDigits();
         }
 
         if ((this.c == 'e') || (this.c == 'E')) {
+            toDouble = true;
             this.add();
 
             if ((this.c == '+') || (this.c == '-')) {
@@ -198,8 +201,11 @@ class JSONReader {
             this.addDigits();
         }
 
-        return (this.buf.indexOf(".") >= 0) ? (Object) Double.parseDouble(this.buf.toString())
-                : (Object) Long.parseLong(this.buf.toString());
+        if (toDouble) {
+            return Double.parseDouble(this.buf.toString());
+        } else {
+            return Long.parseLong(this.buf.toString());
+        }
     }
 
     private Object string(char quote) {

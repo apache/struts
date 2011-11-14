@@ -20,6 +20,7 @@
 package org.apache.struts2.cdi;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -53,6 +54,8 @@ public class CdiObjectFactory extends ObjectFactory {
     protected CreationalContext ctx;
 
     Map<Class<?>, InjectionTarget<?>> injectionTargetCache = new ConcurrentHashMap<Class<?>, InjectionTarget<?>>();
+
+    private boolean useInternalCache = false;
 
     public CdiObjectFactory() {
         super();
@@ -119,11 +122,15 @@ public class CdiObjectFactory extends ObjectFactory {
      * @return if found in cache, an existing instance. A new instance otherwise.
      */
     protected InjectionTarget<?> getInjectionTarget(Class<?> clazz) {
-        InjectionTarget<?> result;
-        result = injectionTargetCache.get(clazz);
+        InjectionTarget<?> result = null;
+        if (useInternalCache) {
+            result = injectionTargetCache.get(clazz);
+        }
         if (result == null) {
             result = beanManager.createInjectionTarget(beanManager.createAnnotatedType(clazz));
-            injectionTargetCache.put(clazz, result);
+            if (useInternalCache) {
+                injectionTargetCache.put(clazz, result);
+            }
         }
 
         return result;
@@ -139,4 +146,15 @@ public class CdiObjectFactory extends ObjectFactory {
     protected CreationalContext buildNonContextualCreationalContext(BeanManager beanManager) {
         return beanManager != null ? beanManager.createCreationalContext(null) : null;
     }
+
+    /**
+     * Disables use of internal cache for InjectionTargets
+     *
+     * @param useInternalCache
+     */
+    @Inject(value = "struts.cdi.useInternalCache", required = false)
+    public void setUseInternalCache(String useInternalCache) {
+        this.useInternalCache = "true".equalsIgnoreCase(useInternalCache);
+    }
+
 }

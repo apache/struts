@@ -31,7 +31,6 @@ import org.apache.struts2.rest.handler.ContentTypeHandler;
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 
 /**
  * Uses the content handler to apply the request body to the action
@@ -60,9 +59,9 @@ public class ContentTypeInterceptor implements Interceptor {
         }
         
         if (request.getContentLength() > 0) {
-            InputStream is = (InputStream) request.getInputStream();
+            InputStream is = request.getInputStream();
             InputStreamReader reader = new InputStreamReader(is);
-            handler.toObject((Reader) reader, target);
+            handler.toObject(reader, target);
         }
         return invocation.invoke();
     }

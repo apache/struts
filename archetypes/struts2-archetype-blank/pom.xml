@@ -21,6 +21,18 @@
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/pom.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
     <profiles>
         <profile>
             <id>release</id>

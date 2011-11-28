@@ -1,21 +1,5 @@
 package org.apache.struts2.rest;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import junit.framework.TestCase;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.HttpHeaderResult;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
 import com.opensymphony.xwork2.ModelDriven;
@@ -27,6 +11,19 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import junit.framework.TestCase;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.HttpHeaderResult;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 
 public class RestActionInvocationTest extends TestCase {
 
@@ -121,8 +118,18 @@ public class RestActionInvocationTest extends TestCase {
 		request.setMethod("DELETE");
 		restActionInvocation.selectTarget();
 		assertEquals(null, restActionInvocation.target);
-		
-	}
+
+        // disable content restriction to GET only
+        model = new ArrayList<String>();
+        model.add("Item1");
+        restAction.model = model;
+
+        request.setMethod("POST");
+        restActionInvocation.setRestrictToGet("false");
+        restActionInvocation.selectTarget();
+        assertEquals(model, restActionInvocation.target);
+        assertEquals(model.get(0), "Item1");
+    }
 
 	/**
 	 * Test the not modified status code.
@@ -187,7 +194,7 @@ public class RestActionInvocationTest extends TestCase {
 		restAction.model = model;
 		request.setMethod("GET");
 		restActionInvocation.setResultCode("index");
-		
+
 		try {
 			restActionInvocation.processResult();
 

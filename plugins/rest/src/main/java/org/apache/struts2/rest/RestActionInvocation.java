@@ -21,33 +21,29 @@
 
 package org.apache.struts2.rest;
 
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpHeaderResult;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.struts2.rest.handler.HtmlHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -64,6 +60,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
     private ContentTypeHandlerManager handlerSelector;
     private boolean logger;
     private String defaultErrorResultName;
+    private boolean restrictToGet = true;
 
     protected HttpHeaders httpHeaders;
     protected Object target;
@@ -82,6 +79,17 @@ public class RestActionInvocation extends DefaultActionInvocation {
     @Inject("struts.rest.defaultErrorResultName")
     public void setDefaultErrorResultName(String value) {
         defaultErrorResultName = value;
+    }
+
+    /**
+     * If set to true (be default) blocks returning content from any other methods than GET,
+     * if set to false, the content can be returned for any kind of method
+     * 
+     * @param value true or false
+     */
+    @Inject(value = "struts.rest.content.restrictToGET", required = false)
+    public void setRestrictToGet(String value) {
+        restrictToGet = "true".equalsIgnoreCase(value);
     }
 
     @Inject
@@ -345,10 +353,17 @@ public class RestActionInvocation extends DefaultActionInvocation {
             target = action;
         }
 
-        // don't return any content for PUT, DELETE, and POST where there are no errors
-        if (!hasErrors && !"get".equalsIgnoreCase(ServletActionContext.getRequest().getMethod())) {
+        if (shouldRestrictToGET()) {
             target = null;
         }
+    }
+
+    // don't return any content for PUT, DELETE, and POST where there are no errors
+    // or backward compatible restrictToGET flag is set to true
+    private boolean shouldRestrictToGET() {
+        return !hasErrors
+                && !"get".equalsIgnoreCase(ServletActionContext.getRequest().getMethod())
+                && restrictToGet;
     }
 
     private void disableCatching(HttpServletResponse response) {

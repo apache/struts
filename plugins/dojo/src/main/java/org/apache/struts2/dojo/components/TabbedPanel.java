@@ -21,17 +21,15 @@
 
 package org.apache.struts2.dojo.components;
 
-import java.util.Random;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.ClosingUIBean;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Random;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -48,35 +46,37 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p/>
  * 
  * <!-- START SNIPPET: example1 -->
- * &lt;s:tabbedpanel id="test" &gt;
- *    &lt;s:div id="one" label="one" theme="ajax" labelposition="top" &gt;
+ * &lt;sx:head /&gt;
+ * &lt;sx:tabbedpanel id="test" &gt;
+ *    &lt;sx:div id="one" label="one" theme="ajax" labelposition="top" &gt;
  *        This is the first pane&lt;br/&gt;
  *        &lt;s:form&gt;
  *            &lt;s:textfield name="tt" label="Test Text"/&gt;  &lt;br/&gt;
  *            &lt;s:textfield name="tt2" label="Test Text2"/&gt;
  *        &lt;/s:form&gt;
- *    &lt;/s:div&gt;
- *    &lt;s:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
+ *    &lt;/sx:div&gt;
+ *    &lt;sx:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
  *        This is the remote tab
- *    &lt;/s:div&gt;
- * &lt;/s:tabbedpanel&gt;
+ *    &lt;/sx:div&gt;
+ * &lt;/sx:tabbedpanel&gt;
  * <!-- END SNIPPET: example1 -->
  * 
  * <!-- START SNIPPET: example2 -->
+ * &lt;sx:head /&gt;
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/beforeSelect", function(event, tab, tabContainer){
  *     event.cancel = true;
  * });
  * &lt;/script&gt;
  * 
- * &lt;s:tabbedpanel id="test" beforeSelectTabNotifyTopics="/beforeSelect"&gt;
- *    &lt;s:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
+ * &lt;sx:tabbedpanel id="test" beforeSelectTabNotifyTopics="/beforeSelect"&gt;
+ *    &lt;sx:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
  *        One Tab
- *    &lt;/s:div&gt;
- *    &lt;s:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
+ *    &lt;/sx:div&gt;
+ *    &lt;sx:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
  *        Another tab
- *    &lt;/s:div&gt;
- * &lt;/s:tabbedpanel&gt;
+ *    &lt;/sx:div&gt;
+ * &lt;/sx:tabbedpanel&gt;
  * <!-- END SNIPPET: example2 -->
  */
 @StrutsTag(name="tabbedpanel", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TabbedPanelTag", description="Render a tabbedPanel widget.")

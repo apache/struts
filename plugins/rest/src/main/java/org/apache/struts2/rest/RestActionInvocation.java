@@ -82,7 +82,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
     }
 
     /**
-     * If set to true (be default) blocks returning content from any other methods than GET,
+     * If set to true (by default) blocks returning content from any other methods than GET,
      * if set to false, the content can be returned for any kind of method
      * 
      * @param value true or false

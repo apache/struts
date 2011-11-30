@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.test;
+package org.apache.struts2.xwork2.test;
 
-import com.opensymphony.xwork2.conversion.annotations.Conversion;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
+import org.apache.struts2.xwork2.conversion.annotations.Conversion;
+import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
+import org.apache.struts2.xwork2.util.Bar;
+import org.apache.struts2.xwork2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.xwork2.validator.annotations.RequiredStringValidator;
+import org.apache.struts2.xwork2.validator.annotations.Validation;
 
 
 /**
@@ -36,7 +36,7 @@ public interface AnnotationDataAware {
     void setBarObj(Bar b);
 
     @TypeConversion(
-            converter = "com.opensymphony.xwork2.conversion.impl.FooBarConverter"
+            converter = "org.apache.struts2.xwork2.conversion.impl.FooBarConverter"
     )
     Bar getBarObj();
 

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.test;
+package org.apache.struts2.xwork2.test;
 
-import com.opensymphony.xwork2.AnnotatedTestBean;
-import com.opensymphony.xwork2.conversion.annotations.Conversion;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.util.Cat;
+import org.apache.struts2.xwork2.AnnotatedTestBean;
+import org.apache.struts2.xwork2.conversion.annotations.Conversion;
+import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
+import org.apache.struts2.xwork2.util.Bar;
+import org.apache.struts2.xwork2.util.Cat;
 
 
 /**
@@ -57,7 +57,7 @@ public class AnnotationTestBean2 extends AnnotatedTestBean implements Annotation
     }
 
     @TypeConversion(
-            key = "cat", converter = "com.opensymphony.xwork2.conversion.impl.FooBarConverter"
+            key = "cat", converter = "org.apache.struts2.xwork2.conversion.impl.FooBarConverter"
     )
     public void setCat(Cat cat) {
         this.cat = cat;

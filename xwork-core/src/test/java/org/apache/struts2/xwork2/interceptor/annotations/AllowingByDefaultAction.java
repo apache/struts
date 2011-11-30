@@ -1,6 +1,6 @@
-package com.opensymphony.xwork2.interceptor.annotations;
+package org.apache.struts2.xwork2.interceptor.annotations;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  * @author martin.gilday

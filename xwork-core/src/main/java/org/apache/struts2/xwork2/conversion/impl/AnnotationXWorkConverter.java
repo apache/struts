@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.xwork2.conversion.impl;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -84,7 +84,7 @@ package com.opensymphony.xwork2.conversion.impl;
  *
  * @author <a href="mailto:plightbo@gmail.com">Pat Lightbody</a>
  * @author Rainer Hermanns
- * @see com.opensymphony.xwork2.conversion.impl.XWorkConverter
+ * @see org.apache.struts2.xwork2.conversion.impl.XWorkConverter
  * @deprecated Since XWork 2.0.4, the implementation of XWorkConverter handles the processing of annotations.
  */
 @Deprecated public class AnnotationXWorkConverter extends XWorkConverter {

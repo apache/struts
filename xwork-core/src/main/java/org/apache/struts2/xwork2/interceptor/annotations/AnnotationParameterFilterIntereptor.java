@@ -1,13 +1,13 @@
-package com.opensymphony.xwork2.interceptor.annotations;
+package org.apache.struts2.xwork2.interceptor.annotations;
 
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.interceptor.ParameterFilterInterceptor;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
-import com.opensymphony.xwork2.util.AnnotationUtils;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.interceptor.ParameterFilterInterceptor;
+import org.apache.struts2.xwork2.interceptor.ParametersInterceptor;
+import org.apache.struts2.xwork2.util.AnnotationUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.Map;
 public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
 
     /* (non-Javadoc)
-      * @see com.opensymphony.xwork2.interceptor.AbstractInterceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+      * @see org.apache.struts2.xwork2.interceptor.AbstractInterceptor#intercept(org.apache.struts2.xwork2.ActionInvocation)
       */
     @Override public String intercept(ActionInvocation invocation) throws Exception {
 

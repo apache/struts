@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util;
+package org.apache.struts2.xwork2.util;
 
-import com.opensymphony.xwork2.conversion.annotations.Conversion;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
+import org.apache.struts2.xwork2.conversion.annotations.Conversion;
+import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class AnnotatedCat {
     }
 
     @TypeConversion(
-            key = "kittens", converter = "com.opensymphony.xwork2.util.Cat"
+            key = "kittens", converter = "org.apache.struts2.xwork2.util.Cat"
     )
     public List getKittens() {
         return kittens;

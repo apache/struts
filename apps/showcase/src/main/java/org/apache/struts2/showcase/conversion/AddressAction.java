@@ -23,7 +23,7 @@ package org.apache.struts2.showcase.conversion;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  * @version $Date$ $Id$

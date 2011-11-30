@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.interceptor.annotations;
+package org.apache.struts2.xwork2.interceptor.annotations;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.AnnotationUtils;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.XWorkException;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.interceptor.PreResultListener;
+import org.apache.struts2.xwork2.util.AnnotationUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
     /**
      * Discovers annotated methods on the action and calls them according to the workflow
      *
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.xwork2.interceptor.Interceptor#intercept(org.apache.struts2.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
         final Object action = invocation.getAction();
@@ -166,7 +166,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
     /**
      * Invokes any &#64;BeforeResult annotated methods
      *
-     * @see com.opensymphony.xwork2.interceptor.PreResultListener#beforeResult(com.opensymphony.xwork2.ActionInvocation,String)
+     * @see org.apache.struts2.xwork2.interceptor.PreResultListener#beforeResult(org.apache.struts2.xwork2.ActionInvocation,String)
      */
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         Object action = invocation.getAction();

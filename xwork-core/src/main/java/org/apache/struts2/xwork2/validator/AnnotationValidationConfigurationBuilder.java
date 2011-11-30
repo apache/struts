@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.validator.annotations.*;
+import org.apache.struts2.xwork2.validator.annotations.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

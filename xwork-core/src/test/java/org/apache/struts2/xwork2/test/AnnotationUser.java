@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.test;
+package org.apache.struts2.xwork2.test;
 
-import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import com.opensymphony.xwork2.util.KeyProperty;
-import com.opensymphony.xwork2.validator.annotations.*;
+import org.apache.struts2.xwork2.conversion.annotations.ConversionRule;
+import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
+import org.apache.struts2.xwork2.util.KeyProperty;
+import org.apache.struts2.xwork2.validator.annotations.*;
 
 import java.util.Collection;
 import java.util.List;

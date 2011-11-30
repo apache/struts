@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.xwork2.interceptor;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.xwork2.mock.MockActionProxy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ import java.util.Map;
  * stack.getContext().putAll(params);
  * <p/>
  * e.g.
- * <action name="aliasTest" class="com.opensymphony.xwork2.SimpleAction">
+ * <action name="aliasTest" class="org.apache.struts2.xwork2.SimpleAction">
  *    <param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz" }</param>
  *    <interceptor-ref name="defaultStack"/>
  *    <interceptor-ref name="alias"/>

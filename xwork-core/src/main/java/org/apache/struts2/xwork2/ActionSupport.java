@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -167,7 +167,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      * <p/>
      * Subclasses should override this method to provide their business logic.
      * <p/>
-     * See also {@link com.opensymphony.xwork2.Action#execute()}.
+     * See also {@link org.apache.struts2.xwork2.Action#execute()}.
      *
      * @return returns {@link #SUCCESS}
      * @throws Exception can be thrown by subclasses.
@@ -263,9 +263,9 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
     }
 
     /**
-     * If called first time it will create {@link com.opensymphony.xwork2.TextProviderFactory},
-     * inject dependency (if {@link com.opensymphony.xwork2.inject.Container} is accesible) into in,
-     * then will create new {@link com.opensymphony.xwork2.TextProvider} and store it in a field
+     * If called first time it will create {@link org.apache.struts2.xwork2.TextProviderFactory},
+     * inject dependency (if {@link org.apache.struts2.xwork2.inject.Container} is accesible) into in,
+     * then will create new {@link org.apache.struts2.xwork2.TextProvider} and store it in a field
      * for future references and at the returns reference to that field
      *
      * @return reference to field with TextProvider

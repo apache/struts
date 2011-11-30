@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.test.AnnotationDataAware2;
-import com.opensymphony.xwork2.test.AnnotationUser;
-import com.opensymphony.xwork2.test.SimpleAnnotationAction2;
-import com.opensymphony.xwork2.test.SimpleAnnotationAction3;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.validator.validators.*;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.test.AnnotationDataAware2;
+import org.apache.struts2.xwork2.test.AnnotationUser;
+import org.apache.struts2.xwork2.test.SimpleAnnotationAction2;
+import org.apache.struts2.xwork2.test.SimpleAnnotationAction3;
+import org.apache.struts2.xwork2.util.FileManager;
+import org.apache.struts2.xwork2.validator.validators.*;
 import org.easymock.EasyMock;
 
 import java.util.List;

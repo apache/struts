@@ -20,9 +20,9 @@
  */
 package mailreader2;
 
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.Action;
 import java.util.Map;
 import org.apache.struts.apps.mailreader.dao.User;
 

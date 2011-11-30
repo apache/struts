@@ -1,12 +1,12 @@
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStackFactory;
+import org.apache.struts2.xwork2.validator.validators.RequiredFieldValidator;
+import org.apache.struts2.xwork2.validator.validators.RequiredStringValidator;
+import org.apache.struts2.xwork2.validator.validators.VisitorFieldValidator;
 
 import java.util.ArrayList;
 import java.util.Collections;

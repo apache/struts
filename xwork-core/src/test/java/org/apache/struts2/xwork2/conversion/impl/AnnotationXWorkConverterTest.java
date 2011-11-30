@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.test.AnnotationUser;
-import com.opensymphony.xwork2.test.ModelDrivenAnnotationAction2;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.test.AnnotationUser;
+import org.apache.struts2.xwork2.test.ModelDrivenAnnotationAction2;
+import org.apache.struts2.xwork2.util.Bar;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 

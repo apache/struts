@@ -1,0 +1,18 @@
+<body>
+
+<p>
+Configuration entity classes.  All objects ending in "Config" are immutable and must be constructed using
+their inner "Builder" class.  For example, a PackageConfig object can be created via:
+</p>
+<pre>
+    PackageConfig config = new PackageConfig.Builder("myPackage").build();
+</pre>
+<p>
+    The methods on the builder object are chainable to support constructions like this:
+</p>
+<pre>
+    ResultConfig config = new ResultConfig.Builder("success", "myapp.MyResult")
+        .addParam("location", "/foo.jsp")
+        .build();
+</pre>
+</body>

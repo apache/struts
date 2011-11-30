@@ -26,13 +26,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.Dispatcher;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.interceptor.ScopedModelDriven;
 
 /**
  *  Calls the reset() method on the ActionForm, if it exists.

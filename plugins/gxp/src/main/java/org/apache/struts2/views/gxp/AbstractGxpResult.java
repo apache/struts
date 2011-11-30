@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.views.gxp;
 
-import com.opensymphony.xwork2.Result;
+import org.apache.struts2.xwork2.Result;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +52,7 @@ import java.util.Locale;
  *     &lt;/result-types>
  * </pre>
  * This means that Struts 2 will attempt to instantiate the {@code Interface}
- * using the {@link com.opensymphony.xwork2.ObjectFactory}. If
+ * using the {@link org.apache.struts2.xwork2.ObjectFactory}. If
  * {@link com.google.webwork.GuiceWebWorkIntegrationModule} is installed, or
  * {@link com.google.webwork.ContainerObjectFactory} is set as the static
  * {@code ObjectFactory} instance, then Guice will be used to instantiate the

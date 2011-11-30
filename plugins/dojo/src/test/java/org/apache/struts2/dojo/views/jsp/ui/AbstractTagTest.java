@@ -39,10 +39,10 @@ import org.apache.struts2.dojo.TestAction;
 import org.apache.struts2.dojo.components.Head;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**

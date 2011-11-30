@@ -26,9 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.ActionMessage;
 import org.apache.struts2.components.Component;
-import org.apache.struts2.components.ActionError;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 /**
  * ActionMessage Tag.

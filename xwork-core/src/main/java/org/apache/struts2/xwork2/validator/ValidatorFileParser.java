@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
 import java.io.InputStream;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.Map;
  * @author Rob Harrop
  * @author Rene Gielen
  *
- * @see com.opensymphony.xwork2.validator.ValidatorConfig
+ * @see org.apache.struts2.xwork2.validator.ValidatorConfig
  */
 public interface ValidatorFileParser {
     /**

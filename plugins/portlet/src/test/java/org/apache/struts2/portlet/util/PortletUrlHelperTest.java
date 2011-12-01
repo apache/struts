@@ -40,7 +40,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionContext;
 
 /**
  */

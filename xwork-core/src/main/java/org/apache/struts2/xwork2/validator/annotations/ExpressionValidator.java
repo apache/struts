@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.validator.annotations;
+package org.apache.struts2.xwork2.validator.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

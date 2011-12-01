@@ -7,7 +7,7 @@ import org.osgi.framework.ServiceReference;
 
 import javax.servlet.ServletContext;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionInvocation;
 import junit.framework.TestCase;
 
 import java.util.List;

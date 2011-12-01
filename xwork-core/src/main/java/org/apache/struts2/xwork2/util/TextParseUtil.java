@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util;
+package org.apache.struts2.xwork2.util;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
+import org.apache.struts2.xwork2.inject.Container;
 
 import java.util.HashSet;
 import java.util.Set;

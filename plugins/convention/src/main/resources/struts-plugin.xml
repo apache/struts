@@ -27,7 +27,7 @@
     "http://struts.apache.org/dtds/struts-2.1.7.dtd">
 
 <struts order="20">
-  <bean type="com.opensymphony.xwork2.UnknownHandler" name="convention" class="org.apache.struts2.convention.ConventionUnknownHandler"/>
+  <bean type="org.apache.struts2.xwork2.UnknownHandler" name="convention" class="org.apache.struts2.convention.ConventionUnknownHandler"/>
 
   <bean type="org.apache.struts2.convention.ActionConfigBuilder" name="convention" class="org.apache.struts2.convention.PackageBasedActionConfigBuilder"/>
   <bean type="org.apache.struts2.convention.ActionNameBuilder" name="convention" class="org.apache.struts2.convention.SEOActionNameBuilder"/>
@@ -35,8 +35,8 @@
   <bean type="org.apache.struts2.convention.InterceptorMapBuilder" name="convention" class="org.apache.struts2.convention.DefaultInterceptorMapBuilder"/>
   <bean type="org.apache.struts2.convention.ConventionsService" name="convention" class="org.apache.struts2.convention.ConventionsServiceImpl"/>
 
-  <bean type="com.opensymphony.xwork2.config.PackageProvider" name="convention.packageProvider" class="org.apache.struts2.convention.ClasspathPackageProvider"/>
-  <bean type="com.opensymphony.xwork2.config.PackageProvider" name="convention.containerProvider" class="org.apache.struts2.convention.ClasspathConfigurationProvider"/>
+  <bean type="org.apache.struts2.xwork2.config.PackageProvider" name="convention.packageProvider" class="org.apache.struts2.convention.ClasspathPackageProvider"/>
+  <bean type="org.apache.struts2.xwork2.config.PackageProvider" name="convention.containerProvider" class="org.apache.struts2.convention.ClasspathConfigurationProvider"/>
 
   <constant name="struts.convention.actionConfigBuilder" value="convention"/>
   <constant name="struts.convention.actionNameBuilder" value="convention"/>

@@ -24,7 +24,7 @@ package org.apache.struts2.views.freemarker;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 
 /**

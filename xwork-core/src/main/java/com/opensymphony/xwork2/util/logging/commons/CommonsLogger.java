@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util.logging.commons;
+package org.apache.struts2.xwork2.util.logging.commons;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerUtils;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerUtils;
 import org.apache.commons.logging.Log;
 
 /**

@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.util.reflection;
+package org.apache.struts2.xwork2.util.reflection;
 
 import java.util.Map;
 

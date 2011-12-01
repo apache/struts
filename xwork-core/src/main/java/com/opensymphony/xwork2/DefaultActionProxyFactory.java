@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
 
 import java.util.Map;
 
 
 /**
- * Default factory for {@link com.opensymphony.xwork2.ActionProxyFactory}.
+ * Default factory for {@link org.apache.struts2.xwork2.ActionProxyFactory}.
  *
  * @author Jason Carreira
  */

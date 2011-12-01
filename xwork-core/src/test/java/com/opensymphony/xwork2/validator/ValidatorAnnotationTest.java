@@ -1,10 +1,10 @@
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
 
 import java.util.Collection;
 import java.util.HashMap;

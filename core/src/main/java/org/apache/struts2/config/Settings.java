@@ -23,14 +23,13 @@ package org.apache.struts2.config;
 
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.util.location.Location;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 
 /**

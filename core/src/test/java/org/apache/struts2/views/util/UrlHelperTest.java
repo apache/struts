@@ -21,13 +21,10 @@
 
 package org.apache.struts2.views.util;
 
-import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Scope.Strategy;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

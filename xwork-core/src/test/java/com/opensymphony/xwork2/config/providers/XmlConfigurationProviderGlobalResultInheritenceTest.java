@@ -1,11 +1,11 @@
-package com.opensymphony.xwork2.config.providers;
+package org.apache.struts2.xwork2.config.providers;
 
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationManager;
+import org.apache.struts2.xwork2.config.ConfigurationProvider;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
 
 /**
  * <code>XmlConfigurationProviderGlobalResultInheritenceTest</code>

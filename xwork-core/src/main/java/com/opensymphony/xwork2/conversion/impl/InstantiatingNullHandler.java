@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.conversion.NullHandler;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.conversion.NullHandler;
+import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
+import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
 
 import java.beans.PropertyDescriptor;
 import java.util.*;
@@ -32,7 +32,7 @@ import java.util.*;
  * <!-- START SNIPPET: javadoc -->
  *
  * Provided that the key {@link ReflectionContextState#CREATE_NULL_OBJECTS} is in the action context with a value of true (this key is set
- * only during the execution of the {@link com.opensymphony.xwork2.interceptor.ParametersInterceptor}), OGNL expressions
+ * only during the execution of the {@link org.apache.struts2.xwork2.interceptor.ParametersInterceptor}), OGNL expressions
  * that have caused a NullPointerException will be temporarily stopped for evaluation while the system automatically
  * tries to solve the null references by automatically creating the object.
  *

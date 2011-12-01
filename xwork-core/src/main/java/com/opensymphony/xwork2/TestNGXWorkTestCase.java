@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.impl.MockConfiguration;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationManager;
+import org.apache.struts2.xwork2.config.ConfigurationProvider;
+import org.apache.struts2.xwork2.config.impl.MockConfiguration;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.util.XWorkTestCaseHelper;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 

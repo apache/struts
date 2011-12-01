@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.ognl.accessor;
+package org.apache.struts2.xwork2.ognl.accessor;
 
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
+import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
 import ognl.ObjectPropertyAccessor;
 import ognl.OgnlException;
 

@@ -1,8 +1,8 @@
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.mock.MockInterceptor;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.mock.MockActionProxy;
+import org.apache.struts2.xwork2.mock.MockInterceptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

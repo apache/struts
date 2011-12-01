@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.UnknownHandler;
-import com.opensymphony.xwork2.UnknownHandlerManager;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.UnknownHandlerConfig;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
 
 /**
  * Default implementation of UnknownHandlerManager
  *
- * @see com.opensymphony.xwork2.UnknownHandlerManager
+ * @see org.apache.struts2.xwork2.UnknownHandlerManager
  */
 public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
     protected ArrayList<UnknownHandler> unknownHandlers;

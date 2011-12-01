@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.config.impl;
+package org.apache.struts2.xwork2.config.impl;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.DefaultTextProvider;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.config.*;
-import com.opensymphony.xwork2.config.entities.*;
-import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.*;
-import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
-import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
-import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
-import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.PatternMatcher;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.DefaultTextProvider;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.TextProvider;
+import org.apache.struts2.xwork2.config.*;
+import org.apache.struts2.xwork2.config.entities.*;
+import org.apache.struts2.xwork2.config.providers.InterceptorBuilder;
+import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
+import org.apache.struts2.xwork2.conversion.impl.XWorkBasicConverter;
+import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
+import org.apache.struts2.xwork2.inject.*;
+import org.apache.struts2.xwork2.ognl.OgnlReflectionProvider;
+import org.apache.struts2.xwork2.ognl.OgnlUtil;
+import org.apache.struts2.xwork2.ognl.OgnlValueStackFactory;
+import org.apache.struts2.xwork2.ognl.accessor.CompoundRootAccessor;
+import org.apache.struts2.xwork2.util.CompoundRoot;
+import org.apache.struts2.xwork2.util.PatternMatcher;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStackFactory;
+import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
 import ognl.PropertyAccessor;
 
 import java.util.*;
@@ -315,7 +315,7 @@ public class DefaultConfiguration implements Configuration {
      * @param baseConfig     the ActionConfig which holds only the configuration specific to itself, without the defaults
      *                       and inheritance
      * @return a full ActionConfig for runtime configuration with all of the inherited and default params
-     * @throws com.opensymphony.xwork2.config.ConfigurationException
+     * @throws org.apache.struts2.xwork2.config.ConfigurationException
      *
      */
     private ActionConfig buildFullActionConfig(PackageConfig packageContext, ActionConfig baseConfig) throws ConfigurationException {

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.ognl.accessor;
+package org.apache.struts2.xwork2.ognl.accessor;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
 import ognl.MapPropertyAccessor;
 import ognl.OgnlException;
 

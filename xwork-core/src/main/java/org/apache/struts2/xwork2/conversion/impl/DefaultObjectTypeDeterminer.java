@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.CreateIfNull;
-import com.opensymphony.xwork2.util.Element;
-import com.opensymphony.xwork2.util.Key;
-import com.opensymphony.xwork2.util.KeyProperty;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.CreateIfNull;
+import org.apache.struts2.xwork2.util.Element;
+import org.apache.struts2.xwork2.util.Key;
+import org.apache.struts2.xwork2.util.KeyProperty;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.reflection.ReflectionException;
+import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
 
 import java.beans.IntrospectionException;
 import java.lang.annotation.Annotation;
@@ -81,7 +81,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      *
      * @param parentClass the Class which contains as a property the Map or Collection we are finding the key for.
      * @param property    the property of the Map or Collection for the given parent class
-     * @see com.opensymphony.xwork2.conversion.ObjectTypeDeterminer#getKeyClass(Class, String)
+     * @see org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer#getKeyClass(Class, String)
      */
     public Class getKeyClass(Class parentClass, String property) {
         Key annotation = getAnnotation(parentClass, property, Key.class);
@@ -110,7 +110,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      *
      * @param parentClass the Class which contains as a property the Map or Collection we are finding the key for.
      * @param property    the property of the Map or Collection for the given parent class
-     * @see com.opensymphony.xwork2.conversion.ObjectTypeDeterminer#getElementClass(Class, String, Object)
+     * @see org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer#getElementClass(Class, String, Object)
      */
     public Class getElementClass(Class parentClass, String property, Object key) {
         Element annotation = getAnnotation(parentClass, property, Element.class);
@@ -148,7 +148,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      *
      * @param parentClass the Class which contains as a property the Map or Collection we are finding the key for.
      * @param property    the property of the Map or Collection for the given parent class
-     * @see com.opensymphony.xwork2.conversion.ObjectTypeDeterminer#getKeyProperty(Class, String)
+     * @see org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer#getKeyProperty(Class, String)
      */
     public String getKeyProperty(Class parentClass, String property) {
         KeyProperty annotation = getAnnotation(parentClass, property, KeyProperty.class);

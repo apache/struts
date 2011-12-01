@@ -1,10 +1,10 @@
-package com.opensymphony.xwork2.config.providers;
+package org.apache.struts2.xwork2.config.providers;
 
-import com.opensymphony.xwork2.UnknownHandlerManager;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
-import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
+import org.apache.struts2.xwork2.UnknownHandlerManager;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.ConfigurationProvider;
+import org.apache.struts2.xwork2.config.entities.UnknownHandlerConfig;
+import org.apache.struts2.xwork2.DefaultUnknownHandlerManager;
 
 import java.util.List;
 

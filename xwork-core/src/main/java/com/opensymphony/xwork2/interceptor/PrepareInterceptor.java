@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.xwork2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Preparable;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.Preparable;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -48,7 +46,7 @@ import java.lang.reflect.InvocationTargetException;
  * <p/><b>Update</b>: Added logic to execute a prepare{MethodName} and conditionally
  * the a general prepare() Method, depending on the 'alwaysInvokePrepare' parameter/property
  * which is by default true. This allows us to run some logic based on the method
- * name we specify in the {@link com.opensymphony.xwork2.ActionProxy}. For example, you can specify a
+ * name we specify in the {@link org.apache.struts2.xwork2.ActionProxy}. For example, you can specify a
  * prepareInput() method that will be run before the invocation of the input method.
  *
  * <!-- END SNIPPET: description -->
@@ -94,7 +92,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Jason Carreira
  * @author Philip Luppens
  * @author tm_jee
- * @see com.opensymphony.xwork2.Preparable
+ * @see org.apache.struts2.xwork2.Preparable
  */
 public class PrepareInterceptor extends MethodFilterInterceptor {
 

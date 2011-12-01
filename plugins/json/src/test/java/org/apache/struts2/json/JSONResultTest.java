@@ -42,9 +42,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 /**
  * JSONResultTest

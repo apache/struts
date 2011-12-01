@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.inject.util;
+package org.apache.struts2.xwork2.inject.util;
 
 import java.lang.ref.PhantomReference;
 
 /**
- * Phantom reference with a {@link com.opensymphony.xwork2.inject.util.FinalizableReference#finalizeReferent() finalizeReferent()} method which a
+ * Phantom reference with a {@link org.apache.struts2.xwork2.inject.util.FinalizableReference#finalizeReferent() finalizeReferent()} method which a
  * background thread invokes after the garbage collector reclaims the
  * referent. This is a simpler alternative to using a {@link
  * java.lang.ref.ReferenceQueue}.

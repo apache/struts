@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.xwork2.interceptor;
 
-import com.opensymphony.xwork2.ModelDriven;
+import org.apache.struts2.xwork2.ModelDriven;
 
 /**
  * Adds the ability to set a model, probably retrieved from a given state.

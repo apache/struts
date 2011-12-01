@@ -21,14 +21,14 @@
 
 package org.apache.struts2.codebehind;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.*;
-import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.*;
+import org.apache.struts2.xwork2.config.providers.InterceptorBuilder;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.util.ClassLoaderUtils;
 
 import javax.servlet.ServletContext;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.config.entities;
+package org.apache.struts2.xwork2.config.entities;
 
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
 
 import java.io.Serializable;
 

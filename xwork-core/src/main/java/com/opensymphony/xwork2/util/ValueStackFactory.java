@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util;
+package org.apache.struts2.xwork2.util;
 
 /**
  * Factory that creates a value stack, defaulting to the OgnlValueStackFactory
@@ -21,17 +21,17 @@ package com.opensymphony.xwork2.util;
 public interface ValueStackFactory {
 
     /**
-     * Get a new instance of {@link com.opensymphony.xwork2.util.ValueStack}
+     * Get a new instance of {@link org.apache.struts2.xwork2.util.ValueStack}
      *
-     * @return  a new {@link com.opensymphony.xwork2.util.ValueStack}.
+     * @return  a new {@link org.apache.struts2.xwork2.util.ValueStack}.
      */
     ValueStack createValueStack();
     
     /**
-     * Get a new instance of {@link com.opensymphony.xwork2.util.ValueStack}
+     * Get a new instance of {@link org.apache.struts2.xwork2.util.ValueStack}
      *
      * @param stack an existing stack to include.
-     * @return  a new {@link com.opensymphony.xwork2.util.ValueStack}.
+     * @return  a new {@link org.apache.struts2.xwork2.util.ValueStack}.
      */
     ValueStack createValueStack(ValueStack stack);
     

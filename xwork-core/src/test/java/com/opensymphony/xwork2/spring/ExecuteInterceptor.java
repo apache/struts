@@ -1,9 +1,9 @@
 /*
  * Created on Jun 12, 2004
  */
-package com.opensymphony.xwork2.spring;
+package org.apache.struts2.xwork2.spring;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.Action;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 

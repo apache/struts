@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.conversion;
+package org.apache.struts2.xwork2.conversion;
 
 /**
  * Determines what the key and and element class of a Map or Collection should be. For Maps, the elements are the

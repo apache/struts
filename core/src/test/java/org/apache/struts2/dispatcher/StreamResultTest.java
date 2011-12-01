@@ -27,18 +27,15 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 /**
  * Unit test for {@link StreamResult}.
@@ -229,7 +226,7 @@ public class StreamResultTest extends StrutsTestCase {
         MyImageAction action = new MyImageAction();
         contentLength = (int) action.getContentLength();
 
-        mai = new com.opensymphony.xwork2.mock.MockActionInvocation();
+        mai = new org.apache.struts2.xwork2.mock.MockActionInvocation();
         mai.setAction(action);
         mai.setStack(stack);
         mai.setInvocationContext(ActionContext.getContext());

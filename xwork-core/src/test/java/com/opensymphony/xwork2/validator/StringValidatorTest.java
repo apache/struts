@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.test.Equidae;
-import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.providers.MockConfigurationProvider;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.test.Equidae;
+import org.apache.struts2.xwork2.validator.validators.RequiredStringValidator;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
-package com.opensymphony.xwork2.util.reflection;
+package org.apache.struts2.xwork2.util.reflection;
 
-import com.opensymphony.xwork2.XWorkException;
+import org.apache.struts2.xwork2.XWorkException;
 
 public class ReflectionException extends XWorkException {
 

@@ -22,9 +22,9 @@ package org.apache.struts2.views.gxp;
 
 import com.google.gxp.base.GxpContext;
 import com.google.gxp.html.HtmlClosure;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
 
 import java.io.IOException;
 

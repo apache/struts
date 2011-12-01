@@ -22,7 +22,7 @@ package org.apache.struts2.showcase.fileupload;
 
 import java.io.File;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  * Show case File Upload example's action. <code>FileUploadAction</code>

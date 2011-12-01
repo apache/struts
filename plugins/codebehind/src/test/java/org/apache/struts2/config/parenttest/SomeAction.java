@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.config.parenttest;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.Action;
 
 public class SomeAction implements Action {
 

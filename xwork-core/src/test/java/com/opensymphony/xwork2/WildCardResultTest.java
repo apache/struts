@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.mock.MockResult;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.mock.MockResult;
 
 /**
  * <code>WildCardResultTest</code>

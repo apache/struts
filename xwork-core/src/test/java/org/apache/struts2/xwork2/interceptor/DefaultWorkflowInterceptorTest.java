@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.xwork2.interceptor;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.entities.InterceptorConfig;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.validator.ValidationInterceptor;
 
 import java.util.HashMap;
 

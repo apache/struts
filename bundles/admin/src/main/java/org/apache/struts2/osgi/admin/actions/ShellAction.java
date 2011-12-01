@@ -28,8 +28,8 @@ import org.apache.struts2.osgi.DefaultBundleAccessor;
 import org.apache.felix.shell.ShellService;
 import org.osgi.framework.ServiceReference;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  * This action executes commands on the Felix Shell

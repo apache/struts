@@ -18,8 +18,8 @@
 package org.apache.struts2.jasper.servlet;
 
 
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.xwork2.util.finder.ClassLoaderInterface;
+import org.apache.struts2.xwork2.ActionContext;
 
 import java.io.File;
 import java.io.InputStream;

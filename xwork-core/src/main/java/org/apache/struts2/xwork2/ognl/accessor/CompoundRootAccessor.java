@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.ognl.accessor;
+package org.apache.struts2.xwork2.ognl.accessor;
 
-import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.ognl.OgnlValueStack;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.XWorkException;
+import org.apache.struts2.xwork2.ognl.OgnlValueStack;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.CompoundRoot;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import ognl.*;
 
 import java.beans.IntrospectionException;

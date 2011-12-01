@@ -23,10 +23,10 @@ package org.apache.struts2.codebehind;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ResultTypeConfig;
+import org.apache.struts2.xwork2.util.XWorkTestCaseHelper;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 

@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.struts2.components.UIBean;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 /**
  * Context used when rendering templates.

@@ -41,9 +41,9 @@ import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.ContextUtil;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.TextParseUtil;
 
 /**
  * Base class to extend for UI components.

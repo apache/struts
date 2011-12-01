@@ -30,10 +30,10 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.Result;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**

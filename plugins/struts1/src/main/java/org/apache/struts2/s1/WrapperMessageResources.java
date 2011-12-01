@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import org.apache.struts.util.MessageResources;
 
-import com.opensymphony.xwork2.TextProvider;
+import org.apache.struts2.xwork2.TextProvider;
 
 /**
  * Wraps the Struts 1 message resources, delegating to Struts 2 resources

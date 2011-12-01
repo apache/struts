@@ -23,7 +23,7 @@ package org.apache.struts2.util;
 
 import java.util.Map;
 
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
+import org.apache.struts2.xwork2.conversion.impl.DefaultTypeConverter;
 
 /**
  * <!-- START SNIPPET: javadoc -->

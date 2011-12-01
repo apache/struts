@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util.location;
+package org.apache.struts2.xwork2.util.location;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
 import org.w3c.dom.Element;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;

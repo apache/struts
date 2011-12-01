@@ -1,8 +1,8 @@
-package com.opensymphony.xwork2.ognl;
+package org.apache.struts2.xwork2.ognl;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.reflection.ReflectionException;
+import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
 import ognl.Ognl;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;

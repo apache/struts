@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  */

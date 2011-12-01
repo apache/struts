@@ -25,36 +25,27 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerActionMapper;
 import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
-import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDispatcher;
-import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.mockobjects.servlet.MockFilterChain;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationManager;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.config.entities.InterceptorStackConfig;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.util.LocalizedTextUtil;
 
 /**
  * Test case for Dispatcher.

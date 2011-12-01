@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.mock;
+package org.apache.struts2.xwork2.mock;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
 import junit.framework.Assert;
 
 
 /**
- * Mock for an {@link com.opensymphony.xwork2.interceptor.Interceptor}.
+ * Mock for an {@link org.apache.struts2.xwork2.interceptor.Interceptor}.
  *
  * @author Jason Carreira
  */

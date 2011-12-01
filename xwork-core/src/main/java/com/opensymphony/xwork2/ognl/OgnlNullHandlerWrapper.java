@@ -1,6 +1,6 @@
-package com.opensymphony.xwork2.ognl;
+package org.apache.struts2.xwork2.ognl;
 
-import com.opensymphony.xwork2.conversion.NullHandler;
+import org.apache.struts2.xwork2.conversion.NullHandler;
 
 import java.util.Map;
 

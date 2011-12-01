@@ -27,8 +27,8 @@ import javax.faces.context.FacesContext;
 
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.Result;
 
 /**
  * Executes the JSF render phase

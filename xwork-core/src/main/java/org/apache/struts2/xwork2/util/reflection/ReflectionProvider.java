@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.util.reflection;
+package org.apache.struts2.xwork2.util.reflection;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -53,7 +53,7 @@ public interface ReflectionProvider {
 
     /**
      * Copies the properties in the object "from" and sets them in the object "to"
-     * using specified type converter, or {@link com.opensymphony.xwork2.conversion.impl.XWorkConverter} if none
+     * using specified type converter, or {@link org.apache.struts2.xwork2.conversion.impl.XWorkConverter} if none
      * is specified.
      *
      * @param from       the source object

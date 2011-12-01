@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.inject;
+package org.apache.struts2.xwork2.inject;
 
-import static com.opensymphony.xwork2.inject.Container.DEFAULT_NAME;
+import static org.apache.struts2.xwork2.inject.Container.DEFAULT_NAME;
 
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;

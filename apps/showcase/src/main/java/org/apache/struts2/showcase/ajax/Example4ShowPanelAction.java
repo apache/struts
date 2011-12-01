@@ -23,7 +23,7 @@ package org.apache.struts2.showcase.ajax;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  * @version $Date$ $Id$

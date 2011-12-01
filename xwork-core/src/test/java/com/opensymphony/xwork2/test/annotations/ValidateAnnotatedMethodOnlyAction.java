@@ -1,8 +1,8 @@
-package com.opensymphony.xwork2.test.annotations;
+package org.apache.struts2.xwork2.test.annotations;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.validator.annotations.ExpressionValidator;
+import org.apache.struts2.xwork2.validator.annotations.Validation;
 
 /**
  * <code>ValidateAnnotatedMethodOnlyAction</code>

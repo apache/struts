@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.validator.annotations;
+package org.apache.struts2.xwork2.validator.annotations;
 
 /**
  * <code>ValidatorType</code>

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.test;
+package org.apache.struts2.xwork2.test;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.util.Cat;
+import org.apache.struts2.xwork2.TestBean;
+import org.apache.struts2.xwork2.util.Bar;
+import org.apache.struts2.xwork2.util.Cat;
 
 
 /**

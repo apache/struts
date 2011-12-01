@@ -1,11 +1,11 @@
-package com.opensymphony.xwork2.config.providers;
+package org.apache.struts2.xwork2.config.providers;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.Action;
 
 /**
  * Action with no public constructor taking no args.
  * <p/>
- * Used for unit test of {@link com.opensymphony.xwork2.config.providers.XmlConfigurationProvider}.
+ * Used for unit test of {@link org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider}.
  *
  * @author Claus Ibsen
  */

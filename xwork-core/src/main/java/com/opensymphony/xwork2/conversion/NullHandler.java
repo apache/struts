@@ -28,7 +28,7 @@
 //THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //DAMAGE.
 //--------------------------------------------------------------------------
-package com.opensymphony.xwork2.conversion;
+package org.apache.struts2.xwork2.conversion;
 
 import java.util.Map;
 

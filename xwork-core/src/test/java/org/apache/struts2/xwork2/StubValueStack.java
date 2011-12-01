@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.CompoundRoot;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 import java.util.HashMap;
 import java.util.Map;

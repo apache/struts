@@ -1,12 +1,12 @@
 /**
  * 
  */
-package com.opensymphony.xwork2.config.impl;
+package org.apache.struts2.xwork2.config.impl;
 
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.util.location.Located;
-import com.opensymphony.xwork2.util.location.LocationUtils;
+import org.apache.struts2.xwork2.inject.Context;
+import org.apache.struts2.xwork2.inject.Factory;
+import org.apache.struts2.xwork2.util.location.Located;
+import org.apache.struts2.xwork2.util.location.LocationUtils;
 
 /**
  * Factory that remembers where a constant came from

@@ -46,11 +46,11 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.ClassLoaderUtils;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
 
 /**
  * * Initializes the JSF context for this request.

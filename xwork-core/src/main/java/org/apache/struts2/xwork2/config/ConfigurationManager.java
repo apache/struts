@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.config;
+package org.apache.struts2.xwork2.config;
 
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.config.impl.DefaultConfiguration;
+import org.apache.struts2.xwork2.config.providers.XWorkConfigurationProvider;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.util.FileManager;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class ConfigurationManager {
     /**
      * Get the current XWork configuration object.  By default an instance of DefaultConfiguration will be returned
      *
-     * @see com.opensymphony.xwork2.config.impl.DefaultConfiguration
+     * @see org.apache.struts2.xwork2.config.impl.DefaultConfiguration
      */
     public synchronized Configuration getConfiguration() {
         if (configuration == null) {
@@ -186,7 +186,7 @@ public class ConfigurationManager {
      * clears the registered ConfigurationProviders.  this method will call destroy() on each of the registered
      * ConfigurationProviders
      *
-     * @see com.opensymphony.xwork2.config.ConfigurationProvider#destroy
+     * @see org.apache.struts2.xwork2.config.ConfigurationProvider#destroy
      * @deprecated Since 2.1, use {@link #clearContainerProviders()}
      */
     @Deprecated public void clearConfigurationProviders() {

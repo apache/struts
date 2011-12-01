@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.showcase.modelDriven;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ModelDriven;
 
 /**
  * Action to demonstrate simple model-driven feature of the framework.

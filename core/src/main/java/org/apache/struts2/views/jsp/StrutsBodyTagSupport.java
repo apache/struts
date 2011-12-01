@@ -28,8 +28,8 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.TextParseUtil;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**

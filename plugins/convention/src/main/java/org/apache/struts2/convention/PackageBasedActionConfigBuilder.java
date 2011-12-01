@@ -20,28 +20,28 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
-import com.opensymphony.xwork2.util.finder.ClassFinder;
-import com.opensymphony.xwork2.util.finder.ClassFinder.ClassInfo;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
-import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.finder.UrlSet;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.FileManager;
+import org.apache.struts2.xwork2.util.TextParseUtil;
+import org.apache.struts2.xwork2.util.classloader.ReloadingClassLoader;
+import org.apache.struts2.xwork2.util.finder.ClassFinder;
+import org.apache.struts2.xwork2.util.finder.ClassFinder.ClassInfo;
+import org.apache.struts2.xwork2.util.finder.ClassLoaderInterface;
+import org.apache.struts2.xwork2.util.finder.ClassLoaderInterfaceDelegate;
+import org.apache.struts2.xwork2.util.finder.Test;
+import org.apache.struts2.xwork2.util.finder.UrlSet;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.StrutsConstants;
@@ -470,7 +470,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * Note that we can't include the test for {@link #actionSuffix} here
      * because a class is included if its name ends in {@link #actionSuffix} OR
-     * it implements {@link com.opensymphony.xwork2.Action}. Since the whole
+     * it implements {@link org.apache.struts2.xwork2.Action}. Since the whole
      * goal is to avoid loading the class if we don't have to, the (actionSuffix
      * || implements Action) test will have to remain until later. See
      * {@link #getActionClassTest()} for the test performed on the loaded
@@ -551,7 +551,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 boolean nameMatches = classInfo.getName().endsWith(actionSuffix);
 
                 try {
-                    return inPackage && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
+                    return inPackage && (nameMatches || (checkImplementsAction && org.apache.struts2.xwork2.Action.class.isAssignableFrom(classInfo.get())));
                 } catch (ClassNotFoundException ex) {
                     if (LOG.isErrorEnabled())
                         LOG.error("Unable to load class [#0]", ex, classInfo.getName());

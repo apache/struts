@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.xwork2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.util.TextParseUtil;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -92,7 +92,7 @@ public class ParameterRemoverInterceptor extends AbstractInterceptor {
 	 * Decide if the parameter should be removed from the parameter map based on
 	 * <code>paramNames</code> and <code>paramValues</code>.
 	 * 
-	 * @see com.opensymphony.xwork2.interceptor.AbstractInterceptor
+	 * @see org.apache.struts2.xwork2.interceptor.AbstractInterceptor
 	 */
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {

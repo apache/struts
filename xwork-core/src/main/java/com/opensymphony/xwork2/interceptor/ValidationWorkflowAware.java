@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.xwork2.interceptor;
 
 /**
  * <code>ValidationWorkflowAware</code>

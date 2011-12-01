@@ -19,11 +19,11 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.util.ValueStack;
 import junit.framework.TestCase;
 
 import java.util.HashMap;

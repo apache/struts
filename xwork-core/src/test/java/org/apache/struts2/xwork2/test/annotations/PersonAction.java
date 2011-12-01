@@ -1,9 +1,9 @@
-package com.opensymphony.xwork2.test.annotations;
+package org.apache.struts2.xwork2.test.annotations;
 
-import com.opensymphony.xwork2.conversion.annotations.Conversion;
-import com.opensymphony.xwork2.conversion.annotations.ConversionType;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import com.opensymphony.xwork2.util.Element;
+import org.apache.struts2.xwork2.conversion.annotations.Conversion;
+import org.apache.struts2.xwork2.conversion.annotations.ConversionType;
+import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
+import org.apache.struts2.xwork2.util.Element;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class PersonAction {
 	List<Person> users;
 	private List<Address> address;
-	@Element(com.opensymphony.xwork2.test.annotations.Address.class)
+	@Element(org.apache.struts2.xwork2.test.annotations.Address.class)
 	private List addressesNoGenericElementAnnotation;
 
 	public List<Person> getUsers() {

@@ -21,9 +21,9 @@
 
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.interceptor.ConversionErrorInterceptor;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**
@@ -67,7 +67,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @see com.opensymphony.xwork2.ActionContext#getConversionErrors()
+ * @see org.apache.struts2.xwork2.ActionContext#getConversionErrors()
  * @see ConversionErrorInterceptor
  */
 public class StrutsConversionErrorInterceptor extends ConversionErrorInterceptor {

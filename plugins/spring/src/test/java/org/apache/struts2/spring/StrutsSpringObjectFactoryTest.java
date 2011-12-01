@@ -24,7 +24,6 @@ package org.apache.struts2.spring;
 import javax.servlet.ServletContext;
 
 import junit.framework.TestCase;
-import org.apache.struts2.StrutsConstants;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.mock.web.MockServletContext;
@@ -32,7 +31,7 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Container;
 
 /**
  * Unit test for {@link StrutsSpringObjectFactory}.

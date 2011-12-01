@@ -23,8 +23,7 @@ package example;
 
 import org.apache.struts2.StrutsTestCase;
 
-import com.opensymphony.xwork2.ActionSupport;
-import junit.framework.TestCase;
+import org.apache.struts2.xwork2.ActionSupport;
 
 public class HelloWorldTest extends StrutsTestCase {
 

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.config.impl;
+package org.apache.struts2.xwork2.config.impl;
 
-import com.opensymphony.xwork2.util.WildcardHelper;
+import org.apache.struts2.xwork2.util.WildcardHelper;
 import junit.framework.TestCase;
 
 import java.util.HashSet;

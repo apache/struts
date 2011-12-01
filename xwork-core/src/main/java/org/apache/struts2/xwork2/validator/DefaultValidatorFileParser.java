@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.providers.XmlHelper;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.DomHelper;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.providers.XmlHelper;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.DomHelper;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
@@ -40,7 +40,7 @@ import java.util.*;
  * @author Rene Gielen
  * @author Martin Gilday
  * 
- * @see com.opensymphony.xwork2.validator.ValidatorConfig
+ * @see org.apache.struts2.xwork2.validator.ValidatorConfig
  */
 public class DefaultValidatorFileParser implements ValidatorFileParser {
 

@@ -26,9 +26,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 
 /**

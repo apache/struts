@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.config;
+package org.apache.struts2.xwork2.config;
 
-import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
 
 import java.io.Serializable;
 import java.util.Map;

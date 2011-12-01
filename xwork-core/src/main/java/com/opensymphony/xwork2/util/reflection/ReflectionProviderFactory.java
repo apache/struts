@@ -1,6 +1,6 @@
-package com.opensymphony.xwork2.util.reflection;
+package org.apache.struts2.xwork2.util.reflection;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionContext;
 
 public class ReflectionProviderFactory {
 

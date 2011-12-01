@@ -28,10 +28,10 @@
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //  DAMAGE.
 //--------------------------------------------------------------------------
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
+import org.apache.struts2.xwork2.conversion.TypeConverter;
+import org.apache.struts2.xwork2.ognl.XWorkTypeConverterWrapper;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;

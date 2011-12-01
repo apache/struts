@@ -1,9 +1,0 @@
-        <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
-            <param name="foo">17</param>
-            <param name="bar">23</param>
-            <result name="success" type="chain">
-                <param name="actionName">Bar</param>
-            </result>
-            <interceptor-ref name="debugStack"/>
-            <interceptor-ref name="defaultStack"/>
-        </action>

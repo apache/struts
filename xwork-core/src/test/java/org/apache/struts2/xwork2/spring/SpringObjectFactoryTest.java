@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.spring;
+package org.apache.struts2.xwork2.spring;
 
 /*
  * Copyright 2002-2003,2009 The Apache Software Foundation.
@@ -19,27 +19,26 @@ package com.opensymphony.xwork2.spring;
  * Created on Mar 8, 2004
  */
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor;
-import com.opensymphony.xwork2.interceptor.TimerInterceptor;
-import com.opensymphony.xwork2.test.StubConfigurationProvider;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.validator.Validator;
-import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
-import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.inject.ContainerBuilder;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.interceptor.ModelDrivenInterceptor;
+import org.apache.struts2.xwork2.interceptor.TimerInterceptor;
+import org.apache.struts2.xwork2.test.StubConfigurationProvider;
+import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.xwork2.validator.Validator;
+import org.apache.struts2.xwork2.validator.validators.ExpressionValidator;
+import org.apache.struts2.xwork2.validator.validators.RequiredStringValidator;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.aop.interceptor.DebugInterceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.StaticApplicationContext;

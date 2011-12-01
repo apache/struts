@@ -35,14 +35,14 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 import org.easymock.EasyMock;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.RuntimeConfiguration;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.config.impl.DefaultConfiguration;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Scope.Strategy;
+import org.apache.struts2.xwork2.validator.ValidationInterceptor;
 
 
 /**
@@ -197,7 +197,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         final Container cont = container;
         // used to determined if the form action needs js validation
-        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+        configurationManager.setConfiguration(new org.apache.struts2.xwork2.config.impl.DefaultConfiguration() {
             private DefaultConfiguration self = this;
             public Container getContainer() {
                 return new Container() {
@@ -278,7 +278,7 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled2() throws Exception {
 
-        com.opensymphony.xwork2.config.Configuration originalConfiguration = configurationManager.getConfiguration();
+        org.apache.struts2.xwork2.config.Configuration originalConfiguration = configurationManager.getConfiguration();
         ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
 
         final Container cont = container;
@@ -368,7 +368,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         final Container cont = container;
         // used to determined if the form action needs js validation
-        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+        configurationManager.setConfiguration(new org.apache.struts2.xwork2.config.impl.DefaultConfiguration() {
             private DefaultConfiguration self = this;
             public Container getContainer() {
                 return new Container() {
@@ -449,7 +449,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         final Container cont = container;
         // used to determined if the form action needs js validation
-        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+        configurationManager.setConfiguration(new org.apache.struts2.xwork2.config.impl.DefaultConfiguration() {
             private DefaultConfiguration self = this;
             public Container getContainer() {
                 return new Container() {

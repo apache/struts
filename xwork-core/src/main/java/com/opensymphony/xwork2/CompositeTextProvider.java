@@ -1,8 +1,8 @@
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import java.util.*;
 
@@ -42,7 +42,7 @@ public class CompositeTextProvider implements TextProvider {
     /**
      * @param key The key to lookup in ressource bundles.
      * @return <tt>true</tt>, if the requested key is found in one of the ressource bundles.
-     * @see {@link com.opensymphony.xwork2.TextProvider#hasKey(String)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#hasKey(String)}
      *      It will consult each individual {@link TextProvider}s and return true if either one of the
      *      {@link TextProvider} has such a <code>key></code> else false.
      */
@@ -62,7 +62,7 @@ public class CompositeTextProvider implements TextProvider {
      *
      * @param key The key to lookup in ressource bundles.
      * @return The i18n text for the requested key.
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String)}
      */
     public String getText(String key) {
         return getText(key, key, Collections.emptyList());
@@ -75,7 +75,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param key
      * @param defaultValue
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String, String)}
      */
     public String getText(String key, String defaultValue) {
         return getText(key, defaultValue, Collections.emptyList());
@@ -90,7 +90,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param defaultValue
      * @param obj
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String, String)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String, String, String)}
      */
     public String getText(String key, String defaultValue, final String obj) {
         return getText(key, defaultValue, new ArrayList<Object>() {
@@ -109,7 +109,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param key
      * @param args
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, java.util.List)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String, java.util.List)}
      */
     public String getText(String key, List<?> args) {
         return getText(key, key, args);
@@ -122,7 +122,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param key
      * @param args
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String[])}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String, String[])}
      */
     public String getText(String key, String[] args) {
         return getText(key, key, args);
@@ -137,7 +137,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param defaultValue
      * @param args
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText#getText(String, String, java.util.List)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText#getText(String, String, java.util.List)}
      */
     public String getText(String key, String defaultValue, List<?> args) {
         // if there's one text provider that gives us a msg not the same as defaultValue
@@ -161,7 +161,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param defaultValue
      * @param args
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String, String[])}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String, String, String[])}
      */
     public String getText(String key, String defaultValue, String[] args) {
         // if there's one text provider that gives us a msg not the same as defaultValue
@@ -186,7 +186,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param args
      * @param stack
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String, java.util.List, com.opensymphony.xwork2.util.ValueStack)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String, String, java.util.List, org.apache.struts2.xwork2.util.ValueStack)}
      */
     public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         // if there's one text provider that gives us a msg not the same as defaultValue
@@ -210,7 +210,7 @@ public class CompositeTextProvider implements TextProvider {
      * @param args
      * @param stack
      * @return
-     * @see {@link com.opensymphony.xwork2.TextProvider#getText(String, String, String[], com.opensymphony.xwork2.util.ValueStack)}
+     * @see {@link org.apache.struts2.xwork2.TextProvider#getText(String, String, String[], org.apache.struts2.xwork2.util.ValueStack)}
      */
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
         // if there's one text provider that gives us a msg not the same as defaultValue
@@ -246,7 +246,7 @@ public class CompositeTextProvider implements TextProvider {
     }
 
     /**
-     * It will consult each {@link com.opensymphony.xwork2.TextProvider}s and return the first non-null {@link ResourceBundle}.
+     * It will consult each {@link org.apache.struts2.xwork2.TextProvider}s and return the first non-null {@link ResourceBundle}.
      *
      * @return
      * @see {@link TextProvider#getTexts()}

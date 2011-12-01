@@ -1,6 +1,6 @@
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
 
 import java.util.HashMap;
 import java.util.Map;

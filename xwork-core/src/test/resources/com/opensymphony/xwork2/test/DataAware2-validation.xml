@@ -1,8 +1,0 @@
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
-<validators>
-    <field name="bling">
-        <field-validator type="requiredstring">
-            <message>You must enter a value for data.</message>
-        </field-validator>
-    </field>
-</validators>

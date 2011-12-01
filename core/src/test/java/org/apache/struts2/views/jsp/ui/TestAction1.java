@@ -21,7 +21,7 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  * TestAction1

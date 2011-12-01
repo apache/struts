@@ -9,8 +9,8 @@ import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.ServletOutputStream;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 /**
  * PortletServletResponseJSR286.

@@ -39,12 +39,12 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.DefaultActionSupport;
 import org.apache.struts2.dispatcher.Dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.interceptor.ScopedModelDriven;
 
 /**
  * Wraps legacy Struts 1.3 Actions.  Supports the following features:

@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util;
+package org.apache.struts2.xwork2.util;
 
-import com.opensymphony.xwork2.XWorkException;
+import org.apache.struts2.xwork2.XWorkException;
 
 import java.io.File;
 import java.net.URI;
@@ -30,8 +30,8 @@ import java.util.Vector;
 /**
  * This class is an utility class that will search through the classpath
  * for files whose names match the given pattern. The filename is tested
- * using the given implementation of {@link com.opensymphony.xwork2.util.PatternMatcher} by default it 
- * uses {@link com.opensymphony.xwork2.util.WildcardHelper}
+ * using the given implementation of {@link org.apache.struts2.xwork2.util.PatternMatcher} by default it
+ * uses {@link org.apache.struts2.xwork2.util.WildcardHelper}
  *
  * @version $Rev$ $Date$
  */

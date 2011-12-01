@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.util.classloader;
+package org.apache.struts2.xwork2.util.classloader;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import java.io.*;
 import java.util.zip.ZipEntry;

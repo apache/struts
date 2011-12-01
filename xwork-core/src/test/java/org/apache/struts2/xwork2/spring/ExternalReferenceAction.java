@@ -1,9 +1,9 @@
 /*
  * Created on Nov 11, 2003
  */
-package com.opensymphony.xwork2.spring;
+package org.apache.struts2.xwork2.spring;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.Action;
 
 /**
  * @author Mike

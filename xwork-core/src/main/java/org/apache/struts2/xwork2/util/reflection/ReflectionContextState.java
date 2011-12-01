@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.util.reflection;
+package org.apache.struts2.xwork2.util.reflection;
 
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
 
 import java.util.HashMap;
 import java.util.Map;

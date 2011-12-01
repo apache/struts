@@ -20,7 +20,7 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 public class JUnitTestAction extends ActionSupport {
     private String name;

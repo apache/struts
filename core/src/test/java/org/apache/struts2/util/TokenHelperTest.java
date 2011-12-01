@@ -27,7 +27,7 @@ import java.util.TreeMap;
 
 import junit.framework.TestCase;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionContext;
 
 
 /**

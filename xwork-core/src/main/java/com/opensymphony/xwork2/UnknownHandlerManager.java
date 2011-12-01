@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
-import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
 
 import java.util.List;
 
 /**
  * An unknown handler manager contains a list of UnknownHandler and iterates on them by order
  *
- * @see com.opensymphony.xwork2.DefaultUnknownHandlerManager
+ * @see org.apache.struts2.xwork2.DefaultUnknownHandlerManager
  */
 public interface UnknownHandlerManager {
     Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode);

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.conversion.metadata;
+package org.apache.struts2.xwork2.conversion.metadata;
 
-import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
-import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.conversion.annotations.ConversionRule;
+import org.apache.struts2.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

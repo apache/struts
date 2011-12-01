@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.config.entities;
+package org.apache.struts2.xwork2.config.entities;
 
 /**
  * Defines an object that can be used to retrieve interceptor configuration

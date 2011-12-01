@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util.classloader;
+package org.apache.struts2.xwork2.util.classloader;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.classloader.FileResourceStore;
-import com.opensymphony.xwork2.util.URLUtil;
-import com.opensymphony.xwork2.XWorkException;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.URLUtil;
+import org.apache.struts2.xwork2.XWorkException;
 
 import java.io.InputStream;
 import java.io.File;
@@ -29,8 +28,6 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Set;
 import java.util.Collections;
-import java.util.Collection;
-import java.util.HashSet;
 
 import org.apache.commons.lang.ObjectUtils;
 

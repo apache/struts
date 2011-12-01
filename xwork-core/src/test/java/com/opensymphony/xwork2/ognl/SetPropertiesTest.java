@@ -17,26 +17,26 @@
  * Created on 6/10/2003
  *
  */
-package com.opensymphony.xwork2.ognl;
+package org.apache.struts2.xwork2.ognl;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.FooBarConverter;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.mock.MockObjectTypeDeterminer;
-import com.opensymphony.xwork2.test.StubConfigurationProvider;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.util.Cat;
-import com.opensymphony.xwork2.util.Foo;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.xwork2.conversion.impl.FooBarConverter;
+import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
+import org.apache.struts2.xwork2.inject.ContainerBuilder;
+import org.apache.struts2.xwork2.inject.Context;
+import org.apache.struts2.xwork2.inject.Factory;
+import org.apache.struts2.xwork2.inject.Scope;
+import org.apache.struts2.xwork2.mock.MockObjectTypeDeterminer;
+import org.apache.struts2.xwork2.test.StubConfigurationProvider;
+import org.apache.struts2.xwork2.util.Bar;
+import org.apache.struts2.xwork2.util.Cat;
+import org.apache.struts2.xwork2.util.Foo;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
 import ognl.Ognl;
 
 import java.util.*;

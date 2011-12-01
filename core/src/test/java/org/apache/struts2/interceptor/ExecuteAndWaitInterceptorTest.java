@@ -21,18 +21,18 @@
 
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
-import com.opensymphony.xwork2.mock.MockResult;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.ConfigurationProvider;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.inject.ContainerBuilder;
+import org.apache.struts2.xwork2.interceptor.ParametersInterceptor;
+import org.apache.struts2.xwork2.mock.MockResult;
+import org.apache.struts2.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;

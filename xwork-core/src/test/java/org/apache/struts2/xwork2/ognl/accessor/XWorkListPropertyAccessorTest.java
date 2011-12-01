@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2005 Opensymphony. All Rights Reserved.
  */
-package com.opensymphony.xwork2.ognl.accessor;
+package org.apache.struts2.xwork2.ognl.accessor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.util.ListHolder;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.util.ListHolder;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 import java.util.ArrayList;
 import java.util.List;

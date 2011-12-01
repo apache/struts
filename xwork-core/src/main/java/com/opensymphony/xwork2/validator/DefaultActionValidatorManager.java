@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.FileManager;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.validator.validators.VisitorFieldValidator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -347,10 +347,10 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
 
 
     /**
-     * An {@link com.opensymphony.xwork2.validator.ValidatorContext} wrapper that
+     * An {@link org.apache.struts2.xwork2.validator.ValidatorContext} wrapper that
      * returns the full field name
      * {@link InternalValidatorContextWrapper#getFullFieldName(String)}
-     * by consulting it's parent if its an {@link com.opensymphony.xwork2.validator.validators.VisitorFieldValidator.AppendingValidatorContext}.
+     * by consulting it's parent if its an {@link org.apache.struts2.xwork2.validator.validators.VisitorFieldValidator.AppendingValidatorContext}.
      * <p/>
      * Eg. if we have nested Visitor
      * AddressVisitor nested inside PersonVisitor, when using the normal #getFullFieldName, we will get

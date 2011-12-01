@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
 
 
 /**
@@ -46,7 +46,7 @@ public class MultiselectInterceptor extends AbstractInterceptor {
      * @param actionInvocation ActionInvocation
      * @return the result of the action
      * @throws Exception if error
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.xwork2.interceptor.Interceptor#intercept(org.apache.struts2.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation actionInvocation) throws Exception {
         Map parameters = actionInvocation.getInvocationContext().getParameters();

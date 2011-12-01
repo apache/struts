@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.ognl.accessor;
+package org.apache.struts2.xwork2.ognl.accessor;
 
-import com.opensymphony.xwork2.ognl.ObjectProxy;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.struts2.xwork2.ognl.ObjectProxy;
+import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;

@@ -1,6 +1,6 @@
-package com.opensymphony.xwork2.config.providers;
+package org.apache.struts2.xwork2.config.providers;
 
-import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.XWorkTestCase;
 import org.easymock.MockControl;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

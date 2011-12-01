@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.inject.util;
+package org.apache.struts2.xwork2.inject.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;

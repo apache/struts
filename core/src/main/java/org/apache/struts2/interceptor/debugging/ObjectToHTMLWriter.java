@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.xwork2.util.reflection.ReflectionException;
+import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
 
 /**
  * Writes an object as a table, where each field can be expanded if it is an Object/Collection/Array

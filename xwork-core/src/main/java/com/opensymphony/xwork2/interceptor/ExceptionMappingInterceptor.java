@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.xwork2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import java.util.List;
 
@@ -64,7 +64,7 @@ import java.util.List;
  * <!-- START SNIPPET: extending -->
  *
  * If you want to add custom handling for publishing the Exception, you may override
- * {@link #publishException(com.opensymphony.xwork2.ActionInvocation, ExceptionHolder)}. The default implementation
+ * {@link #publishException(org.apache.struts2.xwork2.ActionInvocation, ExceptionHolder)}. The default implementation
  * pushes the given ExceptionHolder on value stack. A custom implementation could add additional logging etc.
  *
  * <!-- END SNIPPET: extending -->

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
-import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.config.providers.MockConfigurationProvider;
+import org.apache.struts2.xwork2.validator.validators.DateRangeFieldValidator;
 
 import java.util.*;
 

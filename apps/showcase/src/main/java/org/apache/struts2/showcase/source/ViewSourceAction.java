@@ -30,13 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.ServletContextAware;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
 
 /**
  * Processes configuration, page, and action class paths to create snippets

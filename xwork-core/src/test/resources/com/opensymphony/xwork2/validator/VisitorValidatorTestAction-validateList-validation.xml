@@ -1,8 +1,0 @@
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
-<validators>
-    <field name="testBeanList">
-        <field-validator type="visitor">
-            <message>testBeanList: </message>
-        </field-validator>
-    </field>
-</validators>

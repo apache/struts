@@ -1,7 +1,7 @@
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
 
 public class TestInterceptor extends AbstractInterceptor {
 	private String string1;

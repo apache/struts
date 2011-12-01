@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
 /**
  * ValidatorFactory

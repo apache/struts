@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.config.entities;
+package org.apache.struts2.xwork2.config.entities;
 
-import com.opensymphony.xwork2.util.location.Located;
-import com.opensymphony.xwork2.util.location.Location;
+import org.apache.struts2.xwork2.util.location.Located;
+import org.apache.struts2.xwork2.util.location.Location;
 
 import java.io.Serializable;
 import java.util.Collections;

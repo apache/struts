@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
 /**
  * Simple marker interface to indicate an object should <b>not</b> have its properties copied during chaining.
  *
- * @see com.opensymphony.xwork2.interceptor.ChainingInterceptor
+ * @see org.apache.struts2.xwork2.interceptor.ChainingInterceptor
  */
 public interface Unchainable {
 }

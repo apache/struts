@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.inject;
+package org.apache.struts2.xwork2.inject;
 
-import com.opensymphony.xwork2.inject.util.ReferenceCache;
+import org.apache.struts2.xwork2.inject.util.ReferenceCache;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;

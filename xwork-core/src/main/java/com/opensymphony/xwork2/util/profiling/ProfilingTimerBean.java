@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.opensymphony.xwork2.util.profiling;
+package org.apache.struts2.xwork2.util.profiling;
 
 import java.util.ArrayList;
 import java.util.List;

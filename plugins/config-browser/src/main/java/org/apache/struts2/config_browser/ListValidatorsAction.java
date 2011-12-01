@@ -21,11 +21,11 @@
 
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.validator.ActionValidatorManager;
-import com.opensymphony.xwork2.validator.Validator;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.validator.ActionValidatorManager;
+import org.apache.struts2.xwork2.validator.Validator;
 import org.apache.struts2.util.ClassLoaderUtils;
 
 import java.util.Collections;

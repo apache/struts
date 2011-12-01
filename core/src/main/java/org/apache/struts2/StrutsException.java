@@ -21,8 +21,8 @@
 
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.util.location.Locatable;
+import org.apache.struts2.xwork2.XWorkException;
+import org.apache.struts2.xwork2.util.location.Locatable;
 
 
 /**

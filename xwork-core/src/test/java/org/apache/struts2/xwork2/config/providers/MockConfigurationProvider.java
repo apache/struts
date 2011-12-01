@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.config.providers;
+package org.apache.struts2.xwork2.config.providers;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.*;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
-import com.opensymphony.xwork2.interceptor.StaticParametersInterceptor;
-import com.opensymphony.xwork2.mock.MockResult;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import org.apache.struts2.xwork2.*;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.ConfigurationProvider;
+import org.apache.struts2.xwork2.config.entities.*;
+import org.apache.struts2.xwork2.inject.ContainerBuilder;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.interceptor.ModelDrivenInterceptor;
+import org.apache.struts2.xwork2.interceptor.ParametersInterceptor;
+import org.apache.struts2.xwork2.interceptor.StaticParametersInterceptor;
+import org.apache.struts2.xwork2.mock.MockResult;
+import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.xwork2.validator.ValidationInterceptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

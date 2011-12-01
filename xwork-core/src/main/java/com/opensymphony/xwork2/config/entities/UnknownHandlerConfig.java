@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.config.entities;
+package org.apache.struts2.xwork2.config.entities;
 
 public class UnknownHandlerConfig {
     private String name;

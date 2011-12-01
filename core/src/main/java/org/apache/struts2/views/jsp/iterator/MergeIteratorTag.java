@@ -28,7 +28,7 @@ import org.apache.struts2.components.Component;
 import org.apache.struts2.components.MergeIterator;
 import org.apache.struts2.views.jsp.ContextBeanTag;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**

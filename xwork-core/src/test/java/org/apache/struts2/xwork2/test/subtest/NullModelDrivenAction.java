@@ -1,6 +1,6 @@
-package com.opensymphony.xwork2.test.subtest;
+package org.apache.struts2.xwork2.test.subtest;
 
-import com.opensymphony.xwork2.ModelDrivenAction;
+import org.apache.struts2.xwork2.ModelDrivenAction;
 
 /**
  * Extends ModelDrivenAction to return a null model.

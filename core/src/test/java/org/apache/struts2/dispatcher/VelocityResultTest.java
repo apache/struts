@@ -21,8 +21,6 @@
 
 package org.apache.struts2.dispatcher;
 
-import junit.framework.TestCase;
-
 import org.apache.struts2.StrutsTestCase;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
@@ -30,11 +28,10 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**

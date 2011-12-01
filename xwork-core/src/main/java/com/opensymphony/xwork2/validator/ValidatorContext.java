@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.LocaleProvider;
+import org.apache.struts2.xwork2.TextProvider;
+import org.apache.struts2.xwork2.ValidationAware;
 
 
 /**

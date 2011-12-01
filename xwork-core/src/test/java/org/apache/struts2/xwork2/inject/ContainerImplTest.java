@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.inject;
+package org.apache.struts2.xwork2.inject;
 
 import junit.framework.TestCase;
 

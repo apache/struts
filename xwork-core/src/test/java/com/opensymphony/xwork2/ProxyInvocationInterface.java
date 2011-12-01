@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2;
+package org.apache.struts2.xwork2;
 
 /**
  * Need by the ProxyInvocationTest

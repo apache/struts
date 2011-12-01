@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.util;
+package org.apache.struts2.xwork2.util;
 
 import java.util.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.test.annotations;
+package org.apache.struts2.xwork2.test.annotations;
 
 public class Person {
 	private String firstName;

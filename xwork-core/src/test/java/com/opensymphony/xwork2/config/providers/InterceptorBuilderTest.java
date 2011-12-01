@@ -1,13 +1,13 @@
-package com.opensymphony.xwork2.config.providers;
+package org.apache.struts2.xwork2.config.providers;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.config.entities.InterceptorConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.config.entities.InterceptorStackConfig;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
 
 import java.util.LinkedHashMap;
 import java.util.List;

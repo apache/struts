@@ -20,10 +20,10 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Locale;
 
 import net.sf.oval.configuration.Configurer;
-import org.apache.struts2.oval.interceptor.OValValidationManager;
 
 public class OValValidationInterceptorTest extends XWorkTestCase {
     public void testSimpleFieldsXML() throws Exception {

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.xwork2.validator;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.validator.validators.RepopulateConversionErrorFieldValidatorSupport;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.validator.validators.RepopulateConversionErrorFieldValidatorSupport;
 
 import java.util.Map;
 

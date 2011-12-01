@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensymphony.xwork2.inject;
+package org.apache.struts2.xwork2.inject;
 
 import java.util.concurrent.Callable;
 
@@ -189,7 +189,7 @@ public enum Scope {
    * Pluggable scoping strategy. Enables users to provide custom
    * implementations of request, session, and wizard scopes. Implement and
    * pass to {@link
-   * Container#setScopeStrategy(com.opensymphony.xwork2.inject.Scope.Strategy)}.
+   * Container#setScopeStrategy(org.apache.struts2.xwork2.inject.Scope.Strategy)}.
    */
   public interface Strategy {
 

@@ -25,12 +25,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.struts2.xwork2.util.DomHelper;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-
-import com.opensymphony.xwork2.util.DomHelper;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * StringAdapter adapts a Java String value to a DOM Element with the specified

@@ -21,9 +21,9 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.RequestContext;

@@ -21,19 +21,18 @@
 
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.DefaultActionInvocation;
+import org.apache.struts2.xwork2.ModelDriven;
+import org.apache.struts2.xwork2.Result;
+import org.apache.struts2.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.profiling.UtilTimerStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpHeaderResult;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
@@ -47,7 +46,7 @@ import java.util.Map;
 
 
 /**
- * Extends the usual {@link ActionInvocation} to add support for processing the object returned
+ * Extends the usual {@link org.apache.struts2.xwork2.ActionInvocation} to add support for processing the object returned
  * from the action execution.  This allows us to support methods that return {@link HttpHeaders}
  * as well as apply content type-specific operations to the result.
  */

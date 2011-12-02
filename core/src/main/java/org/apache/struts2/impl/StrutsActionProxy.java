@@ -23,11 +23,9 @@
 
 package org.apache.struts2.impl;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxy;
-
-import java.util.Map;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.DefaultActionProxy;
 
 public class StrutsActionProxy extends DefaultActionProxy {
 

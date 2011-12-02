@@ -4,24 +4,24 @@
 
 <xwork>
 <!-- 
-	<bean class="com.opensymphony.xwork2.ObjectFactory" name="default" />
-	<bean type="com.opensymphony.xwork2.ActionProxyFactory" name="default" class="com.opensymphony.xwork2.DefaultActionProxyFactory"/>
+	<bean class="org.apache.struts2.xwork2.ObjectFactory" name="default" />
+	<bean type="org.apache.struts2.xwork2.ActionProxyFactory" name="default" class="org.apache.struts2.xwork2.DefaultActionProxyFactory"/>
 	<constant name="devMode" value="false" />
 	
-	<bean type="com.opensymphony.xwork2.util.ValueStackFactory"
-    	  class="com.opensymphony.xwork2.ognl.OgnlValueStackFactory" />
-    <bean type="com.opensymphony.xwork2.util.reflection.ReflectionProvider"
-          class="com.opensymphony.xwork2.ognl.OgnlReflectionProvider" />
-    <bean type="com.opensymphony.xwork2.util.reflection.ReflectionContextFactory"
-          class="com.opensymphony.xwork2.ognl.OgnlReflectionContextFactory" />
-    <bean class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
-    <bean type="com.opensymphony.xwork2.conversion.ObjectTypeDeterminer" 
-    	  class="com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer" />
+	<bean type="org.apache.struts2.xwork2.util.ValueStackFactory"
+    	  class="org.apache.struts2.xwork2.ognl.OgnlValueStackFactory" />
+    <bean type="org.apache.struts2.xwork2.util.reflection.ReflectionProvider"
+          class="org.apache.struts2.xwork2.ognl.OgnlReflectionProvider" />
+    <bean type="org.apache.struts2.xwork2.util.reflection.ReflectionContextFactory"
+          class="org.apache.struts2.xwork2.ognl.OgnlReflectionContextFactory" />
+    <bean class="org.apache.struts2.xwork2.conversion.impl.XWorkConverter" />
+    <bean type="org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer"
+    	  class="org.apache.struts2.xwork2.conversion.impl.DefaultObjectTypeDeterminer" />
 -->
     <!--  static injections -->
     <!-- 
-    <bean class="com.opensymphony.xwork2.ognl.OgnlValueStack" static="true"/>
-    <bean class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" static="true"/>
-    <bean class="com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory" static="true" />
+    <bean class="org.apache.struts2.xwork2.ognl.OgnlValueStack" static="true"/>
+    <bean class="org.apache.struts2.xwork2.conversion.impl.XWorkConverter" static="true"/>
+    <bean class="org.apache.struts2.xwork2.util.reflection.ReflectionProviderFactory" static="true" />
     -->
 </xwork>

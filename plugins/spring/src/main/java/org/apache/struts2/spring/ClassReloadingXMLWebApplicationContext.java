@@ -20,11 +20,11 @@
  */
 package org.apache.struts2.spring;
 
-import com.opensymphony.xwork2.util.classloader.FileResourceStore;
-import com.opensymphony.xwork2.util.classloader.JarResourceStore;
-import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.classloader.FileResourceStore;
+import org.apache.struts2.xwork2.util.classloader.JarResourceStore;
+import org.apache.struts2.xwork2.util.classloader.ReloadingClassLoader;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 import org.apache.commons.jci.monitor.FilesystemAlterationObserver;

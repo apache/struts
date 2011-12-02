@@ -27,7 +27,7 @@ import java.util.Locale;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import org.apache.struts2.xwork2.util.LocalizedTextUtil;
 
 
 /**

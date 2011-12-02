@@ -24,7 +24,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.PortletPreferences;
 
 import org.apache.struts2.portlet.context.PortletActionContext;
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  */

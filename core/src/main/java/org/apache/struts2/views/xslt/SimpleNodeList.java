@@ -23,11 +23,10 @@ package org.apache.struts2.views.xslt;
 
 import java.util.List;
 
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 public class SimpleNodeList implements NodeList {
     private Logger log = LoggerFactory.getLogger(SimpleNodeList.class);

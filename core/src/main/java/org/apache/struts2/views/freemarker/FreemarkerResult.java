@@ -21,11 +21,11 @@
 
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.LocaleProvider;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ValueStack;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -208,7 +208,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     }
 
     /**
-     * This method is called from {@link #doExecute(String, ActionInvocation)} to obtain the
+     * This method is called from {@link #doExecute(String, org.apache.struts2.xwork2.ActionInvocation)} to obtain the
      * FreeMarker configuration object that this result will use for template loading. This is a
      * hook that allows you to custom-configure the configuration object in a subclass, or to fetch
      * it from an IoC container.
@@ -222,7 +222,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     }
 
     /**
-     * This method is called from {@link #doExecute(String, ActionInvocation)}  to obtain the
+     * This method is called from {@link #doExecute(String, org.apache.struts2.xwork2.ActionInvocation)}  to obtain the
      * FreeMarker object wrapper object that this result will use for adapting objects into template
      * models. This is a hook that allows you to custom-configure the wrapper object in a subclass.
      * <p/>

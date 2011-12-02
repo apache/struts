@@ -23,7 +23,7 @@ package org.apache.struts2.views.freemarker;
 
 import java.net.URL;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
 
 import freemarker.cache.URLTemplateLoader;
 

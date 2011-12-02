@@ -32,24 +32,17 @@ import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.ActionProxyFactory;
+import org.apache.struts2.xwork2.DefaultActionInvocation;
+import org.apache.struts2.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.ValidationAwareSupport;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import uk.ltd.getahead.dwr.WebContextFactory;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p/>
@@ -61,7 +54,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * &lt;dwr&gt;
  *    &lt;allow&gt;
  *      &lt;create creator="new" javascript="validator" class="org.apache.struts2.validators.DWRValidator"/&gt;
- *      &lt;convert converter="bean" match="com.opensymphony.xwork2.ValidationAwareSupport"/&gt;
+ *      &lt;convert converter="bean" match="org.apache.struts2.xwork2.ValidationAwareSupport"/&gt;
  *    &lt;/allow&gt;
  * &lt;/dwr&gt;
  *

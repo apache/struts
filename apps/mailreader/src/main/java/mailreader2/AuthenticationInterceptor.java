@@ -20,13 +20,14 @@
  */
 package mailreader2;
 
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
+
 import java.util.Map;
 import org.apache.struts.apps.mailreader.dao.User;
 
-public class AuthenticationInterceptor implements Interceptor  {
+public class AuthenticationInterceptor implements Interceptor {
 
     public void destroy () {}
 
@@ -41,7 +42,7 @@ public class AuthenticationInterceptor implements Interceptor  {
         boolean isAuthenticated = (null!=user) && (null!=user.getDatabase());
 
         if (!isAuthenticated) {
-            return Action.LOGIN;            
+            return Action.LOGIN;
         }
         else {
             return actionInvocation.invoke();

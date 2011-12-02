@@ -21,11 +21,11 @@
 
 package ${package}.example;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.config.RuntimeConfiguration;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
 
 import java.util.Map;
 import java.util.List;

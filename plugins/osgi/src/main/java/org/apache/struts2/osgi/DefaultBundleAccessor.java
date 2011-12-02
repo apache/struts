@@ -24,22 +24,18 @@ package org.apache.struts2.osgi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.MalformedURLException;
 import java.util.*;
-import java.util.Map.Entry;
 
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 /**
  * Helper class that find resources and loads classes from the list of bundles

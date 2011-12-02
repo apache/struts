@@ -32,20 +32,18 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.ConfigurationManager;
+import org.apache.struts2.xwork2.inject.Container;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
 import com.mockobjects.servlet.MockFilterChain;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.inject.Container;
 
 
 /**

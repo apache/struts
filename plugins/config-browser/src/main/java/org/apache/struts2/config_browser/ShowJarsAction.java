@@ -24,15 +24,13 @@ package org.apache.struts2.config_browser;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
 
 /**
  * Shows all constants as loaded by Struts

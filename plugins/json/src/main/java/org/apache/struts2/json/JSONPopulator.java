@@ -48,8 +48,8 @@ import java.util.Set;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 /**
  * Isolate the process of populating JSON objects from the Interceptor class

@@ -38,10 +38,10 @@ import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
 import org.apache.struts2.views.jsp.ui.TestAction1;
 
 import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStackFactory;
 
 
 /**

@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.convention.actions.result;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Result;
 
 @Result(name="error", location="error.jsp", params={"key", "value", "key1", "value1"})

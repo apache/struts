@@ -29,15 +29,13 @@ import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.springframework.mock.web.MockServletContext;
-
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 
 /**
  * Base test case for JUnit testing Struts.

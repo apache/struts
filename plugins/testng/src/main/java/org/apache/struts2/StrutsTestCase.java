@@ -29,13 +29,11 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.xwork2.TestNGXWorkTestCase;
-
 /**
  * Base test class for TestNG unit tests.  Provides common Struts variables
  * and performs Struts setup and teardown processes
  */
-public class StrutsTestCase extends TestNGXWorkTestCase {
+public class StrutsTestCase extends org.apache.struts2.xwork2.TestNGXWorkTestCase {
 
     @BeforeTest
     protected void setUp() throws Exception {

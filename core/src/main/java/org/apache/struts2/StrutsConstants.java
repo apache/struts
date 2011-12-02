@@ -61,10 +61,10 @@ public final class StrutsConstants {
 
 	public static final String STRUTS_URL_RENDERER = "struts.urlRenderer";
 
-    /** The com.opensymphony.xwork2.ObjectFactory implementation class */
+    /** The org.apache.struts2.xwork2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
 
-    /** The com.opensymphony.xwork2.util.ObjectTypeDeterminer implementation class */
+    /** The org.apache.struts2.xwork2.util.ObjectTypeDeterminer implementation class */
     public static final String STRUTS_OBJECTTYPEDETERMINER = "struts.objectTypeDeterminer";
 
     /** The package containing actions that use Rife continuations */
@@ -194,25 +194,25 @@ public final class StrutsConstants {
 	/** The name of the parameter to determine whether static method access will be allowed in OGNL expressions or not */
 	public static final String STRUTS_ALLOW_STATIC_METHOD_ACCESS = "struts.ognl.allowStaticMethodAccess";
 
-	/** The com.opensymphony.xwork2.validator.ActionValidatorManager implementation class */
+	/** The org.apache.struts2.xwork2.validator.ActionValidatorManager implementation class */
     public static final String STRUTS_ACTIONVALIDATORMANAGER = "struts.actionValidatorManager";
 
-    /** The {@link com.opensymphony.xwork2.util.ValueStackFactory} implementation class */
+    /** The {@link org.apache.struts2.xwork2.util.ValueStackFactory} implementation class */
     public static final String STRUTS_VALUESTACKFACTORY = "struts.valueStackFactory";
 
-    /** The {@link com.opensymphony.xwork2.util.reflection.ReflectionProvider} implementation class */
+    /** The {@link org.apache.struts2.xwork2.util.reflection.ReflectionProvider} implementation class */
     public static final String STRUTS_REFLECTIONPROVIDER = "struts.reflectionProvider";
 
-    /** The {@link com.opensymphony.xwork2.util.reflection.ReflectionContextFactory} implementation class */
+    /** The {@link org.apache.struts2.xwork2.util.reflection.ReflectionContextFactory} implementation class */
     public static final String STRUTS_REFLECTIONCONTEXTFACTORY = "struts.reflectionContextFactory";
     
-    /** The {@link com.opensymphony.xwork2.util.PatternMatcher} implementation class */
+    /** The {@link org.apache.struts2.xwork2.util.PatternMatcher} implementation class */
     public static final String STRUTS_PATTERNMATCHER = "struts.patternMatcher";
 
     /** The {@link org.apache.struts2.dispatcher.StaticContentLoader} implementation class */
     public static final String STRUTS_STATIC_CONTENT_LOADER = "struts.staticContentLoader";
 
-    /** The {@link com.opensymphony.xwork2.UnknownHandlerManager} implementation class */
+    /** The {@link org.apache.struts2.xwork2.UnknownHandlerManager} implementation class */
     public static final String STRUTS_UNKNOWN_HANDLER_MANAGER = "struts.unknownHandlerManager";
 
     /** Throw RuntimeException when a property is not found, or the evaluation of the espression fails*/

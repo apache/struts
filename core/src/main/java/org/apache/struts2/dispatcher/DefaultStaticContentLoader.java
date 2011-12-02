@@ -20,10 +20,10 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.ng.HostConfig;
 import org.apache.struts2.util.ClassLoaderUtils;

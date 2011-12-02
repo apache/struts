@@ -26,20 +26,19 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.Result;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.interceptor.Interceptor;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.validator.Validator;
 import org.codehaus.plexus.PlexusContainer;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.validator.Validator;
 
 /**
  * Plexus integartion. You need three optional files: plexus-request.xml, plexus-session.xml, and
@@ -114,7 +113,7 @@ public class PlexusObjectFactory extends ObjectFactory {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.ObjectFactory#buildAction(java.lang.String, java.lang.String, com.opensymphony.xwork2.config.entities.ActionConfig, java.util.Map)
+     * @see org.apache.struts2.xwork2.ObjectFactory#buildAction(java.lang.String, java.lang.String, org.apache.struts2.xwork2.config.entities.ActionConfig, java.util.Map)
      */
     public Object buildAction(String actionName, String namespace, ActionConfig config, Map extraContext)
             throws Exception {
@@ -128,7 +127,7 @@ public class PlexusObjectFactory extends ObjectFactory {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.ObjectFactory#buildInterceptor(com.opensymphony.xwork2.config.entities.InterceptorConfig, java.util.Map)
+     * @see org.apache.struts2.xwork2.ObjectFactory#buildInterceptor(org.apache.struts2.xwork2.config.entities.InterceptorConfig, java.util.Map)
      */
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map interceptorRefParams)
             throws ConfigurationException {
@@ -159,7 +158,7 @@ public class PlexusObjectFactory extends ObjectFactory {
         }
         catch (ClassCastException e) {
             cause = e;
-            message = "Class [" + interceptorClassName + "] does not implement com.opensymphony.xwork2.interceptor.Interceptor";
+            message = "Class [" + interceptorClassName + "] does not implement org.apache.struts2.xwork2.interceptor.Interceptor";
         }
         catch (Exception e) {
             cause = e;
@@ -174,7 +173,7 @@ public class PlexusObjectFactory extends ObjectFactory {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.ObjectFactory#buildResult(com.opensymphony.xwork2.config.entities.ResultConfig, java.util.Map)
+     * @see org.apache.struts2.xwork2.ObjectFactory#buildResult(org.apache.struts2.xwork2.config.entities.ResultConfig, java.util.Map)
      */
     public Result buildResult(ResultConfig resultConfig, Map extraContext)
             throws Exception {
@@ -188,7 +187,7 @@ public class PlexusObjectFactory extends ObjectFactory {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.ObjectFactory#buildValidator(java.lang.String, java.util.Map, java.util.Map)
+     * @see org.apache.struts2.xwork2.ObjectFactory#buildValidator(java.lang.String, java.util.Map, java.util.Map)
      */
     public Validator buildValidator(String className, Map params, Map extraContext)
             throws Exception {
@@ -201,7 +200,7 @@ public class PlexusObjectFactory extends ObjectFactory {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.ObjectFactory#buildBean(java.lang.Class, java.util.Map)
+     * @see org.apache.struts2.xwork2.ObjectFactory#buildBean(java.lang.Class, java.util.Map)
      */
     public Object buildBean(Class clazz, Map extraContext)
             throws Exception {
@@ -222,7 +221,7 @@ public class PlexusObjectFactory extends ObjectFactory {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.ObjectFactory#getClassInstance(java.lang.String)
+     * @see org.apache.struts2.xwork2.ObjectFactory#getClassInstance(java.lang.String)
      */
     public Class getClassInstance(String className)
             throws ClassNotFoundException {

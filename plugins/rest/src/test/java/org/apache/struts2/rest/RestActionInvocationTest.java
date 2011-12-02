@@ -1,16 +1,16 @@
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.mock.MockInterceptor;
-import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.DefaultUnknownHandlerManager;
+import org.apache.struts2.xwork2.ModelDriven;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.mock.MockActionProxy;
+import org.apache.struts2.xwork2.mock.MockInterceptor;
+import org.apache.struts2.xwork2.util.XWorkTestCaseHelper;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpHeaderResult;
@@ -217,7 +217,7 @@ public class RestActionInvocationTest extends TestCase {
 	    ((MockActionProxy)restActionInvocation.getProxy()).setMethod("index");
 
 	    // Define result 'success'
-		ResultConfig resultConfig = new ResultConfig.Builder("success", 
+		ResultConfig resultConfig = new ResultConfig.Builder("success",
 			"org.apache.struts2.dispatcher.HttpHeaderResult")
 	    	.addParam("status", "123").build();
 	    ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest", 
@@ -244,7 +244,7 @@ public class RestActionInvocationTest extends TestCase {
             interceptorMappings.add(new InterceptorMapping("interceptor", mockInterceptor));
             interceptors = interceptorMappings.iterator();
             MockActionProxy actionProxy = new MockActionProxy();
-            ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest", 
+            ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
     				"RestAction", "org.apache.rest.RestAction").build();
             actionProxy.setConfig(actionConfig);
             proxy = actionProxy;

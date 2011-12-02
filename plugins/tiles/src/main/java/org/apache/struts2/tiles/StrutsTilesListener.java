@@ -26,13 +26,12 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.TilesException;
 import org.apache.tiles.factory.TilesContainerFactory;
 import org.apache.tiles.web.startup.TilesListener;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Listener used to automatically inject ServletContext

@@ -21,8 +21,8 @@
 
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.Result;
 
 /**
  * Null result to get around annotation defaults that can't be null

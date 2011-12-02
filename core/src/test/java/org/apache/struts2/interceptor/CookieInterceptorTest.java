@@ -26,15 +26,15 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionSupport;
 import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionSupport;
 
 public class CookieInterceptorTest extends StrutsTestCase {
 

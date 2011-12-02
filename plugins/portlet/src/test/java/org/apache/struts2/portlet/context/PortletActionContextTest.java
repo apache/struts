@@ -33,10 +33,9 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.xwork2.ActionContext;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-
-import com.opensymphony.xwork2.ActionContext;
 
 /**
  */

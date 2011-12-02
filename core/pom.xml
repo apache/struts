@@ -131,7 +131,7 @@
                                 </group>
                                 <group>
                                     <title>XWork Packages</title>
-                                    <packages>com.opensymphony.xwork2*</packages>
+                                    <packages>org.apache.struts2.xwork2*</packages>
                                 </group>
                             </groups>
                             <show>private</show>

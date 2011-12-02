@@ -32,9 +32,9 @@ import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUser;
 import org.apache.struts2.interceptor.ApplicationAware;
 import org.apache.struts2.interceptor.SessionAware;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p> Base Action for MailreaderSupport application. </p>

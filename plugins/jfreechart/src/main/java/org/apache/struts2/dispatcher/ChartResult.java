@@ -22,9 +22,9 @@
 package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 
@@ -171,7 +171,7 @@ public class ChartResult extends StrutsResultSupport {
 
     // OTHER METHODS -----------------------
 
-    // Required by com.opensymphony.xwork2.Result
+    // Required by org.apache.struts2.xwork2.Result
 
     /**
      * Executes the result. Writes the given chart as a PNG or JPG to the servlet output stream.

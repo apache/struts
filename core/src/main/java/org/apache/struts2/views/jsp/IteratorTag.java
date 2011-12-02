@@ -28,7 +28,7 @@ import javax.servlet.jsp.JspException;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.IteratorComponent;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 /**
  * @see IteratorComponent

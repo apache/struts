@@ -28,8 +28,6 @@ import org.testng.TestListenerAdapter;
 import org.testng.TestNG;
 import org.testng.annotations.Test;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
-
 public class TestNGStrutsTestCaseTest extends TestCase {
 
     public void testSimpleTest() throws Exception {
@@ -52,7 +50,7 @@ public class TestNGStrutsTestCaseTest extends TestCase {
     
     public static class RunTest extends StrutsTestCase {
         public static boolean ran = false;
-        public static ConfigurationManager mgr;
+        public static org.apache.struts2.xwork2.config.ConfigurationManager mgr;
         public static Dispatcher du;
        
         @Test 

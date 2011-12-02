@@ -22,8 +22,9 @@ package org.apache.struts2.sitemesh;
 
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
@@ -57,7 +58,7 @@ import java.util.Locale;
  * own manager</p>
  */
 public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.FreemarkerServlet {
-    private static final com.opensymphony.xwork2.util.logging.Logger LOG = LoggerFactory.getLogger(FreemarkerDecoratorServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerDecoratorServlet.class);
 
 
     protected FreemarkerManager freemarkerManager;
@@ -188,7 +189,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
             }
         } catch (InvalidReferenceException x) {
             // this exception is thrown if there is an error processing a reference.  We want to report these!
-            HttpServletRequest req = ((StrutsRequestWrapper) ActionContext.getContext().get("com.opensymphony.xwork2.dispatcher.HttpServletRequest"));
+            HttpServletRequest req = ((StrutsRequestWrapper) ActionContext.getContext().get("org.apache.struts2.xwork2.dispatcher.HttpServletRequest"));
             String resultCode = ActionContext.getContext().getActionInvocation().getResultCode();
             if (req == null) req = request;
 

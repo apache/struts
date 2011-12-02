@@ -32,12 +32,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
-
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Velocity based template engine.

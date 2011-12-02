@@ -30,15 +30,11 @@ import javax.servlet.ServletResponse;
 
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.TestAction;
-import org.apache.struts2.util.ListEntry;
-import org.apache.struts2.util.StrutsUtil;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockRequestDispatcher;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Test case for StrutsUtil.

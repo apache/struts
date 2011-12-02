@@ -21,13 +21,13 @@
 
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.ActionProxyFactory;
+import org.apache.struts2.xwork2.XWorkTestCase;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;

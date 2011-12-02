@@ -1,13 +1,8 @@
 package actions.osgi;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ResultPath;
-import org.apache.struts2.osgi.interceptor.BundleContextAware;
-import org.apache.struts2.osgi.interceptor.ServiceAware;
-import org.osgi.framework.BundleContext;
-
-import java.util.List;
 
 @ResultPath("/content")
 public class HelloWorldAction extends ActionSupport {

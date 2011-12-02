@@ -24,13 +24,11 @@ package org.apache.struts2.osgi;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.PackageProvider;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 /**
  * Implementations of this interface can load packages from a Bundle

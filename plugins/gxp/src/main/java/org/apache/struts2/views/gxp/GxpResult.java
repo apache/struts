@@ -22,9 +22,6 @@ package org.apache.struts2.views.gxp;
 
 import com.google.gxp.base.GxpContext;
 import com.google.gxp.html.HtmlClosure;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
 
 import java.io.IOException;
 
@@ -70,7 +67,7 @@ public class GxpResult extends AbstractGxpResult {
      */
     public static final String DEFAULT_PARAM = "gxpName";
 
-    private Container container;
+    private org.apache.struts2.xwork2.inject.Container container;
     private boolean outputXml = false;
 
     /**
@@ -102,7 +99,7 @@ public class GxpResult extends AbstractGxpResult {
     /**
      * Tells the GXP to write itself to the output stream.
      */
-    public void execute(ActionInvocation actionInvocation) {
+    public void execute(org.apache.struts2.xwork2.ActionInvocation actionInvocation) {
         GxpResourceProvider provider = getProvider();
         try {
             getGxpClosure().write(provider.getWriter(), new GxpContext(provider.getLocale(), outputXml));
@@ -138,8 +135,8 @@ public class GxpResult extends AbstractGxpResult {
         }
     }
 
-    @Inject
-    public void setContainer(Container container) {
+    @org.apache.struts2.xwork2.inject.Inject
+    public void setContainer(org.apache.struts2.xwork2.inject.Container container) {
         this.container = container;
     }
 }

@@ -41,17 +41,16 @@ import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.validator.ValidatorPlugIn;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.TextProvider;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.interceptor.ScopedModelDriven;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.xml.sax.SAXException;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  *  Calls the validate() method on the ActionForm, if it exists.  The errors are handled

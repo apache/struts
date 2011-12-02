@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.portlet.example.eventing;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 import org.apache.struts2.portlet.interceptor.PortletResponseAware;
 
 import javax.portlet.ActionResponse;

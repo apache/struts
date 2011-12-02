@@ -26,7 +26,7 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
-    <bean type="com.opensymphony.xwork2.ObjectFactory" name="spring" class="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+    <bean type="org.apache.struts2.xwork2.ObjectFactory" name="spring" class="org.apache.struts2.spring.StrutsSpringObjectFactory" />
     
     <!--  Make the Spring object factory the automatic default -->
     <constant name="struts.objectFactory" value="spring" />
@@ -37,7 +37,7 @@
 
     <package name="spring-default">
         <interceptors>
-            <interceptor name="autowiring" class="com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
+            <interceptor name="autowiring" class="org.apache.struts2.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
         </interceptors>
     </package>    
 </struts>

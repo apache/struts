@@ -7,11 +7,11 @@
 	<package name="edit" extends="struts-portlet-default"
 		namespace="/edit">
 		<action name="index"
-			class="com.opensymphony.xwork2.ActionSupport">
+			class="org.apache.struts2.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/edit/index.jsp</result>
 		</action>
 		<action name="test"
-			class="com.opensymphony.xwork2.ActionSupport">
+			class="org.apache.struts2.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/edit/test.jsp</result>
 		</action>
 		<action name="formExampleEdit"
@@ -41,7 +41,7 @@
 
 	<package name="editTest" extends="edit" namespace="/edit/dummy/test">
 		<action name="testAction"
-			class="com.opensymphony.xwork2.ActionSupport">
+			class="org.apache.struts2.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/edit/namespaceTest.jsp</result>
 		</action>
 	</package>

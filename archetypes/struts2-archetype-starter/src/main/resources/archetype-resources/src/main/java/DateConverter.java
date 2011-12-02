@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.Date;
-import com.opensymphony.xwork2.conversion.TypeConversionException;
+import org.apache.struts2.xwork2.conversion.TypeConversionException;
 
 /**
  * 

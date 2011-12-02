@@ -28,8 +28,8 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.inject.Inject;
 
 /**
  * FormButton.

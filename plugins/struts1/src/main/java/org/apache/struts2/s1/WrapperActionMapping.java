@@ -26,9 +26,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.config.ExceptionConfig;
 import org.apache.struts.config.ForwardConfig;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
 
 import java.util.Iterator;
 import java.util.Map;

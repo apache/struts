@@ -24,8 +24,8 @@ package org.apache.struts2.views.jsp.ui;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.ognl.OgnlUtil;
 
 
 /**

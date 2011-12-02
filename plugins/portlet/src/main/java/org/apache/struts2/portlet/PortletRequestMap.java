@@ -27,8 +27,8 @@ import java.util.Set;
 
 import javax.portlet.PortletRequest;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request attributes.

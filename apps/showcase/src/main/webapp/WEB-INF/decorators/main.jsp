@@ -1,3 +1,6 @@
+<%@ page import="org.apache.struts2.xwork2.ActionInvocation" %>
+<%@ page import="org.apache.struts2.xwork2.util.location.Location" %>
+<%@ page import="org.apache.struts2.xwork2.ActionContext" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,10 +11,10 @@
     
     // Calculate the view sources url
     String sourceUrl = request.getContextPath()+"/viewSource.action";
-    com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
+    ActionInvocation inv = ActionContext.getContext().getActionInvocation();
     org.apache.struts2.dispatcher.mapper.ActionMapping mapping = org.apache.struts2.ServletActionContext.getActionMapping();
     if (inv != null) {
-        com.opensymphony.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
+        Location loc = inv.getProxy().getConfig().getLocation();
         sourceUrl += "?config="+(loc != null ? loc.getURI()+":"+loc.getLineNumber() : "");
         sourceUrl += "&className="+inv.getProxy().getConfig().getClassName();
         

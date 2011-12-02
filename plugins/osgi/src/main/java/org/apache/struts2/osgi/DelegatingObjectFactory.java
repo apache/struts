@@ -23,10 +23,10 @@ package org.apache.struts2.osgi;
 
 import java.util.Map;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.PackageProvider;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.PackageProvider;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 
 public class DelegatingObjectFactory extends ObjectFactory implements ObjectFactoryDestroyable {

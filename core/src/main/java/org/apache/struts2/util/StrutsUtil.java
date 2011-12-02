@@ -40,17 +40,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 
 /**

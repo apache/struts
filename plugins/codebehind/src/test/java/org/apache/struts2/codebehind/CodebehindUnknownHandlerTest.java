@@ -23,12 +23,17 @@ package org.apache.struts2.codebehind;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ResultTypeConfig;
+import org.apache.struts2.xwork2.util.XWorkTestCaseHelper;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.xwork2.ActionProxyFactory;
+import org.apache.struts2.xwork2.Result;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;

@@ -16,12 +16,12 @@
 package ${package};
 
 import java.util.Date;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.validator.annotations.Validation;
-import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.conversion.annotations.Conversion;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.validator.annotations.Validation;
+import org.apache.struts2.xwork2.validator.annotations.RequiredStringValidator;
+import org.apache.struts2.xwork2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.xwork2.conversion.annotations.Conversion;
+import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
 
 @Validation()
 @Conversion()

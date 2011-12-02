@@ -1,5 +1,6 @@
 package org.apache.struts2.osgi.interceptor;
 
+import org.apache.struts2.xwork2.ActionInvocation;
 import org.easymock.EasyMock;
 import org.apache.struts2.osgi.OsgiHost;
 import org.osgi.framework.BundleContext;
@@ -7,7 +8,6 @@ import org.osgi.framework.ServiceReference;
 
 import javax.servlet.ServletContext;
 
-import com.opensymphony.xwork2.ActionInvocation;
 import junit.framework.TestCase;
 
 import java.util.List;

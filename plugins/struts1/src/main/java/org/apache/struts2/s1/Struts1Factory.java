@@ -21,21 +21,17 @@
 
 package org.apache.struts2.s1;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.TextProvider;
+import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
 
-import org.apache.struts.Globals;
 import org.apache.struts.action.*;
 import org.apache.struts.config.*;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
 
 import java.util.Iterator;
 import java.util.Arrays;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
 
 
 /**
@@ -68,7 +64,7 @@ public class Struts1Factory {
      * @param cfg the XWork ActionConfig.
      * @return a wrapper Struts 1.x ActionMapping.
      */
-    public ActionMapping createActionMapping(ActionConfig cfg) {
+    public ActionMapping createActionMapping(org.apache.struts2.xwork2.config.entities.ActionConfig cfg) {
         assert cfg != null;
         return new WrapperActionMapping(this, cfg);
     }
@@ -82,7 +78,7 @@ public class Struts1Factory {
      * @param moduleConfig the Struts 1.x ModuleConfig that contains the ActionMapping.
      * @return a wrapper Struts 1.x ActionMapping.
      */
-    ActionMapping createActionMapping(ActionConfig cfg, String actionPath, ModuleConfig moduleConfig) {
+    ActionMapping createActionMapping(org.apache.struts2.xwork2.config.entities.ActionConfig cfg, String actionPath, ModuleConfig moduleConfig) {
         assert cfg != null;
         assert moduleConfig != null;
         return new WrapperActionMapping(this, cfg, actionPath, moduleConfig);

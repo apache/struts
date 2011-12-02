@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 /**
  */

@@ -23,11 +23,11 @@ package org.apache.struts2.interceptor;
 
 import java.util.Map;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -80,7 +80,7 @@ public class ClearSessionInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(ClearSessionInterceptor.class);
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.xwork2.interceptor.Interceptor#intercept(org.apache.struts2.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
         if (LOG.isDebugEnabled()) {

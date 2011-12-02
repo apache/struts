@@ -27,10 +27,10 @@ package org.apache.struts2.sitemesh;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.context.Context;
 

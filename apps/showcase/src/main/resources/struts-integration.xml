@@ -8,7 +8,7 @@
   <package name="integration" extends="struts1-default" namespace="/integration">
 
     <interceptors>
-      <interceptor name="gangsterForm" class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor">
+      <interceptor name="gangsterForm" class="org.apache.struts2.xwork2.interceptor.ScopedModelDrivenInterceptor">
         <param name="className">org.apache.struts2.showcase.integration.GangsterForm</param>
         <param name="name">gangsterForm</param>
       </interceptor>

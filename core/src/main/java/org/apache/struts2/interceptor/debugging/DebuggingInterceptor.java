@@ -44,15 +44,15 @@ import org.apache.struts2.dispatcher.FilterDispatcher;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.xwork2.interceptor.PreResultListener;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -96,7 +96,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     private final static Logger LOG = LoggerFactory.getLogger(DebuggingInterceptor.class);
 
     private String[] ignorePrefixes = new String[]{"org.apache.struts.",
-            "com.opensymphony.xwork2.", "xwork."};
+            "org.apache.struts2.xwork2.", "xwork."};
     private String[] _ignoreKeys = new String[]{"application", "session",
             "parameters", "request"};
     private HashSet<String> ignoreKeys = new HashSet<String>(Arrays.asList(_ignoreKeys));
@@ -139,7 +139,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     /*
      * (non-Javadoc)
      *
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#invoke(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.xwork2.interceptor.Interceptor#invoke(org.apache.struts2.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation inv) throws Exception {
         boolean actionOnly = false;

@@ -27,8 +27,8 @@ import java.util.Map;
 
 import org.apache.struts2.util.StrutsTypeConverter;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 public class DateConverter extends StrutsTypeConverter {
 

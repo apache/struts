@@ -5,6 +5,6 @@
 
 <xwork>
     <package name="includeTest" extends="default" namespace="includeTest">
-        <action name="includeTest" class="com.opensymphony.xwork2.SimpleAction"></action>
+        <action name="includeTest" class="org.apache.struts2.xwork2.SimpleAction"></action>
     </package>
 </xwork>

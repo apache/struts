@@ -15,10 +15,10 @@
  */
 package ${package};
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 import java.util.Date;
-import com.opensymphony.xwork2.conversion.annotations.Conversion;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
+import org.apache.struts2.xwork2.conversion.annotations.Conversion;
+import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
 
 /**
  * 

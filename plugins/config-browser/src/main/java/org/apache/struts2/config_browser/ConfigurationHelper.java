@@ -25,20 +25,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.util.ClassLoaderUtils;
-
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ResolverUtil;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ResolverUtil;
 
 /**
  * ConfigurationHelper

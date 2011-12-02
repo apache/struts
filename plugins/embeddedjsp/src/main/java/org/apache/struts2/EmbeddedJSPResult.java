@@ -20,7 +20,7 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionInvocation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 

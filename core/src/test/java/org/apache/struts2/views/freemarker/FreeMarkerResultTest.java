@@ -25,8 +25,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
@@ -35,15 +33,11 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.xwork2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.easymock.EasyMock;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 import javax.servlet.ServletContext;
 

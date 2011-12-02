@@ -17,7 +17,7 @@ package ${package};
 
 import junit.framework.TestCase;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.Action;
 
 /**
  * 

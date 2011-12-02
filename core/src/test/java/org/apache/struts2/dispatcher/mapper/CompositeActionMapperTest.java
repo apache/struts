@@ -21,21 +21,14 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.xwork2.config.ConfigurationManager;
+import org.apache.struts2.xwork2.inject.Container;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
 
 import junit.framework.TestCase;
 

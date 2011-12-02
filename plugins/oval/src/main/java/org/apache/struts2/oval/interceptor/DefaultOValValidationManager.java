@@ -1,9 +1,8 @@
 package org.apache.struts2.oval.interceptor;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.FileManager;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import net.sf.oval.configuration.Configurer;
 import net.sf.oval.configuration.annotation.AnnotationsConfigurer;
 import net.sf.oval.configuration.annotation.JPAAnnotationsConfigurer;

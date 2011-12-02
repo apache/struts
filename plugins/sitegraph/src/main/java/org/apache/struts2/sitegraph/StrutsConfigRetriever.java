@@ -21,12 +21,12 @@
 
 package org.apache.struts2.sitegraph;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.config.ConfigurationManager;
+import org.apache.struts2.xwork2.config.ConfigurationProvider;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.config.BeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;

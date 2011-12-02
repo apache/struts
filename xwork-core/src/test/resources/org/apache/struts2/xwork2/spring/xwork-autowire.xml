@@ -1,0 +1,22 @@
+<!DOCTYPE xwork PUBLIC "-//Apache Struts//XWork 2.0//EN" "http://struts.apache.org/dtds/xwork-2.0.dtd">
+<xwork>
+	<bean type="org.apache.struts2.xwork2.ActionProxyFactory" name="default" class="org.apache.struts2.xwork2.DefaultActionProxyFactory" />
+	<bean type="org.apache.struts2.xwork2.ObjectFactory" name="default" class="org.apache.struts2.xwork2.spring.SpringObjectFactory" />
+	<constant name="applicationContextPath" value="org/apache/struts2/xwork2/spring/actionContext-spring.xml" />
+    <package name="default">
+        <result-types>
+            <result-type name="null"
+class="org.apache.struts2.xwork2.result.NullResult" default="true"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="autowire" class="org.apache.struts2.xwork2.spring.interceptor.ActionAutowiringInterceptor">
+              <param name="autowireStrategy">@org.springframework.beans.factory.config.AutowireCapableBeanFactory@AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE</param>
+            </interceptor>
+        </interceptors>
+
+        <default-interceptor-ref name="autowire"/>
+
+       <action name="simpleAction" class="org.apache.struts2.xwork2.SimpleAction"/>
+    </package>
+</xwork>

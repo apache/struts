@@ -34,9 +34,9 @@ import org.apache.struts.config.MessageResourcesConfig;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.config.PlugInConfig;
 
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
 
 /**
  * Wrapper for a Struts 1.x ModuleConfig based on an XWork PackageConfig.  Using a wrapper object
@@ -65,8 +65,8 @@ class WrapperModuleConfig implements ModuleConfig {
             for (Iterator i = delegate.getActionConfigs().entrySet().iterator(); i.hasNext();) {
                 Map.Entry entry = (Map.Entry) i.next();
                 String actionPath = '/' + (String) entry.getKey();
-                com.opensymphony.xwork2.config.entities.ActionConfig actionConfig =
-                        (com.opensymphony.xwork2.config.entities.ActionConfig) entry.getValue();
+                org.apache.struts2.xwork2.config.entities.ActionConfig actionConfig =
+                        (org.apache.struts2.xwork2.config.entities.ActionConfig) entry.getValue();
                 _actionMappings.put(actionPath, strutsFactory.createActionMapping(actionConfig, actionPath, this));
             }
         }

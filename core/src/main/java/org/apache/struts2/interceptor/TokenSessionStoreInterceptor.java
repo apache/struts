@@ -30,10 +30,10 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.Result;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**
@@ -106,7 +106,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
     private static final long serialVersionUID = -9032347965469098195L;
 
     /* (non-Javadoc)
-     * @see org.apache.struts2.interceptor.TokenInterceptor#handleInvalidToken(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.TokenInterceptor#handleInvalidToken(org.apache.struts2.xwork2.ActionInvocation)
      */
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
@@ -151,7 +151,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.struts2.interceptor.TokenInterceptor#handleValidToken(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.TokenInterceptor#handleValidToken(org.apache.struts2.xwork2.ActionInvocation)
      */
     protected String handleValidToken(ActionInvocation invocation) throws Exception {
         // we know the token name and token must be there

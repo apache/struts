@@ -1,0 +1,14 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.1//EN"
+    "http://struts.apache.org/dtds/xwork-2.1.dtd"
+ >
+
+<xwork>
+    <bean type="org.apache.struts2.xwork2.UnknownHandler" name="uh1" class="org.apache.struts2.xwork2.config.providers.SomeUnknownHandler"/>
+    <bean type="org.apache.struts2.xwork2.UnknownHandler" name="uh2" class="org.apache.struts2.xwork2.config.providers.SomeUnknownHandler"/>
+
+    <unknown-handler-stack>
+        <unknown-handler-ref name="uh1" />
+        <unknown-handler-ref name="uh2" />
+    </unknown-handler-stack>
+</xwork>

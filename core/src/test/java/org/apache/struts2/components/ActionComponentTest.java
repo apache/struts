@@ -25,11 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.xwork2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.util.ValueStack;
 
 public class ActionComponentTest extends StrutsTestCase {
 

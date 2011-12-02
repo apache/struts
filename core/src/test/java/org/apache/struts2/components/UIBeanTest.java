@@ -25,11 +25,10 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  *

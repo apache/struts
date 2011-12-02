@@ -24,8 +24,8 @@ package org.apache.struts2.dispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

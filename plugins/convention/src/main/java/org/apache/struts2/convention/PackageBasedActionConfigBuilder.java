@@ -20,28 +20,28 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
-import com.opensymphony.xwork2.util.finder.ClassFinder;
-import com.opensymphony.xwork2.util.finder.ClassFinder.ClassInfo;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
-import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.finder.UrlSet;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ObjectFactory;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.FileManager;
+import org.apache.struts2.xwork2.util.TextParseUtil;
+import org.apache.struts2.xwork2.util.classloader.ReloadingClassLoader;
+import org.apache.struts2.xwork2.util.finder.ClassFinder;
+import org.apache.struts2.xwork2.util.finder.ClassFinder.ClassInfo;
+import org.apache.struts2.xwork2.util.finder.ClassLoaderInterface;
+import org.apache.struts2.xwork2.util.finder.ClassLoaderInterfaceDelegate;
+import org.apache.struts2.xwork2.util.finder.Test;
+import org.apache.struts2.xwork2.util.finder.UrlSet;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.StrutsConstants;
@@ -224,7 +224,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param checkImplementsAction (Optional) Map classes that implement com.opensymphony.xwork2.Action
+     * @param checkImplementsAction (Optional) Map classes that implement org.apache.struts2.xwork2.Action
      *                       as actions
      */
     @Inject(value = "struts.convention.action.checkImplementsAction", required = false)
@@ -470,7 +470,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * Note that we can't include the test for {@link #actionSuffix} here
      * because a class is included if its name ends in {@link #actionSuffix} OR
-     * it implements {@link com.opensymphony.xwork2.Action}. Since the whole
+     * it implements {@link org.apache.struts2.xwork2.Action}. Since the whole
      * goal is to avoid loading the class if we don't have to, the (actionSuffix
      * || implements Action) test will have to remain until later. See
      * {@link #getActionClassTest()} for the test performed on the loaded
@@ -510,13 +510,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
     
     /**
-     * Construct a {@link Test} object that determines if a specified class name
+     * Construct a {@link org.apache.struts2.xwork2.util.finder.Test} object that determines if a specified class name
      * should be included in the package scan based on the clazz's package name.
      * Note that the goal is to avoid loading the class, so the test should only
      * rely on information in the class name itself. The default implementation
      * is to return the result of {@link #includeClassNameInActionScan(String)}.
      * 
-     * @return a {@link Test} object that returns true if the specified class
+     * @return a {@link org.apache.struts2.xwork2.util.finder.Test} object that returns true if the specified class
      *         name should be included in the package scan
      */
     protected Test<String> getClassPackageTest() {
@@ -528,13 +528,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * Construct a {@link Test} Object that determines if a specified class
+     * Construct a {@link org.apache.struts2.xwork2.util.finder.Test} Object that determines if a specified class
      * should be included in the package scan based on the full {@link ClassInfo}
      * of the class. At this point, the class has been loaded, so it's ok to
      * perform tests such as checking annotations or looking at interfaces or
      * super-classes of the specified class.
      * 
-     * @return a {@link Test} object that returns true if the specified class
+     * @return a {@link org.apache.struts2.xwork2.util.finder.Test} object that returns true if the specified class
      *         should be included in the package scan
      */
     protected Test<ClassFinder.ClassInfo> getActionClassTest() {
@@ -545,13 +545,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 // already been called to in the initial call to ClassFinder?
                 // When some action class passes our package filter in that step,
                 // ClassFinder automatically includes parent classes of that action,
-                // such as com.opensymphony.xwork2.ActionSupport.  We repeat the
+                // such as org.apache.struts2.xwork2.ActionSupport.  We repeat the
                 // package filter here to filter out such results.
                 boolean inPackage = includeClassNameInActionScan(classInfo.getName());
                 boolean nameMatches = classInfo.getName().endsWith(actionSuffix);
 
                 try {
-                    return inPackage && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
+                    return inPackage && (nameMatches || (checkImplementsAction && org.apache.struts2.xwork2.Action.class.isAssignableFrom(classInfo.get())));
                 } catch (ClassNotFoundException ex) {
                     if (LOG.isErrorEnabled())
                         LOG.error("Unable to load class [#0]", ex, classInfo.getName());

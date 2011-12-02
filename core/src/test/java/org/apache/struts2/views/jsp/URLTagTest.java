@@ -41,14 +41,11 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxy;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.DefaultActionInvocation;
+import org.apache.struts2.xwork2.DefaultActionProxyFactory;
+import org.apache.struts2.xwork2.inject.Container;
 
 /**
  * Unit test for {@link URLTag}.

@@ -21,12 +21,12 @@
 
 package org.apache.struts2.views.util;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.util.TextParseUtil;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
@@ -253,7 +253,7 @@ public class UrlHelper {
     }
 
     /**
-     * Translates any script expressions using {@link com.opensymphony.xwork2.util.TextParseUtil#translateVariables} and
+     * Translates any script expressions using {@link org.apache.struts2.xwork2.util.TextParseUtil#translateVariables} and
      * encodes the URL using {@link java.net.URLEncoder#encode} with the encoding specified in the configuration.
      *
      * @param input

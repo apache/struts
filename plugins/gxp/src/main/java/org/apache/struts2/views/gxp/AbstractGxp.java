@@ -23,10 +23,6 @@ package org.apache.struts2.views.gxp;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gxp.base.GxpContext;
 import com.google.gxp.base.MarkupClosure;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -48,7 +44,7 @@ import java.util.Map;
  */
 public abstract class AbstractGxp<T extends MarkupClosure> {
 
-    ValueStackFactory valueStackFactory;
+    org.apache.struts2.xwork2.util.ValueStackFactory valueStackFactory;
     Map defaultValues = new HashMap();
     List<Param> params;
     Class gxpClass;
@@ -160,7 +156,7 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
      */
     List getArgListFromValueStack(Map overrides) {
 
-        ValueStack valueStack = valueStackFactory.createValueStack(ActionContext.getContext().getValueStack());
+        org.apache.struts2.xwork2.util.ValueStack valueStack = valueStackFactory.createValueStack(org.apache.struts2.xwork2.ActionContext.getContext().getValueStack());
 
         // add default values to the bottom of the stack. if no action provides
         // a getter for a param, the default value will be used.
@@ -341,8 +337,8 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
         return paramType.isAssignableFrom(argClass);
     }
 
-    @Inject
-    public void setValueStackFactory(ValueStackFactory valueStackFactory) {
+    @org.apache.struts2.xwork2.inject.Inject
+    public void setValueStackFactory(org.apache.struts2.xwork2.util.ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
     }
 }

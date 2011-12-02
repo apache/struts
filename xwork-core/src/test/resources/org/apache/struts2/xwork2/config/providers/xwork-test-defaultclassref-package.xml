@@ -1,0 +1,11 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+
+<xwork>
+    <package name="hasDefaultClassRef">
+    	<default-class-ref class="org.apache.struts2.xwork2.ActionSupport" />
+    </package>
+    <package name="noDefaultClassRef"/>
+</xwork>

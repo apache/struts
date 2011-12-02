@@ -1,0 +1,20 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+
+<xwork>
+    <package name="namespace4" extends="namespace1" namespace="/namespace4">
+        <interceptors>
+            <interceptor name="staticParams" class="org.apache.struts2.xwork2.interceptor.StaticParametersInterceptor"/>
+        </interceptors>
+
+        <action name="action4" class="org.apache.struts2.xwork2.SimpleAction">
+            <result name="success" type="chain"/>
+            <interceptor-ref name="params"/>
+        </action>
+    </package>
+
+
+    <include file="org/apache/struts2/xwork2/config/providers/xwork-include-after-package-2.xml" />
+</xwork>

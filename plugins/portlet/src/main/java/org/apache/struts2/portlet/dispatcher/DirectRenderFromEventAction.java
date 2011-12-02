@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.portlet.dispatcher;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.xwork2.Action;
 
 import java.io.Serializable;
 import java.util.Map;

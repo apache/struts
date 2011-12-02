@@ -15,10 +15,10 @@
     <bean type="org.apache.struts2.osgi.BundleAccessor" class="org.apache.struts2.osgi.DefaultBundleAccessor" />
     <bean type="org.apache.struts2.osgi.PackageLoader" class="org.apache.struts2.osgi.BundlePackageLoader" />
     
-    <bean name="osgi" type="com.opensymphony.xwork2.ObjectFactory" class="org.apache.struts2.osgi.DelegatingObjectFactory" />
-    <bean name="springOsgi" type="com.opensymphony.xwork2.ObjectFactory" class="org.apache.struts2.osgi.SpringOsgiObjectFactory" />
-    <bean name="osgi" type="com.opensymphony.xwork2.config.PackageProvider" class="org.apache.struts2.osgi.OsgiConfigurationProvider" />
-    <bean name="osgi" type="com.opensymphony.xwork2.util.finder.ClassLoaderInterface" class="org.apache.struts2.osgi.BundleClassLoaderInterface" />
+    <bean name="osgi" type="org.apache.struts2.xwork2.ObjectFactory" class="org.apache.struts2.osgi.DelegatingObjectFactory" />
+    <bean name="springOsgi" type="org.apache.struts2.xwork2.ObjectFactory" class="org.apache.struts2.osgi.SpringOsgiObjectFactory" />
+    <bean name="osgi" type="org.apache.struts2.xwork2.config.PackageProvider" class="org.apache.struts2.osgi.OsgiConfigurationProvider" />
+    <bean name="osgi" type="org.apache.struts2.xwork2.util.finder.ClassLoaderInterface" class="org.apache.struts2.osgi.BundleClassLoaderInterface" />
 
     <package name="osgi-default" extends="struts-default" abstract="yes">
         <interceptors>

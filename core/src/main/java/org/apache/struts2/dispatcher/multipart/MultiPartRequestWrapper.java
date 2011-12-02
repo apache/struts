@@ -34,8 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 
 /**

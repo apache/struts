@@ -21,14 +21,14 @@
 
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ValidationAware;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -42,7 +42,7 @@ import java.util.Map;
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
  * <b>This interceptor does not perform any validation</b>.
  * 
- * <p>Copied from the {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support for error handling of Restful
+ * <p>Copied from the {@link org.apache.struts2.xwork2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support for error handling of Restful
  * operations.  For example, if an validation error is discovered, a map of errors is created and processed to be
  * returned, using the appropriate content handler for rendering the body.</p>
  *
@@ -179,7 +179,7 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
 	
 	/**
 	 * Set the <code>inputResultName</code> (result name to be returned when 
-	 * a action / field error is found registered). Default to {@link Action#INPUT}
+	 * a action / field error is found registered). Default to {@link org.apache.struts2.xwork2.Action#INPUT}
 	 * 
 	 * @param inputResultName what result name to use when there was validation error(s).
 	 */

@@ -21,9 +21,9 @@
 
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -109,7 +109,7 @@ public class PlainTextResult extends StrutsResultSupport {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, org.apache.struts2.xwork2.ActionInvocation)
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
 

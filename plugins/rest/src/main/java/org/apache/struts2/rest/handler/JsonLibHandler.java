@@ -32,7 +32,7 @@ import net.sf.json.JsonConfig;
 
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.inject.Inject;
 
 /**
  * Handles JSON content using json-lib

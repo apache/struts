@@ -39,13 +39,12 @@ import org.apache.struts2.convention.actions.result.InheritedResultsExtends;
 import org.apache.struts2.convention.actions.result.OverrideInheritedResultExtends;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.config.entities.ResultTypeConfig;
+import org.apache.struts2.xwork2.inject.Container;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.inject.Container;
 
 /**
  * <p>

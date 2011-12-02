@@ -11,7 +11,7 @@
        
        This is an example of a bean that provides a new ObjectFactory:
     
-    <bean type="com.opensymphony.xwork2.ObjectFactory" name="myObjectFactory" class="com.mycompany.myapp.MyObjectFactory" />
+    <bean type="org.apache.struts2.xwork2.ObjectFactory" name="myObjectFactory" class="com.mycompany.myapp.MyObjectFactory" />
 
        This example adds a new template engine for the Struts UI tags:
 

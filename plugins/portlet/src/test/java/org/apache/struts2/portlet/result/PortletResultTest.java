@@ -21,7 +21,7 @@
 package org.apache.struts2.portlet.result;
 
 import static org.apache.struts2.portlet.PortletConstants.*;
-import static com.opensymphony.xwork2.ActionContext.*;
+import static org.apache.struts2.xwork2.ActionContext.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,12 +37,11 @@ import javax.portlet.RenderResponse;
 import junit.textui.TestRunner;
 
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 
 /**
  * PortletResultTest. Insert description.

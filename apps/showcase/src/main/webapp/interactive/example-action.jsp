@@ -13,7 +13,7 @@
 <span class="kw">import</span> java.util.List;
 <span class="kw">import</span> java.util.Map;
 
-<span class="kw">import</span> com.opensymphony.xwork2.ActionSupport;
+<span class="kw">import</span> org.apache.struts2.xwork2.ActionSupport;
 
 <span class="kw">public class</span> ExampleAction <span class="kw">extends</span> ActionSupport {
     <span class="kw">public static final</span> String CONSTANT = "Struts Rocks!";

@@ -21,20 +21,19 @@
 
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.PackageProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ResolverUtil;
-import com.opensymphony.xwork2.util.ResolverUtil.ClassTest;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.config.Configuration;
+import org.apache.struts2.xwork2.config.ConfigurationException;
+import org.apache.struts2.xwork2.config.PackageProvider;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import org.apache.struts2.xwork2.config.entities.ResultTypeConfig;
+import org.apache.struts2.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.util.ResolverUtil;
+import org.apache.struts2.xwork2.util.ResolverUtil.ClassTest;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.ServletContext;
@@ -317,7 +316,7 @@ public class ClasspathPackageProvider implements PackageProvider {
             // Match Action implementations and classes ending with "Action"
             public boolean matches(Class type) {
                 // TODO: should also find annotated classes
-                return ((checkImplementsAction && Action.class.isAssignableFrom(type)) ||
+                return ((checkImplementsAction && org.apache.struts2.xwork2.Action.class.isAssignableFrom(type)) ||
                         type.getSimpleName().endsWith(getClassSuffix()) ||
                         (checkAnnotation && type.getAnnotation(org.apache.struts2.config.Action.class) != null));
             }

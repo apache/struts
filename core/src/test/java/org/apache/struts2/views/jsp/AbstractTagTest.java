@@ -38,11 +38,10 @@ import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 
 /**

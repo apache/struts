@@ -27,10 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.xwork2.ActionInvocation;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
-
-import com.opensymphony.xwork2.ActionInvocation;
 
 /**
  * <!-- START SNIPPET: description -->

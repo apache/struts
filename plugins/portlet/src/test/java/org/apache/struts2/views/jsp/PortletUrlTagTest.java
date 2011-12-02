@@ -35,20 +35,19 @@ import junit.textui.TestRunner;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.StrutsStatics;
+
 import static org.apache.struts2.StrutsStatics.*;
+
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStackFactory;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
 import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import static com.opensymphony.xwork2.ActionContext.SESSION;
-import static com.opensymphony.xwork2.ActionContext.PARAMETERS;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  */

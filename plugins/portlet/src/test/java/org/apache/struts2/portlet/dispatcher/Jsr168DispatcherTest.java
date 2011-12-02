@@ -20,14 +20,15 @@
  */
 package org.apache.struts2.portlet.dispatcher;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.Action;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.ActionProxyFactory;
+import org.apache.struts2.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import static org.apache.struts2.portlet.PortletConstants.*;
+
 import org.easymock.EasyMock;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;

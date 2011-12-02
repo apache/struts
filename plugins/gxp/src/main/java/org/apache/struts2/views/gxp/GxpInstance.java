@@ -22,8 +22,6 @@ package org.apache.struts2.views.gxp;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.inject.Inject;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -31,7 +29,7 @@ import java.util.logging.Logger;
 
 /**
  * Struts 2 to GXP adapter that uses instances of GXP Interfaces, as created by
- * the {@link ObjectFactory}. Can be used to write a GXP or create a
+ * the {@link org.apache.struts2.xwork2.ObjectFactory}. Can be used to write a GXP or create a
  * HtmlClosure. Pulls non-constructor GXP parameters from Struts 2 value stack.
  *
  * @author David P. Baker
@@ -42,7 +40,7 @@ public class GxpInstance extends Gxp {
 
     private Class<?> gxpInterface;
     private Class<?> gxpInstance;
-    private ObjectFactory objectFactory;
+    private org.apache.struts2.xwork2.ObjectFactory objectFactory;
 
     GxpInstance(Class<?> gxpClass) {
         super(gxpClass,
@@ -63,7 +61,7 @@ public class GxpInstance extends Gxp {
 
     /**
      * {@inheritDoc}
-     * <p> This implementation uses the {@link ObjectFactory} to try to create an
+     * <p> This implementation uses the {@link org.apache.struts2.xwork2.ObjectFactory} to try to create an
      * instance of the {@code Interface} class that is nested within the GXP
      * class. If that doesn't work, it falls back to trying to use the
      * {@code ObjectFactory} to create an instance of the nested {@code Instance}
@@ -130,8 +128,8 @@ public class GxpInstance extends Gxp {
         return classToGxpInstance.get(gxpClass);
     }
 
-    @Inject
-    public void setObjectFactory(ObjectFactory objectFactory) {
+    @org.apache.struts2.xwork2.inject.Inject
+    public void setObjectFactory(org.apache.struts2.xwork2.ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
     }
 

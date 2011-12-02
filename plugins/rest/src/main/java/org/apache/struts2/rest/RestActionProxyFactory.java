@@ -21,10 +21,10 @@
 
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.DefaultActionProxyFactory;
+import org.apache.struts2.xwork2.inject.Inject;
 
 import java.util.Map;
 

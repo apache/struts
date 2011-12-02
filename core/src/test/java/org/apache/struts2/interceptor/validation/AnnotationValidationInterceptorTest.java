@@ -22,11 +22,12 @@
 package org.apache.struts2.interceptor.validation;
 
 import org.apache.struts2.StrutsTestCase;
-import org.easymock.EasyMock;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
+import org.apache.struts2.xwork2.ActionProxy;
+import org.apache.struts2.xwork2.config.entities.ActionConfig;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 public class AnnotationValidationInterceptorTest extends StrutsTestCase {
 

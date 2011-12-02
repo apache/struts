@@ -28,10 +28,9 @@ import javax.portlet.PortletRequest;
 import junit.framework.TestCase;
 
 import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionInvocation;
 import org.easymock.EasyMock;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 
 public class PortletAwareInterceptorTest extends TestCase implements PortletActionConstants {
 

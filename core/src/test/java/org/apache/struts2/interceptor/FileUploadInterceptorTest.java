@@ -21,11 +21,11 @@
 
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.xwork2.ActionContext;
+import org.apache.struts2.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ValidationAwareSupport;
+import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;

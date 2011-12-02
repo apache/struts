@@ -23,8 +23,8 @@ package org.apache.struts2.json.rpc;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.xwork2.util.logging.Logger;
+import org.apache.struts2.xwork2.util.logging.LoggerFactory;
 
 /*
  * Used to serialize RPC Errors

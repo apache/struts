@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.struts2.interceptor.SessionAware;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 public class StartHangmanAction extends ActionSupport implements SessionAware {
 

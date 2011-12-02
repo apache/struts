@@ -65,7 +65,7 @@ import org.apache.struts2.views.velocity.components.TokenDirective;
 import org.apache.struts2.views.velocity.components.URLDirective;
 import org.apache.struts2.views.velocity.components.UpDownSelectDirective;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.xwork2.util.ValueStack;
 
 /**
  * The default Struts tag library

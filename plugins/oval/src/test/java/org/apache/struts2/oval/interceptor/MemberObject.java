@@ -4,7 +4,7 @@ import net.sf.oval.constraint.AssertValid;
 
 import org.apache.struts2.oval.interceptor.domain.Person;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 public class MemberObject extends ActionSupport {
 

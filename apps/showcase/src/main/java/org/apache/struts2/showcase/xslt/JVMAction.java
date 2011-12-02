@@ -23,7 +23,7 @@ package org.apache.struts2.showcase.xslt;
 import java.util.Map;
 import java.util.Properties;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 import org.apache.struts2.interceptor.ServletRequestAware;
 

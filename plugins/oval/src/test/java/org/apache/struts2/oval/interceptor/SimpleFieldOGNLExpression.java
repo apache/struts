@@ -20,11 +20,8 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.Length;
 import net.sf.oval.constraint.Assert;
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.xwork2.ActionSupport;
 
 public class SimpleFieldOGNLExpression extends ActionSupport {
 

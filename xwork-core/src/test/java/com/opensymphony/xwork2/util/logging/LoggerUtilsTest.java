@@ -1,4 +1,4 @@
-package org.apache.struts2.xwork2.util.logging;
+package com.opensymphony.xwork2.util.logging;
 
 
 import junit.framework.TestCase;

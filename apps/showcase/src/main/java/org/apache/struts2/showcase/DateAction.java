@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <code>DateAction</code>

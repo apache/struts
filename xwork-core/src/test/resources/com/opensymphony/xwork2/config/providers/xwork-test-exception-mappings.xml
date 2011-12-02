@@ -1,0 +1,33 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-beans.xml" />
+    <package name="default">
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
+            <result-type name="mock" class="com.opensymphony.xwork2.mock.MockResult"/>
+        </result-types>
+
+        <global-results>
+            <!-- should be chain type since it is the default -->
+            <result name="login">login</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.RuntimeException" result="runForDeeHillz"/>
+            <exception-mapping exception="com.opensymphony.xwork2.XworkException" result="xworkNaughty"/>
+        </global-exception-mappings>
+
+        <action name="Bar" class="com.opensymphony.xwork2.SimpleAction">
+            <exception-mapping exception="com.opensymphony.xwork2.SpookyException" result="spooky-result"/>
+            <result name="spooky-result" type="mock"/>
+            <result name="specificLocationResult">
+                <param name="actionName">bar.vm</param>
+            </result>
+        </action>
+
+    </package>
+</xwork>

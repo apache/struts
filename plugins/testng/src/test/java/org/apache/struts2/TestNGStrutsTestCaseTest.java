@@ -28,7 +28,7 @@ import org.testng.TestListenerAdapter;
 import org.testng.TestNG;
 import org.testng.annotations.Test;
 
-import org.apache.struts2.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 
 public class TestNGStrutsTestCaseTest extends TestCase {
 

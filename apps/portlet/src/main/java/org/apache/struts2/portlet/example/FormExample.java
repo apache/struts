@@ -22,6 +22,8 @@ package org.apache.struts2.portlet.example;
 
 import org.apache.struts2.dispatcher.DefaultActionSupport;
 
+import com.opensymphony.xwork2.ActionSupport;
+
 /**
  */
 public class FormExample extends DefaultActionSupport {

@@ -38,9 +38,9 @@ import java.util.StringTokenizer;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  */

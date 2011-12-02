@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.ognl;
+package com.opensymphony.xwork2.ognl;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.TextProvider;
-import org.apache.struts2.xwork2.conversion.NullHandler;
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.ognl.accessor.CompoundRootAccessor;
-import org.apache.struts2.xwork2.util.CompoundRoot;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.conversion.NullHandler;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;

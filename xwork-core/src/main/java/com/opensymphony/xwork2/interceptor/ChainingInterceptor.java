@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.ActionChainResult;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.Result;
-import org.apache.struts2.xwork2.Unchainable;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.CompoundRoot;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.Unchainable;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 import java.util.*;
 
@@ -96,7 +96,7 @@ import java.util.*;
  *
  * @author mrdon
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
- * @see org.apache.struts2.xwork2.ActionChainResult
+ * @see com.opensymphony.xwork2.ActionChainResult
  */
 public class ChainingInterceptor extends AbstractInterceptor {
 

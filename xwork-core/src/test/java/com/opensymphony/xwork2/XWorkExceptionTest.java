@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
-import org.apache.struts2.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.location.Location;
 
 public class XWorkExceptionTest extends XWorkTestCase {
 

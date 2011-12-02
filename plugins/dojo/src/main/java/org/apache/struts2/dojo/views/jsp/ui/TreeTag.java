@@ -28,7 +28,7 @@ import org.apache.struts2.components.Component;
 import org.apache.struts2.dojo.components.Tree;
 import org.apache.struts2.views.jsp.ui.AbstractClosingTag;
 
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Tree

@@ -21,7 +21,7 @@
 
 package org.apache.struts2.rest.handler;
 
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectReader;

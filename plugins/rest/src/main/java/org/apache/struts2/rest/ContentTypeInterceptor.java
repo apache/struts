@@ -21,10 +21,10 @@
 
 package org.apache.struts2.rest;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ModelDriven;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 

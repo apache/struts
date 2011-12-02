@@ -23,6 +23,7 @@ package org.apache.struts2.views.xslt;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,14 +45,14 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.Result;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.TextParseUtil;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**

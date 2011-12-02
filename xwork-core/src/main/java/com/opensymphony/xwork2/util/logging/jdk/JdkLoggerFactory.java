@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util.logging.jdk;
+package com.opensymphony.xwork2.util.logging.jdk;
 
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Creates jdk loggers

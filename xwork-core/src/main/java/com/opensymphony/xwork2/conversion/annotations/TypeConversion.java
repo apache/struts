@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.conversion.annotations;
+package com.opensymphony.xwork2.conversion.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -157,7 +157,7 @@ public @interface TypeConversion {
      * The ConversionRule can be a PROPERTY, KEY, KEY_PROPERTY, ELEMENT, COLLECTION (deprecated) or a MAP.
      * Note: Collection and Map vonversion rules can be determined via com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer.
      *
-     * @see org.apache.struts2.xwork2.conversion.impl.DefaultObjectTypeDeterminer
+     * @see com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer
      */
     ConversionRule rule() default ConversionRule.PROPERTY;
 

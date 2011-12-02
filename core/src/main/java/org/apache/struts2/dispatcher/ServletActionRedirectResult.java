@@ -27,8 +27,10 @@ import java.util.List;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.util.reflection.ReflectionExceptionHandler;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -161,7 +163,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     }
 
     /**
-     * @see org.apache.struts2.xwork2.Result#execute(org.apache.struts2.xwork2.ActionInvocation)
+     * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
      */
     public void execute(ActionInvocation invocation) throws Exception
     {

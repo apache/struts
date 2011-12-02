@@ -27,8 +27,8 @@ import java.util.Set;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  */

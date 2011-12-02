@@ -22,8 +22,8 @@ package org.apache.struts2.portlet.example;
 
 import org.apache.struts2.portlet.example.model.Name;
 
-import org.apache.struts2.xwork2.ActionSupport;
-import org.apache.struts2.xwork2.ModelDriven;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
 
 /**
  */

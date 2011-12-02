@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
 /**
  * ValueStacks implementing this interface provide a way to remove values from

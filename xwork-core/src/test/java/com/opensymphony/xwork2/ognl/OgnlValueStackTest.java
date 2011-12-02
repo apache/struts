@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.ognl;
+package com.opensymphony.xwork2.ognl;
 
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.ognl.accessor.CompoundRootAccessor;
-import org.apache.struts2.xwork2.test.TestBean2;
-import org.apache.struts2.xwork2.util.*;
-import org.apache.struts2.xwork2.util.Foo;
-import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.test.TestBean2;
+import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.Foo;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.PropertyAccessor;
 
 import java.io.*;

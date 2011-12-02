@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.inject.util;
+package com.opensymphony.xwork2.inject.util;
 
-import static org.apache.struts2.xwork2.inject.util.ReferenceType.STRONG;
+import static com.opensymphony.xwork2.inject.util.ReferenceType.STRONG;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

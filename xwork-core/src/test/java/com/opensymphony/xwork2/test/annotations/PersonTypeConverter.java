@@ -1,6 +1,6 @@
-package org.apache.struts2.xwork2.test.annotations;
+package com.opensymphony.xwork2.test.annotations;
 
-import org.apache.struts2.xwork2.conversion.impl.DefaultTypeConverter;
+import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
 
 import java.util.Map;
 

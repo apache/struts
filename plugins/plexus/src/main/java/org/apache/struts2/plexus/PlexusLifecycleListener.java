@@ -33,8 +33,8 @@ import javax.servlet.http.HttpSessionListener;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Manages the Plexus lifecycle for the servlet and session contexts

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.inject.util;
+package com.opensymphony.xwork2.inject.util;
 
 /**
  * Package-private interface implemented by references that have code to run

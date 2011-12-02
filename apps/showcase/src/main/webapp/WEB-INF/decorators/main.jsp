@@ -8,10 +8,10 @@
     
     // Calculate the view sources url
     String sourceUrl = request.getContextPath()+"/viewSource.action";
-    org.apache.struts2.xwork2.ActionInvocation inv = org.apache.struts2.xwork2.ActionContext.getContext().getActionInvocation();
+    com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
     org.apache.struts2.dispatcher.mapper.ActionMapping mapping = org.apache.struts2.ServletActionContext.getActionMapping();
     if (inv != null) {
-        org.apache.struts2.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
+        com.opensymphony.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
         sourceUrl += "?config="+(loc != null ? loc.getURI()+":"+loc.getLineNumber() : "");
         sourceUrl += "&className="+inv.getProxy().getConfig().getClassName();
         

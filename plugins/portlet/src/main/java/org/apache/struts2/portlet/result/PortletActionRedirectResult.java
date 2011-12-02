@@ -34,9 +34,9 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.views.util.UrlHelper;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * 
@@ -170,7 +170,7 @@ public class PortletActionRedirectResult extends PortletResult {
 	}
 
 	/**
-	 * @see org.apache.struts2.xwork2.Result#execute(org.apache.struts2.xwork2.ActionInvocation)
+	 * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
 	 */
 	public void execute(ActionInvocation invocation) throws Exception {
 		actionName = conditionalParse(actionName, invocation);

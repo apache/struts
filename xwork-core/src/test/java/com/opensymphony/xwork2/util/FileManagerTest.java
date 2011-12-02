@@ -1,6 +1,6 @@
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
-import org.apache.struts2.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.io.InputStream;
 import java.net.URL;

@@ -4,10 +4,10 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -31,10 +31,11 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.VelocityTemplateEngine;
+import org.apache.struts2.dispatcher.mapper.CompositeActionMapper;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * TemplateEngineManagerTest

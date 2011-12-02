@@ -154,7 +154,7 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.apache.struts2.xwork2.*</Export-Package>
+                        <Export-Package>com.opensymphony.xwork2.*</Export-Package>
                     </instructions>
                 </configuration>
                 <executions>

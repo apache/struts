@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.ognl;
+package com.opensymphony.xwork2.ognl;
 
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.CompoundRoot;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import ognl.*;
 
 import java.beans.BeanInfo;
@@ -232,7 +232,7 @@ public class OgnlUtil {
 
     /**
      * Copies the properties in the object "from" and sets them in the object "to"
-     * using specified type converter, or {@link org.apache.struts2.xwork2.conversion.impl.XWorkConverter} if none
+     * using specified type converter, or {@link com.opensymphony.xwork2.conversion.impl.XWorkConverter} if none
      * is specified.
      *
      * @param from       the source object
@@ -306,7 +306,7 @@ public class OgnlUtil {
 
     /**
      * Copies the properties in the object "from" and sets them in the object "to"
-     * using specified type converter, or {@link org.apache.struts2.xwork2.conversion.impl.XWorkConverter} if none
+     * using specified type converter, or {@link com.opensymphony.xwork2.conversion.impl.XWorkConverter} if none
      * is specified.
      *
      * @param from    the source object

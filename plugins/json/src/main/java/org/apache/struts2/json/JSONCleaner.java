@@ -28,11 +28,12 @@ import java.util.TreeMap;
 import java.util.HashMap;
 
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-import org.apache.struts2.xwork2.util.TextParseUtil;
-import org.apache.struts2.xwork2.util.WildcardUtil;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.WildcardUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p>Isolate the process of cleaning JSON data from the Interceptor class

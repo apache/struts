@@ -28,11 +28,11 @@ import org.apache.struts2.convention.annotation.AnnotationTools;
 import org.apache.struts2.convention.annotation.ResultPath;
 import org.apache.struts2.util.ClassLoaderUtils;
 
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.PackageConfig;
-import org.apache.struts2.xwork2.config.entities.ResultTypeConfig;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * <p>

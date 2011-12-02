@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher.mapper;
 
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -30,9 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.RequestUtils;
 
-import org.apache.struts2.xwork2.config.ConfigurationManager;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**

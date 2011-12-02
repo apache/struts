@@ -27,7 +27,7 @@ package org.apache.struts2.sitemesh;
 
 import com.opensymphony.module.sitemesh.*;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;

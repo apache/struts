@@ -36,7 +36,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  */

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.SimpleFooAction;
-import org.apache.struts2.xwork2.XWorkTestCase;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.Parameterizable;
-import org.apache.struts2.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.xwork2.mock.MockActionProxy;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.SimpleFooAction;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.Parameterizable;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 
 import java.util.Map;
 import java.util.HashMap;

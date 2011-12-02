@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.conversion.impl;
+package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.xwork2.util.AnnotatedCat;
-import org.apache.struts2.xwork2.util.Bar;
-import org.apache.struts2.xwork2.util.Cat;
+import com.opensymphony.xwork2.util.AnnotatedCat;
+import com.opensymphony.xwork2.util.Bar;
+import com.opensymphony.xwork2.util.Cat;
 
 import java.lang.reflect.Member;
 import java.util.Map;

@@ -26,7 +26,7 @@ import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.sitemesh.DecoratorSelector;
 import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import javax.servlet.FilterConfig;

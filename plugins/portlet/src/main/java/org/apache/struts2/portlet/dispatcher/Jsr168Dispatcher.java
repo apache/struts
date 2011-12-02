@@ -77,15 +77,15 @@ import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
 import org.apache.struts2.util.AttributeMap;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.ActionProxyFactory;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.util.FileManager;
-import org.apache.struts2.xwork2.util.LocalizedTextUtil;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->

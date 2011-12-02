@@ -34,7 +34,7 @@ import javax.portlet.RenderResponse;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 import static org.apache.struts2.portlet.PortletConstants.*;
 

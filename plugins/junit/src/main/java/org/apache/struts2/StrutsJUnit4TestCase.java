@@ -21,12 +21,12 @@
 
 package org.apache.struts2;
 
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.interceptor.annotations.After;
-import org.apache.struts2.xwork2.interceptor.annotations.Before;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.util.logging.jdk.JdkLoggerFactory;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.interceptor.annotations.After;
+import com.opensymphony.xwork2.interceptor.annotations.Before;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;

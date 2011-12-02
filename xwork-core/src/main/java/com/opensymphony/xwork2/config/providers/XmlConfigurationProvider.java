@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.providers;
+package com.opensymphony.xwork2.config.providers;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.XWorkException;
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.config.ConfigurationUtil;
-import org.apache.struts2.xwork2.config.entities.*;
-import org.apache.struts2.xwork2.config.entities.UnknownHandlerConfig;
-import org.apache.struts2.xwork2.config.impl.LocatableFactory;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.inject.Scope;
-import org.apache.struts2.xwork2.util.*;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
-import org.apache.struts2.xwork2.util.location.Location;
-import org.apache.struts2.xwork2.util.location.LocationUtils;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.ConfigurationUtil;
+import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
+import com.opensymphony.xwork2.config.impl.LocatableFactory;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Scope;
+import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.location.LocationUtils;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

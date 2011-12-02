@@ -31,9 +31,9 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.jsp.IteratorStatus;
 
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->

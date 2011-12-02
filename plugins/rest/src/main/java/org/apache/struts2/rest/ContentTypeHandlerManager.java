@@ -26,7 +26,7 @@ import org.apache.struts2.rest.handler.ContentTypeHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 import java.io.IOException;
 

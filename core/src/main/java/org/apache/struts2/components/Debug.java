@@ -21,9 +21,9 @@
 
 package org.apache.struts2.components;
 
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;

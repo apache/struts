@@ -21,17 +21,21 @@
 
 package org.apache.struts2.s1;
 
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
-import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 
+import org.apache.struts.Globals;
 import org.apache.struts.action.*;
 import org.apache.struts.config.*;
 
 import java.util.Iterator;
 import java.util.Arrays;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 
 /**

@@ -25,7 +25,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;

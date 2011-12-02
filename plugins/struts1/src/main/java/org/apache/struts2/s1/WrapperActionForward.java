@@ -22,7 +22,7 @@
 package org.apache.struts2.s1;
 
 import org.apache.struts.action.ActionForward;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 /**
  * Wrapper for a Struts 1.x ActionForward based on an XWork ResultConfig.  Using a wrapper object

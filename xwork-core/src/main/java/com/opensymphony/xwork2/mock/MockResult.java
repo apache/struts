@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.mock;
+package com.opensymphony.xwork2.mock;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.Result;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 
 /**
  * Mock for a {@link Result}.

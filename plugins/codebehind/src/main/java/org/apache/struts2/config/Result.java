@@ -21,7 +21,7 @@
 
 package org.apache.struts2.config;
 
-import org.apache.struts2.xwork2.Action;
+import com.opensymphony.xwork2.Action;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Result {
     String name() default Action.SUCCESS;
-    Class<? extends org.apache.struts2.xwork2.Result> type() default NullResult.class;
+    Class<? extends com.opensymphony.xwork2.Result> type() default NullResult.class;
     String value();
     String[] params() default {};
 }

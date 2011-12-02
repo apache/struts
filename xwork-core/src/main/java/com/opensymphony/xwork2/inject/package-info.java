@@ -27,4 +27,4 @@
  *   <li>externalize what needs to be and no more</li>
  * </ul>
  */
-package org.apache.struts2.xwork2.inject;
+package com.opensymphony.xwork2.inject;

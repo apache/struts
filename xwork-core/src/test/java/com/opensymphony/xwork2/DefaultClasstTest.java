@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
-import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 
 /**
  * <code>WildCardResultTest</code>

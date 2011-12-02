@@ -21,13 +21,15 @@
 
 package org.apache.struts2.osgi;
 
-import org.apache.struts2.xwork2.util.finder.ClassLoaderInterface;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Collections;
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.osgi.framework.Bundle;
 
 /**
  * ClassLoaderInterface instance that delegates to the singleton of DefaultBundleAccessor 

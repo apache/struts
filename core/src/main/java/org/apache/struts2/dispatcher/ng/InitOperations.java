@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.dispatcher.ng;
 
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.util.ClassLoaderUtils;

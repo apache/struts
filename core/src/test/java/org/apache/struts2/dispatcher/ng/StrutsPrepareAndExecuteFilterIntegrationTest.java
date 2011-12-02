@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.dispatcher.ng;
 
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;

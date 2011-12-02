@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.validator;
+package com.opensymphony.xwork2.validator;
 
-import org.apache.struts2.xwork2.ModelDriven;
+import com.opensymphony.xwork2.ModelDriven;
 
 
 /**

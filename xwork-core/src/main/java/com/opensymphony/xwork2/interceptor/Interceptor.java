@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionInvocation;
 
 import java.io.Serializable;
 
@@ -39,7 +39,7 @@ import java.io.Serializable;
  * <p/>
  * Interceptors <b>must</b> be stateless and not assume that a new instance will be created for each request or Action.
  * Interceptors may choose to either short-circuit the {@link ActionInvocation} execution and return a return code
- * (such as {@link org.apache.struts2.xwork2.Action#SUCCESS}), or it may choose to do some processing before
+ * (such as {@link com.opensymphony.xwork2.Action#SUCCESS}), or it may choose to do some processing before
  * and/or after delegating the rest of the procesing using {@link ActionInvocation#invoke()}.
  * <p/>
  * <!-- END SNIPPET: introduction -->
@@ -195,7 +195,7 @@ public interface Interceptor extends Serializable {
 
     /**
      * Called after an interceptor is created, but before any requests are processed using
-     * {@link #intercept(org.apache.struts2.xwork2.ActionInvocation) intercept} , giving
+     * {@link #intercept(com.opensymphony.xwork2.ActionInvocation) intercept} , giving
      * the Interceptor a chance to initialize any needed resources.
      */
     void init();
@@ -206,7 +206,7 @@ public interface Interceptor extends Serializable {
      *
      * @param invocation the action invocation
      * @return the return code, either returned from {@link ActionInvocation#invoke()}, or from the interceptor itself.
-     * @throws Exception any system-level error, as defined in {@link org.apache.struts2.xwork2.Action#execute()}.
+     * @throws Exception any system-level error, as defined in {@link com.opensymphony.xwork2.Action#execute()}.
      */
     String intercept(ActionInvocation invocation) throws Exception;
 

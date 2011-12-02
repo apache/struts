@@ -1,7 +1,7 @@
 /*
  * Created on Nov 11, 2003
  */
-package org.apache.struts2.xwork2.spring;
+package com.opensymphony.xwork2.spring;
 
 /**
  * @author Mike

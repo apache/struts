@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.mock;
+package com.opensymphony.xwork2.mock;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 /**
  * Mock for an {@link ActionProxy}.

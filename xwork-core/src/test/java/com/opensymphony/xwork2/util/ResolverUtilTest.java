@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.spring.SpringObjectFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.spring.SpringObjectFactory;
 import junit.framework.TestCase;
 
 import java.net.URL;

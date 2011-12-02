@@ -1,8 +1,8 @@
 package org.apache.struts2.dispatcher.mapper;
 
-import org.apache.struts2.xwork2.config.ConfigurationManager;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor.annotations;
+package com.opensymphony.xwork2.interceptor.annotations;
 
-import org.apache.struts2.xwork2.Action;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Zsolt Szasz, zsolt at lorecraft dot com

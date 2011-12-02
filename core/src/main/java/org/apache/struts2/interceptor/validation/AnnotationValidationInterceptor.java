@@ -25,9 +25,11 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.util.AnnotationUtils;
-import org.apache.struts2.xwork2.validator.ValidationInterceptor;
+import org.apache.commons.lang.ArrayUtils;
+
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.AnnotationUtils;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
 
 /**
  * Extends the xwork validation interceptor to also check for a @SkipValidation

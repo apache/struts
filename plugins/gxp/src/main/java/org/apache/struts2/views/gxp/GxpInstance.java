@@ -22,8 +22,8 @@ package org.apache.struts2.views.gxp;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.inject.Inject;
 
 import java.util.Map;
 import java.util.logging.Level;

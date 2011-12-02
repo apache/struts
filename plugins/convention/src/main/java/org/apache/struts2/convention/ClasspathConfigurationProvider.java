@@ -20,13 +20,13 @@
  */
 package org.apache.struts2.convention;
 
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.dispatcher.DispatcherListener;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.StrutsConstants;

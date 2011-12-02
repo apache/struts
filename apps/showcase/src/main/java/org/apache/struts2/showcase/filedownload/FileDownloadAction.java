@@ -24,7 +24,7 @@ import java.io.InputStream;
 
 import org.apache.struts2.ServletActionContext;
 
-import org.apache.struts2.xwork2.Action;
+import com.opensymphony.xwork2.Action;
 
 /**
  * Demonstrates file resource download.

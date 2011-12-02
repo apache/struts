@@ -1,6 +1,7 @@
 package org.apache.struts2.oval.interceptor;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
+import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
 
 public class SimpleFieldsXML extends ActionSupport {

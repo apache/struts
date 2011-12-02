@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.test;
+package com.opensymphony.xwork2.test;
 
-import org.apache.struts2.xwork2.SimpleAnnotationAction;
-import org.apache.struts2.xwork2.validator.annotations.IntRangeFieldValidator;
-import org.apache.struts2.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.SimpleAnnotationAction;
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 
 /**
  * SimpleAction2

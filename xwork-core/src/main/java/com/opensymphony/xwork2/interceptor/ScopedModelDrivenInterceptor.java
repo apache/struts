@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.XWorkException;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 import java.lang.reflect.Method;
 import java.util.Map;

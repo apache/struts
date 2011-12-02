@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  * <!-- START SNIPPET: javadocDefaultWorkflowInterceptor -->
  * 
  * <b>In DefaultWorkflowInterceptor</b>
- * <p>applies only when action implements {@link org.apache.struts2.xwork2.Validateable}</p>
+ * <p>applies only when action implements {@link com.opensymphony.xwork2.Validateable}</p>
  * <ol>
  *    <li>if the action class have validate{MethodName}(), it will be invoked</li>
  *    <li>else if the action class have validateDo{MethodName}(), it will be invoked</li>

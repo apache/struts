@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.providers;
+package com.opensymphony.xwork2.config.providers;
 
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.entities.InterceptorConfig;
-import org.apache.struts2.xwork2.config.entities.InterceptorLocator;
-import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
-import org.apache.struts2.xwork2.config.entities.InterceptorStackConfig;
-import org.apache.struts2.xwork2.interceptor.Interceptor;
-import org.apache.struts2.xwork2.util.location.Location;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorLocator;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

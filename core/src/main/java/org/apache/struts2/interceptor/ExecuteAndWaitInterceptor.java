@@ -21,19 +21,23 @@
 
 package org.apache.struts2.interceptor;
 
+import java.util.Collections;
 import java.util.Map;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
 import javax.servlet.http.HttpSession;

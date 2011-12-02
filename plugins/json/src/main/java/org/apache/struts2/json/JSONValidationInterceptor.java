@@ -21,13 +21,13 @@
 
 package org.apache.struts2.json;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ModelDriven;
-import org.apache.struts2.xwork2.ValidationAware;
-import org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts2.ServletActionContext;
 

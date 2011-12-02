@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.mockobjects.servlet.MockHttpServletResponse;
 import com.mockobjects.servlet.MockServletContext;
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 
 /**

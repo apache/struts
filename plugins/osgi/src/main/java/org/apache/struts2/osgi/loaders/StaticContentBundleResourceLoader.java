@@ -22,11 +22,13 @@
 package org.apache.struts2.osgi.loaders;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.struts2.dispatcher.DefaultStaticContentLoader;
+import org.apache.struts2.osgi.DefaultBundleAccessor;
 import org.apache.struts2.osgi.BundleAccessor;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Loads static resources from bundles 

@@ -20,9 +20,11 @@
  */
 package org.apache.struts2.showcase.person;
 
+import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.views.freemarker.FreemarkerResult;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 @Result(name="input", location="new-person.ftl", type="freemarker")
 public class NewPersonAction extends ActionSupport {

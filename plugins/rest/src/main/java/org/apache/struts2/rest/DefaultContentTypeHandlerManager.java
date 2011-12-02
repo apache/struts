@@ -21,6 +21,9 @@
 
 package org.apache.struts2.rest;
 
+import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -33,9 +36,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Manages {@link ContentTypeHandler} instances and uses them to

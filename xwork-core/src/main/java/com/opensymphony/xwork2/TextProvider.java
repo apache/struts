@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.List;
 import java.util.ResourceBundle;
@@ -43,7 +43,7 @@ import java.util.ResourceBundle;
  * into it all framework messages)
  * &lt;constant name=&quot;system&quot; value=&quot;myTextProvider&quot; /&gt;
  * <p/>
- * Take a look on {@link org.apache.struts2.xwork2.ActionSupport} for example TextProvider implemntation.
+ * Take a look on {@link com.opensymphony.xwork2.ActionSupport} for example TextProvider implemntation.
  *
  * @author Jason Carreira
  * @author Rainer Hermanns

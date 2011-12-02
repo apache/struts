@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.util;
 
-import org.apache.struts2.xwork2.util.PatternMatcher;
+import com.opensymphony.xwork2.util.PatternMatcher;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;

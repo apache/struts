@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.entities;
+package com.opensymphony.xwork2.config.entities;
 
-import org.apache.struts2.xwork2.util.location.Located;
-import org.apache.struts2.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.location.Located;
+import com.opensymphony.xwork2.util.location.Location;
 
 import java.io.Serializable;
 import java.util.Collections;

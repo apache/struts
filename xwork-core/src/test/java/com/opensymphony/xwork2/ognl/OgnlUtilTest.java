@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.ognl;
+package com.opensymphony.xwork2.ognl;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.XWorkException;
-import org.apache.struts2.xwork2.XWorkTestCase;
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.interceptor.ChainingInterceptor;
-import org.apache.struts2.xwork2.test.User;
-import org.apache.struts2.xwork2.util.*;
-import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.interceptor.ChainingInterceptor;
+import com.opensymphony.xwork2.test.User;
+import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.*;
 
 import java.lang.reflect.Method;

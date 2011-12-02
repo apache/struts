@@ -21,9 +21,9 @@
 
 package org.apache.struts2.osgi;
 
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.util.ClassLoaderUtil;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.inject.Inject;
 import org.osgi.framework.ServiceReference;
 
 import java.util.Map;

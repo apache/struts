@@ -21,9 +21,9 @@
 
 package org.apache.struts2.sitegraph.renderers;
 
-import org.apache.struts2.xwork2.ActionChainResult;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import org.apache.struts2.sitegraph.StrutsConfigRetriever;
 import org.apache.struts2.sitegraph.entities.Target;
 import org.apache.struts2.sitegraph.entities.View;

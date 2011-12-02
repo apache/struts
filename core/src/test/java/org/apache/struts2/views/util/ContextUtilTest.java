@@ -21,14 +21,17 @@
 
 package org.apache.struts2.views.util;
 
+import junit.framework.TestCase;
+
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Test case for ContextUtil

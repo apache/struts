@@ -20,10 +20,10 @@
  */
 package org.apache.struts2.json;
 
-import org.apache.struts2.xwork2.util.TextParseUtil;
-import org.apache.struts2.xwork2.util.WildcardUtil;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.WildcardUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.json.annotations.SMDMethod;
 

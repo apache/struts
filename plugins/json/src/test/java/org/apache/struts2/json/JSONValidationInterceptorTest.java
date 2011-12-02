@@ -21,16 +21,16 @@
 
 package org.apache.struts2.json;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionSupport;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.xwork2.mock.MockActionProxy;
-import org.apache.struts2.xwork2.validator.annotations.EmailValidator;
-import org.apache.struts2.xwork2.validator.annotations.IntRangeFieldValidator;
-import org.apache.struts2.xwork2.validator.annotations.StringLengthFieldValidator;
-import org.apache.struts2.xwork2.validator.annotations.Validation;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
+import com.opensymphony.xwork2.validator.annotations.EmailValidator;
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validation;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor;

@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.providers;
+package com.opensymphony.xwork2.config.providers;
 
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.SimpleAction;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.config.RuntimeConfiguration;
-import org.apache.struts2.xwork2.config.entities.*;
-import org.apache.struts2.xwork2.interceptor.LoggingInterceptor;
-import org.apache.struts2.xwork2.interceptor.TimerInterceptor;
-import org.apache.struts2.xwork2.mock.MockInterceptor;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.interceptor.LoggingInterceptor;
+import com.opensymphony.xwork2.interceptor.TimerInterceptor;
+import com.opensymphony.xwork2.mock.MockInterceptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

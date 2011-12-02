@@ -26,9 +26,9 @@ import java.util.Map;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 /**
  * Overrides the JFS navigation by delegating the result to handling by the core

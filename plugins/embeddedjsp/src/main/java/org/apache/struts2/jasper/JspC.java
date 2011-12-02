@@ -28,6 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
@@ -42,7 +43,7 @@ import org.apache.struts2.jasper.servlet.JspCServletContext;
 import org.apache.struts2.jasper.xmlparser.ParserUtils;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.apache.struts2.xwork2.util.finder.ClassLoaderInterface;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 
 /**
  * Shell for the jspc compiler.  Handles all options associated with the

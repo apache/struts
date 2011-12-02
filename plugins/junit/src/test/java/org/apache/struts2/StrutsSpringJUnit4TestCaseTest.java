@@ -20,8 +20,8 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ActionProxy;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.junit.Assert;
 import org.junit.Test;

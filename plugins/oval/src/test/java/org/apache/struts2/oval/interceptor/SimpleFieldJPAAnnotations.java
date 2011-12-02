@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 import javax.persistence.Basic;
 

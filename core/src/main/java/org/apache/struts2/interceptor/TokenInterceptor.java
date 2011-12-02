@@ -21,10 +21,10 @@
 
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ValidationAware;
-import org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor;
-import org.apache.struts2.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.TokenHelper;
 
@@ -121,7 +121,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
     public static final String INVALID_TOKEN_CODE = "invalid.token";
 
     /**
-     * @see org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor#doIntercept(org.apache.struts2.xwork2.ActionInvocation)
+     * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
      */
     protected String doIntercept(ActionInvocation invocation) throws Exception {
         if (log.isDebugEnabled()) {

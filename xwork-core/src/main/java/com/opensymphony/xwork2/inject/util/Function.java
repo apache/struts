@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.inject.util;
+package com.opensymphony.xwork2.inject.util;
 
 /**
  * A Function provides a transformation on an object and returns the resulting

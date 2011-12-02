@@ -21,7 +21,7 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.views.jsp.AbstractTagTest;
 import org.apache.struts2.views.jsp.DateTag;
 

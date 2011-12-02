@@ -21,12 +21,12 @@
 
 package org.apache.struts2.views.freemarker;
 
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.FileManager;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import freemarker.cache.*;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;

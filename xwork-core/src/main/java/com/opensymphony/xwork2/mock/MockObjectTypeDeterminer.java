@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.mock;
+package com.opensymphony.xwork2.mock;
 
-import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 

@@ -1,4 +1,4 @@
-package org.apache.struts2.xwork2.util.reflection;
+package com.opensymphony.xwork2.util.reflection;
 
 /**
  * Declares a class that wants to handle its own reflection exceptions

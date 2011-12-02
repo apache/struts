@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.validator;
+package com.opensymphony.xwork2.validator;
 
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor;
 
 import java.util.*;
 
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 
 
 /**

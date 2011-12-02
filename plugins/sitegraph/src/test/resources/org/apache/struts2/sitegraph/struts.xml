@@ -26,7 +26,7 @@
           
 <struts>
     <package name="default" extends="struts-default">
-        <action name="hello" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="hello" class="com.opensymphony.xwork2.ActionSupport">
             <result name="success">hello.jsp</result>
             <result name="tutorial" type="redirect">/tutorial/test.action</result>
             <result name="tutorial2" type="redirectAction">/tutorial/test.action</result>
@@ -39,7 +39,7 @@
                          class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
         </result-types>
 
-        <action name="test" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="test" class="com.opensymphony.xwork2.ActionSupport">
             <result name="input">sitegraph/guess-input.ftl</result>
         </action>
     </package>
@@ -50,7 +50,7 @@
                          class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
         </result-types>
 
-        <action name="guess" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="guess" class="com.opensymphony.xwork2.ActionSupport">
             <result name="success" type="redirect">guess-success.jsp</result>
             <result name="input">guess-input.ftl</result>
             <result name="error">guess-error.ftl</result>

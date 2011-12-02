@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.entities;
+package com.opensymphony.xwork2.config.entities;
 
-import org.apache.struts2.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.XWorkTestCase;
 
 public class PackageConfigTest extends XWorkTestCase {
 

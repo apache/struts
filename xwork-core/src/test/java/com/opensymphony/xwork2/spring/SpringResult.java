@@ -1,7 +1,7 @@
-package org.apache.struts2.xwork2.spring;
+package com.opensymphony.xwork2.spring;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.Result;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 
 public class SpringResult implements Result {
 

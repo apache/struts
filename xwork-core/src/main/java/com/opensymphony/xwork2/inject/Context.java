@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.inject;
+package com.opensymphony.xwork2.inject;
 
 import java.lang.reflect.Member;
 

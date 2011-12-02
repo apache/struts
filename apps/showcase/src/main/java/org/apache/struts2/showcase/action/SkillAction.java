@@ -25,7 +25,7 @@ import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.dao.SkillDao;
 import org.apache.struts2.showcase.model.Skill;
 
-import org.apache.struts2.xwork2.Preparable;
+import com.opensymphony.xwork2.Preparable;
 
 /**
  * SkillAction.

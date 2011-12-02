@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 
-import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
-import org.apache.struts2.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 /**
  * <p>

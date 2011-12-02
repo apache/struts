@@ -1,0 +1,11 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+
+<xwork>
+    <package name="hasDefaultClassRef">
+    	<default-class-ref class="com.opensymphony.xwork2.ActionSupport" />
+    </package>
+    <package name="noDefaultClassRef"/>
+</xwork>

@@ -32,27 +32,27 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.velocity.VelocityManager;
 
-import org.apache.struts2.xwork2.ActionProxyFactory;
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.TextProvider;
-import org.apache.struts2.xwork2.UnknownHandlerManager;
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.inject.Context;
-import org.apache.struts2.xwork2.inject.Factory;
-import org.apache.struts2.xwork2.inject.Scope;
-import org.apache.struts2.xwork2.util.*;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.util.reflection.ReflectionContextFactory;
-import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
-import org.apache.struts2.xwork2.validator.ActionValidatorManager;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.UnknownHandlerManager;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
+import com.opensymphony.xwork2.inject.Scope;
+import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.validator.ActionValidatorManager;
 
 /**
  * Selects the implementations of key framework extension points, using the loaded
@@ -72,19 +72,19 @@ import org.apache.struts2.xwork2.validator.ActionValidatorManager;
  *     <th>Description</th>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.ObjectFactory</td>
+ *     <td>com.opensymphony.xwork2.ObjectFactory</td>
  *     <td>struts.objectFactory</td>
  *     <td>singleton</td>
  *     <td>Creates actions, results, and interceptors</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.ActionProxyFactory</td>
+ *     <td>com.opensymphony.xwork2.ActionProxyFactory</td>
  *     <td>struts.actionProxyFactory</td>
  *     <td>singleton</td>
  *     <td>Creates the ActionProxy</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.util.ObjectTypeDeterminer</td>
+ *     <td>com.opensymphony.xwork2.util.ObjectTypeDeterminer</td>
  *     <td>struts.objectTypeDeterminer</td>
  *     <td>singleton</td>
  *     <td>Determines what the key and element class of a Map or Collection should be</td>
@@ -114,38 +114,38 @@ import org.apache.struts2.xwork2.validator.ActionValidatorManager;
  *     <td>Loads and processes Velocity templates</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.validator.ActionValidatorManager</td>
+ *     <td>com.opensymphony.xwork2.validator.ActionValidatorManager</td>
  *     <td>struts.actionValidatorManager</td>
  *     <td>singleton</td>
  *     <td>Main interface for validation managers (regular and annotation based).  Handles both the loading of
  *         configuration and the actual validation (since 2.1)</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.util.ValueStackFactory</td>
+ *     <td>com.opensymphony.xwork2.util.ValueStackFactory</td>
  *     <td>struts.valueStackFactory</td>
  *     <td>singleton</td>
  *     <td>Creates value stacks (since 2.1)</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.reflection.ReflectionProvider</td>
+ *     <td>com.opensymphony.xwork2.reflection.ReflectionProvider</td>
  *     <td>struts.reflectionProvider</td>
  *     <td>singleton</td>
  *     <td>Provides reflection services, key place to plug in a custom expression language (since 2.1)</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.reflection.ReflectionContextFactory</td>
+ *     <td>com.opensymphony.xwork2.reflection.ReflectionContextFactory</td>
  *     <td>struts.reflectionContextFactory</td>
  *     <td>singleton</td>
  *     <td>Creates reflection context maps used for reflection and expression language operations (since 2.1)</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.config.PackageProvider</td>
+ *     <td>com.opensymphony.xwork2.config.PackageProvider</td>
  *     <td>N/A</td>
  *     <td>singleton</td>
  *     <td>All beans registered as PackageProvider implementations will be automatically included in configuration building (since 2.1)</td>
  *   </tr>
  *   <tr>
- *     <td>org.apache.struts2.xwork2.util.PatternMatcher</td>
+ *     <td>com.opensymphony.xwork2.util.PatternMatcher</td>
  *     <td>struts.patternMatcher</td>
  *     <td>singleton</td>
  *     <td>Matches patterns, such as action names, generally used in configuration (since 2.1)</td>

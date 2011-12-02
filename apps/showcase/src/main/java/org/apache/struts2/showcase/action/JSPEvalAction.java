@@ -29,8 +29,8 @@ import java.net.URL;
 
 import org.apache.struts2.ServletActionContext;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.interceptor.annotations.After;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.interceptor.annotations.After;
 
 /**
  * Will only work on containers that unzip war files

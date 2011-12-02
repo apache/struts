@@ -1,0 +1,9 @@
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
+<validators>
+    <field name="model">
+        <field-validator type="visitor">
+            <param name="appendPrefix">false</param>
+            <message>model: </message>
+        </field-validator>
+    </field>
+</validators>

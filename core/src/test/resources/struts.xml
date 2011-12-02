@@ -25,7 +25,7 @@
           "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
     <package name="default" extends="struts-default">
-        <action name="hello" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="hello" class="com.opensymphony.xwork2.ActionSupport">
             <result name="success">hello.jsp</result>
             <result name="tutorial" type="redirect">/tutorial/test.action</result>
         </action>
@@ -37,17 +37,17 @@
                          class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
         </result-types>
 
-        <action name="test" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="test" class="com.opensymphony.xwork2.ActionSupport">
             <result name="input">sitegraph/guess-input.ftl</result>
         </action>
 
-        <action name="test2" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="test2" class="com.opensymphony.xwork2.ActionSupport">
             <result type="freemarker">
                 <param name="location">org/apache/struts2/views/freemarker/callActionFreeMarker.ftl</param>
             </result>
         </action>
 
-        <action name="test3" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="test3" class="com.opensymphony.xwork2.ActionSupport">
             <result type="freemarker">org/apache/struts2/views/freemarker/nested.ftl</result>
         </action>
 
@@ -57,7 +57,7 @@
             </result>
         </action>
 
-         <action name="test5" class="org.apache.struts2.xwork2.ActionSupport">
+         <action name="test5" class="com.opensymphony.xwork2.ActionSupport">
             <result type="freemarker">
                 <param name="location">org/apache/struts2/views/freemarker/callActionFreeMarker2.ftl</param>
             </result>
@@ -71,7 +71,7 @@
                          class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
         </result-types>
 
-        <action name="guess" class="org.apache.struts2.xwork2.ActionSupport">
+        <action name="guess" class="com.opensymphony.xwork2.ActionSupport">
             <result name="success" type="redirect">guess-success.jsp</result>
             <result name="input">guess-input.ftl</result>
             <result name="error">guess-error.ftl</result>

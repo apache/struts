@@ -1,4 +1,6 @@
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
+
+import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
 
 import java.util.ArrayList;
 

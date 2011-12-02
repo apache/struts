@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util.location;
+package com.opensymphony.xwork2.util.location;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -27,7 +27,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to handle location information stored in attributes.
- * These attributes are typically setup using {@link org.apache.struts2.xwork2.util.location.LocationAttributes.Pipe}
+ * These attributes are typically setup using {@link com.opensymphony.xwork2.util.location.LocationAttributes.Pipe}
  * which augments the SAX stream with additional attributes, e.g.:
  * <pre>
  * &lt;root xmlns:loc="http://struts.apache.org/xwork/location"
@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * &lt;/root&gt;
  * </pre>
  * 
- * @see org.apache.struts2.xwork2.util.location.LocationAttributes.Pipe
+ * @see com.opensymphony.xwork2.util.location.LocationAttributes.Pipe
  * @since 2.1.8
  * @version $Id$
  */
@@ -275,7 +275,7 @@ public class LocationAttributes {
      * the overhead in SAX events is not that big, as attribute names are interned, and all <code>src</code>
      * attributes point to the same string.
      * 
-     * @see org.apache.struts2.xwork2.util.location.LocationAttributes
+     * @see com.opensymphony.xwork2.util.location.LocationAttributes
      */
     public static class Pipe implements ContentHandler {
         

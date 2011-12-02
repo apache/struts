@@ -1,6 +1,6 @@
-package org.apache.struts2.xwork2.validator.validators;
+package com.opensymphony.xwork2.validator.validators;
 
-import org.apache.struts2.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.ValidationException;
 
 /**
  * <code>ConditionalVisitorFieldValidator</code>

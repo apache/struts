@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.ModelDrivenAction;
-import org.apache.struts2.xwork2.SimpleAction;
-import org.apache.struts2.xwork2.TestBean;
-import org.apache.struts2.xwork2.TextProvider;
-import org.apache.struts2.xwork2.XWorkTestCase;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.providers.MockConfigurationProvider;
-import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.xwork2.ognl.OgnlValueStack;
-import org.apache.struts2.xwork2.ognl.OgnlValueStackFactory;
-import org.apache.struts2.xwork2.ognl.accessor.CompoundRootAccessor;
-import org.apache.struts2.xwork2.util.CompoundRoot;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
+import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
+import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import ognl.PropertyAccessor;
 
 import java.util.ArrayList;

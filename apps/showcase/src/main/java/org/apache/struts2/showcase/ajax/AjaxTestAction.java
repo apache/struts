@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.showcase.ajax;
 
-import org.apache.struts2.xwork2.Action;
+import com.opensymphony.xwork2.Action;
 
 import java.io.Serializable;
 

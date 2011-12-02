@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.impl;
+package com.opensymphony.xwork2.config.impl;
 
-import org.apache.struts2.xwork2.util.PatternMatcher;
+import com.opensymphony.xwork2.util.PatternMatcher;
 
 import java.util.Map;
 import java.util.Set;

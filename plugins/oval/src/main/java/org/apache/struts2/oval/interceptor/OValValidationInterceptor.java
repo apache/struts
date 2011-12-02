@@ -20,18 +20,18 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.ModelDriven;
-import org.apache.struts2.xwork2.Validateable;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor;
-import org.apache.struts2.xwork2.interceptor.PrefixMethodInvocationUtil;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.validator.DelegatingValidatorContext;
-import org.apache.struts2.xwork2.validator.ValidatorContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.Validateable;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
+import com.opensymphony.xwork2.validator.ValidatorContext;
 import net.sf.oval.ConstraintViolation;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.Configurer;
@@ -72,7 +72,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Determines if {@link org.apache.struts2.xwork2.Validateable}'s <code>validate()</code> should be called,
+     * Determines if {@link com.opensymphony.xwork2.Validateable}'s <code>validate()</code> should be called,
      * as well as methods whose name that start with "validate". Defaults to "true".
      *
      * @param programmatic <tt>true</tt> then <code>validate()</code> is invoked.
@@ -82,7 +82,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Determines if {@link org.apache.struts2.xwork2.Validateable}'s <code>validate()</code> should always
+     * Determines if {@link com.opensymphony.xwork2.Validateable}'s <code>validate()</code> should always
      * be invoked. Default to "true".
      *
      * @param alwaysInvokeValidate <tt>true</tt> then <code>validate()</code> is always invoked.

@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config;
+package com.opensymphony.xwork2.config;
 
 //import org.easymock.MockControl;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.XWorkTestCase;
-import org.apache.struts2.xwork2.config.providers.XWorkConfigurationProvider;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.util.FileManager;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import java.util.Properties;
 

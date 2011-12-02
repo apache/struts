@@ -22,10 +22,10 @@ package org.apache.struts2.rest;
 
 import com.mockobjects.dynamic.AnyConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;

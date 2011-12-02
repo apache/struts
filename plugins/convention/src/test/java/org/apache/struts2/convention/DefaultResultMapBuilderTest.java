@@ -42,10 +42,10 @@ import org.apache.struts2.convention.annotation.Action;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
-import org.apache.struts2.xwork2.config.entities.PackageConfig;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
-import org.apache.struts2.xwork2.config.entities.ResultTypeConfig;
-import org.apache.struts2.xwork2.inject.Container;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * <p>

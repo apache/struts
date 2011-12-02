@@ -1,6 +1,6 @@
-package org.apache.struts2.xwork2.util.location;
+package com.opensymphony.xwork2.util.location;
 
-import org.apache.struts2.xwork2.util.PropertiesReader;
+import com.opensymphony.xwork2.util.PropertiesReader;
 
 import java.io.IOException;
 import java.io.InputStream;

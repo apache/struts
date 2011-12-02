@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Form;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Base class for tags that perform AJAX validation

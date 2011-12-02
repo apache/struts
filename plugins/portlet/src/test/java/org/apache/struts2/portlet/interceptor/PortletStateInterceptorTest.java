@@ -31,10 +31,10 @@ import org.apache.struts2.dispatcher.DefaultActionSupport;
 import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
 import org.easymock.EasyMock;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 import static org.apache.struts2.portlet.PortletConstants.*;
 

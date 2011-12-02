@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.validator.validators;
+package com.opensymphony.xwork2.validator.validators;
 
-import org.apache.struts2.xwork2.util.TextParseUtil;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.validator.DelegatingValidatorContext;
-import org.apache.struts2.xwork2.validator.ShortCircuitableValidator;
-import org.apache.struts2.xwork2.validator.ValidationException;
-import org.apache.struts2.xwork2.validator.Validator;
-import org.apache.struts2.xwork2.validator.ValidatorContext;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
+import com.opensymphony.xwork2.validator.ShortCircuitableValidator;
+import com.opensymphony.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.Validator;
+import com.opensymphony.xwork2.validator.ValidatorContext;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;

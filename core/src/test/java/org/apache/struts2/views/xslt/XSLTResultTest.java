@@ -36,10 +36,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Unit test for {@link XSLTResult}.
@@ -205,7 +206,7 @@ public class XSLTResultTest extends StrutsTestCase {
 
         MyAction action = new MyAction();
 
-        mai = new org.apache.struts2.xwork2.mock.MockActionInvocation();
+        mai = new com.opensymphony.xwork2.mock.MockActionInvocation();
         mai.setAction(action);
         mai.setStack(stack);
         mai.setInvocationContext(ActionContext.getContext());

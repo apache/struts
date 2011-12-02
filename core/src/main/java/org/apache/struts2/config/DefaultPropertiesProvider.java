@@ -21,10 +21,10 @@
 
 package org.apache.struts2.config;
 
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
  * Loads the default properties, separate from the usual struts.properties loading

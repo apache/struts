@@ -26,7 +26,7 @@ import java.util.Map;
 import javax.portlet.RenderRequest;
 
 import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  */

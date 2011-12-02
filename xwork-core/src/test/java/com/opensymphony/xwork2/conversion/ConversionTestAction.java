@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.conversion;
+package com.opensymphony.xwork2.conversion;
 
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.conversion.annotations.Conversion;
-import org.apache.struts2.xwork2.conversion.annotations.ConversionRule;
-import org.apache.struts2.xwork2.conversion.annotations.ConversionType;
-import org.apache.struts2.xwork2.conversion.annotations.TypeConversion;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.conversion.annotations.Conversion;
+import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
+import com.opensymphony.xwork2.conversion.annotations.ConversionType;
+import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 
 import java.util.HashMap;
 import java.util.List;

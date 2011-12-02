@@ -21,8 +21,8 @@
 
 package org.apache.struts2.sitegraph;
 
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.sitegraph.renderers.DOTRenderer;
 

@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.convention.actions.idx;
 
-import org.apache.struts2.xwork2.Action;
+import com.opensymphony.xwork2.Action;
 
 public class Index implements Action {
     public String execute() throws Exception {

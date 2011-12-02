@@ -1,17 +1,17 @@
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.ConfigurationManager;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.inject.Context;
-import org.apache.struts2.xwork2.inject.Factory;
-import org.apache.struts2.xwork2.inject.Scope;
-import org.apache.struts2.xwork2.test.StubConfigurationProvider;
-import org.apache.struts2.xwork2.util.XWorkTestCaseHelper;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
+import com.opensymphony.xwork2.inject.Scope;
+import com.opensymphony.xwork2.test.StubConfigurationProvider;
+import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.junit.After;
 import org.junit.Before;
 

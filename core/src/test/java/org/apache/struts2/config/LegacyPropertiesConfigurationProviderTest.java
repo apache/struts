@@ -21,11 +21,16 @@
 
 package org.apache.struts2.config;
 
+import java.util.Iterator;
 import java.util.Locale;
 
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.inject.Container;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsTestCase;
+
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
 
 

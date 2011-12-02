@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.conversion.impl;
+package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.XWorkException;
-import org.apache.struts2.xwork2.test.annotations.Person;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.test.annotations.Person;
 import junit.framework.TestCase;
 
 import java.text.DateFormat;

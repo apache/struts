@@ -33,8 +33,8 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUserDatabase;
 
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p><code>ServletContextListener</code> that initializes and finalizes the

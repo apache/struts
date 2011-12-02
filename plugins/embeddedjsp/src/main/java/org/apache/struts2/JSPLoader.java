@@ -20,12 +20,12 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.xwork2.util.URLUtil;
-import org.apache.struts2.xwork2.util.finder.ClassLoaderInterface;
-import org.apache.struts2.xwork2.util.finder.ClassLoaderInterfaceDelegate;
-import org.apache.struts2.xwork2.util.finder.UrlSet;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.URLUtil;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
+import com.opensymphony.xwork2.util.finder.UrlSet;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;

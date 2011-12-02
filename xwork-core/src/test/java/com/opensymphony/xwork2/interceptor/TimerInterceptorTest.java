@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.SimpleFooAction;
-import org.apache.struts2.xwork2.XWorkTestCase;
-import org.apache.struts2.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.xwork2.mock.MockActionProxy;
-import org.apache.struts2.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.SimpleFooAction;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
+import com.opensymphony.xwork2.util.logging.Logger;
 
 /**
  * Unit test for {@link TimerInterceptor}.

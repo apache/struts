@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util.logging;
+package com.opensymphony.xwork2.util.logging;
 
-import org.apache.struts2.xwork2.util.logging.jdk.JdkLoggerFactory;
+import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -60,7 +60,7 @@ public abstract class LoggerFactory {
             if (factory == null) {
                 try {
                     Class.forName("org.apache.commons.logging.LogFactory");
-                    factory = new org.apache.struts2.xwork2.util.logging.commons.CommonsLoggerFactory();
+                    factory = new com.opensymphony.xwork2.util.logging.commons.CommonsLoggerFactory();
                 } catch (ClassNotFoundException ex) {
                     // commons logging not found, falling back to jdk logging
                     factory = new JdkLoggerFactory();

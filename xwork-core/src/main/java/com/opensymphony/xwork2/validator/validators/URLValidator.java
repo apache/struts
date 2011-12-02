@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.validator.validators;
+package com.opensymphony.xwork2.validator.validators;
 
-import org.apache.struts2.xwork2.validator.ValidationException;
-import org.apache.struts2.xwork2.util.URLUtil;
+import com.opensymphony.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.util.URLUtil;
 
 
 /**

@@ -23,6 +23,8 @@ package org.apache.struts2.s1;
 
 import java.lang.reflect.InvocationTargetException;
 
+import junit.framework.TestCase;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -34,10 +36,14 @@ import org.apache.struts.config.ModuleConfig;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
-import org.apache.struts2.xwork2.ActionSupport;
-import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
-import org.apache.struts2.xwork2.config.entities.PackageConfig;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 /**
  * Test of Struts1Factory, which creates Struts 1.x wrappers around XWork config objects.
@@ -108,8 +114,8 @@ public class Struts1FactoryTest extends StrutsTestCase {
      */
     public void testCreateActionMapping() {
         PackageConfig packageConfig = configuration.getPackageConfig(PACKAGE_NAME);
-        org.apache.struts2.xwork2.config.entities.ActionConfig actionConfig =
-                (org.apache.struts2.xwork2.config.entities.ActionConfig) packageConfig.getActionConfigs().get("action1");
+        com.opensymphony.xwork2.config.entities.ActionConfig actionConfig =
+                (com.opensymphony.xwork2.config.entities.ActionConfig) packageConfig.getActionConfigs().get("action1");
         ActionMapping mapping = factory.createActionMapping(actionConfig);
         assertNotNull(mapping);
 

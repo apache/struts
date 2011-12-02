@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config;
+package com.opensymphony.xwork2.config;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.SimpleAction;
-import org.apache.struts2.xwork2.XWorkTestCase;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
-import org.apache.struts2.xwork2.config.providers.MockConfigurationProvider;
-import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.mock.MockInterceptor;
-import org.apache.struts2.xwork2.test.StubConfigurationProvider;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.mock.MockInterceptor;
+import com.opensymphony.xwork2.test.StubConfigurationProvider;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import java.util.HashMap;
 import java.util.Map;

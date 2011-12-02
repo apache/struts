@@ -31,10 +31,12 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.StrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Value Stack's Context related Utilities.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.inject;
+package com.opensymphony.xwork2.inject;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -84,7 +84,7 @@ public interface Container extends Serializable {
 
   /**
    * Gets an instance of the given dependency which was declared in
-   * {@link org.apache.struts2.xwork2.inject.ContainerBuilder}.
+   * {@link com.opensymphony.xwork2.inject.ContainerBuilder}.
    */
   <T> T getInstance(Class<T> type, String name);
 

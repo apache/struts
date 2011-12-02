@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util.location;
+package com.opensymphony.xwork2.util.location;
 
 /**
  * A interface that should be implemented by objects knowning their location (i.e. where they

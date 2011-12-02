@@ -34,11 +34,11 @@ import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.components.ActionComponent;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.Action;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 
 /**

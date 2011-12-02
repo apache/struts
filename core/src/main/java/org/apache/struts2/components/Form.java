@@ -21,18 +21,19 @@
 
 package org.apache.struts2.components;
 
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.RuntimeConfiguration;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.InterceptorMapping;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.interceptor.MethodFilterInterceptorUtil;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.validator.ActionValidatorManager;
-import org.apache.struts2.xwork2.validator.FieldValidator;
-import org.apache.struts2.xwork2.validator.ValidationInterceptor;
-import org.apache.struts2.xwork2.validator.Validator;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.validator.ActionValidatorManager;
+import com.opensymphony.xwork2.validator.FieldValidator;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import com.opensymphony.xwork2.validator.Validator;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.commons.lang.StringUtils;

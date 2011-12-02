@@ -21,7 +21,7 @@
 
 package org.apache.struts2.s1;
 
-import org.apache.struts2.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import org.apache.struts.config.ExceptionConfig;
 
 /**

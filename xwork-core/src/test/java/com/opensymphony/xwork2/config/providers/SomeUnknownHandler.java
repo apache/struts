@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.providers;
+package com.opensymphony.xwork2.config.providers;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.Result;
-import org.apache.struts2.xwork2.UnknownHandler;
-import org.apache.struts2.xwork2.XWorkException;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.UnknownHandler;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 public class SomeUnknownHandler implements UnknownHandler{
     private ActionConfig actionConfig;

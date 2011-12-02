@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

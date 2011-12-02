@@ -23,7 +23,7 @@ package org.apache.struts2.showcase.fileupload;
 
 import java.io.File;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * Showcase action - mutiple file upload using array.

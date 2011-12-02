@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.validator;
+package com.opensymphony.xwork2.validator;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.test.DataAware2;
-import org.apache.struts2.xwork2.test.SimpleAction2;
-import org.apache.struts2.xwork2.test.SimpleAction3;
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.test.DataAware2;
+import com.opensymphony.xwork2.test.SimpleAction2;
+import com.opensymphony.xwork2.test.SimpleAction3;
+import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;

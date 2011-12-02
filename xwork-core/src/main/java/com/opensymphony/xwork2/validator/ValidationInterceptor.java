@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.validator;
+package com.opensymphony.xwork2.validator;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.ActionProxy;
-import org.apache.struts2.xwork2.Validateable;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor;
-import org.apache.struts2.xwork2.interceptor.PrefixMethodInvocationUtil;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.Validateable;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
  *
  * This interceptor runs the action through the standard validation framework, which in turn checks the action against
  * any validation rules (found in files such as <i>ActionClass-validation.xml</i>) and adds field-level and action-level
- * error messages (provided that the action implements {@link org.apache.struts2.xwork2.ValidationAware}). This interceptor
+ * error messages (provided that the action implements {@link com.opensymphony.xwork2.ValidationAware}). This interceptor
  * is often one of the last (or second to last) interceptors applied in a stack, as it assumes that all values have
  * already been set on the action.
  *
@@ -122,7 +123,7 @@ import org.apache.struts2.xwork2.util.logging.LoggerFactory;
  * @author Rainer Hermanns
  * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  * @see ActionValidatorManager
- * @see org.apache.struts2.xwork2.interceptor.DefaultWorkflowInterceptor
+ * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
  */
 public class ValidationInterceptor extends MethodFilterInterceptor {
 

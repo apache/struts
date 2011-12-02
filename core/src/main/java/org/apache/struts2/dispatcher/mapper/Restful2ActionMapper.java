@@ -29,10 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.StrutsConstants;
 
-import org.apache.struts2.xwork2.config.ConfigurationManager;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->

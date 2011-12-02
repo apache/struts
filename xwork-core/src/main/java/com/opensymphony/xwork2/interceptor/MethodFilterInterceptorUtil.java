@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.util.TextParseUtil;
-import org.apache.struts2.xwork2.util.WildcardHelper;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.WildcardHelper;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +24,7 @@ import java.util.Set;
 
 /**
  * Utility class contains common methods used by 
- * {@link org.apache.struts2.xwork2.interceptor.MethodFilterInterceptor}.
+ * {@link com.opensymphony.xwork2.interceptor.MethodFilterInterceptor}.
  * 
  * @author tm_jee
  */

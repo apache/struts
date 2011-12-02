@@ -21,7 +21,7 @@
 
 package org.apache.struts2.components;
 
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;

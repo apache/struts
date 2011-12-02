@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.inject.util;
+package com.opensymphony.xwork2.inject.util;
 
 /**
  * Reference type. Used to specify what type of reference to keep to a

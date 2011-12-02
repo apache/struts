@@ -20,12 +20,12 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.finder.ClassLoaderInterface;
-import org.apache.struts2.xwork2.util.finder.ClassLoaderInterfaceDelegate;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
+import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import junit.framework.TestCase;
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;

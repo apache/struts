@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.interceptor;
+package com.opensymphony.xwork2.interceptor;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.util.TextParseUtil;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Set;
@@ -65,8 +65,8 @@ import java.util.Set;
  * 
  * @see org.apache.struts2.interceptor.TokenInterceptor
  * @see org.apache.struts2.interceptor.TokenSessionStoreInterceptor
- * @see org.apache.struts2.xwork2.interceptor.DefaultWorkflowInterceptor
- * @see org.apache.struts2.xwork2.validator.ValidationInterceptor
+ * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
+ * @see com.opensymphony.xwork2.validator.ValidationInterceptor
  * 
  * @version $Date$ $Id$
  */

@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.convention;
 
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 
 /**

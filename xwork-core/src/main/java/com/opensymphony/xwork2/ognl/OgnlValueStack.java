@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.ognl;
+package com.opensymphony.xwork2.ognl;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.TextProvider;
-import org.apache.struts2.xwork2.XWorkException;
-import org.apache.struts2.xwork2.conversion.impl.XWorkConverter;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.ognl.accessor.CompoundRootAccessor;
-import org.apache.struts2.xwork2.util.ClearableValueStack;
-import org.apache.struts2.xwork2.util.CompoundRoot;
-import org.apache.struts2.xwork2.util.MemberAccessValueStack;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.util.logging.LoggerUtils;
-import org.apache.struts2.xwork2.util.reflection.ReflectionContextState;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.util.ClearableValueStack;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.MemberAccessValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.logging.LoggerUtils;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
@@ -106,21 +106,21 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#getContext()
+     * @see com.opensymphony.xwork2.util.ValueStack#getContext()
      */
     public Map<String, Object> getContext() {
         return context;
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#setDefaultType(java.lang.Class)
+     * @see com.opensymphony.xwork2.util.ValueStack#setDefaultType(java.lang.Class)
      */
     public void setDefaultType(Class defaultType) {
         this.defaultType = defaultType;
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#setExprOverrides(java.util.Map)
+     * @see com.opensymphony.xwork2.util.ValueStack#setExprOverrides(java.util.Map)
      */
     public void setExprOverrides(Map<Object, Object> overrides) {
         if (this.overrides == null) {
@@ -131,28 +131,28 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#getExprOverrides()
+     * @see com.opensymphony.xwork2.util.ValueStack#getExprOverrides()
      */
     public Map<Object, Object> getExprOverrides() {
         return this.overrides;
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#getRoot()
+     * @see com.opensymphony.xwork2.util.ValueStack#getRoot()
      */
     public CompoundRoot getRoot() {
         return root;
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
+     * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
      */
     public void setValue(String expr, Object value) {
         setValue(expr, value, devMode);
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object, boolean)
+     * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object, boolean)
      */
     public void setValue(String expr, Object value, boolean throwExceptionOnFailure) {
         Map<String, Object> context = getContext();
@@ -203,7 +203,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#findString(java.lang.String)
+     * @see com.opensymphony.xwork2.util.ValueStack#findString(java.lang.String)
      */
     public String findString(String expr) {
         return (String) findValue(expr, String.class);
@@ -214,7 +214,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#findValue(java.lang.String)
+     * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String)
      */
     public Object findValue(String expr, boolean throwExceptionOnFailure) {
         try {
@@ -285,7 +285,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#findValue(java.lang.String, java.lang.Class)
+     * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String, java.lang.Class)
      */
     public Object findValue(String expr, Class asType, boolean throwExceptionOnFailure) {
         try {
@@ -367,28 +367,28 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#peek()
+     * @see com.opensymphony.xwork2.util.ValueStack#peek()
      */
     public Object peek() {
         return root.peek();
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#pop()
+     * @see com.opensymphony.xwork2.util.ValueStack#pop()
      */
     public Object pop() {
         return root.pop();
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#push(java.lang.Object)
+     * @see com.opensymphony.xwork2.util.ValueStack#push(java.lang.Object)
      */
     public void push(Object o) {
         root.push(o);
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#set(java.lang.String, java.lang.Object)
+     * @see com.opensymphony.xwork2.util.ValueStack#set(java.lang.String, java.lang.Object)
      */
     public void set(String key, Object o) {
         //set basically is backed by a Map pushed on the stack with a key being put on the map and the Object being the value
@@ -417,7 +417,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @see org.apache.struts2.xwork2.util.ValueStack#size()
+     * @see com.opensymphony.xwork2.util.ValueStack#size()
      */
     public int size() {
         return root.size();

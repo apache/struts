@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.showcase.freemarker;
 
-import org.apache.struts2.xwork2.ActionSupport;
-import org.apache.struts2.xwork2.Preparable;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 
 import java.text.DateFormatSymbols;
 

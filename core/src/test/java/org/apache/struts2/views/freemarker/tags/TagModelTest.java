@@ -30,11 +30,12 @@ import java.util.Map;
 
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.components.Component;
+import org.apache.struts2.views.freemarker.tags.TagModel;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ognl.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
 
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.AdapterTemplateModel;

@@ -1,0 +1,7 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.1.3//EN"
+    "http://struts.apache.org/dtds/xwork-2.1.3.dtd"
+ >
+
+<xwork order="1">
+</xwork>

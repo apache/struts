@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.conversion.impl;
+package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.XWorkException;
-import org.apache.struts2.xwork2.conversion.ObjectTypeDeterminer;
-import org.apache.struts2.xwork2.conversion.TypeConverter;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.XWorkList;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.XWorkList;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;

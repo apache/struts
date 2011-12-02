@@ -21,7 +21,7 @@
 
 package mailreader2;
 
-import org.apache.struts2.xwork2.Preparable;
+import com.opensymphony.xwork2.Preparable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

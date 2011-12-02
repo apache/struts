@@ -1,4 +1,4 @@
-package org.apache.struts2.xwork2.conversion.impl;
+package com.opensymphony.xwork2.conversion.impl;
 
 /**
  * <code>ParentClass</code>

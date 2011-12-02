@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="simple-action" class="com.opensymphony.xwork2.SimpleAction" singleton="false"/>
+
+    <bean id="dependency-action" class="com.opensymphony.xwork2.SimpleAction" singleton="false">
+        <property name="blah"><value>injected</value></property>
+    </bean>
+
+    <bean id="execute-interceptor" class="com.opensymphony.xwork2.spring.ExecuteInterceptor"/>
+
+    <bean id="proxied-action" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="singleton"><value>false</value></property>  
+		<property name="proxyTargetClass"><value>true</value></property>
+		<property name="interceptorNames">
+			<list>
+				<value>execute-interceptor</value>
+                <!-- When "singleton" is false, the target appears to be required here to 
+                     ensure that the config works as it should -->
+                <value>simple-action</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean id="auto-proxied-action" class="com.opensymphony.xwork2.SimpleAction" singleton="false"/>
+
+    <bean id="xwork-actions-proxy-creator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="proxyTargetClass"><value>true</value></property>
+		<property name="interceptorNames">
+			<list>
+				<value>execute-interceptor</value>
+			</list>
+		</property>
+        <property name="beanNames"><value>auto-proxied-action</value></property>
+    </bean>
+    
+    <bean id="springResult" class="com.opensymphony.xwork2.spring.SpringResult"
+		init-method="initialize">
+		<property name="stringParameter" value="my string"/>
+	</bean>
+</beans>

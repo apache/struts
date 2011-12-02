@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.entities;
+package com.opensymphony.xwork2.config.entities;
 
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import java.util.Map;
  * Actions implementing Parameterizable will receive a map of the static parameters defined in the action
  * configuration.
  * <p/>
- * <p/> The {@link org.apache.struts2.xwork2.interceptor.StaticParametersInterceptor} must be in the action's interceptor
+ * <p/> The {@link com.opensymphony.xwork2.interceptor.StaticParametersInterceptor} must be in the action's interceptor
  * queue for this to work.
  * <p/>
  * <!-- END SNIPPET: javadoc -->

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.conversion.impl;
+package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 
 /**

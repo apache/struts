@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.config.providers;
+package com.opensymphony.xwork2.config.providers;
 
-import org.apache.struts2.xwork2.ObjectFactory;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.config.RuntimeConfiguration;
-import org.apache.struts2.xwork2.config.entities.PackageConfig;
-import org.apache.struts2.xwork2.config.impl.MockConfiguration;
-import org.apache.struts2.xwork2.util.ClassLoaderUtil;
-import org.apache.struts2.xwork2.util.FileManager;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.impl.MockConfiguration;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.FileManager;
 import org.w3c.dom.Document;
 
 import java.io.File;

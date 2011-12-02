@@ -23,10 +23,10 @@ package org.apache.struts2.views.gxp;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gxp.base.GxpContext;
 import com.google.gxp.base.MarkupClosure;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

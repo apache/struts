@@ -44,7 +44,7 @@ import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.TextareaTag;
 import org.apache.struts2.views.jsp.ui.TokenTag;
 
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 
 /**

@@ -28,11 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * Extends {@link ActionSupport} to provides a default implementation of the index method that can be invoked for
- * unknown actions by the {@link org.apache.struts2.xwork2.UnknownHandler}.
+ * unknown actions by the {@link com.opensymphony.xwork2.UnknownHandler}.
  */
 public class RestActionSupport extends ActionSupport {
 

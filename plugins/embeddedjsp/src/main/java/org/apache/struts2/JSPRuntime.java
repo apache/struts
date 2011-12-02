@@ -20,7 +20,7 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.Servlet;

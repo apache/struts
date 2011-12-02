@@ -21,22 +21,27 @@
 
 package org.apache.struts2.osgi;
 
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.util.URLUtil;
-import org.apache.struts2.xwork2.util.finder.ResourceFinder;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.URLUtil;
+import com.opensymphony.xwork2.util.finder.ResourceFinder;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
 import org.apache.felix.main.AutoActivator;
 import org.apache.felix.main.Main;
 import org.apache.felix.shell.ShellService;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsException;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.Constants;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleListener;
+import org.osgi.framework.BundleEvent;
 import org.osgi.util.tracker.ServiceTracker;
 
 import javax.servlet.ServletContext;

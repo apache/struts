@@ -25,7 +25,7 @@ import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
 import com.opensymphony.sitemesh.DecoratorSelector;
 import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.module.sitemesh.Config;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Inject;
 
 import javax.servlet.*;
 

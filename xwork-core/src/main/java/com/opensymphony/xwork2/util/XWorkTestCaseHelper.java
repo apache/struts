@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.config.*;
-import org.apache.struts2.xwork2.config.providers.XWorkConfigurationProvider;
-import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.ContainerBuilder;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.*;
+import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
  * Generic test setup methods to be used with any unit testing framework. 

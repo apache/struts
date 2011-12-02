@@ -1,11 +1,11 @@
 /*
  * Created on 6/11/2004
  */
-package org.apache.struts2.xwork2.spring.interceptor;
+package com.opensymphony.xwork2.spring.interceptor;
 
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.interceptor.PreResultListener;
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import java.lang.reflect.Method;
 

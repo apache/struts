@@ -1,4 +1,4 @@
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

@@ -31,9 +31,10 @@ import org.apache.struts2.StrutsTestCase;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 
 /**

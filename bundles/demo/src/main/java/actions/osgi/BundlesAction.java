@@ -23,9 +23,12 @@ package actions.osgi;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Bundle;
 import org.apache.struts2.osgi.interceptor.BundleContextAware;
+import org.apache.struts2.osgi.interceptor.ServiceAware;
 import org.apache.struts2.convention.annotation.ResultPath;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import java.util.List;
+
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * This action shows how to interact with the OSGi container, using the OSGi interceptor

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.validator.metadata;
+package com.opensymphony.xwork2.validator.metadata;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -25,7 +25,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.VariableResolver;
 
-import org.apache.struts2.xwork2.ActionContext;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Will return a reference to the current action if the action name matches the

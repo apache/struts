@@ -23,9 +23,9 @@ package org.apache.struts2.jsf;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 
 /**
  * Translates JSF phases into individual interceptors, and adapts their expected

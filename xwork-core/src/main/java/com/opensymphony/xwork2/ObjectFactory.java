@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.xwork2.config.entities.InterceptorConfig;
-import org.apache.struts2.xwork2.config.entities.ResultConfig;
-import org.apache.struts2.xwork2.inject.Container;
-import org.apache.struts2.xwork2.inject.Inject;
-import org.apache.struts2.xwork2.interceptor.Interceptor;
-import org.apache.struts2.xwork2.util.ClassLoaderUtil;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.util.reflection.ReflectionException;
-import org.apache.struts2.xwork2.util.reflection.ReflectionExceptionHandler;
-import org.apache.struts2.xwork2.util.reflection.ReflectionProvider;
-import org.apache.struts2.xwork2.validator.Validator;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.validator.Validator;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -112,7 +112,7 @@ public class ObjectFactory implements Serializable {
      * @param actionName the name the action configuration is set up with in the configuration
      * @param namespace the namespace the action is configured in
      * @param config the action configuration found in the config for the actionName / namespace
-     * @param extraContext a Map of extra context which uses the same keys as the {@link org.apache.struts2.xwork2.ActionContext}
+     * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      * @return instance of the action class to handle a web request
      * @throws Exception
      */
@@ -124,7 +124,7 @@ public class ObjectFactory implements Serializable {
      * Build a generic Java object of the given type.
      *
      * @param clazz the type of Object to build
-     * @param extraContext a Map of extra context which uses the same keys as the {@link org.apache.struts2.xwork2.ActionContext}
+     * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Object buildBean(Class clazz, Map<String, Object> extraContext) throws Exception {
         return clazz.newInstance();
@@ -144,7 +144,7 @@ public class ObjectFactory implements Serializable {
      * Build a generic Java object of the given type.
      *
      * @param className the type of Object to build
-     * @param extraContext a Map of extra context which uses the same keys as the {@link org.apache.struts2.xwork2.ActionContext}
+     * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Object buildBean(String className, Map<String, Object> extraContext) throws Exception {
         return buildBean(className, extraContext, true);
@@ -154,7 +154,7 @@ public class ObjectFactory implements Serializable {
      * Build a generic Java object of the given type.
      *
      * @param className the type of Object to build
-     * @param extraContext a Map of extra context which uses the same keys as the {@link org.apache.struts2.xwork2.ActionContext}
+     * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
         Class clazz = getClassInstance(className);
@@ -217,7 +217,7 @@ public class ObjectFactory implements Serializable {
      * Build a Result using the type in the ResultConfig and set the parameters in the ResultConfig.
      *
      * @param resultConfig the ResultConfig found for the action with the result code returned
-     * @param extraContext a Map of extra context which uses the same keys as the {@link org.apache.struts2.xwork2.ActionContext}
+     * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception {
         String resultClassName = resultConfig.getClassName();
@@ -247,7 +247,7 @@ public class ObjectFactory implements Serializable {
      *
      * @param className the type of Validator to build
      * @param params    property name -> value Map to set onto the Validator instance
-     * @param extraContext a Map of extra context which uses the same keys as the {@link org.apache.struts2.xwork2.ActionContext}
+     * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Validator buildValidator(String className, Map<String, String> params, Map<String, Object> extraContext) throws Exception {
         Validator validator = (Validator) buildBean(className, null);

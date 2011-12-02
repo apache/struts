@@ -26,8 +26,8 @@ import java.util.Map;
 
 import org.apache.struts2.StrutsTestCase;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**
  * Unit test for ChecboxInterceptor. 

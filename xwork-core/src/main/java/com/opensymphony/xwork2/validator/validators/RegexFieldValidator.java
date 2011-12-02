@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.validator.validators;
+package com.opensymphony.xwork2.validator.validators;
 
-import org.apache.struts2.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.ValidationException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.ConfigurationManager;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.inject.*;
-import org.apache.struts2.xwork2.test.StubConfigurationProvider;
-import org.apache.struts2.xwork2.util.XWorkTestCaseHelper;
-import org.apache.struts2.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.inject.*;
+import com.opensymphony.xwork2.test.StubConfigurationProvider;
+import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 import junit.framework.TestCase;
 
 

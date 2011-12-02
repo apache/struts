@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.test;
+package com.opensymphony.xwork2.test;
 
 import java.util.Collection;
 import java.util.List;

@@ -29,5 +29,5 @@ package org.apache.struts2.interceptor;
  * security reasons wants to make sure that parameters cannot be set by malicious users.
  *
  */
-public interface NoParameters extends org.apache.struts2.xwork2.interceptor.NoParameters {
+public interface NoParameters extends com.opensymphony.xwork2.interceptor.NoParameters {
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-default.xml" />
+
+    <package name="default">
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
+        </result-types>
+        <interceptors>
+            <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
+        </interceptors>
+    </package>
+
+    <include file="com/opensymphony/xwork2/config/providers/xwork-include-before-package.xml" />
+
+
+    <include file="com/opensymphony/xwork2/config/providers/xwork-include-after-package.xml" />
+</xwork>

@@ -21,13 +21,14 @@
 
 package org.apache.struts2.osgi.admin.actions;
 
-import org.apache.struts2.xwork2.ActionSupport;
-import org.apache.struts2.xwork2.config.Configuration;
-import org.apache.struts2.xwork2.config.entities.PackageConfig;
-import org.apache.struts2.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.osgi.BundleAccessor;
 import org.apache.struts2.osgi.OsgiHost;
 import org.apache.struts2.osgi.StrutsOsgiListener;
+import org.apache.struts2.osgi.OsgiConfigurationProvider;
 import org.apache.struts2.util.ServletContextAware;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
@@ -39,6 +40,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Enumeration;
+import java.util.Dictionary;
 
 public class BundlesAction extends ActionSupport implements ServletContextAware {
 

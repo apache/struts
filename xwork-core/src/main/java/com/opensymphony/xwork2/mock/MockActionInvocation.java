@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.mock;
+package com.opensymphony.xwork2.mock;
 
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.interceptor.PreResultListener;
-import org.apache.struts2.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.ArrayList;
 import java.util.List;

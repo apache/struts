@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import org.apache.struts2.xwork2.Result;
-import org.apache.struts2.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.ActionInvocation;
 
 public class VoidResult implements Result {
     public void execute(ActionInvocation invocation) throws Exception {

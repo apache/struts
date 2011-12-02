@@ -21,10 +21,10 @@
 
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.xwork2.ActionInvocation;
-import org.apache.struts2.xwork2.util.logging.Logger;
-import org.apache.struts2.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 import java.util.Map;
 import java.util.Set;

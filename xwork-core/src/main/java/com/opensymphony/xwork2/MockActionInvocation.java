@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2;
+package com.opensymphony.xwork2;
 
 /**
  * Mock for an {@link ActionInvocation}.
@@ -22,5 +22,5 @@ package org.apache.struts2.xwork2;
  * @author plightbo
  * @deprecated Please use @see com.opensymphony.xwork2.mock.MockActionInvocation instead
  */
-@Deprecated public class MockActionInvocation extends org.apache.struts2.xwork2.mock.MockActionInvocation {
+@Deprecated public class MockActionInvocation extends com.opensymphony.xwork2.mock.MockActionInvocation {
 }

@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.model.IdEntity;
 
-import org.apache.struts2.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * AbstractCRUDAction.

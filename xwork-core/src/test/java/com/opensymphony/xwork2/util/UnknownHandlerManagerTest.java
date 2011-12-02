@@ -1,15 +1,15 @@
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
 import java.util.List;
 
-import org.apache.struts2.xwork2.UnknownHandler;
-import org.apache.struts2.xwork2.UnknownHandlerManager;
-import org.apache.struts2.xwork2.UnknownHandlerManagerMock;
-import org.apache.struts2.xwork2.DefaultUnknownHandlerManager;
-import org.apache.struts2.xwork2.config.ConfigurationException;
-import org.apache.struts2.xwork2.config.ConfigurationProvider;
-import org.apache.struts2.xwork2.config.providers.ConfigurationTestBase;
-import org.apache.struts2.xwork2.config.providers.SomeUnknownHandler;
+import com.opensymphony.xwork2.UnknownHandler;
+import com.opensymphony.xwork2.UnknownHandlerManager;
+import com.opensymphony.xwork2.UnknownHandlerManagerMock;
+import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.ConfigurationTestBase;
+import com.opensymphony.xwork2.config.providers.SomeUnknownHandler;
 
 /**
  * Test UnknownHandlerUtil

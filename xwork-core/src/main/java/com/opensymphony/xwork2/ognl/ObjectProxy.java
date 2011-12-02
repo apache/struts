@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.xwork2.ognl;
+package com.opensymphony.xwork2.ognl;
 
 /**
  * An Object to use within OGNL to proxy other Objects

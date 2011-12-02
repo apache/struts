@@ -21,7 +21,7 @@
 
 package org.apache.struts2.sitegraph;
 
-import org.apache.struts2.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.struts2.StrutsTestCase;
 
 import java.io.File;

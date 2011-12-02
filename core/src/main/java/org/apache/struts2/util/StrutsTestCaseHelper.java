@@ -26,10 +26,10 @@ import java.util.Map;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.util.LocalizedTextUtil;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 import javax.servlet.ServletContext;
 

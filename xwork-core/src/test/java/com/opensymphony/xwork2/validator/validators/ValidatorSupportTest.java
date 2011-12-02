@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.validator.validators;
+package com.opensymphony.xwork2.validator.validators;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.XWorkTestCase;
-import org.apache.struts2.xwork2.ognl.OgnlValueStack;
-import org.apache.struts2.xwork2.util.ValueStack;
-import org.apache.struts2.xwork2.util.ValueStackFactory;
-import org.apache.struts2.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.validator.ValidationException;
 
 /**
  * @author tmjee

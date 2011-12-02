@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util.classloader;
+package com.opensymphony.xwork2.util.classloader;
 
 /**
  * *interface taken from Apache JCI

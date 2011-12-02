@@ -29,8 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.StrutsTestCase;
 import org.jmock.Mock;
 
-import org.apache.struts2.xwork2.ActionContext;
-import org.apache.struts2.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**
  * Test case for ClearSessionInterceptor.

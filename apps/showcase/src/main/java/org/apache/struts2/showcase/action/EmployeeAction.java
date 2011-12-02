@@ -32,7 +32,7 @@ import org.apache.struts2.showcase.dao.EmployeeDao;
 import org.apache.struts2.showcase.model.Employee;
 import org.apache.struts2.showcase.model.Skill;
 
-import org.apache.struts2.xwork2.Preparable;
+import com.opensymphony.xwork2.Preparable;
 
 /**
  * JsfEmployeeAction.

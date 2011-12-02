@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts2.xwork2.util;
+package com.opensymphony.xwork2.util;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.xwork2.*;
-import org.apache.struts2.xwork2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.xwork2.test.ModelDrivenAction2;
-import org.apache.struts2.xwork2.test.TestBean2;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.test.ModelDrivenAction2;
+import com.opensymphony.xwork2.test.TestBean2;
 
 import java.util.Date;
 import java.util.HashMap;

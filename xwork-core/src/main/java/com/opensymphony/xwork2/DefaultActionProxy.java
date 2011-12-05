@@ -41,15 +41,14 @@ import java.util.Locale;
  * @author Rainer Hermanns
  * @author Revised by <a href="mailto:hu_pengfei@yahoo.com.cn">Henry Hu</a>
  * @author tmjee
- * 
  * @version $Date$ $Id$
  * @since 2005-8-6
  */
 public class DefaultActionProxy implements ActionProxy, Serializable {
-	
-	private static final long serialVersionUID = 3293074152487468527L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(DefaultActionProxy.class);
+    private static final long serialVersionUID = 3293074152487468527L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultActionProxy.class);
 
     protected Configuration configuration;
     protected ActionConfig config;
@@ -65,7 +64,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     protected ActionEventListener actionEventListener;
 
-    private boolean methodSpecified=true;
+    private boolean methodSpecified = true;
 
     /**
      * This constructor is private so the builder methods (create*) should be used to create an DefaultActionProxy.
@@ -74,35 +73,35 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
      * (like a RMIActionProxy).
      */
     protected DefaultActionProxy(ActionInvocation inv, String namespace, String actionName, String methodName, boolean executeResult, boolean cleanupContext) {
-        
+
         this.invocation = inv;
-		this.cleanupContext = cleanupContext;
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Creating an DefaultActionProxy for namespace " + namespace + " and action name " + actionName);
-		}
+        this.cleanupContext = cleanupContext;
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating an DefaultActionProxy for namespace " + namespace + " and action name " + actionName);
+        }
 
         this.actionName = StringEscapeUtils.escapeHtml(actionName);
         this.namespace = namespace;
         this.executeResult = executeResult;
         this.method = StringEscapeUtils.escapeJavaScript(StringEscapeUtils.escapeHtml(methodName));
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory factory) {
         this.objectFactory = factory;
     }
-    
+
     @Inject
     public void setConfiguration(Configuration config) {
         this.configuration = config;
     }
-    
+
     @Inject
     public void setUnknownHandler(UnknownHandlerManager unknownHandlerManager) {
         this.unknownHandlerManager = unknownHandlerManager;
     }
-    
-    @Inject(required=false) 
+
+    @Inject(required = false)
     public void setActionEventListener(ActionEventListener listener) {
         this.actionEventListener = listener;
     }
@@ -118,7 +117,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     public ActionConfig getConfig() {
         return config;
     }
-    
+
     public void setExecuteResult(boolean executeResult) {
         this.executeResult = executeResult;
     }
@@ -143,8 +142,8 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
         String profileKey = "execute: ";
         try {
-        	UtilTimerStack.push(profileKey);
-        	
+            UtilTimerStack.push(profileKey);
+
             retCode = invocation.invoke();
         } finally {
             if (cleanupContext) {
@@ -169,44 +168,47 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
             if (StringUtils.isEmpty(this.method)) {
                 this.method = ActionConfig.DEFAULT_METHOD;
             }
-            methodSpecified=false;
+            methodSpecified = false;
         }
     }
 
-    protected void prepare()  {
+    protected void prepare() {
         String profileKey = "create DefaultActionProxy: ";
         try {
             UtilTimerStack.push(profileKey);
             config = configuration.getRuntimeConfiguration().getActionConfig(namespace, actionName);
-    
+
             if (config == null && unknownHandlerManager.hasUnknownHandlers()) {
                 config = unknownHandlerManager.handleUnknownAction(namespace, actionName);
             }
             if (config == null) {
-                String message;
-    
-                if ((namespace != null) && (namespace.trim().length() > 0)) {
-                    message = LocalizedTextUtil.findDefaultText(XWorkMessages.MISSING_PACKAGE_ACTION_EXCEPTION, Locale.getDefault(), new String[]{
-                        namespace, actionName
-                    });
-                } else {
-                    message = LocalizedTextUtil.findDefaultText(XWorkMessages.MISSING_ACTION_EXCEPTION, Locale.getDefault(), new String[]{
-                        actionName
-                    });
-                }
-                throw new ConfigurationException(message);
+                throw new ConfigurationException(getErrorMessage());
             }
 
             resolveMethod();
-            
+
             if (!config.isAllowedMethod(method)) {
-                throw new ConfigurationException("Invalid method: "+method+" for action "+actionName);
+                throw new ConfigurationException("Invalid method: " + method + " for action " + actionName);
             }
 
             invocation.init(this);
 
         } finally {
             UtilTimerStack.pop(profileKey);
+        }
+    }
+
+    protected String getErrorMessage() {
+        if ((namespace != null) && (namespace.trim().length() > 0)) {
+            return LocalizedTextUtil.findDefaultText(
+                    XWorkMessages.MISSING_PACKAGE_ACTION_EXCEPTION,
+                    Locale.getDefault(),
+                    new String[]{namespace, actionName});
+        } else {
+            return LocalizedTextUtil.findDefaultText(
+                    XWorkMessages.MISSING_ACTION_EXCEPTION,
+                    Locale.getDefault(),
+                    new String[]{actionName});
         }
     }
 

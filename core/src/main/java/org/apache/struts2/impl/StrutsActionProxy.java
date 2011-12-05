@@ -26,8 +26,10 @@ package org.apache.struts2.impl;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.DefaultActionProxy;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import org.apache.struts2.ServletActionContext;
 
-import java.util.Map;
+import java.util.Locale;
 
 public class StrutsActionProxy extends DefaultActionProxy {
 
@@ -48,7 +50,7 @@ public class StrutsActionProxy extends DefaultActionProxy {
 //                    return invocation.invoke();
 //                }
 //            });
-            
+
             return invocation.invoke();
         } finally {
             if (cleanupContext)
@@ -59,6 +61,20 @@ public class StrutsActionProxy extends DefaultActionProxy {
     @Override
     protected void prepare() {
         super.prepare();
+    }
+
+    @Override
+    protected String getErrorMessage() {
+        if ((namespace != null) && (namespace.trim().length() > 0)) {
+            String contextPath = ServletActionContext.getRequest().getContextPath();
+            return LocalizedTextUtil.findDefaultText(
+                    "struts.exception.missing-package-action.with-context",
+                    Locale.getDefault(),
+                    new String[]{namespace, actionName, contextPath}
+            );
+        } else {
+            return super.getErrorMessage();
+        }
     }
 
 }

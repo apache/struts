@@ -55,6 +55,7 @@
 <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
+<#include "/${parameters.templateDir}/simple/css.ftl" />
 <#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
 </#if>

@@ -20,6 +20,11 @@
  */
 package org.apache.struts2.showcase;
 
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Validateable;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,12 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.struts2.ServletActionContext;
-
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Validateable;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  */
@@ -47,6 +46,7 @@ public class UITagExample extends ActionSupport implements Validateable {
     String bio;
     String favouriteColor;
     List friends;
+    String bestFriend;
     boolean legalAge;
     String state;
     String region;
@@ -183,6 +183,14 @@ public class UITagExample extends ActionSupport implements Validateable {
 
     public void setFriends(List friends) {
         this.friends = friends;
+    }
+
+    public String getBestFriend() {
+        return bestFriend;
+    }
+
+    public void setBestFriend(String bestFriend) {
+        this.bestFriend = bestFriend;
     }
 
     public boolean isLegalAge() {

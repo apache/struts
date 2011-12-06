@@ -18,7 +18,8 @@
     </tr>
     <s:label label="Biography" name="bio" /> 
     <s:label label="Favourite Color" name="favouriteColor" /> 
-    <s:label label="Friends" name="friends" /> 
+    <s:label label="Friends" name="friends" />
+    <s:label label="Best Friend" name="bestFriend" />
     <s:label label="Legal Age" name="legalAge" /> 
     <s:label label="Region" name="region" /> 
     <s:label label="State" name="state" /> 

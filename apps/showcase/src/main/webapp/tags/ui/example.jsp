@@ -62,8 +62,15 @@
     <s:checkboxlist
             tooltip="Choose your Friends"
             label="Friends"
-            list="{'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}"
+            list="{'Wes', 'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}"
             name="friends"/>
+
+    <s:radio
+            tooltip="Choose your Best Friend"
+            label="Best Friend"
+            list="{'Wes', 'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}"
+            name="bestFriend"
+            cssErrorClass="foo" />
 
     <s:checkbox
             tooltip="Confirmed that your are Over 18"

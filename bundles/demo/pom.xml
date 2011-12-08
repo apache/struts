@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-osgi-bundles</artifactId>
-        <version>2.3.1</version>
+        <version>2.3.2-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-osgi-demo-bundle</artifactId>
@@ -12,9 +12,9 @@
     <name>Struts 2 OSGi Demo Bundle</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/bundles/demo</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/bundles/demo</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_1/bundles/demo</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/demo/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/demo/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/bundles/demo/</url>
     </scm>
     
     <dependencies>

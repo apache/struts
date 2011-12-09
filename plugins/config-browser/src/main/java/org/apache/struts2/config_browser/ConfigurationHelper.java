@@ -21,24 +21,19 @@
 
 package org.apache.struts2.config_browser;
 
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ResolverUtil;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.util.ClassLoaderUtils;
-
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ResolverUtil;
 
 /**
  * ConfigurationHelper
@@ -52,20 +47,20 @@ public class ConfigurationHelper {
         this.configuration = config;
     }
     
-    public Set getNamespaces() {
-        Set namespaces = Collections.EMPTY_SET;
-        Map allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
+    public Set<String> getNamespaces() {
+        Set<String> namespaces = Collections.emptySet();
+        Map<String, Map<String, ActionConfig>>  allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
             namespaces = allActionConfigs.keySet();
         }
         return namespaces;
     }
 
-    public Set getActionNames(String namespace) {
-        Set actionNames = Collections.EMPTY_SET;
-        Map allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
+    public Set<String> getActionNames(String namespace) {
+        Set<String> actionNames = Collections.emptySet();
+        Map<String, Map<String, ActionConfig>> allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
-            Map actionMappings = (Map) allActionConfigs.get(namespace);
+            Map<String, ActionConfig> actionMappings = allActionConfigs.get(namespace);
             if (actionMappings != null) {
                 actionNames = actionMappings.keySet();
             }
@@ -75,11 +70,11 @@ public class ConfigurationHelper {
 
     public ActionConfig getActionConfig(String namespace, String actionName) {
         ActionConfig config = null;
-        Map allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
+        Map<String, Map<String, ActionConfig>> allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
-            Map actionMappings = (Map) allActionConfigs.get(namespace);
+            Map<String, ActionConfig> actionMappings = allActionConfigs.get(namespace);
             if (actionMappings != null) {
-                config = (ActionConfig) actionMappings.get(actionName);
+                config = actionMappings.get(actionName);
             }
         }
         return config;

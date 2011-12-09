@@ -21,16 +21,16 @@
 
 package org.apache.struts2.config_browser;
 
-import java.beans.PropertyDescriptor;
-import java.util.Set;
-import java.util.TreeSet;
-
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+
+import java.beans.PropertyDescriptor;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * ShowConfigAction
@@ -44,7 +44,7 @@ public class ShowConfigAction extends ActionNamesAction {
     private String namespace;
     private String actionName;
     private ActionConfig config;
-    private Set actionNames;
+    private Set<String> actionNames;
     private String detailView = "results";
     private PropertyDescriptor[] properties;
     private static Logger LOG = LoggerFactory.getLogger(ShowConfigAction.class);
@@ -105,11 +105,10 @@ public class ShowConfigAction extends ActionNamesAction {
     public String execute() throws Exception {
         super.execute();
         config = configHelper.getActionConfig(namespace, actionName);
-        actionNames =
-                new TreeSet(configHelper.getActionNames(namespace));
+        actionNames = new TreeSet<String>(configHelper.getActionNames(namespace));
         try {
             Class clazz = objectFactory.getClassInstance(getConfig().getClassName());
-            properties = reflectionProvider.getPropertyDescriptors(clazz);
+            properties = reflectionProvider.getPropertyDescriptors(clazz.newInstance());
         } catch (Exception e) {
             LOG.error("Unable to get properties for action " + actionName, e);
             addActionError("Unable to retrieve action properties: " + e.toString());

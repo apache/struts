@@ -276,9 +276,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (extensions != null && !"".equals(extensions)) {
             List<String> list = new ArrayList<String>();
             String[] tokens = extensions.split(",");
-            for (String token : tokens) {
-                list.add(token);
-            }
+            Collections.addAll(list, tokens);
             if (extensions.endsWith(",")) {
                 list.add("");
             }
@@ -336,6 +334,7 @@ public class DefaultActionMapper implements ActionMapper {
             int exclamation = name.lastIndexOf("!");
             if (exclamation != -1) {
                 mapping.setName(name.substring(0, exclamation));
+
                 mapping.setMethod(name.substring(exclamation + 1));
             }
         }

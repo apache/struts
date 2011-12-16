@@ -21,7 +21,11 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -202,7 +206,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     }
 
     public String getDefaultClassRef() {
-        if((defaultClassRef == null) && !parents.isEmpty()) {
+        if ((defaultClassRef == null) && !parents.isEmpty()) {
             for (PackageConfig parent : parents) {
                 String parentDefault = parent.getDefaultClassRef();
                 if (parentDefault != null) {
@@ -349,28 +353,23 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
             return false;
         }
 
-        if ((actionConfigs != null) ? (!actionConfigs.equals(packageConfig.actionConfigs)) : (packageConfig.actionConfigs != null))
-        {
+        if ((actionConfigs != null) ? (!actionConfigs.equals(packageConfig.actionConfigs)) : (packageConfig.actionConfigs != null)) {
             return false;
         }
 
-        if ((defaultResultType != null) ? (!defaultResultType.equals(packageConfig.defaultResultType)) : (packageConfig.defaultResultType != null))
-        {
+        if ((defaultResultType != null) ? (!defaultResultType.equals(packageConfig.defaultResultType)) : (packageConfig.defaultResultType != null)) {
             return false;
         }
 
-        if ((defaultClassRef != null) ? (!defaultClassRef.equals(packageConfig.defaultClassRef)) : (packageConfig.defaultClassRef != null))
-        {
+        if ((defaultClassRef != null) ? (!defaultClassRef.equals(packageConfig.defaultClassRef)) : (packageConfig.defaultClassRef != null)) {
             return false;
         }
 
-        if ((globalResultConfigs != null) ? (!globalResultConfigs.equals(packageConfig.globalResultConfigs)) : (packageConfig.globalResultConfigs != null))
-        {
+        if ((globalResultConfigs != null) ? (!globalResultConfigs.equals(packageConfig.globalResultConfigs)) : (packageConfig.globalResultConfigs != null)) {
             return false;
         }
 
-        if ((interceptorConfigs != null) ? (!interceptorConfigs.equals(packageConfig.interceptorConfigs)) : (packageConfig.interceptorConfigs != null))
-        {
+        if ((interceptorConfigs != null) ? (!interceptorConfigs.equals(packageConfig.interceptorConfigs)) : (packageConfig.interceptorConfigs != null)) {
             return false;
         }
 
@@ -386,13 +385,11 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
             return false;
         }
 
-        if ((resultTypeConfigs != null) ? (!resultTypeConfigs.equals(packageConfig.resultTypeConfigs)) : (packageConfig.resultTypeConfigs != null))
-        {
+        if ((resultTypeConfigs != null) ? (!resultTypeConfigs.equals(packageConfig.resultTypeConfigs)) : (packageConfig.resultTypeConfigs != null)) {
             return false;
         }
 
-        if ((globalExceptionMappingConfigs != null) ? (!globalExceptionMappingConfigs.equals(packageConfig.globalExceptionMappingConfigs)) : (packageConfig.globalExceptionMappingConfigs != null))
-        {
+        if ((globalExceptionMappingConfigs != null) ? (!globalExceptionMappingConfigs.equals(packageConfig.globalExceptionMappingConfigs)) : (packageConfig.globalExceptionMappingConfigs != null)) {
             return false;
         }
 
@@ -473,7 +470,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
             return this;
         }
 
-        public Builder defaultClassRef( String defaultClassRef ) {
+        public Builder defaultClassRef(String defaultClassRef) {
             target.defaultClassRef = defaultClassRef;
             return this;
         }
@@ -545,10 +542,6 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         }
 
         public Builder addParent(PackageConfig parent) {
-            if (this.equals(parent)) {
-                LOG.error("A package cannot extend itself: " + target.name);
-            }
-
             target.parents.add(0, parent);
             return this;
         }
@@ -618,7 +611,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
         @Override
         public String toString() {
-            return "[BUILDER] "+target.toString();
+            return "[BUILDER] " + target.toString();
         }
     }
 

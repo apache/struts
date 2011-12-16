@@ -129,13 +129,6 @@
 
     <dependencies>
 
-        <!-- Core -->
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- JSP API -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -151,11 +144,6 @@
         </dependency>
 
         <!-- Test dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>struts2-junit-plugin</artifactId>

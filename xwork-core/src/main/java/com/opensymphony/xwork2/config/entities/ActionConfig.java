@@ -17,11 +17,17 @@ package com.opensymphony.xwork2.config.entities;
 
 import com.opensymphony.xwork2.util.location.Located;
 import com.opensymphony.xwork2.util.location.Location;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.*;
-
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -218,6 +224,7 @@ public class ActionConfig extends Located implements Serializable {
 
         public Builder(ActionConfig toClone) {
             target = new ActionConfig(toClone);
+            addAllowedMethod(toClone.getAllowedMethods());
         }
 
         public Builder(String packageName, String name, String className) {

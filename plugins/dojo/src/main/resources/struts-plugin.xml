@@ -22,8 +22,8 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
     
 <struts>
     <bean type="org.apache.struts2.views.TagLibrary" name="sx" class="org.apache.struts2.dojo.views.DojoTagLibrary" />

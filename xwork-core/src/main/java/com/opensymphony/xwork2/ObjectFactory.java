@@ -257,6 +257,13 @@ public class ObjectFactory implements Serializable {
         return validator;
     }
 
+    /**
+     * Build converter of given type - it must be registered with {@link Container} first
+     * It's the first attempt to use Object Factory to build Converters, so the API can change in the future
+     * 
+     * @param converterClass to instantiate
+     * @return instance of converterClass with inject dependencies
+     */
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass) {
         return container.getInstance(converterClass);
     }

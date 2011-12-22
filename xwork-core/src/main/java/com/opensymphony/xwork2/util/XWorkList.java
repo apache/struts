@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -40,20 +41,17 @@ public class XWorkList extends ArrayList {
     private static final Logger LOG = LoggerFactory.getLogger(XWorkConverter.class);
 
     private Class clazz;
-    private XWorkConverter conv;
 
     private ObjectFactory objectFactory;
 
-    public XWorkList(ObjectFactory fac, XWorkConverter conv, Class clazz) {
-        this.conv = conv;
+    public XWorkList(ObjectFactory fac, Class clazz) {
         this.clazz = clazz;
         this.objectFactory = fac;
     }
 
-    public XWorkList(ObjectFactory fac, XWorkConverter conv, Class clazz, int initialCapacity) {
+    public XWorkList(ObjectFactory fac, Class clazz, int initialCapacity) {
         super(initialCapacity);
         this.clazz = clazz;
-        this.conv = conv;
         this.objectFactory = fac;
     }
 
@@ -209,7 +207,7 @@ public class XWorkList extends ArrayList {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Converting from " + element.getClass().getName() + " to " + clazz.getName());
             }
-
+            TypeConverter conv = objectFactory.buildConverter(XWorkConverter.class);
             Map<String, Object> context = ActionContext.getContext().getContextMap();
             element = conv.convertValue(context, null, null, null, element, clazz);
         }

@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
@@ -254,6 +255,10 @@ public class ObjectFactory implements Serializable {
         reflectionProvider.setProperties(params, validator);
 
         return validator;
+    }
+
+    public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass) {
+        return container.getInstance(converterClass);
     }
 
     static class ContinuationsClassLoader extends ClassLoader {

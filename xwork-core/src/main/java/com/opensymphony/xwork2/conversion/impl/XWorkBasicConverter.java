@@ -22,16 +22,29 @@ import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.XWorkList;
+import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.*;
-import java.util.*;
-
-import org.apache.commons.lang.StringUtils;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 
 /**
@@ -66,17 +79,11 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private static String MILLISECOND_FORMAT = ".SSS";
     
     private ObjectTypeDeterminer objectTypeDeterminer;
-    private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;
 
     @Inject
     public void setObjectTypeDeterminer(ObjectTypeDeterminer det) {
         this.objectTypeDeterminer = det;
-    }
-    
-    @Inject
-    public void setXWorkConverter(XWorkConverter conv) {
-        this.xworkConverter = conv;
     }
     
     @Inject
@@ -204,9 +211,9 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
             result = new TreeSet();
         } else {
             if (size > 0) {
-                result = new XWorkList(objectFactory, xworkConverter, memberType, size);
+                result = new XWorkList(objectFactory, memberType, size);
             } else {
-                result = new XWorkList(objectFactory, xworkConverter, memberType);
+                result = new XWorkList(objectFactory, memberType);
             }
         }
 

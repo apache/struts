@@ -17,7 +17,6 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 
 import java.util.ArrayList;
 
@@ -30,9 +29,8 @@ import java.util.ArrayList;
 public class XWorkListTest extends XWorkTestCase {
 
     public void testAddAllIndex() {
-        XWorkConverter conv = container.getInstance(XWorkConverter.class);
         ObjectFactory of = container.getInstance(ObjectFactory.class);
-        XWorkList xworkList = new XWorkList(of, conv, String.class);
+        XWorkList xworkList = new XWorkList(of, String.class);
         xworkList.add(new String[]{"a"});
         xworkList.add("b");
 
@@ -52,7 +50,7 @@ public class XWorkListTest extends XWorkTestCase {
         assertEquals("3", xworkList.get(5));
 
         // take 2, no trim
-        xworkList = new XWorkList(of, conv,String.class);
+        xworkList = new XWorkList(of, String.class);
         xworkList.add(new String[]{"a"});
         xworkList.add("b");
 
@@ -70,7 +68,7 @@ public class XWorkListTest extends XWorkTestCase {
         assertEquals("3", xworkList.get(4));
 
         // take 3, insert
-        xworkList = new XWorkList(of, conv,String.class);
+        xworkList = new XWorkList(of, String.class);
         xworkList.add(new String[]{"a"});
         xworkList.add("b");
 

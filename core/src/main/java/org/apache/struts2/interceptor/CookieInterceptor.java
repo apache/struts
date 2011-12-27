@@ -21,13 +21,6 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.*;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
@@ -35,6 +28,14 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.Cookie;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -75,7 +76,8 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *                                                         action. If more than one cookie name is desired it could be
  *                                                         comma-separated. If left empty, it will assume any value would
  *                                                         be ok. If more than one value is specified (comma-separated)
- *                                                         it will assume a match if either value is matched.
+ *                                                         it will assume a match if either value is matched.</li>
+ *     <li>acceptCookieNames (optional) - Pattern used to check if name of cookie matches the provided patter, to </li>
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->
@@ -161,8 +163,13 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(CookieInterceptor.class);
 
+    private static final String ACCEPTED_PATTERN = "[a-zA-Z0-9\\.\\]\\[_'\\s]+";
+
     private Set<String> cookiesNameSet = Collections.emptySet();
     private Set<String> cookiesValueSet = Collections.emptySet();
+
+    // Allowed names of cookies
+    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PATTERN);
 
     /**
      * Set the <code>cookiesName</code> which if matched will allow the cookie
@@ -187,11 +194,20 @@ public class CookieInterceptor extends AbstractInterceptor {
             this.cookiesValueSet = TextParseUtil.commaDelimitedStringToSet(cookiesValue);
     }
 
+    /**
+     * Set the <code>acceptCookieNames</code> pattern of allowed names of cookies to protect against remote command execution vulnerability
+     *
+     * @param pattern used to check cookie name against
+     */
+    public void setAcceptCookieNames(String pattern) {
+        acceptedPattern = Pattern.compile(pattern);
+    }
+
     public String intercept(ActionInvocation invocation) throws Exception {
         if (LOG.isDebugEnabled()) {
             LOG.debug("start interception");
         }
-        
+
         // contains selected cookies
         final Map<String, String> cookiesMap = new LinkedHashMap<String, String>();
 
@@ -203,13 +219,17 @@ public class CookieInterceptor extends AbstractInterceptor {
                 String name = cookie.getName();
                 String value = cookie.getValue();
 
-                if (cookiesNameSet.contains("*")) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name [" + name + "] with value [" + value + "] will be injected");
+                if (acceptedPattern.matcher(name).matches()) {
+                    if (cookiesNameSet.contains("*")) {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name [" + name + "] with value [" + value + "] will be injected");
+                        }
+                        populateCookieValueIntoStack(name, value, cookiesMap, stack);
+                    } else if (cookiesNameSet.contains(cookie.getName())) {
+                        populateCookieValueIntoStack(name, value, cookiesMap, stack);
                     }
-                    populateCookieValueIntoStack(name, value, cookiesMap, stack);
-                } else if (cookiesNameSet.contains(cookie.getName())) {
-                    populateCookieValueIntoStack(name, value, cookiesMap, stack);
+                } else {
+                    LOG.warn("Cookie name [" + name + "] does not match accepted cookie names pattern [" + acceptedPattern + "]");
                 }
             }
         }
@@ -251,7 +271,7 @@ public class CookieInterceptor extends AbstractInterceptor {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("both configured cookie name and value matched, cookie ["+cookieName+"] with value ["+cookieValue+"] will be injected");
                 }
-                
+
                 cookiesMap.put(cookieName, cookieValue);
                 stack.setValue(cookieName, cookieValue);
             }

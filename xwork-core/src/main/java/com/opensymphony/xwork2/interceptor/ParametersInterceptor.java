@@ -21,10 +21,10 @@ import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ArrayUtils;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -135,7 +135,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     static boolean devMode = false;
 
     // Allowed names of parameters
-    private String acceptedParamNames = "[a-zA-Z0-9\\.\\]\\[\\(\\)_'\\s]+";
+    private String acceptedParamNames = "[a-zA-Z0-9\\.\\]\\[\\(\\)_']+";
     private Pattern acceptedPattern = Pattern.compile(acceptedParamNames);
 
     private ValueStackFactory valueStackFactory;
@@ -151,7 +151,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     public void setAcceptParamNames(String commaDelim) {
-        Collection<String> acceptPatterns = asCollection(commaDelim);
+        Collection<String> acceptPatterns = ArrayUtils.asCollection(commaDelim);
         if (acceptPatterns != null) {
             acceptParams = new HashSet<Pattern>();
             for (String pattern : acceptPatterns) {
@@ -413,26 +413,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setExcludeParams(String commaDelim) {
-        Collection<String> excludePatterns = asCollection(commaDelim);
+        Collection<String> excludePatterns = ArrayUtils.asCollection(commaDelim);
         if (excludePatterns != null) {
             excludeParams = new HashSet<Pattern>();
             for (String pattern : excludePatterns) {
                 excludeParams.add(Pattern.compile(pattern));
             }
         }
-    }
-
-    /**
-     * Return a collection from the comma delimited String.
-     *
-     * @param commaDelim the comma delimited String.
-     * @return A collection from the comma delimited String. Returns <tt>null</tt> if the string is empty.
-     */
-    private Collection<String> asCollection(String commaDelim) {
-        if (commaDelim == null || commaDelim.trim().length() == 0) {
-            return null;
-        }
-        return TextParseUtil.commaDelimitedStringToSet(commaDelim);
     }
 
 }

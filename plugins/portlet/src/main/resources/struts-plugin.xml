@@ -23,56 +23,56 @@
 -->
 
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
-	"http://struts.apache.org/dtds/struts-2.3.dtd">
-    
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
 <struts>
-	
-	<bean type="org.apache.struts2.components.UrlRenderer" name="portlet" class="org.apache.struts2.components.PortletUrlRenderer"/>
-	
-	<constant name="struts.urlRenderer" value="portlet" />
-	<constant name="struts.portlet.useDispatcherServlet" value="false" />
-	<constant name="struts.portlet.dispatcherServletName" value="Struts2PortletDispatcherServlet" />
-	
+
+    <bean type="org.apache.struts2.components.UrlRenderer" name="portlet" class="org.apache.struts2.components.PortletUrlRenderer"/>
+
+    <constant name="struts.urlRenderer" value="portlet"/>
+    <constant name="struts.portlet.useDispatcherServlet" value="false"/>
+    <constant name="struts.portlet.dispatcherServletName" value="Struts2PortletDispatcherServlet"/>
+
     <package name="struts-portlet-default" extends="struts-default">
 
-	   <result-types>
-			<result-type name="dispatcher" class="org.apache.struts2.portlet.result.PortletResult" default="true"/>
+        <result-types>
+            <result-type name="dispatcher" class="org.apache.struts2.portlet.result.PortletResult" default="true"/>
             <result-type name="redirect" class="org.apache.struts2.portlet.result.PortletResult"/>
-		    <result-type name="redirectAction" class="org.apache.struts2.portlet.result.PortletActionRedirectResult"/>
-			<result-type name="freemarker" class="org.apache.struts2.views.freemarker.PortletFreemarkerResult"/>
-			<result-type name="velocity" class="org.apache.struts2.portlet.result.PortletVelocityResult"/>
-	   </result-types>
-       
-       <interceptors>
-        <interceptor name="portletAware" class="org.apache.struts2.portlet.interceptor.PortletAwareInterceptor"/>
-		<interceptor name="portletState" class="org.apache.struts2.portlet.interceptor.PortletStateInterceptor"/>
-		<!-- Default stack for operating in portlet environment -->
-        <interceptor-stack name="portletDefaultStack">
-			<interceptor-ref name="portletState"/>
-            <interceptor-ref name="portletAware"/>
-            <interceptor-ref name="defaultStack"/>
-        </interceptor-stack>
-        <!-- Extension of the default portlet stack which also includes the token interceptor --> 
-		<interceptor-stack name="portletDefaultStackWithToken">
-			<interceptor-ref name="portletState"/>
-			<interceptor-ref name="portletAware"/>
-			<interceptor-ref name="token"/>
-			<interceptor-ref name="defaultStack"/>
-		</interceptor-stack>
-		   
-       </interceptors>
-       
-       <default-interceptor-ref name="portletDefaultStack"/>
-		
-	   <action name="renderDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
-	   		<result name="success">${location}</result>
-	   </action>
-	   <action name="freemarkerDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
-	   		<result type="freemarker" name="success">${location}</result>
-	   </action>
-	   <action name="velocityDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
-	   		<result type="velocity" name="success">${location}</result>
-	   </action>
-	</package>
+            <result-type name="redirectAction" class="org.apache.struts2.portlet.result.PortletActionRedirectResult"/>
+            <result-type name="freemarker" class="org.apache.struts2.views.freemarker.PortletFreemarkerResult"/>
+            <result-type name="velocity" class="org.apache.struts2.portlet.result.PortletVelocityResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="portletAware" class="org.apache.struts2.portlet.interceptor.PortletAwareInterceptor"/>
+            <interceptor name="portletState" class="org.apache.struts2.portlet.interceptor.PortletStateInterceptor"/>
+            <!-- Default stack for operating in portlet environment -->
+            <interceptor-stack name="portletDefaultStack">
+                <interceptor-ref name="portletState"/>
+                <interceptor-ref name="portletAware"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+            <!-- Extension of the default portlet stack which also includes the token interceptor -->
+            <interceptor-stack name="portletDefaultStackWithToken">
+                <interceptor-ref name="portletState"/>
+                <interceptor-ref name="portletAware"/>
+                <interceptor-ref name="token"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+        </interceptors>
+
+        <default-interceptor-ref name="portletDefaultStack"/>
+
+        <action name="renderDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
+            <result name="success">${location}</result>
+        </action>
+        <action name="freemarkerDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
+            <result type="freemarker" name="success">${location}</result>
+        </action>
+        <action name="velocityDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
+            <result type="velocity" name="success">${location}</result>
+        </action>
+    </package>
 </struts>

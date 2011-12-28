@@ -21,13 +21,16 @@
 
 package org.apache.struts2;
 
-import java.util.*;
-
-import org.apache.struts2.views.jsp.ui.User;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.views.jsp.ui.User;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -48,6 +51,7 @@ public class TestAction extends ActionSupport {
     private List list2;
     private List list3;
     private SomeEnum status = SomeEnum.COMPLETED;
+    private Float floatNumber;
 
     private final Map<String, String> texts = new HashMap<String, String>();
 
@@ -197,4 +201,11 @@ public class TestAction extends ActionSupport {
     	return Arrays.asList(SomeEnum.values());
     }
 
+    public Float getFloatNumber() {
+        return floatNumber;
+    }
+
+    public void setFloatNumber(Float floatNumber) {
+        this.floatNumber = floatNumber;
+    }
 }

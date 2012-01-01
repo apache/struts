@@ -21,13 +21,17 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.junit.Test;
 
+import javax.portlet.PortletContext;
 import javax.servlet.ServletException;
 import java.io.UnsupportedEncodingException;
 
 public class StrutsTestCaseTest extends StrutsSpringTestCase {
+
     public void testGetActionMapping() {
         ActionMapping mapping = getActionMapping("/test/testAction.action");
         assertNotNull(mapping);
@@ -60,5 +64,39 @@ public class StrutsTestCaseTest extends StrutsSpringTestCase {
         executeAction("/test/testAction.action");
         String name = (String) findValueAfterExecute("name");
         assertEquals("FD", name);
+    }
+
+    @Test
+    public void shouldPortletContextBeAvailable() throws Exception {
+        // given
+        assertNull(ActionContext.getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT));
+
+        // when
+        String output = executeAction("/test/testAction.action");
+        assertEquals("Hello", output);
+
+        // then
+        Object portletContext = ActionContext.getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
+        assertNotNull(portletContext);
+        assertTrue(portletContext instanceof PortletContext);
+    }
+
+    @Test
+    public void shouldAdditionalContextParamsBeAvailable() throws Exception {
+        // given
+        String key = "my-param";
+        assertNull(ActionContext.getContext().get(key));
+
+        // when
+        String output = executeAction("/test/testAction.action");
+        assertEquals("Hello", output);
+
+        // then
+        assertNotNull(ActionContext.getContext().get(key));
+    }
+
+    @Override
+    protected void applyAdditionalParams(ActionContext context) {
+        context.put("my-param", new Object());
     }
 }

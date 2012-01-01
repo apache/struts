@@ -37,6 +37,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.mock.web.portlet.MockPortletContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +47,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * Base test case for JUnit testing Struts.
@@ -57,7 +62,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     protected MockPageContext pageContext;
     protected MockServletContext servletContext;
     protected Map<String, String> dispatcherInitParams;
-    
+
     protected DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 
     static {
@@ -109,10 +114,9 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         assertNotNull(mapping);
         Dispatcher.getInstance().serviceAction(request, response, servletContext, mapping);
 
-        if (response.getStatus() != HttpServletResponse.SC_OK)
-            throw new ServletException("Error code [" + response.getStatus() + "], Error: ["
-                    + response.getErrorMessage() + "]");
-
+        if (response.getStatus() != HttpServletResponse.SC_OK) {
+            throw new ServletException("Error code [" + response.getStatus() + "], Error: [" + response.getErrorMessage() + "]");
+        }
         return response.getContentAsString();
     }
 
@@ -131,12 +135,9 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
                 namespace, name, method, new HashMap<String, Object>(), true, false);
 
-        ActionContext invocationContext = proxy.getInvocation().getInvocationContext();
-        invocationContext.setParameters(new HashMap(request.getParameterMap()));
-        // set the action context to the one used by the proxy
-        ActionContext.setContext(invocationContext);
+        initActionContext(proxy.getInvocation().getInvocationContext());
 
-        // this is normaly done in onSetUp(), but we are using Struts internal
+        // this is normally done in onSetUp(), but we are using Struts internal
         // objects (proxy and action invocation)
         // so we have to hack around so it works
         ServletActionContext.setServletContext(servletContext);
@@ -144,6 +145,29 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         ServletActionContext.setResponse(response);
 
         return proxy;
+    }
+
+    private void initActionContext(ActionContext actionContext) {
+        actionContext.setParameters(new HashMap(request.getParameterMap()));
+
+        initMockPortletContext(actionContext);
+        applyAdditionalParams(actionContext);
+
+        // set the action context to the one used by the proxy
+        ActionContext.setContext(actionContext);
+    }
+
+    private void initMockPortletContext(ActionContext actionContext) {
+        actionContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, new MockPortletContext());
+    }
+
+    /**
+     * Can be overwritten in subclass to provide additional context's params and settings used during action invocation
+     *
+     * @param context current {@link ActionContext}
+     */
+    protected void applyAdditionalParams(ActionContext context) {
+        // empty be default
     }
 
     /**
@@ -179,10 +203,16 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         super.setUp();
         initServletMockObjects();
         setupBeforeInitDispatcher();
-        initDispatcher(dispatcherInitParams);
+        Dispatcher dispatcher = initDispatcher(dispatcherInitParams);
+        setupAfterInitDispatcher(dispatcher);
     }
 
     protected void setupBeforeInitDispatcher() throws Exception {
+        // empty by default
+    }
+
+    protected void setupAfterInitDispatcher(Dispatcher dispatcher) {
+        // empty by default
     }
 
     protected void initServletMockObjects() {

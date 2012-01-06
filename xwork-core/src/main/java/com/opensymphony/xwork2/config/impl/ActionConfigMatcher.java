@@ -109,13 +109,17 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
      */
     @Override public ActionConfig convert(String path, ActionConfig orig,
         Map<String, String> vars) {
-        
-        String className = convertParam(orig.getClassName(), vars);
+
         String methodName = convertParam(orig.getMethodName(), vars);
+        if (!orig.isAllowedMethod(methodName)) {
+            return null;
+        }
+
+        String className = convertParam(orig.getClassName(), vars);
         String pkgName = convertParam(orig.getPackageName(), vars);
-        
+
         Map<String,String> params = replaceParameters(orig.getParams(), vars);
-        
+
         Map<String,ResultConfig> results = new LinkedHashMap<String,ResultConfig>();
         for (String name : orig.getResults().keySet()) {
             ResultConfig result = orig.getResults().get(name);
@@ -125,7 +129,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
                     .build();
             results.put(name, r);
         }
-        
+
         List<ExceptionMappingConfig> exs = new ArrayList<ExceptionMappingConfig>();
         for (ExceptionMappingConfig ex : orig.getExceptionMappings()) {
             String name = convertParam(ex.getName(), vars);
@@ -135,7 +139,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
             ExceptionMappingConfig e = new ExceptionMappingConfig.Builder(name, exClassName, exResult).addParams(exParams).build();
             exs.add(e);
         }
-        
+
         return new ActionConfig.Builder(pkgName, orig.getName(), className)
                 .methodName(methodName)
                 .addParams(params)

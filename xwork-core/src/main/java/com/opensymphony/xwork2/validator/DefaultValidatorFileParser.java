@@ -113,6 +113,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
 
         Map<String, String> dtdMappings = new HashMap<String, String>();
         dtdMappings.put("-//Apache Struts//XWork Validator Config 1.0//EN", "xwork-validator-config-1.0.dtd");
+        dtdMappings.put("-//Apache Struts//XWork Validator Definition 1.0//EN", "xwork-validator-definition-1.0.dtd");
 
         Document doc = DomHelper.parse(in, dtdMappings);
 

@@ -222,8 +222,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * &lt;!-- START SNIPPET: exShortCircuitingValidators --&gt;
  * &lt;!DOCTYPE validators PUBLIC
- *         "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
- *         "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd"&gt;
+ *         "-//Apache Struts//XWork Validator 1.0.3//EN"
+ *  	   "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd"&gt;
  * &lt;validators&gt;
  *   &lt;!-- Field Validators for email field --&gt;
  *   &lt;field name="email"&gt;

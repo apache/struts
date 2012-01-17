@@ -88,14 +88,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
             String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
             if (lastClass == null || lastProperty == null) {
-                return super.getProperty(context, target, name);
-            }
-            Class keyClass = objectTypeDeterminer
-                    .getKeyClass(lastClass, lastProperty);
-
-            if (keyClass == null) {
-
-                keyClass = java.lang.String.class;
+                return null;
             }
             Object key = getKey(context, name);
             Map map = (Map) target;

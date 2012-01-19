@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.3.1.2-SNAPSHOT</version>
+        <version>2.3.1.2</version>
     </parent>
 
     <groupId>org.apache.struts.xwork</groupId>
@@ -15,9 +15,9 @@
 
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/xwork-core</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/xwork-core</developerConnection>
-        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/xwork-core</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/struts2-parent-2.3.1.2/xwork-core</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/struts2-parent-2.3.1.2/xwork-core</developerConnection>
+        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/struts2-parent-2.3.1.2/xwork-core</url>
     </scm>
 
     <properties>

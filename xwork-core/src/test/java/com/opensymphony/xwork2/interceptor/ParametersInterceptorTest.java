@@ -509,6 +509,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             public void setValue(String expr, Object value) {
                 actual.put(expr, value);
             }
+            @Override
+            public void setParameter(String expr, Object value) {
+                actual.put(expr, value);
+            }
         };
         container.inject(stack);
         return stack;

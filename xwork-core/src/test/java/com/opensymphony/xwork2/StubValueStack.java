@@ -50,6 +50,10 @@ public class StubValueStack implements ValueStack {
         ctx.put(expr, value);
     }
 
+    public void setParameter(String expr, Object value) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
     public void setValue(String expr, Object value, boolean throwExceptionOnFailure) {
         ctx.put(expr, value);
     }

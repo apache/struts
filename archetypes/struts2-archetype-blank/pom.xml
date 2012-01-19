@@ -3,18 +3,18 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-archetypes</artifactId>
-        <version>2.3.1.2-SNAPSHOT</version>
+        <version>2.3.1.2</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-archetype-blank</artifactId>
-    <version>2.3.1.2-SNAPSHOT</version>
+    <version>2.3.1.2</version>
     <name>Struts 2 Archetypes - Blank</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/archetypes/struts2-archetype-blank</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/archetypes/struts2-archetype-blank</developerConnection>
-        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1/archetypes/struts2-archetype-blank</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1_2/archetypes/struts2-archetype-blank</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1_2/archetypes/struts2-archetype-blank</developerConnection>
+        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_1_2/archetypes/struts2-archetype-blank</url>
     </scm>
     
     <properties>
@@ -41,6 +41,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

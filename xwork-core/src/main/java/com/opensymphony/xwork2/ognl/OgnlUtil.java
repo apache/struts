@@ -206,7 +206,23 @@ public class OgnlUtil {
      * Ideally, this should be handled by OGNL directly.
      */
     public void setValue(String name, Map<String, Object> context, Object root, Object value) throws OgnlException {
-        Ognl.setValue(compile(name), context, root, value);
+        setValue(name, context, root, value, true);
+    }
+
+    protected void setValue(String name, Map<String, Object> context, Object root, Object value, boolean evalName) throws OgnlException {
+        Object tree = compile(name);
+        if (!evalName && isEvalExpression(tree, context)) {
+            throw new OgnlException("Eval expression cannot be used as parameter name");
+        }
+        Ognl.setValue(tree, context, root, value);
+    }
+
+    private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
+        if (tree instanceof SimpleNode) {
+            SimpleNode node = (SimpleNode) tree;
+            return node.isEvalChain((OgnlContext) context);
+        }
+        return false;
     }
 
     public Object getValue(String name, Map<String, Object> context, Object root) throws OgnlException {
@@ -245,7 +261,7 @@ public class OgnlUtil {
     public void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
         if (from == null || to == null) {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
+                LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
             }
 
             return;
@@ -284,7 +300,7 @@ public class OgnlUtil {
                     copy = false;
                 }
 
-                if (copy == true) {
+                if (copy) {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
                     if ((toPd != null) && (toPd.getWriteMethod() != null)) {
                         try {

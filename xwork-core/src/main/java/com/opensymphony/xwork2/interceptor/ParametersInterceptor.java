@@ -135,7 +135,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     static boolean devMode = false;
 
     // Allowed names of parameters
-    private String acceptedParamNames = "[a-zA-Z0-9\\.\\]\\[\\(\\)_']+";
+    private String acceptedParamNames = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*";
     private Pattern acceptedPattern = Pattern.compile(acceptedParamNames);
 
     private ValueStackFactory valueStackFactory;
@@ -289,7 +289,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             String name = entry.getKey();
             Object value = entry.getValue();
             try {
-                newStack.setValue(name, value);
+                newStack.setParameter(name, value);
             } catch (RuntimeException e) {
                 if (devMode) {
                     String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{

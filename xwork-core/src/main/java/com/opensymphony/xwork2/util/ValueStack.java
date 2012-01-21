@@ -76,6 +76,14 @@ public interface ValueStack {
 
     /**
      * Attempts to set a property on a bean in the stack with the given expression using the default search order.
+     * N.B.: unlike #setValue(String,Object) it doesn't allow eval expression.
+     * @param expr  the expression defining the path to the property to be set.
+     * @param value the value to be set into the named property
+     */
+    void setParameter(String expr, Object value);
+
+    /**
+     * Attempts to set a property on a bean in the stack with the given expression using the default search order.
      *
      * @param expr                    the expression defining the path to the property to be set.
      * @param value                   the value to be set into the named property

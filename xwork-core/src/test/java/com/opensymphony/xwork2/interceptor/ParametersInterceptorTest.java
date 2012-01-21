@@ -34,8 +34,10 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import junit.framework.Assert;
 import ognl.PropertyAccessor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -295,6 +297,32 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertNull(action.getTheProtectedMap().get("foo"));
     }
 
+    /**
+     * This test demonstrates a vulnerability which allows to execute arbitrary code.
+     * For further details and explanations see https://cwiki.apache.org/confluence/display/WW/S2-009
+     * @throws Exception
+     */
+    public void testEvalExpressionAsParameterName() throws Exception {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("blah", "(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new " +
+                "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
+                "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
+        params.put("top['blah'](0)", "true");
+
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        extraContext.put(ActionContext.PARAMETERS, params);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, extraContext);
+        proxy.execute();
+        @SuppressWarnings("unused")
+        SimpleAction action = (SimpleAction) proxy.getAction();
+        File pwn = new File("/tmp/PWNAGE");
+        boolean dirExists = pwn.exists();
+        @SuppressWarnings("unused")
+        boolean deleted = pwn.delete();
+        Assert.assertFalse("Remote exploit: The PWN folder has been created", dirExists);
+    }
+
     public void testParametersOverwriteField() throws Exception {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
         params.put("existingMap.boo", "This is blah");
@@ -507,6 +535,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 container.getInstance(TextProvider.class, "system"), true) {
             @Override
             public void setValue(String expr, Object value) {
+                actual.put(expr, value);
+            }
+            @Override
+            public void setParameter(String expr, Object value) {
                 actual.put(expr, value);
             }
         };

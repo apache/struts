@@ -20,11 +20,11 @@
  */
 package org.apache.struts2.util;
 
+import junit.framework.TestCase;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import junit.framework.TestCase;
 
 
 public class RegexPatternMatcherTest extends TestCase {
@@ -146,6 +146,38 @@ public class RegexPatternMatcherTest extends TestCase {
         assertEquals("val1", values.get("2"));
         
         assertEquals("/some/val0/some/val1/buaaa", values.get("0"));
+    }
+
+    /**
+     * See WW-3747
+     */
+    public void testWW_3747() {
+        RegexPatternMatcherExpression expr = matcher.compilePattern("/{type}/{author:.+}/list");
+
+        Map<String, String> values = new HashMap<String, String>();
+
+        assertTrue(matcher.match(values, "/philosophy/AynRand/list", expr));
+        assertEquals(5, values.size());
+        assertEquals("philosophy", values.get("type"));
+        assertEquals("AynRand", values.get("author"));
+
+        assertEquals("/philosophy/AynRand/list", values.get("0"));
+    }
+
+    /**
+     * See WW-3747
+     */
+    public void testWW_3747_2() {
+        RegexPatternMatcherExpression expr = matcher.compilePattern("/event/modify/{action}/{eventId:[0-9]+}");
+
+        Map<String, String> values = new HashMap<String, String>();
+
+        assertTrue(matcher.match(values, "/event/modify/delete/1234", expr));
+        assertEquals(5, values.size());
+        assertEquals("delete", values.get("action"));
+        assertEquals("1234", values.get("eventId"));
+
+        assertEquals("/event/modify/delete/1234", values.get("0"));
     }
 
     public void testCompileBad0() {

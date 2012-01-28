@@ -74,7 +74,7 @@ public class RegexPatternMatcher implements PatternMatcher<RegexPatternMatcherEx
 
         //generate a new pattern used to match URIs
         //replace {X:B} by (B)
-        String newPattern = data.replaceAll("(\\{.*?:(.*?)\\})", "($2)");
+        String newPattern = data.replaceAll("(\\{[^\\}]*?:(.*?)\\})", "($2)");
 
         //replace {X} by (.*?)
         newPattern = newPattern.replaceAll("(\\{.*?\\})", "(.*?)");

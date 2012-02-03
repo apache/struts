@@ -24,11 +24,16 @@ var StrutsUtils = {};
 // gets an object with validation errors from string returned by 
 // the ajaxValidation interceptor
 StrutsUtils.getValidationErrors = function(data) {
-  if(data.indexOf("/* {") === 0) {
-    return eval("( " + data.substring(2, data.length - 2) + " )");
-  } else {
-    return null;
-  }  
+    if (typeof data === "object") {
+        return data;
+    }
+    else {
+        if (data.indexOf("/* {") === 0) {
+            return eval("( " + data.substring(2, data.length - 2) + " )");
+        } else {
+            return null;
+        }
+    }
 };
 
 StrutsUtils.clearValidationErrors = function(form) {

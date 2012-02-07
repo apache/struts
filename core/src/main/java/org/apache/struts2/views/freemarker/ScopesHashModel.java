@@ -21,19 +21,18 @@
 
 package org.apache.struts2.views.freemarker;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import com.opensymphony.xwork2.util.ValueStack;
-
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
-import java.util.Map;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -53,7 +52,8 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     private ServletContext servletContext;
     private ValueStack stack;
     private final Map<String,TemplateModel> unlistedModels = new HashMap<String,TemplateModel>();
-
+    private final Map<String, Object> stackCache = new ConcurrentHashMap<String, Object>();
+    private static final Object NULL_OBJECT = new Object();
 
     public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, ValueStack stack) {
         super(objectWrapper);
@@ -90,7 +90,7 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
 
         if (stack != null) {
-            Object obj = stack.findValue(key);
+            Object obj = findValueOnStack(key);
 
             if (obj != null) {
                 return wrap(obj);
@@ -140,6 +140,24 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
 
         return null;
+    }
+
+    private Object findValueOnStack(final String key) {
+        if (this.stackCache.containsKey(key)) {
+            final Object value = this.stackCache.get(key);
+            if (value == NULL_OBJECT) {
+                return null;
+            }
+            return value;
+        }
+
+        final Object value = this.stack.findValue(key);
+        if (value == null) {
+            this.stackCache.put(key, NULL_OBJECT);
+        } else {
+            this.stackCache.put(key, value);
+        }
+        return value;
     }
 
     public void put(String string, boolean b) {

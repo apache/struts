@@ -30,6 +30,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/pom.xml</include>
+                    <include>**/archetype.xml</include>
                 </includes>
             </resource>
         </resources>

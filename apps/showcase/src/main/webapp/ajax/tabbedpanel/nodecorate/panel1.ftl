@@ -1,3 +1,3 @@
 
 Hello, <br/>
-Today is ${todayDate}, the time now is ${todayTime}
+Today is ${todayDate?html}, the time now is ${todayTime?html}

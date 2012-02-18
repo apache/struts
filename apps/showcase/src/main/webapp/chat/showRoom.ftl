@@ -118,7 +118,7 @@
 		
 		<div class="center">
 		<div class="box">
-		<h3>Messages Posted In Room [${roomName?default('')}]</h3>
+		<h3>Messages Posted In Room [${roomName?default('')?html}]</h3>
 		<@s.url id="url" value="/chat/ajax/messagesAvailableInRoom.action" includeContext="true">
 			<@s.param name="roomName" value="%{roomName}" />
 		</@s.url>
@@ -143,7 +143,7 @@
 
 		<div class="right">
 		<div class="box">
-		<h3>Users Available In Room [${roomName?default('')}]</h3>
+		<h3>Users Available In Room [${roomName?default('')?html}]</h3>
 		<@s.url id="url" value="/chat/ajax/usersAvailableInRoom.action" includeContext="true">
 			<@s.param name="roomName" value="%{roomName}" />
 		</@s.url>

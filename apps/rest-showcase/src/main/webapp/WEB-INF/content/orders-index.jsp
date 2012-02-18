@@ -20,8 +20,8 @@
         <s:iterator value="model">
         <tr>
             <td>${id}</td>
-            <td>${clientName}</td>
-            <td>${amount}</td>
+            <td><s:property value="clientName"/></td>
+            <td><s:property value="amount"/></td>
             <td><a href="orders/${id}">View</a> |
                 <a href="orders/${id}/edit">Edit</a> |
                 <a href="orders/${id}/deleteConfirm">Delete</a></td>

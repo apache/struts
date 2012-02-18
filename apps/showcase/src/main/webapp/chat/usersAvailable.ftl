@@ -1,6 +1,6 @@
 
 <ul>
 <#list availableUsers as user>
-	<li>${user.name}</li>
+	<li>${user.name?html}</li>
 </#list>
 </ul>

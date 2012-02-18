@@ -6,7 +6,7 @@
 
 <body>
 <#list actionMessages as msg>
-    ${msg}
+    ${msg?html}
 </#list>
 
 <@s.form action="guess" method="post">

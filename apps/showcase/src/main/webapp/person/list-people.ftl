@@ -13,9 +13,9 @@ There are ${peopleCount} people...
     </tr>
 <#list people as person>
     <tr>
-        <td>${person.id}</td>
-        <td>${person.name}</td>
-        <td>${person.lastName}</td>
+        <td>${person.id?html}</td>
+        <td>${person.name?html}</td>
+        <td>${person.lastName?html}</td>
     </tr>
 </#list>
 </table>

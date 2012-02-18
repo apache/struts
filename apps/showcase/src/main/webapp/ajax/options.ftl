@@ -1,5 +1,5 @@
 [
 <#list options as option>
-	["${option}"],
+	["${option?html}"],
 </#list>
 ]

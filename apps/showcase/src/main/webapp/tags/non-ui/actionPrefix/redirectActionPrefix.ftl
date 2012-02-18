@@ -11,7 +11,7 @@
 	Because this is a 'redirect-action', the text will be lost, due to a redirection
 	implies a new request being issued from the client.<p/>
 	
-	The text you've enter is ${text?default('')}<p/>
+	The text you've enter is ${text?default('')?html}<p/>
 	
 	<@s.url id="url" action="actionPrefixExampleUsingFreemarker" namespace="/tags/non-ui/actionPrefix" />
 	<@s.a href="%{#url}">Back</@s.a>

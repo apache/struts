@@ -59,7 +59,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 
     public String execute() throws MalformedURLException, IOException {
 
-        if (page != null && page.trim().length() > 0) {
+        if (page != null) {
 
             InputStream in = ClassLoaderUtil.getResourceAsStream(page.substring(page.indexOf("//")+1), getClass());
             page = page.replace("//", "/");
@@ -78,7 +78,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
             }
         }
 
-        if (className != null && className.trim().length() > 0) {
+        if (className != null) {
             className = "/"+className.replace('.', '/') + ".java";
             InputStream in = getClass().getResourceAsStream(className);
             if (in == null) {
@@ -93,7 +93,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 
         String rootPath = ServletActionContext.getServletContext().getRealPath("/");
                 
-        if (config != null && config.trim().length() > 0 && (rootPath == null || config.startsWith(rootPath))) {
+        if (config != null && (rootPath == null || config.startsWith(rootPath))) {
             int pos = config.lastIndexOf(':');
             configLine = Integer.parseInt(config.substring(pos+1));
             config = config.substring(0, pos).replace("//", "/");
@@ -107,21 +107,27 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
      * @param className the className to set
      */
     public void setClassName(String className) {
-        this.className = className;
+        if (className != null && className.trim().length()>0) {
+            this.className = className;
+        }
     }
 
     /**
      * @param config the config to set
      */
     public void setConfig(String config) {
-        this.config = config;
+        if (config != null && config.trim().length()>0) {
+            this.config = config;
+        }
     }
 
     /**
      * @param page the page to set
      */
     public void setPage(String page) {
-        this.page = page;
+        if (page != null && page.trim().length()>0) {
+            this.page = page;
+        }
     }
 
     /**

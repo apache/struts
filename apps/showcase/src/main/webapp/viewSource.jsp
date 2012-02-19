@@ -11,14 +11,14 @@
 
 <sx:tabbedpanel id="test">
 	<sx:div id="one" label="Page" >
-        <h3>${empty page ? "Unknown page" : page}</h3>
+        <h3><s:property default="Unknown page" value="page"/></h3>
 <pre>
 <s:iterator value="pageLines" status="row">
 ${row.count}: <s:property/></s:iterator>
 </pre>
     </sx:div>
     <sx:div id="two" label="Configuration" >
-        <h3>${empty config ? "Unknown configuration" : config}</h3>
+        <h3><s:property default="Unknown configuration" value="config"/></h3>
 <pre>
 
 <s:iterator value="configLines" status="row"><s:if test="%{(#row.count-1)==(configLines.size()/2)}">
@@ -27,7 +27,7 @@ ${configLine - padding + row.count - 1}: <s:property/></s:else></s:iterator>
 </pre>
     </sx:div>
     <sx:div id="three" label="Java Action">
-        <h3>${empty className ? "Unknown or unavailable Action class" : className}</h3>
+        <h3><s:property default="Unknown or unavailable Action class" value="className"/></h3>
 <pre>
 <s:iterator value="classLines" status="row">
 ${row.count}: <s:property/></s:iterator>

@@ -320,7 +320,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return rbCollator;
     }
 
-    private String getParameterLogMap(Map<String, Object> parameters) {
+    protected String getParameterLogMap(Map<String, Object> parameters) {
         if (parameters == null) {
             return "NONE";
         }

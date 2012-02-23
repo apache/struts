@@ -20,11 +20,14 @@ package com.opensymphony.xwork2.config.impl;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.Serializable;
-import java.util.*;
-
-import org.apache.commons.lang.math.NumberUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p> Matches patterns against pre-compiled wildcard expressions pulled from

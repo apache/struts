@@ -22,8 +22,8 @@
 package org.apache.struts2.views.java.simple;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
@@ -89,8 +89,8 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
                 //Hidden input section
                 a = new Attributes();
                 a.add("type", "hidden")
-                        .add("id", "__multiselect_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml(id)))
-                        .add("name", "__multiselect_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml(name)))
+                        .add("id", "__multiselect_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
+                        .add("name", "__multiselect_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
                         .add("value", "")
                         .addIfTrue("disabled", disabled);
                 start("input", a);

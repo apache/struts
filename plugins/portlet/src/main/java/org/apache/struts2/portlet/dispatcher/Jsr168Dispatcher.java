@@ -21,42 +21,16 @@
 
 package org.apache.struts2.portlet.dispatcher;
 
-import static org.apache.struts2.portlet.PortletConstants.ACTION_PARAM;
-import static org.apache.struts2.portlet.PortletConstants.ACTION_PHASE;
-import static org.apache.struts2.portlet.PortletConstants.ACTION_RESET;
-import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_FOR_MODE;
-import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_NAME;
-import static org.apache.struts2.portlet.PortletConstants.MODE_NAMESPACE_MAP;
-import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
-import static org.apache.struts2.portlet.PortletConstants.PHASE;
-import static org.apache.struts2.portlet.PortletConstants.PORTLET_CONFIG;
-import static org.apache.struts2.portlet.PortletConstants.PORTLET_NAMESPACE;
-import static org.apache.struts2.portlet.PortletConstants.RENDER_PHASE;
-import static org.apache.struts2.portlet.PortletConstants.REQUEST;
-import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
-
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.GenericPortlet;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
@@ -77,15 +51,39 @@ import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
 import org.apache.struts2.util.AttributeMap;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.GenericPortlet;
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletException;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.apache.struts2.portlet.PortletConstants.ACTION_PARAM;
+import static org.apache.struts2.portlet.PortletConstants.ACTION_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.ACTION_RESET;
+import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_FOR_MODE;
+import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_NAME;
+import static org.apache.struts2.portlet.PortletConstants.MODE_NAMESPACE_MAP;
+import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
+import static org.apache.struts2.portlet.PortletConstants.PHASE;
+import static org.apache.struts2.portlet.PortletConstants.PORTLET_CONFIG;
+import static org.apache.struts2.portlet.PortletConstants.PORTLET_NAMESPACE;
+import static org.apache.struts2.portlet.PortletConstants.RENDER_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.REQUEST;
+import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
 
 /**
  * <!-- START SNIPPET: javadoc -->

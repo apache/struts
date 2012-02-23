@@ -18,7 +18,7 @@
 package org.apache.struts2.jasper;
 
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.jasper.compiler.Compiler;
 import org.apache.struts2.jasper.compiler.JspRuntimeContext;
 import org.apache.struts2.jasper.compiler.JspUtil;

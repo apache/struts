@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.inject.Container;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**

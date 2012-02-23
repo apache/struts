@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * The ReloadingClassLoader uses a delegation mechanism to allow

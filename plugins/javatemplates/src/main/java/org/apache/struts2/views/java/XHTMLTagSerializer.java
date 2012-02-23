@@ -21,8 +21,8 @@
 package org.apache.struts2.views.java;
 
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -39,7 +39,7 @@ public class XHTMLTagSerializer implements TagSerializer {
     }
 
     public void characters(String text, boolean encode) throws IOException {
-        writer.write(encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml(text)) : text);
+        writer.write(encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml4(text)) : text);
     }
 
     public void end(String name) throws IOException {

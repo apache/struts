@@ -26,7 +26,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Iterator;

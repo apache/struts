@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.views.java;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedHashMap;
 
@@ -37,7 +37,7 @@ public class Attributes extends LinkedHashMap<String, String> {
     }
 
     public Attributes add(String key, String value, boolean encode) {
-        put(key, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml(value)) : value));
+        put(key, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml4(value)) : value));
         return this;
     }
 
@@ -63,7 +63,7 @@ public class Attributes extends LinkedHashMap<String, String> {
         if (paramValue != null) {
             String val = paramValue.toString();
             if (StringUtils.isNotBlank(val))
-                put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml(val)) : val));
+                put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml4(val)) : val));
         }
         return this;
     }
@@ -106,7 +106,7 @@ public class Attributes extends LinkedHashMap<String, String> {
     public Attributes addDefaultToEmpty(String attrName, Object paramValue, boolean encode) {
         if (paramValue != null) {
             String val = paramValue.toString();
-            put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml(val)) : val));
+            put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml4(val)) : val));
         } else {
             put(attrName, "");
         }

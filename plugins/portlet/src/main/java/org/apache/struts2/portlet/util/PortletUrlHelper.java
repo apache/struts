@@ -20,15 +20,11 @@
  */
 package org.apache.struts2.portlet.util;
 
-import static org.apache.struts2.portlet.PortletConstants.ACTION_PARAM;
-import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.portlet.context.PortletActionContext;
 
 import javax.portlet.PortletMode;
 import javax.portlet.PortletRequest;
@@ -36,13 +32,15 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.portlet.context.PortletActionContext;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import static org.apache.struts2.portlet.PortletConstants.ACTION_PARAM;
+import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
 
 /**
  * Helper class for creating Portlet URLs. Portlet URLs are fundamentally different from regular

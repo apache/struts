@@ -24,7 +24,7 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -176,10 +176,10 @@ public class Property extends Component {
     private String prepare(String value) {
     	String result = value;
         if (escapeHtml) {
-        	result = StringEscapeUtils.escapeHtml(result);
+        	result = StringEscapeUtils.escapeHtml4(result);
         }
         if (escapeJavaScript) {
-        	result = StringEscapeUtils.escapeJavaScript(result);
+        	result = StringEscapeUtils.escapeEcmaScript(result);
         }
         if (escapeXml) {
         	result = StringEscapeUtils.escapeXml(result);

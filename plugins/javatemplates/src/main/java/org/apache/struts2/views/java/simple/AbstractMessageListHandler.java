@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;

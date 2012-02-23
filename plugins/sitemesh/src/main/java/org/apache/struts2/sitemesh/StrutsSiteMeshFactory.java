@@ -2,7 +2,7 @@ package org.apache.struts2.sitemesh;
 
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.factory.DefaultFactory;
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 

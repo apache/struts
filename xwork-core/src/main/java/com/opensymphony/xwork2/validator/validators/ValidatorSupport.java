@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.validator.ShortCircuitableValidator;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.Validator;
 import com.opensymphony.xwork2.validator.ValidatorContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

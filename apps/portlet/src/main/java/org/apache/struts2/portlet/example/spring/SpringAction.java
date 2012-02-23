@@ -22,7 +22,7 @@ package org.apache.struts2.portlet.example.spring;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.opensymphony.xwork2.ActionSupport;
 

@@ -33,7 +33,7 @@ import java.util.Map;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
 
 import com.opensymphony.xwork2.ActionInvocation;

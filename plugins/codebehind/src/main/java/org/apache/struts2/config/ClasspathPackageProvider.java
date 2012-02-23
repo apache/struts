@@ -35,7 +35,7 @@ import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.ResolverUtil.ClassTest;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletContext;
 import java.lang.reflect.Modifier;

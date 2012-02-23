@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 import org.apache.commons.jci.monitor.FilesystemAlterationObserver;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;

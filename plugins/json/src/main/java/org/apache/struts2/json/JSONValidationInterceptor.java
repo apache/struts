@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -210,7 +210,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
         sb.append("[");
         for (String value : values) {
             sb.append("\"");
-            sb.append(StringEscapeUtils.escapeJavaScript(value));
+            sb.append(StringEscapeUtils.escapeEcmaScript(value));
             sb.append("\",");
         }
         if (values.size() > 0)

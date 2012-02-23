@@ -35,6 +35,7 @@ import org.apache.struts2.views.freemarker.StrutsClassTemplateLoader;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 /**
  * This class extends FreemarkerManager in core to add a template loader
@@ -52,7 +53,7 @@ public class BundleFreemarkerManager extends FreemarkerManager {
                  // substring(7) is intentional as we "reuse" the last slash
                  templatePathLoader = new ClassTemplateLoader(getClass(), templatePath.substring(7));
              } else if (templatePath.startsWith("file://")) {
-                 templatePathLoader = new FileTemplateLoader(new File(templatePath));
+                 templatePathLoader = new FileTemplateLoader(new File(URI.create(templatePath)));
              }
          } catch (IOException e) {
              LOG.error("Invalid template path specified: " + e.getMessage(), e);

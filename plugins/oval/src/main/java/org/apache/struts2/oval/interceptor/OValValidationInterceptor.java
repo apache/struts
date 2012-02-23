@@ -38,7 +38,7 @@ import net.sf.oval.configuration.Configurer;
 import net.sf.oval.context.FieldContext;
 import net.sf.oval.context.MethodReturnValueContext;
 import net.sf.oval.context.OValContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.oval.annotation.Profiles;
 
 import java.lang.reflect.Field;

@@ -15,7 +15,7 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;

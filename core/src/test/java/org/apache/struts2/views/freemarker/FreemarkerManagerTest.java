@@ -21,12 +21,12 @@
 
 package org.apache.struts2.views.freemarker;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
 /**
  * Test case for FreemarkerManager
- *
  */
 public class FreemarkerManagerTest extends StrutsTestCase {
 
@@ -38,4 +38,27 @@ public class FreemarkerManagerTest extends StrutsTestCase {
         freemarker.template.Configuration conf = mgr.getConfiguration(servletContext);
         assertEquals(conf.getDefaultEncoding(), "UTF-8");
     }
+
+    public void testTemplateLoaderBaseOnFile() throws Exception {
+        // given
+        DummyFreemarkerManager manager = new DummyFreemarkerManager();
+        StrutsMockServletContext servletContext = new StrutsMockServletContext();
+        servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
+
+        String tmpPath = "file://" + FileUtils.getTempDirectoryPath();
+        
+        // when
+        manager.load(servletContext, tmpPath);
+
+        // then
+        assertTrue(true); // should pass
+    }
+}
+
+class DummyFreemarkerManager extends FreemarkerManager {
+
+    public void load(StrutsMockServletContext servletContext, String path) {
+        createTemplateLoader(servletContext, path);
+    }
+    
 }

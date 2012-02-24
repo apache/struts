@@ -20,7 +20,9 @@
  */
 package org.apache.struts2.portlet.context;
 
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -30,13 +32,19 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import java.util.Map;
 
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-
-import com.opensymphony.xwork2.ActionContext;
-
-import static org.apache.struts2.portlet.PortletConstants.*;
+import static org.apache.struts2.portlet.PortletConstants.ACTION_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_FOR_MODE;
+import static org.apache.struts2.portlet.PortletConstants.EVENT_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.MODE_NAMESPACE_MAP;
+import static org.apache.struts2.portlet.PortletConstants.PHASE;
+import static org.apache.struts2.portlet.PortletConstants.PORTLET_CONFIG;
+import static org.apache.struts2.portlet.PortletConstants.PORTLET_NAMESPACE;
+import static org.apache.struts2.portlet.PortletConstants.RENDER_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.REQUEST;
+import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
+import static org.apache.struts2.portlet.PortletConstants.SERVE_RESOURCE_PHASE;
 
 
 /**
@@ -118,7 +126,7 @@ public class PortletActionContext {
      * @return The portlet namespace as defined in <code>portlet.xml</code> and <code>struts.xml</code>
      */
     public static String getPortletNamespace() {
-        return (String)getContext().get(PORTLET_NAMESPACE);
+        return (String) getContext().get(PORTLET_NAMESPACE);
     }
 
     /**
@@ -143,7 +151,7 @@ public class PortletActionContext {
      * Get the phase that the portlet is executing in.
      *
      * @return {@link PortletActionConstants#RENDER_PHASE} in render phase, and
-     * {@link PortletActionConstants#ACTION_PHASE} in the event phase.
+     *         {@link PortletActionConstants#ACTION_PHASE} in the event phase.
      */
     public static Integer getPhase() {
         return (Integer) getContext().get(PHASE);
@@ -192,7 +200,7 @@ public class PortletActionContext {
      * @return The default action mapping for the current portlet mode.
      */
     public static ActionMapping getDefaultActionForMode() {
-        return (ActionMapping)getContext().get(DEFAULT_ACTION_FOR_MODE);
+        return (ActionMapping) getContext().get(DEFAULT_ACTION_FOR_MODE);
     }
 
     /**
@@ -201,20 +209,21 @@ public class PortletActionContext {
      * @return The map of the namespaces for each mode.
      */
     public static Map getModeNamespaceMap() {
-        return (Map)getContext().get(MODE_NAMESPACE_MAP);
+        return (Map) getContext().get(MODE_NAMESPACE_MAP);
     }
-    
+
     /**
      * Get the portlet context.
+     *
      * @return The portlet context.
      */
     public static PortletContext getPortletContext() {
-    	return (PortletContext)getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
+        return (PortletContext) getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
     }
 
-	public static boolean isEvent() {
-		return EVENT_PHASE.equals(getPhase());
-	}
+    public static boolean isEvent() {
+        return EVENT_PHASE.equals(getPhase());
+    }
 
     /**
      * Whether JSR286 features are supported.
@@ -222,7 +231,11 @@ public class PortletActionContext {
      * @return <code>true</code> if {@link javax.portlet.PortletContext#getMajorVersion()} returns a value greater than 1
      */
     public static boolean isJSR268Supported() {
-        return getPortletContext().getMajorVersion() > 1;
+        PortletContext ctx = getPortletContext();
+        if (ctx == null) {
+            return false; // fallback to old behaviour, check WW-3763
+        }
+        return ctx.getMajorVersion() > 1;
     }
 
 }

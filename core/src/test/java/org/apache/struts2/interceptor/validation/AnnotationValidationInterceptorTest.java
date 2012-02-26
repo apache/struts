@@ -21,12 +21,12 @@
 
 package org.apache.struts2.interceptor.validation;
 
-import org.apache.struts2.StrutsTestCase;
-import org.easymock.EasyMock;
-
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.StrutsTestCase;
 
 public class AnnotationValidationInterceptorTest extends StrutsTestCase {
 
@@ -52,7 +52,6 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
     }
 
     public void testShouldNotSkip() throws Exception {
-        mockActionProxy.expectAndReturn("getMethod", "execute");
         mockActionProxy.expectAndReturn("getActionName", "foo");
         mockActionProxy.expectAndReturn("getMethod", "execute");
         mockActionProxy.expectAndReturn("getConfig", config);
@@ -86,7 +85,6 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
     }
 
     public void testShouldNotSkipBase() throws Exception {
-        mockActionProxy.expectAndReturn("getMethod", "dontSkipMeBase");
         mockActionProxy.expectAndReturn("getActionName", "foo");
         mockActionProxy.expectAndReturn("getMethod", "execute");
         mockActionProxy.expectAndReturn("getConfig", config);

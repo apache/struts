@@ -19,7 +19,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -206,7 +205,8 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
 
         //the action name has to be from the url, otherwise validators that use aliases, like
         //MyActio-someaction-validator.xml will not be found, see WW-3194
-        String context = proxy.getActionName();
+        //UPDATE:  see WW-3753
+        String context = this.getValidationContext(proxy);
         String method = proxy.getMethod();
 
         if (log.isDebugEnabled()) {
@@ -263,6 +263,27 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
         doBeforeInvocation(invocation);
         
         return invocation.invoke();
+    }
+    
+    /**
+     * Returns the context that will be used by the
+     * {@link ActionValidatorManager} to associate the action invocation with
+     * the appropriate {@link ValidatorConfig ValidatorConfigs}.
+     * <p>
+     * The context returned is used in the pattern
+     * <i>ActionClass-context-validation.xml</i>
+     * <p>
+     * The default context is the action name from the URL, but the method can
+     * be overridden to implement custom contexts.
+     * <p>
+     * This can be useful in cases in which a single action and a single model
+     * require vastly different validation based on some condition.
+     * 
+     * @return the Context
+     */
+    protected String getValidationContext(ActionProxy proxy) {
+        // This method created for WW-3753
+        return proxy.getActionName();
     }
 
 }

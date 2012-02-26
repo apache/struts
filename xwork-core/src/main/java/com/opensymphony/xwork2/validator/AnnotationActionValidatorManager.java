@@ -75,7 +75,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     }
 
     public List<Validator> getValidators(Class clazz, String context, String method) {
-        final String validatorKey = buildValidatorKey(clazz);
+        final String validatorKey = buildValidatorKey(clazz, context);
         final List<ValidatorConfig> cfgs;
 
         if (validatorCache.containsKey(validatorKey)) {
@@ -216,23 +216,36 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
      * @param clazz the action.
      * @return a validator key which is the class name plus context.
      */
-    protected static String buildValidatorKey(Class clazz) {
+    protected static String buildValidatorKey(Class clazz, String context) {
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
         ActionProxy proxy = invocation.getProxy();
         ActionConfig config = proxy.getConfig();
 
-        //the key needs to use the name of the action from the config file,
-        //instead of the url, so wild card actions will have the same validator
-        //see WW-2996
         StringBuilder sb = new StringBuilder(clazz.getName());
         sb.append("/");
         if (StringUtils.isNotBlank(config.getPackageName())) {
             sb.append(config.getPackageName());
             sb.append("/");
         }
-        sb.append(config.getName());
-        sb.append("|");
-        sb.append(proxy.getMethod());
+
+        // the key needs to use the name of the action from the config file,
+        // instead of the url, so wild card actions will have the same validator
+        // see WW-2996
+
+        // UPDATE:
+        // WW-3753 Using the config name instead of the context only for
+        // wild card actions to keep the flexibility provided
+        // by the original design (such as mapping different contexts
+        // to the same action and method if desired)
+        String configName = config.getName();
+        if (configName.contains(ActionConfig.WILDCARD)) {
+            sb.append(configName);
+            sb.append("|");
+            sb.append(proxy.getMethod());
+        } else {
+            sb.append(context);
+        }
+        
         return sb.toString();
     }
 

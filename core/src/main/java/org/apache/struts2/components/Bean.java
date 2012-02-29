@@ -21,18 +21,16 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -94,8 +92,8 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
  *
  * @see Param
  */
-@StrutsTag(name="bean", tldTagClass="org.apache.struts2.views.jsp.BeanTag",
-        description="Instantiate a JavaBean and place it in the context")
+@StrutsTag(name = "bean", tldTagClass = "org.apache.struts2.views.jsp.BeanTag",
+        description = "Instantiate a JavaBean and place it in the context")
 public class Bean extends ContextBean {
     protected static final Logger LOG = LoggerFactory.getLogger(Bean.class);
 
@@ -107,12 +105,12 @@ public class Bean extends ContextBean {
     public Bean(ValueStack stack) {
         super(stack);
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
     }
-    
+
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
         this.reflectionProvider = prov;
@@ -124,11 +122,10 @@ public class Bean extends ContextBean {
         ValueStack stack = getStack();
 
         try {
-            String beanName = findString(name, "name", "Bean name is required. Example: com.acme.FooBean");
-            bean = objectFactory.buildBean(ClassLoaderUtil.loadClass(beanName, getClass()), stack.getContext());
+            String beanName = findString(name, "name", "Bean name is required. Example: com.acme.FooBean or proper Spring bean ID");
+            bean = objectFactory.buildBean(beanName, stack.getContext(), false);
         } catch (Exception e) {
             LOG.error("Could not instantiate bean", e);
-
             return false;
         }
 
@@ -152,9 +149,9 @@ public class Bean extends ContextBean {
         reflectionProvider.setProperty(key, value, bean, getStack().getContext());
     }
 
-    @StrutsTagAttribute(description="The class name of the bean to be instantiated (must respect JavaBean specification)",
-                        required=true)
+    @StrutsTagAttribute(description = "The class name of the bean to be instantiated (must respect JavaBean specification)", required = true)
     public void setName(String name) {
         this.name = name;
     }
+
 }

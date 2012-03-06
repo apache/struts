@@ -469,7 +469,9 @@ public class ClassFinder {
             } else if (file.getName().endsWith(".class")) {
                 String name = file.getName();
                 name = name.replaceFirst(".class$", "");
-                classNames.add(packageName + name);
+                // Classes packaged in an exploded .war (e.g. in a VFS file system) should not
+                // have WEB-INF.classes in their package name.
+                classNames.add(StringUtils.removeStart(packageName, "WEB-INF.classes.") + name);
             }
         }
     }

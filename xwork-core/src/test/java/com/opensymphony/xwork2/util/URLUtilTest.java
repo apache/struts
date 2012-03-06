@@ -161,9 +161,9 @@ public class URLUtilTest extends TestCase {
     }
 
     public void testIsJBoss5Url() throws Exception {
-        assertTrue(URLUtil.isJBoss5Url(new URL("vfszip:/c:/somewar.war/somelibrary.jar")));
-        assertFalse(URLUtil.isJBoss5Url(new URL("vfsfile:/c:/somewar.war/somelibrary.jar")));
-        assertFalse(URLUtil.isJBoss5Url(new URL("jar:file:/c:/somelibrary.jar")));
-        assertTrue(URLUtil.isJBoss5Url(new URL("vfsmemory:/c:/somewar.war/somelibrary.jar")));
+        assertTrue(URLUtil.isJBossUrl(new URL("vfszip:/c:/somewar.war/somelibrary.jar")));
+        assertFalse(URLUtil.isJBossUrl(new URL("vfsfile:/c:/somewar.war/somelibrary.jar")));
+        assertFalse(URLUtil.isJBossUrl(new URL("jar:file:/c:/somelibrary.jar")));
+        assertTrue(URLUtil.isJBossUrl(new URL("vfsmemory:/c:/somewar.war/somelibrary.jar")));
     }
 }

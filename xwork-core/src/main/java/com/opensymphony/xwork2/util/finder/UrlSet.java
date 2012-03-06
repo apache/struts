@@ -190,7 +190,9 @@ public class UrlSet {
                 URL finalUrl = (URL) ObjectUtils.defaultIfNull(normalizedUrl, warUrl);
 
                 Map<String, URL> newUrls = new HashMap<String, URL>(this.urls);
-                newUrls.put(finalUrl.toExternalForm(), finalUrl);
+                if ("jar".equals(finalUrl.getProtocol()) || "file".equals(finalUrl.getProtocol())) {
+                    newUrls.put(finalUrl.toExternalForm(), finalUrl);
+                }
                 return new UrlSet(newUrls);
             }
         }
@@ -258,8 +260,16 @@ public class UrlSet {
 
         }
 
-        //usually the "classes" dir
-        list.addAll(Collections.list(classLoader.getResources("")));
+        // Usually the "classes" dir.
+        ArrayList<URL> classesList = Collections.list(classLoader.getResources(""));
+        for (URL url : classesList) {
+            if (URLUtil.isJBossUrl(url)) {
+                list.add(URLUtil.getJBossPhysicalUrl(url));
+            } else {
+                list.add(url);
+            }
+        }
+
         return list;
     }
 

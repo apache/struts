@@ -139,7 +139,7 @@ public class FileManager {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Creating revision for URL: " +fileName);
             }
-            if (URLUtil.isJBoss5Url(fileUrl)) {
+            if (URLUtil.isJBossUrl(fileUrl)) {
                 revision = JBossFileRevision.build(fileUrl);
             } else if (URLUtil.isJarURL(fileUrl)) {
                 revision = JarEntryRevision.build(fileUrl);

@@ -169,7 +169,7 @@
                 <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params">
-                    <param name="excludeParams">dojo\..*,^struts\..*</param>
+                    <param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
                 </interceptor-ref>
                 <interceptor-ref name="conversionError"/>
             </interceptor-stack>
@@ -224,7 +224,7 @@
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="params">
-                    <param name="excludeParams">dojo\..*,^struts\..*</param>
+                    <param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
                 </interceptor-ref>
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="prepare"/>
@@ -234,7 +234,7 @@
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params">
-                    <param name="excludeParams">dojo\..*,^struts\..*</param>
+                    <param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
                 </interceptor-ref>
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="validation">
@@ -271,7 +271,7 @@
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params">
-                  <param name="excludeParams">dojo\..*,^struts\..*</param>
+                    <param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
                 </interceptor-ref>
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="validation">

@@ -15,7 +15,11 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.User;
@@ -35,7 +39,16 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -665,6 +678,17 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(321, cat.getFoo().getNumber());
     }
 
+    public void testCollectionConversion() throws Exception {
+        // given
+        String[] col1 = new String[]{"1", "2", "ble", "3"};
+
+        // when
+        Object converted = converter.convertValue(context, new ListAction(), null, "ints", col1, List.class);
+
+        // then
+        assertEquals(converted, Arrays.asList(1, 2, 3));
+    }
+
     public static class Foo1 {
         public Bar1 getBar() {
             return new Bar1Impl();
@@ -687,6 +711,20 @@ public class XWorkConverterTest extends XWorkTestCase {
         ac.setLocale(Locale.US);
         context = ac.getContextMap();
         stack = (OgnlValueStack) ac.getValueStack();
+    }
+
+}
+
+class ListAction {
+
+    private List<Integer> ints = new ArrayList<Integer>();
+
+    public List<Integer> getInts() {
+        return ints;
+    }
+
+    public void setInts(List<Integer> ints) {
+        this.ints = ints;
     }
 
 }

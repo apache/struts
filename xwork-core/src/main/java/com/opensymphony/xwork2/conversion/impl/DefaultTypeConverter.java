@@ -30,6 +30,7 @@
 //--------------------------------------------------------------------------
 package com.opensymphony.xwork2.conversion.impl;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
 
@@ -39,6 +40,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -49,6 +51,9 @@ import java.util.Map;
  * @author Drew Davidson (drew@ognl.org)
  */
 public class DefaultTypeConverter implements TypeConverter {
+
+    protected static String MILLISECOND_FORMAT = ".SSS";
+
     private static final String NULL_STRING = "null";
 
     private final Map<Class, Object> primitiveDefaults;
@@ -325,4 +330,16 @@ public class DefaultTypeConverter implements TypeConverter {
     public static String stringValue(Object value) {
         return stringValue(value, false);
     }
+
+    protected Locale getLocale(Map<String, Object> context) {
+        if (context == null) {
+            return Locale.getDefault();
+        }
+        Locale locale = (Locale) context.get(ActionContext.LOCALE);
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        return locale;
+    }
+
 }

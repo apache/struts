@@ -17,12 +17,16 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.test.annotations.Person;
-import junit.framework.TestCase;
 
-import java.text.DateFormat;
-import java.util.*;
 import java.lang.reflect.Member;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Test case for XWorkBasicConverter
@@ -30,7 +34,9 @@ import java.lang.reflect.Member;
  * @author tm_jee
  * @version $Date$ $Id$
  */
-public class XWorkBasicConverterTest extends TestCase {
+public class XWorkBasicConverterTest extends XWorkTestCase {
+
+    private XWorkBasicConverter basicConverter;
 
     // TODO: test for every possible conversion
     // take into account of empty string
@@ -38,14 +44,12 @@ public class XWorkBasicConverterTest extends TestCase {
     // object -> return null when empty string is passed
 
     public void testDateConversionWithEmptyValue() {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "", Date.class);
         // we must not get XWorkException as that will caused a conversion error
         assertNull(convertedObject);
     }
 
     public void testDateConversionWithInvalidValue() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         try {
             Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "asdsd", Date.class);
             fail("XWorkException expected - conversion error occurred");
@@ -55,7 +59,6 @@ public class XWorkBasicConverterTest extends TestCase {
     }
 
     public void testDateWithLocalePoland() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
 
         Map<String, Object> map = new HashMap<String, Object>();
         Locale locale = new Locale("pl", "PL");
@@ -70,7 +73,6 @@ public class XWorkBasicConverterTest extends TestCase {
     }
 
     public void testDateWithLocaleFrance() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
 
         Map<String, Object> map = new HashMap<String, Object>();
         Locale locale = new Locale("fr", "FR");
@@ -85,7 +87,6 @@ public class XWorkBasicConverterTest extends TestCase {
     }
 
     public void testDateWithLocaleUK() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
 
         Map<String, Object> map = new HashMap<String, Object>();
         Locale locale = new Locale("en", "US");
@@ -117,7 +118,6 @@ public class XWorkBasicConverterTest extends TestCase {
     }
 
     public void testEmptyArrayConversion() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, new Object[]{}, Object[].class);
         // we must not get XWorkException as that will caused a conversion error
         assertEquals(Object[].class, convertedObject.getClass());
@@ -126,7 +126,6 @@ public class XWorkBasicConverterTest extends TestCase {
     }
 
     public void testNullArrayConversion() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, null, Object[].class);
         // we must not get XWorkException as that will caused a conversion error
         assertNull(convertedObject);
@@ -165,10 +164,10 @@ public class XWorkBasicConverterTest extends TestCase {
     */
 
     public void testDoubleValues() {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
+        NumberConverter numberConverter = new NumberConverter();
 
-        assertTrue(basicConverter.isInRange(-1.2, "-1.2", Double.class));
-        assertTrue(basicConverter.isInRange(1.5, "1.5", Double.class));
+        assertTrue(numberConverter.isInRange(-1.2, "-1.2", Double.class));
+        assertTrue(numberConverter.isInRange(1.5, "1.5", Double.class));
 
         Object value = basicConverter.convertValue("-1.3", double.class);
         assertNotNull(value);
@@ -196,10 +195,10 @@ public class XWorkBasicConverterTest extends TestCase {
     }
 
     public void testFloatValues() {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
+        NumberConverter numberConverter = new NumberConverter();
 
-        assertTrue(basicConverter.isInRange(-1.65, "-1.65", Float.class));
-        assertTrue(basicConverter.isInRange(1.9876, "1.9876", float.class));
+        assertTrue(numberConverter.isInRange(-1.65, "-1.65", Float.class));
+        assertTrue(numberConverter.isInRange(1.9876, "1.9876", float.class));
 
         Float value = (Float) basicConverter.convertValue("-1.444401", Float.class);
         assertNotNull(value);
@@ -211,14 +210,12 @@ public class XWorkBasicConverterTest extends TestCase {
     }
 
     public void testNegativeFloatValue() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue("-94.1231233", Float.class);
         assertTrue(convertedObject instanceof Float);
         assertEquals(-94.1231233f, ((Float) convertedObject).floatValue(), 0.0001);
     }
 
     public void testPositiveFloatValue() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue("94.1231233", Float.class);
         assertTrue(convertedObject instanceof Float);
         assertEquals(94.1231233f, ((Float) convertedObject).floatValue(), 0.0001);
@@ -226,21 +223,18 @@ public class XWorkBasicConverterTest extends TestCase {
 
 
     public void testNegativeDoubleValue() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue("-94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
         assertEquals(-94.1231233d, ((Double) convertedObject).doubleValue(), 0.0001);
     }
 
     public void testPositiveDoubleValue() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue("94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
         assertEquals(94.1231233d, ((Double) convertedObject).doubleValue(), 0.0001);
     }
 
     public void testNestedEnumValue() throws Exception {
-        XWorkBasicConverter basicConverter = new XWorkBasicConverter();
         Object convertedObject = basicConverter.convertValue(ParentClass.NestedEnum.TEST.name(), ParentClass.NestedEnum.class);
         assertTrue(convertedObject instanceof ParentClass.NestedEnum);
         assertEquals(ParentClass.NestedEnum.TEST, convertedObject);
@@ -248,14 +242,25 @@ public class XWorkBasicConverterTest extends TestCase {
 
 
     public void testConvert() {
-        XWorkBasicConverter converter = new XWorkBasicConverter();
         Map context = new HashMap();
         Person o = new Person();
         Member member = null;
         String s = "names";
         Object value = new Person[0];
         Class toType = String.class;
-        converter.convertValue(context, value, member, s, value, toType);
-    }     
+        basicConverter.convertValue(context, value, member, s, value, toType);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        basicConverter = container.getInstance(XWorkBasicConverter.class);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        ActionContext.setContext(null);
+    }
+
 
 }

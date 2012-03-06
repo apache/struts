@@ -259,13 +259,46 @@ public class ObjectFactory implements Serializable {
 
     /**
      * Build converter of given type - it must be registered with {@link Container} first
-     * It's the first attempt to use Object Factory to build Converters, so the API can change in the future
-     * 
+     *
      * @param converterClass to instantiate
      * @return instance of converterClass with inject dependencies
      */
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating converter of type [#1]", converterClass.getCanonicalName());
+        }
         return container.getInstance(converterClass);
+    }
+
+    /**
+     * Build converter of given type - it must be registered with {@link Container} first
+     *
+     * @param converterClass to instantiate
+     * @param name name of converter to use
+     * @return instance of converterClass with inject dependencies
+     */
+    public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, String name) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating converter of type [#1] with name [#2]", converterClass.getCanonicalName(), name);
+        }
+        return container.getInstance(converterClass, name);
+    }
+
+    /**
+     * Build converter of given type - it must be registered with {@link Container} first
+     *
+     * @param name name of converter to use
+     * @return instance of converterClass with inject dependencies
+     */
+    public TypeConverter buildConverter(String name) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating converter with name [#1]", name);
+        }
+        TypeConverter instance = container.getInstance(TypeConverter.class, name);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Converter of Type [#1] with name [#2], created!", instance.getClass().getCanonicalName(),  name);
+        }
+        return instance;
     }
 
     static class ContinuationsClassLoader extends ClassLoader {

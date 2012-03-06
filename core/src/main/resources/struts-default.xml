@@ -63,6 +63,12 @@
     <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="xwork1" class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
     <bean class="com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter" />
 
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="collection" class="com.opensymphony.xwork2.conversion.impl.CollectionConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="array" class="com.opensymphony.xwork2.conversion.impl.ArrayConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="date" class="com.opensymphony.xwork2.conversion.impl.DateConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="number" class="com.opensymphony.xwork2.conversion.impl.NumberConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="string" class="com.opensymphony.xwork2.conversion.impl.StringConverter" scope="singleton"/>
+
     <bean type="com.opensymphony.xwork2.TextProvider" name="xwork1" class="com.opensymphony.xwork2.TextProviderSupport" scope="default" />
     <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" scope="default" />
 

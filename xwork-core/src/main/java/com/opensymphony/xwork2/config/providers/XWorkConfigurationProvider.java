@@ -12,8 +12,14 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.conversion.impl.ArrayConverter;
+import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
+import com.opensymphony.xwork2.conversion.impl.DateConverter;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
+import com.opensymphony.xwork2.conversion.impl.NumberConverter;
+import com.opensymphony.xwork2.conversion.impl.StringConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -111,7 +117,12 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
                 .factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
-                .factory(XWorkBasicConverter.class, Scope.SINGLETON);
+                .factory(XWorkBasicConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, "collection", CollectionConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, "array", ArrayConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, "date", DateConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, "number", NumberConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, "string", StringConverter.class, Scope.SINGLETON);
         props.setProperty("devMode", Boolean.FALSE.toString());
         props.setProperty("logMissingProperties", Boolean.FALSE.toString());
         props.setProperty("enableOGNLExpressionCache", Boolean.TRUE.toString());

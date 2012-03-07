@@ -20,35 +20,38 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.portlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
-
-import junit.textui.TestRunner;
-
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.StrutsStatics;
-import static org.apache.struts2.StrutsStatics.*;
-import org.jmock.Mock;
-import org.jmock.cglib.MockObjectTestCase;
-import org.jmock.core.Constraint;
-
 import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import static com.opensymphony.xwork2.ActionContext.SESSION;
-import static com.opensymphony.xwork2.ActionContext.PARAMETERS;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import junit.textui.TestRunner;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.jmock.Mock;
+import org.jmock.cglib.MockObjectTestCase;
+import org.jmock.core.Constraint;
+
+import javax.portlet.PortletContext;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import static org.apache.struts2.StrutsStatics.STRUTS_PORTLET_CONTEXT;
 
 /**
  */
@@ -117,6 +120,11 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         mockHttpReq.stubs().method("getAttribute").with(
                 eq("javax.portlet.request")).will(
                 returnValue((PortletRequest) mockPortletReq.proxy()));
+        mockHttpReq.stubs().method("getAttribute").with(
+                eq("javax.servlet.include.servlet_path")).will(
+                returnValue("/servletPath"));
+        mockHttpReq.stubs().method("getParameterMap").will(
+                returnValue(Collections.emptyMap()));
 
         mockPortletReq.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
         mockPortletReq.stubs().method("getWindowState").will(returnValue(WindowState.NORMAL));
@@ -332,6 +340,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
     	
     	Mock mockActionProxy = mock(ActionProxy.class);
     	mockActionProxy.stubs().method("getActionName").will(returnValue("currentExecutingAction"));
+    	mockActionProxy.stubs().method("getNamespace").will(returnValue(""));
     	final ActionProxy proxy = (ActionProxy)mockActionProxy.proxy();
     	
     	Mock mockActionInvocation = mock(ActionInvocation.class);

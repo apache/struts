@@ -75,6 +75,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         }
 
         String result;
+        urlComponent.setNamespace(urlComponent.determineNamespace(urlComponent.getNamespace(), urlComponent.getStack(), urlComponent.getHttpServletRequest()));
         if (onlyActionSpecified(urlComponent)) {
             result = portletUrlHelper.buildUrl(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(),
                     urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());

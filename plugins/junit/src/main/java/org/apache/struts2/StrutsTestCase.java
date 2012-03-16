@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -37,7 +38,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.mock.web.portlet.MockPortletContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -93,6 +93,8 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         logger.setLevel(Level.WARNING);
         LoggerFactory.setLoggerFactory(new JdkLoggerFactory());
     }
+
+    private static final com.opensymphony.xwork2.util.logging.Logger LOG = LoggerFactory.getLogger(StrutsTestCase.class);
 
     /**
      * gets an object from the stack after an action is executed
@@ -158,7 +160,17 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
 
     private void initMockPortletContext(ActionContext actionContext) {
-        actionContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, new MockPortletContext());
+        try {
+            ClassLoaderUtil.loadClass("javax.portlet.PortletContext", getClass());
+            Class mockClazz = ClassLoaderUtil.loadClass("org.springframework.mock.web.portlet.MockPortletContext", getClass());
+            actionContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, mockClazz.newInstance());
+        } catch (ClassNotFoundException e) {
+            LOG.debug("Cannot initialize portlet Mocks (javax.portlet.PortletContext class not found), you're missing dependencies (please add them) or not a portlet environment (so you can ignore this)!");
+        } catch (InstantiationException e) {
+            LOG.warn("Cannot initialize portlet mocks!", e);
+        } catch (IllegalAccessException e) {
+            LOG.warn("Cannot initialize portlet mocks!", e);
+        }
     }
 
     /**

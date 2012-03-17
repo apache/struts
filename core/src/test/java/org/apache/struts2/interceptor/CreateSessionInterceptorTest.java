@@ -21,15 +21,14 @@
 
 package org.apache.struts2.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.jmock.Mock;
 import org.jmock.core.constraint.IsEqual;
 import org.jmock.core.matcher.InvokeOnceMatcher;
 
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Test case for CreateSessionInterceptor.
@@ -39,7 +38,9 @@ public class CreateSessionInterceptorTest extends StrutsTestCase {
 
     public void testCreateSession() throws Exception {
         Mock httpServletRequestMock = new Mock(HttpServletRequest.class);
+        httpServletRequestMock.expects(new InvokeOnceMatcher()).method("getSession").with(new IsEqual(Boolean.FALSE));
         httpServletRequestMock.expects(new InvokeOnceMatcher()).method("getSession").with(new IsEqual(Boolean.TRUE));
+        httpServletRequestMock.expects(new InvokeOnceMatcher()).method("getSession").with(new IsEqual(Boolean.FALSE));
         HttpServletRequest request = (HttpServletRequest) httpServletRequestMock.proxy();
 
         ServletActionContext.setRequest(request);

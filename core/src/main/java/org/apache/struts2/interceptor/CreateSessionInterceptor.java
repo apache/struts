@@ -21,19 +21,21 @@
 
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.ServletActionContext;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.SessionMap;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * <!-- START SNIPPET: description -->
  *
- * This interceptor creates the HttpSession.
+ * This interceptor creates the HttpSession if it doesn't exist, also SessionMap is recreated and put in ServletActionContext.
  * <p/>
- * This is particular usefull when using the &lt;@s.token&gt; tag in freemarker templates.
+ * This is particular useful when using the &lt;@s.token&gt; tag in freemarker templates.
  * The tag <b>do</b> require that a HttpSession is already created since freemarker commits
  * the response to the client immediately.
  *
@@ -88,11 +90,14 @@ public class CreateSessionInterceptor extends AbstractInterceptor {
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating HttpSession");
+        HttpSession httpSession = ServletActionContext.getRequest().getSession(false);
+        if (httpSession == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Creating new HttpSession and new SessionMap in ServletActionContext");
+            }
+            ServletActionContext.getRequest().getSession(true);
+            ServletActionContext.getContext().setSession(new SessionMap<String, Object>(ServletActionContext.getRequest()));
         }
-        
-        ServletActionContext.getRequest().getSession(true);
         return invocation.invoke();
     }
 

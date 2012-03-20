@@ -21,25 +21,20 @@
 
 package org.apache.struts2.views.util;
 
-import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsTestCase;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
 
 
 /**
@@ -107,6 +102,22 @@ public class UrlHelperTest extends StrutsTestCase {
         parameters.put("param1", "value1");
         parameters.put("param2", "value2");
         parameters.put("param3\"<sCrIpT>alert(1);</sCrIpT>","value3");
+
+        StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
+
+        UrlHelper.buildParametersString(parameters, url);
+
+        assertEquals(
+           expectedUrl, url.toString());
+    }
+
+    public void testBuildParametersStringWithJavaScriptInjected() throws Exception {
+        String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2&amp;param3%22%3Cscript+type%3D%22text%2Fjavascript%22%3Ealert%281%29%3B%3C%2Fscript%3E=value3";
+
+        Map parameters = new LinkedHashMap();
+        parameters.put("param1", "value1");
+        parameters.put("param2", "value2");
+        parameters.put("param3\"<script type=\"text/javascript\">alert(1);</script>","value3");
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 

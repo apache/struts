@@ -21,18 +21,6 @@
 
 package org.apache.struts2.config_browser;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.components.UrlRenderer;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-import org.apache.struts2.views.velocity.VelocityManager;
-
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
@@ -40,6 +28,18 @@ import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.components.UrlRenderer;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.views.velocity.VelocityManager;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Shows the beans loaded by the internal Guice container.  Only shows beans that are recognized by Struts as official
@@ -47,11 +47,11 @@ import com.opensymphony.xwork2.inject.Inject;
  */
 public class ShowBeansAction extends ActionNamesAction {
 
-    Map<String,Set<Binding>> bindings;
+    Map<String, Set<Binding>> bindings;
 
     @Inject
     public void setContainer(Container container) {
-        bindings = new TreeMap<String,Set<Binding>>();
+        bindings = new TreeMap<String, Set<Binding>>();
         bindings.put(ObjectFactory.class.getName(), addBindings(container, ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY));
         bindings.put(XWorkConverter.class.getName(), addBindings(container, XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER));
         bindings.put(TextProvider.class.getName(), addBindings(container, TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER));
@@ -63,12 +63,11 @@ public class ShowBeansAction extends ActionNamesAction {
         bindings.put(VelocityManager.class.getName(), addBindings(container, VelocityManager.class, StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME));
         bindings.put(UrlRenderer.class.getName(), addBindings(container, UrlRenderer.class, StrutsConstants.STRUTS_URL_RENDERER));
     }
-    
-    public Map<String, Set<Binding>> getBeans()
-    {
+
+    public Map<String, Set<Binding>> getBeans() {
         return bindings;
     }
-    
+
     protected Set<Binding> addBindings(Container container, Class type, String constName) {
         Set<Binding> bindings = new TreeSet<Binding>();
         String chosenName = container.getInstance(String.class, constName);
@@ -76,6 +75,9 @@ public class ShowBeansAction extends ActionNamesAction {
             chosenName = "struts";
         }
         Set<String> names = container.getInstanceNames(type);
+        if (names == null) {
+            names = Collections.emptySet();
+        }
         if (!names.contains(chosenName)) {
             bindings.add(new Binding(getInstanceClassName(container, type, "default"), chosenName, constName, true));
         }
@@ -97,33 +99,36 @@ public class ShowBeansAction extends ActionNamesAction {
         }
         return instName;
     }
-    
+
     public class Binding implements Comparable<Binding> {
         private String impl;
         private String alias;
         private String constant;
         private boolean isDefault;
-        
+
         public Binding(String impl, String alias, String constant, boolean def) {
             this.impl = impl;
             this.alias = alias;
             this.constant = constant;
             this.isDefault = def;
         }
+
         public String getImpl() {
             return impl;
         }
+
         public String getAlias() {
             return alias;
         }
+
         public String getConstant() {
             return constant;
         }
-        
+
         public boolean isDefault() {
             return isDefault;
         }
-        
+
         public int compareTo(Binding b2) {
             int ret = 0;
             if (isDefault) {

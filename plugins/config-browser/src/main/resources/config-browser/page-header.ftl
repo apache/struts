@@ -41,7 +41,7 @@
   
 <table border="0" cellspacing="0" cellpadding="4" width="100%" id="main">
 	<tr valign="top">
-	    <#if !hideNav?exists>		<td id="leftcol" width="20%">
+	    <#if !hideNav??>		<td id="leftcol" width="20%">
 			<div id="navcolumn">
 				<#-- Quick hack to show menu features :)
 -->				<#-- This should be done via contribution from the actions
@@ -61,15 +61,34 @@
 					</div>
 				</div>
 				<div id="projecttools" class="toolgroup">
-					<#if namespaces?exists>					<div class="label"><strong>Namespaces</strong></div>
-					<div class="body">
-						<#foreach namespace in namespaces>						<div><@s.url id="namespaceLink" action="actionNames" includeParams="none"><@s.param name="namespace">${namespace}</@s.param></@s.url><a href="${namespaceLink}"><#if namespace == ""> default <#else> ${namespace} </#if></a></div>
-						</#foreach>					</div>
-					</#if>				</div>				
+					<#if namespaces??>
+                    <div class="label"><strong>Namespaces</strong></div>
+                    <div class="body">
+                    <#foreach namespace in namespaces>
+                        <div>
+                            <@s.url var="namespaceLink" action="actionNames" includeParams="none">
+                                <@s.param name="namespace">${namespace}</@s.param>
+                            </@s.url>
+                            <@s.a href="%{namespaceLink}"><#if namespace == ""> default <#else> ${namespace} </#if></@s.a>
+                        </div>
+                    </#foreach>
+                    </div>
+					</#if>
+                </div>
 				<div class="toolgroup">
-					<#if actionNames?exists>					<div class="label"><strong>Actions in <#if namespace == ""> default <#else> ${namespace} </#if></strong></div>
-                        <#foreach name in actionNames>                        <div><@s.url id="actionLink" action="showConfig" includeParams="none"><@s.param name="namespace">${namespace}</@s.param><@s.param name="actionName">${name}</@s.param></@s.url><a href="${actionLink}">${name}</a></div>
-						</#foreach>					</#if>				</div>
+					<#if actionNames??>
+                    <div class="label"><strong>Actions in <#if namespace == ""> default <#else> ${namespace} </#if></strong></div>
+                    <#foreach name in actionNames>
+                        <div>
+                            <@s.url id="actionLink" action="showConfig" includeParams="none" escapeAmp="false">
+                                <@s.param name="namespace">${namespace}</@s.param>
+                                <@s.param name="actionName">${name}</@s.param>
+                            </@s.url>
+                            <@s.a href="%{actionLink}">${name}</@s.a>
+                        </div>
+				    </#foreach>
+                    </#if>
+                </div>
 			</div>
 		</td>
 		</#if>		<td>

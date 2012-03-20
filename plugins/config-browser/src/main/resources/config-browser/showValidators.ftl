@@ -24,7 +24,7 @@
 <table width="100%">
     <tr><th>Field</th><th>Type</th><th>&nbsp;</th></tr>
     <#assign row = 0>
-    	<#if validators?exists>
+    	<#if validators??>
         <#foreach i in validators>       
         <tr <#if i_index%2 gt 0>class="b"<#else>class="a"</#if>>
         	<td>${i.fieldName!"(see expression)"}</td>

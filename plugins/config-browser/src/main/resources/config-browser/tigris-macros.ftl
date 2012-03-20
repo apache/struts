@@ -44,7 +44,7 @@
 
 <#macro tab name, url, isSelected>
 	<#if isSelected == "true">
-		<th><a href="${url}">${name}</h></td>
+		<th><a href="${url}">${name}</a></th>
 		<#else>
 		<td><a href="${url}">${name}</a></td>
 	</#if>

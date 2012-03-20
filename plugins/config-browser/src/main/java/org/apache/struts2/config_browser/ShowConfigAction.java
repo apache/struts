@@ -39,8 +39,6 @@ public class ShowConfigAction extends ActionNamesAction {
 
     private static final long serialVersionUID = -1630527489407671652L;
 
-    private static final PropertyDescriptor[] PDSAT = new PropertyDescriptor[0];
-
     private String namespace;
     private String actionName;
     private ActionConfig config;
@@ -60,7 +58,7 @@ public class ShowConfigAction extends ActionNamesAction {
         this.detailView = detailView;
     }
 
-    public Set getActionNames() {
+    public Set<String> getActionNames() {
         return actionNames;
     }
 

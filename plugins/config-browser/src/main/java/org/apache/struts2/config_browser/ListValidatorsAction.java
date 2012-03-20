@@ -41,7 +41,7 @@ public class ListValidatorsAction extends ActionSupport {
 
     private String clazz;
     private String context;
-    List<Validator> validators = Collections.EMPTY_LIST;
+    List<Validator> validators = Collections.emptyList();
     private ActionValidatorManager actionValidatorManager;
 
     

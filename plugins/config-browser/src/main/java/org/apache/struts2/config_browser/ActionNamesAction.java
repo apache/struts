@@ -31,25 +31,24 @@ import java.util.TreeSet;
 
 /**
  * ActionNamesAction
- *
  */
 public class ActionNamesAction extends ActionSupport {
 
     private static final long serialVersionUID = -5389385242431387840L;
 
-    private Set actionNames;
+    private Set<String> actionNames;
     private String namespace = "";
-    private Set namespaces;
+    private Set<String> namespaces;
     private String extension;
-    
+
     protected ConfigurationHelper configHelper;
 
     @Inject
     public void setConfigurationHelper(ConfigurationHelper cfg) {
         this.configHelper = cfg;
     }
-    
-    public Set getActionNames() {
+
+    public Set<String> getActionNames() {
         return actionNames;
     }
 
@@ -60,7 +59,7 @@ public class ActionNamesAction extends ActionSupport {
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
     public void setExtension(String ext) {
         this.extension = ext;
@@ -70,15 +69,15 @@ public class ActionNamesAction extends ActionSupport {
         return configHelper.getActionConfig(namespace, actionName);
     }
 
-    public Set getNamespaces() {
+    public Set<String> getNamespaces() {
         return namespaces;
     }
 
     public String getExtension() {
-        if ( extension == null) {
+        if (extension == null) {
             return "action";
         }
-        if (extension.indexOf(",") > -1) {
+        if (extension.contains(",")) {
             return extension.substring(0, extension.indexOf(","));
         }
         return extension;
@@ -93,8 +92,7 @@ public class ActionNamesAction extends ActionSupport {
         if (namespace == null) {
             namespace = "";
         }
-        actionNames =
-                new TreeSet(configHelper.getActionNames(namespace));
+        actionNames = new TreeSet<String>(configHelper.getActionNames(namespace));
         return SUCCESS;
     }
 }

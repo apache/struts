@@ -21,6 +21,14 @@
 
 package org.apache.struts2.config_browser;
 
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.validator.Validator;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -29,14 +37,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import com.opensymphony.xwork2.validator.Validator;
 
 /**
  * ShowValidatorAction
@@ -47,8 +47,8 @@ public class ShowValidatorAction extends ListValidatorsAction {
 
     private static Logger LOG = LoggerFactory.getLogger(ShowValidatorAction.class);
 
-    Set properties = Collections.EMPTY_SET;
-    int selected = 0;
+    private Set<PropertyInfo> properties = Collections.emptySet();
+    private int selected = 0;
     
     ReflectionProvider reflectionProvider;
     ReflectionContextFactory reflectionContextFactory;
@@ -76,16 +76,16 @@ public class ShowValidatorAction extends ListValidatorsAction {
     }
 
     public Validator getSelectedValidator() {
-        return (Validator) validators.get(selected);
+        return validators.get(selected);
     }
 
     public String execute() throws Exception {
         loadValidators();
         Validator validator = getSelectedValidator();
-        properties = new TreeSet();
+        properties = new TreeSet<PropertyInfo>();
         try {
-            Map context = reflectionContextFactory.createDefaultContext(validator);
-            BeanInfo beanInfoFrom = null;
+            Map<String, Object> context = reflectionContextFactory.createDefaultContext(validator);
+            BeanInfo beanInfoFrom;
             try {
                 beanInfoFrom = Introspector.getBeanInfo(validator.getClass(), Object.class);
             } catch (IntrospectionException e) {
@@ -96,8 +96,7 @@ public class ShowValidatorAction extends ListValidatorsAction {
 
             PropertyDescriptor[] pds = beanInfoFrom.getPropertyDescriptors();
 
-            for (int i = 0; i < pds.length; i++) {
-                PropertyDescriptor pd = pds[i];
+            for (PropertyDescriptor pd : pds) {
                 String name = pd.getName();
                 Object value = null;
                 if (pd.getReadMethod() == null) {
@@ -118,10 +117,11 @@ public class ShowValidatorAction extends ListValidatorsAction {
             addActionError("Unable to retrieve properties: " + e.toString());
         }
 
-        if (hasErrors())
+        if (hasErrors()) {
             return ERROR;
-        else
+        } else {
             return SUCCESS;
+        }
     }
 
     public static class PropertyInfo implements Comparable {

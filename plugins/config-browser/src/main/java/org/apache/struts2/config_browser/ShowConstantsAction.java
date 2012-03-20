@@ -21,29 +21,28 @@
 
 package org.apache.struts2.config_browser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Shows all constants as loaded by Struts
  */
 public class ShowConstantsAction extends ActionNamesAction {
 
-    Map<String,String> consts;
-    
+    private Map<String, String> constants;
+
     @Inject
     public void setContainer(Container container) {
-        consts = new HashMap<String,String>();
+        constants = new HashMap<String, String>();
         for (String key : container.getInstanceNames(String.class)) {
-            consts.put(key, container.getInstance(String.class, key));
+            constants.put(key, container.getInstance(String.class, key));
         }
     }
-    
-    public Map<String,String> getConstants()
-    {
-        return consts;
+
+    public Map<String, String> getConstants() {
+        return constants;
     }
 }

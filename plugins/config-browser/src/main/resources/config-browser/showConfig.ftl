@@ -34,8 +34,8 @@
 		${p}
 	</#list></td></tr>
 
-	<tr><td>Default location:</td><td> <a href="${base}${namespace}/${actionName}.${extension}">
-		${base}${namespace}/${actionName}.${extension}
+	<tr><td>Default location:</td><td> <a href="${base}${namespace}/${actionName}<#if extension != ''>.${extension}</#if>">
+		${base}${namespace}/${actionName}<#if extension != "">.${extension}</#if>
 	</a>
 	</td></tr>
 </table>

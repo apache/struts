@@ -21,11 +21,11 @@
 
 package org.apache.struts2.views.velocity;
 
-import java.io.InputStream;
-
-import org.apache.struts2.util.ClassLoaderUtils;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+
+import java.io.InputStream;
 
 
 /**
@@ -44,7 +44,7 @@ public class StrutsResourceLoader extends ClasspathResourceLoader {
         }
 
         try {
-            return ClassLoaderUtils.getResourceAsStream(name, StrutsResourceLoader.class);
+            return ClassLoaderUtil.getResourceAsStream(name, StrutsResourceLoader.class);
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
         }

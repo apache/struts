@@ -38,6 +38,7 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -61,7 +62,6 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.AttributeMap;
-import org.apache.struts2.util.ClassLoaderUtils;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
@@ -73,6 +73,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,7 +81,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.Enumeration;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -347,7 +347,7 @@ public class Dispatcher {
             String[] classes = configProvs.split("\\s*[,]\\s*");
             for (String cname : classes) {
                 try {
-                    Class cls = ClassLoaderUtils.loadClass(cname, this.getClass());
+                    Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
                     ConfigurationProvider prov = (ConfigurationProvider)cls.newInstance();
                     configurationManager.addContainerProvider(prov);
                 } catch (InstantiationException e) {

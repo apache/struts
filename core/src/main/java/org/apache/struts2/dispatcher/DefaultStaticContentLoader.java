@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.ng.HostConfig;
-import org.apache.struts2.util.ClassLoaderUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -242,7 +241,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
         String factoryName = filterConfig.getInitParameter("loggerFactory");
         if (factoryName != null) {
             try {
-                Class cls = ClassLoaderUtils.loadClass(factoryName, this.getClass());
+                Class cls = ClassLoaderUtil.loadClass(factoryName, this.getClass());
                 LoggerFactory fac = (LoggerFactory)cls.newInstance();
                 LoggerFactory.setLoggerFactory(fac);
             } catch (InstantiationException e) {

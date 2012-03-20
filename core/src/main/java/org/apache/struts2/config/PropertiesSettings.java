@@ -21,19 +21,18 @@
 
 package org.apache.struts2.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Iterator;
-
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.util.ClassLoaderUtils;
-
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationImpl;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Iterator;
 
 
 /**
@@ -54,7 +53,7 @@ class PropertiesSettings extends Settings {
      */
     public PropertiesSettings(String name) {
         
-        URL settingsUrl = ClassLoaderUtils.getResource(name + ".properties", getClass());
+        URL settingsUrl = ClassLoaderUtil.getResource(name + ".properties", getClass());
         
         if (settingsUrl == null) {
             if (LOG.isDebugEnabled()) {

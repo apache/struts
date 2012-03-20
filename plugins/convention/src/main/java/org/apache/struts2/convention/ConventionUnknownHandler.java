@@ -20,15 +20,6 @@
  */
 package org.apache.struts2.convention;
 
-import java.net.MalformedURLException;
-import java.util.*;
-
-import javax.servlet.ServletContext;
-
-import com.opensymphony.xwork2.config.entities.*;
-import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
-import org.apache.struts2.util.ClassLoaderUtils;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -38,10 +29,25 @@ import com.opensymphony.xwork2.UnknownHandler;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -328,7 +334,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
                 LOG.trace("Checking ClasLoader for #0", path);
 
             String classLoaderPath = path.startsWith("/") ? path.substring(1, path.length()) : path;
-            if (ClassLoaderUtils.getResource(classLoaderPath, getClass()) != null) {
+            if (ClassLoaderUtil.getResource(classLoaderPath, getClass()) != null) {
                 if (traceEnabled)
                     LOG.trace("Found");
                 return buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);

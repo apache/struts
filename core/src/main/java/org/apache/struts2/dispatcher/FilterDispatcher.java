@@ -21,10 +21,21 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.struts2.RequestUtils;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.ng.filter.FilterHostConfig;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,23 +46,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.RequestUtils;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.ng.filter.FilterHostConfig;
-import org.apache.struts2.util.ClassLoaderUtils;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Master filter for Struts that handles four distinct
@@ -205,7 +203,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         String factoryName = filterConfig.getInitParameter("loggerFactory");
         if (factoryName != null) {
             try {
-                Class cls = ClassLoaderUtils.loadClass(factoryName, this.getClass());
+                Class cls = ClassLoaderUtil.loadClass(factoryName, this.getClass());
                 LoggerFactory fac = (LoggerFactory) cls.newInstance();
                 LoggerFactory.setLoggerFactory(fac);
             } catch (InstantiationException e) {

@@ -24,6 +24,7 @@ package org.apache.struts2.util;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -78,7 +79,7 @@ public class StrutsUtil {
         Class c = (Class) classes.get(name);
 
         if (c == null) {
-            c = ClassLoaderUtils.loadClass(name, StrutsUtil.class);
+            c = ClassLoaderUtil.loadClass(name, StrutsUtil.class);
             classes.put(name, c);
         }
 

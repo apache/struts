@@ -24,9 +24,9 @@ package org.apache.struts2.config_browser;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.Validator;
-import org.apache.struts2.util.ClassLoaderUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -92,7 +92,7 @@ public class ListValidatorsAction extends ActionSupport {
 
     private Class getClassInstance() {
         try {
-            return ClassLoaderUtils.loadClass(clazz, ActionContext.getContext().getClass());
+            return ClassLoaderUtil.loadClass(clazz, ActionContext.getContext().getClass());
         } catch (Exception e) {
             LOG.error("Class '" + clazz + "' not found...",e);
         }

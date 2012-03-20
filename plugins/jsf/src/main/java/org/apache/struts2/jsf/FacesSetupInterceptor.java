@@ -21,12 +21,14 @@
 
 package org.apache.struts2.jsf;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
@@ -41,16 +43,12 @@ import javax.faces.el.VariableResolver;
 import javax.faces.event.ActionListener;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.util.ClassLoaderUtils;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * * Initializes the JSF context for this request.
@@ -301,7 +299,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
             Class implClass = null;
 
             try {
-                implClass = ClassLoaderUtils.loadClass(implClassName, this
+                implClass = ClassLoaderUtil.loadClass(implClassName, this
                         .getClass());
             } catch (ClassNotFoundException e1) {
                 throw new IllegalArgumentException("Class " + implClassName

@@ -20,14 +20,19 @@
  */
 package org.apache.struts2.dispatcher.ng;
 
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StaticContentLoader;
-import org.apache.struts2.util.ClassLoaderUtils;
-import org.apache.struts2.StrutsConstants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -45,7 +50,7 @@ public class InitOperations {
         String factoryName = filterConfig.getInitParameter("loggerFactory");
         if (factoryName != null) {
             try {
-                Class cls = ClassLoaderUtils.loadClass(factoryName, this.getClass());
+                Class cls = ClassLoaderUtil.loadClass(factoryName, this.getClass());
                 LoggerFactory fac = (LoggerFactory) cls.newInstance();
                 LoggerFactory.setLoggerFactory(fac);
             } catch ( InstantiationException e ) {

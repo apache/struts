@@ -21,26 +21,23 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.util.ClassLoaderUtils;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Unit test for {@link XSLTResult}.
@@ -138,7 +135,7 @@ public class XSLTResultTest extends StrutsTestCase {
             protected URIResolver getURIResolver() {
                 return new URIResolver() {
                     public Source resolve(String href, String base) throws TransformerException {
-                        return new StreamSource(ClassLoaderUtils.getResourceAsStream(href, this.getClass()));
+                        return new StreamSource(ClassLoaderUtil.getResourceAsStream(href, this.getClass()));
                     }
                     
                 };
@@ -159,7 +156,7 @@ public class XSLTResultTest extends StrutsTestCase {
             protected URIResolver getURIResolver() {
                 return new URIResolver() {
                     public Source resolve(String href, String base) throws TransformerException {
-                        return new StreamSource(ClassLoaderUtils.getResourceAsStream(href, this.getClass()));
+                        return new StreamSource(ClassLoaderUtil.getResourceAsStream(href, this.getClass()));
                     }
 
                 };

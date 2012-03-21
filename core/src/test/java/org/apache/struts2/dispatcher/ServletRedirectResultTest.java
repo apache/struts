@@ -35,18 +35,23 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import static org.easymock.EasyMock.*;
+import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
+import static org.easymock.EasyMock.createControl;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 
 
 /**
@@ -188,6 +193,7 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         result.setEncode(false);
         result.setPrependServletContext(false);
         result.setAnchor("fragment");
+        result.setUrlHelper(new DefaultUrlHelper());
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);

@@ -21,19 +21,11 @@
 
 package org.apache.struts2.components;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Stack;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsException;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.FastByteArrayOutputStream;
@@ -41,9 +33,14 @@ import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.ContextUtil;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * Base class to extend for UI components.
@@ -52,12 +49,14 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  *
  */
 public class Component {
+
     public static final String COMPONENT_STACK = "__component_stack";
 
     protected ValueStack stack;
     protected Map parameters;
     protected ActionMapper actionMapper;
     protected boolean throwExceptionOnELFailure;
+    private UrlHelper urlHelper;
 
     /**
      * Constructor.
@@ -91,7 +90,11 @@ public class Component {
     public void setThrowExceptionsOnELFailure(String throwException) {
         this.throwExceptionOnELFailure = "true".equals(throwException);
     }
-    
+
+    @Inject
+    public void setUrlHelper(UrlHelper urlHelper) {
+        this.urlHelper = urlHelper;
+    }
     /**
      * Gets the OGNL value stack assoicated with this component.
      * @return the OGNL value stack assoicated with this component.
@@ -407,7 +410,7 @@ public class Component {
         String finalNamespace = determineNamespace(namespace, getStack(), req);
         ActionMapping mapping = new ActionMapping(finalAction, finalNamespace, finalMethod, parameters);
         String uri = actionMapper.getUriFromActionMapping(mapping);
-        return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, escapeAmp);
+        return urlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, escapeAmp);
     }
 
     /**
@@ -445,8 +448,8 @@ public class Component {
         stack.push(parameters);
         stack.push(this);
         try {
-            for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
+            for (Object o : params.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
                 String key = (String) entry.getKey();
                 stack.setValue(key, entry.getValue());
             }

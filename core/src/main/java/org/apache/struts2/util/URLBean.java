@@ -21,13 +21,14 @@
 
 package org.apache.struts2.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.util.DefaultUrlHelper;
+import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.util.UrlHelper;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -36,11 +37,12 @@ import org.apache.struts2.views.util.UrlHelper;
  */
 public class URLBean {
 
-    HashMap params;
+    HashMap<String, String> params;
     HttpServletRequest request;
     HttpServletResponse response;
     String page;
 
+    private UrlHelper urlHelper;
 
     public URLBean setPage(String page) {
         this.page = page;
@@ -49,6 +51,7 @@ public class URLBean {
 
     public void setRequest(HttpServletRequest request) {
         this.request = request;
+        urlHelper = ServletActionContext.getContext().getInstance(DefaultUrlHelper.class);
     }
 
     public void setResponse(HttpServletResponse response) {
@@ -57,10 +60,10 @@ public class URLBean {
 
     public String getURL() {
         // all this trickier with maps is to reduce the number of objects created
-        Map fullParams = null;
+        Map<String, Object> fullParams = null;
 
         if (params != null) {
-            fullParams = new HashMap();
+            fullParams = new HashMap<String, Object>();
         }
 
         if (page == null) {
@@ -78,12 +81,12 @@ public class URLBean {
             fullParams.putAll(params);
         }
 
-        return UrlHelper.buildUrl(page, request, response, fullParams);
+        return urlHelper.buildUrl(page, request, response, fullParams);
     }
 
     public URLBean addParameter(String name, Object value) {
         if (params == null) {
-            params = new HashMap();
+            params = new HashMap<String, String>();
         }
 
         if (value == null) {

@@ -38,12 +38,13 @@ import java.util.TreeMap;
 
 
 /**
- * Test case for UrlHelper.
+ * Test case for DefaultUrlHelper.
  *
  */
-public class UrlHelperTest extends StrutsTestCase {
+public class DefaultUrlHelperTest extends StrutsTestCase {
     
     private StubContainer stubContainer;
+    private DefaultUrlHelper urlHelper;
 
     public void testForceAddSchemeHostAndPort() throws Exception {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
@@ -57,7 +58,7 @@ public class UrlHelperTest extends StrutsTestCase {
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
 
-        String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, true);
+        String result = urlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), null, "http", true, true, true);
         assertEquals(expectedUrl, result);
         mockHttpServletRequest.verify();
     }
@@ -73,7 +74,7 @@ public class UrlHelperTest extends StrutsTestCase {
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
 
-        String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest)mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, false);
+        String result = urlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), null, "http", true, true, false);
 
         assertEquals(expectedUrl, result);
     }
@@ -90,7 +91,7 @@ public class UrlHelperTest extends StrutsTestCase {
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
 
-        String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, true);
+        String result = urlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), null, "http", true, true, true);
         assertEquals(expectedUrl, result);
         mockHttpServletRequest.verify();
     }
@@ -105,7 +106,7 @@ public class UrlHelperTest extends StrutsTestCase {
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
-        UrlHelper.buildParametersString(parameters, url);
+        urlHelper.buildParametersString(parameters, url);
 
         assertEquals(
            expectedUrl, url.toString());
@@ -121,7 +122,7 @@ public class UrlHelperTest extends StrutsTestCase {
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
-        UrlHelper.buildParametersString(parameters, url);
+        urlHelper.buildParametersString(parameters, url);
 
         assertEquals(
            expectedUrl, url.toString());
@@ -140,10 +141,10 @@ public class UrlHelperTest extends StrutsTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl,
             expectedUrl);
 
-        String result = UrlHelper.buildUrl("/path1/path2/myAction.action",
-            (HttpServletRequest) mockHttpServletRequest.proxy(),
-            (HttpServletResponse) mockHttpServletResponse.proxy(), null,
-            null, true, true, true);
+        String result = urlHelper.buildUrl("/path1/path2/myAction.action",
+                (HttpServletRequest) mockHttpServletRequest.proxy(),
+                (HttpServletResponse) mockHttpServletResponse.proxy(), null,
+                null, true, true, true);
         assertEquals(expectedUrl, result);
         mockHttpServletRequest.verify();
     }
@@ -158,7 +159,7 @@ public class UrlHelperTest extends StrutsTestCase {
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
 
-        String actualUrl = UrlHelper.buildUrl(expectedUrl, (HttpServletRequest) mockHttpServletRequest.proxy(),
+        String actualUrl = urlHelper.buildUrl(expectedUrl, (HttpServletRequest) mockHttpServletRequest.proxy(),
                 (HttpServletResponse) mockHttpServletResponse.proxy(), new HashMap());
         assertEquals(expectedUrl, actualUrl);
     }
@@ -178,7 +179,7 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("hello", "world");
         params.put("foo", "bar");
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params);
         assertEquals(expectedString, urlString);
     }
     
@@ -197,7 +198,7 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("hello", "world");
         params.put("foo", "bar");
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, null, true, true, false, false);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, null, true, true, false, false);
         assertEquals(expectedString, urlString);
     }
 
@@ -213,7 +214,7 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params);
         assertEquals(expectedString, urlString);
     }
 
@@ -238,7 +239,7 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
         assertEquals(expectedString, urlString);
     }
 
@@ -263,7 +264,7 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "http", true, true);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "http", true, true);
         assertEquals(expectedString, urlString);
     }
 
@@ -292,7 +293,7 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
         assertEquals(expectedString, urlString);
     }
 
@@ -321,7 +322,7 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "http", true, true);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "http", true, true);
         assertEquals(expectedString, urlString);
     }
 
@@ -348,13 +349,13 @@ public class UrlHelperTest extends StrutsTestCase {
         String actionName = "promo.html";
         Map params = new TreeMap();
 
-        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
+        String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
         assertEquals(expectedString, urlString);
     }
 
 
     public void testParseQuery() throws Exception {
-        Map result = UrlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E");
+        Map result = urlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E");
 
         assertEquals(result.get("aaa"), "aaaval");
         assertEquals(result.get("bbb"), "bbbval");
@@ -363,14 +364,14 @@ public class UrlHelperTest extends StrutsTestCase {
     }
 
     public void testParseEmptyQuery() throws Exception {
-        Map result = UrlHelper.parseQueryString("");
+        Map result = urlHelper.parseQueryString("");
 
         assertNotNull(result);
         assertEquals(result.size(), 0);
     }
 
     public void testParseNullQuery() throws Exception {
-        Map result = UrlHelper.parseQueryString(null);
+        Map result = urlHelper.parseQueryString(null);
 
         assertNotNull(result);
         assertEquals(result.size(), 0);
@@ -379,7 +380,7 @@ public class UrlHelperTest extends StrutsTestCase {
 
     public void testTranslateAndEncode() throws Exception {
         setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-        String result = UrlHelper.translateAndEncode("\u65b0\u805e");
+        String result = urlHelper.translateAndEncode("\u65b0\u805e");
         String expectedResult = "%E6%96%B0%E8%81%9E";
 
         assertEquals(result, expectedResult);
@@ -387,7 +388,7 @@ public class UrlHelperTest extends StrutsTestCase {
 
     public void testTranslateAndDecode() throws Exception {
         setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-        String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
+        String result = urlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
         String expectedResult = "\u65b0\u805e";
 
         assertEquals(result, expectedResult);
@@ -397,6 +398,7 @@ public class UrlHelperTest extends StrutsTestCase {
         super.setUp();
         stubContainer = new StubContainer(container);
         ActionContext.getContext().put(ActionContext.CONTAINER, stubContainer);
+        urlHelper = new DefaultUrlHelper();
     }
     
     private void setProp(String key, String val) {

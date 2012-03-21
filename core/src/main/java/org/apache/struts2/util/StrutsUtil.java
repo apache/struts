@@ -45,53 +45,49 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Struts base utility class, for use in Velocity and Freemarker templates
- *
  */
 public class StrutsUtil {
 
     protected static final Logger LOG = LoggerFactory.getLogger(StrutsUtil.class);
 
-
     protected HttpServletRequest request;
     protected HttpServletResponse response;
-    protected Map classes = new Hashtable();
+    protected Map<String, Class> classes = new Hashtable<String, Class>();
     protected OgnlTool ognl;
     protected ValueStack stack;
 
+    private UrlHelper urlHelper;
+    private ObjectFactory objectFactory;
 
     public StrutsUtil(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         this.stack = stack;
         this.request = request;
         this.response = response;
         this.ognl = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(OgnlTool.class);
+        this.urlHelper = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(UrlHelper.class);
+        this.objectFactory = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(ObjectFactory.class);
     }
-
 
     public Object bean(Object aName) throws Exception {
         String name = aName.toString();
-        Class c = (Class) classes.get(name);
+        Class c = classes.get(name);
 
         if (c == null) {
             c = ClassLoaderUtil.loadClass(name, StrutsUtil.class);
             classes.put(name, c);
         }
 
-        return ObjectFactory.getObjectFactory().buildBean(c, stack.getContext());
+        return objectFactory.buildBean(c, stack.getContext());
     }
 
     public boolean isTrue(String expression) {
         Boolean retVal = (Boolean) stack.findValue(expression, Boolean.class);
-        if (retVal == null) {
-            return false;
-        }
-        return retVal.booleanValue();
+        return retVal != null && retVal;
     }
 
     public Object findString(String name) {
@@ -134,7 +130,7 @@ public class StrutsUtil {
     }
 
     public String buildUrl(String url) {
-        return UrlHelper.buildUrl(url, request, response, null);
+        return urlHelper.buildUrl(url, request, response, null);
     }
 
     public Object findValue(String expression, String className) throws ClassNotFoundException {
@@ -190,9 +186,8 @@ public class StrutsUtil {
         Collection items = (Collection) stack.findValue(list);
 
         if (items != null) {
-            for (Iterator iter = items.iterator(); iter.hasNext();) {
-                Object element = (Object) iter.next();
-                Object key = null;
+            for (Object element : items) {
+                Object key;
 
                 if ((listKey == null) || (listKey.length() == 0)) {
                     key = element;
@@ -284,4 +279,5 @@ public class StrutsUtil {
             writer.write(aByte);
         }
     }
+
 }

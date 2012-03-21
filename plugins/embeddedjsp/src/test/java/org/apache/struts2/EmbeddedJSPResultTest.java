@@ -28,6 +28,8 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.views.util.DefaultUrlHelper;
+import org.apache.struts2.views.util.UrlHelper;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -266,6 +268,10 @@ public class EmbeddedJSPResultTest extends TestCase {
         //mock container
         Container container = EasyMock.createNiceMock(Container.class);
         EasyMock.expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
+
+        UrlHelper urlHelper = new DefaultUrlHelper();
+        EasyMock.expect(container.getInstance(UrlHelper.class)).andReturn(urlHelper).anyTimes();
+
         EasyMock.replay(container);
         stackContext.put(ActionContext.CONTAINER, container);
         actionContext.setContainer(container);

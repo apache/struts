@@ -48,13 +48,14 @@ public abstract class JSPRuntime {
     public static void handle(String location, boolean flush) throws Exception {
         final HttpServletResponse response = ServletActionContext.getResponse();
         final HttpServletRequest request = ServletActionContext.getRequest();
+        final UrlHelper urlHelper = ServletActionContext.getContext().getInstance(UrlHelper.class);
 
         int i = location.indexOf("?");
         if (i > 0) {
             //extract params from the url and add them to the request
-            Map parameters = ActionContext.getContext().getParameters();
+            Map<String, Object> parameters = ActionContext.getContext().getParameters();
             String query = location.substring(i + 1);
-            Map queryParams = UrlHelper.parseQueryString(query, true);
+            Map<String, Object> queryParams = urlHelper.parseQueryString(query, true);
             if (queryParams != null && !queryParams.isEmpty())
                 parameters.putAll(queryParams);
             location = location.substring(0, i);

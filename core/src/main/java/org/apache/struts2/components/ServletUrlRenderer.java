@@ -27,16 +27,15 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,12 +50,17 @@ public class ServletUrlRenderer implements UrlRenderer {
     private static final Logger LOG = LoggerFactory.getLogger(ServletUrlRenderer.class);
 
     private ActionMapper actionMapper;
+    private UrlHelper urlHelper;
 
     @Inject
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
     }
 
+    @Inject
+    public void setUrlHelper(UrlHelper urlHelper) {
+        this.urlHelper = urlHelper;
+    }
 
     /**
 	 * {@inheritDoc}
@@ -87,7 +91,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 	                if (_value != null && _value.indexOf("?") > 0) {
 	                    _value = _value.substring(0, _value.indexOf("?"));
 	                }
-	                result = UrlHelper.buildUrl(_value, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
+	                result = urlHelper.buildUrl(_value, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
 	        }
             String anchor = urlComponent.getAnchor();
 	        if (StringUtils.isNotEmpty(anchor)) {
@@ -121,8 +125,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 	 * {@inheritDoc}
 	 */
 	public void renderFormUrl(Form formComponent) {
-		String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(),
-				formComponent.request);
+		String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(), formComponent.request);
 		String action;
 
 		if(formComponent.action != null) {
@@ -151,8 +154,8 @@ public class ServletUrlRenderer implements UrlRenderer {
 		if (actionConfig != null) {
 
 			ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
-			String result = UrlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
-					formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
+			String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
+                    formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
 			formComponent.addParameter("action", result);
 
 			// let's try to get the actual action class and name
@@ -187,7 +190,7 @@ public class ServletUrlRenderer implements UrlRenderer {
               LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
             }
 
-			String result = UrlHelper.buildUrl(action, formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
+			String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
 			formComponent.addParameter("action", result);
 
 			// namespace: cut out anything between the start and the last /
@@ -236,7 +239,7 @@ public class ServletUrlRenderer implements UrlRenderer {
             }
 
             if (UrlProvider.NONE.equalsIgnoreCase(includeParams)) {
-                mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), Collections.EMPTY_MAP);
+                mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), Collections.<String, Object>emptyMap());
             } else if (UrlProvider.ALL.equalsIgnoreCase(includeParams)) {
                 mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlComponent.getHttpServletRequest().getParameterMap());
 
@@ -267,7 +270,7 @@ public class ServletUrlRenderer implements UrlRenderer {
     }
     private void includeGetParameters(UrlProvider urlComponent) {
     	String query = extractQueryString(urlComponent);
-    	mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), UrlHelper.parseQueryString(query));
+    	mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlHelper.parseQueryString(query));
     }
 
     private String extractQueryString(UrlProvider urlComponent) {
@@ -304,9 +307,9 @@ public class ServletUrlRenderer implements UrlRenderer {
      * @param parameters component parameters
      * @param contextParameters request parameters
      */
-    protected void mergeRequestParameters(String value, Map parameters, Map contextParameters){
+    protected void mergeRequestParameters(String value, Map<String, Object> parameters, Map<String, Object> contextParameters){
 
-        Map mergedParams = new LinkedHashMap(contextParameters);
+        Map<String, Object> mergedParams = new LinkedHashMap<String, Object>(contextParameters);
 
         // Merge contextParameters (from current request) with parameters specified in value attribute
         // eg. value="someAction.action?id=someId&venue=someVenue"
@@ -315,17 +318,13 @@ public class ServletUrlRenderer implements UrlRenderer {
         if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
             String queryString = value.substring(value.indexOf("?")+1);
 
-            mergedParams = UrlHelper.parseQueryString(queryString);
-            for (Iterator iterator = contextParameters.entrySet().iterator(); iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                Object key = entry.getKey();
-
-                if (!mergedParams.containsKey(key)) {
-                    mergedParams.put(key, entry.getValue());
+            mergedParams = urlHelper.parseQueryString(queryString);
+            for (Map.Entry<String, Object> entry : contextParameters.entrySet()) {
+                if (!mergedParams.containsKey(entry.getKey())) {
+                    mergedParams.put(entry.getKey(), entry.getValue());
                 }
             }
         }
-
 
         // Merge parameters specified in value attribute
         // eg. value="someAction.action?id=someId&venue=someVenue"
@@ -333,12 +332,9 @@ public class ServletUrlRenderer implements UrlRenderer {
         // eg. <param name="id" value="%{'someId'}" />
         // where parameters specified through param tag takes priority.
 
-        for (Iterator iterator = mergedParams.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            Object key = entry.getKey();
-
-            if (!parameters.containsKey(key)) {
-                parameters.put(key, entry.getValue());
+        for (Map.Entry<String, Object> entry : mergedParams.entrySet()) {
+            if (!parameters.containsKey(entry.getKey())) {
+                parameters.put(entry.getKey(), entry.getValue());
             }
         }
     }

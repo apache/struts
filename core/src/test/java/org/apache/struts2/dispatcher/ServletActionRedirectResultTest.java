@@ -31,6 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -89,6 +90,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         result.setEncode(false);
         result.setPrependServletContext(false);
         result.setAnchor("fragment");
+        result.setUrlHelper(new DefaultUrlHelper());
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
@@ -143,6 +145,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         result.setEncode(false);
         result.setPrependServletContext(false);
         result.setAnchor("fragment");
+        result.setUrlHelper(new DefaultUrlHelper());
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
@@ -177,7 +180,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
             .build();
 
         ObjectFactory factory = container.getInstance(ObjectFactory.class);
-        ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, new HashMap());
+        ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, new HashMap<String, Object>());
         assertNotNull(result);
     }
     

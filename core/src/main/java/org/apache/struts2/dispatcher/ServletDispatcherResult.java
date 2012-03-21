@@ -22,8 +22,10 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
@@ -95,12 +97,19 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServletDispatcherResult.class);
 
+    private UrlHelper urlHelper;
+
     public ServletDispatcherResult() {
         super();
     }
 
     public ServletDispatcherResult(String location) {
         super(location);
+    }
+
+    @Inject
+    public void setUrlHelper(UrlHelper urlHelper) {
+        this.urlHelper = urlHelper;
     }
 
     /**
@@ -128,11 +137,10 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 
             //add parameters passed on the location to #parameters
             // see WW-2120
-            if (invocation != null && finalLocation != null && finalLocation.length() > 0
-                    && finalLocation.indexOf("?") > 0) {
+            if (StringUtils.isNotEmpty(finalLocation) && finalLocation.indexOf("?") > 0) {
                 String queryString = finalLocation.substring(finalLocation.indexOf("?") + 1);
-                Map parameters = (Map) invocation.getInvocationContext().getContextMap().get("parameters");
-                Map queryParams = UrlHelper.parseQueryString(queryString, true);
+                Map<String, Object> parameters = getParameters(invocation);
+                Map<String, Object> queryParams = urlHelper.parseQueryString(queryString, true);
                 if (queryParams != null && !queryParams.isEmpty())
                     parameters.putAll(queryParams);
             }
@@ -140,7 +148,6 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             // if the view doesn't exist, let's do a 404
             if (dispatcher == null) {
                 response.sendError(404, "result '" + finalLocation + "' not found");
-
                 return;
             }
 
@@ -160,4 +167,10 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             }
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getParameters(ActionInvocation invocation) {
+        return (Map<String, Object>) invocation.getInvocationContext().getContextMap().get("parameters");
+    }
+
 }

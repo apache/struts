@@ -28,15 +28,16 @@ import java.util.Map;
 
 import javax.portlet.PortletMode;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.ServletActionRedirectResult;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.views.util.UrlHelper;
 
 /**
  * 
@@ -133,14 +134,12 @@ public class PortletActionRedirectResult extends PortletResult {
 	public static final String DEFAULT_PARAM = "actionName";
 
 	protected String actionName;
-
 	protected String namespace;
-
 	protected String method;
 
-	private Map<String, String> requestParameters = new LinkedHashMap<String, String>();
-
+	private Map<String, Object> requestParameters = new LinkedHashMap<String, Object>();
 	private ActionMapper actionMapper;
+    private UrlHelper urlHelper;
 
 	public PortletActionRedirectResult() {
 		super();
@@ -161,23 +160,27 @@ public class PortletActionRedirectResult extends PortletResult {
 		this.method = method;
 	}
 
-	protected List<String> prohibitedResultParam = Arrays.asList(new String[] { DEFAULT_PARAM, "namespace", "method",
-			"encode", "parse", "location", "prependServletContext" });
+	protected List<String> prohibitedResultParam = Arrays.asList(DEFAULT_PARAM, "namespace", "method", "encode", "parse",
+            "location", "prependServletContext");
 
 	@Inject
 	public void setActionMapper(ActionMapper actionMapper) {
 		this.actionMapper = actionMapper;
 	}
 
-	/**
+    @Inject
+    public void setUrlHelper(UrlHelper urlHelper) {
+        this.urlHelper = urlHelper;
+    }
+
+    /**
 	 * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
 	 */
 	public void execute(ActionInvocation invocation) throws Exception {
 		actionName = conditionalParse(actionName, invocation);
 		String portletNamespace = (String)invocation.getInvocationContext().get(PortletActionConstants.PORTLET_NAMESPACE);
 		if (portletMode != null) {
-			Map<PortletMode, String> namespaceMap = (Map<PortletMode, String>) invocation.getInvocationContext().get(
-					PortletActionConstants.MODE_NAMESPACE_MAP);
+			Map<PortletMode, String> namespaceMap = getNamespaceMap(invocation);
 			namespace = namespaceMap.get(portletMode);
 		}
 		if (namespace == null) {
@@ -194,30 +197,32 @@ public class PortletActionRedirectResult extends PortletResult {
 		String resultCode = invocation.getResultCode();
 		if (resultCode != null) {
 			ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(resultCode);
-			Map resultConfigParams = resultConfig.getParams();
-			for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext();) {
-				Map.Entry e = (Map.Entry) i.next();
-				if (!prohibitedResultParam.contains(e.getKey())) {
-					requestParameters.put(e.getKey().toString(), e.getValue() == null ? "" : conditionalParse(e
-							.getValue().toString(), invocation));
-				}
-			}
+			Map<String, String> resultConfigParams = resultConfig.getParams();
+            for (Map.Entry<String, String> e : resultConfigParams.entrySet()) {
+                if (!prohibitedResultParam.contains(e.getKey())) {
+                    requestParameters.put(e.getKey(), e.getValue() == null ? "" : conditionalParse(e.getValue(), invocation));
+                }
+            }
 		}
 
 		StringBuilder tmpLocation = new StringBuilder(actionMapper.getUriFromActionMapping(new ActionMapping(actionName,
 				(portletNamespace == null ? namespace : portletNamespace + namespace), method, null)));
-		UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
+		urlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
 		setLocation(tmpLocation.toString());
 
 		super.execute(invocation);
 	}
 
-	/**
+    @SuppressWarnings("unchecked")
+    private Map<PortletMode, String> getNamespaceMap(ActionInvocation invocation) {
+        return (Map<PortletMode, String>) invocation.getInvocationContext().get(PortletActionConstants.MODE_NAMESPACE_MAP);
+    }
+
+    /**
 	 * Sets the action name
 	 * 
-	 * @param actionName
-	 *            The name
+	 * @param actionName The name
 	 */
 	public void setActionName(String actionName) {
 		this.actionName = actionName;
@@ -226,8 +231,7 @@ public class PortletActionRedirectResult extends PortletResult {
 	/**
 	 * Sets the namespace
 	 * 
-	 * @param namespace
-	 *            The namespace
+	 * @param namespace The namespace
 	 */
 	public void setNamespace(String namespace) {
 		this.namespace = namespace;
@@ -236,8 +240,7 @@ public class PortletActionRedirectResult extends PortletResult {
 	/**
 	 * Sets the method
 	 * 
-	 * @param method
-	 *            The method
+	 * @param method The method
 	 */
 	public void setMethod(String method) {
 		this.method = method;
@@ -246,10 +249,8 @@ public class PortletActionRedirectResult extends PortletResult {
 	/**
 	 * Adds a request parameter to be added to the redirect url
 	 * 
-	 * @param key
-	 *            The parameter name
-	 * @param value
-	 *            The parameter value
+	 * @param key The parameter name
+	 * @param value The parameter value
 	 */
 	public PortletActionRedirectResult addParameter(String key, Object value) {
 		requestParameters.put(key, String.valueOf(value));

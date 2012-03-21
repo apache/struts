@@ -21,17 +21,6 @@
 
 package org.apache.struts2.config;
 
-import java.util.Properties;
-import java.util.StringTokenizer;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.components.UrlRenderer;
-import org.apache.struts2.dispatcher.StaticContentLoader;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-import org.apache.struts2.views.velocity.VelocityManager;
-
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
@@ -46,13 +35,27 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.PatternMatcher;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.components.UrlRenderer;
+import org.apache.struts2.dispatcher.StaticContentLoader;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.views.util.UrlHelper;
+import org.apache.struts2.views.velocity.VelocityManager;
+
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * Selects the implementations of key framework extension points, using the loaded
@@ -178,7 +181,9 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  * </ul>
  */
 public class BeanSelectionProvider implements ConfigurationProvider {
+
     public static final String DEFAULT_BEAN_NAME = "struts";
+
     private static final Logger LOG = LoggerFactory.getLogger(BeanSelectionProvider.class);
 
     public void destroy() {
@@ -191,7 +196,6 @@ public class BeanSelectionProvider implements ConfigurationProvider {
 
     public void init(Configuration configuration) throws ConfigurationException {
         // NO-OP
-
     }
 
     public boolean needsReload() {
@@ -216,6 +220,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(PatternMatcher.class, StrutsConstants.STRUTS_PATTERNMATCHER, builder, props);
         alias(StaticContentLoader.class, StrutsConstants.STRUTS_STATIC_CONTENT_LOADER, builder, props);
         alias(UnknownHandlerManager.class, StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, builder, props);
+        alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);
 
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
@@ -271,7 +276,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
             if (builder.contains(type, foundName)) {
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("Choosing bean ("+foundName+") for "+type);
+                    LOG.info("Choosing bean (" + foundName + ") for " + type);
                 }
                 builder.alias(type, foundName, Container.DEFAULT_NAME);
             } else {
@@ -305,8 +310,10 @@ public class BeanSelectionProvider implements ConfigurationProvider {
     }
 
     static class ObjectFactoryDelegateFactory implements Factory {
+
         String name;
         Class type;
+
         ObjectFactoryDelegateFactory(String name, Class type) {
             this.name = name;
             this.type = type;
@@ -320,5 +327,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                 throw new ConfigurationException("Unable to load bean "+type.getName()+" ("+name+")");
             }
         }
+
     }
+
 }

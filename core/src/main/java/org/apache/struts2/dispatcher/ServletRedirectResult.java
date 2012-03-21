@@ -100,16 +100,13 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     private static final Logger LOG = LoggerFactory.getLogger(ServletRedirectResult.class);
 
     protected boolean prependServletContext = true;
-
     protected ActionMapper actionMapper;
-
     protected int statusCode = SC_FOUND;
-
     protected boolean suppressEmptyParameters = false;
-
-    protected Map<String, String> requestParameters = new LinkedHashMap<String, String>();
-
+    protected Map<String, Object> requestParameters = new LinkedHashMap<String, Object>();
     protected String anchor;
+
+    private UrlHelper urlHelper;
 
     public ServletRedirectResult() {
         super();
@@ -125,13 +122,16 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     }
 
     @Inject
-    public void setActionMapper(ActionMapper mapper)
-    {
+    public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
     }
 
-    public void setStatusCode(int code)
-    {
+    @Inject
+    public void setUrlHelper(UrlHelper urlHelper) {
+        this.urlHelper = urlHelper;
+    }
+
+    public void setStatusCode(int code) {
         this.statusCode = code;
     }
 
@@ -140,8 +140,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      * 
      * @param anchor
      */
-    public void setAnchor(String anchor)
-    {
+    public void setAnchor(String anchor) {
         this.anchor = anchor;
     }
 
@@ -149,22 +148,16 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      * Sets whether or not to prepend the servlet context path to the redirected
      * URL.
      * 
-     * @param prependServletContext
-     *            <tt>true</tt> to prepend the location with the servlet context
-     *            path, <tt>false</tt> otherwise.
+     * @param prependServletContext <tt>true</tt> to prepend the location with the servlet context path, <tt>false</tt> otherwise.
      */
-    public void setPrependServletContext(boolean prependServletContext)
-    {
+    public void setPrependServletContext(boolean prependServletContext) {
         this.prependServletContext = prependServletContext;
     }
 
-    public void execute(ActionInvocation invocation) throws Exception
-    {
-        if (anchor != null)
-        {
+    public void execute(ActionInvocation invocation) throws Exception {
+        if (anchor != null) {
             anchor = conditionalParse(anchor, invocation);
         }
-
         super.execute(invocation);
     }
 
@@ -172,58 +165,43 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      * Redirects to the location specified by calling
      * {@link HttpServletResponse#sendRedirect(String)}.
      * 
-     * @param finalLocation
-     *            the location to redirect to.
-     * @param invocation
-     *            an encapsulation of the action execution state.
-     * @throws Exception
-     *             if an error occurs when redirecting.
+     * @param finalLocation the location to redirect to.
+     * @param invocation an encapsulation of the action execution state.
+     * @throws Exception if an error occurs when redirecting.
      */
-    protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception
-    {
+    protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
         ActionContext ctx = invocation.getInvocationContext();
         HttpServletRequest request = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse response = (HttpServletResponse) ctx.get(ServletActionContext.HTTP_RESPONSE);
 
-        if (isPathUrl(finalLocation))
-        {
-            if (!finalLocation.startsWith("/"))
-            {
+        if (isPathUrl(finalLocation)) {
+            if (!finalLocation.startsWith("/")) {
                 ActionMapping mapping = actionMapper.getMapping(request, Dispatcher.getInstance().getConfigurationManager());
                 String namespace = null;
-                if (mapping != null)
-                {
+                if (mapping != null) {
                     namespace = mapping.getNamespace();
                 }
 
-                if ((namespace != null) && (namespace.length() > 0) && (!"/".equals(namespace)))
-                {
+                if ((namespace != null) && (namespace.length() > 0) && (!"/".equals(namespace))) {
                     finalLocation = namespace + "/" + finalLocation;
-                }
-                else
-                {
+                } else {
                     finalLocation = "/" + finalLocation;
                 }
             }
 
             // if the URL's are relative to the servlet context, append the servlet context path
-            if (prependServletContext && (request.getContextPath() != null) && (request.getContextPath().length() > 0))
-            {
+            if (prependServletContext && (request.getContextPath() != null) && (request.getContextPath().length() > 0)) {
                 finalLocation = request.getContextPath() + finalLocation;
             }
 
             ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(invocation.getResultCode());
-            if (resultConfig != null)
-            {
+            if (resultConfig != null) {
                 Map<String, String> resultConfigParams = resultConfig.getParams();
 
-                for (Map.Entry<String, String> e : resultConfigParams.entrySet())
-                {
-                    if (!getProhibitedResultParams().contains(e.getKey()))
-                    {
+                for (Map.Entry<String, String> e : resultConfigParams.entrySet()) {
+                    if (!getProhibitedResultParams().contains(e.getKey())) {
                         String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue(), invocation);
-                        if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0)))
-                        {
+                        if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
                             requestParameters.put(e.getKey(), potentialValue);
                         }
                     }
@@ -231,27 +209,24 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             }
 
             StringBuilder tmpLocation = new StringBuilder(finalLocation);
-            UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
+            urlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
             // add the anchor
-            if (anchor != null)
-            {
+            if (anchor != null) {
                 tmpLocation.append('#').append(anchor);
             }
 
             finalLocation = response.encodeRedirectURL(tmpLocation.toString());
         }
 
-        if (LOG.isDebugEnabled())
-        {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Redirecting to finalLocation " + finalLocation);
         }
 
         sendRedirect(response, finalLocation);
     }
 
-    protected List<String> getProhibitedResultParams()
-    {
+    protected List<String> getProhibitedResultParams() {
         return Arrays.asList(DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", "prependServletContext", "suppressEmptyParameters", "anchor");
     }
 
@@ -259,20 +234,14 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      * Sends the redirection. Can be overridden to customize how the redirect is
      * handled (i.e. to use a different status code)
      * 
-     * @param response
-     *            The response
-     * @param finalLocation
-     *            The location URI
+     * @param response The response
+     * @param finalLocation The location URI
      * @throws IOException
      */
-    protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException
-    {
-        if (SC_FOUND == statusCode)
-        {
+    protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException {
+        if (SC_FOUND == statusCode) {
             response.sendRedirect(finalLocation);
-        }
-        else
-        {
+        } else {
             response.setStatus(statusCode);
             response.setHeader("Location", finalLocation);
             response.getWriter().write(finalLocation);
@@ -281,8 +250,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     }
 
-    private static boolean isPathUrl(String url)
-    {
+    private static boolean isPathUrl(String url) {
         // filter out "http:", "https:", "mailto:", "file:", "ftp:"
         // since the only valid places for : in URL's is before the path specification
         // either before the port, or after the protocol
@@ -292,31 +260,28 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     /**
      * Sets the suppressEmptyParameters option
      * 
-     * @param suppressEmptyParameters
-     *            The new value for this option
+     * @param suppressEmptyParameters The new value for this option
      */
-    public void setSuppressEmptyParameters(boolean suppressEmptyParameters)
-    {
+    public void setSuppressEmptyParameters(boolean suppressEmptyParameters) {
         this.suppressEmptyParameters = suppressEmptyParameters;
     }
 
     /**
      * Adds a request parameter to be added to the redirect url
      * 
-     * @param key
-     *            The parameter name
-     * @param value
-     *            The parameter value
+     * @param key The parameter name
+     * @param value The parameter value
      */
-    public ServletRedirectResult addParameter(String key, Object value)
-    {
+    public ServletRedirectResult addParameter(String key, Object value) {
         requestParameters.put(key, String.valueOf(value));
         return this;
     }
 
-    public void handle(ReflectionException ex)
-    {
+    public void handle(ReflectionException ex) {
         // Only log as debug as they are probably parameters to be appended to the url
-        LOG.debug(ex.getMessage(), ex);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(ex.getMessage(), ex);
+        }
     }
+
 }

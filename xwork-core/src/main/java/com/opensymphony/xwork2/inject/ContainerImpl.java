@@ -581,6 +581,8 @@ class ContainerImpl implements Container {
 			} finally {
 				// Only remove the context if this call created it.
 				reference[0] = null;
+				// WW-3768: ThreadLocal was not removed
+				localContext.remove();
 			}
 		} else {
 			// Someone else will clean up this context.

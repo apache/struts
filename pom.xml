@@ -344,6 +344,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-cdi-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-portlet-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>

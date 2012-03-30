@@ -69,7 +69,7 @@
                             <@s.url var="namespaceLink" action="actionNames" includeParams="none">
                                 <@s.param name="namespace">${namespace}</@s.param>
                             </@s.url>
-                            <@s.a href="%{namespaceLink}"><#if namespace == ""> default <#else> ${namespace} </#if></@s.a>
+                            <a href="${namespaceLink}"><#if namespace == ""> default <#else> ${namespace} </#if></a>
                         </div>
                     </#foreach>
                     </div>
@@ -84,7 +84,7 @@
                                 <@s.param name="namespace">${namespace}</@s.param>
                                 <@s.param name="actionName">${name}</@s.param>
                             </@s.url>
-                            <@s.a href="%{actionLink}">${name}</@s.a>
+                            <a href="${actionLink}">${name}</a>
                         </div>
 				    </#foreach>
                     </#if>

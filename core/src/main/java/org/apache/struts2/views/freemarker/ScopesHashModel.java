@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -52,8 +51,7 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     private ServletContext servletContext;
     private ValueStack stack;
     private final Map<String,TemplateModel> unlistedModels = new HashMap<String,TemplateModel>();
-    private final Map<String, Object> stackCache = new ConcurrentHashMap<String, Object>();
-    private static final Object NULL_OBJECT = new Object();
+    private volatile Object parametersCache;
 
     public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, ValueStack stack) {
         super(objectWrapper);
@@ -143,21 +141,15 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     }
 
     private Object findValueOnStack(final String key) {
-        if (this.stackCache.containsKey(key)) {
-            final Object value = this.stackCache.get(key);
-            if (value == NULL_OBJECT) {
-                return null;
+        if ("parameters".equals(key)) {
+            if (parametersCache != null) {
+                return parametersCache;
             }
-            return value;
+            Object parametersLocal = stack.findValue(key);
+            parametersCache = parametersLocal;
+            return parametersLocal;
         }
-
-        final Object value = this.stack.findValue(key);
-        if (value == null) {
-            this.stackCache.put(key, NULL_OBJECT);
-        } else {
-            this.stackCache.put(key, value);
-        }
-        return value;
+        return stack.findValue(key);
     }
 
     public void put(String string, boolean b) {

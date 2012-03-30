@@ -32,7 +32,7 @@
                     <@s.param name="namespace">${namespace}</@s.param>
                     <@s.param name="actionName">${name}</@s.param>
                 </@s.url>
-                <li><@s.a href="%{showConfig}">${name}</@s.a></li>
+                <li><a href="${showConfig}">${name}</a></li>
 			</#list>
 			</ul>
 		</td>

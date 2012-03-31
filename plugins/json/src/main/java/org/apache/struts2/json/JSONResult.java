@@ -119,7 +119,7 @@ public class JSONResult implements Result {
     /**
      * Sets a comma-delimited list of wildcard expressions to match properties
      * that should be excluded from the JSON output.
-     * 
+     *
      * @param commaDelim A comma-delimited list of wildcard patterns
      */
     public void setExcludeWildcards(String commaDelim) {
@@ -174,14 +174,14 @@ public class JSONResult implements Result {
         }
     }
 
-    private Object readRootObject(ActionInvocation invocation) {
+    protected Object readRootObject(ActionInvocation invocation) {
         if (enableSMD) {
             return buildSMDObject(invocation);
         }
         return findRootObject(invocation);
     }
 
-    private Object findRootObject(ActionInvocation invocation) {
+    protected Object findRootObject(ActionInvocation invocation) {
         Object rootObject;
         if (this.root != null) {
             ValueStack stack = invocation.getStack();
@@ -192,15 +192,13 @@ public class JSONResult implements Result {
         return rootObject;
     }
 
-    private String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
-        String json;
-        json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
-                enumAsBean, excludeNullProperties);
+    protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
+        String json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties);
         json = addCallbackIfApplicable(request, json);
         return json;
     }
 
-    private boolean enableGzip(HttpServletRequest request) {
+    protected boolean enableGzip(HttpServletRequest request) {
         return enableGZIP && JSONUtil.isGzipInRequest(request);
     }
 

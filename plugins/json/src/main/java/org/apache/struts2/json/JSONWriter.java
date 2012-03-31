@@ -46,7 +46,8 @@ import java.util.regex.Pattern;
  * references are detected they will be nulled out.
  * </p>
  */
-class JSONWriter {
+public class JSONWriter {
+
     private static final Logger LOG = LoggerFactory.getLogger(JSONWriter.class);
 
     /**
@@ -99,7 +100,7 @@ class JSONWriter {
     /**
      * Detect cyclic references
      */
-    private void value(Object object, Method method) throws JSONException {
+    protected void value(Object object, Method method) throws JSONException {
         if (object == null) {
             this.add("null");
 
@@ -129,7 +130,7 @@ class JSONWriter {
     /**
      * Serialize object into json
      */
-    private void process(Object object, Method method) throws JSONException {
+    protected void process(Object object, Method method) throws JSONException {
         this.stack.push(object);
 
         if (object instanceof Class) {
@@ -157,16 +158,23 @@ class JSONWriter {
         } else if (object instanceof Enum) {
             this.enumeration((Enum) object);
         } else {
-            this.bean(object);
+            processCustom(object, method);
         }
 
         this.stack.pop();
     }
 
     /**
+     * Serialize custom object into json
+     */
+    protected void processCustom(Object object, Method method) throws JSONException {
+        this.bean(object);
+    }
+
+    /**
      * Instrospect bean and serialize its properties
      */
-    private void bean(Object object) throws JSONException {
+    protected void bean(Object object) throws JSONException {
         this.add("{");
 
         BeanInfo info;
@@ -233,7 +241,7 @@ class JSONWriter {
         this.add("}");
     }
 
-    private Object getBridgedValue(Method baseAccessor, Object value) throws InstantiationException, IllegalAccessException {
+    protected Object getBridgedValue(Method baseAccessor, Object value) throws InstantiationException, IllegalAccessException {
         JSONFieldBridge fieldBridgeAnn = baseAccessor.getAnnotation(JSONFieldBridge.class);
         if (fieldBridgeAnn != null) {
             Class impl = fieldBridgeAnn.impl();
@@ -251,7 +259,7 @@ class JSONWriter {
         return value;
     }
 
-    private Method findBaseAccessor(Class clazz, Method accessor) {
+    protected Method findBaseAccessor(Class clazz, Method accessor) {
         Method baseAccessor = null;
         if (clazz.getName().indexOf("$$EnhancerByCGLIB$$") > -1) {
             try {
@@ -279,7 +287,7 @@ class JSONWriter {
      * Instrospect an Enum and serialize it as a name/value pair or as a bean
      * including all its own properties
      */
-    private void enumeration(Enum enumeration) throws JSONException {
+    protected void enumeration(Enum enumeration) throws JSONException {
         if (enumAsBean) {
             this.bean(enumeration);
         } else {
@@ -287,7 +295,7 @@ class JSONWriter {
         }
     }
 
-    private boolean shouldExcludeProperty(PropertyDescriptor prop) throws SecurityException,
+    protected boolean shouldExcludeProperty(PropertyDescriptor prop) throws SecurityException,
             NoSuchFieldException {
         String name = prop.getName();
 
@@ -296,23 +304,23 @@ class JSONWriter {
 
     }
 
-    private String expandExpr(int i) {
+    protected String expandExpr(int i) {
         return this.exprStack + "[" + i + "]";
     }
 
-    private String expandExpr(String property) {
+    protected String expandExpr(String property) {
         if (this.exprStack.length() == 0)
             return property;
         return this.exprStack + "." + property;
     }
 
-    private String setExprStack(String expr) {
+    protected String setExprStack(String expr) {
         String s = this.exprStack;
         this.exprStack = expr;
         return s;
     }
 
-    private boolean shouldExcludeProperty(String expr) {
+    protected boolean shouldExcludeProperty(String expr) {
         if (this.excludeProperties != null) {
             for (Pattern pattern : this.excludeProperties) {
                 if (pattern.matcher(expr).matches()) {
@@ -341,7 +349,7 @@ class JSONWriter {
     /**
      * Add name/value pair to buffer
      */
-    private boolean add(String name, Object value, Method method, boolean hasData) throws JSONException {
+    protected boolean add(String name, Object value, Method method, boolean hasData) throws JSONException {
         if (excludeNullProperties && value == null) {
             return false;
         }
@@ -359,7 +367,7 @@ class JSONWriter {
     /**
      * Add map to buffer
      */
-    private void map(Map map, Method method) throws JSONException {
+    protected void map(Map map, Method method) throws JSONException {
         this.add("{");
 
         Iterator it = map.entrySet().iterator();
@@ -411,7 +419,7 @@ class JSONWriter {
     /**
      * Add date to buffer
      */
-    private void date(Date date, Method method) {
+    protected void date(Date date, Method method) {
         JSON json = null;
         if (method != null)
             json = method.getAnnotation(JSON.class);
@@ -426,7 +434,7 @@ class JSONWriter {
     /**
      * Add array to buffer
      */
-    private void array(Iterator it, Method method) throws JSONException {
+    protected void array(Iterator it, Method method) throws JSONException {
         this.add("[");
 
         boolean hasData = false;
@@ -456,7 +464,7 @@ class JSONWriter {
     /**
      * Add array to buffer
      */
-    private void array(Object object, Method method) throws JSONException {
+    protected void array(Object object, Method method) throws JSONException {
         this.add("[");
 
         int length = Array.getLength(object);
@@ -487,14 +495,14 @@ class JSONWriter {
     /**
      * Add boolean to buffer
      */
-    private void bool(boolean b) {
+    protected void bool(boolean b) {
         this.add(b ? "true" : "false");
     }
 
     /**
      * escape characters
      */
-    private void string(Object obj) {
+    protected void string(Object obj) {
         this.add('"');
 
         CharacterIterator it = new StringCharacterIterator(obj.toString());
@@ -529,14 +537,14 @@ class JSONWriter {
     /**
      * Add object to buffer
      */
-    private void add(Object obj) {
+    protected void add(Object obj) {
         this.buf.append(obj);
     }
 
     /**
      * Add char to buffer
      */
-    private void add(char c) {
+    protected void add(char c) {
         this.buf.append(c);
     }
 
@@ -545,7 +553,7 @@ class JSONWriter {
      *
      * @param c character to be encoded
      */
-    private void unicode(char c) {
+    protected void unicode(char c) {
         this.add("\\u");
 
         int n = c;
@@ -574,7 +582,7 @@ class JSONWriter {
         this.enumAsBean = enumAsBean;
     }
 
-    private static class JSONAnnotationFinder {
+    protected static class JSONAnnotationFinder {
         private boolean serialize = true;
         private Method accessor;
         private String name;

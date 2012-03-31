@@ -32,7 +32,7 @@ import java.util.Map;
  * Deserializes and object from a JSON string
  * </p>
  */
-class JSONReader {
+public class JSONReader {
     private static final Object OBJECT_END = new Object();
     private static final Object ARRAY_END = new Object();
     private static final Object COLON = new Object();
@@ -55,13 +55,13 @@ class JSONReader {
     private Object token;
     private StringBuilder buf = new StringBuilder();
 
-    private char next() {
+    protected char next() {
         this.c = this.it.next();
 
         return this.c;
     }
 
-    private void skipWhiteSpace() {
+    protected void skipWhiteSpace() {
         while (Character.isWhitespace(this.c)) {
             this.next();
         }
@@ -74,7 +74,7 @@ class JSONReader {
         return this.read();
     }
 
-    private Object read() throws JSONException {
+    protected Object read() throws JSONException {
         Object ret;
 
         this.skipWhiteSpace();
@@ -125,7 +125,7 @@ class JSONReader {
     }
 
     @SuppressWarnings("unchecked")
-    private Map object() throws JSONException {
+    protected Map object() throws JSONException {
         Map ret = new HashMap();
         Object next = this.read();
         if (next != OBJECT_END) {
@@ -151,12 +151,12 @@ class JSONReader {
         return ret;
     }
 
-    private JSONException buildInvalidInputException() {
+    protected JSONException buildInvalidInputException() {
         return new JSONException("Input string is not well formed JSON (invalid char " + this.c + ")");
     }
 
     @SuppressWarnings("unchecked")
-    private List array() throws JSONException {
+    protected List array() throws JSONException {
         List ret = new ArrayList();
         Object value = this.read();
 
@@ -174,7 +174,7 @@ class JSONReader {
         return ret;
     }
 
-    private Object number() {
+    protected Object number() {
         this.buf.setLength(0);
         boolean toDouble = false;
 
@@ -208,7 +208,7 @@ class JSONReader {
         }
     }
 
-    private Object string(char quote) {
+    protected Object string(char quote) {
         this.buf.setLength(0);
 
         while ((this.c != quote) && (this.c != CharacterIterator.DONE)) {
@@ -234,22 +234,22 @@ class JSONReader {
         return this.buf.toString();
     }
 
-    private void add(char cc) {
+    protected void add(char cc) {
         this.buf.append(cc);
         this.next();
     }
 
-    private void add() {
+    protected void add() {
         this.add(this.c);
     }
 
-    private void addDigits() {
+    protected void addDigits() {
         while (Character.isDigit(this.c)) {
             this.add();
         }
     }
 
-    private char unicode() {
+    protected char unicode() {
         int value = 0;
 
         for (int i = 0; i < 4; ++i) {

@@ -51,7 +51,9 @@ import java.util.zip.GZIPOutputStream;
  * Wrapper for JSONWriter with some utility methods.
  */
 public class JSONUtil {
-    final static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
+    public final static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
     private static final Logger LOG = LoggerFactory.getLogger(JSONUtil.class);
 
     /**
@@ -64,7 +66,6 @@ public class JSONUtil {
      */
     public static String serialize(Object object) throws JSONException {
         JSONWriter writer = new JSONWriter();
-
         return writer.write(object);
     }
 
@@ -459,9 +460,9 @@ public class JSONUtil {
         if (!existingPatterns.containsKey(patternExpr)) {
             existingPatterns.put(patternExpr, patternExpr);
             if (isIndexedProperty(patternPiece, type, includePatternData)) {
-                addPattern(results, patternExpr.substring(0, patternExpr.lastIndexOf(includePatternData.get(ARRAY_BEGIN_STRING).get(type))), type, includePatternData);
+                addPattern(results, patternExpr.substring(0, patternExpr.lastIndexOf(includePatternData.get(ARRAY_BEGIN_STRING).get(type))), type);
             }
-            addPattern(results, patternExpr, type, includePatternData);
+            addPattern(results, patternExpr, type);
         }
         return patternExpr;
     }
@@ -473,13 +474,11 @@ public class JSONUtil {
         return patternPiece.endsWith(includePatternData.get(ARRAY_END_STRING).get(type));
     }
 
-    private static void addPattern(List<Pattern> results, String pattern, String type, Map<String, Map<String, String>> includePatternData) {
-        results.add(
-            type == REGEXP_PATTERN ?
-                Pattern.compile(pattern) :
-                WildcardUtil.compileWildcardPattern(pattern));
+    private static void addPattern(List<Pattern> results, String pattern, String type) {
+        results.add(REGEXP_PATTERN.equals(type) ? Pattern.compile(pattern) : WildcardUtil.compileWildcardPattern(pattern));
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Adding include " + (type == REGEXP_PATTERN ? "property" : "wildcard") + " expression:  " + pattern);
+            LOG.debug("Adding include " + (REGEXP_PATTERN.equals(type) ? "property" : "wildcard") + " expression:  " + pattern);
         }
     }
+
 }

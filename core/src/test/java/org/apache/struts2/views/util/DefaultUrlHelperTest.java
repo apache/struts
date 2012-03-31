@@ -106,7 +106,7 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
-        urlHelper.buildParametersString(parameters, url);
+        urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
 
         assertEquals(
            expectedUrl, url.toString());
@@ -122,7 +122,7 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
-        urlHelper.buildParametersString(parameters, url);
+        urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
 
         assertEquals(
            expectedUrl, url.toString());
@@ -355,7 +355,7 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
 
 
     public void testParseQuery() throws Exception {
-        Map result = urlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E");
+        Map result = urlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E", false);
 
         assertEquals(result.get("aaa"), "aaaval");
         assertEquals(result.get("bbb"), "bbbval");
@@ -364,14 +364,14 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
     }
 
     public void testParseEmptyQuery() throws Exception {
-        Map result = urlHelper.parseQueryString("");
+        Map result = urlHelper.parseQueryString("", false);
 
         assertNotNull(result);
         assertEquals(result.size(), 0);
     }
 
     public void testParseNullQuery() throws Exception {
-        Map result = urlHelper.parseQueryString(null);
+        Map result = urlHelper.parseQueryString(null, false);
 
         assertNotNull(result);
         assertEquals(result.size(), 0);

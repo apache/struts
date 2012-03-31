@@ -169,7 +169,7 @@ public class DefaultUrlHelper implements UrlHelper {
 
         //if the action was not explicitly set grab the params from the request
         if (escapeAmp) {
-            buildParametersString(params, link);
+            buildParametersString(params, link, AMP);
         } else {
             buildParametersString(params, link, "&");
         }
@@ -188,10 +188,6 @@ public class DefaultUrlHelper implements UrlHelper {
         }
 
         return result;
-    }
-
-    public void buildParametersString(Map<String, Object> params, StringBuilder link) {
-        buildParametersString(params, link, AMP);
     }
 
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
@@ -283,10 +279,6 @@ public class DefaultUrlHelper implements UrlHelper {
     private String translateVariable(String input) {
         ValueStack valueStack = ServletActionContext.getContext().getValueStack();
         return TextParseUtil.translateVariables(input, valueStack);
-    }
-
-    public Map<String, Object> parseQueryString(String queryString) {
-        return parseQueryString(queryString, false);
     }
 
     public Map<String, Object> parseQueryString(String queryString, boolean forceValueArray) {

@@ -270,7 +270,7 @@ public class ServletUrlRenderer implements UrlRenderer {
     }
     private void includeGetParameters(UrlProvider urlComponent) {
     	String query = extractQueryString(urlComponent);
-    	mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlHelper.parseQueryString(query));
+    	mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlHelper.parseQueryString(query, false));
     }
 
     private String extractQueryString(UrlProvider urlComponent) {
@@ -318,7 +318,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
             String queryString = value.substring(value.indexOf("?")+1);
 
-            mergedParams = urlHelper.parseQueryString(queryString);
+            mergedParams = urlHelper.parseQueryString(queryString, false);
             for (Map.Entry<String, Object> entry : contextParameters.entrySet()) {
                 if (!mergedParams.containsKey(entry.getKey())) {
                     mergedParams.put(entry.getKey(), entry.getValue());

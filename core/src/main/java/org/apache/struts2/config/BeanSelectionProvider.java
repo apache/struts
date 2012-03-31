@@ -159,6 +159,36 @@ import java.util.StringTokenizer;
  *     <td>singleton</td>
  *     <td>Loads static resources (since 2.1)</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.impl.XWorkConverter</td>
+ *     <td>struts.xworkConverter</td>
+ *     <td>singleton</td>
+ *     <td>Handles conversion logic and allows to load custom converters per class or per action</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.TextProvider</td>
+ *     <td>struts.xworkTextProvider</td>
+ *     <td>default</td>
+ *     <td>Allows provide custom TextProvider for whole application</td>
+ *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.components.UrlRenderer</td>
+ *     <td>struts.urlRenderer</td>
+ *     <td>singleton</td>
+ *     <td>Allows provide custom implementation of environment specific URL rendering/creating class</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.UnknownHandlerManager</td>
+ *     <td>struts.unknownHandlerManager</td>
+ *     <td>singleton</td>
+ *     <td>Implementation of this interface allows handle logic of unknown Actions, Methods or Results</td>
+ *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.views.util.UrlHelper</td>
+ *     <td>struts.view.urlHelper</td>
+ *     <td>singleton</td>
+ *     <td>Helper class used with URLRenderer to provide exact logic for building URLs</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
@@ -233,31 +263,31 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             props.setProperty("devMode", "false");
         }
 
-        if (props.containsKey(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES))
-            props.setProperty("logMissingProperties", props.getProperty(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES));
-
-        if (props.containsKey(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE))
-            props.setProperty("enableOGNLExpressionCache", props.getProperty(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE));
-
-        String val = props.getProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS);
-        if (val != null) {
-            props.setProperty("allowStaticMethodAccess", val);
-        }
-
-        // TODO: This should be moved to XWork after 2.0.4
-        // struts.custom.i18n.resources
+        // Convert Struts properties into XWork properties
+        convertIfExist(props, StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, "logMissingProperties");
+        convertIfExist(props, StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "enableOGNLExpressionCache");
+        convertIfExist(props, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "allowStaticMethodAccess");
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
+        loadCustomResourceBundles(props);
+    }
 
+    private void convertIfExist(LocatableProperties props, String fromKey, String toKey) {
+        if (props.containsKey(fromKey)) {
+            props.setProperty(toKey, props.getProperty(fromKey));
+        }
+    }
+
+    private void loadCustomResourceBundles(LocatableProperties props) {
         String bundles = props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES);
         if (bundles != null && bundles.length() > 0) {
-            StringTokenizer customBundles = new StringTokenizer(props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
+            StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
 
             while (customBundles.hasMoreTokens()) {
                 String name = customBundles.nextToken();
                 try {
                     if (LOG.isInfoEnabled()) {
-                	LOG.info("Loading global messages from " + name);
+                	    LOG.info("Loading global messages from " + name);
                     }
                     LocalizedTextUtil.addDefaultResourceBundle(name);
                 } catch (Exception e) {
@@ -276,20 +306,20 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
             if (builder.contains(type, foundName)) {
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("Choosing bean (" + foundName + ") for " + type);
+                    LOG.info("Choosing bean (#1) for (#2)", foundName, type.getName());
                 }
                 builder.alias(type, foundName, Container.DEFAULT_NAME);
             } else {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(foundName, this.getClass());
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Choosing bean ("+cls+") for "+type);
+                        LOG.debug("Choosing bean (#1) for (#2)", cls.getName(), type.getName());
                     }
                     builder.factory(type, cls, scope);
                 } catch (ClassNotFoundException ex) {
                     // Perhaps a spring bean id, so we'll delegate to the object factory at runtime
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Choosing bean ("+foundName+") for "+type+" to be loaded from the ObjectFactory");
+                        LOG.debug("Choosing bean (#1) for (#2) to be loaded from the ObjectFactory", foundName, type.getName());
                     }
                     if (DEFAULT_BEAN_NAME.equals(foundName)) {
                         // Probably an optional bean, will ignore
@@ -297,14 +327,14 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                         if (ObjectFactory.class != type) {
                             builder.factory(type, new ObjectFactoryDelegateFactory(foundName, type), scope);
                         } else {
-                            throw new ConfigurationException("Cannot locate the chosen ObjectFactory implementation: "+foundName);
+                            throw new ConfigurationException("Cannot locate the chosen ObjectFactory implementation: " + foundName);
                         }
                     }
                 }
             }
         } else {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("Unable to alias bean type "+type+", default mapping already assigned.");
+        	    LOG.warn("Unable to alias bean type (#1), default mapping already assigned.", type.getName());
             }
         }
     }

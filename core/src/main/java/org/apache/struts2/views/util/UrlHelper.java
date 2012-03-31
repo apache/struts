@@ -32,11 +32,7 @@ public interface UrlHelper {
     String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String scheme,
                     boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp);
 
-    void buildParametersString(Map<String, Object> params, StringBuilder link);
-
     void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator);
-
-    Map<String, Object> parseQueryString(String queryString);
 
     Map<String, Object> parseQueryString(String queryString, boolean forceValueArray);
 

@@ -76,7 +76,9 @@ import java.util.regex.Pattern;
  * </p>
  */
 public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
+
     private static final Logger LOG = LoggerFactory.getLogger(PackageBasedActionConfigBuilder.class);
+
     private final Configuration configuration;
     private final ActionNameBuilder actionNameBuilder;
     private final ResultMapBuilder resultMapBuilder;
@@ -353,7 +355,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (ctx != null)
                 classLoaderInterface = (ClassLoaderInterface) ctx.get(ClassLoaderInterface.CLASS_LOADER_INTERFACE);
 
-            return (ClassLoaderInterface) ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(getClassLoader()));
+            return ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(getClassLoader()));
         }
     }
 
@@ -841,14 +843,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     protected void createActionConfig(PackageConfig.Builder pkgCfg, Class<?> actionClass, String actionName,
                                       String actionMethod, Action annotation) {
+    	String className = actionClass.getName();
         if (annotation != null) {
-            actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ?
-                    actionName : annotation.value();
+            actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ? actionName : annotation.value();
             actionName = StringUtils.contains(actionName, "/") && !slashesInActionNames ? StringUtils.substringAfterLast(actionName, "/") : actionName;
+            if(!Action.DEFAULT_VALUE.equals(annotation.className())){
+            	className = annotation.className();
+            }
         }
-
-        ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(),
-                actionName, actionClass.getName());
+        
+        ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(), actionName, className);
         actionConfig.methodName(actionMethod);
 
         if (LOG.isDebugEnabled()) {

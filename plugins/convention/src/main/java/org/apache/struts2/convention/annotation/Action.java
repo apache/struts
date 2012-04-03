@@ -92,4 +92,11 @@ public @interface Action {
      * @return Maps return codes to exceptions. The "exceptions" interceptor must be applied to the action.
      */
     ExceptionMapping[] exceptionMappings() default {};
+
+    /**
+     * Allows actions to specify different class name.
+     * 
+     * @return The class name for the action.
+     */
+    String className() default DEFAULT_VALUE;
 }

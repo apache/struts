@@ -20,22 +20,39 @@
  */
 package org.apache.struts2.convention;
 
-import static org.apache.struts2.convention.ReflectionTools.getAnnotation;
-import static org.easymock.EasyMock.checkOrder;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.verify;
-
-import java.util.*;
-import java.net.MalformedURLException;
-
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
+import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import junit.framework.TestCase;
-
 import org.apache.struts2.convention.actions.DefaultResultPathAction;
 import org.apache.struts2.convention.actions.NoAnnotationAction;
 import org.apache.struts2.convention.actions.Skip;
+import org.apache.struts2.convention.actions.action.ActionNameAction;
+import org.apache.struts2.convention.actions.action.ActionNamesAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationDefaultMethodAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationsAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationsDefaultMethodAction;
+import org.apache.struts2.convention.actions.action.ClassNameAction;
+import org.apache.struts2.convention.actions.action.SingleActionNameAction;
+import org.apache.struts2.convention.actions.action.TestAction;
+import org.apache.struts2.convention.actions.action.TestExtends;
 import org.apache.struts2.convention.actions.chain.ChainedAction;
-import org.apache.struts2.convention.actions.action.*;
 import org.apache.struts2.convention.actions.defaultinterceptor.SingleActionNameAction2;
 import org.apache.struts2.convention.actions.exception.ExceptionsActionLevelAction;
 import org.apache.struts2.convention.actions.exception.ExceptionsMethodLevelAction;
@@ -68,26 +85,20 @@ import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.easymock.EasyMock;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.ActionChainResult;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
-
 import javax.servlet.ServletContext;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.apache.struts2.convention.ReflectionTools.getAnnotation;
+import static org.easymock.EasyMock.checkOrder;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.verify;
 
 /**
  * <p>
@@ -95,6 +106,7 @@ import javax.servlet.ServletContext;
  * </p>
  */
 public class PackageBasedActionConfigBuilderTest extends TestCase {
+
     public void testActionPackages() throws MalformedURLException {
         run("org.apache.struts2.convention.actions", null, null);
     }
@@ -183,6 +195,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
         /* org.apache.struts2.convention.actions.action */
         expect(resultMapBuilder.build(ActionNameAction.class, getAnnotation(ActionNameAction.class, "run1", Action.class), "action1", actionPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ClassNameAction.class, getAnnotation(ClassNameAction.class, "run1", Action.class), "action3", actionPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionNameAction.class, getAnnotation(ActionNameAction.class, "run2", Action.class), "action2", actionPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionNamesAction.class, getAnnotation(ActionNamesAction.class, "run", Actions.class).value()[0], "actions1", actionPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionNamesAction.class, getAnnotation(ActionNamesAction.class, "run", Actions.class).value()[1], "actions2", actionPkg)).andReturn(results);
@@ -321,9 +334,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         /* org.apache.struts2.convention.actions.action */
         PackageConfig pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.action#struts-default#/action");
         assertNotNull(pkgConfig);
-        assertEquals(13, pkgConfig.getActionConfigs().size());
+        assertEquals(14, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "action1", ActionNameAction.class, "run1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action2", ActionNameAction.class, "run2", pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "action3", "someClassName", "run1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "actions1", ActionNamesAction.class, "run", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "actions2", ActionNamesAction.class, "run", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action", SingleActionNameAction.class, "run", pkgConfig.getName());
@@ -553,6 +567,14 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         ActionConfig ac = pkgConfig.getAllActionConfigs().get(actionName);
         assertNotNull(ac);
         assertEquals(actionClass.getName(), ac.getClassName());
+        assertEquals(methodName, ac.getMethodName());
+        assertEquals(packageName, ac.getPackageName());
+    }
+
+    private void verifyActionConfig(PackageConfig pkgConfig, String actionName, String actionClass, String methodName, String packageName) {
+        ActionConfig ac = pkgConfig.getAllActionConfigs().get(actionName);
+        assertNotNull(ac);
+        assertEquals(actionClass, ac.getClassName());
         assertEquals(methodName, ac.getMethodName());
         assertEquals(packageName, ac.getPackageName());
     }

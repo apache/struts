@@ -21,31 +21,34 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.util.TextProviderHelper;
-import org.apache.struts2.components.template.Template;
-import org.apache.struts2.components.template.TemplateEngine;
-import org.apache.struts2.components.template.TemplateEngineManager;
-import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.util.ContextUtil;
-
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.components.template.Template;
+import org.apache.struts2.components.template.TemplateEngine;
+import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.components.template.TemplateRenderingContext;
+import org.apache.struts2.util.TextProviderHelper;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.util.ContextUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * UIBean is the standard superclass of all Struts UI componentns.
@@ -490,6 +493,9 @@ public abstract class UIBean extends Component {
     protected String defaultTemplateDir;
     protected String defaultUITheme;
     protected TemplateEngineManager templateEngineManager;
+
+    // dynamic attributes support for tags used with FreeMarker templates
+    protected static Map<Class, Set<String>> standardAttributesMap = new ConcurrentHashMap<Class, Set<String>>();
 
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
     public void setDefaultTemplateDir(String dir) {
@@ -1195,7 +1201,48 @@ public abstract class UIBean extends Component {
         this.tooltipIconPath = tooltipIconPath;
     }
 
-    public void setDynamicAttributes(Map<String,Object> dynamicAttributes) {
-        this.dynamicAttributes = dynamicAttributes;
-    }
+	public void setDynamicAttributes(Map<String, Object> dynamicAttributes) {
+		this.dynamicAttributes.putAll(dynamicAttributes);
+}
+
+	@Override
+	/**
+	 * supports dynamic attributes for freemarker ui tags
+	 * @see https://issues.apache.org/jira/browse/WW-3174
+	 */
+	public void copyParams(Map params) {
+		super.copyParams(params);
+		Set<String> standardAttributes = getStandardAttributes();
+        for (Object o : params.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+            String key = (String) entry.getKey();
+            if (!key.equals("dynamicAttributes") && !standardAttributes.contains(key)){
+                dynamicAttributes.put(key, entry.getValue());
+            }
+        }
+	}
+	
+	protected Set<String> getStandardAttributes() {
+        Class clz = getClass();
+        Set<String> standardAttributes = standardAttributesMap.get(clz);
+        if (standardAttributes == null) {
+            standardAttributes = new HashSet<String>();
+            standardAttributesMap.put(clz, standardAttributes);
+            while (clz != null) {
+                for (Field f : clz.getDeclaredFields()) {
+                    if (Modifier.isProtected(f.getModifiers())
+                            && (f.getType().equals(String.class) || clz.equals(ListUIBean.class)
+                            && f.getName().equals("list")))
+                        standardAttributes.add(f.getName());
+                }
+                if (clz.equals(UIBean.class)) {
+                    break;
+                } else {
+                    clz = clz.getSuperclass();
+                }
+            }
+        }
+		return standardAttributes;
+	}
+
 }

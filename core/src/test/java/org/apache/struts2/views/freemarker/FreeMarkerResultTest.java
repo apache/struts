@@ -21,12 +21,12 @@
 
 package org.apache.struts2.views.freemarker;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
@@ -35,20 +35,13 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.easymock.EasyMock;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.ServletContext;
-
-import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.Configuration;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Test case for FreeMarkerResult.
@@ -182,6 +175,46 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         assertNull(response.getContentType());
         result.execute(invocation);
         assertEquals("text/xml", response.getContentType());
+    }
+
+    public void testDynamicAttributesSupport() throws Exception {
+        //get fm config to use it in mock servlet context
+        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
+        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+
+        File file = new File(FreeMarkerResultTest.class.getResource("dynaAttributes.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/dynaAttributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/text.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/text.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/scripting-events.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
+        EasyMock.replay(servletContext);
+
+        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
+        ServletActionContext.setServletContext(servletContext);
+
+
+        request.setRequestURI("/tutorial/test6.action");
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
+        dispatcher.serviceAction(request, response, servletContext, mapping);
+        assertEquals("<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>", stringWriter.toString());
     }
 
     protected void setUp() throws Exception {

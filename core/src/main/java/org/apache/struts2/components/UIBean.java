@@ -1203,7 +1203,7 @@ public abstract class UIBean extends Component {
 
 	public void setDynamicAttributes(Map<String, Object> dynamicAttributes) {
 		this.dynamicAttributes.putAll(dynamicAttributes);
-}
+    }
 
 	@Override
 	/**
@@ -1221,7 +1221,7 @@ public abstract class UIBean extends Component {
             }
         }
 	}
-	
+
 	protected Set<String> getStandardAttributes() {
         Class clz = getClass();
         Set<String> standardAttributes = standardAttributesMap.get(clz);

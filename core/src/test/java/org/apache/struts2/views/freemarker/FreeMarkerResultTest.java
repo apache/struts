@@ -214,7 +214,9 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         Dispatcher dispatcher = Dispatcher.getInstance();
         ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
         dispatcher.serviceAction(request, response, servletContext, mapping);
-        assertEquals("<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>", stringWriter.toString());
+        String expected = "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>";
+        assertEquals(expected, stringWriter.toString());
     }
 
     protected void setUp() throws Exception {

@@ -21,12 +21,12 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionSupport;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.Length;
+import net.sf.oval.constraint.NotNull;
 
 public class SimpleFieldI18n  extends ActionSupport {
     @NotNull(message = "notnull.field")
+    @Length(max = 3, message = "field.too.long")
     private String name;
 
     public String getName() {

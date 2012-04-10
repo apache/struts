@@ -180,12 +180,15 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
                 //translate message
                 String key = violation.getMessage();
 
+                String message = key;
+                // push context variable into stack, to allow use ${max}, ${min} etc in error messages
+                valueStack.push(violation.getMessageVariables());
                 //push the validator into the stack
                 valueStack.push(violation.getContext());
-                String message = key;
                 try {
                     message = validatorContext.getText(key);
                 } finally {
+                    valueStack.pop();
                     valueStack.pop();
                 }
 

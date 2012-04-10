@@ -24,14 +24,12 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import net.sf.oval.configuration.Configurer;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
-
-import net.sf.oval.configuration.Configurer;
-import org.apache.struts2.oval.interceptor.OValValidationManager;
+import java.util.Map;
 
 public class OValValidationInterceptorTest extends XWorkTestCase {
     public void testSimpleFieldsXML() throws Exception {
@@ -126,6 +124,20 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         assertEquals(0, fieldErrors.size());
     }
 
+    public void testSimpleFieldTooLong() throws Exception {
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "simpleFieldTooLong", null, null);
+        SimpleField action = (SimpleField) baseActionProxy.getAction();
+        action.setName("12367");
+        baseActionProxy.execute();
+
+        Map<String, List<String>> fieldErrors = action.getFieldErrors();
+
+        assertNotNull(fieldErrors);
+        assertEquals(1, fieldErrors.size());
+        assertValue(fieldErrors, "name", Arrays.asList("name is not between 0 and 3 characters long"));
+        assertValue(fieldErrors, "name", Arrays.asList("name is not between 0 and 3 characters long"));
+    }
+
     public void testSimpleFieldMultipleValidators() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "simpleField", null, null);
         SimpleField action = (SimpleField) baseActionProxy.getAction();
@@ -193,6 +205,19 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
         assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
+    }
+
+    public void testSimpleFieldI18n2() throws Exception {
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "simpleFieldI18n", null, null);
+        SimpleFieldI18n action = (SimpleFieldI18n) baseActionProxy.getAction();
+        action.setName("123123");
+        baseActionProxy.execute();
+
+        Map<String, List<String>> fieldErrors = action.getFieldErrors();
+
+        assertNotNull(fieldErrors);
+        assertEquals(1, fieldErrors.size());
+        assertValue(fieldErrors, "name", Arrays.asList("name value is too long, allowed length is 3"));
     }
 
     public void testSimpleFieldI18nDefaultKey() throws Exception {

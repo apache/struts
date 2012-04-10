@@ -46,6 +46,10 @@
             <interceptor-ref name="ovalValidation"/>
             <result type="void"></result>
         </action>
+        <action name="simpleFieldTooLong" class="org.apache.struts2.oval.interceptor.SimpleField">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
         <action name="simpleMethod" class="org.apache.struts2.oval.interceptor.SimpleMethod">
             <interceptor-ref name="ovalValidation"/>
             <result type="void"></result>

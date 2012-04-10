@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -112,53 +113,27 @@ public class PlainTextResult extends StrutsResultSupport {
      * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-
         // verify charset
-        Charset charset = null;
-        if (charSet != null) {
-            if (Charset.isSupported(charSet)) {
-                charset = Charset.forName(charSet);
-            }
-            else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("charset ["+charSet+"] is not recognized ");
-                }
-                charset = null;
-            }
-        }
+        Charset charset = readCharset();
 
         HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
-        ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(SERVLET_CONTEXT);
 
-
-        if (charset != null) {
-            response.setContentType("text/plain; charset="+charSet);
-        }
-        else {
-            response.setContentType("text/plain");
-        }
-        response.setHeader("Content-Disposition", "inline");
-
+        applyCharset(charset, response);
+        applyAdditionalHeaders(response);
+        String location = adjustLocation(finalLocation);
 
         PrintWriter writer = response.getWriter();
         InputStreamReader reader = null;
         try {
-        	InputStream resourceAsStream = servletContext.getResourceAsStream(finalLocation);
+            InputStream resourceAsStream = readStream(invocation, location);
+            logWrongStream(finalLocation, resourceAsStream);
             if (charset != null) {
                 reader = new InputStreamReader(resourceAsStream, charset);
             } else {
                 reader = new InputStreamReader(resourceAsStream);
             }
-            if (resourceAsStream == null) {
-                if (LOG.isWarnEnabled()) {
-            		LOG.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
-                }
-            } else {
-                char[] buffer = new char[BUFFER_SIZE];
-                int charRead;
-                while((charRead = reader.read(buffer)) != -1) {
-                    writer.write(buffer, 0, charRead);
-                }
+            if (resourceAsStream != null) {
+                sendStream(writer, reader);
             }
         } finally {
             if (reader != null)
@@ -169,4 +144,60 @@ public class PlainTextResult extends StrutsResultSupport {
             }
         }
     }
+
+    protected InputStream readStream(ActionInvocation invocation, String location) {
+        ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(SERVLET_CONTEXT);
+        return servletContext.getResourceAsStream(location);
+    }
+
+    protected void logWrongStream(String finalLocation, InputStream resourceAsStream) {
+        if (resourceAsStream == null) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Resource at location [" + finalLocation + "] cannot be obtained (return null) from ServletContext !!! ");
+            }
+        }
+    }
+
+    protected void sendStream(PrintWriter writer, InputStreamReader reader) throws IOException {
+        char[] buffer = new char[BUFFER_SIZE];
+        int charRead;
+        while((charRead = reader.read(buffer)) != -1) {
+            writer.write(buffer, 0, charRead);
+        }
+    }
+
+    protected String adjustLocation(String location) {
+        if (location.charAt(0) != '/') {
+            return "/" + location;
+        }
+        return location;
+    }
+
+    protected void applyAdditionalHeaders(HttpServletResponse response) {
+        response.setHeader("Content-Disposition", "inline");
+    }
+
+    protected void applyCharset(Charset charset, HttpServletResponse response) {
+        if (charset != null) {
+            response.setContentType("text/plain; charset=" + charSet);
+        } else {
+            response.setContentType("text/plain");
+        }
+    }
+
+    protected Charset readCharset() {
+        Charset charset = null;
+        if (charSet != null) {
+            if (Charset.isSupported(charSet)) {
+                charset = Charset.forName(charSet);
+            } else {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("charset [" + charSet + "] is not recognized ");
+                }
+                charset = null;
+            }
+        }
+        return charset;
+    }
+
 }

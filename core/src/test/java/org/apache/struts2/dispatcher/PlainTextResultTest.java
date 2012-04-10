@@ -21,23 +21,19 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Test case for PlainTextResult.
@@ -73,6 +69,29 @@ public class PlainTextResultTest extends StrutsTestCase {
             String r = AbstractUITagTest.normalize(stringWriter.getBuffer().toString(), true);
             String e = AbstractUITagTest.normalize(
                     readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
+            assertEquals(r, e);
+        }
+        finally {
+            jspResourceInputStream.close();
+        }
+    }
+
+    public void testPlainTextWithoutSlash() throws Exception {
+        PlainTextResult result = new PlainTextResult();
+        result.setLocation("someJspFile.jsp");
+
+        response.setExpectedContentType("text/plain");
+        response.setExpectedHeader("Content-Disposition", "inline");
+        InputStream jspResourceInputStream =
+            ClassLoaderUtil.getResourceAsStream("org/apache/struts2/dispatcher/someJspFile.jsp", PlainTextResultTest.class);
+
+
+        try {
+            servletContext.setResourceAsStream(jspResourceInputStream);
+            result.execute(invocation);
+
+            String r = AbstractUITagTest.normalize(stringWriter.getBuffer().toString(), true);
+            String e = AbstractUITagTest.normalize(readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
             assertEquals(r, e);
         }
         finally {

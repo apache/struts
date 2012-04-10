@@ -149,17 +149,23 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         return proxy;
     }
 
-    private void initActionContext(ActionContext actionContext) {
-        actionContext.setParameters(new HashMap(request.getParameterMap()));
-
-        initMockPortletContext(actionContext);
+    protected void initActionContext(ActionContext actionContext) {
+        actionContext.setParameters(new HashMap<String, Object>(request.getParameterMap()));
+        initSession(actionContext);
+        initPortletContext(actionContext);
         applyAdditionalParams(actionContext);
-
         // set the action context to the one used by the proxy
         ActionContext.setContext(actionContext);
     }
 
-    private void initMockPortletContext(ActionContext actionContext) {
+    protected void initSession(ActionContext actionContext) {
+        Map<String, Object> session = actionContext.getSession();
+        if (session == null) {
+            actionContext.setSession(new HashMap<String, Object>());
+        }
+    }
+
+    protected void initPortletContext(ActionContext actionContext) {
         try {
             ClassLoaderUtil.loadClass("javax.portlet.PortletContext", getClass());
             Class mockClazz = ClassLoaderUtil.loadClass("org.springframework.mock.web.portlet.MockPortletContext", getClass());

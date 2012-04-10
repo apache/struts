@@ -35,7 +35,7 @@ import java.nio.charset.Charset;
 /**
  * <!-- START SNIPPET: description -->
  *
- * A result that send the content out as plain text. Usefull typically when needed
+ * A result that send the content out as plain text. Useful typically when needed
  * to display the raw content of a JSP or Html file for example.
  *
  * <!-- END SNIPPET: description -->
@@ -57,12 +57,12 @@ import java.nio.charset.Charset;
  * <!-- START SNIPPET: example -->
  *
  * &lt;action name="displayJspRawContent" &gt;
- *   &lt;result type="plaintext"&gt;/myJspFile.jsp&lt;/result&gt;
+ *   &lt;result type="plainText"&gt;/myJspFile.jsp&lt;/result&gt;
  * &lt;/action&gt;
  *
  *
  * &lt;action name="displayJspRawContent" &gt;
- *   &lt;result type="plaintext"&gt;
+ *   &lt;result type="plainText"&gt;
  *      &lt;param name="location"&gt;/myJspFile.jsp&lt;/param&gt;
  *      &lt;param name="charSet"&gt;UTF-8&lt;/param&gt;
  *   &lt;/result&gt;

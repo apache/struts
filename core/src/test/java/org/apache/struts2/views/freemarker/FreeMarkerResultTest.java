@@ -219,6 +219,48 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         assertEquals(expected, stringWriter.toString());
     }
 
+    public void testManualListInTemplate() throws Exception {
+        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
+        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+
+        File file = new File(FreeMarkerResultTest.class.getResource("manual-list.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/manual-list.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/radiomap.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/radiomap.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/scripting-events.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
+        EasyMock.replay(servletContext);
+
+        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
+        ServletActionContext.setServletContext(servletContext);
+
+
+        request.setRequestURI("/tutorial/test7.action");
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
+        dispatcher.serviceAction(request, response, servletContext, mapping);
+        String expected =
+                "<input type=\"radio\" name=\"client\" id=\"client_foo\" value=\"foo\"/><label for=\"client_foo\">foo</label>\n" +
+                "<input type=\"radio\" name=\"client\" id=\"client_bar\" value=\"bar\"/><label for=\"client_bar\">bar</label>\n";
+        assertEquals(expected, stringWriter.toString());
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         mgr = new FreemarkerManager();

@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.WildcardHelper;
 import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
 import com.opensymphony.xwork2.util.finder.ClassFinder;
 import com.opensymphony.xwork2.util.finder.ClassFinder.ClassInfo;
@@ -485,6 +486,20 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     protected boolean includeClassNameInActionScan(String className) {
 
         String classPackageName = StringUtils.substringBeforeLast(className, ".");
+
+        if(excludePackages != null && excludePackages.length > 0) {
+            WildcardHelper wildcardHelper = new WildcardHelper();
+
+            //we really don't care about the results, just the boolean
+            Map<String, String> matchMap = new HashMap<String, String>();
+
+            for(String packageExclude : excludePackages) {
+                int[] packagePattern = wildcardHelper.compilePattern(packageExclude);
+                if(wildcardHelper.match(matchMap, classPackageName, packagePattern)) {
+                    return false;
+                }
+            }
+        }
 
         if (actionPackages != null) {
             for (String packageName : actionPackages) {

@@ -82,6 +82,7 @@ import org.apache.struts2.convention.actions.resultpath.PackageLevelResultPathAc
 import org.apache.struts2.convention.actions.skip.Index;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
+import org.apache.struts2.convention.dontfind.DontFindMeAction;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.easymock.EasyMock;
 
@@ -113,6 +114,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
     public void testPackageLocators() throws MalformedURLException {
         run(null, "actions,dontfind", null);
+    }
+
+    public void testExcludedPackages() throws MalformedURLException {
+        run(null, "actions", "dontfind");
     }
 
     private void run(String actionPackages, String packageLocators, String excludePackages) throws MalformedURLException {
@@ -337,6 +342,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertEquals(14, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "action1", ActionNameAction.class, "run1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action2", ActionNameAction.class, "run2", pkgConfig.getName());
+        verifyMissingActionConfig(pkgConfig, "foo", DontFindMeAction.class, "foo", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action3", "someClassName", "run1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "actions1", ActionNamesAction.class, "run", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "actions2", ActionNamesAction.class, "run", pkgConfig.getName());
@@ -349,6 +355,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         verifyActionConfig(pkgConfig, "class3", ClassLevelAnnotationsDefaultMethodAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "class4", ClassLevelAnnotationsDefaultMethodAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "class5", ClassLevelAnnotationAction.class, null, pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "class6", ClassLevelAnnotationDefaultMethodAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "class6", ClassLevelAnnotationDefaultMethodAction.class, "execute", pkgConfig.getName());
 
         /* org.apache.struts2.convention.actions.namespace3 */
@@ -569,6 +576,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertEquals(actionClass.getName(), ac.getClassName());
         assertEquals(methodName, ac.getMethodName());
         assertEquals(packageName, ac.getPackageName());
+    }
+
+    private void verifyMissingActionConfig(PackageConfig pkgConfig, String actionName, Class<?> actionClass,
+            String methodName, String packageName) {
+        ActionConfig ac = pkgConfig.getAllActionConfigs().get(actionName);
+        assertNull(ac);
     }
 
     private void verifyActionConfig(PackageConfig pkgConfig, String actionName, String actionClass, String methodName, String packageName) {

@@ -36,6 +36,7 @@ import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 
@@ -159,9 +160,9 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
 
     protected void initSession(ActionContext actionContext) {
-        Map<String, Object> session = actionContext.getSession();
-        if (session == null) {
+        if (actionContext.getSession() == null) {
             actionContext.setSession(new HashMap<String, Object>());
+            request.setSession(new MockHttpSession(servletContext));
         }
     }
 

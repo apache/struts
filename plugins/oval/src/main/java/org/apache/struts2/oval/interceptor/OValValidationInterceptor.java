@@ -170,7 +170,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
 
         //perform validation
         List<ConstraintViolation> violations = validator.validate(action);
-        addValidationErrors(violations.toArray(new ConstraintViolation[0]), action, valueStack, null);
+        addValidationErrors(violations.toArray(new ConstraintViolation[violations.size()]), action, valueStack, null);
     }
 
 	private void addValidationErrors(ConstraintViolation[] violations, Object action, ValueStack valueStack, String parentFieldname) {

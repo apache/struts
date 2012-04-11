@@ -690,11 +690,7 @@ public class Dispatcher {
         }
 
         if (encoding != null) {
-            try {
-                request.setCharacterEncoding(encoding);
-            } catch (Exception e) {
-                LOG.error("Error setting character encoding to '" + encoding + "' - ignoring.", e);
-            }
+            applyEncoding(request, encoding);
         }
 
         if (locale != null) {
@@ -703,6 +699,18 @@ public class Dispatcher {
 
         if (paramsWorkaroundEnabled) {
             request.getParameter("foo"); // simply read any parameter (existing or not) to "prime" the request
+        }
+    }
+
+    private void applyEncoding(HttpServletRequest request, String encoding) {
+        try {
+            if (!encoding.equals(request.getCharacterEncoding())) {
+                // if the encoding is already correctly set and the parameters have been already read
+                // do not try to set encoding because it is useless and will cause an error
+                request.setCharacterEncoding(encoding);
+            }
+        } catch (Exception e) {
+            LOG.error("Error setting character encoding to '" + encoding + "' - ignoring.", e);
         }
     }
 

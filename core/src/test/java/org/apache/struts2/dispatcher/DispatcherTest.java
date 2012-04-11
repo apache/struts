@@ -70,7 +70,7 @@ public class DispatcherTest extends StrutsTestCase {
         HttpServletRequest req = new MockHttpServletRequest();
         HttpServletResponse res = new MockHttpServletResponse();
 
-        Dispatcher du = initDispatcher(new HashMap() {{
+        Dispatcher du = initDispatcher(new HashMap<String, String>() {{
             put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
         }});
         du.prepare(req, res);
@@ -82,9 +82,10 @@ public class DispatcherTest extends StrutsTestCase {
         // given
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.addHeader("X-Requested-With", "XMLHttpRequest");
+        req.setCharacterEncoding("utf-8");
         HttpServletResponse res = new MockHttpServletResponse();
 
-        Dispatcher du = initDispatcher(new HashMap() {{
+        Dispatcher du = initDispatcher(new HashMap<String, String>() {{
             put(StrutsConstants.STRUTS_I18N_ENCODING, "latin-2");
         }});
 
@@ -95,12 +96,36 @@ public class DispatcherTest extends StrutsTestCase {
         assertEquals(req.getCharacterEncoding(), "utf-8");
     }
 
+    public void testSetEncodingIfDiffer() throws Exception {
+        // given
+        Mock mock = new Mock(HttpServletRequest.class);
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");
+        mock.expectAndReturn("getHeader", "X-Requested-With", "");
+        mock.expectAndReturn("getLocale", Locale.getDefault());
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");
+        HttpServletRequest req = (HttpServletRequest) mock.proxy();
+        HttpServletResponse res = new MockHttpServletResponse();
+
+        Dispatcher du = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+        }});
+
+
+        // when
+        du.prepare(req, res);
+
+        // then
+
+        assertEquals(req.getCharacterEncoding(), "utf-8");
+        mock.verify();
+    }
+
     public void testPrepareSetEncodingPropertyWithMultipartRequest() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         req.setContentType("multipart/form-data");
-        Dispatcher du = initDispatcher(new HashMap() {{
+        Dispatcher du = initDispatcher(new HashMap<String, String>() {{
             put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
         }});
         du.prepare(req, res);
@@ -136,7 +161,7 @@ public class DispatcherTest extends StrutsTestCase {
     
     
     public void testConfigurationManager() {
-    	Dispatcher du = null;
+    	Dispatcher du;
     	InternalConfigurationManager configurationManager = new InternalConfigurationManager();
     	try {
     		du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
@@ -154,7 +179,7 @@ public class DispatcherTest extends StrutsTestCase {
             
     	}
     	finally {
-    		du.setInstance(null);
+    		Dispatcher.setInstance(null);
     	}
     }
     

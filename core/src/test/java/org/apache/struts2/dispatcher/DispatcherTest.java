@@ -21,28 +21,8 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerActionMapper;
-import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
-import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDispatcher;
-import org.springframework.mock.web.MockFilterConfig;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.mockobjects.servlet.MockFilterChain;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -50,11 +30,20 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Test case for Dispatcher.
@@ -86,6 +75,23 @@ public class DispatcherTest extends StrutsTestCase {
         }});
         du.prepare(req, res);
 
+        assertEquals(req.getCharacterEncoding(), "utf-8");
+    }
+
+    public void testEncodingForXMLHttpRequest() throws Exception {
+        // given
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.addHeader("X-Requested-With", "XMLHttpRequest");
+        HttpServletResponse res = new MockHttpServletResponse();
+
+        Dispatcher du = initDispatcher(new HashMap() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "latin-2");
+        }});
+
+        // when
+        du.prepare(req, res);
+
+        // then
         assertEquals(req.getCharacterEncoding(), "utf-8");
     }
 

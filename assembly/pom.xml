@@ -276,6 +276,8 @@
                                     <arg value="-nv" />
                                     <arg value="-E" />
                                     <arg value="-L" />
+                                    <arg value="-l 0" />
+                                    <arg value="-np" />
                                     <arg value="--directory-prefix=${project.build.directory}/cwiki" />
                                     <arg value="--no-check-certificate" />
                                     <arg value="-r" />

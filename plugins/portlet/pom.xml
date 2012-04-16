@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.3.3</version>
+        <version>2.3.4-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-portlet-plugin</artifactId>
@@ -11,9 +11,9 @@
     <name>Struts 2 Portlet Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_3/plugins/portlet</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_3/plugins/portlet</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_3/plugins/portlet</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/portlet/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/portlet/</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/portlet/</url>
     </scm>
 
     <dependencies>

@@ -24,6 +24,7 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
@@ -39,7 +40,6 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -397,7 +397,8 @@ public class Dispatcher {
     }
 
     private void init_CheckConfigurationReloading(Container container) {
-        FileManager.setReloadingConfigs("true".equals(container.getInstance(String.class,
+        FileManager fileManager = container.getInstance(FileManager.class);
+        fileManager.setReloadingConfigs("true".equals(container.getInstance(String.class,
                 StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
     }
 

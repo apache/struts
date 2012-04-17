@@ -177,7 +177,10 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        loadConfigurationProviders(new XmlConfigurationProvider("xwork-default.xml"),  new MockConfigurationProvider());
+        super.setUp();
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-default.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider,  new MockConfigurationProvider());
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
     }

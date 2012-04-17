@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
@@ -73,6 +74,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     private Configuration configuration;
     private boolean throwExceptionOnDuplicateBeans = true;
 
+    private FileManager fileManager;
+
     public XmlConfigurationProvider() {
         this("xwork.xml", true);
     }
@@ -107,6 +110,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
+    }
+
+    @Inject
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
     }
 
     /**
@@ -335,7 +343,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     public boolean needsReload() {
 
         for (String url : loadedFileUrls) {
-            if (FileManager.fileNeedsReloading(url)) {
+            if (fileManager.fileNeedsReloading(url)) {
                 return true;
             }
         }
@@ -932,7 +940,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             while (urls.hasNext()) {
                 try {
                     url = urls.next();
-                    is = FileManager.loadFile(url);
+                    is = fileManager.loadFile(url);
 
                     InputSource in = new InputSource(is);
 
@@ -1037,5 +1045,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     List<Document> getDocuments() {
         return documents;
+    }
+
+    @Override
+    public String toString() {
+        return "XmlConfigurationProvider{" +
+                "configFileName='" + configFileName + '\'' +
+                '}';
     }
 }

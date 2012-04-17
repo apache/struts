@@ -15,14 +15,29 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.AnnotatedTestBean;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.SimpleAnnotationAction;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.test.AnnotationDataAware2;
 import com.opensymphony.xwork2.test.AnnotationUser;
 import com.opensymphony.xwork2.test.SimpleAnnotationAction2;
 import com.opensymphony.xwork2.test.SimpleAnnotationAction3;
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.validator.validators.*;
+import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.EmailValidator;
+import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
+import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.validators.URLValidator;
 import org.easymock.EasyMock;
 
 import java.util.List;
@@ -83,10 +98,11 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
     }
 
     public void testGetValidatorsForGivenMethodNameWithoutReloading() throws ValidationException {
+        FileManager fileManager = container.getInstance(FileManager.class);
         List validatorList = annotationActionValidatorManager.getValidators(SimpleAnnotationAction.class, alias, "execute");
 
         //disable configuration reload/devmode
-        FileManager.setReloadingConfigs(false);
+        fileManager.setReloadingConfigs(false);
 
         //17 in the class level + 0 in the alias
         assertEquals(12, validatorList.size());

@@ -19,7 +19,9 @@ public class ActionsFromSpringTest extends XWorkTestCase {
         super.setUp();
 
         // Set up XWork
-        loadConfigurationProviders(new XmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml"));
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
         appContext = ((SpringObjectFactory)container.getInstance(ObjectFactory.class)).appContext;
     }
 

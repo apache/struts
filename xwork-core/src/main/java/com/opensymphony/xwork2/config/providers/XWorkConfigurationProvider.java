@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.DefaultTextProvider;
 import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.UnknownHandlerManager;
@@ -39,6 +40,7 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.WildcardHelper;
@@ -87,6 +89,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ActionProxyFactory.class, DefaultActionProxyFactory.class, Scope.SINGLETON)
                 .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)
                 .factory(XWorkConverter.class, Scope.SINGLETON)
+                .factory(FileManager.class, DefaultFileManager.class, Scope.SINGLETON)
                 .factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON)
                 .factory(ValidatorFactory.class, DefaultValidatorFactory.class, Scope.SINGLETON)
                 .factory(ValidatorFileParser.class, DefaultValidatorFileParser.class, Scope.SINGLETON)

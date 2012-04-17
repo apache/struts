@@ -97,7 +97,9 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
     }
 
     public void testInterceptorDefaultRefs() throws ConfigurationException {
-        loadConfigurationProviders(new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-defaultref.xml"));
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-defaultref.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
 
         // expectations - the inherited interceptor stack
         // default package

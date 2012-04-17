@@ -207,7 +207,11 @@ public class ConfigurationTest extends XWorkTestCase {
     }
     
     public void testMultipleContainerProviders() throws Exception {
-        System.out.println("-----");
+        // to start from scratch
+        configurationManager.destroyConfiguration();
+         // to build basic configuration
+        configurationManager.getConfiguration();
+
         Mock mockContainerProvider = new Mock(ContainerProvider.class);
         mockContainerProvider.expect("init", C.ANY_ARGS);
         mockContainerProvider.expect("register", C.ANY_ARGS);
@@ -215,7 +219,11 @@ public class ConfigurationTest extends XWorkTestCase {
         mockContainerProvider.matchAndReturn("toString", "foo");
         mockContainerProvider.matchAndReturn("destroy", null);
         mockContainerProvider.expectAndReturn("needsReload", true);
+        // the order of providers must be changed as just first is checked if reload is needed
         configurationManager.addContainerProvider((ContainerProvider) mockContainerProvider.proxy());
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(provider);
+        configurationManager.addContainerProvider(provider);
 
         Configuration config = null;
         try {
@@ -225,13 +233,11 @@ public class ConfigurationTest extends XWorkTestCase {
             fail();
         }
         
-
         RuntimeConfiguration configuration = config.getRuntimeConfiguration();
 
         // check that it has configuration from xml
         assertNotNull(configuration.getActionConfig("/foo/bar", "Bar"));
 
-        System.out.println("-----");
         mockContainerProvider.verify();
     }
     
@@ -302,9 +308,11 @@ public class ConfigurationTest extends XWorkTestCase {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        loadConfigurationProviders(new XmlConfigurationProvider("xwork-sample.xml"));
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
     }
-    
+
     public static class MyPackageProvider implements PackageProvider {
         static Configuration config;
         public void loadPackages() throws ConfigurationException {}

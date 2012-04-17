@@ -24,6 +24,7 @@ package org.apache.struts2.views.freemarker;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
@@ -265,6 +266,7 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         super.setUp();
         mgr = new FreemarkerManager();
         mgr.setEncoding("UTF-8");
+        mgr.setFileManager(new DefaultFileManager());
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         response = new StrutsMockHttpServletResponse();

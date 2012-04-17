@@ -1,7 +1,8 @@
 package org.apache.struts2.oval.interceptor;
 
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import net.sf.oval.configuration.Configurer;
@@ -9,6 +10,7 @@ import net.sf.oval.configuration.annotation.AnnotationsConfigurer;
 import net.sf.oval.configuration.annotation.JPAAnnotationsConfigurer;
 import net.sf.oval.configuration.xml.XMLConfigurer;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +28,19 @@ public class DefaultOValValidationManager implements OValValidationManager {
 
     protected boolean validateJPAAnnotations;
 
+    private FileManager fileManager;
+
+    @Inject
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+
     public synchronized List<Configurer> getConfigurers(Class clazz, String context, boolean validateJPAAnnotations) {
         this.validateJPAAnnotations =validateJPAAnnotations;
         final String validatorKey = buildValidatorKey(clazz, context);
 
         if (validatorCache.containsKey(validatorKey)) {
-            if (FileManager.isReloadingConfigs()) {
+            if (fileManager.isReloadingConfigs()) {
                 List<Configurer> configurers = buildXMLConfigurers(clazz, context, true, null);
 
                 //add an annotation configurer
@@ -133,11 +142,12 @@ public class DefaultOValValidationManager implements OValValidationManager {
     }
 
     protected XMLConfigurer loadFile(String fileName, Class clazz, boolean checkFile) {
-        if ((checkFile && FileManager.fileNeedsReloading(fileName, clazz)) || !validatorFileCache.containsKey(fileName)) {
+        URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
+        if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
             java.io.InputStream is = null;
 
             try {
-                is = FileManager.loadFile(fileName, clazz);
+                is = fileManager.loadFile(fileUrl);
 
                 if (is != null) {
                     if (LOG.isDebugEnabled()) {

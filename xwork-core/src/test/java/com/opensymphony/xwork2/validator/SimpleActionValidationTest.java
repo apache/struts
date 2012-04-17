@@ -224,10 +224,13 @@ public class SimpleActionValidationTest extends XWorkTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        super.setUp();
         origLocale = Locale.getDefault();
         Locale.setDefault(Locale.US);
 
-        loadConfigurationProviders(new XmlConfigurationProvider("xwork-test-beans.xml"), new MockConfigurationProvider());
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider, new MockConfigurationProvider());
     }
 
     @Override

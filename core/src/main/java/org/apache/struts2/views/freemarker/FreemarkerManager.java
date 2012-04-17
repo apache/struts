@@ -21,9 +21,10 @@
 
 package org.apache.struts2.views.freemarker;
 
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -176,6 +177,8 @@ public class FreemarkerManager {
     protected String templateUpdateDelay;
     protected Map<String,TagLibrary> tagLibraries;
 
+    private FileManager fileManager;
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {
         this.encoding = encoding;
@@ -209,6 +212,11 @@ public class FreemarkerManager {
             map.put(prefix, container.getInstance(TagLibrary.class, prefix));
         }
         this.tagLibraries = Collections.unmodifiableMap(map);
+    }
+
+    @Inject
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
     }
 
     public boolean getNoCharsetInContentType() {
@@ -427,7 +435,8 @@ public class FreemarkerManager {
         InputStream in = null;
 
         try {
-            in = FileManager.loadFile("freemarker.properties", FreemarkerManager.class);
+
+            in = fileManager.loadFile(ClassLoaderUtil.getResource("freemarker.properties", getClass()));
 
             if (in != null) {
                 Properties p = new Properties();

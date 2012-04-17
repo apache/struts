@@ -21,6 +21,7 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -31,7 +32,6 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardHelper;
 import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
@@ -108,6 +108,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     private static final String DEFAULT_METHOD = "execute";
     private boolean eagerLoading = false;
+
+    private FileManager fileManager;
 
     /**
      * Constructs actions based on a list of packages.
@@ -291,6 +293,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject(value = "struts.convention.action.eagerLoading", required = false)
     public void setEagerLoading(String eagerLoading) {
         this.eagerLoading = "true".equals(eagerLoading);
+    }
+
+    @Inject
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
     }
 
     protected void initReloadClassLoader() {
@@ -911,7 +918,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         //watch class file
         if (isReloadEnabled()) {
             URL classFile = actionClass.getResource(actionClass.getSimpleName() + ".class");
-            FileManager.loadFile(classFile, false);
+            fileManager.monitorFile(classFile);
             loadedFileUrls.add(classFile.toString());
         }
     }
@@ -1067,7 +1074,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     public boolean needsReload() {
         if (devMode && reload) {
             for (String url : loadedFileUrls) {
-                if (FileManager.fileNeedsReloading(url)) {
+                if (fileManager.fileNeedsReloading(url)) {
                     if (LOG.isDebugEnabled())
                         LOG.debug("File [#0] changed, configuration will be reloaded", url);
                     return true;

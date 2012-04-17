@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkMessages;
 import com.opensymphony.xwork2.XWorkException;
@@ -181,7 +182,7 @@ public class XWorkConverter extends DefaultTypeConverter {
 
     private TypeConverter defaultTypeConverter;
     private ObjectFactory objectFactory;
-
+    private FileManager fileManager;
 
     protected XWorkConverter() {
     }
@@ -198,6 +199,11 @@ public class XWorkConverter extends DefaultTypeConverter {
     @Inject
     public void setDefaultTypeConverter(XWorkBasicConverter conv) {
         this.defaultTypeConverter = conv;
+    }
+
+    @Inject
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
     }
 
     public static String getConversionErrorMessage(String propertyName, ValueStack stack) {
@@ -237,7 +243,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         return indexes;
     }
 
-    public static String buildConverterFilename(Class clazz) {
+    public String buildConverterFilename(Class clazz) {
         String className = clazz.getName();
         return className.replace('.', '/') + "-conversion.properties";
     }
@@ -481,7 +487,7 @@ public class XWorkConverter extends DefaultTypeConverter {
     protected void addConverterMapping(Map<String, Object> mapping, Class clazz) {
         try {
             String converterFilename = buildConverterFilename(clazz);
-            InputStream is = FileManager.loadFile(converterFilename, clazz);
+            InputStream is = fileManager.loadFile(ClassLoaderUtil.getResource(converterFilename, clazz));
 
             if (is != null) {
                 if (LOG.isDebugEnabled()) {
@@ -737,8 +743,9 @@ public class XWorkConverter extends DefaultTypeConverter {
     private Map<String, Object> conditionalReload(Class clazz, Map<String, Object> oldValues) throws Exception {
         Map<String, Object> mapping = oldValues;
 
-        if (FileManager.isReloadingConfigs()) {
-            if (FileManager.fileNeedsReloading(buildConverterFilename(clazz), clazz)) {
+        if (fileManager.isReloadingConfigs()) {
+            URL fileUrl = ClassLoaderUtil.getResource(buildConverterFilename(clazz), clazz);
+            if (fileManager.fileNeedsReloading(fileUrl.toString())) {
                 mapping = buildConverterMapping(clazz);
             }
         }

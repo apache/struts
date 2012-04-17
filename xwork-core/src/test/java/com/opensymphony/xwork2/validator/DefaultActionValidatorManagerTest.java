@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.test.DataAware2;
 import com.opensymphony.xwork2.test.SimpleAction2;
 import com.opensymphony.xwork2.test.SimpleAction3;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
 
@@ -55,6 +56,8 @@ public class DefaultActionValidatorManagerTest extends TestCase {
 
         mockValidatorFactory = new Mock(ValidatorFactory.class);
         actionValidatorManager.setValidatorFactory((ValidatorFactory)mockValidatorFactory.proxy());
+
+        actionValidatorManager.setFileManager(new DefaultFileManager());
 
         stubValueStack = new StubValueStack();
         ActionContext.setContext(new ActionContext(new HashMap<String, Object>()));

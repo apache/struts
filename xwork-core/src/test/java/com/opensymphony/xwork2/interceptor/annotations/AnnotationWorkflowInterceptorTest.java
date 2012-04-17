@@ -40,8 +40,11 @@ public class AnnotationWorkflowInterceptorTest extends XWorkTestCase {
     private final AnnotationWorkflowInterceptor annotationWorkflow = new AnnotationWorkflowInterceptor();
 
     @Override
-    public void setUp() {
-        loadConfigurationProviders(new XmlConfigurationProvider("xwork-default.xml"), new MockConfigurationProvider());
+    public void setUp() throws Exception{
+        super.setUp();
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-default.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider, new MockConfigurationProvider());
     }
 
     public void testInterceptsBeforeAndAfter() throws Exception {

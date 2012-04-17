@@ -19,9 +19,10 @@ package com.opensymphony.xwork2.validator;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -59,6 +61,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
 
     private ValidatorFactory validatorFactory;
     private ValidatorFileParser validatorFileParser;
+    private FileManager fileManager;
 
     @Inject
     public void setValidatorFactory(ValidatorFactory fac) {
@@ -70,6 +73,11 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         this.validatorFileParser = parser;
     }
 
+    @Inject
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+
     public List<Validator> getValidators(Class clazz, String context) {
         return getValidators(clazz, context, null);
     }
@@ -79,7 +87,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         final List<ValidatorConfig> cfgs;
 
         if (validatorCache.containsKey(validatorKey)) {
-            if (FileManager.isReloadingConfigs()) {
+            if (fileManager.isReloadingConfigs()) {
                 validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
             }
         } else {
@@ -366,11 +374,13 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     private List<ValidatorConfig> loadFile(String fileName, Class clazz, boolean checkFile) {
         List<ValidatorConfig> retList = Collections.emptyList();
 
-        if ((checkFile && FileManager.fileNeedsReloading(fileName, clazz)) || !validatorFileCache.containsKey(fileName)) {
+        URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
+
+        if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
             InputStream is = null;
 
             try {
-                is = FileManager.loadFile(fileName, clazz);
+                is = fileManager.loadFile(fileUrl);
 
                 if (is != null) {
                     retList = new ArrayList<ValidatorConfig>(validatorFileParser.parseActionValidatorConfigs(validatorFactory, is, fileName));

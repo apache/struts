@@ -31,7 +31,9 @@ public class DefaultClasstTest extends XWorkTestCase {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        loadConfigurationProviders(new XmlConfigurationProvider("xwork-sample.xml"));
+        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(configurationProvider);
+        loadConfigurationProviders(configurationProvider);
     }
 
     public void testWildCardEvaluation() throws Exception {

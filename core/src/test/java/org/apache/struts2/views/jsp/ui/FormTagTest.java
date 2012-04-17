@@ -21,12 +21,19 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
@@ -35,14 +42,11 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 import org.easymock.EasyMock;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -205,7 +209,7 @@ public class FormTagTest extends AbstractUITagTest {
                     public void removeScopeStrategy() {}
                     public void setScopeStrategy(Strategy scopeStrategy) {}
                     public <T> T getInstance(Class<T> type, String name) {return null;}
-                    public <T> T getInstance(Class<T> type) {return null;}
+                    public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
                     public Set<String> getInstanceNames(Class<?> type) {return null;}
 
                     public void inject(Object o) {
@@ -292,7 +296,7 @@ public class FormTagTest extends AbstractUITagTest {
                         public void removeScopeStrategy() {}
                         public void setScopeStrategy(Strategy scopeStrategy) {}
                         public <T> T getInstance(Class<T> type, String name) {return null;}
-                        public <T> T getInstance(Class<T> type) {return null;}
+                        public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
                         public Set<String> getInstanceNames(Class<?> type) {return null;}
 
                         public void inject(Object o) {
@@ -376,7 +380,7 @@ public class FormTagTest extends AbstractUITagTest {
                     public void removeScopeStrategy() {}
                     public void setScopeStrategy(Strategy scopeStrategy) {}
                     public <T> T getInstance(Class<T> type, String name) {return null;}
-                    public <T> T getInstance(Class<T> type) {return null;}
+                    public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
                     public Set<String> getInstanceNames(Class<?> type) {return null;}
 
                     public void inject(Object o) {
@@ -457,7 +461,7 @@ public class FormTagTest extends AbstractUITagTest {
                     public void removeScopeStrategy() {}
                     public void setScopeStrategy(Strategy scopeStrategy) {}
                     public <T> T getInstance(Class<T> type, String name) {return null;}
-                    public <T> T getInstance(Class<T> type) {return null;}
+                    public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
                     public Set<String> getInstanceNames(Class<?> type) {return null;}
 
                     public void inject(Object o) {

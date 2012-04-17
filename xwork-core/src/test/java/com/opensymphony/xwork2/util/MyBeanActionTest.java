@@ -97,6 +97,8 @@ public class MyBeanActionTest extends XWorkTestCase {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        loadConfigurationProviders(new XmlConfigurationProvider("xwork-sample.xml"));
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
     }
 }

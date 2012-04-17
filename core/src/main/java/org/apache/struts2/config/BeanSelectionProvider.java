@@ -22,6 +22,7 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.UnknownHandlerManager;
@@ -189,6 +190,14 @@ import java.util.StringTokenizer;
  *     <td>singleton</td>
  *     <td>Helper class used with URLRenderer to provide exact logic for building URLs</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.FileManager</td>
+ *     <td>struts.fileManager</td>
+ *     <td>singleton</td>
+ *     <td>Used to access files on the File System as also to monitor if reload is needed,
+ *     can be implemented / overwritten to meet specific an application server needs
+ *     </td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
@@ -234,6 +243,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
 
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
+        alias(FileManager.class, StrutsConstants.STRUTS_FILEMANAGER, builder, props);
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
         alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.DEFAULT);
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);

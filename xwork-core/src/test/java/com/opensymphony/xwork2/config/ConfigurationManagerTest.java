@@ -19,10 +19,10 @@ package com.opensymphony.xwork2.config;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import java.util.Properties;
@@ -37,11 +37,10 @@ import java.util.Properties;
 public class ConfigurationManagerTest extends XWorkTestCase {
 
     Mock configProviderMock;
-
+    private FileManager fileManager;
+    private Configuration configuration;
 
     public void testConfigurationReload() {
-        FileManager.setReloadingConfigs(true);
-
         // now check that it reloads
         configProviderMock.expectAndReturn("needsReload", Boolean.TRUE);
         configProviderMock.expect("init", C.isA(Configuration.class));
@@ -49,7 +48,8 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         configProviderMock.expect("loadPackages", C.ANY_ARGS);
         configProviderMock.expect("destroy", C.ANY_ARGS);
         configProviderMock.matchAndReturn("toString", "mock");
-        configurationManager.getConfiguration();
+        configuration.getContainer().getInstance(FileManager.class).setReloadingConfigs(true);
+        configuration = configurationManager.getConfiguration();
         configProviderMock.verify();
 
         // this will be called in teardown
@@ -57,10 +57,10 @@ public class ConfigurationManagerTest extends XWorkTestCase {
     }
 
     public void testNoConfigurationReload() {
-        FileManager.setReloadingConfigs(false);
-
         // now check that it doesn't try to reload
-        configurationManager.getConfiguration();
+        configuration.getContainer().getInstance(FileManager.class).setReloadingConfigs(false);
+        configuration = configurationManager.getConfiguration();
+
         configProviderMock.verify();
 
         // this will be called in teardown
@@ -162,20 +162,20 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         ConfigurationProvider mockProvider = (ConfigurationProvider) configProviderMock.proxy();
         configurationManager.addContainerProvider(new XWorkConfigurationProvider());
         configurationManager.addContainerProvider(mockProvider);
-        
+
         //the first time it always inits
         configProviderMock.expect("init", C.isA(Configuration.class));
         configProviderMock.expect("register", C.ANY_ARGS);
         configProviderMock.expect("loadPackages", C.ANY_ARGS);
         configProviderMock.matchAndReturn("toString", "mock");
-        
-        configurationManager.getConfiguration();
+
+        configuration = configurationManager.getConfiguration();
     }
 
     @Override
     protected void tearDown() throws Exception {
         configProviderMock.expect("destroy");
-        FileManager.setReloadingConfigs(true);
         super.tearDown();
     }
+
 }

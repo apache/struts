@@ -88,7 +88,6 @@ public class XWorkTestCaseHelper {
         //  clear out configuration
         if (configurationManager != null) {
             configurationManager.destroyConfiguration();
-            configurationManager = null;
         }
         ActionContext.setContext(null);
     }

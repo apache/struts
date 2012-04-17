@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class XmlConfigurationProviderInterceptorParamOverridingTest extends XWor
     public void testInterceptorParamOveriding() throws Exception {
         DefaultConfiguration conf = new DefaultConfiguration();
         final XmlConfigurationProvider p = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-param-overriding.xml");
+        p.setFileManager(new DefaultFileManager());
         conf.reload(new ArrayList<ConfigurationProvider>() {
             {
                 add(new XWorkConfigurationProvider());

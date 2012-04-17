@@ -62,6 +62,9 @@ public class IntRangeValidatorTest extends XWorkTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        loadConfigurationProviders(new XmlConfigurationProvider("xwork-test-beans.xml"), new MockConfigurationProvider());
+        super.setUp();
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider, new MockConfigurationProvider());
     }
 }

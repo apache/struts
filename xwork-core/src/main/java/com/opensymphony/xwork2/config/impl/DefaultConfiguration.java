@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.DefaultTextProvider;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.config.Configuration;
@@ -52,6 +53,7 @@ import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -200,8 +202,10 @@ public class DefaultConfiguration implements Configuration {
 
         ContainerProperties props = new ContainerProperties();
         ContainerBuilder builder = new ContainerBuilder();
+        Container bootstrap = createBootstrapContainer();
         for (final ContainerProvider containerProvider : providers)
         {
+            bootstrap.inject(containerProvider);
             containerProvider.init(this);
             containerProvider.register(builder, props);
         }
@@ -216,7 +220,7 @@ public class DefaultConfiguration implements Configuration {
         ActionContext oldContext = ActionContext.getContext();
         try {
             // Set the bootstrap container for the purposes of factory creation
-            Container bootstrap = createBootstrapContainer();
+
             setContext(bootstrap);
             container = builder.create(false);
             setContext(container);
@@ -265,6 +269,7 @@ public class DefaultConfiguration implements Configuration {
     protected Container createBootstrapContainer() {
         ContainerBuilder builder = new ContainerBuilder();
         builder.factory(ObjectFactory.class, Scope.SINGLETON);
+        builder.factory(FileManager.class, DefaultFileManager.class, Scope.SINGLETON);
         builder.factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON);
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
         builder.factory(XWorkConverter.class, Scope.SINGLETON);

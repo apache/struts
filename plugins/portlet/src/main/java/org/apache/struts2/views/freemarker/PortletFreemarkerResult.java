@@ -20,37 +20,34 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Locale;
-
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.views.util.ResourceUtil;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.portlet.PortletConstants;
+import org.apache.struts2.portlet.PortletPhase;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.views.util.ResourceUtil;
+
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Locale;
 
 /**
  */
-public class PortletFreemarkerResult extends StrutsResultSupport implements PortletActionConstants {
+public class PortletFreemarkerResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -5570612389289887543L;
 
@@ -104,39 +101,26 @@ public class PortletFreemarkerResult extends StrutsResultSupport implements Port
      */
     public void doExecute(String location, ActionInvocation invocation)
             throws IOException, TemplateException, PortletException {
-        if (PortletActionContext.isAction()) {
+        PortletPhase phase = PortletActionContext.getPhase();
+        if (phase.isAction()) {
             executeActionResult(location, invocation);
-        } else if (PortletActionContext.isRender()) {
+        } else if (phase.isRender()) {
             executeRenderResult(location, invocation);
         }
     }
 
-    /**
-     * @param location
-     * @param invocation
-     */
-    private void executeActionResult(String location,
-                                     ActionInvocation invocation) {
+    private void executeActionResult(String location, ActionInvocation invocation) {
         ActionResponse res = PortletActionContext.getActionResponse();
         // View is rendered outside an action...uh oh...
-        invocation.getInvocationContext().getSession().put(RENDER_DIRECT_LOCATION, location);
-        res.setRenderParameter(PortletActionConstants.ACTION_PARAM, "freemarkerDirect");
+        invocation.getInvocationContext().getSession().put(PortletConstants.RENDER_DIRECT_LOCATION, location);
+        res.setRenderParameter(PortletConstants.ACTION_PARAM, "freemarkerDirect");
         res.setRenderParameter("location", location);
-        res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
-                .getRequest().getPortletMode().toString());
+        res.setRenderParameter(PortletConstants.MODE_PARAM, PortletActionContext.getRequest().getPortletMode().toString());
 
     }
 
-    /**
-     * @param location
-     * @param invocation
-     * @throws TemplateException
-     * @throws IOException
-     * @throws TemplateModelException
-     */
-    private void executeRenderResult(String location,
-                                     ActionInvocation invocation) throws TemplateException, IOException,
-            TemplateModelException, PortletException {
+    private void executeRenderResult(String location, ActionInvocation invocation)
+            throws TemplateException, IOException, PortletException {
         this.location = location;
         this.invocation = invocation;
         this.configuration = getConfiguration();
@@ -173,8 +157,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport implements Port
      * from the ConfigurationManager instance. </b>
      */
     protected Configuration getConfiguration() throws TemplateException {
-        return freemarkerManager.getConfiguration(
-                ServletActionContext.getServletContext());
+        return freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
     }
 
     /**
@@ -218,11 +201,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport implements Port
                 .getServletContext();
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        ValueStack stack = ServletActionContext.getContext()
-                .getValueStack();
-        return freemarkerManager.buildTemplateModel(stack,
-                invocation.getAction(), servletContext, request, response,
-                wrapper);
+        ValueStack stack = ServletActionContext.getContext().getValueStack();
+        return freemarkerManager.buildTemplateModel(stack, invocation.getAction(), servletContext, request, response, wrapper);
     }
 
     /**
@@ -239,8 +219,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport implements Port
      * the default implementation of postTemplateProcess applies the contentType
      * parameter
      */
-    protected void postTemplateProcess(Template template, TemplateModel data)
-            throws IOException {
+    protected void postTemplateProcess(Template template, TemplateModel data) throws IOException {
     }
 
     /**
@@ -253,8 +232,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport implements Port
      * @return true to process the template, false to suppress template
      *         processing.
      */
-    protected boolean preTemplateProcess(Template template, TemplateModel model)
-            throws IOException {
+    protected boolean preTemplateProcess(Template template, TemplateModel model) throws IOException {
         Object attrContentType = template.getCustomAttribute("content_type");
 
         if (attrContentType != null) {

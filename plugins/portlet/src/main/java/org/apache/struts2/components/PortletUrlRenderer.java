@@ -23,8 +23,6 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -32,6 +30,7 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.portlet.util.PortletUrlHelperJSR286;
 
+import javax.portlet.PortletMode;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -41,8 +40,6 @@ import java.io.Writer;
  * @see UrlRenderer
  */
 public class PortletUrlRenderer implements UrlRenderer {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PortletUrlRenderer.class);
 
     /**
      * The servlet renderer used when not executing in a portlet context.
@@ -73,16 +70,31 @@ public class PortletUrlRenderer implements UrlRenderer {
             servletRenderer.renderUrl(writer, urlComponent);
             return;
         }
-
         String result;
-        urlComponent.setNamespace(urlComponent.determineNamespace(urlComponent.getNamespace(), urlComponent.getStack(), urlComponent.getHttpServletRequest()));
-        if (onlyActionSpecified(urlComponent)) {
-            result = portletUrlHelper.buildUrl(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(),
-                    urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
-        } else if (onlyValueSpecified(urlComponent)) {
-            result = portletUrlHelper.buildResourceUrl(urlComponent.getValue(), urlComponent.getParameters());
+        if (isPortletModeChange(urlComponent,PortletActionContext.getRequest().getPortletMode())
+        		&& StringUtils.isEmpty(urlComponent.getNamespace())
+        		) {
+        	String mode = urlComponent.getPortletMode();
+        	PortletMode portletMode = new PortletMode(mode);
+        	String action = urlComponent.getAction();
+        	if (StringUtils.isEmpty(action)) {
+        		action = PortletActionContext.getModeActionMap().get(portletMode).getName();
+        	}
+        	String modeNamespace = PortletActionContext.getModeNamespaceMap().get(portletMode);
+    		result = portletUrlHelper.buildUrl(action, modeNamespace, urlComponent.getMethod(),
+    				urlComponent.getParameters(), urlComponent.getPortletUrlType(), mode, urlComponent.getWindowState());
+
         } else {
-            result = createDefaultUrl(urlComponent);
+        	String namespace = urlComponent.determineNamespace(urlComponent.getNamespace(), urlComponent.getStack(), urlComponent.getHttpServletRequest());
+        	urlComponent.setNamespace(namespace);
+        	if (onlyActionSpecified(urlComponent)) {
+        		result = portletUrlHelper.buildUrl(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(),
+        				urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
+        	} else if (onlyValueSpecified(urlComponent)) {
+        		result = portletUrlHelper.buildResourceUrl(urlComponent.getValue(), urlComponent.getParameters());
+        	} else {
+        		result = createDefaultUrl(urlComponent);
+        	}
         }
         final String anchor = urlComponent.getAnchor();
         if (anchor != null && anchor.length() > 0) {
@@ -104,6 +116,14 @@ public class PortletUrlRenderer implements UrlRenderer {
             }
         }
     }
+
+	boolean isPortletModeChange(UrlProvider urlComponent,PortletMode currentMode) {
+		if (StringUtils.isNotEmpty(urlComponent.getPortletMode())) {
+			PortletMode newPortletMode = new PortletMode(urlComponent.getPortletMode());
+        	return !(newPortletMode.equals(currentMode));
+        }
+		return false;
+	}
 
     private String createDefaultUrl(UrlProvider urlComponent) {
         String result;

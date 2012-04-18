@@ -20,20 +20,17 @@
  */
 package org.apache.struts2.portlet.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import junit.framework.TestCase;
+import org.apache.struts2.portlet.PortletConstants;
+import org.easymock.EasyMock;
+
+import javax.portlet.PortletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.portlet.PortletRequest;
-
-import junit.framework.TestCase;
-
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.easymock.EasyMock;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-
-public class PortletAwareInterceptorTest extends TestCase implements PortletActionConstants {
+public class PortletAwareInterceptorTest extends TestCase {
 
 	private PortletAwareInterceptor interceptor;
 	
@@ -49,7 +46,7 @@ public class PortletAwareInterceptorTest extends TestCase implements PortletActi
 	public void testPortletRequestIsSet() throws Exception {
 		PortletRequest request = EasyMock.createMock(PortletRequest.class);
 		Map<String, Object> ctx = new HashMap<String, Object>();
-		ctx.put(REQUEST, request);
+		ctx.put(PortletConstants.REQUEST, request);
 		PortletRequestAware action = EasyMock.createMock(PortletRequestAware.class);
 		action.setPortletRequest(request);
 		

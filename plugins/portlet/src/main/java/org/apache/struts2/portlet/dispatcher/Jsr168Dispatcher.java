@@ -41,8 +41,9 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.PortletApplicationMap;
+import org.apache.struts2.portlet.PortletConstants;
+import org.apache.struts2.portlet.PortletPhase;
 import org.apache.struts2.portlet.PortletRequestMap;
 import org.apache.struts2.portlet.PortletSessionMap;
 import org.apache.struts2.portlet.context.PortletActionContext;
@@ -72,16 +73,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.apache.struts2.portlet.PortletConstants.ACTION_PARAM;
-import static org.apache.struts2.portlet.PortletConstants.ACTION_PHASE;
 import static org.apache.struts2.portlet.PortletConstants.ACTION_RESET;
 import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_FOR_MODE;
 import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_NAME;
 import static org.apache.struts2.portlet.PortletConstants.MODE_NAMESPACE_MAP;
 import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
-import static org.apache.struts2.portlet.PortletConstants.PHASE;
 import static org.apache.struts2.portlet.PortletConstants.PORTLET_CONFIG;
 import static org.apache.struts2.portlet.PortletConstants.PORTLET_NAMESPACE;
-import static org.apache.struts2.portlet.PortletConstants.RENDER_PHASE;
 import static org.apache.struts2.portlet.PortletConstants.REQUEST;
 import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
 
@@ -179,18 +177,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
 
     private static final Logger LOG = LoggerFactory.getLogger(Jsr168Dispatcher.class);
 
+    protected String portletNamespace = null;
+
     private ActionProxyFactory factory = null;
-
-    private Map<PortletMode,String> modeMap = new HashMap<PortletMode,String>(3);
-
-    private Map<PortletMode,ActionMapping> actionMap = new HashMap<PortletMode,ActionMapping>(3);
-
-    String portletNamespace = null;
-
+    private Map<PortletMode, String> modeMap = new HashMap<PortletMode, String>(3);
+    private Map<PortletMode, ActionMapping> actionMap = new HashMap<PortletMode, ActionMapping>(3);
     private Dispatcher dispatcherUtils;
-
     private ActionMapper actionMapper;
-
     private Container container;
 
     /**
@@ -198,9 +191,11 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      */
     public void init(PortletConfig cfg) throws PortletException {
         super.init(cfg);
-        if (LOG.isDebugEnabled()) LOG.debug("Initializing portlet " + getPortletName());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Initializing portlet " + getPortletName());
+        }
 
-        Map<String,String> params = new HashMap<String,String>();
+        Map<String, String> params = new HashMap<String, String>();
         for (Enumeration e = cfg.getInitParameterNames(); e.hasMoreElements(); ) {
             String name = (String) e.nextElement();
             String value = cfg.getInitParameter(name);
@@ -215,7 +210,9 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
             factory = dispatcherUtils.getConfigurationManager().getConfiguration().getContainer().getInstance(ActionProxyFactory.class);
         }
         portletNamespace = cfg.getInitParameter("portletNamespace");
-        if (LOG.isDebugEnabled()) LOG.debug("PortletNamespace: " + portletNamespace);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("PortletNamespace: " + portletNamespace);
+        }
         parseModeConfig(actionMap, cfg, PortletMode.VIEW, "viewNamespace",
                 "defaultViewAction");
         parseModeConfig(actionMap, cfg, PortletMode.EDIT, "editNamespace",
@@ -235,8 +232,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         if (StringUtils.isEmpty(portletNamespace)) {
             portletNamespace = "";
         }
-        LocalizedTextUtil
-                .addDefaultResourceBundle("org/apache/struts2/struts-messages");
+        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
 
         container = dispatcherUtils.getContainer();
         //check for configuration reloading
@@ -259,24 +255,23 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * execute for the mode is configured.
      */
     void parseModeConfig(Map<PortletMode, ActionMapping> actionMap, PortletConfig portletConfig,
-            PortletMode portletMode, String nameSpaceParam,
-            String defaultActionParam) {
+                         PortletMode portletMode, String nameSpaceParam,
+                         String defaultActionParam) {
         String namespace = portletConfig.getInitParameter(nameSpaceParam);
         if (StringUtils.isEmpty(namespace)) {
             namespace = "";
         }
         modeMap.put(portletMode, namespace);
-        String defaultAction = portletConfig
-                .getInitParameter(defaultActionParam);
+        String defaultAction = portletConfig.getInitParameter(defaultActionParam);
         String method = null;
         if (StringUtils.isEmpty(defaultAction)) {
             defaultAction = DEFAULT_ACTION_NAME;
         }
-        if(defaultAction.indexOf('!') >= 0) {
-        	method = defaultAction.substring(defaultAction.indexOf('!') + 1);
-        	defaultAction = defaultAction.substring(0, defaultAction.indexOf('!'));
+        if (defaultAction.indexOf('!') >= 0) {
+            method = defaultAction.substring(defaultAction.indexOf('!') + 1);
+            defaultAction = defaultAction.substring(0, defaultAction.indexOf('!'));
         }
-        StringBuffer fullPath = new StringBuffer();
+        StringBuilder fullPath = new StringBuilder();
         if (StringUtils.isNotEmpty(portletNamespace)) {
             fullPath.append(portletNamespace);
         }
@@ -289,8 +284,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         ActionMapping mapping = new ActionMapping();
         mapping.setName(getActionName(fullPath.toString()));
         mapping.setNamespace(getNamespace(fullPath.toString()));
-        if(method != null) {
-        	mapping.setMethod(method);
+        if (method != null) {
+            mapping.setMethod(method);
         }
         actionMap.put(portletMode, mapping);
     }
@@ -303,12 +298,14 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      */
     public void processAction(ActionRequest request, ActionResponse response)
             throws PortletException, IOException {
-        if (LOG.isDebugEnabled()) LOG.debug("Entering processAction");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Entering processAction in mode ", request.getPortletMode().toString());
+        }
         resetActionContext();
         try {
             serviceAction(request, response, getRequestMap(request), getParameterMap(request),
                     getSessionMap(request), getApplicationMap(),
-                    portletNamespace, ACTION_PHASE);
+                    portletNamespace, PortletPhase.ACTION_PHASE);
             if (LOG.isDebugEnabled()) LOG.debug("Leaving processAction");
         } finally {
             ActionContext.setContext(null);
@@ -324,19 +321,21 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
     public void render(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
 
-        if (LOG.isDebugEnabled()) LOG.debug("Entering render");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Entering render in mode ", request.getPortletMode().toString());
+        }
         resetActionContext();
         response.setTitle(getTitle(request));
-        if(!request.getWindowState().equals(WindowState.MINIMIZED)) {
-        try {
-            // Check to see if an event set the render to be included directly
-            serviceAction(request, response, getRequestMap(request), getParameterMap(request),
-                    getSessionMap(request), getApplicationMap(),
-                    portletNamespace, RENDER_PHASE);
-            if (LOG.isDebugEnabled()) LOG.debug("Leaving render");
-        } finally {
-            resetActionContext();
-        }
+        if (!request.getWindowState().equals(WindowState.MINIMIZED)) {
+            try {
+                // Check to see if an event set the render to be included directly
+                serviceAction(request, response, getRequestMap(request), getParameterMap(request),
+                        getSessionMap(request), getApplicationMap(),
+                        portletNamespace, PortletPhase.RENDER_PHASE);
+                if (LOG.isDebugEnabled()) LOG.debug("Leaving render");
+            } finally {
+                resetActionContext();
+            }
         }
     }
 
@@ -359,15 +358,17 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * @param response the PortletResponse object.
      * @param portletConfig the PortletConfig object.
      * @param phase The portlet phase (render or action, see
-     *        {@link PortletActionConstants})
+     *        {@link PortletConstants})
      * @return a HashMap representing the <tt>Action</tt> context.
      */
     public HashMap<String, Object> createContextMap(Map<String, Object> requestMap, Map<String, String[]> parameterMap,
-            Map<String, Object> sessionMap, Map<String, Object> applicationMap, PortletRequest request,
-            PortletResponse response, HttpServletRequest servletRequest, HttpServletResponse servletResponse, ServletContext servletContext, PortletConfig portletConfig, Integer phase) throws IOException {
+                                                    Map<String, Object> sessionMap, Map<String, Object> applicationMap,
+                                                    PortletRequest request, PortletResponse response, HttpServletRequest servletRequest,
+                                                    HttpServletResponse servletResponse, ServletContext servletContext,
+                                                    PortletConfig portletConfig, PortletPhase phase) throws IOException {
 
         // TODO Must put http request/response objects into map for use with
-    	container.inject(servletRequest);
+        container.inject(servletRequest);
 
         // ServletActionContext
         HashMap<String, Object> extraContext = new HashMap<String, Object>();
@@ -381,7 +382,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
         String defaultLocale = dispatcherUtils.getContainer().getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
-        Locale locale = null;
+        Locale locale;
         if (defaultLocale != null) {
             locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
         } else {
@@ -401,8 +402,9 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         extraContext.put("application", applicationMap);
         extraContext.put("parameters", parameterMap);
         extraContext.put(MODE_NAMESPACE_MAP, modeMap);
+        extraContext.put(PortletConstants.DEFAULT_ACTION_MAP, actionMap);
 
-        extraContext.put(PHASE, phase);
+        extraContext.put(PortletConstants.PHASE, phase);
 
         AttributeMap attrMap = new AttributeMap(extraContext);
         extraContext.put("attr", attrMap);
@@ -423,50 +425,55 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * @param sessionMap a Map of all session attributes.
      * @param applicationMap a Map of all application attributes.
      * @param portletNamespace the namespace or context of the action.
-     * @param phase The portlet phase (render or action, see
-     *        {@link PortletActionConstants})
+     * @param phase The portlet phase (render or action, see {@link PortletConstants})
      */
     public void serviceAction(PortletRequest request, PortletResponse response, Map<String, Object> requestMap, Map<String, String[]> parameterMap,
-            Map<String, Object> sessionMap, Map<String, Object> applicationMap, String portletNamespace,
-            Integer phase) throws PortletException {
+                              Map<String, Object> sessionMap, Map<String, Object> applicationMap, String portletNamespace,
+                              PortletPhase phase) throws PortletException {
         if (LOG.isDebugEnabled()) LOG.debug("serviceAction");
         Dispatcher.setInstance(dispatcherUtils);
         String actionName = null;
-        String namespace = null;
+        String namespace;
         try {
             ServletContext servletContext = new PortletServletContext(getPortletContext());
             HttpServletRequest servletRequest = new PortletServletRequest(request, getPortletContext());
             HttpServletResponse servletResponse = createPortletServletResponse(response);
-            if(ACTION_PHASE.equals(phase)) {
-            	servletRequest = dispatcherUtils.wrapRequest(servletRequest, servletContext);
-        		if(servletRequest instanceof MultiPartRequestWrapper) {
-        			// Multipart request. Request parameters are encoded in the multipart data,
-        			// so we need to manually add them to the parameter map.
-        			parameterMap.putAll(servletRequest.getParameterMap());
-        		}
-        	}
+            if (phase.isAction()) {
+                servletRequest = dispatcherUtils.wrapRequest(servletRequest, servletContext);
+                if (servletRequest instanceof MultiPartRequestWrapper) {
+                    // Multipart request. Request parameters are encoded in the multipart data,
+                    // so we need to manually add them to the parameter map.
+                    parameterMap.putAll(servletRequest.getParameterMap());
+                }
+            }
             container.inject(servletRequest);
             ActionMapping mapping = getActionMapping(request, servletRequest);
             actionName = mapping.getName();
-            namespace = mapping.getNamespace();
+            if ("renderDirect".equals(actionName)) {
+                namespace = request.getParameter(PortletConstants.RENDER_DIRECT_NAMESPACE);
+            } else {
+                namespace = mapping.getNamespace();
+            }
             HashMap<String, Object> extraContext = createContextMap(requestMap, parameterMap,
                     sessionMap, applicationMap, request, response, servletRequest, servletResponse,
                     servletContext, getPortletConfig(), phase);
-            extraContext.put(PortletActionConstants.ACTION_MAPPING, mapping);
-            LOG.debug("Creating action proxy for name = " + actionName
-                    + ", namespace = " + namespace);
-            ActionProxy proxy = factory.createActionProxy(namespace,
-                    actionName, mapping.getMethod(), extraContext);
-            request.setAttribute("struts.valueStack", proxy.getInvocation()
-                    .getStack());
+            extraContext.put(PortletConstants.ACTION_MAPPING, mapping);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Creating action proxy for name = " + actionName + ", namespace = " + namespace);
+            }
+            ActionProxy proxy = factory.createActionProxy(namespace, actionName, mapping.getMethod(), extraContext);
+            request.setAttribute("struts.valueStack", proxy.getInvocation().getStack());
             proxy.execute();
         } catch (ConfigurationException e) {
-            LOG.error("Could not find action", e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Could not find action", e);
+            }
             throw new PortletException("Could not find action " + actionName, e);
         } catch (Exception e) {
-            LOG.error("Could not execute action", e);
-            throw new PortletException("Error executing action " + actionName,
-                    e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Could not execute action", e);
+            }
+            throw new PortletException("Error executing action " + actionName, e);
         } finally {
             Dispatcher.setInstance(null);
         }
@@ -478,7 +485,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      *
      * @return a Map of all application attributes.
      */
-    protected Map getApplicationMap() {
+    protected Map<String, Object> getApplicationMap() {
         return new PortletApplicationMap(getPortletContext());
     }
 
@@ -494,15 +501,14 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * @return the namespace of the action.
      */
     protected ActionMapping getActionMapping(final PortletRequest portletRequest, final HttpServletRequest servletRequest) {
-        ActionMapping mapping = null;
+        ActionMapping mapping;
         String actionPath = getDefaultActionPath(portletRequest);
         if (resetAction(portletRequest)) {
-            mapping = (ActionMapping) actionMap.get(portletRequest.getPortletMode());
+            mapping = actionMap.get(portletRequest.getPortletMode());
         } else {
             actionPath = servletRequest.getParameter(ACTION_PARAM);
             if (StringUtils.isEmpty(actionPath)) {
-                mapping = (ActionMapping) actionMap.get(portletRequest
-                        .getPortletMode());
+                mapping = actionMap.get(portletRequest.getPortletMode());
             } else {
 
                 // Use the usual action mapper, but it is expecting an action extension
@@ -513,13 +519,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         }
 
         if (mapping == null) {
-            throw new StrutsException("Unable to locate action mapping for request, probably due to " +
-                    "an invalid action path: "+actionPath);
+            throw new StrutsException("Unable to locate action mapping for request, probably due to an invalid action path: " + actionPath);
         }
         return mapping;
     }
 
-    protected String getDefaultActionPath( PortletRequest portletRequest ) {
+    protected String getDefaultActionPath(PortletRequest portletRequest) {
         return null;
     }
 
@@ -572,7 +577,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * @param request the PortletRequest object.
      * @return a Map of all request attributes.
      */
-    protected Map getRequestMap(PortletRequest request) {
+    protected Map<String, Object> getRequestMap(PortletRequest request) {
         return new PortletRequestMap(request);
     }
 
@@ -584,7 +589,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * @param request the PortletRequest object.
      * @return a Map of all session attributes.
      */
-    protected Map getSessionMap(PortletRequest request) {
+    protected Map<String, Object> getSessionMap(PortletRequest request) {
         return new PortletSessionMap(request);
     }
 
@@ -615,20 +620,21 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
                 reset = true;
             }
         }
-        if(reset) {
-        	request.setAttribute(ACTION_RESET, Boolean.TRUE);
-        }
-        else {
-        	request.setAttribute(ACTION_RESET, Boolean.FALSE);
+        if (reset) {
+            request.setAttribute(ACTION_RESET, Boolean.TRUE);
+        } else {
+            request.setAttribute(ACTION_RESET, Boolean.FALSE);
         }
         return reset;
     }
 
     public void destroy() {
-        if (dispatcherUtils == null) {
-            LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
-        } else {
+        if (dispatcherUtils != null) {
             dispatcherUtils.cleanup();
+        } else {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Something is seriously wrong, DispatcherUtil is not initialized (null) ");
+            }
         }
     }
 

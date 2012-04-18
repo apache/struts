@@ -20,28 +20,25 @@
  */
 package org.apache.struts2.portlet.interceptor;
 
-import static org.apache.struts2.portlet.PortletConstants.ACTION_PHASE;
-import static org.apache.struts2.portlet.PortletConstants.EVENT_ACTION;
-import static org.apache.struts2.portlet.PortletConstants.PHASE;
-import static org.apache.struts2.portlet.PortletConstants.RENDER_PHASE;
-import static org.apache.struts2.portlet.PortletConstants.REQUEST;
-import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
-import static org.apache.struts2.portlet.PortletConstants.STACK_FROM_EVENT_PHASE;
-
-import java.util.Map;
-
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.portlet.PortletConstants;
+import org.apache.struts2.portlet.PortletPhase;
+import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
+
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import java.util.Map;
+
+import static org.apache.struts2.portlet.PortletConstants.EVENT_ACTION;
+import static org.apache.struts2.portlet.PortletConstants.REQUEST;
+import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
+import static org.apache.struts2.portlet.PortletConstants.STACK_FROM_EVENT_PHASE;
 
 public class PortletStateInterceptor extends AbstractInterceptor {
 
@@ -51,11 +48,11 @@ public class PortletStateInterceptor extends AbstractInterceptor {
 
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		Integer phase = (Integer) invocation.getInvocationContext().get(PHASE);
-		if (RENDER_PHASE.equals(phase)) {
+		PortletPhase phase = (PortletPhase) invocation.getInvocationContext().get(PortletConstants.PHASE);
+		if (phase.isRender()) {
 			restoreStack(invocation);
 			return invocation.invoke();
-		} else if (ACTION_PHASE.equals(phase)) {
+		} else if (phase.isAction()) {
 			try {
 				return invocation.invoke();
 			} finally {

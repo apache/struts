@@ -20,17 +20,13 @@
  */
 package org.apache.struts2.portlet;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 import java.util.AbstractMap;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletSession;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of portlet session
@@ -38,12 +34,10 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * Note, this will occur lazily - only when the entry set is asked for.
  *
  */
-public class PortletSessionMap extends AbstractMap {
+public class PortletSessionMap extends AbstractMap<String, Object> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PortletSessionMap.class);
-
-    private PortletSession session = null;
-    private Set<Object> entries = null;
+    private final PortletSession session;
+    private Set<Entry<String, Object>> entries = null;
 
     /**
      * Creates a new session map given a portlet request.
@@ -57,17 +51,17 @@ public class PortletSessionMap extends AbstractMap {
     /**
      * @see java.util.Map#entrySet()
      */
-    public Set entrySet() {
+    public Set<Entry<String, Object>> entrySet() {
         synchronized (session) {
             if (entries == null) {
-                entries = new HashSet<Object>();
+                entries = new HashSet<Entry<String, Object>>();
 
                 Enumeration enumeration = session.getAttributeNames();
 
                 while (enumeration.hasMoreElements()) {
                     final String key = enumeration.nextElement().toString();
                     final Object value = session.getAttribute(key);
-                    entries.add(new Map.Entry() {
+                    entries.add(new Entry<String, Object>() {
                         public boolean equals(Object obj) {
                             Map.Entry entry = (Map.Entry) obj;
 
@@ -82,7 +76,7 @@ public class PortletSessionMap extends AbstractMap {
                                     ^ ((value == null) ? 0 : value.hashCode());
                         }
 
-                        public Object getKey() {
+                        public String getKey() {
                             return key;
                         }
 
@@ -123,10 +117,10 @@ public class PortletSessionMap extends AbstractMap {
      * @param value the value to set.
      * @return the object that was just set.
      */
-    public Object put(Object key, Object value) {
+    public Object put(String key, Object value) {
         synchronized (session) {
             entries = null;
-            session.setAttribute(key.toString(), value);
+            session.setAttribute(key, value);
 
             return get(key);
         }

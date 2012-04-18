@@ -21,12 +21,11 @@
 package org.apache.struts2.portlet.dispatcher;
 
 import com.opensymphony.xwork2.Action;
+import org.apache.struts2.interceptor.SessionAware;
+import org.apache.struts2.portlet.PortletConstants;
 
 import java.io.Serializable;
 import java.util.Map;
-
-import org.apache.struts2.interceptor.SessionAware;
-import org.apache.struts2.portlet.PortletActionConstants;
 
 /**
  * When a portlet is targetted for an <code>event</code>, the portlet will receive two
@@ -42,7 +41,7 @@ import org.apache.struts2.portlet.PortletActionConstants;
  * specifying this action and the location of the view, which then will be executed in the
  * following render request.
  */
-public class DirectRenderFromEventAction implements SessionAware, PortletActionConstants, Action, Serializable {
+public class DirectRenderFromEventAction implements SessionAware, Action, Serializable {
 
     private static final long serialVersionUID = -1814807772308405785L;
 
@@ -67,6 +66,6 @@ public class DirectRenderFromEventAction implements SessionAware, PortletActionC
     }
 
 	public void setSession(Map session) {
-		location = (String)session.get(RENDER_DIRECT_LOCATION);
+		location = (String)session.get(PortletConstants.RENDER_DIRECT_LOCATION);
 	}
 }

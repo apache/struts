@@ -20,21 +20,20 @@
  */
 package org.apache.struts2.portlet.interceptor;
 
-import javax.portlet.PortletContext;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.interceptor.PrincipalAware;
-import org.apache.struts2.portlet.PortletActionConstants;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.interceptor.PrincipalAware;
+import org.apache.struts2.portlet.PortletConstants;
 
-public class PortletAwareInterceptor extends AbstractInterceptor implements PortletActionConstants, StrutsStatics {
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+
+public class PortletAwareInterceptor extends AbstractInterceptor implements StrutsStatics {
 
 	private static final long serialVersionUID = 2476509721059587700L;
 	
@@ -52,24 +51,24 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Port
         final ActionContext context = invocation.getInvocationContext();
 
         if (action instanceof PortletRequestAware) {
-            PortletRequest request = (PortletRequest) context.get(REQUEST);
+            PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
             ((PortletRequestAware) action).setPortletRequest(request);
         }
 
         if (action instanceof PortletResponseAware) {
-            PortletResponse response = (PortletResponse) context.get(RESPONSE);
+            PortletResponse response = (PortletResponse) context.get(PortletConstants.RESPONSE);
             ((PortletResponseAware) action).setPortletResponse(response);
         }
         if (action instanceof PrincipalAware) {
-            PortletRequest request = (PortletRequest) context.get(REQUEST);
+            PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
             ((PrincipalAware) action).setPrincipalProxy(new PortletPrincipalProxy(request));
         }
         if (action instanceof PortletContextAware) {
-            PortletContext portletContext = (PortletContext) context.get(STRUTS_PORTLET_CONTEXT);
+            PortletContext portletContext = (PortletContext) context.get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
             ((PortletContextAware) action).setPortletContext(portletContext);
         }
         if (action instanceof PortletPreferencesAware) {
-        	PortletRequest request = (PortletRequest) context.get(REQUEST);
+        	PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
             
             // Check if running in a servlet environment
             if (request == null) {

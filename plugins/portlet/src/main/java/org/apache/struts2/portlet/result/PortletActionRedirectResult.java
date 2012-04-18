@@ -20,24 +20,20 @@
  */
 package org.apache.struts2.portlet.result;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.portlet.PortletMode;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.ServletActionRedirectResult;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.PortletActionConstants;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.dispatcher.ServletActionRedirectResult;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.views.util.UrlHelper;
+
+import javax.portlet.PortletMode;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -178,7 +174,7 @@ public class PortletActionRedirectResult extends PortletResult {
 	 */
 	public void execute(ActionInvocation invocation) throws Exception {
 		actionName = conditionalParse(actionName, invocation);
-		String portletNamespace = (String)invocation.getInvocationContext().get(PortletActionConstants.PORTLET_NAMESPACE);
+		String portletNamespace = (String)invocation.getInvocationContext().get(PortletConstants.PORTLET_NAMESPACE);
 		if (portletMode != null) {
 			Map<PortletMode, String> namespaceMap = getNamespaceMap(invocation);
 			namespace = namespaceMap.get(portletMode);
@@ -216,7 +212,7 @@ public class PortletActionRedirectResult extends PortletResult {
 
     @SuppressWarnings("unchecked")
     private Map<PortletMode, String> getNamespaceMap(ActionInvocation invocation) {
-        return (Map<PortletMode, String>) invocation.getInvocationContext().get(PortletActionConstants.MODE_NAMESPACE_MAP);
+        return (Map<PortletMode, String>) invocation.getInvocationContext().get(PortletConstants.MODE_NAMESPACE_MAP);
     }
 
     /**

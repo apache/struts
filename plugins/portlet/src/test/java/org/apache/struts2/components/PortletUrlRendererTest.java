@@ -11,6 +11,8 @@ import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockPortletRequest;
 
 import javax.portlet.PortletContext;
+import javax.portlet.PortletMode;
+
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collections;
@@ -45,6 +47,15 @@ public class PortletUrlRendererTest extends StrutsTestCase {
 
         // then
         assertTrue("/portlettest".equals(component.getNamespace()));
+    }
+    
+    public void testIsPortelModeChanged() {
+    	PortletUrlRenderer renderer = new PortletUrlRenderer();
+    	PortletMode mode = new PortletMode("test");
+    	UrlProvider provider = new ComponentUrlProvider(null, null);
+    	provider.setPortletMode("test2");
+    	
+    	assertTrue(renderer.isPortletModeChange(provider, mode));
     }
 
 }

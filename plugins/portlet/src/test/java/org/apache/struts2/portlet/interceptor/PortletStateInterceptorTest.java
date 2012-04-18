@@ -20,23 +20,26 @@
  */
 package org.apache.struts2.portlet.interceptor;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.DefaultActionSupport;
-import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
-import org.easymock.EasyMock;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.DefaultActionSupport;
+import org.apache.struts2.portlet.PortletPhase;
+import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
+import org.easymock.EasyMock;
 
-import static org.apache.struts2.portlet.PortletConstants.*;
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.struts2.portlet.PortletConstants.EVENT_ACTION;
+import static org.apache.struts2.portlet.PortletConstants.PHASE;
+import static org.apache.struts2.portlet.PortletConstants.REQUEST;
+import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
+import static org.apache.struts2.portlet.PortletConstants.STACK_FROM_EVENT_PHASE;
 
 public class PortletStateInterceptorTest extends StrutsTestCase {
 
@@ -52,7 +55,7 @@ public class PortletStateInterceptorTest extends StrutsTestCase {
 		ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
 		
 		Map<String, Object> ctxMap = new HashMap<String, Object>();
-		ctxMap.put(PHASE, ACTION_PHASE);
+		ctxMap.put(PHASE, PortletPhase.ACTION_PHASE);
 		ctxMap.put(RESPONSE, actionResponse);
 		Map<String, Object> session = new HashMap<String, Object>();
 		
@@ -92,7 +95,7 @@ public class PortletStateInterceptorTest extends StrutsTestCase {
 		
 		session.put(STACK_FROM_EVENT_PHASE, eventPhaseStack);
 		
-		ctxMap.put(PHASE, RENDER_PHASE);
+		ctxMap.put(PHASE, PortletPhase.RENDER_PHASE);
 		ctxMap.put(REQUEST, renderRequest);
 		
 		ActionContext ctx = new ActionContext(ctxMap);
@@ -133,7 +136,7 @@ public class PortletStateInterceptorTest extends StrutsTestCase {
 		
 		session.put(STACK_FROM_EVENT_PHASE, eventPhaseStack);
 		
-		ctxMap.put(PHASE, RENDER_PHASE);
+		ctxMap.put(PHASE, PortletPhase.RENDER_PHASE);
 		ctxMap.put(REQUEST, renderRequest);
 		
 		ActionContext ctx = new ActionContext(ctxMap);

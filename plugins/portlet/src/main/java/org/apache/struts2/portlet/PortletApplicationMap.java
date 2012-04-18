@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.portlet;
 
+import javax.portlet.PortletContext;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Enumeration;
@@ -27,20 +28,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.portlet.PortletContext;
-
 /**
  * Portlet specific {@link java.util.Map} implementation representing the
  * {@link javax.portlet.PortletContext} of a Portlet.
  *
  */
-public class PortletApplicationMap extends AbstractMap implements Serializable {
+public class PortletApplicationMap extends AbstractMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = 2296107511063504414L;
 
     private PortletContext context;
 
-    private Set<Object> entries;
+    private Set<Entry<String, Object>> entries;
 
     /**
      * Creates a new map object given the {@link PortletContext}.
@@ -72,9 +71,9 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
      * @return a Set of all portlet context attributes as well as context init
      *         parameters.
      */
-    public Set entrySet() {
+    public Set<Entry<String, Object>> entrySet() {
         if (entries == null) {
-            entries = new HashSet<Object>();
+            entries = new HashSet<Entry<String, Object>>();
 
             // Add portlet context attributes
             Enumeration enumeration = context.getAttributeNames();
@@ -82,7 +81,7 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
             while (enumeration.hasMoreElements()) {
                 final String key = enumeration.nextElement().toString();
                 final Object value = context.getAttribute(key);
-                entries.add(new Map.Entry() {
+                entries.add(new Entry<String, Object>() {
                     public boolean equals(Object obj) {
                         Map.Entry entry = (Map.Entry) obj;
 
@@ -97,7 +96,7 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
                                 ^ ((value == null) ? 0 : value.hashCode());
                     }
 
-                    public Object getKey() {
+                    public String getKey() {
                         return key;
                     }
 
@@ -106,7 +105,7 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
                     }
 
                     public Object setValue(Object obj) {
-                        context.setAttribute(key.toString(), obj);
+                        context.setAttribute(key, obj);
 
                         return value;
                     }
@@ -119,7 +118,7 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
             while (enumeration.hasMoreElements()) {
                 final String key = enumeration.nextElement().toString();
                 final Object value = context.getInitParameter(key);
-                entries.add(new Map.Entry() {
+                entries.add(new Entry<String, Object>() {
                     public boolean equals(Object obj) {
                         Map.Entry entry = (Map.Entry) obj;
 
@@ -134,7 +133,7 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
                                 ^ ((value == null) ? 0 : value.hashCode());
                     }
 
-                    public Object getKey() {
+                    public String getKey() {
                         return key;
                     }
 
@@ -143,7 +142,7 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
                     }
 
                     public Object setValue(Object obj) {
-                        context.setAttribute(key.toString(), obj);
+                        context.setAttribute(key, obj);
 
                         return value;
                     }
@@ -163,13 +162,12 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
      * @return the portlet context attribute or init parameter or <tt>null</tt>
      *         if the entry is not found.
      */
-    public Object get(Object key) {
+    public Object get(String key) {
         // Try context attributes first, then init params
         // This gives the proper shadowing effects
-        String keyString = key.toString();
-        Object value = context.getAttribute(keyString);
+        Object value = context.getAttribute(key);
 
-        return (value == null) ? context.getInitParameter(keyString) : value;
+        return (value == null) ? context.getInitParameter(key) : value;
     }
 
     /**
@@ -181,9 +179,9 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
      *            the value to set.
      * @return the attribute that was just set.
      */
-    public Object put(Object key, Object value) {
+    public Object put(String key, Object value) {
         entries = null;
-        context.setAttribute(key.toString(), value);
+        context.setAttribute(key, value);
 
         return get(key);
     }
@@ -195,11 +193,11 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
      *            the attribute to remove.
      * @return the entry that was just removed.
      */
-    public Object remove(Object key) {
+    public Object remove(String key) {
         entries = null;
 
         Object value = get(key);
-        context.removeAttribute(key.toString());
+        context.removeAttribute(key);
 
         return value;
     }

@@ -20,23 +20,36 @@
  */
 package org.apache.struts2.portlet.context;
 
-import static org.apache.struts2.portlet.PortletConstants.*;
-import static org.apache.struts2.portlet.context.PortletActionContext.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.portlet.PortletPhase;
+import org.jmock.Mock;
+import org.jmock.MockObjectTestCase;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
-
-import com.opensymphony.xwork2.ActionContext;
+import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_FOR_MODE;
+import static org.apache.struts2.portlet.PortletConstants.PHASE;
+import static org.apache.struts2.portlet.PortletConstants.PORTLET_CONFIG;
+import static org.apache.struts2.portlet.PortletConstants.PORTLET_NAMESPACE;
+import static org.apache.struts2.portlet.PortletConstants.REQUEST;
+import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
+import static org.apache.struts2.portlet.context.PortletActionContext.getActionRequest;
+import static org.apache.struts2.portlet.context.PortletActionContext.getActionResponse;
+import static org.apache.struts2.portlet.context.PortletActionContext.getDefaultActionForMode;
+import static org.apache.struts2.portlet.context.PortletActionContext.getPhase;
+import static org.apache.struts2.portlet.context.PortletActionContext.getPortletConfig;
+import static org.apache.struts2.portlet.context.PortletActionContext.getPortletNamespace;
+import static org.apache.struts2.portlet.context.PortletActionContext.getRenderRequest;
+import static org.apache.struts2.portlet.context.PortletActionContext.getRenderResponse;
+import static org.apache.struts2.portlet.context.PortletActionContext.getRequest;
+import static org.apache.struts2.portlet.context.PortletActionContext.getResponse;
 
 /**
  */
@@ -77,33 +90,39 @@ public class PortletActionContextTest extends MockObjectTestCase {
     }
 
     public void testGetPhase() {
-        context.put(PHASE, RENDER_PHASE);
+        context.put(PHASE, PortletPhase.RENDER_PHASE);
 
-        assertEquals(RENDER_PHASE, getPhase());
+        assertEquals(PortletPhase.RENDER_PHASE, getPhase());
     }
 
     public void testIsRender() {
-        context.put(PHASE, RENDER_PHASE);
+        context.put(PHASE, PortletPhase.RENDER_PHASE);
 
-        assertTrue(isRender());
-        assertFalse(isAction());
-        assertFalse(isEvent());
+        PortletPhase phase = getPhase();
+
+        assertTrue(phase.isRender());
+        assertFalse(phase.isAction());
+        assertFalse(phase.isEvent());
     }
 
     public void testIsAction() {
-        context.put(PHASE, ACTION_PHASE);
+        context.put(PHASE, PortletPhase.ACTION_PHASE);
 
-        assertTrue(isAction());
-        assertFalse(isRender());
-        assertFalse(isEvent());
+        PortletPhase phase = getPhase();
+
+        assertTrue(phase.isAction());
+        assertFalse(phase.isRender());
+        assertFalse(phase.isEvent());
     }
     
     public void testIsEvent() {
-    	context.put(PHASE, EVENT_PHASE);
-    	
-    	assertTrue(isEvent());
-    	assertFalse(isAction());
-    	assertFalse(isRender());
+    	context.put(PHASE, PortletPhase.EVENT_PHASE);
+
+        PortletPhase phase = getPhase();
+
+    	assertTrue(phase.isEvent());
+    	assertFalse(phase.isAction());
+    	assertFalse(phase.isRender());
     }
 
     public void testGetPortletConfig() {
@@ -114,7 +133,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
     public void testGetRenderRequestAndResponse() {
         context.put(REQUEST, renderRequest);
         context.put(RESPONSE, renderResponse);
-        context.put(PHASE, RENDER_PHASE);
+        context.put(PHASE, PortletPhase.RENDER_PHASE);
         assertSame(renderRequest, getRenderRequest());
         assertSame(renderResponse, getRenderResponse());
         assertSame(renderRequest, getRequest());
@@ -124,7 +143,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
     public void testGetRenderRequestAndResponseInEventPhase() {
         context.put(REQUEST, renderRequest);
         context.put(RESPONSE, renderResponse);
-        context.put(PHASE, ACTION_PHASE);
+        context.put(PHASE, PortletPhase.ACTION_PHASE);
         try {
             getRenderRequest();
             fail("Should throw IllegalStateException!");
@@ -144,7 +163,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
     public void testGetActionRequestAndResponse() {
         context.put(REQUEST, actionRequest);
         context.put(RESPONSE, actionResponse);
-        context.put(PHASE, ACTION_PHASE);
+        context.put(PHASE, PortletPhase.ACTION_PHASE);
         assertSame(actionRequest, getActionRequest());
         assertSame(actionResponse, getActionResponse());
         assertSame(actionRequest, getRequest());
@@ -154,7 +173,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
     public void testGetActionRequestAndResponseInRenderPhase() {
         context.put(REQUEST, actionRequest);
         context.put(RESPONSE, actionResponse);
-        context.put(PHASE, RENDER_PHASE);
+        context.put(PHASE, PortletPhase.RENDER_PHASE);
         try {
             getActionRequest();
             fail("Should throw IllegalStateException!");

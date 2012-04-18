@@ -20,8 +20,23 @@
  */
 package org.apache.struts2.portlet.result;
 
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.portlet.PortletConstants;
+import org.apache.struts2.portlet.PortletPhase;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.views.JspSupportServlet;
+import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.velocity.Template;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
 
 import javax.portlet.ActionResponse;
 import javax.servlet.Servlet;
@@ -30,24 +45,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.views.JspSupportServlet;
-import org.apache.struts2.views.velocity.VelocityManager;
-import org.apache.velocity.Template;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -118,11 +117,11 @@ public class PortletVelocityResult extends StrutsResultSupport {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */
-    public void doExecute(String location, ActionInvocation invocation)
-            throws Exception {
-        if (PortletActionContext.isAction()) {
+    public void doExecute(String location, ActionInvocation invocation) throws Exception {
+        PortletPhase phase = PortletActionContext.getPhase();
+        if (phase.isAction()) {
             executeActionResult(location, invocation);
-        } else if (PortletActionContext.isRender()) {
+        } else if (phase.isRender()) {
             executeRenderResult(location, invocation);
         }
     }
@@ -133,16 +132,12 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * @param location The location string
      * @param invocation The action invocation
      */
-    private void executeActionResult(String location,
-            ActionInvocation invocation) {
+    private void executeActionResult(String location, ActionInvocation invocation) {
         ActionResponse res = PortletActionContext.getActionResponse();
         // View is rendered outside an action...uh oh...
-        res.setRenderParameter(PortletActionConstants.ACTION_PARAM,
-                "freemarkerDirect");
+        res.setRenderParameter(PortletConstants.ACTION_PARAM, "freemarkerDirect");
         res.setRenderParameter("location", location);
-        res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
-                .getRequest().getPortletMode().toString());
-
+        res.setRenderParameter(PortletConstants.MODE_PARAM, PortletActionContext.getRequest().getPortletMode().toString());
     }
 
     /**
@@ -155,27 +150,22 @@ public class PortletVelocityResult extends StrutsResultSupport {
      *         loading or executing the template or writing output to the
      *         servlet response stream.
      */
-    public void executeRenderResult(String finalLocation,
-            ActionInvocation invocation) throws Exception {
+    public void executeRenderResult(String finalLocation, ActionInvocation invocation) throws Exception {
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        ServletContext servletContext = ServletActionContext
-                .getServletContext();
+        ServletContext servletContext = ServletActionContext.getServletContext();
         Servlet servlet = JspSupportServlet.jspSupportServlet;
 
         velocityManager.init(servletContext);
 
         boolean usedJspFactory = false;
-        PageContext pageContext = (PageContext) ActionContext.getContext().get(
-                ServletActionContext.PAGE_CONTEXT);
+        PageContext pageContext = (PageContext) ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT);
 
         if (pageContext == null && servlet != null) {
-            pageContext = jspFactory.getPageContext(servlet, request, response,
-                    null, true, 8192, true);
-            ActionContext.getContext().put(ServletActionContext.PAGE_CONTEXT,
-                    pageContext);
+            pageContext = jspFactory.getPageContext(servlet, request, response, null, true, 8192, true);
+            ActionContext.getContext().put(ServletActionContext.PAGE_CONTEXT, pageContext);
             usedJspFactory = true;
         }
 
@@ -187,14 +177,10 @@ public class PortletVelocityResult extends StrutsResultSupport {
                 contentType = contentType + ";charset=" + encoding;
             }
             response.setContentType(contentType);
-            Template t = getTemplate(stack,
-                    velocityManager.getVelocityEngine(), invocation,
-                    finalLocation, encoding);
+            Template t = getTemplate(stack, velocityManager.getVelocityEngine(), invocation, finalLocation, encoding);
 
-            Context context = createContext(velocityManager, stack, request,
-                    response, finalLocation);
-            Writer writer = new OutputStreamWriter(response.getOutputStream(),
-                    encoding);
+            Context context = createContext(velocityManager, stack, request, response, finalLocation);
+            Writer writer = new OutputStreamWriter(response.getOutputStream(), encoding);
 
             t.merge(context, writer);
 
@@ -204,16 +190,13 @@ public class PortletVelocityResult extends StrutsResultSupport {
             // deprecated, we'll oblige :)
             writer.flush();
         } catch (Exception e) {
-            LOG.error("Unable to render Velocity Template, '" + finalLocation
-                    + "'", e);
+            LOG.error("Unable to render Velocity Template, '" + finalLocation + "'", e);
             throw e;
         } finally {
             if (usedJspFactory) {
                 jspFactory.releasePageContext(pageContext);
             }
         }
-
-        return;
     }
 
     /**
@@ -259,16 +242,12 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * @return the template to render
      * @throws Exception when the requested template could not be found
      */
-    protected Template getTemplate(ValueStack stack,
-            VelocityEngine velocity, ActionInvocation invocation,
-            String location, String encoding) throws Exception {
+    protected Template getTemplate(ValueStack stack, VelocityEngine velocity, ActionInvocation invocation,
+                                   String location, String encoding) throws Exception {
         if (!location.startsWith("/")) {
             location = invocation.getProxy().getNamespace() + "/" + location;
         }
-
-        Template template = velocity.getTemplate(location, encoding);
-
-        return template;
+        return velocity.getTemplate(location, encoding);
     }
 
     /**
@@ -280,8 +259,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * @param location the name of the template that is being used
      * @return the a minted Velocity context.
      */
-    protected Context createContext(VelocityManager velocityManager,
-            ValueStack stack, HttpServletRequest request,
+    protected Context createContext(VelocityManager velocityManager, ValueStack stack, HttpServletRequest request,
             HttpServletResponse response, String location) {
         return velocityManager.createContext(stack, request, response);
     }

@@ -20,25 +20,19 @@
  */
 package org.apache.struts2.portlet;
 
+import javax.portlet.PortletRequest;
 import java.util.AbstractMap;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.portlet.PortletRequest;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request attributes.
  *
  */
-public class PortletRequestMap extends AbstractMap {
+public class PortletRequestMap extends AbstractMap<String, Object> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PortletRequestMap.class);
-
-    private Set<Object> entries = null;
+    private Set<Entry<String, Object>> entries = null;
     private PortletRequest request = null;
 
     /**
@@ -69,16 +63,16 @@ public class PortletRequestMap extends AbstractMap {
      *
      * @return a Set of attributes from the portlet request.
      */
-    public Set entrySet() {
+    public Set<Entry<String, Object>> entrySet() {
         if (entries == null) {
-            entries = new HashSet<Object>();
+            entries = new HashSet<Entry<String, Object>>();
 
-            Enumeration enumeration = request.getAttributeNames();
+            Enumeration<String> enumeration = request.getAttributeNames();
 
             while (enumeration.hasMoreElements()) {
-                final String key = enumeration.nextElement().toString();
+                final String key = enumeration.nextElement();
                 final Object value = request.getAttribute(key);
-                entries.add(new Entry() {
+                entries.add(new Entry<String, Object>() {
                     public boolean equals(Object obj) {
                         Entry entry = (Entry) obj;
 
@@ -93,7 +87,7 @@ public class PortletRequestMap extends AbstractMap {
                                 ^ ((value == null) ? 0 : value.hashCode());
                     }
 
-                    public Object getKey() {
+                    public String getKey() {
                         return key;
                     }
 
@@ -131,9 +125,9 @@ public class PortletRequestMap extends AbstractMap {
      * @param value the value to set.
      * @return the object that was just set.
      */
-    public Object put(Object key, Object value) {
+    public Object put(String key, Object value) {
         entries = null;
-        request.setAttribute(key.toString(), value);
+        request.setAttribute(key, value);
 
         return get(key);
     }

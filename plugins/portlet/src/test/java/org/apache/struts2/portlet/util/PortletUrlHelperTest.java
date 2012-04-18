@@ -20,12 +20,10 @@
  */
 package org.apache.struts2.portlet.util;
 
-import static org.apache.struts2.portlet.PortletConstants.*;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import junit.framework.TestCase;
+import org.apache.struts2.portlet.PortletPhase;
+import org.easymock.EasyMock;
 
 import javax.portlet.PortletMode;
 import javax.portlet.PortletModeException;
@@ -35,12 +33,17 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
-import junit.framework.TestCase;
-
-import org.easymock.EasyMock;
-
-import com.opensymphony.xwork2.ActionContext;
+import static org.apache.struts2.portlet.PortletConstants.ACTION_PARAM;
+import static org.apache.struts2.portlet.PortletConstants.MODE_NAMESPACE_MAP;
+import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
+import static org.apache.struts2.portlet.PortletConstants.PHASE;
+import static org.apache.struts2.portlet.PortletConstants.REQUEST;
+import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
 
 /**
  */
@@ -70,7 +73,7 @@ public class PortletUrlHelperTest extends TestCase {
         Map<String, Object> context = new HashMap<String, Object>();
         context.put(REQUEST, renderRequest);
         context.put(RESPONSE, renderResponse);
-        context.put(PHASE, RENDER_PHASE);
+        context.put(PHASE, PortletPhase.RENDER_PHASE);
         context.put(MODE_NAMESPACE_MAP, modeNamespaceMap);
 
         ActionContext.setContext(new ActionContext(context));
@@ -84,7 +87,7 @@ public class PortletUrlHelperTest extends TestCase {
         EasyMock.replay(renderResponse);
 
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-                new HashMap(), null, null, null);
+                new HashMap<String, Object>(), null, null, null);
         assertEquals(PortletMode.VIEW, url.getPortletMode());
         assertEquals(WindowState.NORMAL, url.getWindowState());
         assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
@@ -98,7 +101,7 @@ public class PortletUrlHelperTest extends TestCase {
         EasyMock.replay(renderResponse);
 
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-                new HashMap(), null, "edit", null);
+                new HashMap<String, Object>(), null, "edit", null);
         
         assertEquals(PortletMode.EDIT, url.getPortletMode());
         assertEquals(WindowState.NORMAL, url.getWindowState());
@@ -113,7 +116,7 @@ public class PortletUrlHelperTest extends TestCase {
         EasyMock.replay(renderResponse);
         
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-                new HashMap(), null, null, "maximized");
+                new HashMap<String, Object>(), null, null, "maximized");
         
         assertEquals(PortletMode.VIEW, url.getPortletMode());
         assertEquals(WindowState.MAXIMIZED, url.getWindowState());
@@ -128,7 +131,7 @@ public class PortletUrlHelperTest extends TestCase {
         EasyMock.replay(renderRequest);
         
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-                new HashMap(), "action", null, null);
+                new HashMap<String, Object>(), "action", null, null);
         
         assertEquals(PortletMode.VIEW, url.getPortletMode());
         assertEquals(WindowState.NORMAL, url.getWindowState());

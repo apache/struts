@@ -20,24 +20,23 @@
  */
 package org.apache.struts2.portlet.dispatcher;
 
-import java.io.IOException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.dispatcher.StrutsRequestWrapper;
+import org.apache.struts2.portlet.PortletConstants;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.dispatcher.StrutsRequestWrapper;
-import org.apache.struts2.portlet.PortletActionConstants;
-
-public class DispatcherServlet extends HttpServlet implements PortletActionConstants {
+public class DispatcherServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -266147033645951967L;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String dispatchTo = (String) request.getAttribute(DISPATCH_TO);
+		String dispatchTo = (String) request.getAttribute(PortletConstants.DISPATCH_TO);
 		HttpServletRequest wrapper = wrapRequestIfNecessary(request);
 		if(StringUtils.isNotEmpty(dispatchTo)) {
 			request.getRequestDispatcher(dispatchTo).include(wrapper, response);

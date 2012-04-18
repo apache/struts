@@ -1,5 +1,6 @@
 package org.apache.struts2.portlet;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.portlet.dispatcher.DispatcherServlet;
 
 public class PortletConstants {
@@ -23,28 +24,6 @@ public class PortletConstants {
      * Key used for looking up and storing the portlet phase
      */
     public static String PHASE = "struts.portlet.phase";
-
-    /**
-     * Constant used for the render phase (
-     * {@link javax.portlet.Portlet#render(javax.portlet.RenderRequest, javax.portlet.RenderResponse)})
-     */
-    public static Integer RENDER_PHASE = new Integer(1);
-
-    /**
-     * Constant used for the action phase (
-     * {@link javax.portlet.Portlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)})
-     */
-    public static Integer ACTION_PHASE = new Integer(2);
-    
-    /**
-     * Constant used for the event phase
-     */
-    public static Integer EVENT_PHASE = new Integer(3);
-    
-    /**
-     * 
-     */
-    public static Integer SERVE_RESOURCE_PHASE = new Integer(4);
 
     /**
      * Key used for looking up and storing the
@@ -87,6 +66,12 @@ public class PortletConstants {
     public static String MODE_NAMESPACE_MAP = "struts.portlet.modeNamespaceMap";
 
     /**
+     * Key for the mode-to-default-action map stored in the
+     * {@link org.apache.struts2.portlet.context.PortletActionContext}.
+     */
+    public static String DEFAULT_ACTION_MAP = "struts.portlet.modeActionMap";
+
+    /**
      * Key for the default action name for the portlet, stored in the
      * {@link org.apache.struts2.portlet.context.PortletActionContext}.
      */
@@ -101,7 +86,12 @@ public class PortletConstants {
      * Key for session attribute indicating the location of the render direct action.
      */
     public static String RENDER_DIRECT_LOCATION = "struts.portlet.renderDirectLocation";
-    
+
+    /**
+     * Namespace use for executing the renderDirect action. Necessary to get the namespaces on s:urls correct.
+     */
+    public static String RENDER_DIRECT_NAMESPACE = "struts.portlet.renderDirectNamespace";
+
     /**
      * Key for the dispatch instruction for the {@link DispatcherServlet}
      */
@@ -116,4 +106,10 @@ public class PortletConstants {
 	 * Default name of dispatcher servlet in web.xml
 	 */
 	public static String DEFAULT_DISPATCHER_SERVLET_NAME = "Struts2PortletDispatcherServlet";
+
+    /**
+   	 * Key for the action mapping in the context
+       */
+   	public static String ACTION_MAPPING = ServletActionContext.ACTION_MAPPING;
+
 }

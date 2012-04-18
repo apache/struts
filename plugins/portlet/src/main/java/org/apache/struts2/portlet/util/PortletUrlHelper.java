@@ -88,11 +88,11 @@ public class PortletUrlHelper {
     public String buildUrl(String action, String namespace, String method, Map<String, Object> params,
             String scheme, String type, String portletMode, String windowState,
             boolean includeContext, boolean encodeResult) {
-    	StringBuffer resultingAction = new StringBuffer();
+    	StringBuilder resultingAction = new StringBuilder();
         PortletRequest request = PortletActionContext.getRequest();
         LOG.debug("Creating url. Action = " + action + ", Namespace = "
                 + namespace + ", Type = " + type);
-        namespace = prependNamespace(namespace, portletMode, !URLTYPE_NAME_RESOURCE.equalsIgnoreCase(type));
+        namespace = prependNamespace(namespace, portletMode, false);
         if (StringUtils.isEmpty(portletMode)) {
             portletMode = PortletActionContext.getRequest().getPortletMode().toString();
         }
@@ -137,7 +137,7 @@ public class PortletUrlHelper {
 
         String result = url.toString();
         // TEMP BUG-WORKAROUND FOR DOUBLE ESCAPING OF AMPERSAND
-        if(result.indexOf("&amp;") >= 0) {
+        if(result.contains("&amp;")) {
             result = result.replace("&amp;", "&");
         }
         return result;
@@ -179,14 +179,14 @@ public class PortletUrlHelper {
      * @return prepended namespace.
      */
     private String prependNamespace(String namespace, String portletMode, boolean prependModeNamespace) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String modeNamespace;
         if (prependModeNamespace) {
             PortletMode mode = PortletActionContext.getRequest().getPortletMode();
             if(StringUtils.isNotEmpty(portletMode)) {
                 mode = new PortletMode(portletMode);
             }
-            modeNamespace = (String)PortletActionContext.getModeNamespaceMap().get(mode);
+            modeNamespace = PortletActionContext.getModeNamespaceMap().get(mode);
         } else {
             modeNamespace = null;
         }

@@ -23,28 +23,27 @@ package org.apache.struts2.portlet.context;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.portlet.PortletConstants;
+import org.apache.struts2.portlet.PortletPhase;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
+import javax.portlet.PortletMode;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import java.util.Map;
 
-import static org.apache.struts2.portlet.PortletConstants.ACTION_PHASE;
 import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_FOR_MODE;
-import static org.apache.struts2.portlet.PortletConstants.EVENT_PHASE;
 import static org.apache.struts2.portlet.PortletConstants.MODE_NAMESPACE_MAP;
 import static org.apache.struts2.portlet.PortletConstants.PHASE;
 import static org.apache.struts2.portlet.PortletConstants.PORTLET_CONFIG;
 import static org.apache.struts2.portlet.PortletConstants.PORTLET_NAMESPACE;
-import static org.apache.struts2.portlet.PortletConstants.RENDER_PHASE;
 import static org.apache.struts2.portlet.PortletConstants.REQUEST;
 import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
-import static org.apache.struts2.portlet.PortletConstants.SERVE_RESOURCE_PHASE;
 
 
 /**
@@ -70,9 +69,8 @@ public class PortletActionContext {
      * @throws IllegalStateException If the method is invoked in the wrong phase.
      */
     public static RenderRequest getRenderRequest() {
-        if (!isRender()) {
-            throw new IllegalStateException(
-                    "RenderRequest cannot be obtained in event phase");
+        if (!getPhase().isRender()) {
+            throw new IllegalStateException("RenderRequest cannot be obtained in event phase");
         }
         return (RenderRequest) getContext().get(REQUEST);
     }
@@ -84,9 +82,8 @@ public class PortletActionContext {
      * @throws IllegalStateException If the method is invoked in the wrong phase.
      */
     public static RenderResponse getRenderResponse() {
-        if (!isRender()) {
-            throw new IllegalStateException(
-                    "RenderResponse cannot be obtained in event phase");
+        if (!getPhase().isRender()) {
+            throw new IllegalStateException("RenderResponse cannot be obtained in event phase");
         }
         return (RenderResponse) getContext().get(RESPONSE);
     }
@@ -98,9 +95,8 @@ public class PortletActionContext {
      * @throws IllegalStateException If the method is invoked in the wrong phase.
      */
     public static ActionRequest getActionRequest() {
-        if (!isAction()) {
-            throw new IllegalStateException(
-                    "ActionRequest cannot be obtained in render phase");
+        if (!getPhase().isAction()) {
+            throw new IllegalStateException("ActionRequest cannot be obtained in render phase");
         }
         return (ActionRequest) getContext().get(REQUEST);
     }
@@ -112,9 +108,8 @@ public class PortletActionContext {
      * @throws IllegalStateException If the method is invoked in the wrong phase.
      */
     public static ActionResponse getActionResponse() {
-        if (!isAction()) {
-            throw new IllegalStateException(
-                    "ActionResponse cannot be obtained in render phase");
+        if (!getPhase().isAction()) {
+            throw new IllegalStateException("ActionResponse cannot be obtained in render phase");
         }
         return (ActionResponse) getContext().get(RESPONSE);
     }
@@ -150,32 +145,11 @@ public class PortletActionContext {
     /**
      * Get the phase that the portlet is executing in.
      *
-     * @return {@link PortletActionConstants#RENDER_PHASE} in render phase, and
-     *         {@link PortletActionConstants#ACTION_PHASE} in the event phase.
+     * @return {@link PortletPhase#RENDER_PHASE} in render phase, and
+     *         {@link PortletPhase#ACTION_PHASE} in the event phase.
      */
-    public static Integer getPhase() {
-        return (Integer) getContext().get(PHASE);
-    }
-
-    /**
-     * @return <code>true</code> if the Portlet is executing in render phase.
-     */
-    public static boolean isRender() {
-        return RENDER_PHASE.equals(getPhase());
-    }
-
-    /**
-     * @return <code>true</code> if the Portlet is executing in the event phase.
-     */
-    public static boolean isAction() {
-        return ACTION_PHASE.equals(getPhase());
-    }
-
-    /**
-     * @return <code>true</code> if the Portlet is executing in the resource phase.
-     */
-    public static boolean isResource() {
-        return SERVE_RESOURCE_PHASE.equals(getPhase());
+    public static PortletPhase getPhase() {
+        return (PortletPhase) getContext().get(PHASE);
     }
 
     /**
@@ -208,8 +182,19 @@ public class PortletActionContext {
      *
      * @return The map of the namespaces for each mode.
      */
-    public static Map getModeNamespaceMap() {
-        return (Map) getContext().get(MODE_NAMESPACE_MAP);
+    @SuppressWarnings("unchecked")
+    public static Map<PortletMode,String> getModeNamespaceMap() {
+        return (Map<PortletMode,String>) getContext().get(MODE_NAMESPACE_MAP);
+    }
+    
+    /**
+     * Get the mode to default action mappings.
+     * 
+     * @return The map of default action mapping for each mode
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<PortletMode,ActionMapping> getModeActionMap() {
+        return (Map<PortletMode,ActionMapping>) getContext().get(PortletConstants.DEFAULT_ACTION_MAP);
     }
 
     /**
@@ -219,10 +204,6 @@ public class PortletActionContext {
      */
     public static PortletContext getPortletContext() {
         return (PortletContext) getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
-    }
-
-    public static boolean isEvent() {
-        return EVENT_PHASE.equals(getPhase());
     }
 
     /**

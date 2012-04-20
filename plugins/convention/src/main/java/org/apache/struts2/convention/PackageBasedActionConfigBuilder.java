@@ -767,12 +767,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
         if (pkgPart == null && packageLocators != null) {
             for (String packageLocator : packageLocators) {
-                int index = pkg.lastIndexOf(packageLocator);
+                // check subpackage and not a part of package name, eg. actions -> my.actions.transactions - WW-3803
+                int index = pkg.lastIndexOf("." + packageLocator + ".");
 
                 // This ensures that the match is at the end, beginning or has a dot on each side of it
                 if (index >= 0 && (index + packageLocator.length() == pkg.length() || index == 0 ||
-                        (pkg.charAt(index - 1) == '.' && pkg.charAt(index + packageLocator.length()) == '.'))) {
-                    pkgPart = actionClass.getName().substring(index + packageLocator.length() + 1);
+                        (pkg.charAt(index) == '.' && pkg.charAt(index + 1 + packageLocator.length()) == '.'))) {
+                    pkgPart = actionClass.getName().substring(index + packageLocator.length() + 2);
                 }
             }
         }

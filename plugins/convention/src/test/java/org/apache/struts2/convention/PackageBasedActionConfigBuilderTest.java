@@ -80,6 +80,7 @@ import org.apache.struts2.convention.actions.result.OverrideResultAction;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.actions.resultpath.PackageLevelResultPathAction;
 import org.apache.struts2.convention.actions.skip.Index;
+import org.apache.struts2.convention.actions.transactions.TransNameAction;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.dontfind.DontFindMeAction;
@@ -193,6 +194,8 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
             "/skip", strutsDefault, null);
         PackageConfig chainPkg = makePackageConfig("org.apache.struts2.convention.actions.chain#struts-default#/chain",
             "/chain", strutsDefault, null);
+        PackageConfig transPkg = makePackageConfig("org.apache.struts2.convention.actions.transactions#struts-default#/transactions",
+            "/transactions", strutsDefault, null);
 
         ResultMapBuilder resultMapBuilder = createStrictMock(ResultMapBuilder.class);
         checkOrder(resultMapBuilder, false);
@@ -292,6 +295,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         /* org.apache.struts2.convention.actions.chain */
         expect(resultMapBuilder.build(ChainedAction.class, getAnnotation(ChainedAction.class, "foo", Action.class), "foo", chainPkg)).andReturn(results);
         expect(resultMapBuilder.build(ChainedAction.class, getAnnotation(ChainedAction.class, "bar", Action.class), "foo-bar", chainPkg)).andReturn(results);
+
+        /* org.apache.struts2.convention.actions.transactions */
+        expect(resultMapBuilder.build(TransNameAction.class, getAnnotation(TransNameAction.class, "trans1", Action.class), "trans1", transPkg)).andReturn(results);
+        expect(resultMapBuilder.build(TransNameAction.class, getAnnotation(TransNameAction.class, "trans2", Action.class), "trans2", transPkg)).andReturn(results);
 
         EasyMock.replay(resultMapBuilder);
 
@@ -551,6 +558,11 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         verifyActionConfig(pkgConfig, "skip", Skip.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "idx", org.apache.struts2.convention.actions.idx.Index.class, "execute",
             "org.apache.struts2.convention.actions.idx#struts-default#/idx");
+
+        /* org.apache.struts2.convention.actions.transactions */
+        pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.transactions#struts-default#/transactions");
+        verifyActionConfig(pkgConfig, "trans1", TransNameAction.class, "trans1", pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "trans2", TransNameAction.class, "trans2", pkgConfig.getName());
 
         //test unknown handler automatic chaining
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.chain#struts-default#/chain");

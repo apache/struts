@@ -21,13 +21,13 @@
 
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.apache.struts2.TestAction;
-import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 
 /**
@@ -173,6 +173,30 @@ public class RadioTest extends AbstractUITagTest {
         RadioTag tag = new RadioTag();
         prepareTagGeneric(tag);
         verifyGenericProperties(tag, "xhtml", new String[]{"id","value"});
+    }
+
+    public void testDynamicAttributes() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+        testAction.setList(new String[][]{
+                {"hello", "world"},
+                {"foo", "bar"}
+        });
+
+        RadioTag tag = new RadioTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setValue("");
+        tag.setList("list");
+        tag.setListKey("top[0]");
+        tag.setListValue("top[1]");
+        tag.setDynamicAttribute(null, "dojo", "checked: %{top[0]}");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(RadioTag.class.getResource("Radio-7.txt"));
     }
 
     private void prepareTagGeneric(RadioTag tag) {

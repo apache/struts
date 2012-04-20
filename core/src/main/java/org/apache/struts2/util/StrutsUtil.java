@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -146,6 +147,10 @@ public class StrutsUtil {
      */
     public String getContext() {
         return (request == null)? "" : request.getContextPath();
+    }
+
+    public String translateVariables(String expression) {
+        return TextParseUtil.translateVariables(expression, stack);
     }
 
     /**

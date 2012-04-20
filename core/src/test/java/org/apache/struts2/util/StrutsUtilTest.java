@@ -21,24 +21,19 @@
 
 package org.apache.struts2.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.TestAction;
-import org.apache.struts2.util.ListEntry;
-import org.apache.struts2.util.StrutsUtil;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockRequestDispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test case for StrutsUtil.
@@ -184,6 +179,18 @@ public class StrutsUtilTest extends StrutsTestCase {
         assertEquals(strutsUtil.toString(11l), "11");
     }
 
+    public void testTranslateVariables() throws Exception {
+        stack.push(new Object() {
+            public String getFoo() {
+                return "bar";
+            }
+        });
+        Object obj1 = strutsUtil.translateVariables("try: %{foo}");
+
+        assertNotNull(obj1);
+        assertTrue(obj1 instanceof String);
+        assertEquals(obj1, "try: bar");
+    }
 
     // === Junit Hook
 

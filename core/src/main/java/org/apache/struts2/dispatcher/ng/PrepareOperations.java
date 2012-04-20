@@ -20,23 +20,22 @@
  */
 package org.apache.struts2.dispatcher.ng;
 
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.RequestUtils;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.RequestUtils;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +45,8 @@ import java.util.regex.Pattern;
  * Contains preparation operations for a request before execution
  */
 public class PrepareOperations {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PrepareOperations.class);
 
     private ServletContext servletContext;
     private Dispatcher dispatcher;
@@ -98,10 +99,18 @@ public class PrepareOperations {
                 return;
             }
         }
-
         // always clean up the thread request, even if an action hasn't been executed
-        ActionContext.setContext(null);
-        Dispatcher.setInstance(null);
+        try {
+            dispatcher.cleanUpRequest(request);
+        } catch (IOException e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Cannot clean up the request, some files can still remain in #1 after upload!", e,
+                        StrutsConstants.STRUTS_MULTIPART_SAVEDIR);
+            }
+        } finally {
+            ActionContext.setContext(null);
+            Dispatcher.setInstance(null);
+        }
     }
 
     /**
@@ -173,7 +182,7 @@ public class PrepareOperations {
      */
     public void cleanupDispatcher() {
         if (dispatcher == null) {
-            throw new StrutsException("something is seriously wrong, Dispatcher is not initialized (null) ");
+            throw new StrutsException("Something is seriously wrong, Dispatcher is not initialized (null) ");
         } else {
             try {
                 dispatcher.cleanup();

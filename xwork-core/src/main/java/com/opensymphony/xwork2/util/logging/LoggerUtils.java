@@ -24,12 +24,12 @@ public class LoggerUtils {
      * Formats messages using parameters. For example, the call:
      * 
      * <pre>
-     * format("foo #1", "bob");
+     * format("foo #0 #1", "bob", "joe");
      * </pre>
      * 
      * will return:
      * <pre>
-     * foo bob
+     * foo bob joe
      * </pre>
      * 
      * @param msg The message

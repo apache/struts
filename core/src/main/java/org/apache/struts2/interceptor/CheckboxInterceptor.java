@@ -72,7 +72,7 @@ public class CheckboxInterceptor extends AbstractInterceptor {
                 iterator.remove();
                 if (values != null && values instanceof String[] && ((String[])values).length > 1) {
                     if (LOG.isDebugEnabled()) {
-                	LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: #1", name);
+                	    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: #0", name);
                     }
                     continue;
                 }

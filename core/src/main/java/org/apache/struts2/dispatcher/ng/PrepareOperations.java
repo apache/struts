@@ -104,7 +104,7 @@ public class PrepareOperations {
             dispatcher.cleanUpRequest(request);
         } catch (IOException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Cannot clean up the request, some files can still remain in #1 after upload!", e,
+                LOG.warn("Cannot clean up the request, some files can still remain in #0 after upload!", e,
                         StrutsConstants.STRUTS_MULTIPART_SAVEDIR);
             }
         } finally {

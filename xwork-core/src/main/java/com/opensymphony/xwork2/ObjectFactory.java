@@ -265,7 +265,7 @@ public class ObjectFactory implements Serializable {
      */
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating converter of type [#1]", converterClass.getCanonicalName());
+            LOG.debug("Creating converter of type [#0]", converterClass.getCanonicalName());
         }
         return container.getInstance(converterClass);
     }
@@ -279,7 +279,7 @@ public class ObjectFactory implements Serializable {
      */
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, String name) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating converter of type [#1] with name [#2]", converterClass.getCanonicalName(), name);
+            LOG.debug("Creating converter of type [#0] with name [#1]", converterClass.getCanonicalName(), name);
         }
         return container.getInstance(converterClass, name);
     }
@@ -292,11 +292,11 @@ public class ObjectFactory implements Serializable {
      */
     public TypeConverter buildConverter(String name) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating converter with name [#1]", name);
+            LOG.debug("Creating converter with name [#0]", name);
         }
         TypeConverter instance = container.getInstance(TypeConverter.class, name);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Converter of Type [#1] with name [#2], created!", instance.getClass().getCanonicalName(),  name);
+            LOG.debug("Converter of Type [#0] with name [#1], created!", instance.getClass().getCanonicalName(),  name);
         }
         return instance;
     }

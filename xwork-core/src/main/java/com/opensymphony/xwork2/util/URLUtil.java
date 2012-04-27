@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,14 +125,53 @@ public class URLUtil {
         Object content = url.openConnection().getContent();
         try {
             if (content.getClass().toString().startsWith("class org.jboss.vfs.VirtualFile")) {
-                Method method = content.getClass().getDeclaredMethod("getPhysicalFile");
-                File physicalFile = (File) method.invoke(content);
+                File physicalFile = readJBossPhysicalFile(content);
                 return physicalFile.toURI().toURL();
             }
         } catch (Exception e) {
             LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile.", e);
         }
         return url;
+    }
+
+    public static List<URL> getAllJBossPhysicalUrls(URL url) throws IOException {
+        List<URL> urls = new ArrayList<URL>();
+        Object content = url.openConnection().getContent();
+        try {
+            if (content.getClass().toString().startsWith("class org.jboss.vfs.VirtualFile")) {
+                File physicalFile = readJBossPhysicalFile(content);
+                readFile(urls, physicalFile);
+                readFile(urls, physicalFile.getParentFile());
+            } else {
+                urls.add(url);
+            }
+        } catch (Exception e) {
+            LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile.", e);
+        }
+        return urls;
+    }
+
+    private static File readJBossPhysicalFile(Object content) throws Exception {
+        Method method = content.getClass().getDeclaredMethod("getPhysicalFile");
+        return (File) method.invoke(content);
+    }
+
+    private static void readFile(List<URL> urls, File physicalFile) throws MalformedURLException {
+        if (physicalFile.isDirectory()) {
+            for (File file : physicalFile.listFiles()) {
+                if (file.isFile()) {
+                    addIfAbsent(urls, file.toURI().toURL());
+                } else if (file.isDirectory()) {
+                    readFile(urls, file);
+                }
+            }
+        }
+    }
+
+    private static void addIfAbsent(List<URL> urls, URL fileUrl) {
+        if (!urls.contains(fileUrl)) {
+            urls.add(fileUrl);
+        }
     }
 
 }

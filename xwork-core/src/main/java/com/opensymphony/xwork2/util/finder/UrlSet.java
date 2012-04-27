@@ -264,7 +264,7 @@ public class UrlSet {
         ArrayList<URL> classesList = Collections.list(classLoader.getResources(""));
         for (URL url : classesList) {
             if (URLUtil.isJBossUrl(url)) {
-                list.add(URLUtil.getJBossPhysicalUrl(url));
+                list.addAll(URLUtil.getAllJBossPhysicalUrls(url));
             } else {
                 list.add(url);
             }

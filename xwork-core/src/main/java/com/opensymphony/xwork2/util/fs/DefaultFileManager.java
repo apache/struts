@@ -34,7 +34,8 @@ public class DefaultFileManager implements FileManager {
 
     private static Logger LOG = LoggerFactory.getLogger(DefaultFileManager.class);
 
-    private Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
+    private static Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
+
     protected boolean reloadingConfigs = true;
 
     static final String JAR_FILE_NAME_SEPARATOR = "!/";

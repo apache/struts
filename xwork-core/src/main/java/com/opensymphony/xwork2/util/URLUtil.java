@@ -124,9 +124,13 @@ public class URLUtil {
     public static URL getJBossPhysicalUrl(URL url) throws IOException {
         Object content = url.openConnection().getContent();
         try {
-            if (content.getClass().toString().startsWith("class org.jboss.vfs.VirtualFile")) {
+            String s = content.getClass().toString();
+            if (s.startsWith("class org.jboss.vfs.VirtualFile")) { // JBoss 7 and probably JBoss 6
                 File physicalFile = readJBossPhysicalFile(content);
                 return physicalFile.toURI().toURL();
+            } else if (s.startsWith("class org.jboss.virtual.VirtualFile")) { // JBoss 5
+                String fileName = url.toExternalForm();
+                return new URL("file", null, fileName.substring(fileName.indexOf(":") + 1));
             }
         } catch (Exception e) {
             LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile.", e);

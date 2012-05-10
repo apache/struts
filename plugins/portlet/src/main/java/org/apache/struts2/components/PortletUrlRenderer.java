@@ -29,6 +29,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.portlet.util.PortletUrlHelperJSR286;
+import org.apache.struts2.views.util.UrlHelper;
 
 import javax.portlet.PortletMode;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class PortletUrlRenderer implements UrlRenderer {
     /**
      * The servlet renderer used when not executing in a portlet context.
      */
-    private UrlRenderer servletRenderer = null;
+    private ServletUrlRenderer servletRenderer = null;
     private PortletUrlHelper portletUrlHelper = null;
 
     public PortletUrlRenderer() {
@@ -62,18 +63,23 @@ public class PortletUrlRenderer implements UrlRenderer {
         servletRenderer.setActionMapper(actionMapper);
     }
 
+    @Inject
+    public void setUrlHelper(UrlHelper urlHelper) {
+        servletRenderer.setUrlHelper(urlHelper);
+    }
+
     /**
      * {@inheritDoc}
      */
     public void renderUrl(Writer writer, UrlProvider urlComponent) {
-        if (PortletActionContext.getPortletContext() == null || "none".equalsIgnoreCase(urlComponent.getPortletUrlType())) {
+        if (PortletActionContext.getPortletContext() == null) {
             servletRenderer.renderUrl(writer, urlComponent);
             return;
         }
         String result;
         if (isPortletModeChange(urlComponent,PortletActionContext.getRequest().getPortletMode())
-        		&& StringUtils.isEmpty(urlComponent.getNamespace())
-        		) {
+        		&& StringUtils.isEmpty(urlComponent.getNamespace()))
+        {
         	String mode = urlComponent.getPortletMode();
         	PortletMode portletMode = new PortletMode(mode);
         	String action = urlComponent.getAction();
@@ -126,13 +132,10 @@ public class PortletUrlRenderer implements UrlRenderer {
 	}
 
     private String createDefaultUrl(UrlProvider urlComponent) {
-        String result;
-        ActionInvocation ai = (ActionInvocation) urlComponent.getStack().getContext().get(
-                ActionContext.ACTION_INVOCATION);
+        ActionInvocation ai = (ActionInvocation) urlComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
         String action = ai.getProxy().getActionName();
-        result = portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(),
+        return portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(),
                 urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
-        return result;
     }
 
     private boolean onlyValueSpecified(UrlProvider urlComponent) {
@@ -153,7 +156,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         }
         String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(),
                 formComponent.request);
-        String action = null;
+        String action;
         if (formComponent.action != null) {
             action = formComponent.findString(formComponent.action);
         } else {

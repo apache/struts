@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -308,7 +309,7 @@ public class DefaultUrlHelper implements UrlHelper {
                             } else {
                                 String currentParamValues[] = (String[]) currentParam;
                                 if (currentParamValues != null) {
-                                    List<String> paramList = Arrays.asList(currentParamValues);
+                                    List<String> paramList = new ArrayList<String>(Arrays.asList(currentParamValues));
                                     paramList.add(translatedParamValue);
                                     queryParams.put(paramName, paramList.toArray(new String[paramList.size()]));
                                 } else {

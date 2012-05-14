@@ -35,10 +35,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import java.util.Map;
 
-import static org.apache.struts2.portlet.PortletConstants.EVENT_ACTION;
-import static org.apache.struts2.portlet.PortletConstants.REQUEST;
-import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
-import static org.apache.struts2.portlet.PortletConstants.STACK_FROM_EVENT_PHASE;
+import static org.apache.struts2.portlet.PortletConstants.*;
 
 public class PortletStateInterceptor extends AbstractInterceptor {
 
@@ -83,7 +80,7 @@ public class PortletStateInterceptor extends AbstractInterceptor {
 					CompoundRoot oldRoot = oldStack.getRoot();
 					ValueStack currentStack = invocation.getStack();
 					CompoundRoot root = currentStack.getRoot();
-					root.addAll(oldRoot);
+					root.addAll(0, oldRoot);
 					if (LOG.isDebugEnabled()) LOG.debug("Restored stack");
 				}
 			}

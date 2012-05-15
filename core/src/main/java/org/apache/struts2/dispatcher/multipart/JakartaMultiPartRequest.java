@@ -22,6 +22,7 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.fileupload.FileItem;
@@ -42,7 +43,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
@@ -118,6 +121,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         }
 
         values.add(item);
+        item.delete();
         files.put(item.getFieldName(), values);
     }
 
@@ -334,6 +338,26 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
                 return req.getInputStream();
             }
         };
+    }
+
+    /* (non-Javadoc)
+    * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
+    */
+    public void cleanUp() {
+        Set<String> names = files.keySet();
+        for (String name : names) {
+            List<FileItem> items = files.get(name);
+            for (FileItem item : items) {
+                if (LOG.isInfoEnabled()) {
+                    String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file",
+                            Locale.ENGLISH, "no.message.found", new Object[]{name, item});
+                    LOG.info(msg);
+                }
+                if (!item.isInMemory()) {
+                    item.delete();
+                }
+            }
+        }
     }
 
 }

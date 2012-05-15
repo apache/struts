@@ -21,6 +21,11 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.dispatcher.StrutsRequestWrapper;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,13 +34,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.dispatcher.StrutsRequestWrapper;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -245,4 +243,11 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 
         return temp.elements();
     }
+
+    public void cleanUp() {
+        if (multi != null) {
+            multi.cleanUp();
+        }
+    }
+
 }

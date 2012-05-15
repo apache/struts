@@ -21,12 +21,11 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -115,4 +114,10 @@ public interface MultiPartRequest {
      * @return a list of Strings that represent various errors during parsing
      */
     public List getErrors();
+
+    /**
+     * Cleans up all uploaded file, should be called at the end of request
+     */
+    public void cleanUp();
+
 }

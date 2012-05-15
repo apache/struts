@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.RequestUtils;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -102,11 +101,6 @@ public class PrepareOperations {
         // always clean up the thread request, even if an action hasn't been executed
         try {
             dispatcher.cleanUpRequest(request);
-        } catch (IOException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Cannot clean up the request, some files can still remain in #0 after upload!", e,
-                        StrutsConstants.STRUTS_MULTIPART_SAVEDIR);
-            }
         } finally {
             ActionContext.setContext(null);
             Dispatcher.setInstance(null);

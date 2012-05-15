@@ -74,7 +74,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -762,35 +761,13 @@ public class Dispatcher {
      *
      * @param request the HttpServletRequest object.
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper
-     * @throws java.io.IOException on any error.
      */
-    public void cleanUpRequest(HttpServletRequest request) throws IOException {
+    public void cleanUpRequest(HttpServletRequest request) {
         if (!(request instanceof MultiPartRequestWrapper)) {
             return;
         }
-
         MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
-
-        Enumeration fileParameterNames = multiWrapper.getFileParameterNames();
-        while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
-            String inputValue = (String) fileParameterNames.nextElement();
-            File[] files = multiWrapper.getFiles(inputValue);
-
-            for (File currentFile : files) {
-                if (LOG.isInfoEnabled()) {
-                    String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file", Locale.ENGLISH, "no.message.found", new Object[]{inputValue, currentFile});
-                    LOG.info(msg);
-                }
-
-                if ((currentFile != null) && currentFile.isFile()) {
-                    if (!currentFile.delete()) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Resource Leaking:  Could not remove uploaded file '" + currentFile.getCanonicalPath() + "'.");
-                        }
-                    }
-                }
-            }
-        }
+        multiWrapper.cleanUp();
     }
 
     /**

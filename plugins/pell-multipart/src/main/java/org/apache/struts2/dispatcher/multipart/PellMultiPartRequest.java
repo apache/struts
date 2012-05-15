@@ -21,8 +21,14 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import http.utils.multipartrequest.ServletMultipartRequest;
+import org.apache.struts2.StrutsConstants;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,14 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.StrutsConstants;
-
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.util.Locale;
 
 
 /**
@@ -159,10 +158,36 @@ public class PellMultiPartRequest implements MultiPartRequest {
             }
         } catch (IllegalArgumentException e) {
             if (LOG.isInfoEnabled()) {
-        	LOG.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
+        	    LOG.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
             }
         } catch (UnsupportedEncodingException e) {
             LOG.error("Encoding " + encoding + " is not a valid encoding.  Please check your struts.properties file.");
         }
     }
+
+    /* (non-Javadoc)
+    * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
+    */
+    public void cleanUp() {
+        Enumeration fileParameterNames = multi.getFileParameterNames();
+        while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
+            String inputValue = (String) fileParameterNames.nextElement();
+            File[] files = getFile(inputValue);
+            for (File currentFile : files) {
+                if (LOG.isInfoEnabled()) {
+                    String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file", Locale.ENGLISH,
+                            "no.message.found", new Object[]{inputValue, currentFile});
+                    LOG.info(msg);
+                }
+                if ((currentFile != null) && currentFile.isFile()) {
+                    if (!currentFile.delete()) {
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("Resource Leaking:  Could not remove uploaded file [#0]", currentFile.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

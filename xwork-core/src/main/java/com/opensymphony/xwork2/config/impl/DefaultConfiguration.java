@@ -17,7 +17,6 @@ package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.DefaultTextProvider;
-import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
@@ -57,7 +56,6 @@ import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -240,13 +238,11 @@ public class DefaultConfiguration implements Configuration {
 
             // Then process any package providers from the plugins
             Set<String> packageProviderNames = container.getInstanceNames(PackageProvider.class);
-            if (packageProviderNames != null) {
-                for (String name : packageProviderNames) {
-                    PackageProvider provider = container.getInstance(PackageProvider.class, name);
-                    provider.init(this);
-                    provider.loadPackages();
-                    packageProviders.add(provider);
-                }
+            for (String name : packageProviderNames) {
+                PackageProvider provider = container.getInstance(PackageProvider.class, name);
+                provider.init(this);
+                provider.loadPackages();
+                packageProviders.add(provider);
             }
 
             rebuildRuntimeConfiguration();

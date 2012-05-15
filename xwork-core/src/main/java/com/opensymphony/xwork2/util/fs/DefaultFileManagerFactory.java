@@ -21,17 +21,15 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     @Inject
     public DefaultFileManagerFactory(Container container) {
         Set<String> names = container.getInstanceNames(FileManager.class);
-        if (names != null) {
-            for (String fmName : names) {
-                FileManager fm = container.getInstance(FileManager.class, fmName);
-                if (fm.support()) {
-                    if (fileManager != null) {
-                        LOG.error("More than one FileManager supports current file system, [#0] and [#1]! "
-                                + "Remove one of them from the config! Using implementation [#2]",
-                                fm.toString(), fileManager.toString(), fm.toString());
-                    }
-                    fileManager = fm;
+        for (String fmName : names) {
+            FileManager fm = container.getInstance(FileManager.class, fmName);
+            if (fm.support()) {
+                if (fileManager != null) {
+                    LOG.error("More than one FileManager supports current file system, [#0] and [#1]! "
+                            + "Remove one of them from the config! Using implementation [#2]",
+                            fm.toString(), fileManager.toString(), fm.toString());
                 }
+                fileManager = fm;
             }
         }
         if (fileManager == null) {

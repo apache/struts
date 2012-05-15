@@ -741,11 +741,9 @@ public class Dispatcher {
             MultiPartRequest mpr = null;
             //check for alternate implementations of MultiPartRequest
             Set<String> multiNames = getContainer().getInstanceNames(MultiPartRequest.class);
-            if (multiNames != null) {
-                for (String multiName : multiNames) {
-                    if (multiName.equals(multipartHandlerName)) {
-                        mpr = getContainer().getInstance(MultiPartRequest.class, multiName);
-                    }
+            for (String multiName : multiNames) {
+                if (multiName.equals(multipartHandlerName)) {
+                    mpr = getContainer().getInstance(MultiPartRequest.class, multiName);
                 }
             }
             if (mpr == null ) {

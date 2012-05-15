@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -80,7 +81,7 @@ class DummyContainer implements Container {
                 }
             };
         }
-        return null;
+        return Collections.emptySet();
     }
 
     public void setScopeStrategy(Scope.Strategy scopeStrategy) {

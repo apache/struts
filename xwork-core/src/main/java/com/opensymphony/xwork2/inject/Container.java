@@ -97,7 +97,7 @@ public interface Container extends Serializable {
   /**
    * Gets a set of all registered names for the given type
    * @param type The instance type
-   * @return A set of registered names
+   * @return A set of registered names or empty set if no instances are registered for that type
    */
   Set<String> getInstanceNames(Class<?> type);
 

@@ -15,19 +15,15 @@
  */
 package com.opensymphony.xwork2;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.UnknownHandler;
-import com.opensymphony.xwork2.UnknownHandlerManager;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Default implementation of UnknownHandlerManager
@@ -69,11 +65,9 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
             } else {
                 //add all available UnknownHandlers
                 Set<String> unknowHandlerNames = container.getInstanceNames(UnknownHandler.class);
-                if (unknowHandlerNames != null) {
-                    for (String unknowHandlerName : unknowHandlerNames) {
-                        UnknownHandler uh = container.getInstance(UnknownHandler.class, unknowHandlerName);
-                        unknownHandlers.add(uh);
-                    }
+                for (String unknowHandlerName : unknowHandlerNames) {
+                    UnknownHandler uh = container.getInstance(UnknownHandler.class, unknowHandlerName);
+                    unknownHandlers.add(uh);
                 }
             }
         }

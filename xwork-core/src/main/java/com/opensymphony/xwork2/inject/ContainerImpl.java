@@ -558,7 +558,11 @@ class ContainerImpl implements Container {
 	}
 
 	public Set<String> getInstanceNames( final Class<?> type ) {
-		return factoryNamesByType.get(type);
+        Set<String> names = factoryNamesByType.get(type);
+        if (names == null) {
+            names = Collections.emptySet();
+        }
+        return names;
 	}
 
 	ThreadLocal<Object[]> localContext =

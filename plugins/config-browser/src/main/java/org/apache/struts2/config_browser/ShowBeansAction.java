@@ -35,7 +35,6 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.velocity.VelocityManager;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -75,9 +74,6 @@ public class ShowBeansAction extends ActionNamesAction {
             chosenName = "struts";
         }
         Set<String> names = container.getInstanceNames(type);
-        if (names == null) {
-            names = Collections.emptySet();
-        }
         if (!names.contains(chosenName)) {
             bindings.add(new Binding(getInstanceClassName(container, type, "default"), chosenName, constName, true));
         }

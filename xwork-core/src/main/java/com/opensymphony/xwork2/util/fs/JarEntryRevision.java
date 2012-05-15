@@ -1,6 +1,6 @@
 package com.opensymphony.xwork2.util.fs;
 
-import com.opensymphony.xwork2.util.URLUtil;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.io.FileUtils;
@@ -43,7 +43,7 @@ class JarEntryRevision extends Revision {
         return entry != null && (lastModified < entry.getTime());
     }
 
-    public static Revision build(URL fileUrl) {
+    public static Revision build(URL fileUrl, FileManager fileManager) {
         // File within a Jar
         // Find separator index of jar filename and filename within jar
         String jarFileName = "";
@@ -64,7 +64,7 @@ class JarEntryRevision extends Revision {
             int index = separatorIndex + DefaultFileManager.JAR_FILE_NAME_SEPARATOR.length();
             String fileNameInJar = fileName.substring(index).replaceAll("%20", " ");
 
-            URL url = URLUtil.normalizeToFileProtocol(fileUrl);
+            URL url = fileManager.normalizeToFileProtocol(fileUrl);
             if (url != null) {
                 JarFile jarFile = new JarFile(FileUtils.toFile(url));
                 ZipEntry entry = jarFile.getEntry(fileNameInJar);

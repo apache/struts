@@ -15,16 +15,18 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.URLUtil;
-import com.opensymphony.xwork2.XWorkException;
+import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.EmptyVisitor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +39,17 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -66,6 +78,7 @@ public class ClassFinder {
 
     private boolean extractBaseInterfaces;
     private ClassLoaderInterface classLoaderInterface;
+    private FileManager fileManager;
 
     /**
      * Creates a ClassFinder that will search the urls in the specified ClassLoaderInterface
@@ -136,6 +149,7 @@ public class ClassFinder {
     public ClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls, boolean extractBaseInterfaces, Set<String> protocols, Test<String> classNameFilter) {
         this.classLoaderInterface = classLoaderInterface;
         this.extractBaseInterfaces = extractBaseInterfaces;
+        this.fileManager = ActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
 
         List<String> classNames = new ArrayList<String>();
         for (URL location : urls) {
@@ -477,7 +491,7 @@ public class ClassFinder {
     }
 
     private List<String> jar(URL location) throws IOException {
-        URL url = URLUtil.normalizeToFileProtocol(location);
+        URL url = fileManager.normalizeToFileProtocol(location);
         if (url != null) {
             InputStream in = url.openStream();
             try {

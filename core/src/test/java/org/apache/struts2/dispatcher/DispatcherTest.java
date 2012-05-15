@@ -23,7 +23,7 @@ package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
@@ -198,9 +198,9 @@ public class DispatcherTest extends StrutsTestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
-        FileManager fileManager = new DefaultFileManager();
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(FileManager.class)), fileManager);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(FileManager.class)), fileManager);
+        FileManagerFactory fileManagerFactory = new DefaultFileManagerFactory(container);
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(FileManagerFactory.class)), fileManagerFactory);
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(FileManagerFactory.class)), fileManagerFactory);
         mockConfiguration.expect("destroy");
         mockConfiguration.matchAndReturn("getPackageConfigs", new HashMap<String, PackageConfig>());
         
@@ -228,7 +228,7 @@ public class DispatcherTest extends StrutsTestCase {
         
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
-        mockContainer.matchAndReturn("getInstance", C.args(C.eq(FileManager.class)), new DefaultFileManager());
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(FileManagerFactory.class)), new DefaultFileManagerFactory(container));
 
         Mock mockConfiguration = new Mock(Configuration.class);
         mockConfiguration.matchAndReturn("getPackageConfigs", packageConfigs);

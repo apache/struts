@@ -15,7 +15,7 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -37,7 +37,7 @@ public abstract class ConfigurationTestBase extends XWorkTestCase {
 
         XmlConfigurationProvider prov = new XmlConfigurationProvider(filename, true);
         prov.setObjectFactory(container.getInstance(ObjectFactory.class));
-        prov.setFileManager(container.getInstance(FileManager.class));
+        prov.setFileManagerFactory(container.getInstance(FileManagerFactory.class));
         prov.init(configuration);
         prov.loadPackages();
         return prov;

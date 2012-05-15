@@ -1,6 +1,7 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -31,8 +32,8 @@ public class DefaultOValValidationManager implements OValValidationManager {
     private FileManager fileManager;
 
     @Inject
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+    public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
+        this.fileManager = fileManagerFactory.getFileManager();
     }
 
     public synchronized List<Configurer> getConfigurers(Class clazz, String context, boolean validateJPAAnnotations) {

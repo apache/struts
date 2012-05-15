@@ -21,7 +21,7 @@
 
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.util.fs.DefaultFileManager;
+import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
@@ -34,7 +34,7 @@ public class FreemarkerManagerTest extends StrutsTestCase {
     public void testIfStrutsEncodingIsSetProperty() throws Exception {
         FreemarkerManager mgr = new FreemarkerManager();
         mgr.setEncoding("UTF-8");
-        mgr.setFileManager(new DefaultFileManager());
+        mgr.setFileManagerFactory(new DefaultFileManagerFactory(container));
         StrutsMockServletContext servletContext = new StrutsMockServletContext();
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
         freemarker.template.Configuration conf = mgr.getConfiguration(servletContext);

@@ -21,27 +21,24 @@
 
 package org.apache.struts2.osgi;
 
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.URLUtil;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
 import org.apache.felix.main.AutoActivator;
 import org.apache.felix.main.Main;
 import org.apache.felix.shell.ShellService;
-import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
-import org.osgi.framework.Constants;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleListener;
-import org.osgi.framework.BundleEvent;
+import org.osgi.framework.Constants;
 import org.osgi.util.tracker.ServiceTracker;
 
 import javax.servlet.ServletContext;
@@ -337,7 +334,8 @@ public class FelixOsgiHost implements OsgiHost {
     protected String getVersion(URL url) {
         if ("jar".equals(url.getProtocol())) {
             try {
-                JarFile jarFile = new JarFile(new File(URLUtil.normalizeToFileProtocol(url).toURI()));
+                FileManager fileManager = ServletActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
+                JarFile jarFile = new JarFile(new File(fileManager.normalizeToFileProtocol(url).toURI()));
                 Manifest manifest = jarFile.getManifest();
                 if (manifest != null) {
                     String version = manifest.getMainAttributes().getValue("Bundle-Version");

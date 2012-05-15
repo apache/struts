@@ -17,14 +17,18 @@ package com.opensymphony.xwork2.validator;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.StubValueStack;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.test.DataAware2;
 import com.opensymphony.xwork2.test.SimpleAction2;
 import com.opensymphony.xwork2.test.SimpleAction3;
-import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.ValueStack;
-import junit.framework.TestCase;
+import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +42,7 @@ import java.util.List;
  * @author tm_jee 
  * @version $Date$ $Id$
  */
-public class DefaultActionValidatorManagerTest extends TestCase {
+public class DefaultActionValidatorManagerTest extends XWorkTestCase {
 
     protected final String alias = "validationAlias";
 
@@ -57,12 +61,11 @@ public class DefaultActionValidatorManagerTest extends TestCase {
         mockValidatorFactory = new Mock(ValidatorFactory.class);
         actionValidatorManager.setValidatorFactory((ValidatorFactory)mockValidatorFactory.proxy());
 
-        actionValidatorManager.setFileManager(new DefaultFileManager());
-
         stubValueStack = new StubValueStack();
         ActionContext.setContext(new ActionContext(new HashMap<String, Object>()));
         ActionContext.getContext().setValueStack(stubValueStack);
 
+        actionValidatorManager.setFileManagerFactory(new DefaultFileManagerFactory(container));
     }
 
     @Override

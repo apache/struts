@@ -21,11 +21,14 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.util.DefaultUrlHelper;
@@ -41,6 +44,7 @@ import javax.servlet.http.HttpSession;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
@@ -117,7 +121,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         assertEquals("somethingelseText", response.getContentAsString());
     }
 
-    public void tesAbsolutePatht() throws Exception {
+    public void testAbsolutePath() throws Exception {
         result.setLocation("/org/apache/struts2/simple0.jsp");
         result.execute(null);
 
@@ -265,12 +269,19 @@ public class EmbeddedJSPResultTest extends TestCase {
         //mock converter
         XWorkConverter converter = new DummyConverter();
 
+        DefaultFileManager fileManager = new DefaultFileManager();
+        fileManager.setReloadingConfigs(false);
+
         //mock container
         Container container = EasyMock.createNiceMock(Container.class);
         EasyMock.expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
+        EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<String>()).anyTimes();
+        EasyMock.expect(container.getInstance(FileManager.class)).andReturn(fileManager).anyTimes();
 
         UrlHelper urlHelper = new DefaultUrlHelper();
         EasyMock.expect(container.getInstance(UrlHelper.class)).andReturn(urlHelper).anyTimes();
+        FileManagerFactory fileManagerFactory = new DummyFileManagerFactory();
+        EasyMock.expect(container.getInstance(FileManagerFactory.class)).andReturn(fileManagerFactory).anyTimes();
 
         EasyMock.replay(container);
         stackContext.put(ActionContext.CONTAINER, container);
@@ -278,10 +289,19 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         actionContext.setValueStack(valueStack);
     }
+
 }
 
 //converter has a protected default constructor...meh
 class DummyConverter extends XWorkConverter {
+
+}
+
+class DummyFileManagerFactory implements FileManagerFactory {
+
+    public FileManager getFileManager() {
+        return new DefaultFileManager();
+    }
 
 }
 
@@ -307,7 +327,7 @@ class ServletGetRunnable implements Runnable {
 
     public void run() {
         ActionContext.setContext(actionContext);
-        //wait to start all therads at once..or try at least
+        //wait to start all threads at once..or try at least
         try {
             startBarrier.await();
             object = servletCache.get("org/apache/struts2/simple0.jsp");

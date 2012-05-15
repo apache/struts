@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -74,8 +75,8 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     }
 
     @Inject
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+    public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
+        this.fileManager = fileManagerFactory.getFileManager();
     }
 
     public List<Validator> getValidators(Class clazz, String context) {

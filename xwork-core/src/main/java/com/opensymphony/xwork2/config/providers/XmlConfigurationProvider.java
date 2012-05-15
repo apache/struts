@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
@@ -113,8 +114,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     }
 
     @Inject
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+    public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
+        this.fileManager = fileManagerFactory.getFileManager();
     }
 
     /**

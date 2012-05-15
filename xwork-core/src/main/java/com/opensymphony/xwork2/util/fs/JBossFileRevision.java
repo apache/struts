@@ -1,6 +1,6 @@
 package com.opensymphony.xwork2.util.fs;
 
-import com.opensymphony.xwork2.util.URLUtil;
+import com.opensymphony.xwork2.FileManager;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -15,9 +15,9 @@ class JBossFileRevision extends FileRevision {
         super(file, lastUpdated);
     }
 
-    public static Revision build(URL fileUrl) {
+    public static Revision build(URL fileUrl, FileManager fileManager) {
         File file;
-        URL url = URLUtil.normalizeToFileProtocol(fileUrl);
+        URL url = fileManager.normalizeToFileProtocol(fileUrl);
         try {
             if (url != null) {
                 file = new File(url.toURI());

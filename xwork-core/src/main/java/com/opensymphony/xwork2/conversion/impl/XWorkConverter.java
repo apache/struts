@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkMessages;
 import com.opensymphony.xwork2.XWorkException;
@@ -202,8 +203,8 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     @Inject
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+    public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
+        this.fileManager = fileManagerFactory.getFileManager();
     }
 
     public static String getConversionErrorMessage(String propertyName, ValueStack stack) {

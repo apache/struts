@@ -22,6 +22,7 @@
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -215,8 +216,8 @@ public class FreemarkerManager {
     }
 
     @Inject
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+    public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
+        this.fileManager = fileManagerFactory.getFileManager();
     }
 
     public boolean getNoCharsetInContentType() {

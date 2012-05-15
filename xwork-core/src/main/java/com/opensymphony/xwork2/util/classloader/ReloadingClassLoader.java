@@ -15,24 +15,22 @@
  */
 package com.opensymphony.xwork2.util.classloader;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.classloader.FileResourceStore;
-import com.opensymphony.xwork2.util.URLUtil;
-import com.opensymphony.xwork2.XWorkException;
-
-import java.io.InputStream;
-import java.io.File;
-import java.net.URL;
-import java.net.URISyntaxException;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.Set;
-import java.util.Collections;
-import java.util.Collection;
-import java.util.HashSet;
-
 import org.apache.commons.lang3.ObjectUtils;
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The ReloadingClassLoader uses a delegation mechanism to allow
@@ -54,8 +52,9 @@ public class ReloadingClassLoader extends ClassLoader {
         super(pParent);
         parent = pParent;
         URL parentRoot = pParent.getResource("");
-        URL root = URLUtil.normalizeToFileProtocol(parentRoot);
-        root = (URL) ObjectUtils.defaultIfNull(root, parentRoot);
+        FileManager fileManager = ActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
+        URL root = fileManager.normalizeToFileProtocol(parentRoot);
+        root = ObjectUtils.defaultIfNull(root, parentRoot);
         try {
             if (root != null) {
                 stores = new ResourceStore[]{new FileResourceStore(new File(root.toURI()))};

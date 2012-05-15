@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.config;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -48,7 +49,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         configProviderMock.expect("loadPackages", C.ANY_ARGS);
         configProviderMock.expect("destroy", C.ANY_ARGS);
         configProviderMock.matchAndReturn("toString", "mock");
-        configuration.getContainer().getInstance(FileManager.class).setReloadingConfigs(true);
+        configuration.getContainer().getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
         configuration = configurationManager.getConfiguration();
         configProviderMock.verify();
 
@@ -58,7 +59,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
 
     public void testNoConfigurationReload() {
         // now check that it doesn't try to reload
-        configuration.getContainer().getInstance(FileManager.class).setReloadingConfigs(false);
+        configuration.getContainer().getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(false);
         configuration = configurationManager.getConfiguration();
 
         configProviderMock.verify();

@@ -20,7 +20,8 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.util.URLUtil;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.UrlSet;
@@ -186,9 +187,10 @@ public class JSPLoader {
         //find jars
         List<URL> urls = urlSet.getUrls();
 
+        FileManager fileManager = ServletActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
         for (URL url : urls) {
-            URL normalizedUrl = URLUtil.normalizeToFileProtocol(url);
-            File file = FileUtils.toFile((URL) ObjectUtils.defaultIfNull(normalizedUrl, url));
+            URL normalizedUrl = fileManager.normalizeToFileProtocol(url);
+            File file = FileUtils.toFile(ObjectUtils.defaultIfNull(normalizedUrl, url));
             if (file.exists())
                 classPath.add(file.getAbsolutePath());
         }

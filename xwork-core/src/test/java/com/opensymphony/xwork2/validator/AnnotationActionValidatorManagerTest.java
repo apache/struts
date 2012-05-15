@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.AnnotatedTestBean;
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.SimpleAnnotationAction;
 import com.opensymphony.xwork2.XWorkTestCase;
@@ -98,7 +99,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
     }
 
     public void testGetValidatorsForGivenMethodNameWithoutReloading() throws ValidationException {
-        FileManager fileManager = container.getInstance(FileManager.class);
+        FileManager fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
         List validatorList = annotationActionValidatorManager.getValidators(SimpleAnnotationAction.class, alias, "execute");
 
         //disable configuration reload/devmode

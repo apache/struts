@@ -22,6 +22,8 @@ package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
@@ -37,6 +39,7 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
+import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import junit.framework.TestCase;
 import org.apache.struts2.convention.actions.DefaultResultPathAction;
@@ -108,6 +111,14 @@ import static org.easymock.EasyMock.verify;
  * </p>
  */
 public class PackageBasedActionConfigBuilderTest extends TestCase {
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        ActionContext context = new ActionContext(new HashMap<String, Object>());
+        context.setContainer(new DummyContainer());
+        ActionContext.setContext(context);
+    }
 
     public void testActionPackages() throws MalformedURLException {
         run("org.apache.struts2.convention.actions", null, null);
@@ -680,6 +691,11 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         private ResultMapBuilder resultMapBuilder;
         private InterceptorMapBuilder interceptorMapBuilder;
         private ConventionsService conventionsService;
+        private DefaultFileManagerFactory fileManagerFactory;
+
+        public DummyContainer() {
+            fileManagerFactory = new DefaultFileManagerFactory(this);
+        }
 
         public void setActionNameBuilder(ActionNameBuilder actionNameBuilder) {
             this.actionNameBuilder = actionNameBuilder;
@@ -699,6 +715,9 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
         public <T> T getInstance(Class<T> type) {
             try {
+                if (type == FileManagerFactory.class) {
+                    return (T) fileManagerFactory;
+                }
                 T obj = type.newInstance();
                 if (obj instanceof ObjectFactory) {
                     ((ObjectFactory)obj).setReflectionProvider(new OgnlReflectionProvider() {
@@ -736,10 +755,15 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 return (T) actionNameBuilder;
             else if (type == ConventionsService.class)
                 return (T) conventionsService;
+            else if (type == FileManagerFactory.class)
+                return (T) fileManagerFactory;
             return null;
         }
 
         public Set<String> getInstanceNames(Class<?> type) {
+            if (type == FileManager.class) {
+                return Collections.emptySet();
+            }
             return null;
         }
 

@@ -15,7 +15,7 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
@@ -51,7 +51,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
             }
         };
         prov.setObjectFactory(container.getInstance(ObjectFactory.class));
-        prov.setFileManager(container.getInstance(FileManager.class));
+        prov.setFileManagerFactory(container.getInstance(FileManagerFactory.class));
         prov.init(configuration);
         List<Document> docs = prov.getDocuments();
         assertEquals(3, docs.size());
@@ -74,7 +74,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     }
 
     public void testNeedsReload() throws Exception {
-        container.getInstance(FileManager.class).setReloadingConfigs(true);
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-actions.xml";
         ConfigurationProvider provider = buildConfigurationProvider(filename);
 
@@ -150,7 +150,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     public void testEmptySpaces() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork- test.xml";
-        container.getInstance(FileManager.class).setReloadingConfigs(true);
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
 
         ConfigurationProvider provider = buildConfigurationProvider(filename);
         assertTrue(!provider.needsReload());
@@ -166,7 +166,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     }
 
     public void testConfigsInJarFiles() throws Exception {
-        container.getInstance(FileManager.class).setReloadingConfigs(true);
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
         testProvider("xwork-jar.xml");
         testProvider("xwork-zip.xml");
         testProvider("xwork - jar.xml");

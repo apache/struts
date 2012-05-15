@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
@@ -397,7 +398,7 @@ public class Dispatcher {
     }
 
     private void init_CheckConfigurationReloading(Container container) {
-        FileManager fileManager = container.getInstance(FileManager.class);
+        FileManager fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
         fileManager.setReloadingConfigs("true".equals(container.getInstance(String.class,
                 StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
     }

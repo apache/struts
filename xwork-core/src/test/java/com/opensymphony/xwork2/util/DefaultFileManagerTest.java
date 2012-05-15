@@ -1,6 +1,7 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.io.InputStream;
@@ -20,7 +21,7 @@ public class DefaultFileManagerTest extends XWorkTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        fileManager = container.getInstance(FileManager.class);
+        fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
     }
 
     public void testGetFileInJar() throws Exception {

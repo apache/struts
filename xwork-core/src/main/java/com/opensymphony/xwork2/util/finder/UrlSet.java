@@ -15,17 +15,27 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.URLUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Use with ClassFinder to filter the Urls to be scanned, example:
@@ -46,15 +56,22 @@ public class UrlSet {
     private static final Logger LOG = LoggerFactory.getLogger(UrlSet.class);
     private final Map<String,URL> urls;
     private Set<String> protocols;
-    
+    private FileManager fileManager;
+
+    private UrlSet() {
+        this.urls = new HashMap<String,URL>();
+        this.fileManager = ActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
+    }
 
     public UrlSet(ClassLoaderInterface classLoader) throws IOException {
-        this(getUrls(classLoader));
+        this();
+        load(getUrls(classLoader));
     }
 
     public UrlSet(ClassLoaderInterface classLoader, Set<String> protocols) throws IOException {
-        this(getUrls(classLoader, protocols));
+        this();
         this.protocols = protocols;
+        load(getUrls(classLoader, protocols));
     }
 
     public UrlSet(URL... urls){
@@ -65,29 +82,22 @@ public class UrlSet {
      * @param urls
      */
     public UrlSet(Collection<URL> urls){
-        this.urls = new HashMap<String,URL>();
+        this();
+        load(urls);
+    }
+
+    private UrlSet(Map<String, URL> urls) {
+        this.urls = urls;
+    }
+
+    private void load(Collection<URL> urls){
         for (URL location : urls) {
             try {
-//                if (location.getProtocol().equals("file")) {
-//                    try {
-//                        // See if it's actually a jar
-//                        URL jarUrl = new URL("jar", "", location.toExternalForm() + "!/");
-//                        JarURLConnection juc = (JarURLConnection) jarUrl.openConnection();
-//                        juc.getJarFile();
-//                        location = jarUrl;
-//                    } catch (IOException e) {
-//                    }
-//                    this.urls.put(location.toExternalForm(), location);
-//                }
                 this.urls.put(location.toExternalForm(), location);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private UrlSet(Map<String, URL> urls) {
-        this.urls = urls;
     }
 
     public UrlSet include(UrlSet urlSet){
@@ -186,8 +196,8 @@ public class UrlSet {
                 //if it is inside a war file, get the url to the file
                 externalForm = StringUtils.substringBefore(externalForm, "/WEB-INF/classes");
                 URL warUrl = new URL(externalForm);
-                URL normalizedUrl = URLUtil.normalizeToFileProtocol(warUrl);
-                URL finalUrl = (URL) ObjectUtils.defaultIfNull(normalizedUrl, warUrl);
+                URL normalizedUrl = fileManager.normalizeToFileProtocol(warUrl);
+                URL finalUrl = ObjectUtils.defaultIfNull(normalizedUrl, warUrl);
 
                 Map<String, URL> newUrls = new HashMap<String, URL>(this.urls);
                 if ("jar".equals(finalUrl.getProtocol()) || "file".equals(finalUrl.getProtocol())) {
@@ -216,7 +226,7 @@ public class UrlSet {
         return new ArrayList<URL>(urls.values());
     }
 
-    private static List<URL> getUrls(ClassLoaderInterface classLoader) throws IOException {
+    private List<URL> getUrls(ClassLoaderInterface classLoader) throws IOException {
         List<URL> list = new ArrayList<URL>();
 
         //find jars
@@ -238,7 +248,7 @@ public class UrlSet {
         return list;
     }
 
-    private static List<URL> getUrls(ClassLoaderInterface classLoader, Set<String> protocols) throws IOException {
+    private List<URL> getUrls(ClassLoaderInterface classLoader, Set<String> protocols) throws IOException {
 
         if (protocols == null) {
             return getUrls(classLoader);
@@ -263,11 +273,7 @@ public class UrlSet {
         // Usually the "classes" dir.
         ArrayList<URL> classesList = Collections.list(classLoader.getResources(""));
         for (URL url : classesList) {
-            if (URLUtil.isJBossUrl(url)) {
-                list.addAll(URLUtil.getAllJBossPhysicalUrls(url));
-            } else {
-                list.add(url);
-            }
+            list.addAll(fileManager.getAllPhysicalUrls(url));
         }
 
         return list;

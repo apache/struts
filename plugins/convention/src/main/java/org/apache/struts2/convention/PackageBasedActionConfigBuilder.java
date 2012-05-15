@@ -22,6 +22,7 @@ package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -296,8 +297,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     @Inject
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+    public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
+        this.fileManager = fileManagerFactory.getFileManager();
     }
 
     protected void initReloadClassLoader() {

@@ -1,5 +1,7 @@
 package com.opensymphony.xwork2.util;
 
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import junit.framework.TestCase;
 
 import java.io.IOException;
@@ -12,10 +14,14 @@ import java.util.jar.JarInputStream;
  * registered URLStreamHandlerFactory would make them fail
  */
 public class UrlUtilTest2 extends TestCase {
+
     public void testOpenWithJarProtocol() throws IOException {
+        FileManager fileManager = new DefaultFileManager();
+
         URL url = ClassLoaderUtil.getResource("xwork-jar.jar", URLUtil.class);
         URL jarUrl = new URL("jar", "", url.toExternalForm() + "!/");
-        URL outputURL = URLUtil.normalizeToFileProtocol(jarUrl);
+        URL outputURL = fileManager.normalizeToFileProtocol(jarUrl);
+
         assertNotNull(outputURL);
         assertUrlCanBeOpened(outputURL);
     }

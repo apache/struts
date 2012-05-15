@@ -1,7 +1,9 @@
 package com.opensymphony.xwork2;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 
 /**
  * Basic interface to access file on the File System and to monitor changes
@@ -44,4 +46,19 @@ public interface FileManager {
      */
     void monitorFile(URL fileUrl);
 
+    /**
+     * Convert URLs to URLs with "file" protocol
+     * @param url URL to convert to a jar url
+     * @return a URL to a file, or null if the URL external form cannot be parsed
+     */
+    URL normalizeToFileProtocol(URL url);
+
+    /**
+     * Indicate if given implementation supports current OS File System
+     *
+     * @return true if supports current OS File System
+     */
+    boolean support();
+
+    Collection<? extends URL> getAllPhysicalUrls(URL url) throws IOException;
 }

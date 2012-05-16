@@ -121,7 +121,6 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         }
 
         values.add(item);
-        item.delete();
         files.put(item.getFieldName(), values);
     }
 
@@ -146,6 +145,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
             values.add(item.getString());
         }
         params.put(item.getFieldName(), values);
+        item.delete();
     }
 
     private List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {

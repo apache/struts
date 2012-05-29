@@ -24,7 +24,11 @@
 <#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
 <#list aKeys as aKey><#rt/>
   <#assign keyValue = parameters.dynamicAttributes[aKey]/>
-  <#assign value = struts.translateVariables(keyValue)!keyValue/>
+  <#if keyValue?is_string>
+      <#assign value = struts.translateVariables(keyValue)!keyValue/>
+  <#else>
+      <#assign value = keyValue?string/>
+  </#if>
  ${aKey}="${value?html}"<#rt/>
 </#list><#rt/>
 </#if><#rt/>

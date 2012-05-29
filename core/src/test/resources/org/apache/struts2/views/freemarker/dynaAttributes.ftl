@@ -22,3 +22,4 @@
 -->
 <@s.textfield name="test" dynamicAttributes={"placeholder":"input","foo":"bar"}/>
 <@s.textfield name="test" placeholder="input" foo="bar"/>
+<@s.textfield name="test" break=true />

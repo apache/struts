@@ -21,12 +21,11 @@
 
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -46,6 +45,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: example -->
  * &lt;s:action name="GenderMap" var="genders"/&gt;
  * &lt;s:radio label="Gender" name="male" list="#genders.genders"/&gt;
+ * <!-- END SNIPPET: example -->
+ *
+ * <!-- START SNIPPET: example_fmt -->
+ * &lt;@s.radio name="car" list={"ford": "Ford Motor Co", "toyota": "Toyota"} listKey="key" listValue="value" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

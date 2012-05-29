@@ -21,3 +21,5 @@
  */
 -->
 <@s.radio name="client" id="client_" list='{"foo", "bar"}' />
+
+<@s.radio name="car" list={"ford": "Ford Motor Co", "toyota": "Toyota"} listKey="key" listValue="value" />

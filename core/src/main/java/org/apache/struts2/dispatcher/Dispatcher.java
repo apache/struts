@@ -682,7 +682,7 @@ public class Dispatcher {
         }
         // check for Ajax request to use UTF-8 encoding strictly http://www.w3.org/TR/XMLHttpRequest/#the-send-method
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-            encoding = "utf-8";
+            encoding = "UTF-8";
         }
 
         Locale locale = null;

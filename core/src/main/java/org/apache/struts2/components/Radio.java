@@ -49,8 +49,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <!-- START SNIPPET: example_fmt -->
  * &lt;@s.radio name="car" list={"ford": "Ford Motor Co", "toyota": "Toyota"} listKey="key" listValue="value" /&gt;
- * <!-- END SNIPPET: example -->
- * </pre>
+ * <!-- END SNIPPET: example_fmt -->
  *
  */
 @StrutsTag(name="radio", tldTagClass="org.apache.struts2.views.jsp.ui.RadioTag", description="Renders a radio button input field")

@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -153,7 +152,6 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     protected void initActionContext(ActionContext actionContext) {
         actionContext.setParameters(new HashMap<String, Object>(request.getParameterMap()));
         initSession(actionContext);
-        initPortletContext(actionContext);
         applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy
         ActionContext.setContext(actionContext);
@@ -163,20 +161,6 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         if (actionContext.getSession() == null) {
             actionContext.setSession(new HashMap<String, Object>());
             request.setSession(new MockHttpSession(servletContext));
-        }
-    }
-
-    protected void initPortletContext(ActionContext actionContext) {
-        try {
-            ClassLoaderUtil.loadClass("javax.portlet.PortletContext", getClass());
-            Class mockClazz = ClassLoaderUtil.loadClass("org.springframework.mock.web.portlet.MockPortletContext", getClass());
-            actionContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, mockClazz.newInstance());
-        } catch (ClassNotFoundException e) {
-            LOG.debug("Cannot initialize portlet Mocks (javax.portlet.PortletContext class not found), you're missing dependencies (please add them) or not a portlet environment (so you can ignore this)!");
-        } catch (InstantiationException e) {
-            LOG.warn("Cannot initialize portlet mocks!", e);
-        } catch (IllegalAccessException e) {
-            LOG.warn("Cannot initialize portlet mocks!", e);
         }
     }
 

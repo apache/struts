@@ -20,7 +20,13 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -92,15 +98,13 @@
         <!-- Mocks for unit testing (by Spring) -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>2.0.7</version>
-            <scope>test</scope>
+            <artifactId>spring-test</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-portlet</artifactId>
-            <version>2.0.8</version>
-            <scope>test</scope>
+            <artifactId>spring-webmvc-portlet</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

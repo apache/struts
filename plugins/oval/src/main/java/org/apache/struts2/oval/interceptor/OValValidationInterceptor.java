@@ -65,10 +65,11 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Enable OVal support fopr JPA
+     * Enable OVal support for JPA
      */
-    public void setValidateJPAAnnotations(boolean validateJPAAnnotations) {
-        this.validateJPAAnnotations = validateJPAAnnotations;
+    @Inject(value = "struts.oval.validateJPAAnnotations")
+    public void setValidateJPAAnnotations(String validateJPAAnnotations) {
+        this.validateJPAAnnotations = Boolean.parseBoolean(validateJPAAnnotations);
     }
 
     /**

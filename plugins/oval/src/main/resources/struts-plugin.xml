@@ -22,43 +22,47 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
-	"http://struts.apache.org/dtds/struts-2.3.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-    <bean type="org.apache.struts2.oval.interceptor.OValValidationManager" class="org.apache.struts2.oval.interceptor.DefaultOValValidationManager" />
-    <constant name="struts.oval.validateJPAAnnotations" value="false" />
-    
-    <package name="oval-default" extends="struts-default">
-           <interceptors>
-               <interceptor name="ovalValidation" class="org.apache.struts2.oval.interceptor.OValValidationInterceptor" />
 
-               <interceptor-stack name="ovalValidationStack">
-                   <interceptor-ref name="exception"/>
-                   <interceptor-ref name="alias"/>
-                   <interceptor-ref name="servletConfig"/>
-                   <interceptor-ref name="i18n"/>
-                   <interceptor-ref name="prepare"/>
-                   <interceptor-ref name="chain"/>
-                   <interceptor-ref name="debugging"/>
-                   <interceptor-ref name="profiling"/>
-                   <interceptor-ref name="scopedModelDriven"/>
-                   <interceptor-ref name="modelDriven"/>
-                   <interceptor-ref name="fileUpload"/>
-                   <interceptor-ref name="checkbox"/>
-                   <interceptor-ref name="staticParams"/>
-                   <interceptor-ref name="actionMappingParams"/>
-                   <interceptor-ref name="params">
-                       <param name="excludeParams">dojo\..*,^struts\..*</param>
-                   </interceptor-ref>
-                   <interceptor-ref name="conversionError"/>
-                   <interceptor-ref name="ovalValidation">
-                       <param name="excludeMethods">input,back,cancel,browse</param>
-                   </interceptor-ref>
-                   <interceptor-ref name="workflow">
-                       <param name="excludeMethods">input,back,cancel,browse</param>
-                   </interceptor-ref>
-               </interceptor-stack>
-           </interceptors>
+    <bean type="org.apache.struts2.oval.interceptor.OValValidationManager"
+          class="org.apache.struts2.oval.interceptor.DefaultOValValidationManager"/>
+
+    <constant name="struts.oval.validateJPAAnnotations" value="false"/>
+
+    <package name="oval-default" extends="struts-default">
+        <interceptors>
+            <interceptor name="ovalValidation" class="org.apache.struts2.oval.interceptor.OValValidationInterceptor"/>
+
+            <interceptor-stack name="ovalValidationStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="profiling"/>
+                <interceptor-ref name="scopedModelDriven"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="actionMappingParams"/>
+                <interceptor-ref name="params">
+                    <param name="excludeParams">dojo\..*,^struts\..*</param>
+                </interceptor-ref>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="ovalValidation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
     </package>
+
 </struts>

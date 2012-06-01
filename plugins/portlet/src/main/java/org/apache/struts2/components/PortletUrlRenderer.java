@@ -94,17 +94,24 @@ public class PortletUrlRenderer implements UrlRenderer {
         	String namespace = urlComponent.determineNamespace(urlComponent.getNamespace(), urlComponent.getStack(), urlComponent.getHttpServletRequest());
         	urlComponent.setNamespace(namespace);
         	if (onlyActionSpecified(urlComponent)) {
-        		result = portletUrlHelper.buildUrl(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(),
-        				urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
+        	    if (StringUtils.isNotEmpty(urlComponent.getAction())) {
+        	        String action = urlComponent.findString(urlComponent.getAction());
+                    result = portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(),
+                                    urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
+        	    }
+        	    else {
+                    result = portletUrlHelper.buildUrl(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(),
+                                    urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
+        	    }
         	} else if (onlyValueSpecified(urlComponent)) {
         		result = portletUrlHelper.buildResourceUrl(urlComponent.getValue(), urlComponent.getParameters());
         	} else {
         		result = createDefaultUrl(urlComponent);
         	}
         }
-        final String anchor = urlComponent.getAnchor();
-        if (anchor != null && anchor.length() > 0) {
-            result += '#' + anchor;
+        String anchor = urlComponent.getAnchor();
+        if (StringUtils.isNotEmpty(anchor)) {
+            result += '#' + urlComponent.findString(anchor);
         }
 
         String var = urlComponent.getVar();

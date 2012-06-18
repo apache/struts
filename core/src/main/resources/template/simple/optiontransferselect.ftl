@@ -214,10 +214,13 @@
     onmousedown="${parameters.doubleOnmousedown?html}"
     </#if><#t/>
     <#if parameters.doubleOnmouseup??><#t/>
-    onmouseup="${parameters.doubleMnmouseup?html}"
+    onmouseup="${parameters.doubleOnmouseup?html}"
     </#if><#t/>
     <#if parameters.doubleOnmousemove??><#t/>
     onmousemove="${parameters.doubleOnmousemove?html}"
+    </#if><#t/>
+    <#if parameters.doubleOnmouseover??><#t/>
+    onmouseover="${parameters.doubleOnmouseover?html}"
     </#if><#t/>
     <#if parameters.doubleOnmouseout??><#t/>
     onmouseout="${parameters.doubleOnmouseout?html}"

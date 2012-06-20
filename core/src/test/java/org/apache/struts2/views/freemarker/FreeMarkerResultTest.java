@@ -269,7 +269,9 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         super.setUp();
         mgr = new FreemarkerManager();
         mgr.setEncoding("UTF-8");
-        mgr.setFileManagerFactory(new DefaultFileManagerFactory(container));
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        container.inject(factory);
+        mgr.setFileManagerFactory(factory);
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         response = new StrutsMockHttpServletResponse();

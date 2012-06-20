@@ -1,7 +1,6 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope;
@@ -21,7 +20,9 @@ public class DefaultFileManagerFactoryTest extends XWorkTestCase {
     public void testCreateDefaultFileManager() throws Exception {
         // given
         fileManager = null;
-        FileManagerFactory factory = new DefaultFileManagerFactory(new DummyContainer());
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        factory.setFileManager(new DefaultFileManager());
+        factory.setContainer(new DummyContainer());
 
         // when
         FileManager fm = factory.getFileManager();
@@ -33,7 +34,8 @@ public class DefaultFileManagerFactoryTest extends XWorkTestCase {
     public void testCreateDummyFileManager() throws Exception {
         // given
         fileManager = new DummyFileManager();
-        FileManagerFactory factory = new DefaultFileManagerFactory(new DummyContainer());
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        factory.setContainer(new DummyContainer());
 
         // when
         FileManager fm = factory.getFileManager();
@@ -44,7 +46,8 @@ public class DefaultFileManagerFactoryTest extends XWorkTestCase {
 
     public void testFileManagerFactoryWithRealConfig() throws Exception {
         // given
-        FileManagerFactory factory = new DefaultFileManagerFactory(container);
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        container.inject(factory);
 
         // when
         FileManager fm = factory.getFileManager();
@@ -89,6 +92,7 @@ class DummyContainer implements Container {
 
     public void removeScopeStrategy() {
     }
+
 }
 
 class DummyFileManager implements FileManager {
@@ -120,6 +124,10 @@ class DummyFileManager implements FileManager {
     }
 
     public boolean support() {
+        return true;
+    }
+
+    public boolean internal() {
         return true;
     }
 

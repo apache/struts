@@ -45,7 +45,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,72 +78,6 @@ public class ClassFinder {
     private boolean extractBaseInterfaces;
     private ClassLoaderInterface classLoaderInterface;
     private FileManager fileManager;
-
-    /**
-     * Creates a ClassFinder that will search the urls in the specified ClassLoaderInterface
-     * excluding the urls in the ClassLoaderInterface's parent.
-     *
-     * To include the parent ClassLoaderInterface, use:
-     *
-     *    new ClassFinder(ClassLoaderInterface, false);
-     *
-     * To exclude the parent's parent, use:
-     *
-     *    new ClassFinder(ClassLoaderInterface, ClassLoaderInterface.getParent().getParent());
-     *
-     * @param classLoader source of classes to scan
-     * @throws Exception if something goes wrong
-     */
-    public ClassFinder(ClassLoaderInterface classLoader) throws Exception {
-        this(classLoader, true);
-    }
-
-    /**
-     * Creates a ClassFinder that will search the urls in the specified ClassLoaderInterface.
-     *
-     * @param classLoader source of classes to scan
-     * @param excludeParent Allegedly excludes classes from parent ClassLoaderInterface, whatever that might mean
-     * @throws Exception if something goes wrong.
-     */
-    public ClassFinder(ClassLoaderInterface classLoader, boolean excludeParent) throws Exception {
-        this(classLoader, getUrls(classLoader, excludeParent));
-    }
-
-    /**
-     * Creates a ClassFinder that will search the urls in the specified classloader excluding
-     * the urls in the 'exclude' ClassLoaderInterface.
-     *
-     * @param classLoader source of classes to scan
-     * @param exclude source of classes to exclude from scanning
-     * @throws Exception if something goes wrong
-     */
-    public ClassFinder(ClassLoaderInterface classLoader, ClassLoaderInterface exclude) throws Exception {
-        this(classLoader, getUrls(classLoader, exclude));
-    }
-
-    public ClassFinder(ClassLoaderInterface classLoader, URL url) {
-        this(classLoader, Arrays.asList(url));
-    }
-
-    public ClassFinder(ClassLoaderInterface classLoader, String... dirNames) {
-        this(classLoader, getURLs(classLoader, dirNames));
-    }
-
-    public ClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls) {
-        this(classLoaderInterface, urls, false);
-    }
-
-    public ClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls, boolean extractBaseInterfaces) {
-        this(classLoaderInterface, urls, extractBaseInterfaces, new HashSet(){
-            {
-                add("jar");
-            }
-        });
-    }
-
-    public ClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls, boolean extractBaseInterfaces, Set<String> protocols) {
-	    this(classLoaderInterface,urls,extractBaseInterfaces,protocols,new DefaultClassnameFilterImpl());
-    }
 
     public ClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls, boolean extractBaseInterfaces, Set<String> protocols, Test<String> classNameFilter) {
         this.classLoaderInterface = classLoaderInterface;
@@ -449,18 +382,6 @@ public class ClassFinder {
         }
 
         return urls;
-    }
-
-    private static Collection<URL> getUrls(ClassLoaderInterface classLoaderInterface, boolean excludeParent) throws IOException {
-        return getUrls(classLoaderInterface, excludeParent? classLoaderInterface.getParent() : null);
-    }
-
-    private static Collection<URL> getUrls(ClassLoaderInterface classLoader, ClassLoaderInterface excludeParent) throws IOException {
-        UrlSet urlSet = new UrlSet(classLoader);
-        if (excludeParent != null){
-            urlSet = urlSet.exclude(excludeParent);
-        }
-        return urlSet.getUrls();
     }
 
     private List<String> file(URL location) {

@@ -17,6 +17,9 @@ class JarEntryRevision extends Revision {
 
     private static Logger LOG = LoggerFactory.getLogger(JarEntryRevision.class);
 
+    private static final String JAR_FILE_NAME_SEPARATOR = "!/";
+    private static final String JAR_FILE_EXTENSION_END = ".jar/";
+
     private String jarFileName;
     private String fileNameInJar;
     private long lastModified;
@@ -35,8 +38,7 @@ class JarEntryRevision extends Revision {
         try {
             JarFile jarFile = new JarFile(this.jarFileName);
             entry = jarFile.getEntry(this.fileNameInJar);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             entry = null;
         }
 
@@ -49,9 +51,9 @@ class JarEntryRevision extends Revision {
         String jarFileName = "";
         try {
             String fileName = fileUrl.toString();
-            int separatorIndex = fileName.indexOf(DefaultFileManager.JAR_FILE_NAME_SEPARATOR);
+            int separatorIndex = fileName.indexOf(JAR_FILE_NAME_SEPARATOR);
             if (separatorIndex == -1) {
-                separatorIndex = fileName.lastIndexOf(DefaultFileManager.JAR_FILE_EXTENSION_END);
+                separatorIndex = fileName.lastIndexOf(JAR_FILE_EXTENSION_END);
             }
             if (separatorIndex == -1) {
                 if (LOG.isWarnEnabled()) {
@@ -61,7 +63,7 @@ class JarEntryRevision extends Revision {
             }
             // Split file name
             jarFileName = fileName.substring(0, separatorIndex);
-            int index = separatorIndex + DefaultFileManager.JAR_FILE_NAME_SEPARATOR.length();
+            int index = separatorIndex + JAR_FILE_NAME_SEPARATOR.length();
             String fileNameInJar = fileName.substring(index).replaceAll("%20", " ");
 
             URL url = fileManager.normalizeToFileProtocol(fileUrl);

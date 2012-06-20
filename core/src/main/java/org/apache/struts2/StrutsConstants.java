@@ -67,6 +67,9 @@ public final class StrutsConstants {
     /** The com.opensymphony.xwork2.util.FileManager implementation class */
     public static final String STRUTS_FILE_MANAGER_FACTORY = "struts.fileManagerFactory";
 
+    /** The com.opensymphony.xwork2.util.fs.FileManager implementation class */
+    public static final String STRUTS_FILE_MANAGER = "struts.fileManager";
+
     /** The com.opensymphony.xwork2.util.ObjectTypeDeterminer implementation class */
     public static final String STRUTS_OBJECTTYPEDETERMINER = "struts.objectTypeDeterminer";
 

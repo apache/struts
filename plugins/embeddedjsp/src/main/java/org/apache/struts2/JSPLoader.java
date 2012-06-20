@@ -180,14 +180,15 @@ public class JSPLoader {
         List<String> optionList = new ArrayList<String>();
         Set<String> classPath = new HashSet<String>();
 
+        FileManager fileManager = ServletActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
+
         //find available jars
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
-        UrlSet urlSet = new UrlSet(classLoaderInterface);
+        UrlSet urlSet = new UrlSet(fileManager, classLoaderInterface);
 
         //find jars
         List<URL> urls = urlSet.getUrls();
 
-        FileManager fileManager = ServletActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
         for (URL url : urls) {
             URL normalizedUrl = fileManager.normalizeToFileProtocol(url);
             File file = FileUtils.toFile(ObjectUtils.defaultIfNull(normalizedUrl, url));

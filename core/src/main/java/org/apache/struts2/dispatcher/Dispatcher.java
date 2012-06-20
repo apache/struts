@@ -32,6 +32,8 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.FileManagerFactoryProvider;
+import com.opensymphony.xwork2.config.FileManagerProvider;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
@@ -64,6 +66,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
+import org.apache.struts2.util.fs.JBossFileManager;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import javax.servlet.ServletContext;
@@ -306,6 +309,28 @@ public class Dispatcher {
     	configurationManager = null;
     }
 
+    private void init_FileManager() throws ClassNotFoundException {
+        if (initParams.containsKey(StrutsConstants.STRUTS_FILE_MANAGER)) {
+            final String fileManagerClassName = initParams.get(StrutsConstants.STRUTS_FILE_MANAGER);
+            final Class<FileManager> fileManagerClass = (Class<FileManager>) Class.forName(fileManagerClassName);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Custom FileManager specified: #0", fileManagerClassName);
+            }
+            configurationManager.addContainerProvider(new FileManagerProvider(fileManagerClass, fileManagerClass.getSimpleName()));
+        } else {
+            // add any other Struts 2 provided implementations of FileManager
+            configurationManager.addContainerProvider(new FileManagerProvider(JBossFileManager.class, "jboss"));
+        }
+        if (initParams.containsKey(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY)) {
+            final String fileManagerFactoryClassName = initParams.get(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY);
+            final Class<FileManagerFactory> fileManagerFactoryClass = (Class<FileManagerFactory>) Class.forName(fileManagerFactoryClassName);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Custom FileManagerFactory specified: #0", fileManagerFactoryClassName);
+            }
+            configurationManager.addContainerProvider(new FileManagerFactoryProvider(fileManagerFactoryClass));
+        }
+    }
+
     private void init_DefaultProperties() {
         configurationManager.addContainerProvider(new DefaultPropertiesProvider());
     }
@@ -427,6 +452,7 @@ public class Dispatcher {
     	}
 
         try {
+            init_FileManager();
             init_DefaultProperties(); // [1]
             init_TraditionalXmlConfigurations(); // [2]
             init_LegacyStrutsProperties(); // [3]

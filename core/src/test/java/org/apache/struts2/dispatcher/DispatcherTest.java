@@ -198,7 +198,8 @@ public class DispatcherTest extends StrutsTestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
-        FileManagerFactory fileManagerFactory = new DefaultFileManagerFactory(container);
+        FileManagerFactory fileManagerFactory = new DefaultFileManagerFactory();
+        container.inject(fileManagerFactory);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(FileManagerFactory.class)), fileManagerFactory);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(FileManagerFactory.class)), fileManagerFactory);
         mockConfiguration.expect("destroy");
@@ -228,7 +229,9 @@ public class DispatcherTest extends StrutsTestCase {
         
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
-        mockContainer.matchAndReturn("getInstance", C.args(C.eq(FileManagerFactory.class)), new DefaultFileManagerFactory(container));
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        container.inject(factory);
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(FileManagerFactory.class)), factory);
 
         Mock mockConfiguration = new Mock(Configuration.class);
         mockConfiguration.matchAndReturn("getPackageConfigs", packageConfigs);

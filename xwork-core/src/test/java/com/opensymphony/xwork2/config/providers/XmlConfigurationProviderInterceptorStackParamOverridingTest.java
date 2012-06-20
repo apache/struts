@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 
 import java.util.ArrayList;
@@ -22,7 +23,10 @@ public class XmlConfigurationProviderInterceptorStackParamOverridingTest extends
     public void testInterceptorStackParamOveriding() throws Exception {
     	DefaultConfiguration conf = new DefaultConfiguration();
     	final XmlConfigurationProvider p = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-stack-param-overriding.xml");
-        p.setFileManagerFactory(new DefaultFileManagerFactory(container));
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        factory.setContainer(container);
+        factory.setFileManager(new DefaultFileManager());
+        p.setFileManagerFactory(factory);
     	configurationManager.addContainerProvider(p);
         conf.reload(new ArrayList<ConfigurationProvider>(){
             {

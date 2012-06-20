@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.DefaultTextProvider;
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
@@ -24,6 +25,8 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.ContainerProvider;
+import com.opensymphony.xwork2.config.FileManagerFactoryProvider;
+import com.opensymphony.xwork2.config.FileManagerProvider;
 import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -56,6 +59,7 @@ import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -202,7 +206,7 @@ public class DefaultConfiguration implements Configuration {
 
         ContainerProperties props = new ContainerProperties();
         ContainerBuilder builder = new ContainerBuilder();
-        Container bootstrap = createBootstrapContainer();
+        Container bootstrap = createBootstrapContainer(providers);
         for (final ContainerProvider containerProvider : providers)
         {
             bootstrap.inject(containerProvider);
@@ -264,10 +268,23 @@ public class DefaultConfiguration implements Configuration {
         return context;
     }
 
-    protected Container createBootstrapContainer() {
+    protected Container createBootstrapContainer(List<ContainerProvider> providers) {
         ContainerBuilder builder = new ContainerBuilder();
+        boolean fmFactoryRegistered = false;
+        for (ContainerProvider provider : providers) {
+            if (provider instanceof FileManagerProvider) {
+                provider.register(builder, null);
+            }
+            if (provider instanceof FileManagerFactoryProvider) {
+                provider.register(builder, null);
+                fmFactoryRegistered = true;
+            }
+        }
         builder.factory(ObjectFactory.class, Scope.SINGLETON);
-        builder.factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON);
+        builder.factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON);
+        if (!fmFactoryRegistered) {
+            builder.factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON);
+        }
         builder.factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON);
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
         builder.factory(XWorkConverter.class, Scope.SINGLETON);

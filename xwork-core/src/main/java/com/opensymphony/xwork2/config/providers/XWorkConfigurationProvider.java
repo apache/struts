@@ -91,6 +91,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ActionProxyFactory.class, DefaultActionProxyFactory.class, Scope.SINGLETON)
                 .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)
                 .factory(XWorkConverter.class, Scope.SINGLETON)
+                .factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON)
                 .factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON)
                 .factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON)
                 .factory(ValidatorFactory.class, DefaultValidatorFactory.class, Scope.SINGLETON)

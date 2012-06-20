@@ -34,7 +34,9 @@ public class FreemarkerManagerTest extends StrutsTestCase {
     public void testIfStrutsEncodingIsSetProperty() throws Exception {
         FreemarkerManager mgr = new FreemarkerManager();
         mgr.setEncoding("UTF-8");
-        mgr.setFileManagerFactory(new DefaultFileManagerFactory(container));
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        container.inject(factory);
+        mgr.setFileManagerFactory(factory);
         StrutsMockServletContext servletContext = new StrutsMockServletContext();
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
         freemarker.template.Configuration conf = mgr.getConfiguration(servletContext);

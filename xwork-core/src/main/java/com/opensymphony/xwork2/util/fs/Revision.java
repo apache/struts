@@ -5,7 +5,7 @@ import java.net.URL;
 /**
  * Class represents common revision resource, should be used as default class when no other option exists
  */
-class Revision {
+public class Revision {
 
     public Revision() {
     }
@@ -17,4 +17,5 @@ class Revision {
     public static Revision build(URL fileUrl) {
         return new Revision();
     }
+
 }

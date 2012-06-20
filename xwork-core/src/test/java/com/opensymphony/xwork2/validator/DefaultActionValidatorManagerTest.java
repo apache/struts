@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.test.DataAware2;
 import com.opensymphony.xwork2.test.SimpleAction2;
 import com.opensymphony.xwork2.test.SimpleAction3;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 
 import java.util.ArrayList;
@@ -65,7 +66,10 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         ActionContext.setContext(new ActionContext(new HashMap<String, Object>()));
         ActionContext.getContext().setValueStack(stubValueStack);
 
-        actionValidatorManager.setFileManagerFactory(new DefaultFileManagerFactory(container));
+        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        factory.setContainer(container);
+        factory.setFileManager(new DefaultFileManager());
+        actionValidatorManager.setFileManagerFactory(factory);
     }
 
     @Override

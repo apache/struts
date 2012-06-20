@@ -39,6 +39,7 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
+import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import junit.framework.TestCase;
@@ -350,6 +351,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         if (excludePackages != null) {
             builder.setExcludePackages(excludePackages);
         }
+        DefaultFileManagerFactory fileManagerFactory = new DefaultFileManagerFactory();
+        fileManagerFactory.setContainer(ActionContext.getContext().getContainer());
+        fileManagerFactory.setFileManager(new DefaultFileManager());
+        builder.setFileManagerFactory(fileManagerFactory);
         builder.setPackageLocatorsBase("org.apache.struts2.convention.actions");
         builder.buildActionConfigs();
         verify(resultMapBuilder);
@@ -694,7 +699,9 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         private DefaultFileManagerFactory fileManagerFactory;
 
         public DummyContainer() {
-            fileManagerFactory = new DefaultFileManagerFactory(this);
+            fileManagerFactory = new DefaultFileManagerFactory();
+            fileManagerFactory.setContainer(this);
+            fileManagerFactory.setFileManager(new DefaultFileManager());
         }
 
         public void setActionNameBuilder(ActionNameBuilder actionNameBuilder) {

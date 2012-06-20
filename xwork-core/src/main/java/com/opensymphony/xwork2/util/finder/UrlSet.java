@@ -15,9 +15,7 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.ObjectUtils;
@@ -28,7 +26,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -58,36 +55,35 @@ public class UrlSet {
     private Set<String> protocols;
     private FileManager fileManager;
 
-    private UrlSet() {
-        this.urls = new HashMap<String,URL>();
-        this.fileManager = ActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
-    }
-
-    public UrlSet(ClassLoaderInterface classLoader) throws IOException {
-        this();
+    public UrlSet(FileManager fileManager, ClassLoaderInterface classLoader) throws IOException {
+        this(fileManager);
         load(getUrls(classLoader));
     }
 
-    public UrlSet(ClassLoaderInterface classLoader, Set<String> protocols) throws IOException {
-        this();
+    public UrlSet(FileManager fileManager, ClassLoaderInterface classLoader, Set<String> protocols) throws IOException {
+        this(fileManager);
         this.protocols = protocols;
+        this.fileManager = fileManager;
         load(getUrls(classLoader, protocols));
     }
 
-    public UrlSet(URL... urls){
-        this(Arrays.asList(urls));
-    }
     /**
      * Ignores all URLs that are not "jar" or "file"
      * @param urls
      */
-    public UrlSet(Collection<URL> urls){
-        this();
+    public UrlSet(FileManager fileManager, Collection<URL> urls){
+        this(fileManager);
         load(urls);
     }
 
-    private UrlSet(Map<String, URL> urls) {
+    private UrlSet(FileManager fileManager) {
+        this.urls = new HashMap<String,URL>();
+        this.fileManager = fileManager;
+    }
+
+    private UrlSet(FileManager fileManager, Map<String, URL> urls) {
         this.urls = urls;
+        this.fileManager = fileManager;
     }
 
     private void load(Collection<URL> urls){
@@ -103,7 +99,7 @@ public class UrlSet {
     public UrlSet include(UrlSet urlSet){
         Map<String, URL> urls = new HashMap<String, URL>(this.urls);
         urls.putAll(urlSet.urls);
-        return new UrlSet(urls);
+        return new UrlSet(fileManager, urls);
     }
 
     public UrlSet exclude(UrlSet urlSet) {
@@ -112,11 +108,11 @@ public class UrlSet {
         for (String url : parentUrls.keySet()) {
             urls.remove(url);
         }
-        return new UrlSet(urls);
+        return new UrlSet(fileManager, urls);
     }
 
     public UrlSet exclude(ClassLoaderInterface parent) throws IOException {
-        return exclude(new UrlSet(parent, this.protocols));
+        return exclude(new UrlSet(fileManager, parent, this.protocols));
     }
 
     public UrlSet exclude(File file) throws MalformedURLException {
@@ -181,7 +177,7 @@ public class UrlSet {
                 urls.put(url, entry.getValue());
             }
         }
-        return new UrlSet(urls);
+        return new UrlSet(fileManager, urls);
     }
 
     /**
@@ -203,7 +199,7 @@ public class UrlSet {
                 if ("jar".equals(finalUrl.getProtocol()) || "file".equals(finalUrl.getProtocol())) {
                     newUrls.put(finalUrl.toExternalForm(), finalUrl);
                 }
-                return new UrlSet(newUrls);
+                return new UrlSet(fileManager, newUrls);
             }
         }
 
@@ -219,7 +215,7 @@ public class UrlSet {
                 urls.put(url, entry.getValue());
             }
         }
-        return new UrlSet(urls);
+        return new UrlSet(fileManager, urls);
     }
 
     public List<URL> getUrls() {

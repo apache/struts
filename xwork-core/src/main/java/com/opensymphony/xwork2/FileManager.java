@@ -60,5 +60,13 @@ public interface FileManager {
      */
     boolean support();
 
+    /**
+     * User's implementation should return false as then it will be taken in first place
+     *
+     * @return true if it's a framework provided implementation
+     */
+    boolean internal();
+
     Collection<? extends URL> getAllPhysicalUrls(URL url) throws IOException;
+
 }

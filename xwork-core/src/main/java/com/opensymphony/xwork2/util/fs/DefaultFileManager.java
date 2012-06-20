@@ -19,18 +19,14 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,18 +38,10 @@ public class DefaultFileManager implements FileManager {
 
     private static Logger LOG = LoggerFactory.getLogger(DefaultFileManager.class);
 
-    public static final String JBOSS5_VFS = "vfs";
-    public static final String JBOSS5_VFSZIP = "vfszip";
-    public static final String JBOSS5_VFSMEMORY = "vfsmemory";
-    public static final String JBOSS5_VFSFILE = "vfsfile";
-
-    public static final String JAR_FILE_NAME_SEPARATOR = "!/";
-    public static final String JAR_FILE_EXTENSION_END = ".jar/";
-
     private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|\\.jar/)(.*)");
     private static final int JAR_FILE_PATH = 3;
 
-    private static Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
+    protected static Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
 
     protected boolean reloadingConfigs = true;
 
@@ -74,13 +62,11 @@ public class DefaultFileManager implements FileManager {
 
     public boolean fileNeedsReloading(String fileName) {
         Revision revision = files.get(fileName);
-
         if (revision == null) {
             // no revision yet and we keep the revision history, so
             // return whether the file needs to be loaded for the first time
             return reloadingConfigs;
         }
-
         return revision.needsReloading();
     }
 
@@ -109,13 +95,10 @@ public class DefaultFileManager implements FileManager {
         if (isReloadingConfigs()) {
             String fileName = fileUrl.toString();
             Revision revision;
-
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Creating revision for URL: " +fileName);
+                LOG.debug("Creating revision for URL: " + fileName);
             }
-            if (isJBossUrl(fileUrl)) {
-                revision = JBossFileRevision.build(fileUrl, this);
-            } else if (isJarURL(fileUrl)) {
+            if (isJarURL(fileUrl)) {
                 revision = JarEntryRevision.build(fileUrl, this);
             } else {
                 revision = FileRevision.build(fileUrl);
@@ -130,6 +113,7 @@ public class DefaultFileManager implements FileManager {
 
     /**
      * Check if given URL is matching Jar pattern for different servers
+     *
      * @param fileUrl
      * @return
      */
@@ -138,19 +122,15 @@ public class DefaultFileManager implements FileManager {
         return jarMatcher.matches();
     }
 
-
     public URL normalizeToFileProtocol(URL url) {
         String fileName = url.toExternalForm();
         Matcher jarMatcher = JAR_PATTERN.matcher(fileName);
         try {
-            if (isJBossUrl(url)){
-                return getJBossPhysicalUrl(url);
-            } else  if (jarMatcher.matches()) {
+            if (jarMatcher.matches()) {
                 String path = jarMatcher.group(JAR_FILE_PATH);
                 return new URL("file", "", path);
             } else {
-                //it is not a jar or zip file
-                return null;
+                return null; //it is not a jar or zip file
             }
         } catch (MalformedURLException e) {
             //can this ever happen?
@@ -161,89 +141,16 @@ public class DefaultFileManager implements FileManager {
         }
     }
 
-    /**
-     * Check if given URL is pointing to JBoss 5 VFS resource
-     * @param fileUrl
-     * @return
-     */
-    protected boolean isJBossUrl(URL fileUrl) {
-        final String protocol = fileUrl.getProtocol();
-        return JBOSS5_VFSZIP.equals(protocol) || JBOSS5_VFSMEMORY.equals(protocol) || JBOSS5_VFS.equals(protocol)
-                || ("true".equals(System.getProperty("jboss.vfs.forceVfsJar")) && JBOSS5_VFSFILE.equals(protocol));
-    }
-
-    /**
-     * Try to determine physical file location.
-     *
-     * @param url JBoss VFS URL
-     * @return URL pointing to physical file or original URL
-     * @throws IOException If conversion fails
-     */
-    protected URL getJBossPhysicalUrl(URL url) throws IOException {
-        Object content = url.openConnection().getContent();
-        try {
-            String s = content.getClass().toString();
-            if (s.startsWith("class org.jboss.vfs.VirtualFile")) { // JBoss 7 and probably 6
-                File physicalFile = readJBossPhysicalFile(content);
-                return physicalFile.toURI().toURL();
-            } else if (s.startsWith("class org.jboss.virtual.VirtualFile")) { // JBoss 5
-                String fileName = url.toExternalForm();
-                return new URL("file", null, fileName.substring(fileName.indexOf(":") + 1));
-            }
-        } catch (Exception e) {
-            LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile.", e);
-        }
-        return url;
-    }
-
     public boolean support() {
         return false; // allow other implementation to be used first
     }
 
+    public boolean internal() {
+        return true;
+    }
+
     public Collection<? extends URL> getAllPhysicalUrls(URL url) throws IOException {
-        if (isJBossUrl(url)) {
-            return getAllJBossPhysicalUrls(url);
-        }
         return Arrays.asList(url);
     }
 
-    private List<URL> getAllJBossPhysicalUrls(URL url) throws IOException {
-        List<URL> urls = new ArrayList<URL>();
-        Object content = url.openConnection().getContent();
-        try {
-            if (content.getClass().toString().startsWith("class org.jboss.vfs.VirtualFile")) {
-                File physicalFile = readJBossPhysicalFile(content);
-                readFile(urls, physicalFile);
-                readFile(urls, physicalFile.getParentFile());
-            } else {
-                urls.add(url);
-            }
-        } catch (Exception e) {
-            LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile.", e);
-        }
-        return urls;
-    }
-
-    private File readJBossPhysicalFile(Object content) throws Exception {
-        Method method = content.getClass().getDeclaredMethod("getPhysicalFile");
-        return (File) method.invoke(content);
-    }
-
-    private void readFile(List<URL> urls, File physicalFile) throws MalformedURLException {
-        if (physicalFile.isDirectory()) {
-            for (File file : physicalFile.listFiles()) {
-                if (file.isFile()) {
-                    addIfAbsent(urls, file.toURI().toURL());
-                } else if (file.isDirectory()) {
-                    readFile(urls, file);
-                }
-            }
-        }
-    }
-
-    private void addIfAbsent(List<URL> urls, URL fileUrl) {
-        if (!urls.contains(fileUrl)) {
-            urls.add(fileUrl);
-        }
-    }
 }

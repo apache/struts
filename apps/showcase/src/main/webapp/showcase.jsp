@@ -23,10 +23,6 @@
                 For more "by example" solutions,
                 see the <a href="http://struts.apache.org/2.x/docs/cookbook.html">Struts Cookbook</a> pages.
             </li>
-            <li>
-                For a "best practices" example, see the
-                <a href="http://planetstruts.org/struts2-mailreader/">MailReader application</a> Tour and source code.
-            </li>
         </ul>
     </blockquote>
     <p>

@@ -97,7 +97,7 @@ class DummyContainer implements Container {
 
 class DummyFileManager implements FileManager {
 
-    public void setReloadingConfigs(boolean reloadingConfigs) {
+    public void setReloadingConfigs(String reloadingConfigs) {
     }
 
     public boolean isReloadingConfigs() {

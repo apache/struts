@@ -300,6 +300,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
         builder.constant("devMode", "false");
         builder.constant("logMissingProperties", "false");
+        builder.constant("reloadXmlConfiguration", "false");
         return builder.create(true);
     }
 

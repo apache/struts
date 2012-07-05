@@ -132,6 +132,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
         props.setProperty("devMode", Boolean.FALSE.toString());
         props.setProperty("logMissingProperties", Boolean.FALSE.toString());
         props.setProperty("enableOGNLExpressionCache", Boolean.TRUE.toString());
+        props.setProperty("reloadXmlConfiguration", Boolean.FALSE.toString());
     }
 
 }

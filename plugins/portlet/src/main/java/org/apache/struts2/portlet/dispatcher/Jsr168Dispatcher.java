@@ -24,7 +24,6 @@ package org.apache.struts2.portlet.dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
@@ -235,12 +234,6 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
 
         container = dispatcherUtils.getContainer();
-        //check for configuration reloading
-        if ("true".equalsIgnoreCase(container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
-            FileManager fileManager = container.getInstance(FileManager.class);
-            fileManager.setReloadingConfigs(true);
-        }
-
         actionMapper = container.getInstance(ActionMapper.class);
     }
 

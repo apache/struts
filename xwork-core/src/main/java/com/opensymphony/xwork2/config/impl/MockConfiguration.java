@@ -57,6 +57,7 @@ public class MockConfiguration implements Configuration {
         LocatableProperties props = new LocatableProperties();
         new XWorkConfigurationProvider().register(builder, props);
         builder.constant("devMode", "false");
+        builder.constant("reloadXmlConfiguration", "true");
         container = builder.create(true);
     }
 

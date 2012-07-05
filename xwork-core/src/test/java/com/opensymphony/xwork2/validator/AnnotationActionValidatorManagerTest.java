@@ -103,7 +103,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
         List validatorList = annotationActionValidatorManager.getValidators(SimpleAnnotationAction.class, alias, "execute");
 
         //disable configuration reload/devmode
-        fileManager.setReloadingConfigs(false);
+        fileManager.setReloadingConfigs("false");
 
         //17 in the class level + 0 in the alias
         assertEquals(12, validatorList.size());

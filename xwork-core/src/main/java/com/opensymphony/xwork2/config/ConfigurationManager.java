@@ -46,6 +46,7 @@ public class ConfigurationManager {
     private List<ContainerProvider> containerProviders = new CopyOnWriteArrayList<ContainerProvider>();
     private List<PackageProvider> packageProviders = new CopyOnWriteArrayList<PackageProvider>();
     protected String defaultFrameworkBeanName;
+    private boolean providersChanged = false;
 
     public ConfigurationManager() {
         this("xwork");
@@ -118,6 +119,7 @@ public class ConfigurationManager {
         providerLock.lock();
         try {
             this.containerProviders = new CopyOnWriteArrayList<ContainerProvider>(containerProviders);
+            providersChanged = true;
         } finally {
             providerLock.unlock();
         }
@@ -132,6 +134,7 @@ public class ConfigurationManager {
     public void addContainerProvider(ContainerProvider provider) {
         if (!containerProviders.contains(provider)) {
             containerProviders.add(provider);
+            providersChanged = true;
         }
     }
 
@@ -140,6 +143,7 @@ public class ConfigurationManager {
             clearContainerProvider(containerProvider);
         }
         containerProviders.clear();
+        providersChanged = true;
     }
 
     private void clearContainerProvider(ContainerProvider containerProvider) {
@@ -170,7 +174,7 @@ public class ConfigurationManager {
      */
     public synchronized void conditionalReload(Container container) {
         FileManager fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
-        if (fileManager.isReloadingConfigs()) {
+        if (fileManager.isReloadingConfigs() || providersChanged) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Checking ConfigurationProviders for reload.");
             }

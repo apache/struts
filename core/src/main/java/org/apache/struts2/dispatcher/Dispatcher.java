@@ -421,12 +421,6 @@ public class Dispatcher {
         return container;
     }
 
-    private void init_CheckConfigurationReloading(Container container) {
-        FileManager fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
-        fileManager.setReloadingConfigs("true".equals(container.getInstance(String.class,
-                StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
-    }
-
     private void init_CheckWebLogicWorkaround(Container container) {
         // test whether param-access workaround needs to be enabled
         if (servletContext != null && servletContext.getServerInfo() != null
@@ -462,7 +456,6 @@ public class Dispatcher {
 
             Container container = init_PreloadConfiguration();
             container.inject(this);
-            init_CheckConfigurationReloading(container);
             init_CheckWebLogicWorkaround(container);
 
             if (!dispatcherListeners.isEmpty()) {

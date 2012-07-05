@@ -10,7 +10,7 @@ import java.util.Collection;
  */
 public interface FileManager {
 
-    void setReloadingConfigs(boolean reloadingConfigs);
+    void setReloadingConfigs(String reloadingConfigs);
 
     boolean isReloadingConfigs();
 

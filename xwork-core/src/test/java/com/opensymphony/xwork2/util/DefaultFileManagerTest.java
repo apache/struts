@@ -36,7 +36,7 @@ public class DefaultFileManagerTest extends XWorkTestCase {
     }
 
     private void testLoadFile(String fileName) {
-        fileManager.setReloadingConfigs(true);
+        fileManager.setReloadingConfigs("true");
         URL url = ClassLoaderUtil.getResource(fileName, DefaultFileManagerTest.class);
         InputStream file = fileManager.loadFile(url);
         assertNotNull(file);

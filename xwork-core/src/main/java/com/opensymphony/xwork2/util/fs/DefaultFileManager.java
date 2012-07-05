@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -43,13 +44,14 @@ public class DefaultFileManager implements FileManager {
 
     protected static Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
 
-    protected boolean reloadingConfigs = true;
+    protected boolean reloadingConfigs = false;
 
     public DefaultFileManager() {
     }
 
-    public void setReloadingConfigs(boolean reloadingConfigs) {
-        this.reloadingConfigs = reloadingConfigs;
+    @Inject(value = "reloadXmlConfiguration", required = false)
+    public void setReloadingConfigs(String reloadingConfigs) {
+        this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }
 
     public boolean isReloadingConfigs() {

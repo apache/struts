@@ -278,6 +278,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         convertIfExist(props, StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, "logMissingProperties");
         convertIfExist(props, StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "enableOGNLExpressionCache");
         convertIfExist(props, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "allowStaticMethodAccess");
+        convertIfExist(props, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "reloadXmlConfiguration");
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         loadCustomResourceBundles(props);

@@ -186,6 +186,7 @@ public class ConfigurationManager {
             if (reload) {
                 reloadProviders(providers);
             }
+            providersChanged = false;
         }
     }
 

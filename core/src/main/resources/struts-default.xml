@@ -65,16 +65,14 @@
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="jsp" class="org.apache.struts2.components.template.JspTemplateEngine" />
 
     <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
-    <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="xwork1" class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
     <bean class="com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter" />
 
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="collection" class="com.opensymphony.xwork2.conversion.impl.CollectionConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="array" class="com.opensymphony.xwork2.conversion.impl.ArrayConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="date" class="com.opensymphony.xwork2.conversion.impl.DateConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="number" class="com.opensymphony.xwork2.conversion.impl.NumberConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverter" name="string" class="com.opensymphony.xwork2.conversion.impl.StringConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.impl.CollectionConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.CollectionConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.impl.ArrayConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.ArrayConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.impl.DateConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.DateConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.impl.NumberConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.NumberConverter" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.conversion.impl.StringConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.StringConverter" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.TextProvider" name="xwork1" class="com.opensymphony.xwork2.TextProviderSupport" scope="default" />
     <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" scope="default" />
 
     <bean type="org.apache.struts2.components.UrlRenderer" name="struts" class="org.apache.struts2.components.ServletUrlRenderer"/>

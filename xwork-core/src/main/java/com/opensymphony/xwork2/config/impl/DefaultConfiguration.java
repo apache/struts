@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -289,18 +290,18 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
         builder.factory(XWorkConverter.class, Scope.SINGLETON);
         builder.factory(XWorkBasicConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, "collection",  CollectionConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, "array", ArrayConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, "date", DateConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, "number",  NumberConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, "string", StringConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, XWorkConstants.COLLECTION_CONVERTER,  CollectionConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, XWorkConstants.ARRAY_CONVERTER, ArrayConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, XWorkConstants.DATE_CONVERTER, DateConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, XWorkConstants.NUMBER_CONVERTER,  NumberConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, XWorkConstants.STRING_CONVERTER, StringConverter.class, Scope.SINGLETON);
         builder.factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON);
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
-        builder.constant("devMode", "false");
-        builder.constant("logMissingProperties", "false");
-        builder.constant("reloadXmlConfiguration", "false");
+        builder.constant(XWorkConstants.DEV_MODE, "false");
+        builder.constant(XWorkConstants.LOG_MISSING_PROPERTIES, "false");
+        builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "false");
         return builder.create(true);
     }
 

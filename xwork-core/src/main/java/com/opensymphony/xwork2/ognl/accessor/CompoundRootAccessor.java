@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.ognl.accessor;
 
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.inject.Inject;
@@ -58,7 +59,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
     static boolean devMode = false;
 
-    @Inject("devMode")
+    @Inject(XWorkConstants.DEV_MODE)
     public static void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }

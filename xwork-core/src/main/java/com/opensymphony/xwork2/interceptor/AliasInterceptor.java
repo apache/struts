@@ -19,6 +19,7 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -95,7 +96,7 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected ValueStackFactory valueStackFactory;
     static boolean devMode = false;
 
-    @Inject("devMode")
+    @Inject(XWorkConstants.DEV_MODE)
     public static void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }   

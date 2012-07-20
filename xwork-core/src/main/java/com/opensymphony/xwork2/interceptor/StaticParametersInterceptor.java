@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
@@ -95,7 +96,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
         this.valueStackFactory = valueStackFactory;
     }
 
-    @Inject("devMode")
+    @Inject(XWorkConstants.DEV_MODE)
     public static void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }    

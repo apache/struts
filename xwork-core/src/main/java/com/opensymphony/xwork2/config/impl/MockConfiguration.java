@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.config.impl;
 
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -56,8 +57,8 @@ public class MockConfiguration implements Configuration {
         builder.factory(Configuration.class, MockConfiguration.class, Scope.SINGLETON);
         LocatableProperties props = new LocatableProperties();
         new XWorkConfigurationProvider().register(builder, props);
-        builder.constant("devMode", "false");
-        builder.constant("reloadXmlConfiguration", "true");
+        builder.constant(XWorkConstants.DEV_MODE, "false");
+        builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "true");
         container = builder.create(true);
     }
 

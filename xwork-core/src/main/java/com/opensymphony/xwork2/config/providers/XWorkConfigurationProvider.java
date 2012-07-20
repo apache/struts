@@ -9,12 +9,12 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.UnknownHandlerManager;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.impl.ArrayConverter;
 import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
 import com.opensymphony.xwork2.conversion.impl.DateConverter;
@@ -124,15 +124,15 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(XWorkBasicConverter.class, Scope.SINGLETON)
-                .factory(TypeConverter.class, "collection", CollectionConverter.class, Scope.SINGLETON)
-                .factory(TypeConverter.class, "array", ArrayConverter.class, Scope.SINGLETON)
-                .factory(TypeConverter.class, "date", DateConverter.class, Scope.SINGLETON)
-                .factory(TypeConverter.class, "number", NumberConverter.class, Scope.SINGLETON)
-                .factory(TypeConverter.class, "string", StringConverter.class, Scope.SINGLETON);
-        props.setProperty("devMode", Boolean.FALSE.toString());
-        props.setProperty("logMissingProperties", Boolean.FALSE.toString());
-        props.setProperty("enableOGNLExpressionCache", Boolean.TRUE.toString());
-        props.setProperty("reloadXmlConfiguration", Boolean.FALSE.toString());
+                .factory(CollectionConverter.class, Scope.SINGLETON)
+                .factory(ArrayConverter.class, Scope.SINGLETON)
+                .factory(DateConverter.class, Scope.SINGLETON)
+                .factory(NumberConverter.class, Scope.SINGLETON)
+                .factory(StringConverter.class, Scope.SINGLETON);
+        props.setProperty(XWorkConstants.DEV_MODE, Boolean.FALSE.toString());
+        props.setProperty(XWorkConstants.LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
+        props.setProperty(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());
+        props.setProperty(XWorkConstants.RELOAD_XML_CONFIGURATION, Boolean.FALSE.toString());
     }
 
 }

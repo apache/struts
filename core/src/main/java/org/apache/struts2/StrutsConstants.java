@@ -233,4 +233,10 @@ public final class StrutsConstants {
     /** The{@link org.apache.struts2.views.util.UrlHelper} implementation class **/
     public static final String STRUTS_URL_HELPER = "struts.view.urlHelper";
 
+    /** {@link com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter} **/
+    public static final String STRUTS_CONVERTER_COLLECTION = "struts.converter.collection";
+    public static final String STRUTS_CONVERTER_ARRAY = "struts.converter.array";
+    public static final String STRUTS_CONVERTER_DATE = "struts.converter.date";
+    public static final String STRUTS_CONVERTER_NUMBER = "struts.converter.number";
+    public static final String STRUTS_CONVERTER_STRING = "struts.converter.string";
 }

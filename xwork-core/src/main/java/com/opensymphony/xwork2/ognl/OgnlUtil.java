@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.CompoundRoot;
@@ -55,7 +56,7 @@ public class OgnlUtil {
         this.defaultConverter = new OgnlTypeConverterWrapper(conv);
     }
 
-    @Inject("devMode")
+    @Inject(XWorkConstants.DEV_MODE)
     public static void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }

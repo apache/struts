@@ -27,10 +27,16 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.UnknownHandlerManager;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.impl.ArrayConverter;
+import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
+import com.opensymphony.xwork2.conversion.impl.DateConverter;
+import com.opensymphony.xwork2.conversion.impl.NumberConverter;
+import com.opensymphony.xwork2.conversion.impl.StringConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -198,6 +204,35 @@ import java.util.StringTokenizer;
  *     <td>Used to create {@link FileManager} instance to access files on the File System as also to monitor if reload is needed,
  *     can be implemented / overwritten to meet specific an application server needs
  *     </td>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.impl.CollectionConverter</td>
+ *     <td>struts.converter.collection</td>
+ *     <td>singleton</td>
+ *     <td>Converter used to convert any object to Collection and back</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.impl.ArrayConverter</td>
+ *     <td>struts.converter.array</td>
+ *     <td>singleton</td>
+ *     <td>Converter used to convert any object to Array and back</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.impl.DateConverter</td>
+ *     <td>struts.converter.date</td>
+ *     <td>singleton</td>
+ *     <td>Converter used to convert any object to Date and back</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.impl.NumberConverter</td>
+ *     <td>struts.converter.number</td>
+ *     <td>singleton</td>
+ *     <td>Converter used to convert any object to Number and back</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.impl.StringConverter</td>
+ *     <td>struts.converter.string</td>
+ *     <td>singleton</td>
+ *     <td>Converter used to convert any object to String and back</td>
  *   </tr>
  * </table>
  *
@@ -263,22 +298,28 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(UnknownHandlerManager.class, StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, builder, props);
         alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);
 
+        alias(CollectionConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION, builder, props);
+        alias(ArrayConverter.class, StrutsConstants.STRUTS_CONVERTER_ARRAY, builder, props);
+        alias(DateConverter.class, StrutsConstants.STRUTS_CONVERTER_DATE, builder, props);
+        alias(NumberConverter.class, StrutsConstants.STRUTS_CONVERTER_NUMBER, builder, props);
+        alias(StringConverter.class, StrutsConstants.STRUTS_CONVERTER_STRING, builder, props);
+
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
             props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
             props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE, "false");
             props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, "0");
             // Convert struts properties into ones that xwork expects
-            props.setProperty("devMode", "true");
+            props.setProperty(XWorkConstants.DEV_MODE, "true");
         } else {
-            props.setProperty("devMode", "false");
+            props.setProperty(XWorkConstants.DEV_MODE, "false");
         }
 
         // Convert Struts properties into XWork properties
-        convertIfExist(props, StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, "logMissingProperties");
-        convertIfExist(props, StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "enableOGNLExpressionCache");
-        convertIfExist(props, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "allowStaticMethodAccess");
-        convertIfExist(props, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "reloadXmlConfiguration");
+        convertIfExist(props, StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, XWorkConstants.LOG_MISSING_PROPERTIES);
+        convertIfExist(props, StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE);
+        convertIfExist(props, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS);
+        convertIfExist(props, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, XWorkConstants.RELOAD_XML_CONFIGURATION);
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         loadCustomResourceBundles(props);

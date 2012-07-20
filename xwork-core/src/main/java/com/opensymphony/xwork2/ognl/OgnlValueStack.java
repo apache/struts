@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
@@ -95,7 +96,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         ((OgnlContext) context).setKeepLastEvaluation(false);
     }
 
-    @Inject("devMode")
+    @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
         devMode = "true".equalsIgnoreCase(mode);
     }

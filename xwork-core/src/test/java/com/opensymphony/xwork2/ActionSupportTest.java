@@ -313,7 +313,34 @@ public class ActionSupportTest extends XWorkTestCase {
         assertEquals(rb, mas.getTexts(MyActionSupport.class.getName()));
     }
 
+    public void testFormattingSupport() throws Exception {
+        ActionContext.getContext().setLocale(new Locale("da"));
+        MyActionSupport mas = new MyActionSupport();
+        ActionContext.getContext().getValueStack().push(mas);
+
+        mas.setVal(234d);
+
+        String formatted = mas.getFormatted("format.number", "val");
+
+        assertEquals("234,0", formatted);
+    }
+
+    public void testFormattingSupportWithConversionError() throws Exception {
+        ActionContext.getContext().getConversionErrors().put("val", new String[]{"4567def"});
+        ActionContext.getContext().setLocale(new Locale("da"));
+        MyActionSupport mas = new MyActionSupport();
+        ActionContext.getContext().getValueStack().push(mas);
+
+        mas.setVal(234d);
+
+        String formatted = mas.getFormatted("format.number", "val");
+
+        assertEquals("4567def", formatted);
+    }
+
     private class MyActionSupport extends ActionSupport {
+
+        private Double val;
 
         @Override
         public String doDefault() throws Exception {
@@ -324,6 +351,14 @@ public class ActionSupportTest extends XWorkTestCase {
         public void validate() {
             super.validate(); // to have code coverage
             addActionMessage("validation was called");
+        }
+
+        public Double getVal() {
+            return val;
+        }
+
+        public void setVal(Double val) {
+            this.val = val;
         }
     }
 

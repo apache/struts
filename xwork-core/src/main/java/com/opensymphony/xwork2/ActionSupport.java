@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -132,6 +133,25 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
 
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
         return getTextProvider().getText(key, defaultValue, args, stack);
+    }
+
+    /**
+     * Dedicated method to support I10N and conversion errors
+     *
+     * @param key message which contains formatting string
+     * @param expr that should be formatted
+     * @return formatted expr with format specified by key
+     */
+    public String getFormatted(String key, String expr) {
+        Map<String, Object> conversionErrors = ActionContext.getContext().getConversionErrors();
+        if (conversionErrors.containsKey(expr)) {
+            String[] vals = (String[]) conversionErrors.get(expr);
+            return vals[0];
+        } else {
+            final ValueStack valueStack = ActionContext.getContext().getValueStack();
+            final Object val = valueStack.findValue(expr);
+            return getText(key, Arrays.asList(val));
+        }
     }
 
     public ResourceBundle getTexts() {

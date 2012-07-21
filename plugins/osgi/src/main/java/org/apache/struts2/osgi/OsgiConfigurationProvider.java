@@ -22,6 +22,8 @@
 package org.apache.struts2.osgi;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -54,6 +56,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
     private Configuration configuration;
     private ObjectFactory objectFactory;
+    private FileManager fileManager;
 
     private OsgiHost osgiHost;
     private BundleContext bundleContext;
@@ -130,7 +133,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
             //XML config
             PackageLoader loader = new BundlePackageLoader();
-            for (PackageConfig pkg : loader.loadPackages(bundle, bundleContext, objectFactory, configuration.getPackageConfigs())) {
+            for (PackageConfig pkg : loader.loadPackages(bundle, bundleContext, objectFactory, fileManager, configuration.getPackageConfigs())) {
                 configuration.addPackageConfig(pkg.getName(), pkg);
                 bundleAccessor.addPackageFromBundle(bundle, pkg.getName());
             }
@@ -200,6 +203,10 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
     @Inject
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
+    }
+
+    public void setFileManagerFactory(FileManagerFactory fmFactory) {
+        this.fileManager = fmFactory.getFileManager();
     }
 
     public void destroy() {

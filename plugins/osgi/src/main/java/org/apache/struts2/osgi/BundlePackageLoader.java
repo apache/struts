@@ -21,33 +21,35 @@
 
 package org.apache.struts2.osgi;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Package loader implementation that loads resources from a bundle
  */
 public class BundlePackageLoader implements PackageLoader {
+
     private static final Logger LOG = LoggerFactory.getLogger(BundlePackageLoader.class);
 
-    public List<PackageConfig> loadPackages(Bundle bundle, BundleContext bundleContext, ObjectFactory objectFactory, Map<String, PackageConfig> pkgConfigs) throws ConfigurationException {
+    public List<PackageConfig> loadPackages(Bundle bundle, BundleContext bundleContext, ObjectFactory objectFactory,
+                                            FileManager fileManager, Map<String, PackageConfig> pkgConfigs) throws ConfigurationException {
         Configuration config = new DefaultConfiguration("struts.xml");
         BundleConfigurationProvider prov = new BundleConfigurationProvider("struts.xml", bundle, bundleContext);
         for (PackageConfig pkg : pkgConfigs.values()) {

@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.validator;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.TestBean;
@@ -162,6 +163,25 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         actionValidatorManager.getValidators(SimpleAction.class, alias);
         actionValidatorManager.getValidators(SimpleAction2.class, alias);
         mockValidatorFileParser.verify();
+    }
+
+    /**
+     * Test to verify WW-3850.
+     *
+     * @since 2.3.5
+     */
+    public void testBuildsValidatorsForClassError() {
+        // for this test we need to have a file manager with reloadingConfigs to true
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs("true");
+        // no validator found, but no check on file since it is not in cache
+        actionValidatorManager.getValidators(List.class, null);
+        // this second call will try reload a not existing file
+        // and causes a NPE (see WW-3850)
+        try {
+            actionValidatorManager.getValidators(List.class, null);
+        } catch (Exception e) {
+            fail("Exception occurred " + e);
+        }
     }
 
     /*

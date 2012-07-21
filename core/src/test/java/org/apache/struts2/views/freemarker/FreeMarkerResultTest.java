@@ -265,6 +265,33 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         assertEquals(expected, stringWriter.toString());
     }
 
+    public void testDynamicAttributesInTheme() throws Exception {
+        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
+        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+
+        File file = new File(FreeMarkerResultTest.class.getResource("customTextField.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/customTextField.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/test/text.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/test/text.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
+        EasyMock.replay(servletContext);
+
+        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
+        ServletActionContext.setServletContext(servletContext);
+
+        request.setRequestURI("/tutorial/test8.action");
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
+        dispatcher.serviceAction(request, response, servletContext, mapping);
+        String expected = "<input type=\"text\"autofocus=\"autofocus\"/>";
+        assertEquals(expected, stringWriter.toString());
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         mgr = new FreemarkerManager();

@@ -24,6 +24,7 @@ package org.apache.struts2.config;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.UnknownHandlerManager;
@@ -180,6 +181,12 @@ import java.util.StringTokenizer;
  *     <td>Allows provide custom TextProvider for whole application</td>
  *   </tr>
  *   <tr>
+ *     <td>com.opensymphony.xwork2.LocaleProvider</td>
+ *     <td>struts.localeProvider</td>
+ *     <td>singleton</td>
+ *     <td>Allows provide custom TextProvider for whole application</td>
+ *   </tr>
+ *   <tr>
  *     <td>org.apache.struts2.components.UrlRenderer</td>
  *     <td>struts.urlRenderer</td>
  *     <td>singleton</td>
@@ -282,6 +289,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props);
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
         alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.DEFAULT);
+        alias(LocaleProvider.class, StrutsConstants.STRUTS_LOCALE_PROVIDER, builder, props);
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);
         alias(ObjectTypeDeterminer.class, StrutsConstants.STRUTS_OBJECTTYPEDETERMINER, builder, props);
         alias(ActionMapper.class, StrutsConstants.STRUTS_MAPPER_CLASS, builder, props);

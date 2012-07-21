@@ -22,9 +22,10 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.TokenHelper;
 
@@ -120,6 +121,16 @@ public class TokenInterceptor extends MethodFilterInterceptor {
 
     public static final String INVALID_TOKEN_CODE = "invalid.token";
 
+    private static final String INVALID_TOKEN_MESSAGE_KEY = "struts.messages.invalid.token";
+    private static final String DEFAULT_ERROR_MESSAGE = "The form has already been processed or no token was supplied, please try again.";
+
+    private TextProvider textProvider;
+
+    @Inject
+    public void setTextProvider(TextProvider textProvider) {
+        this.textProvider = textProvider;
+    }
+
     /**
      * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
      */
@@ -149,9 +160,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
      */
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
-        String errorMessage = LocalizedTextUtil.findText(this.getClass(), "struts.messages.invalid.token",
-                invocation.getInvocationContext().getLocale(),
-                "The form has already been processed or no token was supplied, please try again.", new Object[0]);
+        String errorMessage = getErrorMessage(invocation);
 
         if (action instanceof ValidationAware) {
             ((ValidationAware) action).addActionError(errorMessage);
@@ -160,6 +169,14 @@ public class TokenInterceptor extends MethodFilterInterceptor {
         }
 
         return INVALID_TOKEN_CODE;
+    }
+
+    protected String getErrorMessage(ActionInvocation invocation) {
+        Object action = invocation.getAction();
+        if (action instanceof TextProvider) {
+            return ((TextProvider) action).getText(INVALID_TOKEN_MESSAGE_KEY, DEFAULT_ERROR_MESSAGE);
+        }
+        return textProvider.getText(INVALID_TOKEN_MESSAGE_KEY, DEFAULT_ERROR_MESSAGE);
     }
 
     /**

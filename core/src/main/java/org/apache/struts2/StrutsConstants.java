@@ -194,6 +194,9 @@ public final class StrutsConstants {
     /** XWork default text provider */
     public static final String STRUTS_XWORKTEXTPROVIDER = "struts.xworkTextProvider";
 
+    /** The {@link com.opensymphony.xwork2.LocaleProvider} implementation class */
+    public static final String STRUTS_LOCALE_PROVIDER = "struts.localeProvider";
+
     /** The name of the parameter to create when mapping an id (used by some action mappers) */
 	public static final String STRUTS_ID_PARAMETER_NAME = "struts.mapper.idParameterName";
 	
@@ -239,4 +242,5 @@ public final class StrutsConstants {
     public static final String STRUTS_CONVERTER_DATE = "struts.converter.date";
     public static final String STRUTS_CONVERTER_NUMBER = "struts.converter.number";
     public static final String STRUTS_CONVERTER_STRING = "struts.converter.string";
+
 }

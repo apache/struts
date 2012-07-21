@@ -74,6 +74,7 @@
     <bean type="com.opensymphony.xwork2.conversion.impl.StringConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.StringConverter" scope="singleton"/>
 
     <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" scope="default" />
+    <bean type="com.opensymphony.xwork2.LocaleProvider" name="struts" class="com.opensymphony.xwork2.DefaultLocaleProvider" scope="singleton" />
 
     <bean type="org.apache.struts2.components.UrlRenderer" name="struts" class="org.apache.struts2.components.ServletUrlRenderer"/>
     <bean type="org.apache.struts2.views.util.UrlHelper" name="struts" class="org.apache.struts2.views.util.DefaultUrlHelper"/>

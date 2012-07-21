@@ -15,10 +15,15 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 /**
@@ -79,6 +84,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     /**
      * @param localeProvider a locale provider.
      */
+    @Inject
     public void setLocaleProvider(LocaleProvider localeProvider) {
         this.localeProvider = localeProvider;
     }

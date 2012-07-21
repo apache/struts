@@ -24,10 +24,13 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -37,7 +40,14 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -145,27 +155,27 @@ import java.util.*;
  * <pre>
  * <!-- START SNIPPET: example-action -->
  *    package com.example;
- * <p/>
+ *
  *    import java.io.File;
  *    import com.opensymphony.xwork2.ActionSupport;
- * <p/>
+ *
  *    public UploadAction extends ActionSupport {
  *       private File file;
  *       private String contentType;
  *       private String filename;
- * <p/>
+ *
  *       public void setUpload(File file) {
  *          this.file = file;
  *       }
- * <p/>
+ *
  *       public void setUploadContentType(String contentType) {
  *          this.contentType = contentType;
  *       }
- * <p/>
+ *
  *       public void setUploadFileName(String filename) {
  *          this.filename = filename;
  *       }
- * <p/>
+ *
  *       public String execute() {
  *          //...
  *          return SUCCESS;
@@ -179,23 +189,22 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = -4764627478894962478L;
 
     protected static final Logger LOG = LoggerFactory.getLogger(FileUploadInterceptor.class);
-    private static final String DEFAULT_MESSAGE = "no.message.found";
-
-    protected boolean useActionMessageBundle;
 
     protected Long maximumSize;
     protected Set<String> allowedTypesSet = Collections.emptySet();
     protected Set<String> allowedExtensionsSet = Collections.emptySet();
 
     private PatternMatcher matcher;
+    private Container container;
 
     @Inject
     public void setMatcher(PatternMatcher matcher) {
         this.matcher = matcher;
     }
 
-    public void setUseActionMessageBundle(String value) {
-        this.useActionMessageBundle = Boolean.valueOf(value);
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
     /**
@@ -237,7 +246,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         if (!(request instanceof MultiPartRequestWrapper)) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
-                LOG.debug(getTextMessage("struts.messages.bypass.request", new Object[]{proxy.getNamespace(), proxy.getActionName()}, ac.getLocale()));
+                LOG.debug(getTextMessage("struts.messages.bypass.request", new String[]{proxy.getNamespace(), proxy.getActionName()}));
             }
 
             return invocation.invoke();
@@ -289,7 +298,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         String fileNameName = inputName + "FileName";
 
                         for (int index = 0; index < files.length; index++) {
-                            if (acceptFile(action, files[index], fileName[index], contentType[index], inputName, validation, ac.getLocale())) {
+                            if (acceptFile(action, files[index], fileName[index], contentType[index], inputName, validation)) {
                                 acceptedFiles.add(files[index]);
                                 acceptedContentTypes.add(contentType[index]);
                                 acceptedFileNames.add(fileName[index]);
@@ -306,12 +315,12 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                     }
                 } else {
                     if (LOG.isWarnEnabled()) {
-                	LOG.warn(getTextMessage(action, "struts.messages.invalid.file", new Object[]{inputName}, ac.getLocale()));
+                        LOG.warn(getTextMessage(action, "struts.messages.invalid.file", new String[]{inputName}));
                     }
                 }
             } else {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn(getTextMessage(action, "struts.messages.invalid.content.type", new Object[]{inputName}, ac.getLocale()));
+                    LOG.warn(getTextMessage(action, "struts.messages.invalid.content.type", new String[]{inputName}));
                 }
             }
         }
@@ -329,48 +338,47 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      * @param inputName   - inputName of the file.
      * @param validation  - Non-null ValidationAware if the action implements ValidationAware, allowing for better
      *                    logging.
-     * @param locale
      * @return true if the proposed file is acceptable by contentType and size.
      */
-    protected boolean acceptFile(Object action, File file, String filename, String contentType, String inputName, ValidationAware validation, Locale locale) {
+    protected boolean acceptFile(Object action, File file, String filename, String contentType, String inputName, ValidationAware validation) {
         boolean fileIsAcceptable = false;
 
         // If it's null the upload failed
         if (file == null) {
-            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new Object[]{inputName}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new String[]{inputName});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             if (LOG.isWarnEnabled()) {
-        	LOG.warn(errMsg);
+                LOG.warn(errMsg);
             }
         } else if (maximumSize != null && maximumSize < file.length()) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new Object[]{inputName, filename, file.getName(), "" + file.length()}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new String[]{inputName, filename, file.getName(), "" + file.length()});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             if (LOG.isWarnEnabled()) {
-        	LOG.warn(errMsg);
+                LOG.warn(errMsg);
             }
         } else if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
-            String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new Object[]{inputName, filename, file.getName(), contentType}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new String[]{inputName, filename, file.getName(), contentType});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             if (LOG.isWarnEnabled()) {
-        	LOG.warn(errMsg);
+                LOG.warn(errMsg);
             }
         } else if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.extension.not.allowed", new Object[]{inputName, filename, file.getName(), contentType}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.file.extension.not.allowed", new String[]{inputName, filename, file.getName(), contentType});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             if (LOG.isWarnEnabled()) {
-        	LOG.warn(errMsg);
+                LOG.warn(errMsg);
             }
         } else {
             fileIsAcceptable = true;
@@ -426,21 +434,34 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         return result;
     }
 
-    private String getTextMessage(String messageKey, Object[] args, Locale locale) {
-        return getTextMessage(null, messageKey, args, locale);
+    protected String getTextMessage(String messageKey, String[] args) {
+        return getTextMessage(this, messageKey, args);
     }
 
-    private String getTextMessage(Object action, String messageKey, Object[] args, Locale locale) {
-        if (args == null || args.length == 0) {
-            if (action != null && useActionMessageBundle) {
-                return LocalizedTextUtil.findText(action.getClass(), messageKey, locale);
-            }
-            return LocalizedTextUtil.findText(this.getClass(), messageKey, locale);
-        } else {
-            if (action != null && useActionMessageBundle) {
-                return LocalizedTextUtil.findText(action.getClass(), messageKey, locale, DEFAULT_MESSAGE, args);
-            }
-            return LocalizedTextUtil.findText(this.getClass(), messageKey, locale, DEFAULT_MESSAGE, args);
+    protected String getTextMessage(Object action, String messageKey, String[] args) {
+        if (action instanceof TextProvider) {
+            return ((TextProvider) action).getText(messageKey, args);
         }
+        return getTextProvider(action).getText(messageKey, args);
     }
+
+    private TextProvider getTextProvider(Object action) {
+        TextProviderFactory tpf = new TextProviderFactory();
+        if (container != null) {
+            container.inject(tpf);
+        }
+        LocaleProvider localeProvider = getLocaleProvider(action);
+        return tpf.createInstance(action.getClass(), localeProvider);
+    }
+
+    private LocaleProvider getLocaleProvider(Object action) {
+        LocaleProvider localeProvider;
+        if (action instanceof LocaleProvider) {
+            localeProvider = (LocaleProvider) action;
+        } else {
+            localeProvider = container.getInstance(LocaleProvider.class);
+        }
+        return localeProvider;
+    }
+
 }

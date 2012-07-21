@@ -52,7 +52,10 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example_fmt -->
  *
  */
-@StrutsTag(name="radio", tldTagClass="org.apache.struts2.views.jsp.ui.RadioTag", description="Renders a radio button input field")
+@StrutsTag(name="radio",
+        tldTagClass="org.apache.struts2.views.jsp.ui.RadioTag",
+        description="Renders a radio button input field",
+        allowDynamicAttributes = true)
 public class Radio extends ListUIBean {
     final public static String TEMPLATE = "radiomap";
 

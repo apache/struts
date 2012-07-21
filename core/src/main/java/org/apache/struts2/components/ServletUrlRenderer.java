@@ -145,6 +145,13 @@ public class ServletUrlRenderer implements UrlRenderer {
 			}
 		}
 
+        Map actionParams = null;
+        if (action != null && action.indexOf("?") > 0) {
+            String queryString = action.substring(action.indexOf("?") + 1);
+            actionParams = urlHelper.parseQueryString(queryString, false);
+            action = action.substring(0, action.indexOf("?"));
+        }
+
         ActionMapping nameMapping = actionMapper.getMappingFromActionName(action);
         String actionName = nameMapping.getName();
         String actionMethod = nameMapping.getMethod();
@@ -155,7 +162,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
 			ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
 			String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
-                    formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
+                    formComponent.request, formComponent.response, actionParams, null, formComponent.includeContext, true);
 			formComponent.addParameter("action", result);
 
 			// let's try to get the actual action class and name

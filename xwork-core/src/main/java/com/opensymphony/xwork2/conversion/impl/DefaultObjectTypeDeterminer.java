@@ -47,12 +47,10 @@ import java.util.Map;
  * and will be removed eventually.
  *
  * <!-- END SNIPPET: javadoc -->
- * 
  *
  * @author Gabriel Zimmerman
  */
 public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
-    
 
     protected static final Logger LOG = LoggerFactory.getLogger(DefaultObjectTypeDeterminer.class);
 
@@ -61,17 +59,16 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
     public static final String KEY_PROPERTY_PREFIX = "KeyProperty_";
     public static final String CREATE_IF_NULL_PREFIX = "CreateIfNull_";
     public static final String DEPRECATED_ELEMENT_PREFIX = "Collection_";
-    
+
     private ReflectionProvider reflectionProvider;
     private XWorkConverter xworkConverter;
-    
+
     @Inject
     public DefaultObjectTypeDeterminer(@Inject XWorkConverter conv, @Inject ReflectionProvider prov) {
         this.reflectionProvider = prov;
         this.xworkConverter = conv;
-        
     }
-    
+
     /**
      * Determines the key class by looking for the value of @Key annotation for the given class.
      * If no annotation is found, the key class is determined by using the generic parametrics.
@@ -85,20 +82,15 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      */
     public Class getKeyClass(Class parentClass, String property) {
         Key annotation = getAnnotation(parentClass, property, Key.class);
-
         if (annotation != null) {
             return annotation.value();
         }
-
         Class clazz = getClass(parentClass, property, false);
-
         if (clazz != null) {
             return clazz;
         }
-
         return (Class) xworkConverter.getConverter(parentClass, KEY_PREFIX + property);
     }
-
 
     /**
      * Determines the element class by looking for the value of @Element annotation for the given
@@ -114,31 +106,22 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      */
     public Class getElementClass(Class parentClass, String property, Object key) {
         Element annotation = getAnnotation(parentClass, property, Element.class);
-
         if (annotation != null) {
             return annotation.value();
         }
-
         Class clazz = getClass(parentClass, property, true);
-
         if (clazz != null) {
             return clazz;
         }
-
         clazz = (Class) xworkConverter.getConverter(parentClass, ELEMENT_PREFIX + property);
-
         if (clazz == null) {
-            clazz = (Class) xworkConverter
-                    .getConverter(parentClass, DEPRECATED_ELEMENT_PREFIX + property);
-
+            clazz = (Class) xworkConverter.getConverter(parentClass, DEPRECATED_ELEMENT_PREFIX + property);
             if (LOG.isInfoEnabled() && clazz != null) {
                 LOG.info("The Collection_xxx pattern for collection type conversion is deprecated. Please use Element_xxx!");
             }
         }
         return clazz;
-
     }
-
 
     /**
      * Determines the key property for a Collection by getting it from the @KeyProperty annotation.
@@ -152,14 +135,11 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      */
     public String getKeyProperty(Class parentClass, String property) {
         KeyProperty annotation = getAnnotation(parentClass, property, KeyProperty.class);
-
         if (annotation != null) {
             return annotation.value();
         }
-
         return (String) xworkConverter.getConverter(parentClass, KEY_PROPERTY_PREFIX + property);
     }
-
 
     /**
      * Determines the createIfNull property for a Collection or Map by getting it from the @CreateIfNull annotation.
@@ -175,21 +155,14 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      * @return <tt>true</tt>, if the Collection or Map should be created, <tt>false</tt> otherwise.
      * @see ObjectTypeDeterminer#getKeyProperty(Class, String)
      */
-    public boolean shouldCreateIfNew(Class parentClass,
-                                     String property,
-                                     Object target,
-                                     String keyProperty,
-                                     boolean isIndexAccessed) {
-
+    public boolean shouldCreateIfNew(Class parentClass, String property, Object target, String keyProperty, boolean isIndexAccessed) {
         CreateIfNull annotation = getAnnotation(parentClass, property, CreateIfNull.class);
-
         if (annotation != null) {
             return annotation.value();
         }
-
         String configValue = (String) xworkConverter.getConverter(parentClass, CREATE_IF_NULL_PREFIX + property);
         //check if a value is in the config
-        if (configValue!=null) {
+        if (configValue != null) {
             if ("true".equalsIgnoreCase(configValue)) {
                 return true;
             }
@@ -201,12 +174,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
         //default values depend on target type
         //and whether this is accessed by an index
         //in the case of List
-        if ((target instanceof Map) || isIndexAccessed) {
-            return true;
-        }	else {
-            return false;
-        }
-
+        return (target instanceof Map) || isIndexAccessed;
     }
 
     /**
@@ -243,19 +211,17 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      * @param annotationClass The annotation
      * @return concrete Annotation instance or <tt>null</tt> if none could be retrieved.
      */
-    private <T extends Annotation>T getAnnotationFromGetter(Class parentClass, String property, Class<T> annotationClass) {
+    private <T extends Annotation> T getAnnotationFromGetter(Class parentClass, String property, Class<T> annotationClass) {
         try {
             Method getter = reflectionProvider.getGetMethod(parentClass, property);
 
             if (getter != null) {
                 return getter.getAnnotation(annotationClass);
             }
-        }
-        catch (ReflectionException ognle) {
-            ; // ignore
-        }
-        catch (IntrospectionException ie) {
-            ; // ignore
+        } catch (ReflectionException ognle) {
+            // ignore
+        } catch (IntrospectionException ie) {
+            // ignore
         }
         return null;
     }
@@ -268,19 +234,17 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      * @param annotationClass The annotation
      * @return concrete Annotation instance or <tt>null</tt> if none could be retrieved.
      */
-    private <T extends Annotation>T getAnnotationFromSetter(Class parentClass, String property, Class<T> annotationClass) {
+    private <T extends Annotation> T getAnnotationFromSetter(Class parentClass, String property, Class<T> annotationClass) {
         try {
             Method setter = reflectionProvider.getSetMethod(parentClass, property);
 
             if (setter != null) {
                 return setter.getAnnotation(annotationClass);
             }
-        }
-        catch (ReflectionException ognle) {
-            ; // ignore
-        }
-        catch (IntrospectionException ie) {
-            ; // ignore
+        } catch (ReflectionException ognle) {
+            // ignore
+        } catch (IntrospectionException ie) {
+            // ignore
         }
         return null;
     }
@@ -294,30 +258,22 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
      * @return Class of the specified field.
      */
     private Class getClass(Class parentClass, String property, boolean element) {
-
-
         try {
-
             Field field = reflectionProvider.getField(parentClass, property);
-
             Type genericType = null;
-
             // Check fields first
             if (field != null) {
                 genericType = field.getGenericType();
             }
-
             // Try to get ParameterType from setter method
             if (genericType == null || !(genericType instanceof ParameterizedType)) {
                 try {
                     Method setter = reflectionProvider.getSetMethod(parentClass, property);
-                    genericType = setter.getGenericParameterTypes()[0];
-                }
-                catch (ReflectionException ognle) {
-                    ; // ignore
-                }
-                catch (IntrospectionException ie) {
-                    ; // ignore
+                    genericType = setter != null ? setter.getGenericParameterTypes()[0] : null;
+                } catch (ReflectionException ognle) {
+                    // ignore
+                } catch (IntrospectionException ie) {
+                    // ignore
                 }
             }
 
@@ -326,32 +282,24 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
                 try {
                     Method getter = reflectionProvider.getGetMethod(parentClass, property);
                     genericType = getter.getGenericReturnType();
-                }
-                catch (ReflectionException ognle) {
-                    ; // ignore
-                }
-                catch (IntrospectionException ie) {
-                    ; // ignore
+                } catch (ReflectionException ognle) {
+                    // ignore
+                } catch (IntrospectionException ie) {
+                    // ignore
                 }
             }
 
             if (genericType instanceof ParameterizedType) {
-
-
                 ParameterizedType type = (ParameterizedType) genericType;
-
                 int index = (element && type.getRawType().toString().contains(Map.class.getName())) ? 1 : 0;
-
                 Type resultType = type.getActualTypeArguments()[index];
-
-                if ( resultType instanceof ParameterizedType) {
+                if (resultType instanceof ParameterizedType) {
                     return (Class) ((ParameterizedType) resultType).getRawType();
                 }
                 return (Class) resultType;
-
             }
         } catch (Exception e) {
-            if ( LOG.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Error while retrieving generic property class for property=" + property, e);
             }
         }

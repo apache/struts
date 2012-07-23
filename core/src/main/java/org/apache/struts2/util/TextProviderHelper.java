@@ -94,7 +94,7 @@ public class TextProviderHelper {
                 } else {
                 	LOG.warn("Could not locate the message resource '"+key+"' as there is no TextProvider in the ValueStack.");
                 }
-                if (msg.equals(defaultMessage)) {
+                if (defaultMessage.equals(msg)) {
                 	LOG.warn("The default value expression '"+defaultMessage+"' was evaluated and did not match a property.  The literal value '"+defaultMessage+"' will be used.");
                 } else {
                 	LOG.warn("The default value expression '"+defaultMessage+"' evaluated to '"+msg+"'");

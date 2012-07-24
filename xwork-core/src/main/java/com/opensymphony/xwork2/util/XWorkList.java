@@ -42,17 +42,13 @@ public class XWorkList extends ArrayList {
 
     private Class clazz;
 
-    private ObjectFactory objectFactory;
-
-    public XWorkList(ObjectFactory fac, Class clazz) {
+    public XWorkList(Class clazz) {
         this.clazz = clazz;
-        this.objectFactory = fac;
     }
 
-    public XWorkList(ObjectFactory fac, Class clazz, int initialCapacity) {
+    public XWorkList(Class clazz, int initialCapacity) {
         super(initialCapacity);
         this.clazz = clazz;
-        this.objectFactory = fac;
     }
 
     /**
@@ -169,14 +165,17 @@ public class XWorkList extends ArrayList {
     public synchronized Object get(int index) {
         while (index >= this.size()) {
             try {
-                //todo
-                this.add(objectFactory.buildBean(clazz, null)); //ActionContext.getContext().getContextMap()));
+                this.add(getObjectFactory().buildBean(clazz, ActionContext.getContext().getContextMap()));
             } catch (Exception e) {
                 throw new XWorkException(e);
             }
         }
 
         return super.get(index);
+    }
+
+    private ObjectFactory getObjectFactory() {
+        return ActionContext.getContext().getInstance(ObjectFactory.class);
     }
 
     /**
@@ -207,7 +206,7 @@ public class XWorkList extends ArrayList {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Converting from " + element.getClass().getName() + " to " + clazz.getName());
             }
-            TypeConverter conv = objectFactory.buildConverter(XWorkConverter.class);
+            TypeConverter conv = getObjectFactory().buildConverter(XWorkConverter.class);
             Map<String, Object> context = ActionContext.getContext().getContextMap();
             element = conv.convertValue(context, null, null, null, element, clazz);
         }

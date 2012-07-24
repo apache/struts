@@ -89,9 +89,9 @@ public class CollectionConverter extends DefaultTypeConverter {
             result = new TreeSet();
         } else {
             if (size > 0) {
-                result = new XWorkList(objectFactory, memberType, size);
+                result = new XWorkList(memberType, size);
             } else {
-                result = new XWorkList(objectFactory, memberType);
+                result = new XWorkList(memberType);
             }
         }
 

@@ -61,9 +61,39 @@
     <#else>
     	<#assign tmpListValue = stack.findString('top') />
     </#if>
+    <#if parameters.listCssClass??>
+        <#if stack.findString(parameters.listCssClass)??>
+          <#assign itemCssClass= stack.findString(parameters.listCssClass)/>
+        <#else>
+          <#assign itemCssClass = ''/>
+        </#if>
+    </#if>
+    <#if parameters.listCssStyle??>
+        <#if stack.findString(parameters.listCssStyle)??>
+          <#assign itemCssStyle= stack.findString(parameters.listCssStyle)/>
+        <#else>
+          <#assign itemCssStyle = ''/>
+        </#if>
+    </#if>
+    <#if parameters.listTitle??>
+        <#if stack.findString(parameters.listTitle)??>
+          <#assign itemTitle= stack.findString(parameters.listTitle)/>
+        <#else>
+          <#assign itemTitle = ''/>
+        </#if>
+    </#if>
     <option value="${tmpListKey?html}"<#rt/>
         <#if (parameters.nameValue == tmpListKey)>
  selected="selected"<#rt/>
+        </#if>
+        <#if itemCssClass?if_exists != "">
+ class="${itemCssClass?html}"<#rt/>
+        </#if>
+        <#if itemCssStyle?if_exists != "">
+ style="${itemCssStyle?html}"<#rt/>
+        </#if>
+        <#if itemTitle?if_exists != "">
+ title="${itemTitle?html}"<#rt/>
         </#if>
     ><#t/>
             ${tmpListValue?html}<#t/>

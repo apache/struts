@@ -26,12 +26,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  */
@@ -67,9 +62,9 @@ public class UITagExample extends ActionSupport implements Validateable {
     String thoughts;
 
     public UITagExample() {
-        favouriteLanguages.add(new Language("EnglishKey", "English Language"));
-        favouriteLanguages.add(new Language("FrenchKey", "French Language"));
-        favouriteLanguages.add(new Language("SpanishKey", "Spanish Language"));
+        favouriteLanguages.add(new Language("EnglishKey", "English Language", "color: blue; font-style: italic;"));
+        favouriteLanguages.add(new Language("FrenchKey", "French Language", "color: grey;"));
+        favouriteLanguages.add(new Language("SpanishKey", "Spanish Language", "color: red; font-wight: bold;"));
 
         VehicalType car = new VehicalType("CarKey", "Car");
         VehicalType motorcycle = new VehicalType("MotorcycleKey", "Motorcycle");
@@ -268,10 +263,12 @@ public class UITagExample extends ActionSupport implements Validateable {
     public static class Language {
         String description;
         String key;
+        String style;
 
-        public Language(String key, String description) {
+        public Language(String key, String description, String style) {
             this.key = key;
             this.description = description;
+            this.style = style;
         }
 
         public String getKey() {
@@ -279,6 +276,9 @@ public class UITagExample extends ActionSupport implements Validateable {
         }
         public String getDescription() {
             return description;
+        }
+        public String getStyle() {
+            return style;
         }
 
     }

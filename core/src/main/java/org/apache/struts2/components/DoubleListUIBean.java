@@ -21,14 +21,12 @@
 
 package org.apache.struts2.components;
 
-import java.util.Map;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.Map;
 
 /**
  * DoubleListUIBean is the standard superclass of all Struts double list handling components.
@@ -55,6 +53,9 @@ public abstract class DoubleListUIBean extends ListUIBean {
     protected String doubleList;
     protected String doubleListKey;
     protected String doubleListValue;
+    protected String doubleListCssClass;
+    protected String doubleListCssStyle;
+    protected String doubleListTitle;
     protected String doubleName;
     protected String doubleValue;
     protected String formName;
@@ -148,6 +149,15 @@ public abstract class DoubleListUIBean extends ListUIBean {
             addParameter("doubleListValue", doubleListValue);
         }else if (tmpDoubleList instanceof Map) {
             addParameter("doubleListValue", "value");
+        }
+        if (doubleListCssClass != null) {
+            addParameter("doubleListCssClass", findString(doubleListCssClass));
+        }
+        if (doubleListCssStyle!= null) {
+            addParameter("doubleListCssStyle", findString(doubleListCssStyle));
+        }
+        if (doubleListTitle != null) {
+            addParameter("doubleListTitle", findString(doubleListTitle));
         }
 
 
@@ -274,6 +284,21 @@ public abstract class DoubleListUIBean extends ListUIBean {
     @StrutsTagAttribute(description="The value expression to use for second list")
     public void setDoubleListValue(String doubleListValue) {
         this.doubleListValue = doubleListValue;
+    }
+
+    @StrutsTagAttribute(description = "Property of second list objects to get css class from")
+     public void setDoubleListCssClass(String doubleListCssClass) {
+        this.doubleListCssClass = doubleListCssClass;
+    }
+
+    @StrutsTagAttribute(description = "Property of second list objects to get css style from")
+    public void setDoubleListCssStyle(String doubleListCssStyle) {
+        this.doubleListCssStyle = doubleListCssStyle;
+    }
+
+    @StrutsTagAttribute(description = "Property of second list objects to get title from")
+    public void setDoubleListTitle(String doubleListTitle) {
+        this.doubleListTitle = doubleListTitle;
     }
 
     @StrutsTagAttribute(description="The name for complete component", required=true)

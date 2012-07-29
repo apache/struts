@@ -110,7 +110,37 @@
             <#else>
                 <#assign doubleItemValue = stack.findString('top')/>
         </#if>
+        <#if parameters.doubleListCssClass??>
+            <#if stack.findString(parameters.doubleListCssClass)??>
+              <#assign itemDoubleCssClass= stack.findString(parameters.doubleListCssClass)/>
+            <#else>
+              <#assign itemDoubleCssClass = ''/>
+            </#if>
+        </#if>
+        <#if parameters.doubleListCssStyle??>
+            <#if stack.findString(parameters.doubleListCssStyle)??>
+              <#assign itemDoubleCssStyle= stack.findString(parameters.doubleListCssStyle)/>
+            <#else>
+              <#assign itemDoubleCssStyle = ''/>
+            </#if>
+        </#if>
+        <#if parameters.doubleListTitle??>
+            <#if stack.findString(parameters.doubleListTitle)??>
+              <#assign itemDoubleTitle= stack.findString(parameters.doubleListTitle)/>
+            <#else>
+              <#assign itemDoubleTitle = ''/>
+            </#if>
+        </#if>
     ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue?js_string}", "${doubleItemKeyStr?js_string}");
+        <#if itemDoubleCssClass?if_exists != "">
+    ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("class","${itemDoubleCssClass?html}");
+        </#if>
+        <#if itemDoubleCssStyle?if_exists != "">
+        ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("style","${itemDoubleCssStyle?html}");
+        </#if>
+        <#if itemDoubleTitle?if_exists != "">
+        ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("title","${itemDoubleTitle?html}");
+        </#if>
 
         <#assign doubleItemCount = doubleItemCount + 1/>
     </@s.iterator>

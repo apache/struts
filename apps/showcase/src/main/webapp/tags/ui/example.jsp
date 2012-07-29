@@ -55,6 +55,7 @@
             name="favouriteLanguage"
             listKey="key"
             listValue="description"
+            listCssStyle="style"
             emptyOption="true"
             headerKey="None"
             headerValue="None"/>

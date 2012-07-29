@@ -21,37 +21,37 @@
 
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ContainUtil;
+import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.util.ContainUtil;
-import org.apache.struts2.util.MakeIterator;
-
-import com.opensymphony.xwork2.util.ValueStack;
-
 /**
  * DoubleListUIBean is the standard superclass of all Struts list handling components.
- *
  * <p/>
- *
+ * <p/>
+ * <p/>
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p/>
  * Note that the listkey and listvalue attribute will default to "key" and "value"
  * respectively only when the list attribute is evaluated to a Map or its decendant.
  * Everything else will result in listkey and listvalue to be null and not used.
- *
+ * <p/>
  * <!-- END SNIPPET: javadoc -->
- *
  */
 public abstract class ListUIBean extends UIBean {
     protected Object list;
     protected String listKey;
     protected String listValue;
+    protected String listCssClass;
+    protected String listCssStyle;
+    protected String listTitle;
 
     // indicate if an exception is to be thrown when value attribute is null
     protected boolean throwExceptionOnNullValueAttribute = false;
@@ -78,13 +78,12 @@ public abstract class ListUIBean extends UIBean {
             if (throwExceptionOnNullValueAttribute) {
                 // will throw an exception if not found
                 value = findValue((list == null) ? (String) list : list.toString(), "list",
-                    "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
-                    "Example: people or people.{name}");
-            }
-            else {
+                        "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
+                                "Example: people or people.{name}");
+            } else {
                 // ww-1010, allows value with null value to be compatible with ww
                 // 2.1.7 behaviour
-                value = findValue((list == null)?(String) list:list.toString());
+                value = findValue((list == null) ? (String) list : list.toString());
             }
         }
 
@@ -103,17 +102,29 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (listKey != null) {
-        	listKey = stripExpressionIfAltSyntax(listKey);
+            listKey = stripExpressionIfAltSyntax(listKey);
             addParameter("listKey", listKey);
         } else if (value instanceof Map) {
             addParameter("listKey", "key");
         }
 
         if (listValue != null) {
-        	listValue = stripExpressionIfAltSyntax(listValue);
+            listValue = stripExpressionIfAltSyntax(listValue);
             addParameter("listValue", listValue);
         } else if (value instanceof Map) {
             addParameter("listValue", "value");
+        }
+
+        if (listCssClass != null && listCssClass.trim().length() > 0) {
+            addParameter("listCssClass", listCssClass);
+        }
+
+        if (listCssStyle != null && listCssStyle.trim().length() > 0) {
+            addParameter("listCssStyle", listCssStyle);
+        }
+
+        if (listTitle != null && listTitle.trim().length() > 0) {
+            addParameter("listTitle", listTitle);
         }
     }
 
@@ -125,20 +136,35 @@ public abstract class ListUIBean extends UIBean {
         return null; // don't convert nameValue to anything, we need the raw value
     }
 
-    @StrutsTagAttribute(description="Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option 'value'" +
-                " parameter and the Map value will become the option body.", required=true)
+    @StrutsTagAttribute(description = "Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option 'value'" +
+            " parameter and the Map value will become the option body.", required = true)
     public void setList(Object list) {
         this.list = list;
     }
 
-    @StrutsTagAttribute(description=" Property of list objects to get field value from")
+    @StrutsTagAttribute(description = " Property of list objects to get field value from")
     public void setListKey(String listKey) {
         this.listKey = listKey;
     }
 
-    @StrutsTagAttribute(description="Property of list objects to get field content from")
+    @StrutsTagAttribute(description = "Property of list objects to get field content from")
     public void setListValue(String listValue) {
         this.listValue = listValue;
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to get css class from")
+    public void setListCssClass(String listCssClass) {
+        this.listCssClass = listCssClass;
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to get css style from")
+    public void setListCssStyle(String listCssStyle) {
+        this.listCssStyle = listCssStyle;
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to get title from")
+    public void setListTitle(String listTitle) {
+        this.listTitle = listTitle;
     }
 
 

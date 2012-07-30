@@ -31,6 +31,9 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
     protected String doubleList;
     protected String doubleListKey;
     protected String doubleListValue;
+    protected String doubleListCssClass;
+    protected String doubleListCssStyle;
+    protected String doubleListTitle;
     protected String doubleName;
     protected String doubleValue;
     protected String formName;
@@ -76,6 +79,9 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
         bean.setDoubleList(doubleList);
         bean.setDoubleListKey(doubleListKey);
         bean.setDoubleListValue(doubleListValue);
+        bean.setDoubleListCssClass(doubleListCssClass);
+        bean.setDoubleListCssStyle(doubleListCssStyle);
+        bean.setDoubleListTitle(doubleListTitle);
         bean.setDoubleName(doubleName);
         bean.setDoubleValue(doubleValue);
         bean.setFormName(formName);
@@ -125,6 +131,18 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
 
     public void setDoubleListValue(String listValue) {
         this.doubleListValue = listValue;
+    }
+
+    public void setDoubleListCssClass(String doubleListCssClass) {
+        this.doubleListCssClass = doubleListCssClass;
+    }
+
+    public void setDoubleListCssStyle(String doubleListCssStyle) {
+        this.doubleListCssStyle = doubleListCssStyle;
+    }
+
+    public void setDoubleListTitle(String doubleListTitle) {
+        this.doubleListTitle = doubleListTitle;
     }
 
     public void setDoubleName(String aName) {

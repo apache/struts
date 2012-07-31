@@ -1,4 +1,4 @@
-package org.apache.struts2.rest.example;
+package org.demo.rest.example;
 
 public class Order {
     String id;

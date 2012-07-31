@@ -60,6 +60,7 @@ import org.apache.struts2.convention.actions.chain.ChainedAction;
 import org.apache.struts2.convention.actions.defaultinterceptor.SingleActionNameAction2;
 import org.apache.struts2.convention.actions.exception.ExceptionsActionLevelAction;
 import org.apache.struts2.convention.actions.exception.ExceptionsMethodLevelAction;
+import org.apache.struts2.convention.actions.exclude.ExcludeAction;
 import org.apache.struts2.convention.actions.interceptor.ActionLevelInterceptor2Action;
 import org.apache.struts2.convention.actions.interceptor.ActionLevelInterceptor3Action;
 import org.apache.struts2.convention.actions.interceptor.ActionLevelInterceptorAction;
@@ -131,6 +132,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
     public void testExcludedPackages() throws MalformedURLException {
         run(null, "actions", "dontfind");
+    }
+
+    public void testJustExcludedPackages() throws MalformedURLException {
+        run("org.apache.struts2.convention.actions", null, "org.apache.struts2.convention.actions.exclude");
     }
 
     private void run(String actionPackages, String packageLocators, String excludePackages) throws MalformedURLException {
@@ -208,6 +213,8 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
             "/chain", strutsDefault, null);
         PackageConfig transPkg = makePackageConfig("org.apache.struts2.convention.actions.transactions#struts-default#/transactions",
             "/transactions", strutsDefault, null);
+        PackageConfig excludePkg = makePackageConfig("org.apache.struts2.convention.actions.exclude#struts-default#/exclude",
+            "/exclude", strutsDefault, null);
 
         ResultMapBuilder resultMapBuilder = createStrictMock(ResultMapBuilder.class);
         checkOrder(resultMapBuilder, false);
@@ -311,6 +318,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         /* org.apache.struts2.convention.actions.transactions */
         expect(resultMapBuilder.build(TransNameAction.class, getAnnotation(TransNameAction.class, "trans1", Action.class), "trans1", transPkg)).andReturn(results);
         expect(resultMapBuilder.build(TransNameAction.class, getAnnotation(TransNameAction.class, "trans2", Action.class), "trans2", transPkg)).andReturn(results);
+
+        /* org.apache.struts2.convention.actions.exclude */
+        // this is only expected when excludePackages was specified with org.apache.struts2.convention.actions.exclude package
+        if (excludePackages == null || !excludePackages.contains("org.apache.struts2.convention.actions.exclude")) {
+            expect(resultMapBuilder.build(ExcludeAction.class, getAnnotation(ExcludeAction.class, "run1", Action.class), "exclude1", excludePkg)).andReturn(results);
+        }
 
         EasyMock.replay(resultMapBuilder);
 
@@ -567,7 +580,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         /* org.apache.struts2.convention.actions */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions#struts-default#");
         assertNotNull(pkgConfig);
-        System.out.println("actions " + pkgConfig.getActionConfigs());
+
         assertEquals(4, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "no-annotation", NoAnnotationAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "default-result-path", DefaultResultPathAction.class, "execute", pkgConfig.getName());
@@ -579,6 +592,14 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.transactions#struts-default#/transactions");
         verifyActionConfig(pkgConfig, "trans1", TransNameAction.class, "trans1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "trans2", TransNameAction.class, "trans2", pkgConfig.getName());
+
+        /* org.apache.struts2.convention.actions.exclude */
+        pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.exclude#struts-default#/exclude");
+        if (excludePackages != null && excludePackages.contains("org.apache.struts2.convention.actions.exclude")) {
+            verifyMissingActionConfig(configuration, "exclude1", ExcludeAction.class, "run1", "org.apache.struts2.convention.actions.exclude#struts-default#/exclude");
+        } else {
+            verifyActionConfig(pkgConfig, "exclude1", ExcludeAction.class, "run1", pkgConfig.getName());
+        }
 
         //test unknown handler automatic chaining
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.chain#struts-default#/chain");
@@ -604,6 +625,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertEquals(actionClass.getName(), ac.getClassName());
         assertEquals(methodName, ac.getMethodName());
         assertEquals(packageName, ac.getPackageName());
+    }
+
+    private void verifyMissingActionConfig(Configuration configuration, String actionName, Class<?> actionClass,
+                                           String methodName, String packageName) {
+        assertNull(configuration.getPackageConfig(packageName));
+        assertFalse(configuration.getPackageConfigNames().contains(packageName));
     }
 
     private void verifyMissingActionConfig(PackageConfig pkgConfig, String actionName, Class<?> actionClass,

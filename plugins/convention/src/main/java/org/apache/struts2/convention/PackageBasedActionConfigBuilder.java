@@ -492,9 +492,17 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      *         package-based action scan
      */
     protected boolean includeClassNameInActionScan(String className) {
-
         String classPackageName = StringUtils.substringBeforeLast(className, ".");
+        return (checkActionPackages(classPackageName) || checkPackageLocators(classPackageName)) && checkExcludePackages(classPackageName);
+    }
 
+    /**
+     * Checks if provided class package is on the exclude list
+     *
+     * @param classPackageName name of class package
+     * @return false if class package is on the {@link #excludePackages} list
+     */
+    protected boolean checkExcludePackages(String classPackageName) {
         if(excludePackages != null && excludePackages.length > 0) {
             WildcardHelper wildcardHelper = new WildcardHelper();
 
@@ -508,7 +516,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 }
             }
         }
+        return true;
+    }
 
+    /**
+     * Checks if class package match provided list of action packages
+     *
+     * @param classPackageName name of class package
+     * @return true if class package is on the {@link #actionPackages} list
+     */
+    protected boolean checkActionPackages(String classPackageName) {
         if (actionPackages != null) {
             for (String packageName : actionPackages) {
                 String strictPackageName = packageName + ".";
@@ -517,7 +534,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                     return true;
             }
         }
+        return false;
+    }
 
+    /**
+     * Checks if class package match provided list of package locators
+     *
+     * @param classPackageName name of class package
+     * @return true if class package is on the {@link #packageLocators} list
+     */
+    protected boolean checkPackageLocators(String classPackageName) {
         if (packageLocators != null && !disablePackageLocatorsScanning) {
             for (String packageLocator : packageLocators) {
                 if (classPackageName.length() > 0
@@ -530,10 +556,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 }
             }
         }
-
         return false;
     }
-    
+
     /**
      * Construct a {@link Test} object that determines if a specified class name
      * should be included in the package scan based on the clazz's package name.

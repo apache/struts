@@ -57,6 +57,15 @@ public class RestActionMapperTest extends TestCase {
         };
     }
 
+    public void testRootMapping() throws Exception {
+        req.setRequestURI("/myapp/");
+        req.setServletPath("/");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertNull(mapping);
+    }
+
     public void testGetMapping() throws Exception {
         req.setRequestURI("/myapp/animals/dog");
         req.setServletPath("/animals/dog");

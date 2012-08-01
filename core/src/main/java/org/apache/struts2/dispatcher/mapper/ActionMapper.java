@@ -21,9 +21,9 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.opensymphony.xwork2.config.ConfigurationManager;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -51,7 +51,7 @@ public interface ActionMapper {
      *
      * @param request The servlet request
      * @param configManager The current configuration manager
-     * @return The appropriate action mapping
+     * @return The appropriate action mapping or null if mapping cannot be determined
      */
     ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager);
 

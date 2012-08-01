@@ -289,9 +289,10 @@ public class RestActionMapper extends DefaultActionMapper {
             }
 
             mapping.setName(fullName);
+            return mapping;
         }
-
-        return mapping;
+        // if action name isn't specified, it can be a normal request, to static resource, return null to allow handle that case
+        return null;
     }
 
     private void handleDynamicMethodInvocation(ActionMapping mapping, String name) {

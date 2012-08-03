@@ -1,0 +1,64 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-beans.xml" />
+    <package name="xwork-test-default">
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
+            <result-type name="void" class="com.opensymphony.xwork2.VoidResult"/>
+            <result-type name="mock" class="com.opensymphony.xwork2.mock.MockResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="logger" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
+            <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
+            <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
+            <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
+            <interceptor name="modelDriven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
+            <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor">
+                <param name="validateAnnotatedMethodOnly">true</param>
+            </interceptor>
+			<interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
+            <interceptor name="test" class="com.opensymphony.xwork2.mock.MockInterceptor">
+                <param name="foo">expectedFoo</param>
+            </interceptor>
+
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="params"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="debugStack">
+                <interceptor-ref name="timer"/>
+                <interceptor-ref name="logger"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="validationStack">
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="validation"/>
+            </interceptor-stack>
+        </interceptors>
+
+    </package>
+    <package name="default" extends="xwork-test-default">
+
+        <action name="annotatedMethod" class="com.opensymphony.xwork2.test.annotations.ValidateAnnotatedMethodOnlyAction" method="annotatedMethod">
+            <interceptor-ref name="validationStack"/>
+            <result name="success" type="mock"/>
+        </action>
+        
+        <action name="notAnnotatedMethod" class="com.opensymphony.xwork2.test.annotations.ValidateAnnotatedMethodOnlyAction" method="notAnnotatedMethod">
+            <interceptor-ref name="validationStack"/>
+            <result name="success" type="mock"/>
+        </action>
+
+    </package>
+
+</xwork>

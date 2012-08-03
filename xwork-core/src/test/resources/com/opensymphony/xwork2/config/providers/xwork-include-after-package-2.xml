@@ -1,0 +1,14 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+
+<xwork>
+    <package name="namespace5" extends="namespace4" namespace="/namespace5">
+        <action name="action5" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="chain"/>
+            <interceptor-ref name="params"/>
+        </action>
+    </package>
+
+</xwork>

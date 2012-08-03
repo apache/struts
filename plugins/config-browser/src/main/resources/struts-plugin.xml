@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+    
+<struts>
+
+    <bean class="org.apache.struts2.config_browser.ConfigurationHelper" />
+    
+    <package name="config-browser" extends="struts-default" namespace="/config-browser">
+        <interceptors>
+            <interceptor-stack name="configBrowserDefault">
+                <interceptor-ref name="validationWorkflowStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="configBrowserDefault"/>
+
+        <global-results>
+            <result name="error" type="freemarker">/config-browser/error.ftl</result>
+            <result name="input" type="freemarker">/config-browser/error.ftl</result>
+        </global-results>
+
+        <action name="index">
+            <result type="redirectAction">actionNames</result>
+        </action>
+
+        <action name="actionNames" class="org.apache.struts2.config_browser.ActionNamesAction">
+            <result type="freemarker" name="success">/config-browser/actionNames.ftl</result>
+        </action>
+
+        <action name="showConfig" class="org.apache.struts2.config_browser.ShowConfigAction">
+            <result type="freemarker" name="success">/config-browser/showConfig.ftl</result>
+        </action>
+        
+        <action name="showConstants" class="org.apache.struts2.config_browser.ShowConstantsAction">
+            <result type="freemarker" name="success">/config-browser/showConstants.ftl</result>
+        </action>
+        
+        <action name="showBeans" class="org.apache.struts2.config_browser.ShowBeansAction">
+            <result type="freemarker" name="success">/config-browser/showBeans.ftl</result>
+        </action>
+        
+        <action name="showJars" class="org.apache.struts2.config_browser.ShowJarsAction">
+            <result type="freemarker" name="success">/config-browser/showJars.ftl</result>
+        </action>
+
+        <action name="showValidators" class="org.apache.struts2.config_browser.ListValidatorsAction">
+            <result name="error" type="freemarker">/config-browser/simple-error.ftl</result>
+            <result name="input" type="freemarker">/config-browser/simple-error.ftl</result>
+            <result type="freemarker" name="success">/config-browser/showValidators.ftl</result>
+        </action>
+
+        <action name="validatorDetails" class="org.apache.struts2.config_browser.ShowValidatorAction">
+            <result type="freemarker" name="success">/config-browser/validatorDetails.ftl</result>
+        </action>
+    </package>
+</struts>

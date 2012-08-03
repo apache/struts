@@ -1,0 +1,10 @@
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
+<validators>
+    <field name="myUpDownSelectTag">
+        <field-validator type="double">
+            <param name="minInclusive">6000.10</param>
+            <param name="maxInclusive">10000.10</param>
+            <message>bar must be between ${minInclusive} and ${maxInclusive}.</message>
+        </field-validator>
+    </field>
+</validators>

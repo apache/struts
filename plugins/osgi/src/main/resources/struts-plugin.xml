@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+    
+<struts order="10">
+    <constant name="struts.objectFactory" value="osgi" />
+    <constant name="struts.objectFactory.delegate" value="struts" />
+    <constant name="struts.freemarker.manager.classname" value="org.apache.struts2.osgi.BundleFreemarkerManager" />
+    <constant name="struts.staticContentLoader" value="org.apache.struts2.osgi.loaders.StaticContentBundleResourceLoader" />
+
+    <constant name="struts.convention.action.includeJars" value="jar:file:.*?/bundles/.*?\.jar(!/)?" />
+
+    <bean type="org.apache.struts2.osgi.BundleAccessor" class="org.apache.struts2.osgi.DefaultBundleAccessor" />
+    <bean type="org.apache.struts2.osgi.PackageLoader" class="org.apache.struts2.osgi.BundlePackageLoader" />
+    
+    <bean name="osgi" type="com.opensymphony.xwork2.ObjectFactory" class="org.apache.struts2.osgi.DelegatingObjectFactory" />
+    <bean name="springOsgi" type="com.opensymphony.xwork2.ObjectFactory" class="org.apache.struts2.osgi.SpringOsgiObjectFactory" />
+    <bean name="osgi" type="com.opensymphony.xwork2.config.PackageProvider" class="org.apache.struts2.osgi.OsgiConfigurationProvider" />
+    <bean name="osgi" type="com.opensymphony.xwork2.util.finder.ClassLoaderInterface" class="org.apache.struts2.osgi.BundleClassLoaderInterface" />
+
+    <package name="osgi-default" extends="struts-default" abstract="yes">
+        <interceptors>
+            <interceptor name="osgi" class="org.apache.struts2.osgi.interceptor.OsgiInterceptor" />
+
+            <interceptor-stack name="osgiStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="osgi"/>
+            </interceptor-stack>
+        </interceptors>
+
+         <default-interceptor-ref name="osgiStack"/>
+    </package>
+</struts>

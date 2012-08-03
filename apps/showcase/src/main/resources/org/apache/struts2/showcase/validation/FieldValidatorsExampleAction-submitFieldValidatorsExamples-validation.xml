@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE validators PUBLIC 
+  		"-//Apache Struts//XWork Validator 1.0//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+  		
+<!-- START SNIPPET: fieldValidatorsExample -->  		
+  		
+<validators>
+	<field name="requiredValidatorField">
+		<field-validator type="required">
+			<message><![CDATA[ required ]]></message>
+		</field-validator>
+	</field>
+	<field name="requiredStringValidatorField">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message><![CDATA[ required and must be string ]]></message>
+		</field-validator>
+	</field>
+	<field name="integerValidatorField">
+		<field-validator type="int">
+			<param name="min">1</param>
+			<param name="max">10</param>
+			<message><![CDATA[ must be integer min 1 max 10 if supplied ]]></message>
+		</field-validator>
+	</field>
+	<field name="dateValidatorField">
+		<field-validator type="date">
+			<param name="min">01/01/1990</param>
+			<param name="max">01/01/2000</param>
+			<message><![CDATA[ must be a min 01-01-1990 max 01-01-2000 if supplied ]]></message>
+		</field-validator>
+	</field>
+	<field name="emailValidatorField">
+		<field-validator type="email">
+			<message><![CDATA[ must be a valid email if supplied ]]></message>
+		</field-validator>
+	</field>
+	<field name="urlValidatorField">
+		<field-validator type="url">
+			<message><![CDATA[ must be a valid url if supplied ]]></message>
+		</field-validator>
+	</field>
+	<field name="stringLengthValidatorField">
+		<field-validator type="stringlength">
+			<param name="maxLength">4</param>
+			<param name="minLength">2</param>
+			<param name="trim">true</param>
+			<message><![CDATA[ must be a String of a specific greater than 1 less than 5 if specified ]]></message>
+		</field-validator>
+	</field>
+	<field name="regexValidatorField">
+		<field-validator type="regex">
+			<param name="expression">.*\.txt</param>
+			<message><![CDATA[ regexValidatorField must match a regexp (.*\.txt) if specified ]]></message>
+		</field-validator>
+	</field>
+	<field name="fieldExpressionValidatorField">
+		<field-validator type="fieldexpression">
+			<param name="expression">(fieldExpressionValidatorField == requiredValidatorField)</param>
+			<message><![CDATA[ must be the same as the Required Validator Field if specified ]]></message>
+		</field-validator>
+	</field>
+</validators>
+
+<!-- END SNIPPET: fieldValidatorsExample -->
+

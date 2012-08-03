@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="eventing" extends="struts-portlet-default" namespace="/eventing">
+
+        <action name="publish" class="org.apache.struts2.portlet.example.eventing.PublishAction">
+            <result name="success">/WEB-INF/eventing/index.jsp</result>
+        </action>
+
+        <action name="process" class="org.apache.struts2.portlet.example.eventing.ProcessAction">
+            <result name="success">/WEB-INF/eventing/process.jsp</result>
+            <result name="forward" type="redirectAction">
+                <param name="actionName">process</param>
+                <param name="namespace">/eventing</param>
+            </result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,11 @@
+<tr>
+    <td colspan="2">
+        <label for="someId" class="checkboxLabel">mylabel:</label>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+		<input type="checkbox" name="foo" value="baz" checked="checked" id="someId" title="mytitle" onfocus="test();"/>
+		<input type="hidden" id="__checkbox_someId" name="__checkbox_foo" value="baz"/>
+    </td>
+</tr>

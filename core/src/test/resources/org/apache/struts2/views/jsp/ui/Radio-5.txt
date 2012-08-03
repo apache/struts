@@ -1,0 +1,7 @@
+<tr>
+    <td class="tdLabel"><label for="myname" class="label">mylabel--</label></td>
+    <td>
+<input type="radio" name="myname" id="mynamehello" value="hello"/><label for="mynamehello">world</label>
+<input type="radio" name="myname" id="mynamefoo" value="foo"/><label for="mynamefoo">bar</label>
+    </td>
+</tr>

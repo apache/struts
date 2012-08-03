@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="struts1-default" extends="struts-default">
+
+        <interceptors>
+            <interceptor name="actionForm-reset" class="org.apache.struts2.s1.ActionFormResetInterceptor"/>
+            <interceptor name="actionForm-validation" class="org.apache.struts2.s1.ActionFormValidationInterceptor"/>
+            <interceptor name="actionForm-commonsValidation" class="org.apache.struts2.s1.ActionFormValidationInterceptor">
+              <param name="pathnames">/org/apache/struts/validator/validator-rules.xml,/WEB-INF/validation.xml</param>
+            </interceptor>
+            <interceptor-stack name="struts1Stack">
+          <interceptor-ref name="staticParams"/>
+          <interceptor-ref name="scopedModelDriven"/>
+          <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="actionForm-reset"/>
+                <interceptor-ref name="basicStack"/>
+                <interceptor-ref name="actionForm-validation"/>
+                <interceptor-ref name="workflow"/>
+        </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="struts1Stack"/>
+    </package>
+
+</struts>

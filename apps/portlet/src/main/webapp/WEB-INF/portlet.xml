@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<portlet-app
+        id="struts-portlet"
+        xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        version="2.0"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+        >
+
+    <portlet id="StrutsPortlet">
+        <description xml:lang="EN">Struts Test Portlet</description>
+        <portlet-name>StrutsPortlet</portlet-name>
+        <display-name xml:lang="EN">Struts Test Portlet</display-name>
+
+        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
+
+        <!-- The view mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>viewNamespace</name>
+            <value>/view</value>
+        </init-param>
+
+        <!-- The default action to invoke in view mode. -->
+        <init-param>
+            <name>defaultViewAction</name>
+            <value>index</value>
+        </init-param>
+
+        <!-- The edit mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>editNamespace</name>
+            <value>/edit</value>
+        </init-param>
+
+        <!-- The default action to invoke in edit mode. -->
+        <init-param>
+            <name>defaultEditAction</name>
+            <value>index</value>
+        </init-param>
+
+        <!-- The help mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>helpNamespace</name>
+            <value>/help</value>
+        </init-param>
+
+        <!-- The default action to invoke in help mode. -->
+        <init-param>
+            <name>defaultHelpAction</name>
+            <value>index</value>
+        </init-param>
+
+        <expiration-cache>0</expiration-cache>
+
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+        </supports>
+
+        <supported-locale>en</supported-locale>
+
+        <portlet-info>
+            <title>My Struts2 Portlet</title>
+            <short-title>SP2</short-title>
+            <keywords>struts,portlet</keywords>
+        </portlet-info>
+    </portlet>
+
+    <portlet id="StrutsPortlet2">
+        <description xml:lang="EN">Struts Test Portlet with JSR 286 Dispatcher</description>
+        <portlet-name>StrutsPortlet2</portlet-name>
+        <display-name xml:lang="EN">Struts Test Portlet with JSR 286 Dispatcher</display-name>
+
+        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr286Dispatcher</portlet-class>
+
+        <!-- The view mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>viewNamespace</name>
+            <value>/view</value>
+        </init-param>
+
+        <!-- The default action to invoke in view mode. -->
+        <init-param>
+            <name>defaultViewAction</name>
+            <value>index</value>
+        </init-param>
+
+        <!-- The edit mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>editNamespace</name>
+            <value>/edit</value>
+        </init-param>
+
+        <!-- The default action to invoke in edit mode. -->
+        <init-param>
+            <name>defaultEditAction</name>
+            <value>index</value>
+        </init-param>
+
+        <!-- The help mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>helpNamespace</name>
+            <value>/help</value>
+        </init-param>
+
+        <!-- The default action to invoke in help mode. -->
+        <init-param>
+            <name>defaultHelpAction</name>
+            <value>index</value>
+        </init-param>
+
+        <expiration-cache>0</expiration-cache>
+
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>edit</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+        </supports>
+
+        <supported-locale>en</supported-locale>
+
+        <portlet-info>
+            <title>My Struts2 Portlet with JSR 286 Dispatcher</title>
+            <short-title>SP2JSR286</short-title>
+            <keywords>struts,portlet</keywords>
+        </portlet-info>
+    </portlet>
+
+
+    <portlet id="Struts2PublishPortlet">
+        <description xml:lang="EN">Struts2 Publish Portlet</description>
+        <portlet-name>Struts2PublishPortlet</portlet-name>
+        <display-name xml:lang="EN">Struts2 Publish Portlet</display-name>
+
+        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr286Dispatcher</portlet-class>
+
+        <!-- The view mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>viewNamespace</name>
+            <value>/eventing</value>
+        </init-param>
+
+        <!-- The default action to invoke in view mode. -->
+        <init-param>
+            <name>defaultViewAction</name>
+            <value>publish</value>
+        </init-param>
+
+        <expiration-cache>0</expiration-cache>
+
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+
+        <supported-locale>en</supported-locale>
+
+        <portlet-info>
+            <title>Struts2 Publish Portlet</title>
+            <short-title>S2PUB</short-title>
+            <keywords>struts,publish,portlet</keywords>
+        </portlet-info>
+
+        <supported-publishing-event xmlns:x="http://org.apache.struts2.portlets/events">
+            <qname>x:name</qname>
+        </supported-publishing-event>
+    </portlet>
+
+    <portlet id="Struts2ProcessPortlet">
+        <description xml:lang="EN">Struts2 Process Portlet</description>
+        <portlet-name>Struts2ProcessPortlet</portlet-name>
+        <display-name xml:lang="EN">Struts2 Process Portlet</display-name>
+
+        <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr286Dispatcher</portlet-class>
+
+        <!-- The view mode namespace. Maps to a namespace in the Struts 2 config file. -->
+        <init-param>
+            <name>viewNamespace</name>
+            <value>/eventing</value>
+        </init-param>
+
+        <!-- The default action to invoke in view mode. -->
+        <init-param>
+            <name>defaultViewAction</name>
+            <value>process</value>
+        </init-param>
+
+        <expiration-cache>0</expiration-cache>
+
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+
+        <supported-locale>en</supported-locale>
+
+        <portlet-info>
+            <title>Struts2 Process Portlet</title>
+            <short-title>S2PRO</short-title>
+            <keywords>struts,process,portlet</keywords>
+        </portlet-info>
+
+        <supported-processing-event xmlns:x="http://org.apache.struts2.portlets/events">
+            <qname>x:name</qname>
+        </supported-processing-event>
+    </portlet>
+
+    <event-definition>
+        <qname xmlns:x="http://org.apache.struts2.portlets/events">x:name</qname>
+        <value-type>java.lang.String</value-type>
+    </event-definition>
+
+</portlet-app>

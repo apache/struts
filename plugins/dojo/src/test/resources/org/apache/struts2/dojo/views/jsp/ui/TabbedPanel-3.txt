@@ -1,0 +1,14 @@
+<linkrel="stylesheet" href="/struts/TabbedPanel.css" type="text/css"/>
+<script type="text/javascript">
+dojo.require("dojo.io.cookie");
+dojo.addOnLoad(function(){
+    var tabContainer=dojo.widget.byId("foo");
+    dojo.event.connect(tabContainer,"selectChild",function(evt){
+        dojo.io.cookie.setCookie("Struts2TabbedPanel_selectedTab_foo",evt.widgetId,1,null,null,null);
+        }
+    )
+});
+</script>
+<div dojoType="struts:StrutsTabContainer" id="foo" selectedTab="bar" doLayout="false">
+</div>
+<script language="JavaScript" type="text/javascript">djConfig.searchIds.push("foo");</script>

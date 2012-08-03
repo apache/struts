@@ -1,0 +1,21 @@
+{
+    "bigDecimal": null,
+    "bigInteger": null,
+	"booleanField": true,
+	"byteField": 0,
+	"charField": "s",
+	"doubleField": 10.1,
+	"enumBean": {
+	    "propA":"A",
+	    "propB":"B",
+	    "_name":"One"
+	 },
+	"enumField": {
+	    "_name":"ValueA"
+   },
+	"floatField": 1.5,
+	"intField": 10,
+	"longField": 100,
+	"objectField": null,
+	"stringField": "str"
+}

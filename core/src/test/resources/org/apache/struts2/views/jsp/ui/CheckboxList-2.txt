@@ -1,0 +1,12 @@
+<tr>
+    <td class="tdLabel"><label for="collection" class="label">mylabel:</label></td>
+    <td>
+<input type="checkbox" name="collection" value="hello" id="collection-1" checked="checked"/>
+<label for="collection-1" class="checkboxLabel">world</label>
+<input type="checkbox" name="collection" value="foo" id="collection-2" checked="checked"/>
+<label for="collection-2" class="checkboxLabel">bar</label>
+<input type="checkbox" name="collection" value="cat" id="collection-3"/>
+<label for="collection-3" class="checkboxLabel">dog</label>
+<input type="hidden" id="__multiselect_collection" name="__multiselect_collection" value=""/>
+    </td>
+</tr>

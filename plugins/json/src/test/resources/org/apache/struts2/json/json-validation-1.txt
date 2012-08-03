@@ -1,0 +1,12 @@
+{
+   "errors": [
+        "General error"
+   ],
+   "fieldErrors": {
+        "value": ["Min value is -1"],
+   		"text" : [
+   			"Too short",
+			"This is no email"
+		]
+   } 
+}

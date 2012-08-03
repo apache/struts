@@ -1,0 +1,2 @@
+<button type="submit" id="myname" name="action:manager" value="Submit">mylabel
+</button>

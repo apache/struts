@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="currentSkill.name">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="skill.name.required"/>
+        </field-validator>
+    </field>
+</validators>

@@ -1,0 +1,5 @@
+<ul id="someid" class="errorMessage">
+	<li><span>action error number 1</span></li>
+	<li><span>action error number 2</span></li>
+	<li><span>action error number 3</span></li>
+</ul>

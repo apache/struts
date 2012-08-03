@@ -1,0 +1,30 @@
+<!DOCTYPE validators PUBLIC 
+  		"-//Apache Struts//XWork Validator 1.0.2//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+  		
+<validators>
+	<field name="description1">
+		<field-validator type="requiredstring">
+			<message>Description1 Is Required !!!</message>
+		</field-validator>
+	</field>
+	
+	<field name="description2">
+		<field-validator type="requiredstring">
+			<message>Description2 Is Required !!!</message>
+		</field-validator>
+	</field>
+	
+	<field name="description3">
+		<field-validator type="requiredstring">
+			<message>Description3 Is Required !!!</message>
+		</field-validator>
+	</field>
+	
+	<field name="description4">
+		<field-validator type="requiredstring">
+			<message>Description4 Is Required !!!</message>
+		</field-validator>
+	</field>
+</validators>  		
+ 

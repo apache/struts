@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>	
+	<package name="edit" extends="struts-portlet-default"
+		namespace="/edit">
+		<action name="index"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/edit/index.jsp</result>
+		</action>
+		<action name="test"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/edit/test.jsp</result>
+		</action>
+		<action name="formExampleEdit"
+			class="org.apache.struts2.portlet.example.FormExample" method="input">
+			<result name="input">
+				/WEB-INF/edit/formExampleInput.jsp
+			</result>
+		</action>
+
+		<action name="processFormExampleEdit"
+			class="org.apache.struts2.portlet.example.FormExample">
+			<result name="input">
+				/WEB-INF/edit/formExampleInput.jsp
+			</result>
+			<result name="success">
+				/edit/processFormExampleForward.action?firstName=${firstName}&amp;lastName=${lastName}
+			</result>
+		</action>
+
+		<action name="processFormExampleForward"
+			class="org.apache.struts2.portlet.example.FormExample">
+			<result name="success">
+				/WEB-INF/edit/formExample.jsp
+			</result>
+		</action>
+	</package>
+
+	<package name="editTest" extends="edit" namespace="/edit/dummy/test">
+		<action name="testAction"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/edit/namespaceTest.jsp</result>
+		</action>
+	</package>
+</struts>

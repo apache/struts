@@ -1,0 +1,8 @@
+<foo xmlns:loc="http://struts.apache.org/xwork/location"
+     loc:src="foo.xml"
+     loc:line="1"
+     loc:column="1">
+     <bar loc:src="foo.xml"
+          loc:line="5"
+          loc:column="6" />
+</foo>          

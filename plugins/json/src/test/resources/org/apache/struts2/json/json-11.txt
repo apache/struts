@@ -1,0 +1,6 @@
+{
+    "set":[
+        {"list":[{"booleanField":false},{"booleanField":false},{"booleanField":false}]},
+        {"list":[{"booleanField":false},{"booleanField":false}]}
+    ]
+}

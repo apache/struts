@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator Config 1.0//EN"
+        "http://struts.apache.org/dtds/xwork-validator-config-1.0.dtd">
+<validators>
+    <validator name="requiredAnother" class="com.opensymphony.xwork2.validator.validators.RequiredFieldValidator"/>
+</validators>

@@ -1,0 +1,1 @@
+<button type="reset" name="action:manager!update" value="Reset">mylabel</button>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <bean type="org.apache.struts2.views.gxp.inject.InjectedObjectContainer" class="org.apache.struts2.views.gxp.inject.InjectedObjectContainer" static="true" /> 
+    <package name="gxp-default" extends="struts-default">
+        <result-types>
+            <result-type name="gxp" class="org.apache.struts2.views.gxp.GxpResult"/>
+        </result-types>
+    </package>
+</struts>

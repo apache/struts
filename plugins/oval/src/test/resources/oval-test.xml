@@ -1,0 +1,102 @@
+<!DOCTYPE xwork PUBLIC
+        "-//Apache Struts//XWork 2.0//EN"
+        "http://struts.apache.org/dtds/xwork-2.0.dtd"
+        >
+
+<xwork>
+    <bean type="org.apache.struts2.oval.interceptor.OValValidationManager" class="org.apache.struts2.oval.interceptor.DummyDefaultOValValidationManager"/>
+    <constant name="struts.enable.SlashesInActionNames" value="true"/>
+    <constant name="struts.oval.validateJPAAnnotations" value="false" />
+
+    <package namespace="oval" name="oval-test">
+        <result-types>
+            <result-type name="void" class="org.apache.struts2.oval.interceptor.VoidResult"/>
+        </result-types>
+        <interceptors>
+            <interceptor name="ovalValidation" class="org.apache.struts2.oval.interceptor.OValValidationInterceptor"/>
+        </interceptors>
+
+        <action name="simpleFieldsJPA" class="org.apache.struts2.oval.interceptor.SimpleFieldJPAAnnotations">
+            <interceptor-ref name="ovalValidation">
+                <param name="validateJPAAnnotations">true</param>
+            </interceptor-ref>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldsXMLChild" class="org.apache.struts2.oval.interceptor.SimpleFieldsXMLChild">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="validationInMethods" class="org.apache.struts2.oval.interceptor.ValidationInMethods">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldsXML/*" class="org.apache.struts2.oval.interceptor.SimpleFieldsXML">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldsXML" class="org.apache.struts2.oval.interceptor.SimpleFieldsXML">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldsXMLCaching" class="org.apache.struts2.oval.interceptor.SimpleFieldsXML">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleField" class="org.apache.struts2.oval.interceptor.SimpleField">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldTooLong" class="org.apache.struts2.oval.interceptor.SimpleField">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleMethod" class="org.apache.struts2.oval.interceptor.SimpleMethod">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldOGNL" class="org.apache.struts2.oval.interceptor.SimpleFieldOGNLExpression">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldI18n" class="org.apache.struts2.oval.interceptor.SimpleFieldI18n">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldI18nDefaultKey" class="org.apache.struts2.oval.interceptor.SimpleFieldI18nDefaultKey">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="fieldsWidthProfiles13" class="org.apache.struts2.oval.interceptor.FieldsWithProfiles" method="run1">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="fieldsWidthProfiles2" class="org.apache.struts2.oval.interceptor.FieldsWithProfiles" method="run2">
+            <interceptor-ref name="ovalValidation"/>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldNoValidate" class="org.apache.struts2.oval.interceptor.SimpleField">
+            <interceptor-ref name="ovalValidation">
+                <param name="alwaysInvokeValidate">false</param>
+            </interceptor-ref>
+            <result type="void"></result>
+        </action>
+        <action name="simpleFieldNoProgrammatic" class="org.apache.struts2.oval.interceptor.SimpleField">
+            <interceptor-ref name="ovalValidation">
+                <param name="programmatic">false</param>
+            </interceptor-ref>
+            <result type="void"></result>
+        </action>
+        <action name="modelDrivenAction" class="org.apache.struts2.oval.interceptor.ModelDrivenAction">
+            <interceptor-ref name="ovalValidation">
+              <param name="validateJPAAnnotations">true</param>
+            </interceptor-ref>
+            <result type="void"></result>
+        </action>
+        <action name="memberObject" class="org.apache.struts2.oval.interceptor.MemberObject">
+            <interceptor-ref name="ovalValidation">
+              <param name="validateJPAAnnotations">true</param>
+            </interceptor-ref>
+            <result type="void"></result>
+        </action>
+    </package>
+</xwork>

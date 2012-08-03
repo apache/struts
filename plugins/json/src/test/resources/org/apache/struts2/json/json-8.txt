@@ -1,0 +1,13 @@
+{
+        "booleanField": "true",
+        "stringField" : "test",
+        "intField" : "10",
+        "charField": "s",
+        "doubleField": "10.1",
+        "byteField": "3",
+        "objectField": { "empty": "to test issue 28 (http://code.google.com/p/jsonplugin/issues/detail?id=28) the value of objectField should be simply empty curly braces { } " },
+        "listField": null,
+        "listMapField": null,
+        "mapListField": null,
+        "arrayMapField": null
+}

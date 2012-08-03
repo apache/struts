@@ -1,0 +1,41 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+
+<xwork>
+    <package name="default">
+
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
+            <result-type name="mock" class="com.opensymphony.xwork2.mock.MockResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="logging" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
+            <interceptor name="test" class="com.opensymphony.xwork2.mock.MockInterceptor">
+                <param name="foo">fooDefault</param>
+            </interceptor>
+
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="timer"/>
+            </interceptor-stack>
+        </interceptors>
+
+		<default-class-ref class="com.opensymphony.xwork2.UserSpecifiedDefaultAction" />
+
+        <global-results>
+            <result name="login"> <!-- should be chain type since it is the default -->
+                <param name="actionName">login</param>
+            </result>
+        </global-results>
+
+		<!--  No class spcified for action. This should use the default-class-ref -->
+        <action name="Bar">
+            <param name="foo">17</param>
+            <param name="bar">23</param>
+            <param name="testForXW171"></param>
+        </action>
+    </package>
+</xwork>

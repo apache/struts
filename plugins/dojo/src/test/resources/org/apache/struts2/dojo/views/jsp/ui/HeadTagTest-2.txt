@@ -1,0 +1,33 @@
+<script language="JavaScript" type="text/javascript">
+	// Dojo configuration
+	djConfig={
+		isDebug: false,
+		bindEncoding: "ISO-8859-1",
+		baseRelativePath: "/struts/dojo/",
+		baseScriptUri: "/struts/dojo/",
+		locale: "es",
+		extraLocale: [
+			"a",
+			"b",
+			"c"
+		],
+		parseWidgets: false
+		};
+</script>
+
+<script language="JavaScript" type="text/javascript" src="/struts/dojo/dojo.js">
+</script>
+
+<script language="JavaScript" type="text/javascript" src="/struts/ajax/dojoRequire.js">
+</script>
+
+<link rel="stylesheet" href="/struts/xhtml/styles.css" type="text/css"/>
+
+<script language="JavaScript" src="/struts/utils.js" type="text/javascript">
+</script>
+
+<script language="JavaScript" src="/struts/xhtml/validation.js" type="text/javascript">
+</script>
+
+<script language="JavaScript"src="/struts/css_xhtml/validation.js" type="text/javascript">
+</script>

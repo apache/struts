@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE validators PUBLIC 
+  		"-//Apache Struts//XWork Validator 1.0//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+  		
+<!-- START SNIPPET: visitorValidatorsExample -->
+
+<validators>
+	<field name="user">
+		<field-validator type="visitor">
+			<param name="context">userContext</param>
+			<param name="appendPrefix">true</param>
+			<message>User:</message>
+		</field-validator>
+	</field>
+</validators>
+
+<!--  END SNIPPET: visitorValidatorExample -->
+

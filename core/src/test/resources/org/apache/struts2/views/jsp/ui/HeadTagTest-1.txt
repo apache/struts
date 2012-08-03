@@ -1,0 +1,2 @@
+<link rel="stylesheet" href="/struts/xhtml/styles.css" type="text/css"/>
+<script src="/struts/utils.js" type="text/javascript"></script>

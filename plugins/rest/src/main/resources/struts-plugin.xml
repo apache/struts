@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="rest" class="org.apache.struts2.rest.RestActionProxyFactory" />
+	<bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="rest" class="org.apache.struts2.rest.RestActionMapper" />
+
+	<bean type="org.apache.struts2.rest.ContentTypeHandlerManager" class="org.apache.struts2.rest.DefaultContentTypeHandlerManager" />
+
+    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="xml" class="org.apache.struts2.rest.handler.XStreamHandler" />
+    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="json" class="org.apache.struts2.rest.handler.JsonLibHandler" />
+    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="html" class="org.apache.struts2.rest.handler.HtmlHandler" />
+    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="x-www-form-urlencoded" class="org.apache.struts2.rest.handler.FormUrlEncodedHandler" />
+    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="multipart/form-data" class="org.apache.struts2.rest.handler.MultipartFormDataHandler" />
+
+    <constant name="struts.actionProxyFactory" value="rest" />
+    <constant name="struts.rest.defaultExtension" value="xhtml" />
+    <constant name="struts.rest.logger" value="true" />
+    <constant name="struts.rest.defaultErrorResultName" value="default-error" />
+    <constant name="struts.mapper.class" value="rest" />
+    <constant name="struts.mapper.idParameterName" value="id" />
+    <constant name="struts.action.extension" value="xhtml,,xml,json" />
+
+    <package name="rest-default" extends="struts-default">
+        <result-types>
+            <result-type name="redirect" class="org.apache.struts2.dispatcher.ServletRedirectResult">
+                <param name="statusCode">303</param>
+            </result-type>
+            <result-type name="redirectAction" class="org.apache.struts2.dispatcher.ServletActionRedirectResult">
+                <param name="statusCode">303</param>
+            </result-type>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="rest" class="org.apache.struts2.rest.ContentTypeInterceptor"/>
+            <interceptor name="restWorkflow" class="org.apache.struts2.rest.RestWorkflowInterceptor"/>
+            <interceptor name="messages" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
+
+            <!-- A complete stack with all the common interceptors in place.
+                 Generally, this stack should be the one you use, though it
+                 may do more than you need. Also, the ordering can be
+                 switched around (ex: if you wish to have your servlet-related
+                 objects applied before prepare() is called, you'd need to move
+                 servletConfig interceptor up.
+
+                 This stack also excludes from the normal validation and workflow
+                 the method names input, back, and cancel. These typically are
+                 associated with requests that should not be validated.
+                 -->
+            <interceptor-stack name="restDefaultStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="messages">
+                    <param name="operationMode">AUTOMATIC</param>
+                </interceptor-ref>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="profiling"/>
+                <interceptor-ref name="actionMappingParams"/>
+                <interceptor-ref name="scopedModelDriven"/>
+                <interceptor-ref name="modelDriven">
+                    <param name="refreshModelBeforeResult">true</param>
+                </interceptor-ref>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="params">
+                  <param name="excludeParams">dojo\..*</param>
+                </interceptor-ref>
+                <interceptor-ref name="rest" />
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse,index,show,edit,editNew</param>
+                </interceptor-ref>
+                <interceptor-ref name="restWorkflow">
+                    <param name="excludeMethods">input,back,cancel,browse,index,show,edit,editNew</param>
+                </interceptor-ref>
+            </interceptor-stack>
+
+        </interceptors>
+
+        <default-interceptor-ref name="restDefaultStack"/>
+
+        <default-class-ref class="org.apache.struts2.rest.RestActionSupport"/>
+
+    </package>
+
+</struts>

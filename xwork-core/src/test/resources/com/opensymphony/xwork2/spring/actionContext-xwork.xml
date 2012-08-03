@@ -1,0 +1,23 @@
+<!DOCTYPE xwork PUBLIC "-//Apache Struts//XWork 2.0//EN" "http://struts.apache.org/dtds/xwork-2.0.dtd">
+<xwork>
+	<bean type="com.opensymphony.xwork2.ObjectFactory" class="com.opensymphony.xwork2.spring.SpringObjectFactory" />
+	<constant name="applicationContextPath" value="com/opensymphony/xwork2/spring/actionContext-spring.xml" />
+    <package name="default">
+        <result-types>
+            <result-type name="null" class="com.opensymphony.xwork2.mock.MockResult" default="true"/>
+            <result-type name="springResult" class="springResult" />
+        </result-types>
+
+		<action name="simpleAction" class="simple-action"/>
+
+        <action name="dependencyAction" class="dependency-action"/>
+
+        <action name="proxiedAction" class="proxied-action"/>
+
+        <action name="autoProxiedAction" class="auto-proxied-action"/>
+        
+        <action name="simpleActionSpringResult" class="simple-action">
+			<result name="error" type="springResult"/>
+		</action>
+    </package>
+</xwork>

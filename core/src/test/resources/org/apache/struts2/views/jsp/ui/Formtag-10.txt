@@ -1,0 +1,4 @@
+<form id="testNamespaceAction" name="myForm" onsubmit="submitMe()" action="/testNamespace/testNamespaceAction.action" method="post" enctype="myEncType" title="mytitle" accept-charset="UTF-8">
+<table class="wwFormTable">
+</table>
+</form>

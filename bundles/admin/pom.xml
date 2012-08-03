@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-osgi-bundles</artifactId>
+        <version>2.3.4</version>
+    </parent>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-osgi-admin-bundle</artifactId>    
+    <packaging>bundle</packaging>
+    <name>Struts 2 OSGi Admin Bundle</name>
+
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_4/bundles/admin</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_4/bundles/admin</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_4/bundles/admin</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-osgi-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>       
+    </dependencies>
+   
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <version>2.1.0</version>
+                <configuration>
+                    <instructions>
+                        <manifestLocation>META-INF</manifestLocation>
+                        <Struts2-Enabled>true</Struts2-Enabled>
+                        <Import-Package>*,com.opensymphony.xwork2</Import-Package>
+                        <Export-Package>org.apache.struts2.osgi.admin*</Export-Package>
+                        <Spring-Context>*;create-asynchronously:=false</Spring-Context>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

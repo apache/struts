@@ -1,0 +1,11 @@
+<tr>
+    <td class="tdLabel"></td>
+    <td>
+        <input type="radio" name="myMap['name']" id="myMap_'name'_"value=""/>
+        <label for="myMap_'name'_">N/A</label>
+        <input type="radio" name="myMap['name']" id="myMap_'name'_Opt." value="Opt."/>
+        <label for="myMap_'name'_Opt.">Opt.</label>
+        <input type="radio" name="myMap['name']" id="myMap_'name'_Std." checked="checked" value="Std."/>
+        <label for="myMap_'name'_Std.">Std.</label>
+    </td>
+</tr>

@@ -1,0 +1,23 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-beans.xml" />
+    <package name="default" namespace="/default">
+        <action name="default" class="com.opensymphony.xwork2.ActionSupport"/>
+    </package>
+
+    <package name="abstractPackage" abstract="true">
+        <action name="abstract" class="com.opensymphony.xwork2.ActionSupport"/>
+    </package>
+
+    <package name="singleInheritance" namespace="/single" extends="default">
+        <action name="single" class="com.opensymphony.xwork2.ActionSupport"/>
+    </package>
+
+    <package name="multipleInheritance" namespace="/multiple" extends="default,abstractPackage,singleInheritance">
+        <action name="multiple" class="com.opensymphony.xwork2.ActionSupport"/>
+    </package>
+</xwork>

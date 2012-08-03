@@ -1,0 +1,23 @@
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<!--  START SNIPPET: quizValidators -->
+<!--
+    Add the following DOCTYPE declaration as first line of your XXX-validation.xml file:
+    <!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+-->
+<validators>
+    <field name="name">
+        <field-validator type="requiredstring">
+            <message>You must enter a name</message>
+        </field-validator>
+    </field>
+    <field name="age">
+        <field-validator type="int">
+            <param name="min">13</param>
+            <param name="max">19</param>
+            <message>Only people ages 13 to 19 may take this quiz</message>
+        </field-validator>
+    </field>
+</validators>
+
+<!--  END SNIPPET: quizValidators  -->

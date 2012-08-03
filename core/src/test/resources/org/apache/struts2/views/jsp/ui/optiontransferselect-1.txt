@@ -1,0 +1,53 @@
+<tr> 
+<td class="tdLabel"></td> 
+<td>
+<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
+<table border="0">
+<tr>
+<td>
+	<label for="leftTitle">Title Left</label><br/>
+	<select name="collection" size="20" id="id" multiple="multiple">
+    	<option value="Header Key">Header Value</option>
+    	<option value=""></option>
+    	<option value="Left1" selected="selected">Left1</option>
+    	<option value="Left2" selected="selected">Left2</option>
+	</select>
+	<input type="hidden" id="__multiselect_id" name="__multiselect_collection" value=""/>
+	<input type="button" onclick="moveOptionDown(document.getElementById('id'), 'key', 'Header Key');" value="v" />
+	<input type="button" onclick="moveOptionUp(document.getElementById('id'), 'key', 'Header Key');" value="^" />
+</td>
+<td valign="middle" align="center">
+	<input type="button" class="buttonCssClass" style="buttonCssStyle"
+			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '');" /><br/><br/>
+	<input type="button" class="buttonCssClass" style="buttonCssStyle"
+			value="Right" onclick="moveSelectedOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');" /><br/><br/>
+	<input type="button" class="buttonCssClass" style="buttonCssStyle"
+			value="All Left" onclick="moveAllOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '');" /><br/><br/>
+	<input type="button" class="buttonCssClass" style="buttonCssStyle"
+			value="All Right" onclick="moveAllOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');" /><br/><br/>	
+	<input type="button" class="buttonCssClass" style="buttonCssStyle"
+			value="Select All" onclick="selectAllOptionsExceptSome(document.getElementById('id'), 'key', 'Header Key');selectAllOptionsExceptSome(document.getElementById('doubleId'), 'key', 'Double Header Key');" /><br/><br/>
+</td> 
+<td>
+	<label for="rightTitle">Title Right</label><br/>
+	<select 
+		name="list2"
+		size="20"		
+		multiple="multiple"
+		id="doubleId"
+		class="c2"
+		style="s2"
+	>
+    	<option value="Double Header Key">Double Header Value</option>
+    	<option value=""></option>
+    	<option value="Right1" selected="selected">Right1</option>
+    	<option value="Right2" selected="selected">Right2</option>
+	</select>
+	<input type="hidden" id="__multiselect_doubleId" name="__multiselect_list2" value=""/>
+	<input type="button" onclick="moveOptionDown(document.getElementById('doubleId'), 'key', 'Double Header Key');" value="v" />
+	<input type="button" onclick="moveOptionUp(document.getElementById('doubleId'), 'key', 'Double Header Key');" value="^" />
+</td>
+</tr>
+</table>
+</td> 
+</tr>

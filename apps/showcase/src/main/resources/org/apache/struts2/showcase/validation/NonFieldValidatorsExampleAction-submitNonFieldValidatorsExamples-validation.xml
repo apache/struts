@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE validators PUBLIC 
+  		"-//Apache Struts//XWork Validator 1.0//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+  		
+  		
+<!-- START SNIPPET: nonFieldValidatorsExample -->  		
+  		
+<validators>
+	<validator type="expression">
+		<param name="expression"><![CDATA[ ( (someText == someTextRetype) && (someTextRetype == someTextRetypeAgain) ) ]]></param>
+		<message><![CDATA[ all three text must be exactly the same ]]></message>
+	</validator>
+</validators>
+
+<!--  END SNIPPET: nonFieldValidatorsExample -->
+

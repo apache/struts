@@ -1,0 +1,10 @@
+<tr>
+    <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
+    <td>
+<input type="checkbox" name="foo" value="hello" id="foo-1" checked="checked" disabled="disabled" onchange="alert('foo');"/>
+<label for="foo-1" class="checkboxLabel">world</label>
+<input type="checkbox" name="foo" value="foo" id="foo-2" disabled="disabled" onchange="alert('foo');"/>
+<label for="foo-2" class="checkboxLabel">bar</label>
+<input type="hidden" id="__multiselect_foo" name="__multiselect_foo" value="" disabled="disabled"/>
+    </td>
+</tr>

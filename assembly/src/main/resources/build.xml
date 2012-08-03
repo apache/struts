@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project name="struts2-core" default="default">
+
+  <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+  <!--                   directories                     -->
+  <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+  <property name="src.dir" value="src/core/src/main/java"/>
+  <property name="build.dir" value="build"/>
+  <property name="build.classes.dir" value="${build.dir}/classes"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="lib.dir" value="lib"/>
+  		
+  <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+  <!--                    paths                          -->
+  <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+  <path id="compile.classpath">
+    <pathelement location="${build.classes.dir}"/>
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+  
+  <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+  <!--                  targets                          -->
+  <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+  <target name="default" 
+          depends="dist" 
+          description="default: build everything"
+  />
+  
+  <target name="clean" description="remove all built files">
+    <delete dir="${build.dir}" />
+    <delete dir="${dist.dir}" />
+  </target>
+
+  <target name="dist" 
+          depends="compile" 
+          description="create distributables (jars etc)">
+    <mkdir dir="${dist.dir}" />
+    <jar jarfile="${dist.dir}/struts2-core.jar"> 
+      <fileset dir="${build.classes.dir}"/>
+    </jar>
+  </target>
+  <target name="compile" description="compile java">
+    <mkdir dir="${build.classes.dir}" />
+    <javac srcdir="${src.dir}" 
+           destdir="${build.classes.dir}" 
+           classpathref="compile.classpath" 
+           debug="on" 
+           deprecation="on"/>
+  </target>
+
+</project>

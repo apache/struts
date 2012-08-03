@@ -1,0 +1,10 @@
+<tr>
+    <td class="tdLabel"><label for="collection" class="label">mylabel:</label></td>
+    <td><select name="collection" id="collection" multiple="multiple" onmousedown="alert('onmousedown');" onmouseup="alert('onmouseup');" onmouseover="alert('onmouseover');" onmousemove="alert('onmousemove');" onmouseout="alert('onmouseout');">
+    <option value="hello" selected="selected">world</option>
+    <option value="foo" selected="selected">bar</option>
+    <option value="cat">dog</option>
+</select>
+<inputtype="hidden" id="__multiselect_collection" name="__multiselect_collection" value=""/>
+</td>
+</tr>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<project name="Struts 2">
+    <bannerLeft>
+        <name>Apache Software Foundation</name>
+        <src>http://www.apache.org/images/asf-logo.gif</src>
+        <href>http://www.apache.org/</href>
+    </bannerLeft>
+    <bannerRight>
+        <name>Apache Struts</name>
+        <src>images/struts2.png</src>
+        <href>http://struts.apache.org/2.x/index.html</href>
+    </bannerRight>
+    <body>
+        <links>
+            <item name="Apache"
+                  href="http://www.apache.org/"/>
+            <item name="Struts"
+                  href="http://struts.apache.org/index.html"/>
+        </links>
+        <menu name="Struts 2">
+            <item name="Welcome"
+                  href="index.html"/>
+            <item name="Releases"
+                  href="http://struts.apache.org/downloads.html"/>
+            <item name="Thanks!"
+                  href="http://apache.org/foundation/thanks.html"/>
+            <item name="Sponsorship"
+                  href="http://apache.org/foundation/sponsorship.html"/>
+        </menu>
+
+        <menu ref="parent" inherit="bottom" />
+
+        <menu name="Documentation">
+            <item name="Getting Started"
+                  href="docs/home.html"/>
+            <item name="Tutorials"
+                  href="docs/tutorials.html"/>
+            <item name="FAQs"
+                  href="docs/faqs.html"/>
+            <item name="Guides"
+                  href="docs/guides.html"/>
+        </menu>
+
+        <menu name="Support">
+            <item name="User Mailing List"
+                  href="http://struts.apache.org/mail.html"/>
+            <item name="Issue Tracker (JIRA)"
+                  href="https://issues.apache.org/jira/browse/WW"/>
+            <item name="Wiki Pages"
+                  href="https://cwiki.apache.org/S2WIKI/welcome-to-apache-struts2.html"/>
+        </menu>
+
+        <menu name="Reference">
+            <item name="XWork API"
+                  href="xwork-core/apidocs/index.html"/>
+            <item name="Struts Core API"
+                  href="struts2-core/apidocs/index.html"/>
+            <item name="Tag Reference"
+                  href="docs/tag-reference.html"/>
+            <item name="Plugin Registry"
+                  href="http://cwiki.apache.org/S2PLUGINS/home.html"/>
+        </menu>
+
+        <menu name="Plugin APIs">
+            <item name="Config Browser"
+                  href="struts2-plugins/struts2-config-browser-plugin/apidocs/index.html"/>
+            <item name="Convention"
+                  href="struts2-plugins/struts2-convention-plugin/apidocs/index.html"/>
+            <item name="DWR"
+                  href="struts2-plugins/struts2-dwr-plugin/apidocs/index.html"/>
+            <item name="Embedded JSP"
+                  href="struts2-plugins/struts2-embeddedjsp-plugin/apidocs/index.html"/>
+            <item name="GXP"
+                  href="struts2-plugins/struts2-gxp-plugin/apidocs/index.html"/>
+            <item name="JasperReports"
+                  href="struts2-plugins/struts2-jasperreports-plugin/apidocs/index.html"/>
+            <item name="JavaTemplates"
+                  href="struts2-plugins/struts2-javatemplates-plugin/apidocs/index.html"/>
+            <item name="JFreeChart"
+                  href="struts2-plugins/struts2-jfreechart-plugin/apidocs/index.html"/>
+            <item name="JavaServer Faces"
+                  href="struts2-plugins/struts2-jsf-plugin/apidocs/index.html"/>
+            <item name="JSON"
+                  href="struts2-plugins/struts2-json-plugin/apidocs/index.html"/>
+            <item name="JUnit"
+                  href="struts2-plugins/struts2-junit-plugin/apidocs/index.html"/>
+            <item name="OSGi"
+                  href="struts2-plugins/struts2-osgi-plugin/apidocs/index.html"/>
+            <item name="OVAL"
+                  href="struts2-plugins/struts2-oval-plugin/apidocs/index.html"/>
+            <item name="Pell Multipart"
+                  href="struts2-plugins/struts2-pell-multipart-plugin/apidocs/index.html"/>
+            <item name="Plexus"
+                  href="struts2-plugins/struts2-plexus-plugin/apidocs/index.html"/>
+            <item name="Portlet"
+                  href="struts2-plugins/struts2-portlet-plugin/apidocs/index.html"/>
+            <item name="Rest"
+                  href="struts2-plugins/struts2-rest-plugin/apidocs/index.html"/>
+            <item name="Sitegraph"
+                  href="struts2-plugins/struts2-sitegraph-plugin/apidocs/index.html"/>
+            <item name="Sitemesh"
+                  href="struts2-plugins/struts2-sitemesh-plugin/apidocs/index.html"/>
+            <item name="Spring"
+                  href="struts2-plugins/struts2-spring-plugin/apidocs/index.html"/>
+            <item name="Struts 1"
+                  href="struts2-plugins/struts2-struts1-plugin/apidocs/index.html"/>
+            <item name="TestNG"
+                  href="struts2-plugins/struts2-testng-plugin/apidocs/index.html"/>
+            <item name="Tiles"
+                  href="struts2-plugins/struts2-tiles-plugin/apidocs/index.html"/>
+        </menu>
+
+        <menu name="Development">
+            <item name="Struts 2.x Draft Docs"
+                  href="http://struts.apache.org/2.x/index.html"/>
+            <item name="How to Help FAQ"
+                  href="http://struts.apache.org/helping.html"/>
+            <item name="Development Lists"
+                  href="http://struts.apache.org/dev/dev-mail.html"/>
+            <item name="Source Code"
+                  href="http://struts.apache.org/dev/builds.html"/>
+            <item name="Release Guidelines"
+                  href="http://struts.apache.org/dev/releases.html"/>
+            <item name="Volunteers"
+                  href="http://struts.apache.org/dev/volunteers.html"/>
+            <item name="PMC Charter"
+                  href="http://struts.apache.org/dev/bylaws.html"/>
+            <item name="Sandbox"
+                  href="http://struts.apache.org/struts-sandbox/index.html"/>
+            <item name="Source Repository"
+                  href="http://svn.apache.org/viewcvs.cgi/struts/"/>
+        </menu>
+
+        <menu ref="modules"/>
+
+        <menu ref="reports"/>
+
+    </body>
+</project>

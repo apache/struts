@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>UI Tags Example</title>
+    #shead()
+    #sxhead()
+</head>
+
+<body>
+
+#surl ("id=url" "value=index.jsp")
+<a href="${url}">Back to index.jsp</a>!
+
+
+#sform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
+    #stextfield ("label=Name" "name=name")
+    #sxdatetimepicker ("label=Birthday" "name=birthday")
+    #sxdatetimepicker ("label=Wake up time" "name=wakeup" "type=time")
+    #stextarea ("label=Biography" "name=bio" "cols=20" "rows=3")
+    #sselect ("label=Favourite Color" "list={'Red', 'Blue', 'Green'}" "name=favouriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
+    #sselect ("label=Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")
+    #scheckboxlist ("label=Friends" "list={'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}" "name=friends")
+    #scheckbox ("label=Age 18+" "name=legalAge")
+    #sdoubleselect ("label=State" "name=region" "list={'North', 'South'}" "value='North'" "doubleValue='Florida'" "doubleList=top == 'North' ? {'Oregon', 'Washington'} : {'Texas', 'Florida'}" "doubleName=state" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
+    #sdoubleselect ("label=Favourite Vehical" "name=favouriteVehicalType" "list=vehicalTypeList" "listKey=key" "listValue=description" "value='MotorcycleKey'" "doubleValue='YamahaKey'" "doubleList=vehicalSpecificList" "doubleListKey=key" "doubleListValue=description" "doubleName=favouriteVehicalSpecific" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
+    #sfile ("label=Picture" "name=picture")
+    #soptiontransferselect ("label=Favourite Cartoons Characters" "name=leftSideCartoonCharacters" "leftTitle=Left Title" "rightTitle=Right Title" "list={'Popeye', 'He-Man', 'Spiderman'}" "multiple=true" "headerKey=headerKey" "headerValue=--- Please Select ---" "emptyOption=true" "doubleList={'Superman', 'Mickey Mouse', 'Donald Duck'}" "doubleName=rightSideCartoonCharacters" "doubleHeaderKey=doubleHeaderKey" "doubleHeaderValue=--- Please Select ---" "doubleEmptyOption=true" "doubleMultiple=true" )
+    #ssubmit()
+    #sreset()
+#end
+
+#sa("href=${url}")Back to index.jsp#end
+
+</body>
+</html>

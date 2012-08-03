@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   XWork Configuraion DTD.
+   Use the following DOCTYPE.
+   
+   <!DOCTYPE xwork PUBLIC 
+		"-//Apache Struts//XWork 1.0//EN"
+		"http://struts.apache.org/dtds/xwork-1.0.dtd">
+-->
+
+<!ELEMENT xwork (package|include)*>
+
+<!ELEMENT package (result-types?, interceptors?, default-interceptor-ref?, global-results?, action*)>
+<!ATTLIST package
+    name CDATA #REQUIRED
+    extends CDATA #IMPLIED
+    namespace CDATA #IMPLIED
+    abstract CDATA #IMPLIED
+    externalReferenceResolver NMTOKEN #IMPLIED
+>
+
+<!ELEMENT result-types (result-type+)>
+
+<!ELEMENT result-type (param*)>
+<!ATTLIST result-type
+    name CDATA #REQUIRED
+    class CDATA #REQUIRED
+    default (true|false) "false"
+>
+
+<!ELEMENT interceptors (interceptor|interceptor-stack)+>
+
+<!ELEMENT interceptor (param*)>
+<!ATTLIST interceptor
+    name CDATA #REQUIRED
+    class CDATA #REQUIRED
+>
+
+<!ELEMENT interceptor-stack (interceptor-ref+)>
+<!ATTLIST interceptor-stack
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT interceptor-ref (param*)>
+<!ATTLIST interceptor-ref
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT default-interceptor-ref (param*)>
+<!ATTLIST default-interceptor-ref
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT external-ref (#PCDATA)>
+<!ATTLIST external-ref
+    name NMTOKEN #REQUIRED
+    required (true|false) "true"
+>
+
+<!ELEMENT global-results (result+)>
+
+<!ELEMENT action (param|result|interceptor-ref|external-ref)*>
+<!ATTLIST action
+name CDATA #REQUIRED
+    class CDATA #REQUIRED
+    method CDATA #IMPLIED
+    converter CDATA #IMPLIED
+>
+
+<!ELEMENT param (#PCDATA)>
+<!ATTLIST param
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT result (#PCDATA|param)*>
+<!ATTLIST result
+    name CDATA #REQUIRED
+    type CDATA #IMPLIED
+>
+
+<!ELEMENT include (#PCDATA)>
+<!ATTLIST include
+    file CDATA #REQUIRED
+>
+
+

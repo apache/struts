@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+    <constant name="struts.objectFactory" value="spring"/>
+    <package name="test" namespace="/test" extends="struts-default">
+        <action name="testAction" class="org.apache.struts2.JUnitTestAction">
+            <result type="freemarker">/template-1.ftl</result>
+        </action>
+    </package>
+</struts>

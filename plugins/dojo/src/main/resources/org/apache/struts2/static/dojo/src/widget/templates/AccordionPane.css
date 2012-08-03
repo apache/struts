@@ -1,0 +1,22 @@
+.dojoAccordionPane .label {
+	color: #000;
+	font-weight: bold;
+	background: url("images/soriaAccordionOff.gif") repeat-x top left #85aeec;
+	border:1px solid #d9d9d9;
+	font-size:0.9em;
+}
+
+.dojoAccordionPane-selected .label {
+	background: url("images/soriaAccordionSelected.gif") repeat-x top left #85aeec;
+	border:1px solid #84a3d1;
+}
+
+.dojoAccordionPane .label:hover {
+	cursor: pointer;
+}
+
+.dojoAccordionPane .accBody {
+	background: #fff;
+	overflow: auto;
+	border:1px solid #84a3d1;
+}

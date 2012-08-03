@@ -1,0 +1,67 @@
+<!DOCTYPE xwork PUBLIC
+        "-//Apache Struts//XWork 2.0//EN"
+        "http://struts.apache.org/dtds/xwork-2.0.dtd">
+
+<xwork>
+    <package name="xwork-default" abstract="true">
+
+        <!-- START SNIPPET: xwork2-default-result-types -->
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>
+        </result-types>
+
+        <!-- END SNIPPET: xwork2-default-result-types -->
+
+        <interceptors>
+            <!-- START SNIPPET: xwork2-default-interceptors -->
+
+            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="logger" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
+            <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
+            <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
+            <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
+            <interceptor name="filterParams" class="com.opensymphony.xwork2.interceptor.ParameterFilterInterceptor"/>
+            <interceptor name="removeParams" class="com.opensymphony.xwork2.interceptor.ParameterRemoverInterceptor"/>
+            <interceptor name="modelDriven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
+            <interceptor name="scopedModelDriven"
+                         class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor"/>
+            <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor"/>
+            <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
+            <interceptor name="prepare" class="com.opensymphony.xwork2.interceptor.PrepareInterceptor"/>
+            <interceptor name="conversionError" class="com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor"/>
+            <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
+            <interceptor name="exception" class="com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor"/>
+            <interceptor name="i18n" class="com.opensymphony.xwork2.interceptor.I18nInterceptor"/>
+
+            <!-- END SNIPPET: xwork2-default-interceptors -->
+
+            <!--interceptor name="static-params" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
+            <interceptor name="filter-params" class="com.opensymphony.xwork2.interceptor.ParameterFilterInterceptor"/>
+            <interceptor name="remove-params" class="com.opensymphony.xwork2.interceptor.ParameterRemoverInterceptor"/>
+            <interceptor name="model-driven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
+            <interceptor name="scoped-model-driven"
+                         class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor"/-->
+
+            <!-- START SNIPPET: xwork2-default-interceptor-stack -->
+
+            <interceptor-stack name="emptyStack"/>
+
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+            </interceptor-stack>
+            <interceptor-stack name="validationWorkflowStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="validation"/>
+                <interceptor-ref name="workflow"/>
+            </interceptor-stack>
+
+            <!-- END SNIPPET: xwork2-default-interceptor-stack -->
+
+        </interceptors>
+
+        <default-class-ref class="com.opensymphony.xwork2.ActionSupport"/>
+
+    </package>
+</xwork>

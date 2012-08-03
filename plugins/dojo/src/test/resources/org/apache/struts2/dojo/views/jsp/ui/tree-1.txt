@@ -1,0 +1,47 @@
+<script type="text/javascript">
+        <!--
+        dojo.require("dojo.lang.*");
+        dojo.require("dojo.widget.*");
+        dojo.require("dojo.widget.Tree");
+        // dojo.hostenv.writeIncludes();
+        -->
+ </script>
+<div dojoType="struts:StrutsTree"   
+		templateCssPath="/struts/tree.css"
+	showGrid="false"
+	showRootGrid="false"
+    id="rootId"
+    toggle="fade"
+    >
+    <div dojoType="struts:StrutsTreeNode" title="Root" id="rootId_root"
+    >
+<div dojoType="struts:StrutsTreeNode" 
+	    id="child1"
+    title="Child 1">
+</div>
+<div dojoType="struts:StrutsTreeNode" 
+	    id="child2"
+    title="Child 2">
+<div dojoType="struts:StrutsTreeNode" 
+	    id="gChild1"
+    title="Grand Child 1">
+</div>
+<div dojoType="struts:StrutsTreeNode" 
+	    id="gChild2"
+    title="Grand Child 2">
+</div>
+<div dojoType="struts:StrutsTreeNode" 
+	    id="gChild3"
+    title="Grand Child 3">
+</div>
+</div>
+<div dojoType="struts:StrutsTreeNode" 
+	    id="child3"
+    title="Child 4">
+</div>
+</div></div>
+<script language="JavaScript" type="text/javascript">
+   djConfig.searchIds.push("treeSelector_rootId");
+   djConfig.searchIds.push("rootId");
+   djConfig.searchIds.push("child1","child1","child2","gChild1","gChild1","gChild2","gChild2","gChild3","gChild3","child2","child3","child3");
+</script>

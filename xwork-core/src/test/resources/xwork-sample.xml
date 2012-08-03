@@ -1,0 +1,238 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.0//EN"
+    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+ >
+ <!-- "file:///temp/ross/xwork/src/etc/xwork-1.0.dtd"  -->
+
+<xwork>
+    <include file="xwork-test-default.xml"/>
+    <package name="default" extends="xwork-test-default">
+
+        <global-results>
+            <result name="login"> <!-- should be chain type since it is the default -->
+                <param name="actionName">login</param>
+            </result>
+        </global-results>
+
+        <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="foo">17</param>
+            <param name="bar">23</param>
+            <result name="success" type="chain">
+                <param name="actionName">Bar</param>
+            </result>
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="WildCard" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="foo">17</param>
+            <param name="bar">23</param>
+            <result name="success" type="void" />
+            <result name="*" type="mock" />
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="WildCardInput" class="com.opensymphony.xwork2.SimpleAction" method="input">
+            <param name="foo">17</param>
+            <param name="bar">23</param>
+            <result name="success" type="void" />
+            <result name="*" type="mock" />
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="WildCardError" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="void" />
+            <result name="*" type="mock" />
+            <interceptor-ref name="defaultStack"/>
+        </action>
+		
+		<action name="WildCard/*/*" class="com.opensymphony.xwork2.{1}Action" 
+			method="{2}">
+            <param name="foo">{1}</param>
+            <param name="bar">{2}</param>
+            <result name="success" type="void" />
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="aliasTest" class="com.opensymphony.xwork2.SimpleAction">
+           	<param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz" }</param>
+			<interceptor-ref name="params"/>
+         	<interceptor-ref name="alias"/>
+         	<result name="success" type="mock" />
+        </action>
+      
+        <action name="packagelessAction" class="PackagelessAction">
+        </action>
+
+        <action name="Bar" class="com.opensymphony.xwork2.SimpleAction">
+        	<param name="foo">17</param>
+            <param name="bar">23</param>
+            <result name="error" type="mock" />
+        </action>
+
+        <action name="MyBean" class="com.opensymphony.xwork2.util.MyBeanAction">
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+            <result name="success" type="mock" />
+        </action>
+
+        <action name="TestInterceptorParam" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="test">
+                <param name="expectedFoo">expectedFoo</param>
+            </interceptor-ref>
+            <result name="error" type="mock" />
+        </action>
+
+        <action name="TestInterceptorParamOverride" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="test">
+                <param name="foo">foo123</param>
+                <param name="expectedFoo">foo123</param>
+            </interceptor-ref>
+            <result name="error" type="mock" />
+        </action>
+	
+        <action name="TestModelDrivenValidation" class="com.opensymphony.xwork2.ModelDrivenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="validation"/>
+            <result name="success" type="mock" />
+        </action>
+
+        <!-- chain resursion detection -->
+        <action name="InfiniteRecursionChain" class="com.opensymphony.xwork2.ActionSupport">
+                <result name="success" type="chain">InfiniteRecursionChain</result>
+        </action>
+
+   </package>
+
+   <package name="bar" extends="default" namespace="/foo/bar">
+        <interceptors>
+            <interceptor-stack name="barDefaultStack">
+                <interceptor-ref name="debugStack"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+
+        <global-exception-mappings>
+            <exception-mapping name="foo" exception="com.opensymphony.TestException" result="foo"/>
+        </global-exception-mappings>
+
+        <action name="Bar" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="barDefaultStack"/>
+            <result name="error" type="mock" />
+        </action>
+
+        <action name="TestInterceptorParamInheritance" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="test">
+                <param name="expectedFoo">expectedFoo</param>
+            </interceptor-ref>
+            <result name="error" type="mock" />
+        </action>
+
+        <action name="TestInterceptorParamInehritanceOverride" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="test">
+                <param name="foo">foo123</param>
+                <param name="expectedFoo">foo123</param>
+            </interceptor-ref>
+            <result name="error" type="mock" />
+        </action>
+    </package>
+
+    <package name="abstractPackage" namespace="/abstract" abstract="true">
+        <action name="test" class="com.opensymphony.xwork2.SimpleAction"/>
+    </package>
+
+    <package name="nonAbstractPackage" extends="abstractPackage" namespace="/nonAbstract"/>
+
+    <package name="baz" extends="default" namespace="baz">
+        <action name="commandTest" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="foo">123</param>
+            <result name="error" type="chain">
+                <param name="actionName">bar</param>
+            </result>
+            <result name="success" type="mock" />
+            <interceptor-ref name="staticParams"/>
+        </action>
+        <action name="myCommand" class="com.opensymphony.xwork2.SimpleAction" method="commandMethod">
+            <param name="bar">456</param>
+            <result name="success" type="chain">
+                <param name="actionName">foo</param>
+            </result>
+            <result name="com.opensymphony.xwork2.SimpleAction.CommandInvoked" type="mock"/>
+            <interceptor-ref name="logger"/>
+        </action>
+        <action name="doMethodTest" class="com.opensymphony.xwork2.SimpleAction" method="input">
+            <result name="input" type="mock" />
+        </action>
+        <action name="unknownMethodTest" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="found" type="mock" />
+        </action>
+        <action name="resultAction" class="com.opensymphony.xwork2.SimpleAction" method="resultAction">
+            <param name="bar">456</param>
+            <result name="success" type="chain">
+                <param name="actionName">foo</param>
+            </result>
+            <interceptor-ref name="logger"/>
+        </action>
+    </package>
+
+    <package name="wildcardNamespaces" extends="default" namespace="/animals/*">
+        <action name="commandTest" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="mock" />
+            <interceptor-ref name="staticParams"/>
+        </action>
+    </package>
+
+    <package name="multipleInheritance" extends="default,abstractPackage,bar" namespace="multipleInheritance">
+        <action name="testMultipleInheritance" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="chain">
+                <param name="actionName">foo</param>
+            </result>
+            <interceptor-ref name="barDefaultStack"/>
+        </action>
+    </package>
+
+
+	<package name="Abstract-crud" extends="default">
+  	<!--  edit is often used as the create/view -->
+  			   <default-class-ref class="com.opensymphony.xwork2.SimpleAction"/>
+                <action name="edit" >
+                        <result name="input" type="mock">edit.vm</result>
+                        <result name="success" type="mock">edit.vm</result>
+                        <result name="error" type="mock">edit.vm</result>
+                </action>
+                <action name="save" >
+                        <result name="input" type="mock">edit.vm</result>
+                        <result name="success" type="chain">list</result>
+                        <result name="error" type="mock">edit.vm</result>
+                        <result name="cancel" type="mock">list.action</result>
+                </action>
+                <action name="list">
+                        <result name="success" type="mock">list</result>
+                </action>
+                <action name="delete">
+                        <result name="success" type="mock">list</result>
+                </action>
+
+        </package>
+       
+        <package name="Example" extends="Abstract-crud" namespace="/example">
+                 <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
+        </package>
+
+        <package name="Example2" extends="Abstract-crud" namespace="/example2">
+                <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
+                <action name="override">
+                        <result name="success" type="mock">somethingelse.vm</result>
+                </action>
+        </package>
+
+        <package name="SubItem" extends="Abstract-crud" namespace="/example2/subItem">
+                <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
+        </package> 
+        
+        <package name="Example3" extends="Abstract-crud" namespace="/example3">
+ 			<!--  default-class-ref is expected to be inherited -->
+        </package>
+
+    <include file="includeTest.xml"/>
+</xwork>

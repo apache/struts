@@ -1,0 +1,12 @@
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+    <validator type="expression">
+        <param name="expression">email.equals(email2)</param>
+        <message>Email not the same as email2</message>
+    </validator>
+    <validator type="expression" short-circuit="true">
+        <param name="expression">email.startsWith('mark')</param>
+        <message>Email does not start with mark</message>
+    </validator>
+/validators>

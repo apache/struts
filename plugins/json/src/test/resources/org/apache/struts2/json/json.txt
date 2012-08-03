@@ -1,0 +1,44 @@
+{
+	"array": ["a", "a", "\"", "\\", "\/", "\b", "\f", "\n", "\r", "\t"],
+	"bean": null,
+	"collection": ["b", 1, [10, 12]],
+	"collection2": [{
+						"bigDecimal": 111111.111111,
+						"bigInteger": 111111111111,
+						"booleanField": true,
+						"byteField": 0,
+						"charField": "s",
+						"doubleField": 10.1,
+						"enumBean": "One",
+						"enumField": "ValueA",
+						"floatField": 1.5,
+						"intField": 10,
+						"longField": 100,
+						"objectField": {
+							"bigDecimal": null,
+							"bigInteger": null,
+							"booleanField": false,
+							"byteField": 0,
+							"charField": "\u0000",
+							"doubleField": 2.2,
+							"enumBean": "Two",
+							"enumField": "ValueB",
+							"floatField": 1.1,
+							"intField": 0,
+							"longField":0,
+							"objectField":null,
+							"stringField":"  "
+						},
+						"stringField": "str"
+	}],
+	"date": "1999-12-31T11:59:59",
+	"date2": "31\/12\/99",
+	"foo": "foo",
+	"list": null,
+	"map": {
+		"a": 1,
+		"c": [1.0, 2.0]
+	},
+	"result":null,
+	"set":null
+}

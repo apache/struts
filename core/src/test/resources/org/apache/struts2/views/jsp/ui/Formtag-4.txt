@@ -1,0 +1,4 @@
+<form id="foo" name="foo" action="/foo.jsp" method="post">
+<table class="wwFormTable">
+</table>
+</form>

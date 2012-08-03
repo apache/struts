@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC 
+	"-//Apache Struts//XWork Validator 1.0.2//EN"
+	"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+	
+<validators>
+	<field name="value">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>Value must not be empty</message>
+		</field-validator>
+	</field>
+	
+	
+	<field name="count">
+		<field-validator type="int">
+			<message>Count must be an integer</message>
+		</field-validator>	
+	</field>
+</validators>	
+
+

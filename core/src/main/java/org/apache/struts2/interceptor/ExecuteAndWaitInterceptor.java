@@ -257,8 +257,9 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
             if ((!executeAfterValidationPass || !secondTime) && bp != null && !bp.isDone()) {
                 actionInvocation.getStack().push(bp.getAction());
 
-                if (TokenHelper.getToken() != null) {
-                    session.put(TokenHelper.getTokenName(), TokenHelper.getToken());
+				final String token = TokenHelper.getToken();
+				if (token != null) {
+					TokenHelper.setSessionToken(TokenHelper.getTokenName(), token);
                 }
 
                 Map results = proxy.getConfig().getResults();

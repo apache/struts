@@ -63,7 +63,7 @@ public class TokenTagTest extends AbstractUITagTest {
         doTokenTest(tokenName, tag);
 
         String s = writer.toString();
-        assertTrue(s.indexOf("name=\"" + TokenHelper.DEFAULT_TOKEN_NAME) > -1);
+        assertTrue(s.indexOf("name=\"" + TokenHelper.TOKEN_NAME_FIELD) > -1);
         assertTrue(s.indexOf("value=\"" + tokenName + "\"") > -1);
         assertTrue(s.indexOf("name=\"" + tokenName + "\"") > -1);
 
@@ -87,8 +87,9 @@ public class TokenTagTest extends AbstractUITagTest {
             tag.doEndTag();
 
             token = (String) context.get(tokenName);
-            assertNotNull(token);
-            assertEquals(token, pageContext.getSession().getAttribute(tokenName));
+			assertNotNull(token);
+			final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+			assertEquals(token, pageContext.getSession().getAttribute(sessionTokenName));
         } catch (JspException e) {
             e.printStackTrace();
             fail();

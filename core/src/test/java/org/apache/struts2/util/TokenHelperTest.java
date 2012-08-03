@@ -38,22 +38,38 @@ public class TokenHelperTest extends TestCase {
 
     private Map session;
 
+	public void testTokenSessionNameBuilding() throws Exception {
+		String name = "foo";
+		String sessionName = TokenHelper.buildTokenSessionAttributeName(name);
+		assertEquals(TokenHelper.TOKEN_NAMESPACE + "." + name, sessionName);
+	}
 
     public void testSetToken() {
         String token = TokenHelper.setToken();
-        assertEquals(token, session.get(TokenHelper.DEFAULT_TOKEN_NAME));
+		final String defaultSessionTokenName = TokenHelper.buildTokenSessionAttributeName(TokenHelper.DEFAULT_TOKEN_NAME);
+		assertEquals(token, session.get(defaultSessionTokenName));
     }
 
     public void testSetTokenWithName() {
         String tokenName = "myTestToken";
         String token = TokenHelper.setToken(tokenName);
-        assertEquals(token, session.get(tokenName));
+		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+		assertEquals(token, session.get(sessionTokenName));
     }
 
-    public void testValidToken() {
+	public void testSetSessionToken() {
+		String tokenName = "myOtherTestToken";
+		String token = "foobar";
+		TokenHelper.setSessionToken(tokenName, token);
+		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+		assertEquals(token, session.get(sessionTokenName));
+	}
+
+	public void testValidToken() {
         String tokenName = "validTokenTest";
         String token = TokenHelper.setToken(tokenName);
-        assertEquals(token, session.get(tokenName));
+		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+		assertEquals(token, session.get(sessionTokenName));
         ActionContext.getContext().getParameters().put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
         ActionContext.getContext().getParameters().put(tokenName, new String[]{token});
         assertTrue(TokenHelper.validToken());

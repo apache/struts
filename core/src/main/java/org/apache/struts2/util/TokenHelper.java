@@ -36,10 +36,15 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class TokenHelper {
 
-    /**
+	/**
+	 * The default namespace for storing token session values
+	 */
+	public static final String TOKEN_NAMESPACE = "struts.tokens";
+
+	/**
      * The default name to map the token value
      */
-    public static final String DEFAULT_TOKEN_NAME = "struts.token";
+    public static final String DEFAULT_TOKEN_NAME = "token";
 
     /**
      * The name of the field which will hold the token name
@@ -58,31 +63,53 @@ public class TokenHelper {
         return setToken(DEFAULT_TOKEN_NAME);
     }
 
-    /**
-     * Sets a transaction token into the session using the provided token name.
-     *
-     * @param tokenName the name to store into the session with the token as the value
-     * @return the token string
-     */
-    public static String setToken(String tokenName) {
-        Map session = ActionContext.getContext().getSession();
-        String token = generateGUID();
-        try {
-            session.put(tokenName, token);
-        }
-        catch(IllegalStateException e) {
-            // WW-1182 explain to user what the problem is
-            String msg = "Error creating HttpSession due response is commited to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: " + e.getMessage();
-            LOG.error(msg, e);
-            throw new IllegalArgumentException(msg);
-        }
+	/**
+	 * Sets a transaction token into the session based on the provided token name.
+	 *
+	 * @param tokenName the token name based on which a generated token value is stored into session; for actual session
+	 *                  store, this name will be prefixed by a namespace.
+	 *
+	 * @return the token string
+	 */
+	public static String setToken( String tokenName ) {
+		String token = generateGUID();
+		setSessionToken(tokenName, token);
+		return token;
+	}
 
-        return token;
-    }
+	/**
+	 * Put a given named token into the session map. The token will be stored with a namespace prefix prepended.
+	 *
+	 * @param tokenName the token name based on which given token value is stored into session; for actual session store,
+	 *                  this name will be prefixed by a namespace.
+	 * @param token     the token value to store
+	 */
+	public static void setSessionToken( String tokenName, String token ) {
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		try {
+			session.put(buildTokenSessionAttributeName(tokenName), token);
+		} catch ( IllegalStateException e ) {
+			// WW-1182 explain to user what the problem is
+			String msg = "Error creating HttpSession due response is commited to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: " + e.getMessage();
+			LOG.error(msg, e);
+			throw new IllegalArgumentException(msg);
+		}
+	}
 
 
-    /**
-     * Gets a transaction token into the session using the default token name.
+	/**
+	 * Build a name-spaced token session attribute name based on the given token name.
+	 *
+	 * @param tokenName the token name to prefix
+	 *
+	 * @return the name space prefixed session token name
+	 */
+	public static String buildTokenSessionAttributeName( String tokenName ) {
+		return TOKEN_NAMESPACE + "." + tokenName;
+	}
+
+	/**
+     * Gets a transaction token from the params in the ServletActionContext using the default token name.
      *
      * @return token
      */
@@ -175,7 +202,8 @@ public class TokenHelper {
         }
 
         Map session = ActionContext.getContext().getSession();
-        String sessionToken = (String) session.get(tokenName);
+		String tokenSessionName = buildTokenSessionAttributeName(tokenName);
+        String sessionToken = (String) session.get(tokenSessionName);
 
         if (!token.equals(sessionToken)) {
             if (LOG.isWarnEnabled()) {
@@ -188,7 +216,7 @@ public class TokenHelper {
         }
 
         // remove the token so it won't be used again
-        session.remove(tokenName);
+        session.remove(tokenSessionName);
 
         return true;
     }

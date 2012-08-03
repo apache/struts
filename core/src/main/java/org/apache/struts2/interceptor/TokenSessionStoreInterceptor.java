@@ -121,7 +121,8 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
             params.remove(tokenName);
             params.remove(TokenHelper.TOKEN_NAME_FIELD);
 
-            ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(tokenName, token);
+			String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+            ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(sessionTokenName, token);
 
             if (savedInvocation != null) {
                 // set the valuestack to the request scope
@@ -157,7 +158,8 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         // we know the token name and token must be there
         String key = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(key);
-        InvocationSessionStore.storeInvocation(key, token, invocation);
+		String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(key);
+		InvocationSessionStore.storeInvocation(sessionTokenName, token, invocation);
 
         return invocation.invoke();
     }

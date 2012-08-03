@@ -95,9 +95,11 @@ import java.util.regex.Pattern;
  * <!-- START SNIPPET: parameters -->
  * <p/>
  * <ul>
- * <p/>
  * <li>ordered - set to true if you want the top-down property setter behaviour</li>
- * <p/>
+ * <li>acceptParamNames - a comma delimited list of regular expressions to describe a whitelist of accepted parameter names.
+ * Don't change the default unless you know what you are doing in terms of security implications</li>
+ * <li>excludeParams - a comma delimited list of regular expressions to describe a blacklist of not allowed parameter names</li>
+ * <li>paramNameMaxLength - the maximum length of parameter names; parameters with longer names will be ignored; the default is 100 characters</li>
  * </ul>
  * <p/>
  * <!-- END SNIPPET: parameters -->
@@ -129,6 +131,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParametersInterceptor.class);
 
+    protected static final int PARAM_NAME_MAX_LENGTH = 100;
+
+    private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
+
     boolean ordered = false;
     Set<Pattern> excludeParams = Collections.emptySet();
     Set<Pattern> acceptParams = Collections.emptySet();
@@ -150,7 +156,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         devMode = "true".equals(mode);
     }
 
-    public void setAcceptParamNames(String commaDelim) {
+	/**
+	 * Sets a comma-delimited list of regular expressions to match
+	 * parameters that are allowed in the parameter map (aka whitelist).
+	 * <p/>
+	 * Don't change the default unless you know what you are doing in terms
+	 * of security implications.
+	 *
+	 * @param commaDelim A comma-delimited list of regular expressions
+	 */
+	public void setAcceptParamNames(String commaDelim) {
         Collection<String> acceptPatterns = ArrayUtils.asCollection(commaDelim);
         if (acceptPatterns != null) {
             acceptParams = new HashSet<Pattern>();
@@ -158,6 +173,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 acceptParams.add(Pattern.compile(pattern));
             }
         }
+    }
+
+    /**
+     * If the param name exceeds the configured maximum length it will not be
+     * accepted.
+     *
+     * @param paramNameMaxLength Maximum length of param names
+     */
+    public void setParamNameMaxLength(int paramNameMaxLength) {
+        this.paramNameMaxLength = paramNameMaxLength;
     }
 
     static private int countOGNLCharacters(String s) {
@@ -350,10 +375,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean acceptableName(String name) {
-        return isAccepted(name) && !isExcluded(name);
+        return isWithinLengthLimit(name) && isAccepted(name)
+                && !isExcluded(name);
     }
 
-    protected boolean isAccepted(String paramName) {
+	protected boolean isWithinLengthLimit( String name ) {
+		return name.length() <= paramNameMaxLength;
+	}
+
+	protected boolean isAccepted(String paramName) {
         if (!this.acceptParams.isEmpty()) {
             for (Pattern pattern : acceptParams) {
                 Matcher matcher = pattern.matcher(paramName);

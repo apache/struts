@@ -201,7 +201,39 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(0, existingMap.size());
     }
 
-    public void testExcludedTrickyParameters() throws Exception {
+    public void testLargeParameterNameWithDefaultLimit() throws Exception {
+		ParametersInterceptor parametersInterceptor = createParametersInterceptor();
+		doTestParameterNameLengthRestriction(parametersInterceptor, ParametersInterceptor.PARAM_NAME_MAX_LENGTH);
+    }
+
+	public void testLargeParameterNameWithCustomLimit() throws Exception {
+		ParametersInterceptor parametersInterceptor = createParametersInterceptor();
+		int limit = 20;
+		parametersInterceptor.setParamNameMaxLength(limit);
+		doTestParameterNameLengthRestriction(parametersInterceptor, limit);
+	}
+
+	private void doTestParameterNameLengthRestriction( ParametersInterceptor parametersInterceptor,
+													   int paramNameMaxLength ) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < paramNameMaxLength + 1; i++) {
+            sb.append("x");
+        }
+
+		Map<String, Object> actual = new LinkedHashMap<String, Object>();
+		parametersInterceptor.setValueStackFactory(createValueStackFactory(actual));
+		ValueStack stack = createStubValueStack(actual);
+
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(sb.toString(), "");
+		parameters.put("huuhaa", "");
+
+		Action action = new SimpleAction();
+		parametersInterceptor.setParameters(action, stack, parameters);
+		assertEquals(1, actual.size());
+	}
+
+	public void testExcludedTrickyParameters() throws Exception {
         Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put("blah", "This is blah");

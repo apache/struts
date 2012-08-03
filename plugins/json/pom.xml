@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.3.4</version>
+        <version>2.3.4.1-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-json-plugin</artifactId>
@@ -34,9 +34,9 @@
     <name>Struts 2 JSON Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_4/plugins/json</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_4/plugins/json</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_4/plugins/json</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_4_X/plugins/json</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_4_X/plugins/json</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_4_X/plugins/json</url>
     </scm>
 
     <build>

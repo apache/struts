@@ -388,6 +388,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
+        showDeprecatedWarning();
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = getServletContext();
@@ -440,5 +442,22 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             }
             devModeOverride.remove();
         }
+    }
+
+    private void showDeprecatedWarning() {
+        String msg =
+                "\n\n" +
+                "***********************************************************************\n" +
+                "*                               WARNING!!!                            *\n" +
+                "*                                                                     *\n" +
+                "* >>> FilterDispatcher <<< is deprecated! Please use the new filters! *\n" +
+                "*                                                                     *\n" +
+                "*           This can be a source of unpredictable problems!           *\n" +
+                "*                                                                     *\n" +
+                "*              Please refer to the docs for more details!             *\n" +
+                "*            http://struts.apache.org/2.x/docs/webxml.html            *\n" +
+                "*                                                                     *\n" +
+                "***********************************************************************\n\n";
+        System.out.println(msg);
     }
 }

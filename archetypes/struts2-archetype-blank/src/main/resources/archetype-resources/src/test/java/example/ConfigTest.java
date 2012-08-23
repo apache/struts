@@ -62,7 +62,7 @@ public class ConfigTest extends StrutsTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         XmlConfigurationProvider c = new XmlConfigurationProvider("struts.xml");
-        configurationManager.addConfigurationProvider(c);
+        configurationManager.addContainerProvider(c);
         configurationManager.reload();
     }
 

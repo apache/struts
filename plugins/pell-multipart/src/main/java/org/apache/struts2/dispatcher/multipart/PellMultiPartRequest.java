@@ -111,7 +111,7 @@ public class PellMultiPartRequest implements MultiPartRequest {
         return multi.getURLParameter(name);
     }
 
-    public Enumeration getParameterNames() {
+    public Enumeration<String> getParameterNames() {
         return multi.getParameterNames();
     }
 
@@ -122,17 +122,17 @@ public class PellMultiPartRequest implements MultiPartRequest {
             return null;
         }
 
-        List values = new ArrayList();
+        List<String> values = new ArrayList<String>();
 
         while (enumeration.hasMoreElements()) {
-            values.add(enumeration.nextElement());
+            values.add((String) enumeration.nextElement());
         }
 
-        return (String[]) values.toArray(new String[values.size()]);
+        return values.toArray(new String[values.size()]);
     }
 
-    public List getErrors() {
-        return Collections.EMPTY_LIST;
+    public List<String> getErrors() {
+        return Collections.emptyList();
     }
 
     /**

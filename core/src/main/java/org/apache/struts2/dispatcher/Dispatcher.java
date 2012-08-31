@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
@@ -767,7 +768,8 @@ public class Dispatcher {
             if (mpr == null ) {
                 mpr = getContainer().getInstance(MultiPartRequest.class);
             }
-            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext));
+            LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
+            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext), provider);
         } else {
             request = new StrutsRequestWrapper(request);
         }

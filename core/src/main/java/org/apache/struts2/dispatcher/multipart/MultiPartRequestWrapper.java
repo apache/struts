@@ -21,6 +21,8 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
@@ -53,31 +56,52 @@ import java.util.Vector;
  *
  */
 public class MultiPartRequestWrapper extends StrutsRequestWrapper {
+
     protected static final Logger LOG = LoggerFactory.getLogger(MultiPartRequestWrapper.class);
 
-    Collection<String> errors;
-    MultiPartRequest multi;
+    private Collection<String> errors;
+    private MultiPartRequest multi;
+    private Locale defaultLocale = Locale.ENGLISH;
 
     /**
      * Process file downloads and log any errors.
      *
+     * @param multiPartRequest Our MultiPartRequest object
      * @param request Our HttpServletRequest object
      * @param saveDir Target directory for any files that we save
-     * @param multiPartRequest Our MultiPartRequest object
+     * @param provider
      */
-    public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir) {
+    public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir, LocaleProvider provider) {
         super(request);
-        
+        errors = new ArrayList<String>();
         multi = multiPartRequest;
+        defaultLocale = provider.getLocale();
+        setLocale(request);
         try {
             multi.parse(request, saveDir);
-            for (Object o : multi.getErrors()) {
-                String error = (String) o;
+            for (String error : multi.getErrors()) {
                 addError(error);
             }
         } catch (IOException e) {
-            addError("Cannot parse request: "+e.toString());
+            if (LOG.isWarnEnabled()) {
+                LOG.warn(e.getMessage(), e);
+            }
+            addError(buildErrorMessage(e, new Object[] {e.getMessage()}));
         } 
+    }
+
+    protected void setLocale(HttpServletRequest request) {
+        if (defaultLocale == null) {
+            defaultLocale = request.getLocale();
+        }
+    }
+
+    protected String buildErrorMessage(Throwable e, Object[] args) {
+        String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Preparing error message for key: [#0]", errorKey);
+        }
+        return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }
 
     /**
@@ -198,7 +222,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @return <tt>true</tt> if any errors occured when parsing the HTTP multipart request, <tt>false</tt> otherwise.
      */
     public boolean hasErrors() {
-        return !((errors == null) || errors.isEmpty());
+        return !errors.isEmpty();
     }
 
     /**
@@ -211,16 +235,14 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * Adds an error message.
+     * Adds an error message when it isn't already added.
      *
      * @param anErrorMessage the error message to report.
      */
     protected void addError(String anErrorMessage) {
-        if (errors == null) {
-            errors = new ArrayList<String>();
+        if (!errors.contains(anErrorMessage)) {
+            errors.add(anErrorMessage);
         }
-
-        errors.add(anErrorMessage);
     }
 
     /**

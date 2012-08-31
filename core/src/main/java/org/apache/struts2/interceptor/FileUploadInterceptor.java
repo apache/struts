@@ -267,10 +267,6 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                 if (validation != null) {
                     validation.addActionError(error);
                 }
-
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn(error);
-                }
             }
         }
 

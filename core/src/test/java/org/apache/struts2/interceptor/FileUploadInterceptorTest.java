@@ -23,6 +23,7 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -357,7 +358,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize) throws IOException {
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
-        return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath());
+        return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
     protected void setUp() throws Exception {

@@ -113,7 +113,7 @@ public interface MultiPartRequest {
      *
      * @return a list of Strings that represent various errors during parsing
      */
-    public List getErrors();
+    public List<String> getErrors();
 
     /**
      * Cleans up all uploaded file, should be called at the end of request

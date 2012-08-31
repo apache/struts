@@ -96,7 +96,7 @@
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 /><#rt/>
-<label for="${parameters.id?html}${itemKeyStr?html}"><#rt/>
+<label for="${parameters.id?html}${itemKeyStr?html}"<#include "/${parameters.templateDir}/simple/css.ftl"/>><#rt/>
     ${itemValue}<#t/>
 </label>
 </@s.iterator>

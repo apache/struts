@@ -136,10 +136,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
 
-    boolean ordered = false;
-    Set<Pattern> excludeParams = Collections.emptySet();
-    Set<Pattern> acceptParams = Collections.emptySet();
-    static boolean devMode = false;
+    protected boolean ordered = false;
+    protected Set<Pattern> excludeParams = Collections.emptySet();
+    protected Set<Pattern> acceptParams = Collections.emptySet();
+
+    private boolean devMode = false;
 
     // Allowed names of parameters
     private String acceptedParamNames = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*";
@@ -153,7 +154,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     @Inject(XWorkConstants.DEV_MODE)
-    public static void setDevMode(String mode) {
+    public void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }
 
@@ -279,8 +280,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             String name = entry.getKey();
 
             boolean acceptableName = acceptableName(name)
-                    && (parameterNameAware == null
-                    || parameterNameAware.acceptableParameterName(name));
+                    || (parameterNameAware != null && parameterNameAware.acceptableParameterName(name));
 
             if (acceptableName) {
                 acceptableParameters.put(name, entry.getValue());
@@ -376,8 +376,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean acceptableName(String name) {
-        return isWithinLengthLimit(name) && isAccepted(name)
-                && !isExcluded(name);
+        return isWithinLengthLimit(name) && isAccepted(name) && !isExcluded(name);
     }
 
 	protected boolean isWithinLengthLimit( String name ) {

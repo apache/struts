@@ -34,9 +34,15 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
 
     public void testBadInheritance() throws ConfigurationException {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-bad-inheritance.xml";
-        ConfigurationProvider provider = buildConfigurationProvider(filename);
-        provider.init(configuration);
-        provider.loadPackages();
+        ConfigurationProvider provider = null;
+        try {
+	    	provider = buildConfigurationProvider(filename);
+	    	fail("Should have thrown a ConfigurationException");
+	        provider.init(configuration);
+	        provider.loadPackages();
+        } catch (ConfigurationException e) {
+        	// Expected
+        }
     }
 
     public void testBasicPackages() throws ConfigurationException {
@@ -82,7 +88,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         provider.loadPackages();
 
         // test expectations
-        assertEquals(4, configuration.getPackageConfigs().size());
+        assertEquals(5, configuration.getPackageConfigs().size());
         PackageConfig defaultPackage = configuration.getPackageConfig("default");
         assertNotNull(defaultPackage);
         assertEquals("default", defaultPackage.getName());
@@ -98,10 +104,15 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         assertNotNull(multiplePackage);
         assertEquals("multipleInheritance", multiplePackage.getName());
         assertEquals(3, multiplePackage.getParents().size());
-        List multipleParents = multiplePackage.getParents();
+        List<PackageConfig> multipleParents = multiplePackage.getParents();
         assertTrue(multipleParents.contains(defaultPackage));
         assertTrue(multipleParents.contains(abstractPackage));
         assertTrue(multipleParents.contains(singlePackage));
+        
+        PackageConfig parentBelow = configuration.getPackageConfig("testParentBelow");
+        assertEquals(1, parentBelow.getParents().size());
+        List<PackageConfig> parentBelowParents = parentBelow.getParents();
+        assertTrue(parentBelowParents.contains(multiplePackage));
 
         configurationManager.addContainerProvider(provider);
         configurationManager.reload();
@@ -115,6 +126,12 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         assertNull(runtimeConfiguration.getActionConfig("/single", "abstract"));
         assertNotNull(runtimeConfiguration.getActionConfig("/single", "single"));
         assertNull(runtimeConfiguration.getActionConfig("/single", "multiple"));
+        
+        assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "default"));
+        assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "abstract"));
+        assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "single"));
+        assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "multiple"));
+        assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "testParentBelowAction"));
 
     }
 

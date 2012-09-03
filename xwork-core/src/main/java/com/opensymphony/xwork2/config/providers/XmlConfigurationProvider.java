@@ -74,6 +74,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     private Map<String, String> dtdMappings;
     private Configuration configuration;
     private boolean throwExceptionOnDuplicateBeans = true;
+    private Map<String, Element> declaredPackages = new HashMap<String, Element>();
 
     private FileManager fileManager;
 
@@ -270,6 +271,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     public void loadPackages() throws ConfigurationException {
         List<Element> reloads = new ArrayList<Element>();
+        verifyPackageStructure();
+
         for (Document doc : documents) {
             Element rootElement = doc.getDocumentElement();
             NodeList children = rootElement.getChildNodes();
@@ -303,7 +306,49 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         }
 
         documents.clear();
+        declaredPackages.clear();
         configuration = null;
+    }
+
+    private void verifyPackageStructure() {
+        DirectedGraph<String> graph = new DirectedGraph<String>();
+
+        for (Document doc : documents) {
+            Element rootElement = doc.getDocumentElement();
+            NodeList children = rootElement.getChildNodes();
+            int childSize = children.getLength();
+            for (int i = 0; i < childSize; i++) {
+                Node childNode = children.item(i);
+                if (childNode instanceof Element) {
+                    Element child = (Element) childNode;
+
+                    final String nodeName = child.getNodeName();
+
+                    if ("package".equals(nodeName)) {
+                        String packageName = child.getAttribute("name");
+                        declaredPackages.put(packageName, child);
+                        graph.addNode(packageName);
+
+                        String extendsAttribute = child.getAttribute("extends");
+                        List<String> parents = ConfigurationUtil.buildParentListFromString(extendsAttribute);
+                        for (String parent : parents) {
+                            graph.addNode(parent);
+                            graph.addEdge(packageName, parent);
+                        }
+                    }
+                }
+            }
+        }
+
+        CycleDetector<String> detector = new CycleDetector<String>(graph);
+        if (detector.containsCycle()) {
+            StringBuilder builder = new StringBuilder("The following packages participate in cycles:");
+            for (String packageName : detector.getVerticesInCycles()) {
+                builder.append(" ");
+                builder.append(packageName);
+            }
+            throw new ConfigurationException(builder.toString());
+        }
     }
 
     private void reloadRequiredPackages(List<Element> reloads) {
@@ -602,8 +647,20 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 .location(DomHelper.getLocationObject(packageElement));
 
         if (StringUtils.isNotEmpty(StringUtils.defaultString(parent))) { // has parents, let's look it up
+            List<PackageConfig> parents = new ArrayList<PackageConfig>();
+            for (String parentPackageName : ConfigurationUtil.buildParentListFromString(parent)) {
+                if (configuration.getPackageConfigNames().contains(parentPackageName)) {
+                    parents.add(configuration.getPackageConfig(parentPackageName));
+                } else if (declaredPackages.containsKey(parentPackageName)) {
+                    if (configuration.getPackageConfig(parentPackageName) == null) {
+                        addPackage(declaredPackages.get(parentPackageName));
+                    }
+                    parents.add(configuration.getPackageConfig(parentPackageName));
+                } else {
+                    throw new ConfigurationException("Parent package is not defined: " + parentPackageName);
+                }
 
-            List<PackageConfig> parents = ConfigurationUtil.buildParentsFromString(configuration, parent);
+            }
 
             if (parents.size() <= 0) {
                 cfg.needsRefresh(true);

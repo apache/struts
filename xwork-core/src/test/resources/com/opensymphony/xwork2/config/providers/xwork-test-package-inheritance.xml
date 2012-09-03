@@ -16,6 +16,10 @@
     <package name="singleInheritance" namespace="/single" extends="default">
         <action name="single" class="com.opensymphony.xwork2.ActionSupport"/>
     </package>
+    
+    <package name="testParentBelow" namespace="/parentBelow" extends="multipleInheritance">
+    	<action name="testParentBelowAction" class="com.opensymphony.xwork2.ActionSupport"/>
+    </package>
 
     <package name="multipleInheritance" namespace="/multiple" extends="default,abstractPackage,singleInheritance">
         <action name="multiple" class="com.opensymphony.xwork2.ActionSupport"/>

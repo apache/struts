@@ -278,7 +278,7 @@ public class Component {
 	public static String stripExpressionIfAltSyntax(ValueStack stack, String expr) {
 		if (altSyntax(stack)) {
             // does the expression start with %{ and end with }? if so, just cut it off!
-            if (expr.startsWith("%{") && expr.endsWith("}")) {
+            if (isExpression(expr)) {
                 return expr.substring(2, expr.length() - 1);
             }
         }
@@ -511,10 +511,16 @@ public class Component {
     }
 
     /**
-     * Overwrite to set if body shold be used.
+     * Overwrite to set if body should be used.
      * @return always false for this component.
      */
     public boolean usesBody() {
         return false;
     }
+
+    public static boolean isExpression(Object value) {
+        String expr = value.toString();
+        return expr.startsWith("%{") && expr.endsWith("}");
+    }
+
 }

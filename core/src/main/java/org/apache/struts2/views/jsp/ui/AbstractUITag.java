@@ -22,6 +22,7 @@
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.struts2.components.Component;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.jsp.ComponentTagSupport;
 
@@ -291,10 +292,11 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     }
 
     public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
-        if (value != null && value instanceof String) {
+        if (Component.altSyntax(getStack()) && Component.isExpression(value)) {
             dynamicAttributes.put(localName, String.valueOf(ObjectUtils.defaultIfNull(findValue(value.toString()), value)));
         } else {
             dynamicAttributes.put(localName, value);
         }
     }
+
 }

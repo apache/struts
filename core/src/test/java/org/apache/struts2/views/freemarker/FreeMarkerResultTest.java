@@ -44,6 +44,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
+
 /**
  * Test case for FreeMarkerResult.
  *
@@ -262,7 +264,7 @@ public class FreeMarkerResultTest extends StrutsTestCase {
                 + "\n"
                 + "<input type=\"radio\" name=\"car\" id=\"carford\" value=\"ford\"/><label for=\"carford\">Ford Motor Co</label>\n"
                 + "<input type=\"radio\" name=\"car\" id=\"cartoyota\" value=\"toyota\"/><label for=\"cartoyota\">Toyota</label>\n";
-        assertEquals(expected, stringWriter.toString());
+        assertEquals(normalize(expected), normalize(stringWriter.toString()));
     }
 
     public void testDynamicAttributesInTheme() throws Exception {

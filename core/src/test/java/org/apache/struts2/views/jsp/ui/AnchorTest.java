@@ -71,7 +71,7 @@ public class AnchorTest extends AbstractUITagTest {
         AnchorTag tag = createTag();
         tag.setHref("a");
 
-        tag.setDynamicAttribute("uri", "placeholder", "foo");
+        tag.setDynamicAttribute("uri", "placeholder", "%{foo}");
 
         tag.doStartTag();
         tag.doEndTag();

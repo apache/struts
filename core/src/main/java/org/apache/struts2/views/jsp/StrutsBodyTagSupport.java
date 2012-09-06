@@ -25,7 +25,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.struts2.components.Component;
+import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
@@ -49,17 +49,17 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
     }
 
     protected Object findValue(String expr) {
-    	expr = Component.stripExpressionIfAltSyntax(getStack(), expr);
+    	expr = ComponentUtils.stripExpressionIfAltSyntax(getStack(), expr);
 
         return getStack().findValue(expr);
     }
 
     protected Object findValue(String expr, Class toType) {
-        if (Component.altSyntax(getStack()) && toType == String.class) {
+        if (ComponentUtils.altSyntax(getStack()) && toType == String.class) {
         	return TextParseUtil.translateVariables('%', expr, getStack());
             //return translateVariables(expr, getStack());
         } else {
-        	expr = Component.stripExpressionIfAltSyntax(getStack(), expr);
+        	expr = ComponentUtils.stripExpressionIfAltSyntax(getStack(), expr);
 
             return getStack().findValue(expr, toType);
         }

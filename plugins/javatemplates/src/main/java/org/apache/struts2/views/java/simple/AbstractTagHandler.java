@@ -23,7 +23,7 @@ package org.apache.struts2.views.java.simple;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.struts2.components.Component;
+import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagHandler;
 import org.apache.struts2.views.util.ContextUtil;
@@ -83,7 +83,7 @@ public abstract class AbstractTagHandler implements TagHandler {
         }
 
         ValueStack stack = context.getStack();
-        return stack.findValue(Component.stripExpressionIfAltSyntax(stack, expr));
+        return stack.findValue(ComponentUtils.stripExpressionIfAltSyntax(stack, expr));
     }
 
     private Object findValue(String expr, Class toType) {
@@ -92,7 +92,7 @@ public abstract class AbstractTagHandler implements TagHandler {
         if (altSyntax && toType == String.class) {
             return TextParseUtil.translateVariables('%', expr, stack);
         } else {
-            return stack.findValue(Component.stripExpressionIfAltSyntax(stack, expr), toType);
+            return stack.findValue(ComponentUtils.stripExpressionIfAltSyntax(stack, expr), toType);
         }
     }
 }

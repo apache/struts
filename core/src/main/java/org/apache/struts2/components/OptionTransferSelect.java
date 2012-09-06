@@ -21,18 +21,16 @@
 
 package org.apache.struts2.components;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -51,7 +49,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * NOTE: The id and doubleId need not be supplied as they will generated provided
  * that the optiontransferselect tag is being used in a form tag. The generated id
- * and doubleId will be &lt;form_id&gt;_&lt;optiontransferselect_doubleName&gt; and
+ * and doubleId will be &lt;form_id&gt;_&lt;optiontransferselect_nameame&gt; and
  * &lt;form_id&gt;_&lt;optiontransferselect_doubleName&gt; respectively.
  *
  * <!-- END SNIPPET: notice -->

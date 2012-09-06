@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.struts2.convention.annotation.AnnotationTools;
 import org.apache.struts2.convention.annotation.ResultPath;
 
 import java.util.HashMap;
@@ -58,7 +58,7 @@ public class ConventionsServiceImpl implements ConventionsService {
      */
     public String determineResultPath(Class<?> actionClass) {
         String localResultPath = resultPath;
-        ResultPath resultPathAnnotation = AnnotationTools.findAnnotation(actionClass, ResultPath.class);
+        ResultPath resultPathAnnotation = AnnotationUtils.findAnnotation(actionClass, ResultPath.class);
         if (resultPathAnnotation != null) {
             if (resultPathAnnotation.value().equals("") && resultPathAnnotation.property().equals("")) {
                 throw new ConfigurationException("The ResultPath annotation must have either" +

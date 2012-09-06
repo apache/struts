@@ -15,13 +15,14 @@
  */
 package com.opensymphony.xwork2.util;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +50,7 @@ public class AnnotationUtils {
      * @param clazz
      * @param allFields
      */
-    public static void addAllFields(Class annotationClass, Class clazz, List<Field> allFields) {
+    public static void addAllFields(Class<? extends Annotation> annotationClass, Class clazz, List<Field> allFields) {
 
         if (clazz == null) {
             return;
@@ -73,7 +74,7 @@ public class AnnotationUtils {
      * @param clazz
      * @param allMethods
      */
-    public static void addAllMethods(Class annotationClass, Class clazz, List<Method> allMethods) {
+    public static void addAllMethods(Class<? extends Annotation> annotationClass, Class clazz, List<Method> allMethods) {
 
         if (clazz == null) {
             return;
@@ -116,11 +117,11 @@ public class AnnotationUtils {
 	 * @return A {@link Collection}&lt;{@link AnnotatedElement}&gt; containing all of the
 	 *  method {@link AnnotatedElement}s matching the specified {@link Annotation}s
 	 */
-	public static final Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation){
+	public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation){
 		Collection<Method> toReturn = new HashSet<Method>();
 		
 		for(Method m : clazz.getMethods()){
-			if( ArrayUtils.isNotEmpty(annotation) && isAnnotatedBy(m,annotation) ){
+			if( ArrayUtils.isNotEmpty(annotation) && isAnnotatedBy(m, annotation) ){
 				toReturn.add(m);
 			}else if( ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(m.getAnnotations())){
 				toReturn.add(m);
@@ -134,44 +135,19 @@ public class AnnotationUtils {
 	 * Varargs version of <code>AnnotatedElement.isAnnotationPresent()</code>
 	 * @see AnnotatedElement
 	 */
-	public static final boolean isAnnotatedBy(AnnotatedElement annotatedElement, Class<? extends Annotation>... annotation) {
+	public static boolean isAnnotatedBy(AnnotatedElement annotatedElement, Class<? extends Annotation>... annotation) {
 		if(ArrayUtils.isEmpty(annotation)) return false;
-		
+
 		for( Class<? extends Annotation> c : annotation ){
 			if( annotatedElement.isAnnotationPresent(c) ) return true;
 		}
-		
-		return false;
-	}    
-    
-	/**
-	 * 
-	 * @deprecated since 2.0.4 use getAnnotatedMethods
-	 */
-    @Deprecated
-    public static List<Method> findAnnotatedMethods(Class clazz, Class<? extends Annotation> annotationClass) {
-        List<Method> methods = new ArrayList<Method>();
-        findRecursively(clazz, annotationClass, methods);
-        return methods;
-    }
 
-    /**
-     * 
-     * @deprecated since 2.0.4 use getAnnotatedMethods
-     */
-    @Deprecated
-    public static void findRecursively(Class clazz, Class<? extends Annotation> annotationClass, List<Method> methods) {
-        for (Method m : clazz.getDeclaredMethods()) {
-            if (m.getAnnotation(annotationClass) != null) { methods.add(0, m); }
-        }
-        if (clazz.getSuperclass() != Object.class) {
-            findRecursively(clazz.getSuperclass(), annotationClass, methods);
-        }
-    }
+		return false;
+	}
 
     /**
      * Returns the property name for a method.
-     * This method is independant from property fields.
+     * This method is independent from property fields.
      *
      * @param method The method to get the property name for.
      * @return the property name for given method; null if non could be resolved.
@@ -193,35 +169,28 @@ public class AnnotationUtils {
         return null;
     }
 
-
     /**
-     * Retrieves all classes within a packages.
-     * TODO: this currently does not work with jars.
+     * Returns the annotation on the given class or the package of the class. This searchs up the
+     * class hierarchy and the package hierarchy for the closest match.
      *
-     * @param pckgname
-     * @return Array of full qualified class names from this package.
+     * @param   klass The class to search for the annotation.
+     * @param   annotationClass The Class of the annotation.
+     * @return  The annotation or null.
      */
-    public static String[] find(Class clazz, final String pckgname) {
-
-        List<String> classes = new ArrayList<String>();
-        String name = new String(pckgname);
-        if (!name.startsWith("/")) {
-            name = "/" + name;
-        }
-
-        name = name.replace('.', File.separatorChar);
-
-        final URL url = clazz.getResource(name);
-        final File directory = new File(url.getFile());
-
-        if (directory.exists()) {
-            final String[] files = directory.list();
-            for (String file : files) {
-                if (file.endsWith(".class")) {
-                    classes.add(pckgname + "." + file.substring(0, file.length() - 6));
+    public static <T extends Annotation> T findAnnotation(Class<?> klass, Class<T> annotationClass) {
+        T ann = klass.getAnnotation(annotationClass);
+        while (ann == null && klass != null) {
+            ann = klass.getAnnotation(annotationClass);
+            if (ann == null)
+                ann = klass.getPackage().getAnnotation(annotationClass);
+            if (ann == null) {
+                klass = klass.getSuperclass();
+                if (klass != null ) {
+                    ann = klass.getAnnotation(annotationClass);
                 }
             }
         }
-        return classes.toArray(new String[classes.size()]);
+
+        return ann;
     }
 }

@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardHelper;
 import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
@@ -50,7 +51,6 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
-import org.apache.struts2.convention.annotation.AnnotationTools;
 import org.apache.struts2.convention.annotation.DefaultInterceptorRef;
 import org.apache.struts2.convention.annotation.ExceptionMapping;
 import org.apache.struts2.convention.annotation.ExceptionMappings;
@@ -753,7 +753,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
         // Check if there is a class or package level annotation for the namespace
         //single namespace
-        Namespace namespaceAnnotation = AnnotationTools.findAnnotation(actionClass, Namespace.class);
+        Namespace namespaceAnnotation = AnnotationUtils.findAnnotation(actionClass, Namespace.class);
         if (namespaceAnnotation != null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using non-default action namespace from Namespace annotation of [#0]", namespaceAnnotation.value());
@@ -763,7 +763,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
 
         //multiple annotations
-        Namespaces namespacesAnnotation = AnnotationTools.findAnnotation(actionClass, Namespaces.class);
+        Namespaces namespacesAnnotation = AnnotationUtils.findAnnotation(actionClass, Namespaces.class);
         if (namespacesAnnotation != null) {
             if (LOG.isTraceEnabled()) {
                 StringBuilder sb = new StringBuilder();
@@ -979,7 +979,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
 
         // Next grab the parent annotation from the class
-        ParentPackage parent = AnnotationTools.findAnnotation(actionClass, ParentPackage.class);
+        ParentPackage parent = AnnotationUtils.findAnnotation(actionClass, ParentPackage.class);
         String parentName = null;
         if (parent != null) {
             if (LOG.isTraceEnabled()) {
@@ -1013,7 +1013,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             packageConfigs.put(name, pkgConfig);
 
             //check for @DefaultInterceptorRef in the package
-            DefaultInterceptorRef defaultInterceptorRef = AnnotationTools.findAnnotation(actionClass, DefaultInterceptorRef.class);
+            DefaultInterceptorRef defaultInterceptorRef = AnnotationUtils.findAnnotation(actionClass, DefaultInterceptorRef.class);
             if (defaultInterceptorRef != null) {
                 pkgConfig.defaultInterceptorRef(defaultInterceptorRef.value());
 

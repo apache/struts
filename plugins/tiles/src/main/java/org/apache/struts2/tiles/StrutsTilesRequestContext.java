@@ -21,21 +21,19 @@
 
 package org.apache.struts2.tiles;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.freemarker.FreemarkerResult;
-import org.apache.tiles.context.TilesRequestContext;
-import org.apache.tiles.context.TilesRequestContextWrapper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerResult;
+import org.apache.tiles.context.TilesRequestContext;
+import org.apache.tiles.context.TilesRequestContextWrapper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Default implementation of TilesUtil.
@@ -51,7 +49,6 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(StrutsTilesRequestContext.class);
-
 
     /**
      * The mask used to detect requests which should be intercepted.
@@ -74,14 +71,13 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
      * @param mask
      * @param context
      */
-    public StrutsTilesRequestContext(TilesRequestContext context,
-                                     String mask) {
+    public StrutsTilesRequestContext(TilesRequestContext context, String mask) {
         super(context);
         this.mask = mask;
     }
 
     public void dispatch(String include) throws IOException {
-    	if (include.endsWith(mask)) {
+    	if (include.endsWith(mask) || include.endsWith(".jsp")) {
             // FIXME This way FreeMarker results still don't have a content-type!
     	    include(include);
         } else {

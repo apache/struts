@@ -57,6 +57,7 @@
         <module>dojo</module>
         <module>rest</module>
         <module>portlet</module>
+        <module>portlet-tiles</module>
         <module>junit</module>
         <module>testng</module>
         <module>dwr</module>

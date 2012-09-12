@@ -21,11 +21,11 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -150,6 +150,25 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-4.txt"));
+    }
+
+    public void testWithJustKeyValueFromStack() throws Exception {
+        TestAction testAction = (TestAction) action;
+        final String key = "labelKey";
+        final String value = "baz";
+
+        // put key with message in a "resource"
+        testAction.setText(key, value);
+
+        LabelTag tag = new LabelTag();
+        tag.setPageContext(pageContext);
+        tag.setKey(key);
+        tag.setTheme("simple");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(LabelTest.class.getResource("Label-6.txt"));
     }
 
 }

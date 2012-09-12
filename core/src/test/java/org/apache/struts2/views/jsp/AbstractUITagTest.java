@@ -244,18 +244,6 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * @throws Exception if the validation failed
      */
     public void verify(URL url) throws Exception {
-        verify(url, null);
-    }
-
-    /**
-     * Attempt to verify the contents of this.writer against the contents of the URL specified.  verify() performs a
-     * trim on both ends
-     *
-     * @param url      the HTML snippet that we want to validate against
-     * @param excluded
-     * @throws Exception if the validation failed
-     */
-    public void verify(URL url, String[] excluded) throws Exception {
         if (url == null) {
             fail("unable to verify a null URL");
         } else if (this.writer == null) {

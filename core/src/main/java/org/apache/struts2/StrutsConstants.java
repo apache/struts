@@ -243,4 +243,7 @@ public final class StrutsConstants {
     public static final String STRUTS_CONVERTER_NUMBER = "struts.converter.number";
     public static final String STRUTS_CONVERTER_STRING = "struts.converter.string";
 
+    /** Enable handling exceptions by Dispatcher - true by default **/
+    public static final String STRUTS_HANDLE_EXCEPTION = "struts.handle.exception";
+
 }

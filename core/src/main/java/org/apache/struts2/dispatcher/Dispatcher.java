@@ -156,6 +156,12 @@ public class Dispatcher {
     private boolean paramsWorkaroundEnabled = false;
 
     /**
+     * Indicates if Dispatcher should handle exception and call sendError()
+     * Introduced to allow integration with other frameworks like Spring Security
+     */
+    private boolean handleException;
+
+    /**
      * Provide the dispatcher instance for the current thread.
      *
      * @return The dispatcher instance
@@ -252,6 +258,11 @@ public class Dispatcher {
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
+    }
+
+    @Inject(StrutsConstants.STRUTS_HANDLE_EXCEPTION)
+    public void setHandleException(String handleException) {
+        this.handleException = Boolean.parseBoolean(handleException);
     }
 
     /**
@@ -537,21 +548,24 @@ public class Dispatcher {
             }
         } catch (ConfigurationException e) {
         	// WW-2874 Only log error if in devMode
-        	if(devMode) {
+            if (devMode) {
                 String reqStr = request.getRequestURI();
                 if (request.getQueryString() != null) {
                     reqStr = reqStr + "?" + request.getQueryString();
                 }
                 LOG.error("Could not find action or result\n" + reqStr, e);
+            } else {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Could not find action or result", e);
+                }
             }
-        	else {
-                    if (LOG.isWarnEnabled()) {
-        		LOG.warn("Could not find action or result", e);
-                    }
-        	}
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
-            sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+            if (handleException || devMode) {
+                sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+            } else {
+                throw new ServletException(e);
+            }
         } finally {
             UtilTimerStack.pop(timerKey);
         }
@@ -800,8 +814,7 @@ public class Dispatcher {
      * @param e        the Exception that is reported.
      * @param ctx      the ServletContext object.
      */
-    public void sendError(HttpServletRequest request, HttpServletResponse response,
-            ServletContext ctx, int code, Exception e) {
+    public void sendError(HttpServletRequest request, HttpServletResponse response, ServletContext ctx, int code, Exception e) {
         Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
         if (devModeOverride != null ? devModeOverride : devMode) {
             response.setContentType("text/html");

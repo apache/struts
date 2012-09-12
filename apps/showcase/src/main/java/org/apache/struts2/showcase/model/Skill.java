@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.showcase.model;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.Serializable;
 
 /**
@@ -47,7 +49,7 @@ public class Skill implements IdEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(name));
     }
 
     public String getDescription() {
@@ -55,7 +57,7 @@ public class Skill implements IdEntity {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(description));
     }
 
     public Serializable getId() {

@@ -54,7 +54,7 @@ import java.util.Set;
  */
 public class JakartaMultiPartRequest implements MultiPartRequest {
 
-    static final Logger LOG = LoggerFactory.getLogger(MultiPartRequest.class);
+    static final Logger LOG = LoggerFactory.getLogger(JakartaMultiPartRequest.class);
 
     // maps parameter name -> List of FileItem objects
     protected Map<String, List<FileItem>> files = new HashMap<String, List<FileItem>>();
@@ -382,10 +382,10 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         for (String name : names) {
             List<FileItem> items = files.get(name);
             for (FileItem item : items) {
-                if (LOG.isInfoEnabled()) {
+                if (LOG.isDebugEnabled()) {
                     String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file",
                             Locale.ENGLISH, "no.message.found", new Object[]{name, item});
-                    LOG.info(msg);
+                    LOG.debug(msg);
                 }
                 if (!item.isInMemory()) {
                     item.delete();

@@ -1,0 +1,4 @@
+<tr>
+    <td class="tdLabel"><label for="foo" class="label">myemaillabel:</label></td>
+    <td><input type="email" name="foo" size="50" value="bar" id="foo"/></td>
+</tr>

@@ -21,13 +21,12 @@
 
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -67,6 +66,7 @@ public class TextField extends UIBean {
     protected String maxlength;
     protected String readonly;
     protected String size;
+    protected String type;
 
     public TextField(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -90,6 +90,11 @@ public class TextField extends UIBean {
         if (readonly != null) {
             addParameter("readonly", findValue(readonly, Boolean.class));
         }
+
+        if (type != null) {
+            addParameter("type", findString(type));
+        }
+
     }
 
     @StrutsTagAttribute(description="HTML maxlength attribute", type="Integer")
@@ -110,5 +115,10 @@ public class TextField extends UIBean {
     @StrutsTagAttribute(description="HTML size attribute",  type="Integer")
     public void setSize(String size) {
         this.size = size;
+    }
+
+    @StrutsTagAttribute(description="Specifies the html5 type element to display. e.g. text, email, url", defaultValue="text")
+    public void setType(String type) {
+        this.type = type;
     }
 }

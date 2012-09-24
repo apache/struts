@@ -20,7 +20,8 @@
  * under the License.
  */
 -->
-<input type="text"<#rt/>
+<input<#rt/>
+ type="${parameters.type?default("text")?html}"<#rt/>
  name="${parameters.name?default("")?html}"<#rt/>
 <#if parameters.get("size")??>
  size="${parameters.get("size")?html}"<#rt/>

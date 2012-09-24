@@ -21,14 +21,13 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import freemarker.template.TransformControl;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.freemarker.tags.TextFieldModel;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import freemarker.template.TransformControl;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -181,5 +180,22 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Textfield-6.txt"));
+    }
+
+    public void testHtml5EmailTag() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("myemaillabel");
+        tag.setName("foo");
+        tag.setSize("50");
+        tag.setType("email");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-7.txt"));
     }
 }

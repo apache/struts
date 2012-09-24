@@ -21,13 +21,12 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.TextField;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see TextField
@@ -39,6 +38,7 @@ public class TextFieldTag extends AbstractUITag {
     protected String maxlength;
     protected String readonly;
     protected String size;
+    protected String type;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TextField(stack, req, res);
@@ -51,6 +51,7 @@ public class TextFieldTag extends AbstractUITag {
         textField.setMaxlength(maxlength);
         textField.setReadonly(readonly);
         textField.setSize(size);
+        textField.setType(type);
     }
 
     /**
@@ -70,5 +71,9 @@ public class TextFieldTag extends AbstractUITag {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

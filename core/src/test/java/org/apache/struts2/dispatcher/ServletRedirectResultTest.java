@@ -79,6 +79,20 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         }
     }
 
+    public void testFullUrlRedirect() {
+        view.setLocation("http://localhost/bar/foo.jsp");
+        responseMock.expect("sendRedirect", C.args(C.eq("http://localhost/bar/foo.jsp")));
+
+        try {
+            view.execute(ai);
+            requestMock.verify();
+            responseMock.verify();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     public void testAbsoluteRedirect303() {
         view.setLocation("/bar/foo.jsp");
         view.setStatusCode(303);

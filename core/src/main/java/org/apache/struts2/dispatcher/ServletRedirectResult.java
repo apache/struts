@@ -250,11 +250,13 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     }
 
-    private static boolean isPathUrl(String url) {
+    private boolean isPathUrl(String url) {
         // filter out "http:", "https:", "mailto:", "file:", "ftp:"
-        // since the only valid places for : in URL's is before the path specification
-        // either before the port, or after the protocol
-        return (url.indexOf(':') == -1);
+        return !url.startsWith("http:")
+                && !url.startsWith("https:")
+                && !url.startsWith("mailto:")
+                && !url.startsWith("file:")
+                && !url.startsWith("ftp:");
     }
 
     /**

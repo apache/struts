@@ -380,10 +380,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
 	protected boolean isWithinLengthLimit( String name ) {
-		return name.length() <= paramNameMaxLength;
+        boolean matchLength = name.length() <= paramNameMaxLength;
+        if (!matchLength) {
+            notifyDeveloper("Parameter [#0] is too long, allowed length is [#1]", name, String.valueOf(paramNameMaxLength));
+        }
+        return matchLength;
 	}
 
-	protected boolean isAccepted(String paramName) {
+    protected boolean isAccepted(String paramName) {
         if (!this.acceptParams.isEmpty()) {
             for (Pattern pattern : acceptParams) {
                 Matcher matcher = pattern.matcher(paramName);
@@ -391,9 +395,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                     return true;
                 }
             }
+            notifyDeveloper("Parameter [#0] didn't match acceptParams list of patterns!", paramName);
             return false;
-        } else
-            return acceptedPattern.matcher(paramName).matches();
+        } else {
+            boolean matches = acceptedPattern.matcher(paramName).matches();
+            if (!matches) {
+                notifyDeveloper("Parameter [#0] didn't match acceptedPattern pattern!", paramName);
+            }
+            return matches;
+        }
     }
 
     protected boolean isExcluded(String paramName) {
@@ -405,7 +415,18 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 }
             }
         }
+        notifyDeveloper("Parameter [#0] is on the excludeParams list of patterns!", paramName);
         return false;
+    }
+
+    private void notifyDeveloper(String message, String... parameters) {
+        if (devMode) {
+            LOG.warn(message, parameters);
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(message, parameters);
+            }
+        }
     }
 
     /**

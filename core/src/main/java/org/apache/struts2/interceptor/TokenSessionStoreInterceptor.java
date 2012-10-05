@@ -21,19 +21,18 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.util.InvocationSessionStore;
-import org.apache.struts2.util.TokenHelper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.util.InvocationSessionStore;
+import org.apache.struts2.util.TokenHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 
 /**
@@ -105,9 +104,20 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
 
     private static final long serialVersionUID = -9032347965469098195L;
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.interceptor.TokenInterceptor#handleInvalidToken(com.opensymphony.xwork2.ActionInvocation)
-     */
+    @Override
+    protected String handleToken(ActionInvocation invocation) throws Exception {
+        //see WW-2902: we need to use the real HttpSession here, as opposed to the map
+        //that wraps the session, because a new wrap is created on every request
+        HttpSession session = ServletActionContext.getRequest().getSession(true);
+        synchronized (session) {
+            if (!TokenHelper.validToken()) {
+                return handleInvalidToken(invocation);
+            }
+            return handleValidToken(invocation);
+        }
+    }
+
+    @Override
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
 
@@ -136,9 +146,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
                 Result result = savedInvocation.getResult();
 
                 if ((result != null) && (savedInvocation.getProxy().getExecuteResult())) {
-                    synchronized (context) {
-                        result.execute(savedInvocation);
-                    }
+                    result.execute(savedInvocation);
                 }
 
                 // turn off execution of this invocations result
@@ -151,9 +159,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         return INVALID_TOKEN_CODE;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.interceptor.TokenInterceptor#handleValidToken(com.opensymphony.xwork2.ActionInvocation)
-     */
+    @Override
     protected String handleValidToken(ActionInvocation invocation) throws Exception {
         // we know the token name and token must be there
         String key = TokenHelper.getTokenName();
@@ -163,4 +169,5 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
 
         return invocation.invoke();
     }
+
 }

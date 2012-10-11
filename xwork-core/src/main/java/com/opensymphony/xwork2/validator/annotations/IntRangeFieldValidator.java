@@ -77,13 +77,19 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> min </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
- * <td class='confluenceTd'> Integer property.  The minimum the number must be. </td>
+ * <td class='confluenceTd'> Integer property. The minimum the number must be. Can be an expression. Don't use ${min} as this can turn into infinitive loop!</td>
  * </tr>
  * <tr>
  * <td class='confluenceTd'> max </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
- * <td class='confluenceTd'> Integer property.  The maximum number can be. </td>
+ * <td class='confluenceTd'> Integer property. The maximum number can be. Can be an expression. Don't use ${max} as this can turn into infinitive loop!</td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'>parse</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>false</td>
+ * <td class='confluenceTd'>Enable parsing of min/max value.</td>
  * </tr>
  * </table>
  *
@@ -97,6 +103,8 @@ import java.lang.annotation.Target;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &#64;IntRangeFieldValidator(message = "Default message", key = "i18n.key", shortCircuit = true, min = "0", max = "42")
+ *
+ * &#64;IntRangeFieldValidator(message = "Default message", key = "i18n.key", shortCircuit = true, min = "${minValue}", max = "${maxValue}" parse="true")
  * <!-- END SNIPPET: example -->
  * </pre>
  *

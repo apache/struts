@@ -40,6 +40,8 @@ public class EmailValidatorTest extends XWorkTestCase {
         assertTrue(verifyEmailValidity("tm.j'ee@yahoo.co.uk"));
         assertTrue(verifyEmailValidity("tm.j'e.e'@yahoo.co.uk"));
         assertTrue(verifyEmailValidity("tmj'ee@yahoo.com"));
+        assertTrue(verifyEmailValidity("ferda+mravenec@yahoo.com"));
+        assertTrue(verifyEmailValidity("Ferda+Mravenec@yaHoo.CoM"));
 		
 		assertFalse(verifyEmailValidity("tm_jee#marry@yahoo.co.uk"));
 		assertFalse(verifyEmailValidity("tm_jee@ yahoo.co.uk"));
@@ -48,6 +50,8 @@ public class EmailValidatorTest extends XWorkTestCase {
 		assertFalse(verifyEmailValidity("tm_jee  @yah oo.co.uk"));
 		assertFalse(verifyEmailValidity("tm_jee @ yahoo.com"));
 		assertFalse(verifyEmailValidity(" user@subname1.subname2.subname3.domainn#ame.co.uk "));
+		assertFalse(verifyEmailValidity("aaa@aa.aaaaaaa"));
+		assertFalse(verifyEmailValidity("+ferdamravenec@yahoo.com"));
 	}
 	
 	protected boolean verifyEmailValidity(final String email) throws Exception {

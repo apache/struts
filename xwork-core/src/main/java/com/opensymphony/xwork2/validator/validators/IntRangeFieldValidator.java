@@ -15,7 +15,6 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
-
 /**
  * <!-- START SNIPPET: javadoc -->
  * Field Validator that checks if the integer specified is within a certain range.
@@ -28,34 +27,49 @@ package com.opensymphony.xwork2.validator.validators;
  * 		<li>min - the minimum value (if none is specified, it will not be checked) </li>
  * 		<li>max - the maximum value (if none is specified, it will not be checked) </li>
  * </ul>
+ *
+ * The min / max value can be specified as an expression, but then you must also enable parsing it by specifying <strong>parse</strong> param
+ * as in the example below.
+ * WARNING! Do not use ${min} and ${max} as an expression as this will turn into infinitive loop!
+ *
  * <!-- END SNIPPET: parameters -->
  * 
  * 
  * <pre>
  * <!-- START SNIPPET: examples -->
- * 		&lt;validators>
- *           &lt;!-- Plain Validator Syntax --&gt;
- *           &lt;validator type="int">
- *               &lt;param name="fieldName"&gt;age&lt;/param&gt;
- *               &lt;param name="min"&gt;20&lt;/param&gt;
- *               &lt;param name="max"&gt;50&lt;/param&gt;
- *               &lt;message&gt;Age needs to be between ${min} and ${max}&lt;/message&gt;
- *           &lt;/validator&gt;
- *           
- *           &lt;!-- Field Validator Syntax --&gt;
- *           &lt;field name="age"&gt;
- *               &lt;field-validator type="int"&gt;
- *                   &lt;param name="min"&gt;20&lt;/param&gt;
- *                   &lt;param name="max"&gt;50&lt;/param&gt;
- *                   &lt;message&gt;Age needs to be between ${min} and ${max}&lt;/message&gt;
- *               &lt;/field-validator&gt;
- *           &lt;/field&gt;
- *      &lt;/validators&gt;
+ *	&lt;validators>
+ *      &lt;!-- Plain Validator Syntax --&gt;
+ *      &lt;validator type="int">
+ *          &lt;param name="fieldName"&gt;age&lt;/param&gt;
+ *          &lt;param name="min"&gt;20&lt;/param&gt;
+ *          &lt;param name="max"&gt;50&lt;/param&gt;
+ *          &lt;message&gt;Age needs to be between ${min} and ${max}&lt;/message&gt;
+ *      &lt;/validator&gt;
+ *
+ *      &lt;!-- Field Validator Syntax --&gt;
+ *      &lt;field name="age"&gt;
+ *          &lt;field-validator type="int"&gt;
+ *              &lt;param name="min"&gt;20&lt;/param&gt;
+ *              &lt;param name="max"&gt;50&lt;/param&gt;
+ *              &lt;message&gt;Age needs to be between ${min} and ${max}&lt;/message&gt;
+ *          &lt;/field-validator&gt;
+ *      &lt;/field&gt;
+ *
+ *      &lt;!-- Field Validator Syntax with expression --&gt;
+ *      &lt;field name="age"&gt;
+ *          &lt;field-validator type="int"&gt;
+ *              &lt;param name="parse"&gt;true&lt;/param&gt;
+ *              &lt;param name="${minValue}"&gt;20&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinValue() --&gt;
+ *              &lt;param name="${maxValue}"&gt;50&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxValue() --&gt;
+ *              &lt;message&gt;Age needs to be between ${min} and ${max}&lt;/message&gt;
+ *          &lt;/field-validator&gt;
+ *      &lt;/field&gt;
+ * &lt;/validators&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
  * 
- * 
- * 
+ *
+ *
  * @author Jason Carreira
  * @version $Date$ $Id$
  */

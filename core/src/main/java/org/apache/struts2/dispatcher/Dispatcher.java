@@ -76,6 +76,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -820,8 +822,6 @@ public class Dispatcher {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Exception occurred during processing request: #0", e, e.getMessage());
             }
-            response.setContentType("text/html");
-
             try {
                 FreemarkerManager mgr = getContainer().getInstance(FreemarkerManager.class);
 
@@ -840,14 +840,19 @@ public class Dispatcher {
                 data.put("unknown", Location.UNKNOWN);
                 data.put("chain", chain);
                 data.put("locator", new Locator());
-                template.process(data, response.getWriter());
+
+                Writer writer = new StringWriter();
+                template.process(data, writer);
+
+                response.setContentType("text/html");
+                response.getWriter().write(writer.toString());
                 response.getWriter().close();
             } catch (Exception exp) {
                 try {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Cannot show problem report!", exp);
                     }
-                    response.sendError(code, "Unable to show problem report: " + exp);
+                    response.sendError(code, "Unable to show problem report:\n" + exp + "\n\n" + LocationUtils.getLocation(exp));
                 } catch (IOException ex) {
                     // we're already sending an error, not much else we can do if more stuff breaks
                 }

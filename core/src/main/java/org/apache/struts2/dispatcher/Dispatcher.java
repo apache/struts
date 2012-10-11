@@ -817,6 +817,9 @@ public class Dispatcher {
     public void sendError(HttpServletRequest request, HttpServletResponse response, ServletContext ctx, int code, Exception e) {
         Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
         if (devModeOverride != null ? devModeOverride : devMode) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Exception occurred during processing request: #0", e, e.getMessage());
+            }
             response.setContentType("text/html");
 
             try {
@@ -841,6 +844,9 @@ public class Dispatcher {
                 response.getWriter().close();
             } catch (Exception exp) {
                 try {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Cannot show problem report!", exp);
+                    }
                     response.sendError(code, "Unable to show problem report: " + exp);
                 } catch (IOException ex) {
                     // we're already sending an error, not much else we can do if more stuff breaks
@@ -848,6 +854,9 @@ public class Dispatcher {
             }
         } else {
             try {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Exception occurred during processing request: #0", e, e.getMessage());
+                }
                 // WW-1977: Only put errors in the request when code is a 500 error
                 if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
                     // send a http error response to use the servlet defined error handler

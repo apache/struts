@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  * <li>input: renders as html &lt;input type="reset"...&gt;</li>
  * <li>button: renders as html &lt;button type="reset"...&gt;</li>
  * </ul>
- * Please note that the button type has advantages by adding the possibility to seperate the submitted value from the
+ * Please note that the button type has advantages by adding the possibility to separate the submitted value from the
  * text shown on the button face, but has issues with Microsoft Internet Explorer at least up to 6.0
  * <!-- END SNIPPET: javadoc -->
  *
@@ -50,7 +50,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
- * Render an button reset:
+ * Render a reset button:
  * &lt;s:reset type="button" key="reset"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
@@ -85,12 +85,8 @@ public class Reset extends FormButton {
     }
 
     public void evaluateParams() {
-        if ((key == null) && (value == null)) {
-            value = "Reset";
-        }
-
-        if (((key != null)) && (value == null)) {
-            this.value = "%{getText('"+key +"')}";
+        if (value == null) {
+            value = (key != null ? "%{getText('"+key+"')}" : "Reset");
         }
         super.evaluateParams();
     }
@@ -98,7 +94,7 @@ public class Reset extends FormButton {
     /**
      * Indicate whether the concrete button supports the type "image".
      *
-     * @return <tt>false</tt> to indicate type image is supported.
+     * @return <tt>false</tt> to indicate type image is not supported.
      */
     protected boolean supportsImageType() {
         return false;

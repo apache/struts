@@ -99,9 +99,9 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "int">
             if (continueValidation && field.value != null) {
                 if (<#if validator.min??>parseInt(field.value) <
-                     ${validator.min?c}<#else>false</#if> ||
+                     ${validator.min}<#else>false</#if> ||
                         <#if validator.max??>parseInt(field.value) >
-                           ${validator.max?c}<#else>false</#if>) {
+                           ${validator.max}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                     <#if validator.shortCircuit>continueValidation = false;</#if>

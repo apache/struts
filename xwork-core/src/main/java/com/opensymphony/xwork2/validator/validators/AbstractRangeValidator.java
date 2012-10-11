@@ -24,11 +24,11 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * @author Jason Carreira
  * @author Cameron Braid
  */
-public abstract class AbstractRangeValidator extends FieldValidatorSupport {
+public abstract class AbstractRangeValidator<T extends Comparable> extends FieldValidatorSupport {
 
     public void validate(Object object) throws ValidationException {
         Object obj = getFieldValue(getFieldName(), object);
-        Comparable value = (Comparable) obj;
+        Comparable<T> value = (Comparable<T>) obj;
 
         // if there is no value - don't do comparison
         // if a value is required, a required validator should be added to the field
@@ -37,17 +37,28 @@ public abstract class AbstractRangeValidator extends FieldValidatorSupport {
         }
 
         // only check for a minimum value if the min parameter is set
-        if ((getMinComparatorValue() != null) && (value.compareTo(getMinComparatorValue()) < 0)) {
+        T minComparatorValue = getMinComparatorValue();
+        if ((minComparatorValue != null) && (value.compareTo(minComparatorValue) < 0)) {
             addFieldError(getFieldName(), object);
         }
 
         // only check for a maximum value if the max parameter is set
-        if ((getMaxComparatorValue() != null) && (value.compareTo(getMaxComparatorValue()) > 0)) {
+        T maxComparatorValue = getMaxComparatorValue();
+        if ((maxComparatorValue != null) && (value.compareTo(maxComparatorValue) > 0)) {
             addFieldError(getFieldName(), object);
         }
     }
 
-    protected abstract Comparable getMaxComparatorValue();
+    protected abstract T getMaxComparatorValue();
 
-    protected abstract Comparable getMinComparatorValue();
+    protected abstract T getMinComparatorValue();
+
+    protected String safeConditionalParse(String expression) {
+        Object value = conditionalParse(expression);
+        if (value != null) {
+            return value.toString();
+        } else {
+            return null;
+        }
+    }
 }

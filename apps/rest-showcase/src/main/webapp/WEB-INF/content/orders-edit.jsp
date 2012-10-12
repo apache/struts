@@ -1,27 +1,55 @@
-<!DOCTYPE html PUBLIC 
-	"-//W3C//DTD XHTML 1.1 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
+<!DOCTYPE html>
 <%@taglib prefix="s" uri="/struts-tags" %>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html lang="en">
 <head>
-	<title>Order <s:property value="id" /></title>
+    <meta charset="utf-8">
+    <title>Order <s:property value="id" /></title>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
 <body>
-    <s:form method="post" action="%{#request.contextPath}/orders/%{id}">
-    <s:hidden name="_method" value="put" />
-    <table>
-        <s:textfield name="id" label="ID" disabled="true"/>
-        <s:textfield name="clientName" label="Client"/>
-        <s:textfield name="amount" label="Amount" />
-        <tr>
-            <td colspan="2">
-                <s:submit />
-            </td>
-    </table>
-    </s:form>    	
-    <a href="<%=request.getContextPath() %>/orders">Back to Orders</a>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+
+	        <div class="page-header">
+		        <h1>Order <s:property value="id" /></h1>
+	        </div>
+
+	        <s:fielderror  cssClass="alert alert-error"/>
+
+            <s:form method="post" action="%{#request.contextPath}/orders/%{id}" cssClass="form-horizontal" theme="simple">
+                <s:hidden name="_method" value="put" />
+                <div class="control-group">
+                    <label class="control-label" for="id">ID</label>
+                    <div class="controls">
+                        <s:textfield id="id" name="id" disabled="true"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="clientName">Client</label>
+                    <div class="controls">
+                        <s:textfield id="clientName" name="clientName"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="amount">Amount</label>
+                    <div class="controls">
+                        <s:textfield id="amount" name="amount" />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <s:submit cssClass="btn btn-primary"/>
+                </div>
+                <table>
+            </s:form>
+	        <a href="${pageContext.request.contextPath}/orders" class="btn btn-info">
+		        <i class="icon icon-arrow-left"></i> Back to Orders
+	        </a>
+        </div><!--/row-->
+    </div><!--/span-->
+</div><!--/row-->
 </body>
 </html>
 	

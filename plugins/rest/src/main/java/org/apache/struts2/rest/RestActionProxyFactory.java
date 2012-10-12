@@ -44,7 +44,9 @@ public class RestActionProxyFactory extends DefaultActionProxyFactory {
     }
 
     @Override
-    public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map extraContext, boolean executeResult, boolean cleanupContext) {
+    public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext,
+                                         boolean executeResult, boolean cleanupContext)
+    {
         if (this.namespace == null || namespace.startsWith(this.namespace)) {
             ActionInvocation inv = new RestActionInvocation(extraContext, true);
             container.inject(inv);

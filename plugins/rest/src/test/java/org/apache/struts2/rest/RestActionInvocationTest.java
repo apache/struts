@@ -93,7 +93,7 @@ public class RestActionInvocationTest extends TestCase {
 		String actionMessage = "Error!";
 		RestActionSupport action = (RestActionSupport)restActionInvocation.getAction();
 		action.addActionError(actionMessage);
-		Map errors = new HashMap();
+		Map<String, Object> errors = new HashMap<String, Object>();
 		List<String> list = new ArrayList<String>();
 		list.add(actionMessage);
     	errors.put("actionErrors", list);
@@ -236,7 +236,7 @@ public class RestActionInvocationTest extends TestCase {
 
     class RestActionInvocationTester extends RestActionInvocation {
     	RestActionInvocationTester() {
-            super(new HashMap<String,String>(), true);
+            super(new HashMap<String, Object>(), true);
             List<InterceptorMapping> interceptorMappings = new ArrayList<InterceptorMapping>();
             MockInterceptor mockInterceptor = new MockInterceptor();
             mockInterceptor.setFoo("interceptor");

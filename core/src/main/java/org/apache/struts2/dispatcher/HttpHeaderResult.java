@@ -21,19 +21,16 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -130,7 +127,7 @@ public class HttpHeaderResult implements Result {
      *
      * @return a Map of all HTTP headers.
      */
-    public Map getHeaders() {
+    public Map<String, String> getHeaders() {
         return headers;
     }
 
@@ -154,10 +151,14 @@ public class HttpHeaderResult implements Result {
         this.status = status;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
     /**
      * Adds an HTTP header to the response
-     * @param name
-     * @param value
+     * @param name header name
+     * @param value header value
      */
     public void addHeader(String name, String value) {
         headers.put(name, value);
@@ -186,9 +187,8 @@ public class HttpHeaderResult implements Result {
         }
 
         if (headers != null) {
-            for (Iterator iterator = headers.entrySet().iterator();
-                 iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
+            for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
+                Map.Entry entry = (Map.Entry) stringStringEntry;
                 String value = (String) entry.getValue();
                 String finalValue = parse ? TextParseUtil.translateVariables(value, stack) : value;
                 response.addHeader((String) entry.getKey(), finalValue);

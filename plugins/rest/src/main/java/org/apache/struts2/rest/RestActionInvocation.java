@@ -41,7 +41,6 @@ import org.apache.struts2.rest.handler.HtmlHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,13 +66,13 @@ public class RestActionInvocation extends DefaultActionInvocation {
     protected boolean isFirstInterceptor = true;
     protected boolean hasErrors;
 
-    protected RestActionInvocation(Map extraContext, boolean pushAction) {
+    protected RestActionInvocation(final Map<String, Object> extraContext, boolean pushAction) {
         super(extraContext, pushAction);
     }
 
     @Inject("struts.rest.logger")
     public void setLogger(String value) {
-        logger = new Boolean(value);
+        logger = Boolean.valueOf(value);
     }
 
     @Inject("struts.rest.defaultErrorResultName")
@@ -99,7 +98,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
 
     /**
      * Save the result to be used later.
-     * @param actionConfig
+     * @param actionConfig current ActionConfig
      * @param methodResult the result of the action.
      * @return the result code to process.
      *
@@ -250,26 +249,13 @@ public class RestActionInvocation extends DefaultActionInvocation {
     }
 
     /**
-     * Get the status code from HttpHeaderResult
-     * and it is saved in the HttpHeaders object.
-     * @throws Exception
+     * Get the status code from HttpHeaderResult and it is saved in the HttpHeaders object.
      */
-    private void updateStatusFromResult() {
-
-        if (this.result instanceof HttpHeaderResult) {
-            try {
-                Field field = result.getClass().getDeclaredField("status");
-                if (field != null) {
-                    field.setAccessible(true);
-                    int status = (Integer)field.get(result);
-                    if (status != -1) {
-                        this.httpHeaders.setStatus(status);
-                    }
-                }
-            } catch (Exception e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(e.getMessage(), e);
-                }
+    protected void updateStatusFromResult() {
+        if (result instanceof HttpHeaderResult) {
+            int status = ((HttpHeaderResult) result).getStatus();
+            if (status != -1) {
+                httpHeaders.setStatus(status);
             }
         }
     }
@@ -284,7 +270,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
     private void findResult() throws Exception {
 
         boolean isHttpHeaderResult = false;
-        if (result != null && this.result instanceof HttpHeaderResult) {
+        if (result != null && result instanceof HttpHeaderResult) {
             result = null;
             isHttpHeaderResult = true;
         }
@@ -297,15 +283,14 @@ public class RestActionInvocation extends DefaultActionInvocation {
                     invocationContext, proxy.getActionName(), proxy.getConfig(), resultCode);
         }
 
-        if (this.result == null && this.hasErrors && defaultErrorResultName != null) {
+        if (result == null && hasErrors && defaultErrorResultName != null) {
 
             // Get default error result
-            ResultConfig resultConfig = this.proxy.getConfig().getResults()
-                .get(defaultErrorResultName);
+            ResultConfig resultConfig = this.proxy.getConfig().getResults().get(defaultErrorResultName);
             if (resultConfig != null) {
                 this.result = objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
                 if (LOG.isDebugEnabled()) {
-                LOG.debug("Found default error result.");
+                    LOG.debug("Found default error result.");
                 }
             }
         }
@@ -397,9 +382,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
              message += "] took " + total + " ms (execution: " + executionTime
                 + " ms, result: " + processResult + " ms)";
 
-             if (LOG.isInfoEnabled()) {
              LOG.info(message);
-             }
          }
     }
 

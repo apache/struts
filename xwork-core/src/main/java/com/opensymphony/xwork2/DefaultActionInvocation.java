@@ -15,7 +15,6 @@
  */
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
@@ -75,7 +74,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected ActionEventListener actionEventListener;
     protected ValueStackFactory valueStackFactory;
     protected Container container;
-    private Configuration configuration;
     protected UnknownHandlerManager unknownHandlerManager;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
@@ -91,11 +89,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     @Inject
     public void setValueStackFactory(ValueStackFactory fac) {
         this.valueStackFactory = fac;
-    }
-
-    @Inject
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
     }
 
     @Inject
@@ -182,7 +175,7 @@ public class DefaultActionInvocation implements ActionInvocation {
      * Result is executed. The ActionInvocation implementation must guarantee that listeners will be called in the order
      * in which they are registered. Listener registration and execution does not need to be thread-safe.
      *
-     * @param listener
+     * @param listener to register
      */
     public void addPreResultListener(PreResultListener listener) {
         if (preResultListeners == null) {
@@ -242,7 +235,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             }
 
             if (interceptors.hasNext()) {
-                final InterceptorMapping interceptor = (InterceptorMapping) interceptors.next();
+                final InterceptorMapping interceptor = interceptors.next();
                 String interceptorMsg = "interceptor: " + interceptor.getName();
                 UtilTimerStack.push(interceptorMsg);
                 try {
@@ -303,7 +296,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         } catch (IllegalAccessException e) {
             throw new XWorkException("Illegal access to constructor, is it public?", e, proxy.getConfig());
         } catch (Exception e) {
-            String gripe = "";
+            String gripe;
 
             if (proxy == null) {
                 gripe = "Whoa!  No ActionProxy instance found in current ActionInvocation.  This is bad ... very bad";
@@ -478,7 +471,7 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     /**
      * Save the result to be used later.
-     * @param actionConfig
+     * @param actionConfig current ActionConfig
      * @param methodResult the result of the action.
      * @return the result code to process.
      */

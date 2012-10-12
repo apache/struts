@@ -21,25 +21,19 @@
 
 package org.apache.struts2.rest;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.rest.handler.ContentTypeHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.rest.handler.ContentTypeHandler;
-
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Manages {@link ContentTypeHandler} instances and uses them to
@@ -52,7 +46,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
     /** ContentTypeHandlers keyed by the content-type */
     Map<String,ContentTypeHandler> handlersByContentType = new HashMap<String,ContentTypeHandler>();
 
-    String defaultExtension;
+    private String defaultExtension;
 
     @Inject("struts.rest.defaultExtension")
     public void setDefaultExtension(String name) {
@@ -126,15 +120,14 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
      * @return The new result code to process
      * @throws IOException If unable to write to the response
      */
-    public String handleResult(ActionConfig actionConfig, Object methodResult, Object target)
-            throws IOException {
-        String resultCode = null;
+    public String handleResult(ActionConfig actionConfig, Object methodResult, Object target) throws IOException {
+        String resultCode = readResultCode(methodResult);
         HttpServletRequest req = ServletActionContext.getRequest();
         HttpServletResponse res = ServletActionContext.getResponse();
-		
+
         ContentTypeHandler handler = getHandlerForResponse(req, res);
         if (handler != null) {
-            String extCode = resultCode+"-"+handler.getExtension();
+            String extCode = resultCode + "." + handler.getExtension();
             if (actionConfig.getResults().get(extCode) != null) {
                 resultCode = extCode;
             } else {
@@ -151,9 +144,19 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
             }
         }
         return resultCode;
-        
     }
-    
+
+    protected String readResultCode(Object methodResult) {
+        if (methodResult == null) {
+            return null;
+        }
+        if (methodResult instanceof HttpHeaders) {
+            return ((HttpHeaders) methodResult).getResultCode();
+        } else {
+            return methodResult.toString();
+        }
+    }
+
     /**
      * Finds the extension in the url
      * 

@@ -17,6 +17,9 @@
     <constant name="struts.convention.package.locators.basePackage" value="org.apache.struts2.showcase.person" />
     <constant name="struts.convention.result.path" value="/" />
 
+    <!-- Necessary for Showcase because default includes org.apache.struts2.* -->
+    <constant name="struts.convention.exclude.packages" value="org.apache.struts.*,org.springframework.web.struts.*,org.springframework.web.struts2.*,org.hibernate.*"/>
+
     <constant name="struts.freemarker.manager.classname" value="customFreemarkerManager" />
     <constant name="struts.serve.static" value="true" />
     <constant name="struts.serve.static.browserCache" value="false" />

@@ -3,8 +3,12 @@ package com.opensymphony.xwork2.validator.validators;
 public class ValidationAction {
 
     private Integer intRange;
-    private Integer minValue;
-    private Integer maxValue;
+    private Integer intMinValue;
+    private Integer intMaxValue;
+
+    private Short shortRange;
+    private Short shortMinValue;
+    private Short shortMaxValue;
 
     public Integer getIntRange() {
         return intRange;
@@ -14,19 +18,43 @@ public class ValidationAction {
         this.intRange = intRange;
     }
 
-    public Integer getMinValue() {
-        return minValue;
+    public Integer getIntMinValue() {
+        return intMinValue;
     }
 
-    public void setMinValue(Integer minValue) {
-        this.minValue = minValue;
+    public void setIntMinValue(Integer intMinValue) {
+        this.intMinValue = intMinValue;
     }
 
-    public Integer getMaxValue() {
-        return maxValue;
+    public Integer getIntMaxValue() {
+        return intMaxValue;
     }
 
-    public void setMaxValue(Integer maxValue) {
-        this.maxValue = maxValue;
+    public void setIntMaxValue(Integer intMaxValue) {
+        this.intMaxValue = intMaxValue;
+    }
+
+    public Short getShortRange() {
+        return shortRange;
+    }
+
+    public void setShortRange(Short shortRange) {
+        this.shortRange = shortRange;
+    }
+
+    public Short getShortMinValue() {
+        return shortMinValue;
+    }
+
+    public void setShortMinValue(Short shortMinValue) {
+        this.shortMinValue = shortMinValue;
+    }
+
+    public Short getShortMaxValue() {
+        return shortMaxValue;
+    }
+
+    public void setShortMaxValue(Short shortMaxValue) {
+        this.shortMaxValue = shortMaxValue;
     }
 }

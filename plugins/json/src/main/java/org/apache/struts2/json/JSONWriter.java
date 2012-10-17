@@ -29,6 +29,7 @@ import org.apache.struts2.json.bridge.FieldBridge;
 import org.apache.struts2.json.bridge.ParameterizedBridge;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
@@ -38,6 +39,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
 /**
@@ -51,13 +54,17 @@ public class JSONWriter {
     private static final Logger LOG = LoggerFactory.getLogger(JSONWriter.class);
 
     /**
-     * By default, enums are serialzied as name=value pairs
+     * By default, enums are serialised as name=value pairs
      */
     public static final boolean ENUM_AS_BEAN_DEFAULT = false;
 
-    static char[] hex = "0123456789ABCDEF".toCharArray();
+    private static char[] hex = "0123456789ABCDEF".toCharArray();
+
+    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE_IGNORE_HIERARCHY = new ConcurrentHashMap<Class<?>, BeanInfo>();
+    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE = new ConcurrentHashMap<Class<?>, BeanInfo>();
+
     private StringBuilder buf = new StringBuilder();
-    private Stack stack = new Stack();
+    private Stack<Object> stack = new Stack<Object>();
     private boolean ignoreHierarchy = true;
     private Object root;
     private boolean buildExpr = true;
@@ -182,8 +189,9 @@ public class JSONWriter {
         try {
             Class clazz = object.getClass();
 
-            info = ((object == this.root) && this.ignoreHierarchy) ? Introspector.getBeanInfo(clazz, clazz
-                    .getSuperclass()) : Introspector.getBeanInfo(clazz);
+            info = ((object == this.root) && this.ignoreHierarchy)
+                    ? getBeanInfoIgnoreHierarchy(clazz)
+                    : getBeanInfo(clazz);
 
             PropertyDescriptor[] props = info.getPropertyDescriptors();
 
@@ -241,6 +249,26 @@ public class JSONWriter {
         this.add("}");
     }
 
+    protected BeanInfo getBeanInfoIgnoreHierarchy(final Class<?> clazz) throws IntrospectionException {
+        BeanInfo beanInfo = BEAN_INFO_CACHE_IGNORE_HIERARCHY.get(clazz);
+        if (beanInfo != null) {
+            return beanInfo;
+        }
+        beanInfo = Introspector.getBeanInfo(clazz, clazz.getSuperclass());
+        BEAN_INFO_CACHE_IGNORE_HIERARCHY.put(clazz, beanInfo);
+        return beanInfo;
+    }
+
+    protected BeanInfo getBeanInfo(final Class<?> clazz) throws IntrospectionException {
+        BeanInfo beanInfo = BEAN_INFO_CACHE.get(clazz);
+        if (beanInfo != null) {
+            return beanInfo;
+        }
+        beanInfo = Introspector.getBeanInfo(clazz);
+        BEAN_INFO_CACHE.put(clazz, beanInfo);
+        return beanInfo;
+    }
+
     protected Object getBridgedValue(Method baseAccessor, Object value) throws InstantiationException, IllegalAccessException {
         JSONFieldBridge fieldBridgeAnn = baseAccessor.getAnnotation(JSONFieldBridge.class);
         if (fieldBridgeAnn != null) {
@@ -261,7 +289,7 @@ public class JSONWriter {
 
     protected Method findBaseAccessor(Class clazz, Method accessor) {
         Method baseAccessor = null;
-        if (clazz.getName().indexOf("$$EnhancerByCGLIB$$") > -1) {
+        if (clazz.getName().contains("$$EnhancerByCGLIB$$")) {
             try {
                 baseAccessor = Thread.currentThread().getContextClassLoader().loadClass(
                         clazz.getName().substring(0, clazz.getName().indexOf("$$"))).getMethod(
@@ -269,7 +297,7 @@ public class JSONWriter {
             } catch (Exception ex) {
                 LOG.debug(ex.getMessage(), ex);
             }
-        } else if (clazz.getName().indexOf("$$_javassist") > -1) {
+        } else if (clazz.getName().contains("$$_javassist")) {
             try {
                 baseAccessor = Class.forName(
                         clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
@@ -295,13 +323,12 @@ public class JSONWriter {
         }
     }
 
-    protected boolean shouldExcludeProperty(PropertyDescriptor prop) throws SecurityException,
-            NoSuchFieldException {
+    protected boolean shouldExcludeProperty(PropertyDescriptor prop) throws SecurityException, NoSuchFieldException {
         String name = prop.getName();
-
-        return name.equals("class") || name.equals("declaringClass") || name.equals("cachedSuperClass")
+        return name.equals("class")
+                || name.equals("declaringClass")
+                || name.equals("cachedSuperClass")
                 || name.equals("metaClass");
-
     }
 
     protected String expandExpr(int i) {
@@ -309,8 +336,9 @@ public class JSONWriter {
     }
 
     protected String expandExpr(String property) {
-        if (this.exprStack.length() == 0)
+        if (this.exprStack.length() == 0) {
             return property;
+        }
         return this.exprStack + "." + property;
     }
 
@@ -324,8 +352,9 @@ public class JSONWriter {
         if (this.excludeProperties != null) {
             for (Pattern pattern : this.excludeProperties) {
                 if (pattern.matcher(expr).matches()) {
-                    if (LOG.isDebugEnabled())
+                    if (LOG.isDebugEnabled()) {
                         LOG.debug("Ignoring property because of exclude rule: " + expr);
+                    }
                     return true;
                 }
             }
@@ -337,12 +366,11 @@ public class JSONWriter {
                     return false;
                 }
             }
-
-            if (LOG.isDebugEnabled())
+            if (LOG.isDebugEnabled()){
                 LOG.debug("Ignoring property because of include rule:  " + expr);
+            }
             return true;
         }
-
         return false;
     }
 
@@ -353,7 +381,6 @@ public class JSONWriter {
         if (excludeNullProperties && value == null) {
             return false;
         }
-
         if (hasData) {
             this.add(',');
         }
@@ -591,7 +618,7 @@ public class JSONWriter {
             this.accessor = accessor;
         }
 
-        boolean shouldSerialize() {
+        public boolean shouldSerialize() {
             return serialize;
         }
 
@@ -609,4 +636,5 @@ public class JSONWriter {
             return this;
         }
     }
+
 }

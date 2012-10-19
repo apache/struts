@@ -1,12 +1,18 @@
-
 <html>
 <head>
-	<title>Showcase - Freemarker - CustomFreemarkerManager Usage</title>
+	<title>Struts2 Showcase - Freemarker - CustomFreemarkerManager Usage</title>
 </head>
 <body>
+
+<div class="page-header">
 	<h1>Custom Freemarker Manager Usage</h1>
-	
-	<p/>
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+
+		<p>
 	This page shows a simple example of using a custom freemarker manager.
 	The custom freemarker manager put into freemarker model an util classed 
 	under the name 'customFreemarkerManagerUtil'. so one could use
@@ -20,7 +26,9 @@
 	 
 	 Today's Date = <span id="todaysDate">${customFreemarkerManagerUtil.todayDate}</span><br/>
 	 Time now =  <span id="timeNow">${customFreemarkerManagerUtil.getTimeNow()}</span><br/>
-
+		</div>
+	</div>
+</div>
 </body>
 </html>
 

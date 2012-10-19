@@ -123,5 +123,14 @@
 			<result type="freemarker">/tags/non-ui/ifTag/testIf.ftl</result>
 		</action>
 	</package>
+
+    <!--  ========================================== -->
+    <!--  === Package for Debug Tag              === -->
+    <!--  ========================================== -->
+    <package name="debugTagPackage" extends="struts-default" namespace="/tags/non-ui">
+        <action name="debugTagDemo">
+            <result>/tags/non-ui/debug.jsp</result>
+        </action>
+    </package>
 </struts>
 

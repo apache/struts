@@ -20,6 +20,12 @@
  */
 package org.apache.struts2.showcase.source;
 
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.util.ServletContextAware;
+
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,211 +35,201 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.util.ServletContextAware;
-
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-
 /**
  * Processes configuration, page, and action class paths to create snippets
  * of the files for display.
  */
 public class ViewSourceAction extends ActionSupport implements ServletContextAware {
 
-    private String page;
-    private String className;
-    private String config;
+	private String page;
+	private String className;
+	private String config;
 
-    private List pageLines;
-    private List classLines;
-    private List configLines;
+	private List pageLines;
+	private List classLines;
+	private List configLines;
 
-    private int configLine;
-    private int padding = 10;
+	private int configLine;
+	private int padding = 10;
 
-    private ServletContext servletContext;
+	private ServletContext servletContext;
 
-    public String execute() throws MalformedURLException, IOException {
+	public String execute() throws MalformedURLException, IOException {
 
-        if (page != null) {
+		if (page != null) {
 
-            InputStream in = ClassLoaderUtil.getResourceAsStream(page.substring(page.indexOf("//")+1), getClass());
-            page = page.replace("//", "/");
+			InputStream in = ClassLoaderUtil.getResourceAsStream(page.substring(page.indexOf("//") + 1), getClass());
+			page = page.replace("//", "/");
 
-            if (in == null) {
-                in = servletContext.getResourceAsStream(page);
-                while (in == null && page.indexOf('/', 1) > 0) {
-                    page = page.substring(page.indexOf('/', 1));
-                    in = servletContext.getResourceAsStream(page);
-                }
-            }
-            pageLines = read(in, -1);
+			if (in == null) {
+				in = servletContext.getResourceAsStream(page);
+				while (in == null && page.indexOf('/', 1) > 0) {
+					page = page.substring(page.indexOf('/', 1));
+					in = servletContext.getResourceAsStream(page);
+				}
+			}
+			pageLines = read(in, -1);
 
-            if (in != null) {
-                in.close();
-            }
-        }
+			if (in != null) {
+				in.close();
+			}
+		}
 
-        if (className != null) {
-            className = "/"+className.replace('.', '/') + ".java";
-            InputStream in = getClass().getResourceAsStream(className);
-            if (in == null) {
-                in = servletContext.getResourceAsStream("/WEB-INF/src"+className);
-            }
-            classLines = read(in, -1);
+		if (className != null) {
+			className = "/" + className.replace('.', '/') + ".java";
+			InputStream in = getClass().getResourceAsStream(className);
+			if (in == null) {
+				in = servletContext.getResourceAsStream("/WEB-INF/src" + className);
+			}
+			classLines = read(in, -1);
 
-            if (in != null) {
-                in.close();
-            }
-        }
+			if (in != null) {
+				in.close();
+			}
+		}
 
-        String rootPath = ServletActionContext.getServletContext().getRealPath("/");
-                
-        if (config != null && (rootPath == null || config.startsWith(rootPath))) {
-            int pos = config.lastIndexOf(':');
-            configLine = Integer.parseInt(config.substring(pos+1));
-            config = config.substring(0, pos).replace("//", "/");
-            configLines = read(new URL(config).openStream(), configLine);
-        }
-        return SUCCESS;
-    }
+		String rootPath = ServletActionContext.getServletContext().getRealPath("/");
 
-
-    /**
-     * @param className the className to set
-     */
-    public void setClassName(String className) {
-        if (className != null && className.trim().length()>0) {
-            this.className = className;
-        }
-    }
-
-    /**
-     * @param config the config to set
-     */
-    public void setConfig(String config) {
-        if (config != null && config.trim().length()>0) {
-            this.config = config;
-        }
-    }
-
-    /**
-     * @param page the page to set
-     */
-    public void setPage(String page) {
-        if (page != null && page.trim().length()>0) {
-            this.page = page;
-        }
-    }
-
-    /**
-     * @param padding the padding to set
-     */
-    public void setPadding(int padding) {
-        this.padding = padding;
-    }
+		if (config != null && (rootPath == null || config.startsWith(rootPath))) {
+			int pos = config.lastIndexOf(':');
+			configLine = Integer.parseInt(config.substring(pos + 1));
+			config = config.substring(0, pos).replace("//", "/");
+			configLines = read(new URL(config).openStream(), configLine);
+		}
+		return SUCCESS;
+	}
 
 
+	/**
+	 * @param className the className to set
+	 */
+	public void setClassName(String className) {
+		if (className != null && className.trim().length() > 0) {
+			this.className = className;
+		}
+	}
 
-    /**
-     * @return the classLines
-     */
-    public List getClassLines() {
-        return classLines;
-    }
+	/**
+	 * @param config the config to set
+	 */
+	public void setConfig(String config) {
+		if (config != null && config.trim().length() > 0) {
+			this.config = config;
+		}
+	}
 
-    /**
-     * @return the configLines
-     */
-    public List getConfigLines() {
-        return configLines;
-    }
+	/**
+	 * @param page the page to set
+	 */
+	public void setPage(String page) {
+		if (page != null && page.trim().length() > 0) {
+			this.page = page;
+		}
+	}
 
-    /**
-     * @return the pageLines
-     */
-    public List getPageLines() {
-        return pageLines;
-    }
+	/**
+	 * @param padding the padding to set
+	 */
+	public void setPadding(int padding) {
+		this.padding = padding;
+	}
 
-    /**
-     * @return the className
-     */
-    public String getClassName() {
-        return className;
-    }
 
-    /**
-     * @return the config
-     */
-    public String getConfig() {
-        return config;
-    }
+	/**
+	 * @return the classLines
+	 */
+	public List getClassLines() {
+		return classLines;
+	}
 
-    /**
-     * @return the page
-     */
-    public String getPage() {
-        return page;
-    }
+	/**
+	 * @return the configLines
+	 */
+	public List getConfigLines() {
+		return configLines;
+	}
 
-    /**
-     * @return the configLine
-     */
-    public int getConfigLine() {
-        return configLine;
-    }
+	/**
+	 * @return the pageLines
+	 */
+	public List getPageLines() {
+		return pageLines;
+	}
 
-    /**
-     * @return the padding
-     */
-    public int getPadding() {
-        return padding;
-    }
+	/**
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
 
-    /**
-     * Reads in a strea, optionally only including the target line number
-     * and its padding
-     *
-     * @param in The input stream
-     * @param targetLineNumber The target line number, negative to read all
-     * @return A list of lines
-     */
-    private List read(InputStream in, int targetLineNumber) {
-        List snippet = null;
-        if (in != null) {
-            snippet = new ArrayList();
-            int startLine = 0;
-            int endLine = Integer.MAX_VALUE;
-            if (targetLineNumber > 0) {
-                startLine = targetLineNumber - padding;
-                endLine = targetLineNumber + padding;
-            }
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+	/**
+	 * @return the config
+	 */
+	public String getConfig() {
+		return config;
+	}
 
-                int lineno = 0;
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    lineno++;
-                    if (lineno >= startLine && lineno <= endLine) {
-                        snippet.add(line);
-                    }
-                }
-            } catch (Exception ex) {
-                // ignoring as snippet not available isn't a big deal
-            }
-        }
-        return snippet;
-    }
+	/**
+	 * @return the page
+	 */
+	public String getPage() {
+		return page;
+	}
 
-    public void setServletContext(ServletContext arg0) {
-        this.servletContext = arg0;
-    }
+	/**
+	 * @return the configLine
+	 */
+	public int getConfigLine() {
+		return configLine;
+	}
+
+	/**
+	 * @return the padding
+	 */
+	public int getPadding() {
+		return padding;
+	}
+
+	/**
+	 * Reads in a strea, optionally only including the target line number
+	 * and its padding
+	 *
+	 * @param in               The input stream
+	 * @param targetLineNumber The target line number, negative to read all
+	 * @return A list of lines
+	 */
+	private List read(InputStream in, int targetLineNumber) {
+		List snippet = null;
+		if (in != null) {
+			snippet = new ArrayList();
+			int startLine = 0;
+			int endLine = Integer.MAX_VALUE;
+			if (targetLineNumber > 0) {
+				startLine = targetLineNumber - padding;
+				endLine = targetLineNumber + padding;
+			}
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+				int lineno = 0;
+				String line;
+				while ((line = reader.readLine()) != null) {
+					lineno++;
+					if (lineno >= startLine && lineno <= endLine) {
+						snippet.add(line);
+					}
+				}
+			} catch (Exception ex) {
+				// ignoring as snippet not available isn't a big deal
+			}
+		}
+		return snippet;
+	}
+
+	public void setServletContext(ServletContext arg0) {
+		this.servletContext = arg0;
+	}
 
 
 }

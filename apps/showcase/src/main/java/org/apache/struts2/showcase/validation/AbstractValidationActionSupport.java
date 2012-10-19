@@ -26,11 +26,11 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public abstract class AbstractValidationActionSupport extends ActionSupport {
 
-    public String submit() throws Exception {
-        return "success";
-    }
+	public String submit() throws Exception {
+		return "success";
+	}
 
-    public String input() throws Exception {
-        return "input";
-    }
+	public String input() throws Exception {
+		return "input";
+	}
 }

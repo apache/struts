@@ -21,13 +21,12 @@
 package org.apache.struts2.showcase.conversion;
 
 /**
- *
  * @version $Date$ $Id$
  */
 public enum OperationsEnum {
-    ADD,
-    MINUS,
-    DIVIDE,
-    MULTIPLY,
-    REMAINDER;
+	ADD,
+	MINUS,
+	DIVIDE,
+	MULTIPLY,
+	REMAINDER;
 }

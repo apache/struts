@@ -27,52 +27,52 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class LotsOfRichtexteditorAction extends ActionSupport {
 
-    public String description1;
-    public String description2 = "This is Description 2";
-    public String description3;
-    public String description4 = "This is Description 4";
+	public String description1;
+	public String description2 = "This is Description 2";
+	public String description3;
+	public String description4 = "This is Description 4";
 
-    public String getDescription1() {
-        return this.description1;
-    }
-    public void setDescription1(String description1) {
-        this.description1 = description1;
-    }
+	public String getDescription1() {
+		return this.description1;
+	}
 
-
-    public String getDescription2() {
-        return this.description2;
-    }
-    public void setDescription2(String description2) {
-        this.description2 = description2;
-    }
+	public void setDescription1(String description1) {
+		this.description1 = description1;
+	}
 
 
-    public String getDescription3() {
-        return this.description3;
-    }
-    public void setDescription3(String description3) {
-        this.description3 = description3;
-    }
+	public String getDescription2() {
+		return this.description2;
+	}
+
+	public void setDescription2(String description2) {
+		this.description2 = description2;
+	}
 
 
+	public String getDescription3() {
+		return this.description3;
+	}
+
+	public void setDescription3(String description3) {
+		this.description3 = description3;
+	}
 
 
-    public String getDescription4() {
-        return this.description4;
-    }
-    public void setDescription4(String description4) {
-        this.description4 = description4;
-    }
+	public String getDescription4() {
+		return this.description4;
+	}
+
+	public void setDescription4(String description4) {
+		this.description4 = description4;
+	}
 
 
+	public String input() throws Exception {
+		return SUCCESS;
+	}
 
-
-    public String input() throws Exception {
-        return SUCCESS;
-    }
-
-    public String submit() throws Exception {
-        return SUCCESS;
-    }
+	public String submit() throws Exception {
+		return SUCCESS;
+	}
 }

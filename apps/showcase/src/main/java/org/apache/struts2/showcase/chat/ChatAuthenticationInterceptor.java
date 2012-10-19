@@ -21,40 +21,37 @@
 package org.apache.struts2.showcase.chat;
 
 
-import org.apache.struts2.dispatcher.SessionMap;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.dispatcher.SessionMap;
 
 public class ChatAuthenticationInterceptor implements Interceptor {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = LoggerFactory.getLogger(ChatAuthenticationInterceptor.class);
+	public static final String USER_SESSION_KEY = "chatUserSessionKey";
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChatAuthenticationInterceptor.class);
+	public void destroy() {
+	}
 
-    public static final String USER_SESSION_KEY = "chatUserSessionKey";
+	public void init() {
+	}
 
-    public void destroy() {
-    }
+	public String intercept(ActionInvocation invocation) throws Exception {
 
-    public void init() {
-    }
+		LOG.debug("Authenticating chat user");
 
-    public String intercept(ActionInvocation invocation) throws Exception {
+		SessionMap session = (SessionMap) ActionContext.getContext().get(ActionContext.SESSION);
+		User user = (User) session.get(USER_SESSION_KEY);
 
-        LOG.debug("Authenticating chat user");
-
-        SessionMap session = (SessionMap) ActionContext.getContext().get(ActionContext.SESSION);
-        User user = (User) session.get(USER_SESSION_KEY);
-
-        if (user == null) {
-            return Action.LOGIN;
-        }
-        return invocation.invoke();
-    }
+		if (user == null) {
+			return Action.LOGIN;
+		}
+		return invocation.invoke();
+	}
 
 }

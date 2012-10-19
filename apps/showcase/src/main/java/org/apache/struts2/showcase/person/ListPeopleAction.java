@@ -20,37 +20,35 @@
  */
 package org.apache.struts2.showcase.person;
 
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
-
-@Result(location="list-people.ftl", type="freemarker")
+@Result(location = "list-people.ftl", type = "freemarker")
 public class ListPeopleAction extends ActionSupport {
 
-    private static final long serialVersionUID = 3608017189783645371L;
+	private static final long serialVersionUID = 3608017189783645371L;
 
-    PersonManager personManager;
-    List people = new ArrayList();
+	@Autowired
+	private PersonManager personManager;
 
-    public void setPersonManager(PersonManager personManager) {
-        this.personManager = personManager;
-    }
+	private List<Person> people = new ArrayList<Person>();
 
-    public String execute() {
-        people.addAll(personManager.getPeople());
+	public String execute() {
+		people.addAll(personManager.getPeople());
 
-        return SUCCESS;
-    }
+		return SUCCESS;
+	}
 
-    public List getPeople() {
-        return people;
-    }
+	public List<Person> getPeople() {
+		return people;
+	}
 
-    public int getPeopleCount() {
-        return people.size();
-    }
+	public int getPeopleCount() {
+		return people.size();
+	}
 
 }

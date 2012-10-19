@@ -20,7 +20,7 @@
 		</action>
 		
 		<action name="doMultipleUploadUsingList" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingListAction" method="upload">
-			<result>multipleUploadUsingList-success.jsp</result>
+			<result>multiple-success.jsp</result>
 		</action>
 
 
@@ -29,7 +29,7 @@
 		</action>
 
 		<action name="doMultipleUploadUsingArray" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingArrayAction" method="upload">
-			<result>multipleUploadUsingArray-success.jsp</result>
+			<result>multiple-success.jsp</result>
 		</action>
 
 

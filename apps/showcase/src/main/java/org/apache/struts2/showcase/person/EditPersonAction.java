@@ -20,68 +20,59 @@
  */
 package org.apache.struts2.showcase.person;
 
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
-
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.convention.annotation.Results;
-
 /**
  * <code>EditPerson</code>
- *
  */
 @Results({
-    @Result(name="list", location="list-people.action", type="redirect"),
-    @Result(name="input", location="new-person.ftl", type="freemarker")
+		@Result(name = "list", location = "list-people.action", type = "redirect"),
+		@Result(name = "input", location = "edit-person.jsp")
 })
 public class EditPersonAction extends ActionSupport {
 
-    private static final long serialVersionUID = 7699491775215130850L;
+	private static final long serialVersionUID = 7699491775215130850L;
 
-    PersonManager personManager;
-    List persons = new ArrayList();
+	@Autowired
+	private PersonManager personManager;
+	private List<Person> persons = new ArrayList<Person>();
 
-    public void setPersonManager(PersonManager personManager) {
-        this.personManager = personManager;
-    }
+	/**
+	 * A default implementation that does nothing an returns "success".
+	 *
+	 * @return {@link #INPUT}
+	 */
+	public String execute() throws Exception {
+		persons.addAll(personManager.getPeople());
+		return INPUT;
+	}
 
-    public List getPersons() {
-        return persons;
-    }
+	/**
+	 * A default implementation that does nothing an returns "success".
+	 *
+	 * @return {@link #SUCCESS}
+	 */
+	public String save() throws Exception {
 
-    public void setPersons(List persons) {
-        this.persons = persons;
-    }
+		for (Person p : persons) {
+			personManager.getPeople().remove(p);
+			personManager.getPeople().add(p);
+		}
+		return "list";
+	}
 
-    /**
-     * A default implementation that does nothing an returns "success".
-     *
-     * @return {@link #SUCCESS}
-     */
-    public String execute() throws Exception {
-        persons.addAll(personManager.getPeople());
-        return SUCCESS;
-    }
+	public List<Person> getPersons() {
+		return persons;
+	}
 
-    /**
-     * A default implementation that does nothing an returns "success".
-     *
-     * @return {@link #SUCCESS}
-     */
-    public String save() throws Exception {
-
-        // Set people = personManager.getPeople();
-
-        for ( Iterator iter = persons.iterator(); iter.hasNext();) {
-            Person p = (Person) iter.next();
-            personManager.getPeople().remove(p);
-            personManager.getPeople().add(p);
-        }
-        return "list";
-    }
-
+	public void setPersons(List<Person> persons) {
+		this.persons = persons;
+	}
 }

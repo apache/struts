@@ -20,17 +20,13 @@
  */
 package org.apache.struts2.showcase.jsf;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.struts2.showcase.action.EmployeeAction;
 import org.apache.struts2.showcase.dao.SkillDao;
 import org.apache.struts2.showcase.model.Employee;
 import org.apache.struts2.showcase.model.Skill;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
 
 /**
  * Overriding the EmployeeAction to main provide getters returning the data in
@@ -38,85 +34,82 @@ import org.apache.struts2.showcase.model.Skill;
  */
 public class JsfEmployeeAction extends EmployeeAction {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Creating a default employee and main skill, since the JSF EL can't handle
-     * creating new objects as necessary
-     *
-     */
-    public JsfEmployeeAction() {
-        Employee e = new Employee();
-        e.setMainSkill(new Skill());
-        setCurrentEmployee(e);
-    }
+	@Autowired
+	private SkillDao skillDao;
 
-    private SkillDao skillDao;
+	/**
+	 * Creating a default employee and main skill, since the JSF EL can't handle
+	 * creating new objects as necessary
+	 */
+	public JsfEmployeeAction() {
+		Employee e = new Employee();
+		e.setMainSkill(new Skill());
+		setCurrentEmployee(e);
+	}
 
-    public void setSkillDao(SkillDao skillDao) {
-        this.skillDao = skillDao;
-    }
 
-    /**
-     * Returning a List because the JSF dataGrid can't handle a Set for some
-     * reason
-     */
-    @Override
-    public Collection getAvailableItems() {
-        return new ArrayList(super.getAvailableItems());
-    }
+	/**
+	 * Returning a List because the JSF dataGrid can't handle a Set for some
+	 * reason
+	 */
+	@Override
+	public Collection getAvailableItems() {
+		return new ArrayList(super.getAvailableItems());
+	}
 
-    /**
-     * Changing the String array into a Map
-     */
-    public Map<String, String> getAvailablePositionsAsMap() {
-        Map<String, String> map = new LinkedHashMap<String, String>();
-        for (String val : super.getAvailablePositions()) {
-            map.put(val, val);
-        }
-        return map;
-    }
+	/**
+	 * Changing the String array into a Map
+	 */
+	public Map<String, String> getAvailablePositionsAsMap() {
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		for (String val : super.getAvailablePositions()) {
+			map.put(val, val);
+		}
+		return map;
+	}
 
-    /**
-     * Converting the list into a map
-     */
-    public Map getAvailableLevelsAsMap() {
-        Map map = new LinkedHashMap();
-        for (Object val : super.getAvailableLevels()) {
-            map.put(val, val);
-        }
-        return map;
-    }
+	/**
+	 * Converting the list into a map
+	 */
+	public Map getAvailableLevelsAsMap() {
+		Map map = new LinkedHashMap();
+		for (Object val : super.getAvailableLevels()) {
+			map.put(val, val);
+		}
+		return map;
+	}
 
-    /**
-     * Converting the Skill object list into a map
-     */
-    public Map<String, String> getAvailableSkills() {
-        Map<String, String> map = new HashMap<String, String>();
-        for (Object val : skillDao.findAll()) {
-            Skill skill = (Skill) val;
-            map.put(skill.getDescription(), skill.getName());
-        }
-        return map;
-    }
+	/**
+	 * Converting the Skill object list into a map
+	 */
+	public Map<String, String> getAvailableSkills() {
+		Map<String, String> map = new HashMap<String, String>();
+		for (Object val : skillDao.findAll()) {
+			Skill skill = (Skill) val;
+			map.put(skill.getDescription(), skill.getName());
+		}
+		return map;
+	}
 
-    /**
-     * Gets the selected Skill objects as a list
-     */
-    public List<String> getSelectedSkillsAsList() {
-        System.out.println("asked for skills");
-        List<String> list = new ArrayList<String>();
-        List skills = super.getSelectedSkills();
-        if (skills != null) {
-            for (Object val : skills) {
-                if (val instanceof Skill) {
-                    list.add(((Skill) val).getDescription());
-                } else {
-                    Skill skill = skillDao.getSkill((String) val);
-                    list.add(skill.getDescription());
-                }
-            }
-        }
-        return list;
-    }
+	/**
+	 * Gets the selected Skill objects as a list
+	 */
+	public List<String> getSelectedSkillsAsList() {
+		System.out.println("asked for skills");
+		List<String> list = new ArrayList<String>();
+		List skills = super.getSelectedSkills();
+		if (skills != null) {
+			for (Object val : skills) {
+				if (val instanceof Skill) {
+					list.add(((Skill) val).getDescription());
+				} else {
+					Skill skill = skillDao.getSkill((String) val);
+					list.add(skill.getDescription());
+				}
+			}
+		}
+		return list;
+	}
 }

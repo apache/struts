@@ -25,25 +25,25 @@ import com.opensymphony.xwork2.ActionSupport;
 /**
  */
 public class GetCategory extends ActionSupport {
-    private long catId;
-    private Category category;
+	private long catId;
+	private Category category;
 
-    public String execute() throws Exception {
-        if (catId < 1) {
-            // force the root
-            catId = 1;
-        }
+	public String execute() throws Exception {
+		if (catId < 1) {
+			// force the root
+			catId = 1;
+		}
 
-        category = Category.getById(catId);
+		category = Category.getById(catId);
 
-        return SUCCESS;
-    }
+		return SUCCESS;
+	}
 
-    public void setCatId(long catId) {
-        this.catId = catId;
-    }
+	public void setCatId(long catId) {
+		this.catId = catId;
+	}
 
-    public Category getCategory() {
-        return category;
-    }
+	public Category getCategory() {
+		return category;
+	}
 }

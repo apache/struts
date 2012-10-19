@@ -20,58 +20,52 @@
  */
 package org.apache.struts2.showcase.action;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.struts2.ServletActionContext;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.interceptor.annotations.After;
+import org.apache.struts2.ServletActionContext;
+
+import java.io.*;
+import java.net.URL;
 
 /**
  * Will only work on containers that unzip war files
- *
  */
 public class JSPEvalAction extends ExampleAction {
-    private String jsp;
-    private final static String FILE = "/interactive/demo.jsp";
+	private String jsp;
+	private final static String FILE = "/interactive/demo.jsp";
 
-    public String execute() throws IOException {
-        if (jsp != null) {
-            //write it to file
-            URL url = ServletActionContext.getServletContext().getResource(FILE);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(url
-                .getFile())));
-            try {
-                //directive
-                writer.write("<%@ taglib prefix=\"s\" uri=\"/struts-tags\" %>");
-                writer.write(jsp);
-            } finally {
-                if (writer != null)
-                    writer.close();
-            }
-        }
-        return Action.SUCCESS;
-    }
+	public String execute() throws IOException {
+		if (jsp != null) {
+			//write it to file
+			URL url = ServletActionContext.getServletContext().getResource(FILE);
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(url
+					.getFile())));
+			try {
+				//directive
+				writer.write("<%@ taglib prefix=\"s\" uri=\"/struts-tags\" %>");
+				writer.write(jsp);
+			} finally {
+				if (writer != null)
+					writer.close();
+			}
+		}
+		return Action.SUCCESS;
+	}
 
-    @After
-    public void cleanUp() throws IOException {
-        URL url = ServletActionContext.getServletContext().getResource(FILE);
-        FileOutputStream out = new FileOutputStream(new File(url.getFile()));
-        try {
-            out.getChannel().truncate(0);
-        } finally {
-            if (out != null)
-                out.close();
-        }
-    }
+	@After
+	public void cleanUp() throws IOException {
+		URL url = ServletActionContext.getServletContext().getResource(FILE);
+		FileOutputStream out = new FileOutputStream(new File(url.getFile()));
+		try {
+			out.getChannel().truncate(0);
+		} finally {
+			if (out != null)
+				out.close();
+		}
+	}
 
-    public void setJsp(String jsp) {
-        this.jsp = jsp;
-    }
+	public void setJsp(String jsp) {
+		this.jsp = jsp;
+	}
 
 }

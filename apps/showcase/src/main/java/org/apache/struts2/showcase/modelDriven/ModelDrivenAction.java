@@ -25,21 +25,20 @@ import com.opensymphony.xwork2.ModelDriven;
 
 /**
  * Action to demonstrate simple model-driven feature of the framework.
- *
  */
 public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 
-    private static final long serialVersionUID = 1271130427666936592L;
+	private static final long serialVersionUID = 1271130427666936592L;
 
-    public String input() throws Exception {
-        return SUCCESS;
-    }
+	public String input() throws Exception {
+		return SUCCESS;
+	}
 
-    public String execute() throws Exception {
-        return SUCCESS;
-    }
+	public String execute() throws Exception {
+		return SUCCESS;
+	}
 
-    public Object getModel() {
-        return new Gangster();
-    }
+	public Object getModel() {
+		return new Gangster();
+	}
 }

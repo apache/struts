@@ -1,19 +1,29 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-
 <html>
 <head>
-<title>Showcase - Tag - Non Ui Tag - Iterator Generator Tag Demo</title>
+	<title>Struts2 Showcase - Non Ui Tag - Iterator Generator Tag Demo</title>
+	<s:head/>
 </head>
 <body>
+<div class="page-header">
+	<h1>Non Ui Tag - Iterator Generator Tag Demo</h1>
+</div>
 
-    <s:generator val="%{value}" separator="%{separator}" count="%{count}">
-        <s:iterator value="%{top}">
-            <s:property /><br/>
-        </s:iterator>
-    </s:generator>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
 
-    <s:url value="%{'/tags/non-ui/'}" var="url" /><s:a href="%{#url}">Back To Non-UI Demo</s:a>
-    <s:url value="%{'/'}" var="url" /><s:a href="%{#url}">Back To Showcase</s:a>
+		<s:generator val="%{value}" separator="%{separator}" count="%{count}">
+            <s:iterator value="%{top}">
+               <s:property /><br/>
+            </s:iterator>
+        </s:generator>
 
+
+        <s:url var="url" action="showGeneratorTagDemo" namespace="/tags/non-ui/iteratorGeneratorTag" />
+        <s:a href="%{#url}" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back To Input</s:a>
+        </div>
+    </div>
+</div>
 </body>
 </html>

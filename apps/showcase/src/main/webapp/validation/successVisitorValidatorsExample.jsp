@@ -6,14 +6,23 @@
 --%>
 
 
-
 <%@taglib prefix="s" uri="/struts-tags" %>
-
 <html>
-    <head><title>Showcase - Validation - SuccessVisitorValidatorsExameple</title></head>
-    <body>
-        <h1>Success !</h1>
-        <table>
+<head>
+	<title>Struts2 Showcase - Validation - Success Visitor Validators Exameple</title>
+	<s:head/>
+</head>
+<body>
+
+<div class="page-header">
+	<h1>Success !</h1>
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+
+			<table class="table table-striped table-bordered table-hover table-condensed">
             <tr>
                 <td>User Name:</td>
                 <td><s:property value="user.name" /></td>
@@ -29,7 +38,9 @@
         </table>
         
         <s:include value="footer.jsp" />
-        
-    </body>
-</html>
 
+		</div>
+	</div>
+</div>
+</body>
+</html>

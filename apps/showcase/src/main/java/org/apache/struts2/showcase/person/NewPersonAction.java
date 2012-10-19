@@ -20,35 +20,35 @@
  */
 package org.apache.struts2.showcase.person;
 
-import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.views.freemarker.FreemarkerResult;
-
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Result(name="input", location="new-person.ftl", type="freemarker")
+
+@Results({
+		@Result(name = "list", location = "list-people.action", type = "redirect"),
+		@Result(name = "input", location = "new-person.ftl", type = "freemarker")
+})
 public class NewPersonAction extends ActionSupport {
 
-    private static final long serialVersionUID = 200410824352645515L;
+	private static final long serialVersionUID = 200410824352645515L;
 
-    PersonManager personManager;
-    Person person;
+	@Autowired
+	private PersonManager personManager;
+	private Person person;
 
-    public void setPersonManager(PersonManager personManager) {
-        this.personManager = personManager;
-    }
+	public String execute() {
+		personManager.createPerson(person);
 
-    public String execute() {
-        personManager.createPerson(person);
+		return "list";
+	}
 
-        return SUCCESS;
-    }
+	public Person getPerson() {
+		return person;
+	}
 
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }

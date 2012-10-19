@@ -25,30 +25,28 @@ import com.opensymphony.xwork2.Action;
 import java.io.Serializable;
 
 
-/**
- */
 public class AjaxTestAction implements Action, Serializable {
 
-    private static int counter = 0;
-    private String data;
+	private static int counter = 0;
+	private String data;
 
-    public long getServerTime() {
-        return System.currentTimeMillis();
-    }
+	public String execute() throws Exception {
+		return SUCCESS;
+	}
 
-    public int getCount() {
-        return ++counter;
-    }
+	public long getServerTime() {
+		return System.currentTimeMillis();
+	}
 
-    public String getData() {
-        return data;
-    }
+	public int getCount() {
+		return ++counter;
+	}
 
-    public void setData(String data) {
-        this.data = data;
-    }
+	public String getData() {
+		return data;
+	}
 
-    public String execute() throws Exception {
-        return SUCCESS;
-    }
+	public void setData(String data) {
+		this.data = data;
+	}
 }

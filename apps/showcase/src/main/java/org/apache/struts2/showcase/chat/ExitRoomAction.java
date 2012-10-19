@@ -20,39 +20,43 @@
  */
 package org.apache.struts2.showcase.chat;
 
-import java.util.Map;
-
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.interceptor.SessionAware;
 
-import com.opensymphony.xwork2.ActionSupport;
+import java.util.Map;
 
 public class ExitRoomAction extends ActionSupport implements SessionAware {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private String roomName;
+	private String roomName;
 
-    private Map session;
+	private Map session;
 
-    public String getRoomName() { return roomName; }
-    public void setRoomName(String roomName) { this.roomName = roomName; }
+	public String getRoomName() {
+		return roomName;
+	}
 
-    private ChatService chatService;
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
 
-    public ExitRoomAction(ChatService chatService) {
-        this.chatService = chatService;
-    }
+	private ChatService chatService;
 
-    public String execute() throws Exception {
-        User user = (User) session.get(ChatAuthenticationInterceptor.USER_SESSION_KEY);
-        chatService.exitRoom(user.getName(), roomName);
+	public ExitRoomAction(ChatService chatService) {
+		this.chatService = chatService;
+	}
 
-        return SUCCESS;
-    }
+	public String execute() throws Exception {
+		User user = (User) session.get(ChatAuthenticationInterceptor.USER_SESSION_KEY);
+		chatService.exitRoom(user.getName(), roomName);
 
-    // === SessionAware ===
-    public void setSession(Map session) {
-        this.session = session;
-    }
+		return SUCCESS;
+	}
+
+	// === SessionAware ===
+	public void setSession(Map session) {
+		this.session = session;
+	}
 
 }

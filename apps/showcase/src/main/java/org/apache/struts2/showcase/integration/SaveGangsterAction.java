@@ -20,32 +20,27 @@
  */
 package org.apache.struts2.showcase.integration;
 
+import org.apache.struts.action.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-
 public class SaveGangsterAction extends Action {
 
-    /* (non-Javadoc)
-     * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
-    @Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	/* (non-Javadoc)
+		 * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+		 */
+	@Override
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        // Some code to save the gangster to the db as necessary
-        GangsterForm gform = (GangsterForm) form;
-        ActionMessages messages = new ActionMessages();
-        messages.add("msg", new ActionMessage("Gangster "+gform.getName()+" added successfully"));
-        addMessages(request, messages);
+		// Some code to save the gangster to the db as necessary
+		GangsterForm gform = (GangsterForm) form;
+		ActionMessages messages = new ActionMessages();
+		messages.add("msg", new ActionMessage("Gangster " + gform.getName() + " added successfully"));
+		addMessages(request, messages);
 
-        return mapping.findForward("success");
-    }
+		return mapping.findForward("success");
+	}
 
 
 }

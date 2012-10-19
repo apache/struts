@@ -24,13 +24,12 @@ import java.io.Serializable;
 
 /**
  * IdEntity. Interface.
- *
  */
 
 public interface IdEntity extends Serializable {
 
-    Serializable getId ();
+	Serializable getId();
 
-    void setId ( Serializable id );
+	void setId(Serializable id);
 
 }

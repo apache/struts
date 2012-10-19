@@ -1,40 +1,54 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 <html>
 <head>
     <title>View Sources</title>
-
-    <jsp:include page="/ajax/commonInclude.jsp"/>
 </head>
 <body>
-<h1>View Sources</h1>
 
-<sx:tabbedpanel id="test">
-	<sx:div id="one" label="Page" >
-        <h3><s:property default="Unknown page" value="page"/></h3>
-<pre>
-<s:iterator value="pageLines" status="row">
-${row.count}: <s:property/></s:iterator>
-</pre>
-    </sx:div>
-    <sx:div id="two" label="Configuration" >
-        <h3><s:property default="Unknown configuration" value="config"/></h3>
-<pre>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<h1>View Sources</h1>
 
-<s:iterator value="configLines" status="row"><s:if test="%{(#row.count-1)==(configLines.size()/2)}">
-<span style="background-color:yellow">${configLine - padding + row.count - 1}: <s:property/></span></s:if><s:else>
-${configLine - padding + row.count - 1}: <s:property/></s:else></s:iterator>
-</pre>
-    </sx:div>
-    <sx:div id="three" label="Java Action">
-        <h3><s:property default="Unknown or unavailable Action class" value="className"/></h3>
-<pre>
-<s:iterator value="classLines" status="row">
-${row.count}: <s:property/></s:iterator>
-</pre>
-    </sx:div>
-    
-</sx:tabbedpanel>
+			<ul class="nav nav-tabs" id="codeTab">
+				<li class="active"><a href="#page">Page</a></li>
+				<li><a href="#config">Configuration</a></li>
+				<li><a href="#java">Java Action</a></li>
+			</ul>
 
+			<div class="tab-content">
+				<div class="tab-pane active" id="page">
+					<h3><s:property default="Unknown page" value="page"/></h3>
+					<pre class="prettyprint lang-html linenums">
+						<s:iterator value="pageLines" status="row">
+<s:property/></s:iterator>
+					</pre>
+				</div>
+				<div class="tab-pane" id="config">
+					<h3><s:property default="Unknown configuration" value="config"/></h3>
+					<pre class="prettyprint lang-xml linenums">
+						<s:iterator value="configLines" status="row">
+<s:property/></s:iterator>
+					</pre>
+				</div>
+				<div class="tab-pane" id="java">
+					<h3><s:property default="Unknown or unavailable Action class" value="className"/></h3>
+					<pre class="prettyprint lang-java linenums">
+						<s:iterator value="classLines" status="row">
+<s:property/></s:iterator>
+					</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$('#codeTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	})
+</script>
 </body>
 </html>

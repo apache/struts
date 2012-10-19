@@ -120,12 +120,6 @@
         }
         .wc-command {
             margin: 1px 0 0 0; 
-            border-style: none;
-            font-family: courier; 
-            color: white; 
-            background-color: black; 
-            width: 100%;
-            padding: 0px;
         }
         .shell {
             width: 100%;
@@ -196,7 +190,7 @@
                          :-&gt;
                     </div>
                     <input type="hidden" name="debug" value="command" />
-                    OGNL Expression <input name="expression" onkeyup="keyEvent(event, '${jspEval}')" class="wc-command" id="wc-command" type="text" />
+                    OGNL Expression <input name="expression" onkeyup="keyEvent(event, '${jspEval}')" class="input-xxlarge wc-command" id="wc-command" type="text" />
                 </form>
             </div>
         </sx:div>

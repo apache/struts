@@ -26,49 +26,48 @@ import java.io.Serializable;
 
 /**
  * Skill.
- *
  */
 
 public class Skill implements IdEntity {
 
-    private static final long serialVersionUID = -4150317722693212439L;
+	private static final long serialVersionUID = -4150317722693212439L;
 
-    private String name;
-    private String description;
+	private String name;
+	private String description;
 
-    public Skill() {
-    }
+	public Skill() {
+	}
 
-    public Skill(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+	public Skill(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(name));
-    }
+	public void setName(String name) {
+		this.name = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(name));
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(description));
-    }
+	public void setDescription(String description) {
+		this.description = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(description));
+	}
 
-    public Serializable getId() {
-        return getName();
-    }
+	public Serializable getId() {
+		return getName();
+	}
 
-    public void setId(Serializable id) {
-        setName((String) id);
-    }
+	public void setId(Serializable id) {
+		setName((String) id);
+	}
 
-    public String toString() {
-        return getName();
-    }
+	public String toString() {
+		return getName();
+	}
 }

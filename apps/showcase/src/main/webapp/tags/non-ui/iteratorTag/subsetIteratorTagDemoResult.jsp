@@ -1,21 +1,30 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-
 <html>
 <head>
-<title>Showcase - Tags - Non UI Tags - Subset Tag</title>
+	<title>Struts2 Showcase - Non Ui Tag - SubsetTag Demo</title>
+	<s:head/>
 </head>
 <body>
+<div class="page-header">
+	<h1>Non Ui Tag - SubsetTag Demo</h1>
+</div>
 
-    <s:generator var="iterator" val="%{iteratorValue}" separator="," />
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
 
-    <s:subset count="%{count}" start="%{start}" source="%{#attr.iterator}" >
-        <s:iterator>
-            <s:property /><br/>
-        </s:iterator>
-    </s:subset>
+			<s:generator var="iterator" val="%{iteratorValue}" separator="," />
 
-    <s:url value="%{'/tags/non-ui/'}" var="url" /><s:a href="%{#url}">Back To Non-UI Demo</s:a>
-    <s:url value="%{'/'}" var="url" /><s:a href="%{#url}">Back To Showcase</s:a>
+		    <s:subset count="%{count}" start="%{start}" source="%{#attr.iterator}" >
+		        <s:iterator>
+		            <s:property /><br/>
+		        </s:iterator>
+		    </s:subset>
 
+			<s:url var="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" />
+			<s:a href="%{#url}" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back To Input</s:a>
+		</div>
+	</div>
+</div>
 </body>
 </html>

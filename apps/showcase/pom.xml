@@ -164,10 +164,11 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
+             <artifactId>commons-logging</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
@@ -217,47 +218,35 @@
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.0.1</version>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.0.0.M2</version>
                 <configuration>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>log4j.configuration</name>
+                            <value>file:${basedir}/src/main/resources/log4j.properties</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>slf4j</name>
+                            <value>false</value>
+                        </systemProperty>
+                    </systemProperties>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
+                    <webAppConfig>
+                        <contextPath>/struts2-showcase</contextPath>
+                        <descriptor>${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
+                    </webAppConfig>
                 </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>org.apache.myfaces.core</groupId>
-                        <artifactId>myfaces-impl</artifactId>
-                        <version>1.1.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.myfaces.core</groupId>
-                        <artifactId>myfaces-api</artifactId>
-                        <version>1.1.2</version>
-                    </dependency>
-                    <dependency>
                         <groupId>log4j</groupId>
                         <artifactId>log4j</artifactId>
-                        <version>1.2.9</version>
+                        <version>1.2.16</version>
                     </dependency>
                 </dependencies>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.twdata.maven</groupId>
-                <artifactId>maven-itblast-plugin</artifactId>
-                <version>0.3</version>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <containers>tomcat5x</containers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -283,13 +272,4 @@
         </resources>
 
     </build>
-    <!--
-    <pluginRepositories>
-        <pluginRepository>
-            <id>twdata-m2-repository</id>
-            <name>twdata.org Maven Repository</name>
-            <url>http://twdata-m2-repository.googlecode.com/svn/</url>
-        </pluginRepository>
-    </pluginRepositories>
-    -->
 </project>

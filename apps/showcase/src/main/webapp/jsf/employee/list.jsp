@@ -22,48 +22,54 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 
 <f:view>
+	<html>
+	<head>
+		<title>Struts2 Showcase - JSF Integration - Available Employees</title>
+		<s:head/>
+	</head>
 
-<html>
-<head><title>Available Employees</title></head>
+	<body>
 
-<body>
-<h1>Available Employees</h1>
-  	
-  	<h:dataTable value="#{action.availableItems}" var="e">
-  		<h:column>
-  			<f:facet name="header">
-  				<h:outputText value="Id" />
-  			</f:facet>
-  			<h:outputLink value="edit.action">
-  				<f:param name="empId" value="#{e.empId}" />
-  				<h:outputText value="#{e.empId}" />
-  			</h:outputLink>	
-  		</h:column>
-		<h:column>
-  			<f:facet name="header">
-  				<h:outputText value="First Name" />
-  			</f:facet>
-  			<h:outputText value="#{e.firstName}" />
-  		</h:column>
-  		<h:column>
-  			<f:facet name="header">
-  				<h:outputText value="Last Name" />
-  			</f:facet>
-  			<h:outputText value="#{e.lastName}" />
-  		</h:column>
-  	</h:dataTable>	
-  	
-  	<p>
-  	<h:outputLink value="edit.action">
-  		<h:outputText value="Create new Employee" />
-  	</h:outputLink>
-  	</p>
-  	
-  	<h:outputLink value="../../showcase.action">
-  		<h:outputText value="Back to Showcase Startpage" />
-  	</h:outputLink>
-  </body>
+	<div class="page-header">
+		<h1>Available Employees</h1>
+	</div>
 
-</html>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span12">
 
+				<h:dataTable value="#{action.availableItems}" var="e" styleClass="table table-striped table-bordered table-hover table-condensed">
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Id"/>
+						</f:facet>
+						<h:outputLink value="edit.action">
+							<f:param name="empId" value="#{e.empId}"/>
+							<h:outputText value="#{e.empId}"/>
+						</h:outputLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="First Name"/>
+						</f:facet>
+						<h:outputText value="#{e.firstName}"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Last Name"/>
+						</f:facet>
+						<h:outputText value="#{e.lastName}"/>
+					</h:column>
+				</h:dataTable>
+
+				<p>
+					<h:outputLink value="edit.action" styleClass="btn btn-primary">
+						<h:outputText value="Create new Employee"/>
+					</h:outputLink>
+				</p>
+			</div>
+		</div>
+	</div>
+	</body>
+	</html>
 </f:view>

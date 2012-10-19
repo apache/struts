@@ -20,17 +20,16 @@
  */
 package org.apache.struts2.showcase;
 
-import org.apache.struts2.showcase.ajax.tree.Category;
-
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.showcase.ajax.tree.Category;
 
 // START SNIPPET: treeExampleDynamicJavaShow
 
 public class ShowDynamicTreeAction extends ActionSupport {
 
-    public Category getTreeRootNode() {
-        return Category.getById(1);
-    }
+	public Category getTreeRootNode() {
+		return Category.getById(1);
+	}
 }
 
 // END SNIPPET: treeExampleDynamicJavaShow

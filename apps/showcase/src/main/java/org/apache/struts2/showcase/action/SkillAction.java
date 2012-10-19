@@ -20,70 +20,64 @@
  */
 package org.apache.struts2.showcase.action;
 
+import com.opensymphony.xwork2.Preparable;
 import org.apache.log4j.Logger;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.dao.SkillDao;
 import org.apache.struts2.showcase.model.Skill;
-
-import com.opensymphony.xwork2.Preparable;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * SkillAction.
- *
  */
 
 public class SkillAction extends AbstractCRUDAction implements Preparable {
 
-    private static final Logger log = Logger.getLogger(SkillAction.class);
+	private static final Logger log = Logger.getLogger(SkillAction.class);
 
-    private String skillName;
-    protected SkillDao skillDao;
-    private Skill currentSkill;
+	@Autowired
+	private SkillDao skillDao;
 
-    public String getSkillName() {
-        return skillName;
-    }
+	private String skillName;
+	private Skill currentSkill;
 
-    public void setSkillName(String skillName) {
-        this.skillName = skillName;
-    }
+	/**
+	 * This method is called to allow the action to prepare itself.
+	 *
+	 * @throws Exception thrown if a system level exception occurs.
+	 */
+	public void prepare() throws Exception {
+		Skill preFetched = (Skill) fetch(getSkillName(), getCurrentSkill());
+		if (preFetched != null) {
+			setCurrentSkill(preFetched);
+		}
+	}
 
-    protected Dao getDao() {
-        return skillDao;
-    }
+	public String save() throws Exception {
+		if (getCurrentSkill() != null) {
+			setSkillName((String) skillDao.merge(getCurrentSkill()));
+		}
+		return SUCCESS;
+	}
 
-    public void setSkillDao(SkillDao skillDao) {
-        if (log.isDebugEnabled()) {
-            log.debug("SkillAction - [setSkillDao]: skillDao injected.");
-        }
-        this.skillDao = skillDao;
-    }
+	public String getSkillName() {
+		return skillName;
+	}
 
-    public Skill getCurrentSkill() {
-        return currentSkill;
-    }
+	public void setSkillName(String skillName) {
+		this.skillName = skillName;
+	}
 
-    public void setCurrentSkill(Skill currentSkill) {
-        this.currentSkill = currentSkill;
-    }
+	protected Dao getDao() {
+		return skillDao;
+	}
 
-    /**
-     * This method is called to allow the action to prepare itself.
-     *
-     * @throws Exception thrown if a system level exception occurs.
-     */
-    public void prepare() throws Exception {
-        Skill preFetched = (Skill) fetch(getSkillName(), getCurrentSkill());
-        if (preFetched != null) {
-            setCurrentSkill(preFetched);
-        }
-    }
+	public Skill getCurrentSkill() {
+		return currentSkill;
+	}
 
-    public String save() throws Exception {
-        if (getCurrentSkill() != null) {
-            setSkillName((String) skillDao.merge(getCurrentSkill()));
-        }
-        return SUCCESS;
-    }
+	public void setCurrentSkill(Skill currentSkill) {
+		this.currentSkill = currentSkill;
+	}
 
 }

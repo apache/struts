@@ -1,21 +1,30 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+	<title>Struts2 Showcase - Validation - Store Errors Across Request Example</title>
+	<s:head/>
 </head>
+
 <body>
 
-	<s:actionmessage/>
-	<s:actionerror/>
-	<s:fielderror />
+<div class="page-header">
+	<h1>Application Canceled</h1>
+</div>
 
-	<h1>Application Canceled</h1>	
-	<s:url var="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
-	<s:a href="%{#url}">Try Again</s:a>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+
+			<s:actionmessage cssClass="alert alert-info"/>
+			<s:actionerror cssClass="alert alert-error"/>
+			<s:fielderror cssClass="alert alert-error"/>
+
+			<s:url var="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
+			<s:a href="%{#url}">Try Again</s:a>
+
+			<s:include value="footer.jsp"/>
+		</div>
+	</div>
+</div>
 </body>
 </html>
-

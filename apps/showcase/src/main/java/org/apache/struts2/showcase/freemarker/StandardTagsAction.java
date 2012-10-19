@@ -30,38 +30,38 @@ import java.text.DateFormatSymbols;
  */
 public class StandardTagsAction extends ActionSupport implements Preparable {
 
-    private String name;
-    private String[] gender;
-    private String[] months;
+	private String name;
+	private String[] gender;
+	private String[] months;
 
-    public void prepare() {
-        months = new DateFormatSymbols().getMonths();
-        name = StandardTagsAction.class.getName().substring(StandardTagsAction.class.getName().lastIndexOf(".")+1);
-        gender = new String[] { "Male", "Femal" };
-    }
+	public void prepare() {
+		months = new DateFormatSymbols().getMonths();
+		name = StandardTagsAction.class.getName().substring(StandardTagsAction.class.getName().lastIndexOf(".") + 1);
+		gender = new String[]{"Male", "Femal"};
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String[] getMonths() {
-        return months;
-    }
+	public String[] getMonths() {
+		return months;
+	}
 
-    public void setMonths(String[] months) {
-        this.months = months;
-    }
+	public void setMonths(String[] months) {
+		this.months = months;
+	}
 
 
-    public String[] getGender() {
-        return gender;
-    }
+	public String[] getGender() {
+		return gender;
+	}
 
-    public void setGender(String[] gender) {
-        this.gender = gender;
-    }
+	public void setGender(String[] gender) {
+		this.gender = gender;
+	}
 }

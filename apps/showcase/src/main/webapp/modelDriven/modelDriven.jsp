@@ -1,31 +1,42 @@
-<%@taglib prefix="s" uri="/struts-tags" %>
-
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
-<title>Showcase - Model Driven Example</title>
-<s:head/>
+	<title>Struts2 Showcase - Model Driven Example</title>
+	<s:head/>
 </head>
+
 <body>
 
-<s:form action="modelDrivenResult" method="POST" namespace="/modelDriven">
-    
-    <s:textfield 
-            label="Gangster Name"
-            name="name" />
-    <s:textfield
-            label="Gangster Age"
-            name="age" />
-    <s:checkbox
-            label="Gangster Busted Before"
-            name="bustedBefore" />
-    <s:textarea
-            cols="30"
-            rows="5"
-            label="Gangster Description"
-            name="description" />           
-    <s:submit />
-    
-</s:form>
+<div class="page-header">
+	<h1>Model Driven Example</h1>
+</div>
 
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+
+			<s:form action="modelDrivenResult" method="POST" namespace="/modelDriven">
+
+				<s:textfield
+						label="Gangster Name"
+						name="name"/>
+				<s:textfield
+						label="Gangster Age"
+						name="age"/>
+				<s:checkbox
+						label="Gangster Busted Before"
+						name="bustedBefore"/>
+				<s:textarea
+						cols="30"
+						rows="5"
+						label="Gangster Description"
+						name="description"/>
+				<s:submit cssClass="btn btn-primary"/>
+
+			</s:form>
+
+		</div>
+	</div>
+</div>
 </body>
 </html>

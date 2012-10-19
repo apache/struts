@@ -20,31 +20,29 @@
  */
 package org.apache.struts2.showcase.filedownload;
 
-import java.io.InputStream;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.struts2.ServletActionContext;
 
-import com.opensymphony.xwork2.Action;
+import java.io.InputStream;
 
 /**
  * Demonstrates file resource download.
  * Set filePath to the local file resource to download,
  * relative to the application root ("/images/struts.gif").
- *
  */
 public class FileDownloadAction implements Action {
 
-    private String inputPath;
-    public void setInputPath(String value) {
-        inputPath = value;
-    }
+	private String inputPath;
 
-    public InputStream getInputStream() throws Exception {
-        return ServletActionContext.getServletContext().getResourceAsStream(inputPath);
-    }
+	public String execute() throws Exception {
+		return SUCCESS;
+	}
 
-    public String execute() throws Exception {
-        return SUCCESS;
-    }
+	public void setInputPath(String value) {
+		inputPath = value;
+	}
 
+	public InputStream getInputStream() throws Exception {
+		return ServletActionContext.getServletContext().getResourceAsStream(inputPath);
+	}
 }

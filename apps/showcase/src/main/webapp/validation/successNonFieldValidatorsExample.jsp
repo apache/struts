@@ -7,12 +7,22 @@
 
 
 <%@taglib prefix="s" uri="/struts-tags" %>
-
 <html>
-    <head><title>Showcase - Validation - SuccessNonFieldValidatorsExample</title></head>
-    <body>
-        <h1>Success !</h1>
-        <table>
+<head>
+	<title>Struts2 Showcase - Validation - Success Non Field Validators Example</title>
+	<s:head/>
+</head>
+<body>
+
+<div class="page-header">
+	<h1>Success !</h1>
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+
+			<table class="table table-striped table-bordered table-hover table-condensed">
             <tr>
                 <td>Some Text: </td>
                 <td><s:property value="someText" /></td>
@@ -28,6 +38,8 @@
         </table>
         
         <s:include value="footer.jsp" />
-    </body>
+		</div>
+	</div>
+</div>
+</body>
 </html>
-

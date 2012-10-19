@@ -9,7 +9,7 @@
 
     <!-- Some or all of these can be flipped to true for debugging -->
     <constant name="struts.i18n.reload" value="false" />
-    <constant name="struts.devMode" value="true" />
+    <constant name="struts.devMode" value="false" />
     <constant name="struts.configuration.xml.reload" value="false" />
     <constant name="struts.custom.i18n.resources" value="globalMessages" />
     <constant name="struts.action.extension" value="action,," />
@@ -65,9 +65,9 @@
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">
-              <interceptor-ref name="checkbox" />
+                <interceptor-ref name="checkbox" />
                 <interceptor-ref name="params" />
-        <interceptor-ref name="staticParams" />
+                <interceptor-ref name="staticParams" />
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
         </interceptors>
@@ -102,11 +102,11 @@
         </action>
         <action name="save" class="org.apache.struts2.showcase.action.SkillAction" method="save">
             <result name="input">/empmanager/editSkill.jsp</result>
-            <result type="redirect">edit.action?skillName=${currentSkill.name}</result>
+            <result type="redirect">list.action</result>
         </action>
         <action name="delete" class="org.apache.struts2.showcase.action.SkillAction" method="delete">
             <result name="error">/empmanager/editSkill.jsp</result>
-            <result type="redirect">edit.action?skillName=${currentSkill.name}</result>
+            <result type="redirect">list.action</result>
         </action>
     </package>
 
@@ -124,11 +124,11 @@
         </action>
         <action name="save" class="org.apache.struts2.showcase.action.EmployeeAction" method="save">
             <result name="input">/empmanager/editEmployee.jsp</result>
-            <result type="redirect">edit-${currentEmployee.empId}.action</result>
+            <result type="redirect">list.action</result>
         </action>
         <action name="delete" class="org.apache.struts2.showcase.action.EmployeeAction" method="delete">
             <result name="error">/empmanager/editEmployee.jsp</result>
-            <result type="redirect">edit-${currentEmployee.empId}.action</result>
+            <result type="redirect">list.action</result>
         </action>
     </package>
 

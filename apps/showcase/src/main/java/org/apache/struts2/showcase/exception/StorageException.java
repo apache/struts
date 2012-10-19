@@ -22,23 +22,22 @@ package org.apache.struts2.showcase.exception;
 
 /**
  * StorageException.
- *
  */
 
 public class StorageException extends Exception {
 
-    private static final long serialVersionUID = -2528721270540362905L;
+	private static final long serialVersionUID = -2528721270540362905L;
 
-    public StorageException(String message) {
-        super(message);
-    }
+	public StorageException(String message) {
+		super(message);
+	}
 
-    public StorageException(Throwable cause) {
-        super(cause);
-    }
+	public StorageException(Throwable cause) {
+		super(cause);
+	}
 
-    public StorageException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public StorageException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

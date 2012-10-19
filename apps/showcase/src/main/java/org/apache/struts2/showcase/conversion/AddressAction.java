@@ -20,28 +20,32 @@
  */
 package org.apache.struts2.showcase.conversion;
 
+import com.opensymphony.xwork2.ActionSupport;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * @version $Date$ $Id$
  */
 public class AddressAction extends ActionSupport {
 
-    private Set addresses = new LinkedHashSet();
+	private Set<Address> addresses = new LinkedHashSet<Address>();
 
-    public Set getAddresses() { return addresses; }
-    public void setAddresses(Set addresses) { this.addresses = addresses; }
+	public String input() throws Exception {
+		return SUCCESS;
+	}
 
+	public String submit() throws Exception {
+		System.out.println(addresses);
+		return SUCCESS;
+	}
 
-    public String input() throws Exception {
-        return SUCCESS;
-    }
+	public Set<Address> getAddresses() {
+		return addresses;
+	}
 
-    public String submit() throws Exception {
-        System.out.println(addresses);
-        return SUCCESS;
-    }
+	public void setAddresses(Set<Address> addresses) {
+		this.addresses = addresses;
+	}
 }

@@ -26,23 +26,24 @@ import java.util.Date;
 /**
  * Represends a user in the Chat example.
  */
-public class User implements Serializable  {
+public class User implements Serializable {
 
-    private static final long serialVersionUID = -1434958919516089297L;
+	private static final long serialVersionUID = -1434958919516089297L;
 
-    private String name;
-    private Date creationDate;
+	private String name;
+	private Date creationDate;
 
 
-    public User(String name) {
-        this.name = name;
-        this.creationDate = new Date(System.currentTimeMillis());
-    }
+	public User(String name) {
+		this.name = name;
+		this.creationDate = new Date(System.currentTimeMillis());
+	}
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-    public String getName() {
-        return name;
-    }
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

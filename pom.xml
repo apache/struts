@@ -55,7 +55,7 @@
     <distributionManagement>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.3.5/</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.3.6/</url>
         </site>
     </distributionManagement>
 

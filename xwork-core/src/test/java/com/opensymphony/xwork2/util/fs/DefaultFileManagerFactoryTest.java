@@ -35,6 +35,7 @@ public class DefaultFileManagerFactoryTest extends XWorkTestCase {
         // given
         fileManager = new DummyFileManager();
         DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
+        factory.setFileManager(new DefaultFileManager());
         factory.setContainer(new DummyContainer());
 
         // when

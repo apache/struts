@@ -56,11 +56,9 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
         if (LOG.isDebugEnabled()) {
             LOG.debug("No user defined FileManager, looking up for internal implementations!");
         }
-        if (fileManager == null) {
-            for (FileManager fm : internals) {
-                if (fm.support()) {
-                    return fm;
-                }
+        for (FileManager fm : internals) {
+            if (fm.support()) {
+                return fm;
             }
         }
         if (LOG.isDebugEnabled()) {

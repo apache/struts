@@ -16,7 +16,6 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -49,9 +48,8 @@ public class DefaultFileManager implements FileManager {
     public DefaultFileManager() {
     }
 
-    @Inject(value = "reloadXmlConfiguration", required = false)
-    public void setReloadingConfigs(String reloadingConfigs) {
-        this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
+    public void setReloadingConfigs(boolean reloadingConfigs) {
+        this.reloadingConfigs = reloadingConfigs;
     }
 
     public boolean isReloadingConfigs() {
@@ -94,22 +92,20 @@ public class DefaultFileManager implements FileManager {
     }
 
     public void monitorFile(URL fileUrl) {
-        if (isReloadingConfigs()) {
-            String fileName = fileUrl.toString();
-            Revision revision;
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Creating revision for URL: " + fileName);
-            }
-            if (isJarURL(fileUrl)) {
-                revision = JarEntryRevision.build(fileUrl, this);
-            } else {
-                revision = FileRevision.build(fileUrl);
-            }
-            if (revision == null) {
-                files.put(fileName, Revision.build(fileUrl));
-            } else {
-                files.put(fileName, revision);
-            }
+        String fileName = fileUrl.toString();
+        Revision revision;
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating revision for URL: " + fileName);
+        }
+        if (isJarURL(fileUrl)) {
+            revision = JarEntryRevision.build(fileUrl, this);
+        } else {
+            revision = FileRevision.build(fileUrl);
+        }
+        if (revision == null) {
+            files.put(fileName, Revision.build(fileUrl));
+        } else {
+            files.put(fileName, revision);
         }
     }
 
@@ -135,10 +131,9 @@ public class DefaultFileManager implements FileManager {
                 return null; //it is not a jar or zip file
             }
         } catch (MalformedURLException e) {
-            //can this ever happen?
-            return null;
-        } catch (IOException e) {
-            LOG.warn("Error opening JBoss vfs file", e);
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Error opening url [#0]", e, url.toString());
+            }
             return null;
         }
     }

@@ -2,6 +2,7 @@ package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -17,6 +18,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultFileManagerFactory.class);
 
+    private boolean reloadingConfigs;
     private FileManager fileManager;
     private Container container;
 
@@ -28,6 +30,11 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     @Inject
     public void setContainer(Container container) {
         this.container = container;
+    }
+
+    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
+    public void setReloadingConfigs(String reloadingConfigs) {
+        this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }
 
     public FileManager getFileManager() {
@@ -50,6 +57,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Using FileManager implementation [#0]", fm.getClass().getSimpleName());
                 }
+                fm.setReloadingConfigs(reloadingConfigs);
                 return fm;
             }
         }
@@ -64,6 +72,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Using default implementation of FileManager provided under name [system]: #0", fileManager.getClass().getSimpleName());
         }
+        fileManager.setReloadingConfigs(reloadingConfigs);
         return fileManager;
     }
 

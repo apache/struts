@@ -36,11 +36,25 @@ public class DefaultFileManagerTest extends XWorkTestCase {
     }
 
     private void testLoadFile(String fileName) {
-        fileManager.setReloadingConfigs("true");
+        fileManager.setReloadingConfigs(true);
         URL url = ClassLoaderUtil.getResource(fileName, DefaultFileManagerTest.class);
         InputStream file = fileManager.loadFile(url);
         assertNotNull(file);
-        assertFalse(!fileManager.fileNeedsReloading(fileName));
+        assertTrue(fileManager.fileNeedsReloading(fileName));
+    }
+
+    public void testReloadingConfigs() throws Exception {
+        // given
+        container.getInstance(FileManagerFactory.class).setReloadingConfigs("false");
+        FileManager fm = container.getInstance(FileManagerFactory.class).getFileManager();
+        assertFalse(fm.isReloadingConfigs());
+
+        // when
+        container.getInstance(FileManagerFactory.class).setReloadingConfigs("true");
+        fm = container.getInstance(FileManagerFactory.class).getFileManager();
+
+        // then
+        assertTrue(fm.isReloadingConfigs());
     }
 
 }

@@ -33,8 +33,8 @@ public class JBossFileManager extends DefaultFileManager {
     @Override
     public boolean support() {
         boolean supports = isJBoss7() || isJBoss5();
-        if (supports && LOG.isInfoEnabled()) {
-            LOG.info("JBoss server detected, Struts 2 will use [#0] to support file system operations!", JBossFileManager.class.getSimpleName());
+        if (supports && LOG.isDebugEnabled()) {
+            LOG.debug("JBoss server detected, Struts 2 will use [#0] to support file system operations!", JBossFileManager.class.getSimpleName());
         }
         return supports;
     }
@@ -61,13 +61,15 @@ public class JBossFileManager extends DefaultFileManager {
 
     @Override
     public void monitorFile(URL fileUrl) {
-        if (isReloadingConfigs()) {
-            if (isJBossUrl(fileUrl)) {
-                Revision revision = FileRevision.build(normalizeToFileProtocol(fileUrl));
-                files.put(fileUrl.toString(), revision);
-            } else {
-                super.monitorFile(fileUrl);
+        if (isJBossUrl(fileUrl)) {
+            String fileName = fileUrl.toString();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Creating revision for URL: " + fileName);
             }
+            Revision revision = FileRevision.build(normalizeToFileProtocol(fileUrl));
+            files.put(fileName, revision);
+        } else {
+            super.monitorFile(fileUrl);
         }
     }
 
@@ -146,7 +148,7 @@ public class JBossFileManager extends DefaultFileManager {
                 urls.add(url);
             }
         } catch (Exception e) {
-            LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile.", e);
+            LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile!", e);
         }
         return urls;
     }

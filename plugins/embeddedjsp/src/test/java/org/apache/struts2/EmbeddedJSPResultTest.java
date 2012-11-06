@@ -270,7 +270,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         XWorkConverter converter = new DummyConverter();
 
         DefaultFileManager fileManager = new DefaultFileManager();
-        fileManager.setReloadingConfigs("false");
+        fileManager.setReloadingConfigs(false);
 
         //mock container
         Container container = EasyMock.createNiceMock(Container.class);
@@ -298,6 +298,9 @@ class DummyConverter extends XWorkConverter {
 }
 
 class DummyFileManagerFactory implements FileManagerFactory {
+
+    public void setReloadingConfigs(String reloadingConfigs) {
+    }
 
     public FileManager getFileManager() {
         return new DefaultFileManager();

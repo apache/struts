@@ -74,10 +74,10 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     }
 
     public void testNeedsReload() throws Exception {
-        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs("true");
+        container.getInstance(FileManagerFactory.class).setReloadingConfigs("true");
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-actions.xml";
         ConfigurationProvider provider = buildConfigurationProvider(filename);
-        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs("true");
+        container.getInstance(FileManagerFactory.class).setReloadingConfigs("true");
 
         assertTrue(!provider.needsReload()); // Revision exists and timestamp didn't change
 
@@ -151,7 +151,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     public void testEmptySpaces() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork- test.xml";
-        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs("true");
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
 
         ConfigurationProvider provider = buildConfigurationProvider(filename);
         assertTrue(!provider.needsReload());
@@ -167,7 +167,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     }
 
     public void testConfigsInJarFiles() throws Exception {
-        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs("true");
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
         testProvider("xwork-jar.xml");
         testProvider("xwork-zip.xml");
         testProvider("xwork - jar.xml");

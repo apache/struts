@@ -47,7 +47,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         configProviderMock.expect("loadPackages", C.ANY_ARGS);
         configProviderMock.expect("destroy", C.ANY_ARGS);
         configProviderMock.matchAndReturn("toString", "mock");
-        configuration.getContainer().getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs("true");
+        configuration.getContainer().getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
         configuration = configurationManager.getConfiguration();
         configProviderMock.verify();
 

@@ -286,7 +286,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
 
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
-        alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props);
+        alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
         alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.DEFAULT);
         alias(LocaleProvider.class, StrutsConstants.STRUTS_LOCALE_PROVIDER, builder, props);

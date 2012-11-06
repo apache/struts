@@ -10,7 +10,12 @@ import java.util.Collection;
  */
 public interface FileManager {
 
-    void setReloadingConfigs(String reloadingConfigs);
+    /**
+     * Enables configs reloading when config file changed
+     *
+     * @param reloadingConfigs {@link XWorkConstants#RELOAD_XML_CONFIGURATION}
+     */
+    void setReloadingConfigs(boolean reloadingConfigs);
 
     boolean isReloadingConfigs();
 

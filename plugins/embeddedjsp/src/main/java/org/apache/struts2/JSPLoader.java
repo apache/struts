@@ -184,7 +184,7 @@ public class JSPLoader {
 
         //find available jars
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
-        UrlSet urlSet = new UrlSet(fileManager, classLoaderInterface);
+        UrlSet urlSet = new UrlSet(classLoaderInterface);
 
         //find jars
         List<URL> urls = urlSet.getUrls();

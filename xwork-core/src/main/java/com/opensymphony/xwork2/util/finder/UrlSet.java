@@ -15,7 +15,6 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.ObjectUtils;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -50,40 +50,41 @@ import java.util.Set;
  * @version $Rev$ $Date$
  */
 public class UrlSet {
+
     private static final Logger LOG = LoggerFactory.getLogger(UrlSet.class);
+
     private final Map<String,URL> urls;
     private Set<String> protocols;
-    private FileManager fileManager;
 
-    public UrlSet(FileManager fileManager, ClassLoaderInterface classLoader) throws IOException {
-        this(fileManager);
+    private UrlSet() {
+        this.urls = new HashMap<String,URL>();
+    }
+
+    public UrlSet(ClassLoaderInterface classLoader) throws IOException {
+        this();
         load(getUrls(classLoader));
     }
 
-    public UrlSet(FileManager fileManager, ClassLoaderInterface classLoader, Set<String> protocols) throws IOException {
-        this(fileManager);
+    public UrlSet(ClassLoaderInterface classLoader, Set<String> protocols) throws IOException {
+        this();
         this.protocols = protocols;
-        this.fileManager = fileManager;
         load(getUrls(classLoader, protocols));
     }
 
+    public UrlSet(URL... urls){
+        this(Arrays.asList(urls));
+    }
     /**
      * Ignores all URLs that are not "jar" or "file"
      * @param urls
      */
-    public UrlSet(FileManager fileManager, Collection<URL> urls){
-        this(fileManager);
+    public UrlSet(Collection<URL> urls){
+        this();
         load(urls);
     }
 
-    private UrlSet(FileManager fileManager) {
-        this.urls = new HashMap<String,URL>();
-        this.fileManager = fileManager;
-    }
-
-    private UrlSet(FileManager fileManager, Map<String, URL> urls) {
+    private UrlSet(Map<String, URL> urls) {
         this.urls = urls;
-        this.fileManager = fileManager;
     }
 
     private void load(Collection<URL> urls){
@@ -91,7 +92,9 @@ public class UrlSet {
             try {
                 this.urls.put(location.toExternalForm(), location);
             } catch (Exception e) {
-                e.printStackTrace();
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Cannot translate url to external form!", e);
+                }
             }
         }
     }
@@ -99,7 +102,7 @@ public class UrlSet {
     public UrlSet include(UrlSet urlSet){
         Map<String, URL> urls = new HashMap<String, URL>(this.urls);
         urls.putAll(urlSet.urls);
-        return new UrlSet(fileManager, urls);
+        return new UrlSet(urls);
     }
 
     public UrlSet exclude(UrlSet urlSet) {
@@ -108,11 +111,11 @@ public class UrlSet {
         for (String url : parentUrls.keySet()) {
             urls.remove(url);
         }
-        return new UrlSet(fileManager, urls);
+        return new UrlSet(urls);
     }
 
     public UrlSet exclude(ClassLoaderInterface parent) throws IOException {
-        return exclude(new UrlSet(fileManager, parent, this.protocols));
+        return exclude(new UrlSet(parent, this.protocols));
     }
 
     public UrlSet exclude(File file) throws MalformedURLException {
@@ -177,13 +180,13 @@ public class UrlSet {
                 urls.put(url, entry.getValue());
             }
         }
-        return new UrlSet(fileManager, urls);
+        return new UrlSet(urls);
     }
 
     /**
      * Try to find a classes directory inside a war file add its normalized url to this set
      */
-    public UrlSet includeClassesUrl(ClassLoaderInterface classLoaderInterface) throws IOException {
+    public UrlSet includeClassesUrl(ClassLoaderInterface classLoaderInterface, FileProtocolNormalizer normalizer) throws IOException {
         Enumeration<URL> rootUrlEnumeration = classLoaderInterface.getResources("");
         while (rootUrlEnumeration.hasMoreElements()) {
             URL url = rootUrlEnumeration.nextElement();
@@ -192,14 +195,14 @@ public class UrlSet {
                 //if it is inside a war file, get the url to the file
                 externalForm = StringUtils.substringBefore(externalForm, "/WEB-INF/classes");
                 URL warUrl = new URL(externalForm);
-                URL normalizedUrl = fileManager.normalizeToFileProtocol(warUrl);
+                URL normalizedUrl = normalizer.normalizeToFileProtocol(warUrl);
                 URL finalUrl = ObjectUtils.defaultIfNull(normalizedUrl, warUrl);
 
                 Map<String, URL> newUrls = new HashMap<String, URL>(this.urls);
                 if ("jar".equals(finalUrl.getProtocol()) || "file".equals(finalUrl.getProtocol())) {
                     newUrls.put(finalUrl.toExternalForm(), finalUrl);
                 }
-                return new UrlSet(fileManager, newUrls);
+                return new UrlSet(newUrls);
             }
         }
 
@@ -207,7 +210,7 @@ public class UrlSet {
     }
 
     public UrlSet relative(File file) throws MalformedURLException {
-        String urlPath = file.toURL().toExternalForm();
+        String urlPath = file.toURI().toURL().toExternalForm();
         Map<String, URL> urls = new HashMap<String, URL>();
         for (Map.Entry<String, URL> entry : this.urls.entrySet()) {
             String url = entry.getKey();
@@ -215,7 +218,7 @@ public class UrlSet {
                 urls.put(url, entry.getValue());
             }
         }
-        return new UrlSet(fileManager, urls);
+        return new UrlSet(urls);
     }
 
     public List<URL> getUrls() {
@@ -265,14 +268,13 @@ public class UrlSet {
                 LOG.debug("Ignoring URL [#0] because it is not a valid protocol", url.toExternalForm());
 
         }
-
-        // Usually the "classes" dir.
-        ArrayList<URL> classesList = Collections.list(classLoader.getResources(""));
-        for (URL url : classesList) {
-            list.addAll(fileManager.getAllPhysicalUrls(url));
-        }
-
         return list;
+    }
+
+    public static interface FileProtocolNormalizer {
+
+        URL normalizeToFileProtocol(URL url);
+
     }
 
 }

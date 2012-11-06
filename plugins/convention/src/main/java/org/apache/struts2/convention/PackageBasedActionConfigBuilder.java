@@ -65,6 +65,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,6 +81,7 @@ import java.util.regex.Pattern;
 public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(PackageBasedActionConfigBuilder.class);
+    private static final boolean EXTRACT_BASE_INTERFACES = true;
 
     private final Configuration configuration;
     private final ActionNameBuilder actionNameBuilder;
@@ -384,7 +386,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 // only considers classes that match the action packages
                 // specified by the user
                 Test<String> classPackageTest = getClassPackageTest();
-                ClassFinder finder = new ClassFinder(getClassLoaderInterface(), buildUrlSet().getUrls(), true, this.fileProtocols, classPackageTest);
+                List<URL> urls = readUrls();
+                ClassFinder finder = new ClassFinder(getClassLoaderInterface(), urls, EXTRACT_BASE_INTERFACES, fileProtocols, classPackageTest);
 
                 Test<ClassFinder.ClassInfo> test = getActionClassTest();
                 classes.addAll(finder.findClasses(test));
@@ -397,9 +400,19 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         return classes;
     }
 
+    private List<URL> readUrls() throws IOException {
+        List<URL> list = buildUrlSet().getUrls();
+        // Usually the "classes" dir.
+        ArrayList<URL> classesList = Collections.list(getClassLoaderInterface().getResources(""));
+        for (URL url : classesList) {
+            list.addAll(fileManager.getAllPhysicalUrls(url));
+        }
+        return list;
+    }
+
     private UrlSet buildUrlSet() throws IOException {
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
-        UrlSet urlSet = new UrlSet(fileManager, classLoaderInterface, this.fileProtocols);
+        UrlSet urlSet = new UrlSet(classLoaderInterface, this.fileProtocols);
 
         //excluding the urls found by the parent class loader is desired, but fails in JBoss (all urls are removed)
         if (excludeParentClassLoader) {
@@ -425,7 +438,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
 
         //try to find classes dirs inside war files
-        urlSet = urlSet.includeClassesUrl(classLoaderInterface);
+        urlSet = urlSet.includeClassesUrl(classLoaderInterface, new UrlSet.FileProtocolNormalizer() {
+            public URL normalizeToFileProtocol(URL url) {
+                return fileManager.normalizeToFileProtocol(url);
+            }
+        });
 
 
         urlSet = urlSet.excludeJavaExtDirs();
@@ -472,7 +489,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                     }
                 }
             }
-            return new UrlSet(fileManager, includeUrls);
+            return new UrlSet(includeUrls);
         }
 
         return urlSet;

@@ -6,7 +6,6 @@ import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
@@ -62,19 +61,21 @@ public class DefaultFileManagerTest extends XWorkTestCase {
         // then
         url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
         fm = container.getInstance(FileManagerFactory.class).getFileManager();
-        assertTrue("Url is " + url, fm.fileNeedsReloading(url));
+        assertTrue(fm.fileNeedsReloading(url));
         restoreLastModified(resourceName);
     }
 
-    private void changeLastModified(String resourceName) throws URISyntaxException {
+    private void changeLastModified(String resourceName) throws Exception {
         URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
         lastModified = new File(url.toURI()).lastModified();
         new File(url.toURI()).setLastModified(new Date().getTime() - 1000*10);
+        Thread.sleep(1100);
     }
 
-    private void restoreLastModified(String resourceName) throws URISyntaxException {
+    private void restoreLastModified(String resourceName) throws Exception {
         URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
         new File(url.toURI()).setLastModified(lastModified);
+        Thread.sleep(1100);
     }
 
 }

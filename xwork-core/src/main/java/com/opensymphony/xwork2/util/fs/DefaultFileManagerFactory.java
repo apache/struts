@@ -19,12 +19,12 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultFileManagerFactory.class);
 
     private boolean reloadingConfigs;
-    private FileManager fileManager;
+    private FileManager systemFileManager;
     private Container container;
 
     @Inject(value = "system")
     public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+        this.systemFileManager = fileManager;
     }
 
     @Inject
@@ -38,6 +38,22 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     }
 
     public FileManager getFileManager() {
+        FileManager fileManager = lookupFileManager();
+        if (fileManager != null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Using FileManager implementation [#0]", fileManager.getClass().getSimpleName());
+            }
+            fileManager.setReloadingConfigs(reloadingConfigs);
+            return fileManager;
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using default implementation of FileManager provided under name [system]: #0", systemFileManager.getClass().getSimpleName());
+        }
+        systemFileManager.setReloadingConfigs(reloadingConfigs);
+        return systemFileManager;
+    }
+
+    private FileManager lookupFileManager() {
         Set<String> names = container.getInstanceNames(FileManager.class);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Found following implementations of FileManager interface: #0", names.toString());
@@ -57,7 +73,6 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Using FileManager implementation [#0]", fm.getClass().getSimpleName());
                 }
-                fm.setReloadingConfigs(reloadingConfigs);
                 return fm;
             }
         }
@@ -69,11 +84,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
                 return fm;
             }
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using default implementation of FileManager provided under name [system]: #0", fileManager.getClass().getSimpleName());
-        }
-        fileManager.setReloadingConfigs(reloadingConfigs);
-        return fileManager;
+        return null;
     }
 
 }

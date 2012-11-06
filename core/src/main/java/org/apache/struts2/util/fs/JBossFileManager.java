@@ -154,8 +154,9 @@ public class JBossFileManager extends DefaultFileManager {
     }
 
     private void readFile(List<URL> urls, File physicalFile) throws MalformedURLException {
-        if (physicalFile.isDirectory()) {
-            for (File file : physicalFile.listFiles()) {
+        File[] files = physicalFile.listFiles();
+        if (physicalFile.isDirectory() && files != null) {
+            for (File file : files) {
                 if (file.isFile()) {
                     addIfAbsent(urls, file.toURI().toURL());
                 } else if (file.isDirectory()) {

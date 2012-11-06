@@ -10,6 +10,7 @@ import net.sf.oval.configuration.Configurer;
 import net.sf.oval.configuration.annotation.AnnotationsConfigurer;
 import net.sf.oval.configuration.annotation.JPAAnnotationsConfigurer;
 import net.sf.oval.configuration.xml.XMLConfigurer;
+import org.apache.struts2.StrutsConstants;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,7 +30,13 @@ public class DefaultOValValidationManager implements OValValidationManager {
 
     protected boolean validateJPAAnnotations;
 
+    private boolean reloadConfigs;
     private FileManager fileManager;
+
+    @Inject(value = StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, required = false)
+    public void setReloadingConfigs(String reloadingConfigs) {
+        this.reloadConfigs = Boolean.parseBoolean(reloadingConfigs);
+    }
 
     @Inject
     public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
@@ -41,7 +48,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
         final String validatorKey = buildValidatorKey(clazz, context);
 
         if (validatorCache.containsKey(validatorKey)) {
-            if (fileManager.isReloadingConfigs()) {
+            if (reloadConfigs) {
                 List<Configurer> configurers = buildXMLConfigurers(clazz, context, true, null);
 
                 //add an annotation configurer

@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkMessages;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
@@ -184,6 +185,7 @@ public class XWorkConverter extends DefaultTypeConverter {
     private TypeConverter defaultTypeConverter;
     private ObjectFactory objectFactory;
     private FileManager fileManager;
+    private boolean reloadingConfigs;
 
     protected XWorkConverter() {
     }
@@ -205,6 +207,11 @@ public class XWorkConverter extends DefaultTypeConverter {
     @Inject
     public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
         this.fileManager = fileManagerFactory.getFileManager();
+    }
+
+    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
+    public void setReloadingConfigs(String reloadingConfigs) {
+        this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }
 
     public static String getConversionErrorMessage(String propertyName, ValueStack stack) {
@@ -744,7 +751,7 @@ public class XWorkConverter extends DefaultTypeConverter {
     private Map<String, Object> conditionalReload(Class clazz, Map<String, Object> oldValues) throws Exception {
         Map<String, Object> mapping = oldValues;
 
-        if (fileManager.isReloadingConfigs()) {
+        if (reloadingConfigs) {
             URL fileUrl = ClassLoaderUtil.getResource(buildConverterFilename(clazz), clazz);
             if (fileManager.fileNeedsReloading(fileUrl.toString())) {
                 mapping = buildConverterMapping(clazz);

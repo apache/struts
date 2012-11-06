@@ -52,10 +52,6 @@ public class DefaultFileManager implements FileManager {
         this.reloadingConfigs = reloadingConfigs;
     }
 
-    public boolean isReloadingConfigs() {
-        return reloadingConfigs;
-    }
-
     public boolean fileNeedsReloading(URL fileUrl) {
         return fileUrl != null && fileNeedsReloading(fileUrl.toString());
     }

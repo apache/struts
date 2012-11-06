@@ -101,10 +101,6 @@ class DummyFileManager implements FileManager {
     public void setReloadingConfigs(boolean reloadingConfigs) {
     }
 
-    public boolean isReloadingConfigs() {
-        return false;
-    }
-
     public boolean fileNeedsReloading(String fileName) {
         return false;
     }

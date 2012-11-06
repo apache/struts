@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -63,6 +64,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     private ValidatorFactory validatorFactory;
     private ValidatorFileParser validatorFileParser;
     private FileManager fileManager;
+    private boolean reloadingConfigs;
 
     @Inject
     public void setValidatorFactory(ValidatorFactory fac) {
@@ -79,6 +81,11 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
+    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
+    public void setReloadingConfigs(String reloadingConfigs) {
+        this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
+    }
+
     public List<Validator> getValidators(Class clazz, String context) {
         return getValidators(clazz, context, null);
     }
@@ -88,7 +95,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         final List<ValidatorConfig> cfgs;
 
         if (validatorCache.containsKey(validatorKey)) {
-            if (fileManager.isReloadingConfigs()) {
+            if (reloadingConfigs) {
                 validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
             }
         } else {

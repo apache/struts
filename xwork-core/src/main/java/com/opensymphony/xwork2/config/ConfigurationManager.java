@@ -15,8 +15,7 @@
  */
 package com.opensymphony.xwork2.config;
 
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
@@ -173,8 +172,8 @@ public class ConfigurationManager {
      * @param container current container used to obtain instance of {@link com.opensymphony.xwork2.util.fs.DefaultFileManager}
      */
     public synchronized void conditionalReload(Container container) {
-        FileManager fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
-        if (fileManager.isReloadingConfigs() || providersChanged) {
+        boolean reloadConfigs = Boolean.parseBoolean(container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION));
+        if (reloadConfigs || providersChanged) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Checking ConfigurationProviders for reload.");
             }

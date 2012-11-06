@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.validator;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -55,6 +56,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     private ValidatorFactory validatorFactory;
     private ValidatorFileParser validatorFileParser;
     private FileManager fileManager;
+    private boolean reloadingConfigs;
 
     @Inject
     public void setValidatorFileParser(ValidatorFileParser parser) {
@@ -71,6 +73,11 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
+    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
+    public void setReloadingConfigs(String reloadingConfigs) {
+        this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
+    }
+
     public synchronized List<Validator> getValidators(Class clazz, String context) {
         return getValidators(clazz, context, null);
     }
@@ -79,7 +86,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         final String validatorKey = buildValidatorKey(clazz, context);
 
         if (validatorCache.containsKey(validatorKey)) {
-            if (fileManager.isReloadingConfigs()) {
+            if (reloadingConfigs) {
                 validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
             }
         } else {

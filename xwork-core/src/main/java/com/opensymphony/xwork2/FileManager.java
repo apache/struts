@@ -17,10 +17,8 @@ public interface FileManager {
      */
     void setReloadingConfigs(boolean reloadingConfigs);
 
-    boolean isReloadingConfigs();
-
     /**
-     * Checks if given file changed and must be reloaded if {@link #isReloadingConfigs()} is true
+     * Checks if given file changed and must be reloaded if {@link #setReloadingConfigs(boolean)} is true
      *
      * @param fileName to check
      * @return true if file changed
@@ -45,7 +43,7 @@ public interface FileManager {
     InputStream loadFile(URL fileUrl);
 
     /**
-     * Adds file to list of monitored files if {@link #isReloadingConfigs()} is true
+     * Adds file to list of monitored files if {@link #setReloadingConfigs(boolean)} is true
      *
      * @param fileUrl {@link URL} to file to be monitored
      */

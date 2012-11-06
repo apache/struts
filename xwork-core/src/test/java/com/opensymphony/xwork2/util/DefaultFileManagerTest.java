@@ -4,8 +4,11 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Date;
 
 /**
  * FileManager Tester.
@@ -17,6 +20,7 @@ import java.net.URL;
 public class DefaultFileManagerTest extends XWorkTestCase {
 
     private FileManager fileManager;
+    private long lastModified;
 
     @Override
     public void setUp() throws Exception {
@@ -47,14 +51,30 @@ public class DefaultFileManagerTest extends XWorkTestCase {
         // given
         container.getInstance(FileManagerFactory.class).setReloadingConfigs("false");
         FileManager fm = container.getInstance(FileManagerFactory.class).getFileManager();
-        assertFalse(fm.isReloadingConfigs());
+        String resourceName = "xwork-sample.xml";
+        URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
+        assertFalse(fm.fileNeedsReloading(url));
 
         // when
         container.getInstance(FileManagerFactory.class).setReloadingConfigs("true");
-        fm = container.getInstance(FileManagerFactory.class).getFileManager();
+        changeLastModified(resourceName);
 
         // then
-        assertTrue(fm.isReloadingConfigs());
+        url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
+        fm = container.getInstance(FileManagerFactory.class).getFileManager();
+        assertTrue("Url is " + url, fm.fileNeedsReloading(url));
+        restoreLastModified(resourceName);
+    }
+
+    private void changeLastModified(String resourceName) throws URISyntaxException {
+        URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
+        lastModified = new File(url.toURI()).lastModified();
+        new File(url.toURI()).setLastModified(new Date().getTime() - 1000*10);
+    }
+
+    private void restoreLastModified(String resourceName) throws URISyntaxException {
+        URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
+        new File(url.toURI()).setLastModified(lastModified);
     }
 
 }

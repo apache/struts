@@ -4,10 +4,8 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Date;
 
 /**
  * FileManager Tester.
@@ -51,32 +49,14 @@ public class DefaultFileManagerTest extends XWorkTestCase {
         container.getInstance(FileManagerFactory.class).setReloadingConfigs("false");
         FileManager fm = container.getInstance(FileManagerFactory.class).getFileManager();
         String resourceName = "xwork-sample.xml";
-        URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
-        assertFalse(fm.fileNeedsReloading(url));
+        assertFalse(fm.fileNeedsReloading(resourceName));
 
         // when
         container.getInstance(FileManagerFactory.class).setReloadingConfigs("true");
-        changeLastModified(resourceName);
 
         // then
-        url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
         fm = container.getInstance(FileManagerFactory.class).getFileManager();
-        assertTrue(fm.fileNeedsReloading(url));
-        restoreLastModified(resourceName);
-    }
-
-    private void changeLastModified(String resourceName) throws Exception {
-        URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
-        File file = new File(url.toURI());
-        lastModified = file.lastModified();
-        file.setLastModified(new Date().getTime() - 1000 * 20);
-        Thread.sleep(1100);
-    }
-
-    private void restoreLastModified(String resourceName) throws Exception {
-        URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
-        new File(url.toURI()).setLastModified(lastModified);
-        Thread.sleep(1100);
+        assertTrue(fm.fileNeedsReloading(resourceName));
     }
 
 }

@@ -67,8 +67,9 @@ public class DefaultFileManagerTest extends XWorkTestCase {
 
     private void changeLastModified(String resourceName) throws Exception {
         URL url = ClassLoaderUtil.getResource(resourceName, DefaultFileManagerTest.class);
-        lastModified = new File(url.toURI()).lastModified();
-        new File(url.toURI()).setLastModified(new Date().getTime() - 1000*10);
+        File file = new File(url.toURI());
+        lastModified = file.lastModified();
+        file.setLastModified(new Date().getTime() - 1000 * 20);
         Thread.sleep(1100);
     }
 

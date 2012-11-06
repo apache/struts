@@ -6,7 +6,7 @@
 <struts>
 
     <constant name="struts.enable.DynamicMethodInvocation" value="false" />
-    <constant name="struts.devMode" value="false" />
+    <constant name="struts.devMode" value="true" />
 
     <package name="default" namespace="/" extends="struts-default">
 

@@ -40,11 +40,11 @@ public class GxpInstance extends Gxp {
 
     private static final Logger logger = Logger.getLogger(GxpInstance.class.getCanonicalName());
 
-    private Class<?> gxpInterface;
-    private Class<?> gxpInstance;
+    private Class gxpInterface;
+    private Class gxpInstance;
     private ObjectFactory objectFactory;
 
-    GxpInstance(Class<?> gxpClass) {
+    GxpInstance(Class gxpClass) {
         super(gxpClass,
                 lookupMethodByName(getNestedClass(gxpClass, "Interface"), "write"),
                 lookupMethodByName(getNestedClass(gxpClass, "Interface"), "getGxpClosure"));
@@ -52,8 +52,8 @@ public class GxpInstance extends Gxp {
         this.gxpInstance = getNestedClass(gxpClass, "Instance");
     }
 
-    private static Class<?> getNestedClass(Class<?> clazz, String nestedClassName) {
-        for (Class<?> nested : clazz.getDeclaredClasses()) {
+    private static Class getNestedClass(Class clazz, String nestedClassName) {
+        for (Class nested : clazz.getDeclaredClasses()) {
             if (nestedClassName.equals(nested.getSimpleName())) {
                 return nested;
             }
@@ -92,9 +92,9 @@ public class GxpInstance extends Gxp {
         return this.gxpInterface;
     }
 
-    private static final Map<Class<?>, GxpInstance> classToGxpInstance = new MapMaker().weakKeys().softValues()
-            .makeComputingMap(new Function<Class<?>, GxpInstance>() {
-                public GxpInstance apply(Class<?> from) {
+    private static final Map<Class, GxpInstance> classToGxpInstance = new MapMaker().weakKeys().softValues()
+            .makeComputingMap(new Function<Class, GxpInstance>() {
+                public GxpInstance apply(Class from) {
                     return classToGxpInstance.containsKey(from) ? classToGxpInstance.get(from) : new GxpInstance(from);
                 }
             });
@@ -126,7 +126,7 @@ public class GxpInstance extends Gxp {
     /**
      * Looks up {@code GxpInstance} instance for the given GXP class.
      */
-    public static GxpInstance getInstance(Class<?> gxpClass) {
+    public static GxpInstance getInstance(Class gxpClass) {
         return classToGxpInstance.get(gxpClass);
     }
 

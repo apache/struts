@@ -33,7 +33,6 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Currency;
 
@@ -212,6 +211,8 @@ public class Number extends ContextBean {
     }
 
     private void setRoundingMode(NumberFormat format) {
+    /*
+        TODO lukaszlenart: enable when switched to Java 1.6
         if (roundingMode != null) {
             roundingMode = findString(roundingMode);
             if ("ceiling".equals(roundingMode)) {
@@ -234,6 +235,7 @@ public class Number extends ContextBean {
                 LOG.error("Could not recognise a roundingMode of [" + roundingMode + "]");
             }
         }
+    */
     }
 
     private NumberFormat getNumberFormat() {
@@ -396,7 +398,7 @@ public class Number extends ContextBean {
     /**
      * @param roundingMode the roundingMode to set
      */
-    @StrutsTagAttribute(description = "The rounding mode to use", type = "String")
+    @StrutsTagAttribute(description = "The rounding mode to use - not implemented yet as this required Java 1.6", type = "String")
     public void setRoundingMode(String roundingMode) {
         this.roundingMode = roundingMode;
     }

@@ -3,7 +3,6 @@ package org.apache.struts2.views.jsp;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.TestAction;
 
-import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -66,7 +65,10 @@ public class NumberTagTest extends AbstractTagTest {
 
         // then
         NumberFormat format = NumberFormat.getCurrencyInstance((Locale) context.get(ActionContext.LOCALE));
+        /*
+        TODO lukaszlenart: enable when switched to Java 1.6
         format.setRoundingMode(RoundingMode.CEILING);
+        */
         String expected = format.format(120.0f);
 
         assertEquals(expected, writer.toString());
@@ -90,7 +92,10 @@ public class NumberTagTest extends AbstractTagTest {
 
         // then
         NumberFormat format = NumberFormat.getInstance((Locale) context.get(ActionContext.LOCALE));
+        /*
+        TODO lukaszlenart: enable when switched to Java 1.6
         format.setRoundingMode(RoundingMode.CEILING);
+        */
         String expected = format.format(120.45f);
 
         assertEquals(expected, writer.toString());

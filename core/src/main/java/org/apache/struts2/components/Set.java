@@ -35,7 +35,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * useful in both cases: when the complex expression takes time (performance improvement) or is hard to read (code
  * readability improvement).</p>
  * <p>If the tag is used with body content, the evaluation of the value parameter is omitted. Instead, the String to
- * which the body eveluates is set as value for the scoped variable.</p>
+ * which the body evaluates is set as value for the scoped variable.</p>
  *
  * The scopes available are as follows :-
  * <ul>

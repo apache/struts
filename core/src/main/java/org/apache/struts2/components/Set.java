@@ -72,8 +72,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:set name="personName" value="person.name"/&gt;
- * Hello, &lt;s:property value="#personName"/&gt;. How are you?
+ * &lt;s:set var="personName" value="person.name"/&gt;
+ * Hello, &lt;s:property value="#personName"/&gt;
+ *
+ * &lt;s:set var="janesName"&gt;Jane Doe&lt;/s:set&gt;
+ * &lt;s:property value="#janesName"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

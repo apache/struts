@@ -64,8 +64,11 @@
         <module>oval</module>
         <module>osgi</module>
         <module>json</module>
+<!--
+        TODO lukaszlenart: uncomment after switching to Java 1.6
         <module>embeddedjsp</module>
         <module>gxp</module>
+-->
         <module>cdi</module>
     </modules>
 

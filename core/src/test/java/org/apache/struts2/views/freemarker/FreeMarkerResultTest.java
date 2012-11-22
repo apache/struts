@@ -217,10 +217,24 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         Dispatcher dispatcher = Dispatcher.getInstance();
         ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
         dispatcher.serviceAction(request, response, servletContext, mapping);
-        String expected = "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
+
+        // TODO lukaszlenart: remove expectedJDK15 and if() after switching to Java 1.6
+        String expectedJDK15 =
+                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>";
+        String expectedJDK16 =
+                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
                 + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
                 + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>";
-        assertEquals(expected, stringWriter.toString());
+
+        String result = stringWriter.toString();
+
+        if (result.contains("foo=\"bar\" placeholder=\"input\"")) {
+            assertEquals(expectedJDK15, result);
+        } else {
+            assertEquals(expectedJDK16, result);
+        }
     }
 
     public void testManualListInTemplate() throws Exception {

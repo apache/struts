@@ -21,7 +21,10 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.io.IOException;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,11 +34,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import java.io.IOException;
 
 /**
  * <!-- SNIPPET START: description -->
@@ -79,6 +78,8 @@ public class ActionContextCleanUp implements Filter {
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+
+        showDeprecatedWarning();
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
@@ -137,4 +138,22 @@ public class ActionContextCleanUp implements Filter {
 
     public void init(FilterConfig arg0) throws ServletException {
     }
+
+    private void showDeprecatedWarning() {
+        String msg =
+                "\n\n" +
+                "***************************************************************************\n" +
+                "*                                 WARNING!!!                              *\n" +
+                "*                                                                         *\n" +
+                "* >>> ActionContextCleanUp <<< is deprecated! Please use the new filters! *\n" +
+                "*                                                                         *\n" +
+                "*             This can be a source of unpredictable problems!             *\n" +
+                "*                                                                         *\n" +
+                "*                Please refer to the docs for more details!               *\n" +
+                "*              http://struts.apache.org/2.x/docs/webxml.html              *\n" +
+                "*                                                                         *\n" +
+                "***************************************************************************\n\n";
+        System.out.println(msg);
+    }
+
 }

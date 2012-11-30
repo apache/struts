@@ -20,15 +20,20 @@
  */
 package org.apache.struts2.dispatcher;
 
-import java.io.IOException;
+import org.apache.struts2.dispatcher.ng.HostConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.dispatcher.ng.HostConfig;
+import java.io.IOException;
 
 /**
- * Interface for loading static resources, based on a path
+ * Interface for loading static resources, based on a path. After implementing your own static content loader
+ * you must tell the framework how to use it, eg.
+ *
+ * &lt;bean name="myContentLoader" type="org.apache.struts2.dispatcher" class="com.company.struts.MyContentLoader"/&gt;
+ * &lt;constant name="struts.staticContentLoader" value="myContentLoader"/&gt;
+ *
+ * Check {@link org.apache.struts2.config.BeanSelectionProvider} for more details.
  */
 public interface StaticContentLoader {
 

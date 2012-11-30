@@ -77,7 +77,7 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
     }
 
     public void dispatch(String include) throws IOException {
-    	if (include.endsWith(mask) || include.endsWith(".jsp")) {
+    	if (include.endsWith(mask)) {
             // FIXME This way FreeMarker results still don't have a content-type!
     	    include(include);
         } else {

@@ -37,6 +37,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -69,7 +70,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /**
      * Store set of path prefixes to use with static resources.
      */
-    protected String[] pathPrefixes;
+    protected List<String> pathPrefixes;
 
     /**
      * Store state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
@@ -150,9 +151,9 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      *            A comma-delimited String listing packages
      * @return A string array of packages
      */
-    protected String[] parse(String packages) {
+    protected List<String> parse(String packages) {
         if (packages == null) {
-            return null;
+            return Collections.emptyList();
         }
         List<String> pathPrefixes = new ArrayList<String>();
 
@@ -165,7 +166,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             pathPrefixes.add(pathPrefix);
         }
 
-        return pathPrefixes.toArray(new String[pathPrefixes.size()]);
+        return pathPrefixes;
     }
 
     /*
@@ -253,7 +254,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             } finally {
                 is.close();
             }
-            return;
         }
     }
 
@@ -276,7 +276,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             }
         }
 
-        log = LoggerFactory.getLogger(FilterDispatcher.class);
+        log = LoggerFactory.getLogger(DefaultStaticContentLoader.class);
 
     }
 
@@ -296,7 +296,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * @param packagePrefix The package prefix to use to locate the resource
      * @return full path
      * @throws UnsupportedEncodingException
-     * @throws IOException
      */
     protected String buildPath(String name, String packagePrefix) throws UnsupportedEncodingException {
         String resourcePath;

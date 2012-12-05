@@ -24,7 +24,8 @@ package org.apache.struts2.sitegraph.entities;
 
 /**
  */
-public class Target {
+public class Target implements Comparable<Target> {
+
     private String target;
     private int type;
 
@@ -59,4 +60,13 @@ public class Target {
         result = 29 * result + type;
         return result;
     }
+
+    public int compareTo(Target o) {
+        if (o.target != null && target != null) {
+            return o.target.compareTo(target);
+        } else {
+            return 0;
+        }
+    }
+
 }

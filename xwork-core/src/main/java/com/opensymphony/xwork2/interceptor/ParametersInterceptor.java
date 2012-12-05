@@ -411,11 +411,12 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             for (Pattern pattern : excludeParams) {
                 Matcher matcher = pattern.matcher(paramName);
                 if (matcher.matches()) {
+                    notifyDeveloper("Parameter [#0] is on the excludeParams list of patterns!", paramName);
                     return true;
                 }
             }
         }
-        notifyDeveloper("Parameter [#0] is on the excludeParams list of patterns!", paramName);
+        notifyDeveloper("Parameter [#0] is not on the excludeParams list of patterns and will be appended to action!", paramName);
         return false;
     }
 

@@ -28,12 +28,6 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-tools</artifactId>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>velocity</groupId>
-                    <artifactId>velocity</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>

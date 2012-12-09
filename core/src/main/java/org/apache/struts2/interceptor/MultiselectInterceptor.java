@@ -20,15 +20,13 @@
  */
 package org.apache.struts2.interceptor;
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-
 
 /**
  * Just as the CheckboxInterceptor checks that if only the hidden field is present, so too does this interceptor. If
@@ -49,7 +47,7 @@ public class MultiselectInterceptor extends AbstractInterceptor {
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation actionInvocation) throws Exception {
-        Map parameters = actionInvocation.getInvocationContext().getParameters();
+        Map<String, Object> parameters = actionInvocation.getInvocationContext().getParameters();
         Map<String, Object> newParams = new HashMap<String, Object>();
         Set<String> keys = parameters.keySet();
 
@@ -74,4 +72,5 @@ public class MultiselectInterceptor extends AbstractInterceptor {
 
         return actionInvocation.invoke();
     }
+
 }

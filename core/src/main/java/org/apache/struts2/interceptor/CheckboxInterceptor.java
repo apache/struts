@@ -58,12 +58,13 @@ public class CheckboxInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(CheckboxInterceptor.class);
 
     public String intercept(ActionInvocation ai) throws Exception {
-        Map parameters = ai.getInvocationContext().getParameters();
+        Map<String, Object> parameters = ai.getInvocationContext().getParameters();
         Map<String, String[]> newParams = new HashMap<String, String[]>();
-        Set<Map.Entry> entries = parameters.entrySet();
-        for (Iterator<Map.Entry> iterator = entries.iterator(); iterator.hasNext();) {
-            Map.Entry entry = iterator.next();
-            String key = (String)entry.getKey();
+        Set<Map.Entry<String, Object>> entries = parameters.entrySet();
+
+        for (Iterator<Map.Entry<String, Object>> iterator = entries.iterator(); iterator.hasNext();) {
+            Map.Entry<String, Object> entry = iterator.next();
+            String key = entry.getKey();
 
             if (key.startsWith("__checkbox_")) {
                 String name = key.substring("__checkbox_".length());

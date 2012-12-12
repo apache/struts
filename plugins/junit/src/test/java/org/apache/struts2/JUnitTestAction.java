@@ -24,6 +24,8 @@ import com.opensymphony.xwork2.ActionSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class JUnitTestAction extends ActionSupport {
+    private static final long serialVersionUID = 1629266238339053546L;
+
     private String name;
 
     @Autowired

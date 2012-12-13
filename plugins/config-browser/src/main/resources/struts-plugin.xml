@@ -42,7 +42,7 @@
             <result name="input" type="freemarker">/config-browser/error.ftl</result>
         </global-results>
 
-        <action name="index">
+        <action name="index" class="org.apache.struts2.config_browser.ActionNamesAction" method="redirect">
             <result type="redirectAction">actionNames</result>
         </action>
 

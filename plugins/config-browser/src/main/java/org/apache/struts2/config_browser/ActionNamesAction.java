@@ -95,4 +95,19 @@ public class ActionNamesAction extends ActionSupport {
         actionNames = new TreeSet<String>(configHelper.getActionNames(namespace));
         return SUCCESS;
     }
+
+    /**
+     * Index action to support cooperation with REST plugin
+     *
+     * @return action result
+     * @throws Exception
+     */
+    public String index() throws Exception {
+        return execute();
+    }
+
+    public String redirect() {
+        return SUCCESS;
+    }
+
 }

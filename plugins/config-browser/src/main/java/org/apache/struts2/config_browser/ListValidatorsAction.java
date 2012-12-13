@@ -83,6 +83,16 @@ public class ListValidatorsAction extends ActionSupport {
         return super.execute();
     }
 
+    /**
+     * Index action to support cooperation with REST plugin
+     *
+     * @return action result
+     * @throws Exception
+     */
+    public String index() throws Exception {
+        return execute();
+    }
+
     protected void loadValidators() {
         Class value = getClassInstance();
         if ( value != null ) {

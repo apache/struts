@@ -21,19 +21,18 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Arrays;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.util.MakeIterator;
-import org.apache.struts2.views.jsp.IteratorStatus;
-
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.jsp.IteratorStatus;
+
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -357,7 +356,7 @@ public class IteratorComponent extends ContextBean {
         }
     }
 
-    class CounterIterator implements Iterator<Object> {
+    static class CounterIterator implements Iterator<Object> {
         private int step;
         private int end;
         private int currentIndex;
@@ -380,7 +379,7 @@ public class IteratorComponent extends ContextBean {
             if (hasNext()) {
                 int nextIndex = peekNextIndex();
                 currentIndex += step;
-                return value != null ? values.get(nextIndex) : nextIndex;
+                return values != null ? values.get(nextIndex) : nextIndex;
             } else {
                 throw new IndexOutOfBoundsException("Index " + ( currentIndex + step) + " must be less than or equal to " + end);
             }

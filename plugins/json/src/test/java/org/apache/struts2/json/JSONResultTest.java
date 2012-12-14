@@ -20,6 +20,16 @@
  */
 package org.apache.struts2.json;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.StrutsTestCase;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -33,18 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * JSONResultTest
@@ -571,6 +569,31 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-11.txt"));
         assertEquals(normalizedExpected, normalizedActual);
         assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+    }
+
+    public void testDefaultEncoding() throws Exception {
+        // given
+        JSONResult json = new JSONResult();
+        json.setDefaultEncoding("UTF-16");
+
+        // when
+        String encoding = json.getEncoding();
+
+        // thn
+        assertEquals("UTF-16", encoding);
+    }
+
+    public void testEncoding() throws Exception {
+        // given
+        JSONResult json = new JSONResult();
+        json.setEncoding("UTF-8");
+        json.setDefaultEncoding("UTF-8");
+
+        // when
+        String encoding = json.getEncoding();
+
+        // thn
+        assertEquals("UTF-8", encoding);
     }
 
     @Override

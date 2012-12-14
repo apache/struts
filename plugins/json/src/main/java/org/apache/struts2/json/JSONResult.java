@@ -65,6 +65,7 @@ public class JSONResult implements Result {
 
     private static final Logger LOG = LoggerFactory.getLogger(JSONResult.class);
 
+    private String encoding;
     private String defaultEncoding = "ISO-8859-1";
     private List<Pattern> includeProperties;
     private List<Pattern> excludeProperties;
@@ -217,10 +218,14 @@ public class JSONResult implements Result {
      * Retrieve the encoding <p/>
      *
      * @return The encoding associated with this template (defaults to the value
-     *         of 'struts.i18n.encoding' property)
+     *         of param 'encoding', if empty default to 'struts.i18n.encoding' property)
      */
     protected String getEncoding() {
-        String encoding = this.defaultEncoding;
+        String encoding = this.encoding;
+
+        if (encoding == null) {
+            encoding = this.defaultEncoding;
+        }
 
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
@@ -420,5 +425,17 @@ public class JSONResult implements Result {
      */
     public void setWrapSuffix(String wrapSuffix) {
         this.wrapSuffix = wrapSuffix;
+    }
+
+    /**
+     * If defined will be used instead of {@link #defaultEncoding}, you can define it with result
+     * &lt;result name=&quot;success&quot; type=&quot;json&quot;&gt;
+     *     &lt;param name=&quot;encoding&quot;&gt;UTF-8&lt;/param&gt;
+     * &lt;/result&gt;
+     *
+     * @param encoding valid encoding string
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 }

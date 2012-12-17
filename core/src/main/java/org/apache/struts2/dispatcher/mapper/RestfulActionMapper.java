@@ -21,47 +21,21 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.RequestUtils;
-
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.RequestUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
- * <!-- START SNIPPET: description -->
- *
- * A custom action mapper using the following format:
- * <p/>
- * <p/>
- * <ul><tt>http://HOST/ACTION_NAME/PARAM_NAME1/PARAM_VALUE1/PARAM_NAME2/PARAM_VALUE2</tt></ul>
- * <p/>
- * You can have as many parameters you'd like to use. Alternatively the URL can be shortened to the following:
- * <p/>
- * <ul><tt>http://HOST/ACTION_NAME/PARAM_VALUE1/PARAM_NAME2/PARAM_VALUE2</tt></ul>
- * <p/>
- * This is the same as:
- * <p/>
- * <ul><tt>http://HOST/ACTION_NAME/ACTION_NAME + "Id"/PARAM_VALUE1/PARAM_NAME2/PARAM_VALUE2</tt></ul>
- * <p/>
- * Suppose for example we would like to display some articles by id at using the following URL sheme:
- * <p/>
- * <ul><tt>http://HOST/article/Id</tt></ul>
- * <p/>
- * <p/>
- * Your action just needs a setArticleId() method, and requests such as /article/1, /article/2, etc will all map
- * to that URL pattern.
- *
- * <!-- END SNIPPET: description -->
- *
+ * Simple Restfull Action Mapper to support REST application
+ * See docs for more information
+ * http://struts.apache.org/2.x/docs/restfulactionmapper.html
  */
 public class RestfulActionMapper implements ActionMapper {
     protected static final Logger LOG = LoggerFactory.getLogger(RestfulActionMapper.class);

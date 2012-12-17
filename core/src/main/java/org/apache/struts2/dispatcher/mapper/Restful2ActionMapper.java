@@ -21,18 +21,16 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.StrutsConstants;
-
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -92,6 +90,54 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * </p>
  *
  * <!-- END SNIPPET: description -->
+ *
+ * <!-- START SNIPPET: example -->
+ *
+ * To use the Restful2ActionMapper in an existing struts application we have to change
+ * the strus.mapper.class constant and let it point to the Restful2ActionMapper
+ * {code:xml}
+ * <constant name="struts.mapper.class" value="org.apache.struts2.dispatcher.mapper.Restful2ActionMapper" />
+ * {code}
+ *
+ * The problem with the above approach is that we may break existing actions because
+ * the Restful2ActionMapper tries to guess the method name using conventions
+ * that aren't applicable to normal action classes.
+ *
+ * To overcome the above problem, we have to use a different action mapper depending on the url we want to process.
+ * REST actions will be processed by the Restful2ActionMapper and non-REST actions by the {@link DefaultActionMapper}
+ *
+ * To achieve that we have to rely on nampespaces and the {@link PrefixBasedActionMapper} that can choose
+ * which action mapper to use for a particular url based on a prefix (the action namespace).
+ *
+ * To put everything together, we create a package for our rest actions
+ * {code:xml}
+ * <package name="rest" namespace="/rest" extends="struts-default">
+ *   ....interceptor config
+ *    <action name="movie/*" class="app.MovieAction">
+ *   <param name="id">{0}</param>
+ *       ....results
+ *    </action>
+ *   ....
+ * </package>
+ * {code}
+ *
+ * All other actions remain in their existing packages and namespaces
+ * we use the PrefixBasedActionMapper telling it to use the Restful2ActionMapper for actions
+ * in the /rest namespace and the DefaultActionMapper for all other actions
+ *
+ * {code:xml}
+ * <constant name="struts.mapper.class" value="org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper" />
+ * <constant name="struts.mapper.prefixMapping" value="/rest:restful2,:struts" />
+ * {code}
+ *
+ * For the Restful2ActionMapper to work we also have to set
+ *
+ * {code:xml}
+ * <constant name="struts.enable.SlashesInActionNames" value="true" />
+ * <constant name="struts.mapper.alwaysSelectFullNamespace" value="false" />
+ * {code}
+ *
+ * <!-- END SNIPPET: example -->
  */
 public class Restful2ActionMapper extends DefaultActionMapper {
 
@@ -102,7 +148,6 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     public Restful2ActionMapper() {
     	setSlashesInActionNames("true");
     }
-    
 
     /*
     * (non-Javadoc)

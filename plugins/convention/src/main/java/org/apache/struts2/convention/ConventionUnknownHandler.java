@@ -66,7 +66,9 @@ import java.util.Map;
  * </p>
  */
 public class ConventionUnknownHandler implements UnknownHandler {
+
     private static final Logger LOG = LoggerFactory.getLogger(ConventionUnknownHandler.class);
+
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
     protected ServletContext servletContext;
@@ -81,24 +83,24 @@ public class ConventionUnknownHandler implements UnknownHandler {
     /**
      * Constructs the unknown handler.
      *
-     * @param   configuration The XWork configuration.
-     * @param   objectFactory The XWork object factory used to create result instances.
-     * @param   servletContext The servlet context used to help build the action configurations.
-     * @param   container The Xwork container
-     * @param   defaultParentPackageName The default XWork package that the unknown handler will use as
-     *          the parent package for new actions and results.
-     * @param   redirectToSlash A boolean parameter that controls whether or not this will handle
-     *          unknown actions in the same manner as Apache, Tomcat and other web servers. This
-     *          handling will send back a redirect for URLs such as /foo to /foo/ if there doesn't
-     *          exist an action that responds to /foo.
-     * @param   nameSeparator The character used as word separator in the action names. "-" by default
+     * @param configuration            The XWork configuration.
+     * @param objectFactory            The XWork object factory used to create result instances.
+     * @param servletContext           The servlet context used to help build the action configurations.
+     * @param container                The Xwork container
+     * @param defaultParentPackageName The default XWork package that the unknown handler will use as
+     *                                 the parent package for new actions and results.
+     * @param redirectToSlash          A boolean parameter that controls whether or not this will handle
+     *                                 unknown actions in the same manner as Apache, Tomcat and other web servers. This
+     *                                 handling will send back a redirect for URLs such as /foo to /foo/ if there doesn't
+     *                                 exist an action that responds to /foo.
+     * @param nameSeparator            The character used as word separator in the action names. "-" by default
      */
     @Inject
     public ConventionUnknownHandler(Configuration configuration, ObjectFactory objectFactory,
-            ServletContext servletContext, Container container,
-            @Inject("struts.convention.default.parent.package") String defaultParentPackageName,
-            @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
-            @Inject("struts.convention.action.name.separator") String nameSeparator) {
+                                    ServletContext servletContext, Container container,
+                                    @Inject("struts.convention.default.parent.package") String defaultParentPackageName,
+                                    @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
+                                    @Inject("struts.convention.action.name.separator") String nameSeparator) {
         this.configuration = configuration;
         this.objectFactory = objectFactory;
         this.servletContext = servletContext;
@@ -116,7 +118,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     public ActionConfig handleUnknownAction(String namespace, String actionName)
-    throws XWorkException {
+            throws XWorkException {
         // Strip the namespace if it is just a slash
         if (namespace == null || "/".equals(namespace)) {
             namespace = "";
@@ -173,6 +175,14 @@ public class ConventionUnknownHandler implements UnknownHandler {
                 // Otherwise, if the URL is /foo or /foo/ look for index pages in /foo/
                 actionConfig = buildActionConfig(resource.path, resultsByExtension.get(resource.ext));
             }
+
+            // try to find index action in current namespace or in default one
+            if (actionConfig == null) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Looking for action named [index] in namespace [#0] or in default namespace", namespace);
+                }
+                actionConfig = configuration.getRuntimeConfiguration().getActionConfig(namespace, "index");
+            }
         }
 
         return actionConfig;
@@ -181,9 +191,9 @@ public class ConventionUnknownHandler implements UnknownHandler {
     /**
      * Finds a resource using the given path parts and all of the extensions in the map.
      *
-     * @param   resultsByExtension Map of extension to result type config objects.
-     * @param   parts The parts of the resource.
-     * @return  The resource path or null.
+     * @param resultsByExtension Map of extension to result type config objects.
+     * @param parts              The parts of the resource.
+     * @return The resource path or null.
      */
     protected Resource findResource(Map<String, ResultTypeConfig> resultsByExtension, String... parts) {
         for (String ext : resultsByExtension.keySet()) {
@@ -197,8 +207,9 @@ public class ConventionUnknownHandler implements UnknownHandler {
                     return new Resource(canonicalPath, ext);
                 }
             } catch (MalformedURLException e) {
-                if (LOG.isErrorEnabled())
+                if (LOG.isErrorEnabled()) {
                     LOG.error("Unable to parse path to the web application resource [#0] skipping...", canonicalPath);
+                }
             }
         }
 
@@ -214,7 +225,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     protected ActionConfig buildActionConfig(String path, ResultTypeConfig resultTypeConfig) {
-        Map<String, ResultConfig> results = new HashMap<String,ResultConfig>();
+        Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
         HashMap<String, String> params = new HashMap<String, String>();
         if (resultTypeConfig.getParams() != null) {
             params.putAll(resultTypeConfig.getParams());
@@ -222,17 +233,17 @@ public class ConventionUnknownHandler implements UnknownHandler {
         params.put(resultTypeConfig.getDefaultResultParam(), path);
 
         PackageConfig pkg = configuration.getPackageConfig(defaultParentPackageName);
-        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), Collections.EMPTY_MAP, null, objectFactory);
+        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), Collections.<String, String>emptyMap(), null, objectFactory);
         ResultConfig config = new ResultConfig.Builder(Action.SUCCESS, resultTypeConfig.getClassName()).
-            addParams(params).build();
+                addParams(params).build();
         results.put(Action.SUCCESS, config);
 
         return new ActionConfig.Builder(defaultParentPackageName, "execute", ActionSupport.class.getName()).
-            addInterceptors(interceptors).addResultConfigs(results).build();
+                addInterceptors(interceptors).addResultConfigs(results).build();
     }
 
     private Result scanResultsByExtension(String ns, String actionName, String pathPrefix,
-            String resultCode, ActionContext actionContext) {
+                                          String resultCode, ActionContext actionContext) {
         Map<String, ResultTypeConfig> resultsByExtension = conventionsService.getResultTypesByExtension(parentPackage);
         Result result = null;
         for (String ext : resultsByExtension.keySet()) {
@@ -243,31 +254,31 @@ public class ConventionUnknownHandler implements UnknownHandler {
                         fqan, ext, pathPrefix, resultCode);
             }
 
-            String path = string(pathPrefix, actionName, nameSeparator, resultCode, "." , ext);
+            String path = string(pathPrefix, actionName, nameSeparator, resultCode, ".", ext);
             result = findResult(path, resultCode, ext, actionContext, resultsByExtension);
             if (result != null) {
                 break;
             }
 
-            path = string(pathPrefix, actionName, "." , ext);
+            path = string(pathPrefix, actionName, ".", ext);
             result = findResult(path, resultCode, ext, actionContext, resultsByExtension);
             if (result != null) {
                 break;
             }
 
             // Issue #6 - Scan for result-code as page name
-            path = string(pathPrefix, resultCode, "." , ext);
+            path = string(pathPrefix, resultCode, ".", ext);
             result = findResult(path, resultCode, ext, actionContext, resultsByExtension);
             if (result != null) {
                 break;
             }
 
         }
-      return result;
+        return result;
     }
 
     public Result handleUnknownResult(ActionContext actionContext, String actionName,
-            ActionConfig actionConfig, String resultCode) throws XWorkException {
+                                      ActionConfig actionConfig, String resultCode) throws XWorkException {
 
         PackageConfig pkg = configuration.getPackageConfig(actionConfig.getPackageName());
         String ns = pkg.getNamespace();
@@ -290,7 +301,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
                     break;
                 }
 
-                path = string(pathPrefix, actionName, "/index." , ext);
+                path = string(pathPrefix, actionName, "/index.", ext);
                 result = findResult(path, resultCode, ext, actionContext, resultsByExtension);
                 if (result != null) {
                     break;
@@ -302,7 +313,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             //try to find an action to chain to. If the source action is "foo" and
             //the result is "bar", we will try to find an action called "foo-bar"
             //in the same package
-            String chainedTo = new StringBuilder(actionName).append(nameSeparator).append(resultCode).toString();
+            String chainedTo = actionName + nameSeparator + resultCode;
             ActionConfig chainedToConfig = pkg.getActionConfigs().get(chainedTo);
             if (chainedToConfig != null) {
                 if (LOG.isTraceEnabled()) {
@@ -318,7 +329,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     protected Result findResult(String path, String resultCode, String ext, ActionContext actionContext,
-            Map<String, ResultTypeConfig> resultsByExtension) {
+                                Map<String, ResultTypeConfig> resultsByExtension) {
         try {
             boolean traceEnabled = LOG.isTraceEnabled();
             if (traceEnabled)
@@ -350,7 +361,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     protected Result buildResult(String path, String resultCode, ResultTypeConfig config, ActionContext invocationContext) {
         String resultClass = config.getClassName();
 
-        Map<String,String> params = new LinkedHashMap<String,String>();
+        Map<String, String> params = new LinkedHashMap<String, String>();
         if (config.getParams() != null) {
             params.putAll(config.getParams());
         }
@@ -376,10 +387,10 @@ public class ConventionUnknownHandler implements UnknownHandler {
      * Determines the result path prefix that the request URL is for, minus the action name. This includes
      * the base result location and the namespace, with all the slashes handled.
      *
-     * @param   actionConfig (Optional) The might be a ConventionActionConfig, from which we can get the
-     *          default base result location of that specific action.
-     * @param   namespace The current URL namespace.
-     * @return  The path prefix and never null.
+     * @param actionConfig (Optional) The might be a ConventionActionConfig, from which we can get the
+     *                     default base result location of that specific action.
+     * @param namespace    The current URL namespace.
+     * @return The path prefix and never null.
      */
     protected String determinePath(ActionConfig actionConfig, String namespace) {
         String finalPrefix = conventionsService.determineResultPath(actionConfig);
@@ -408,9 +419,9 @@ public class ConventionUnknownHandler implements UnknownHandler {
     /**
      * Not used
      */
-	public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException {
-		throw null;
-	}
+    public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException {
+        throw null;
+    }
 
     public static class Resource {
         final String path;

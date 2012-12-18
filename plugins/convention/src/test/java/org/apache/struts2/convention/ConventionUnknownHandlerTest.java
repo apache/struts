@@ -21,10 +21,22 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
+import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.easymock.EasyMock;
+
+import javax.servlet.ServletContext;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.createNiceMock;
@@ -32,13 +44,10 @@ import static org.easymock.classextension.EasyMock.createStrictMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
-import javax.servlet.ServletContext;
-import java.net.URL;
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-
 public class ConventionUnknownHandlerTest extends TestCase {
+
+    private PackageConfig packageConfiguration;
+
     public void testCanonicalizeShouldReturnNullWhenPathIsNull() throws Exception {
         final ConventionUnknownHandler handler = conventionUnknownHandler();
 
@@ -57,6 +66,24 @@ public class ConventionUnknownHandlerTest extends TestCase {
 
         assertEquals("/should/not/modify/single/slashes.ext",
                 handler.canonicalize("/should/not/modify/single/slashes.ext"));
+    }
+
+    public void testHandleUnknownActionPointToIndex() throws Exception {
+        // given
+        ServletContext servletContext = createStrictMock(ServletContext.class);
+        expect(servletContext.getResource("/does-not-exist.jsp")).andReturn(null);
+        expect(servletContext.getResource("/does-not-exist/index.jsp")).andReturn(null);
+        replay(servletContext);
+
+        ConventionUnknownHandler handler = conventionUnknownHandler(servletContext);
+
+        // when
+        ActionConfig config = handler.handleUnknownAction("", "/does-not-exist");
+
+        // then
+        assertNotNull(config);
+        assertEquals("", config.getPackageName());
+        assertEquals("index", config.getName());
     }
 
     public void testFindResourceShouldReturnNullAfterTryingEveryExtensionWithoutSuccess() throws Exception {
@@ -114,18 +141,31 @@ public class ConventionUnknownHandlerTest extends TestCase {
     private Configuration configuration(final String packageName) {
         final Configuration mock = createNiceMock(Configuration.class);
 
-        final PackageConfig packageConfiguration = packageConfiguration();
+        packageConfiguration = packageConfiguration();
         expect(mock.getPackageConfig(packageName)).andStubReturn(packageConfiguration);
+        RuntimeConfiguration runtime = createNiceMock(RuntimeConfiguration.class);
+        expect(runtime.getActionConfig("", "index")).andStubReturn(new ActionConfig.Builder("", "index", "").build());
+        expect(mock.getRuntimeConfiguration()).andStubReturn(runtime);
 
-        replay(mock);
+        replay(mock, runtime);
 
         return mock;
     }
 
     private Container container() {
         final Container mock = createNiceMock(Container.class);
+        ConventionsService service = EasyMock.createNiceMock(ConventionsService.class);
 
-        replay(mock);
+        expect(mock.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE)).andReturn("test");
+        expect(mock.getInstance(ConventionsService.class, "test")).andStubReturn(service);
+
+        ActionConfig actionConfig = null;
+        expect(service.determineResultPath(actionConfig)).andReturn("");
+        Map<String, ResultTypeConfig> results = new HashMap<String, ResultTypeConfig>();
+        results.put("jsp", new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName()).build());
+        expect(service.getResultTypesByExtension(packageConfiguration)).andReturn(results);
+
+        replay(mock, service);
 
         return mock;
     }

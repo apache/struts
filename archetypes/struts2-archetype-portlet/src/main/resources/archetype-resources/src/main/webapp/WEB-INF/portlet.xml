@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<portlet-app
-    version="1.0"
-    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
-    id="${artifactId}">
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd 
+                                 http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+             id="\${artifactId}">
 
     <portlet id="HelloPortlet">
         <description xml:lang="EN">Simple hello world portlet</description>
         <portlet-name>HelloPortlet</portlet-name>
-        <display-name xml:lang="EN">${artifactId}</display-name>
+        <display-name xml:lang="EN">\${artifactId}</display-name>
     
         <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr286Dispatcher</portlet-class>
 
+		<init-param>
+	        <name>actionPackages</name>
+	        <value>${package}</value>
+	    </init-param>
+    
 		<!-- The namespace for the actions configured for view mode -->
 		<init-param>
 			<name>viewNamespace</name>

@@ -1,11 +1,9 @@
-package ${packageName};
+package ${package};
 
 import javax.portlet.PortletPreferences;
 
 import org.apache.struts2.dispatcher.DefaultActionSupport;
 import org.apache.struts2.portlet.interceptor.PortletPreferencesAware;
-
-import com.opensymphony.xwork2.Preparable;
 
 public class HelloAction extends DefaultActionSupport implements PortletPreferencesAware {
 

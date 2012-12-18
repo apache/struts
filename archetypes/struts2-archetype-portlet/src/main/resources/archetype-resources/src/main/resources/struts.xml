@@ -5,14 +5,14 @@
 
 <struts>
    <package name="default" extends="struts-portlet-default" namespace="/view">
-	   <action name="index" class="${packageName}.HelloAction">
+	   <action name="index" class="${package}.HelloAction">
 		   <result>/WEB-INF/jsp/view/index.jsp</result>
 	   </action>
    </package>
 	
 	<package name="edit" extends="struts-portlet-default" namespace="/edit">
 	
-		<action name="index" class="${packageName}.UpdateNameAction">
+		<action name="index" class="${package}.UpdateNameAction">
 			<result type="redirectAction">
 				<param name="actionName">index</param>
 				<param name="portletMode">view</param>

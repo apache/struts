@@ -21,25 +21,20 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
-
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * HttpHeaderResultTest
- *
  */
 public class HttpHeaderResultTest extends StrutsTestCase {
 
@@ -49,13 +44,12 @@ public class HttpHeaderResultTest extends StrutsTestCase {
     Mock responseMock;
     ReflectionProvider reflectionProvider;
 
-
     public void testHeaderValuesAreNotParsedWhenParseIsFalse() throws Exception {
-        Map params = new HashMap();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("headers.foo", "${bar}");
         params.put("headers.baz", "baz");
 
-        Map values = new HashMap();
+        Map<String, String> values = new HashMap<String, String>();
         values.put("bar", "abc");
         ActionContext.getContext().getValueStack().push(values);
 
@@ -69,11 +63,11 @@ public class HttpHeaderResultTest extends StrutsTestCase {
     }
 
     public void testHeaderValuesAreParsedAndSet() throws Exception {
-        Map params = new HashMap();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("headers.foo", "${bar}");
         params.put("headers.baz", "baz");
 
-        Map values = new HashMap();
+        Map<String, String> values = new HashMap<String, String>();
         values.put("bar", "abc");
         ActionContext.getContext().getValueStack().push(values);
 
@@ -87,7 +81,8 @@ public class HttpHeaderResultTest extends StrutsTestCase {
     
     public void testErrorMessageIsParsedAndSet() throws Exception {
         ActionContext.getContext().getValueStack().set("errMsg", "abc");
-        result.setError(404);
+        ActionContext.getContext().getValueStack().set("errCode", "404");
+        result.setError("${errCode}");
         result.setErrorMessage("${errMsg}");
         
         responseMock.expect("sendError", C.args(C.eq(404), C.eq("abc")));
@@ -97,7 +92,7 @@ public class HttpHeaderResultTest extends StrutsTestCase {
     
     public void testErrorMessageIsNotParsedAndSet() throws Exception {
         ActionContext.getContext().getValueStack().set("errMsg", "abc");
-        result.setError(404);
+        result.setError("404");
         result.setParse(false);
         result.setErrorMessage("${errMsg}");
         
@@ -115,7 +110,7 @@ public class HttpHeaderResultTest extends StrutsTestCase {
     
     public void testErrorIsSet() throws Exception {
         responseMock.expect("sendError", C.eq(404));
-        result.setError(404);
+        result.setError("404");
         result.execute(invocation);
         responseMock.verify();
     }
@@ -134,4 +129,5 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         super.tearDown();
         ActionContext.setContext(null);
     }
+
 }

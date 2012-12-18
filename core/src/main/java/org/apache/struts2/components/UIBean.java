@@ -51,7 +51,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * UIBean is the standard superclass of all Struts UI componentns.
+ * UIBean is the standard superclass of all Struts UI components.
  * It defines common Struts and html properties all UI components should present for usage.
  *
  * <!-- START SNIPPET: templateRelatedAttributes -->
@@ -156,6 +156,12 @@ import java.util.concurrent.ConcurrentHashMap;
  *          <td>xhtml</td>
  *          <td>String</td>
  *          <td>define required label position of form element (left/right), default to right</td>
+ *       </tr>
+  *       <tr>
+ *          <td>errorPosition</td>
+ *          <td>xhtml</td>
+ *          <td>String</td>
+ *          <td>define error position of form element (top|bottom), default to top</td>
  *       </tr>
  *       <tr>
  *          <td>name</td>
@@ -454,6 +460,7 @@ public abstract class UIBean extends Component {
     protected String labelPosition;
     protected String labelSeparator;
     protected String requiredposition;
+    protected String errorPosition;
     protected String name;
     protected String required;
     protected String tabindex;
@@ -666,6 +673,10 @@ public abstract class UIBean extends Component {
             addParameter("requiredposition", findString(requiredposition));
         }
 
+        if (errorPosition != null) {
+            addParameter("errorposition", findString(errorPosition));
+        }
+        
         if (required != null) {
             addParameter("required", findValue(required, Boolean.class));
         }
@@ -1070,6 +1081,11 @@ public abstract class UIBean extends Component {
         this.requiredposition = requiredposition;
     }
 
+    @StrutsTagAttribute(description="Define error position of form element (top|bottom)")
+    public void setErrorPosition(String errorPosition) {
+        this.errorPosition = errorPosition;
+    }
+    
     @StrutsTagAttribute(description="The name to set for element")
     public void setName(String name) {
         this.name = name;

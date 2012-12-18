@@ -1,0 +1,13 @@
+<tr errorFor="myId">
+    <td align="center" valign="top" colspan="2">
+        <span class="errorMessage">barerrormessage</span>
+    </td>
+</tr>
+<tr>
+    <td class="tdLabel">
+        <labelfor="myId" class="errorLabel">mylabel:</label>
+    </td>
+    <td>
+        <input type="text" name="foo" value="bar" id="myId" title="mytitle"/>
+    </td>
+</tr>

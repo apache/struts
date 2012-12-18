@@ -42,8 +42,8 @@ public class TextfieldTest extends AbstractUITagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
-    protected Map initializedGenericTagTestProperties() {
-        Map result = super.initializedGenericTagTestProperties();
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = super.initializedGenericTagTestProperties();
         new PropertyHolder("maxlength", "10").addToMap(result);
         new PropertyHolder("readonly", "true", "readonly=\"readonly\"").addToMap(result);
         new PropertyHolder("size", "12").addToMap(result);
@@ -120,7 +120,7 @@ public class TextfieldTest extends AbstractUITagTest {
         testAction.setFoo("bar");
 
         TextFieldModel model = new TextFieldModel(stack, request, response);
-        HashMap params = new HashMap();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("name", "myname");
         params.put("value", "%{foo}");
         params.put("size", "10");
@@ -198,4 +198,87 @@ public class TextfieldTest extends AbstractUITagTest {
 
         verify(TextFieldTag.class.getResource("Textfield-7.txt"));
     }
+
+    public void testErrorPositionBottom() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setValue("bar");
+        tag.setTitle("mytitle");
+        tag.setErrorPosition("bottom");
+
+        testAction.addFieldError("foo", "bar error message");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-8.txt"));
+    }
+
+    public void testErrorPositionTop() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setValue("bar");
+        tag.setTitle("mytitle");
+        tag.setErrorPosition("top");
+
+        testAction.addFieldError("foo", "bar error message");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-9.txt"));
+    }
+
+    public void testErrorPositionBottomCssXhtmlTheme() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setValue("bar");
+        tag.setTitle("mytitle");
+        tag.setErrorPosition("bottom");
+        tag.setTheme("css_xhtml");
+
+        testAction.addFieldError("foo", "bar error message");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-10.txt"));
+    }
+
+    public void testErrorPositionTopCssXhtmlTheme() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setValue("bar");
+        tag.setTitle("mytitle");
+        tag.setErrorPosition("top");
+        tag.setTheme("css_xhtml");
+
+        testAction.addFieldError("foo", "bar error message");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-11.txt"));
+    }
+
 }

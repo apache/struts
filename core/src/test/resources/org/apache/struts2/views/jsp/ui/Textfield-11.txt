@@ -1,0 +1,12 @@
+<div id="wwgrp_myId" class="wwgrp">
+    <div id="wwerr_myId" class="wwerr">
+        <div errorFor="myId" class="errorMessage">barerrormessage</div>
+    </div>
+    <div id="wwlbl_myId" class="wwlbl">
+        <label for="myId" class="errorLabel">mylabel:</label>
+    </div>
+    <br/>
+    <div id="wwctrl_myId" class="wwctrl">
+        <input type="text" name="foo" value="bar" id="myId" title="mytitle"/>
+    </div>
+</div>

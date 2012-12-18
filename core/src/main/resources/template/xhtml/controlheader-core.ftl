@@ -25,18 +25,16 @@
 	This will be done if ActionSupport is used.
 -->
 <#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<#if parameters.errorposition?default("top") == 'top'>
 <#if hasFieldErrors>
 <#list fieldErrors[parameters.name] as error>
 <tr errorFor="${parameters.id}">
-<#if parameters.labelposition?default("") == 'top'>
-    <td align="left" valign="top" colspan="2"><#rt/>
-<#else>
     <td align="center" valign="top" colspan="2"><#rt/>
-</#if>
         <span class="errorMessage">${error?html}</span><#t/>
     </td><#lt/>
 </tr>
 </#list>
+</#if>
 </#if>
 <#--
 	if the label position is top,

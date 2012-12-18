@@ -39,7 +39,7 @@ import java.util.Map;
  * <!-- START SNIPPET: description -->
  * <p/>
  * A custom Result type for setting HTTP headers and status by optionally evaluating against the ValueStack.
- * This result can also be used to send and error to the client.
+ * This result can also be used to send and error to the client. All the parameters can be evaluated against the ValueStack.
  * <p/>
  * <!-- END SNIPPET: description -->
  * <p/>

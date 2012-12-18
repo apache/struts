@@ -132,6 +132,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParametersInterceptor.class);
 
+    public static final String ACCEPTED_PARAM_NAMES = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*";
+
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
@@ -143,7 +145,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private boolean devMode = false;
 
     // Allowed names of parameters
-    private String acceptedParamNames = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*";
+    private String acceptedParamNames = ACCEPTED_PARAM_NAMES;
     private Pattern acceptedPattern = Pattern.compile(acceptedParamNames);
 
     private ValueStackFactory valueStackFactory;

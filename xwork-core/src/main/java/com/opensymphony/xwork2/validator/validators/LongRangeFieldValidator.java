@@ -72,8 +72,8 @@ package com.opensymphony.xwork2.validator.validators;
  */
 public class LongRangeFieldValidator extends AbstractRangeValidator<Long> {
 
-    String max = null;
-    String min = null;
+    private String max = null;
+    private String min = null;
 
     public void setMax(String max) {
         this.max = max;

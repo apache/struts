@@ -149,6 +149,15 @@ public class AnnotationValidationConfigurationBuilder {
                     }
 
                 }
+                // Process ShortRangeFieldValidator
+                else if ( a instanceof ShortRangeFieldValidator) {
+                    ShortRangeFieldValidator v = (ShortRangeFieldValidator) a;
+                    ValidatorConfig temp = processShortRangeFieldValidatorAnnotation(v, fieldName, methodName);
+                    if ( temp != null) {
+                        result.add(temp);
+                    }
+
+                }
                 // Process DoubleRangeFieldValidator
                 else if ( a instanceof DoubleRangeFieldValidator) {
                     DoubleRangeFieldValidator v = (DoubleRangeFieldValidator) a;
@@ -548,18 +557,14 @@ public class AnnotationValidationConfigurationBuilder {
         SimpleDateFormat d2 = (SimpleDateFormat)DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.getDefault());
         SimpleDateFormat d3 = (SimpleDateFormat)DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
         SimpleDateFormat[] dfs = {d1, d2, d3};
-        DateFormat df = null;
-        for (SimpleDateFormat df1 : dfs) {
+        for (SimpleDateFormat df : dfs)
             try {
-                Date check = df1.parse(value);
-                df = df1;
+                Date check = df.parse(value);
                 if (check != null) {
                     return check;
                 }
+            } catch (ParseException ignore) {
             }
-            catch (ParseException ignore) {
-            }
-        }
         return null;
 
     }
@@ -610,6 +615,34 @@ public class AnnotationValidationConfigurationBuilder {
 
     private ValidatorConfig processIntRangeFieldValidatorAnnotation(IntRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "int";
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        if (fieldName != null) {
+            params.put("fieldName", fieldName);
+        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+            params.put("fieldName", v.fieldName());
+        }
+
+        if ( v.min() != null && v.min().length() > 0) {
+            params.put("min", v.min());
+        }
+        if ( v.max() != null && v.max().length() > 0) {
+            params.put("max", v.max());
+        }
+
+        validatorFactory.lookupRegisteredValidatorType(validatorType);
+        return new ValidatorConfig.Builder(validatorType)
+            .addParams(params)
+            .addParam("methodName", methodName)
+            .shortCircuit(v.shortCircuit())
+            .defaultMessage(v.message())
+            .messageKey(v.key())
+            .build();
+    }
+
+    private ValidatorConfig processShortRangeFieldValidatorAnnotation(ShortRangeFieldValidator v, String fieldName, String methodName) {
+        String validatorType = "short";
 
         Map<String, String> params = new HashMap<String, String>();
 

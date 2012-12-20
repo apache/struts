@@ -68,8 +68,6 @@ package com.opensymphony.xwork2.validator.validators;
  * <!-- END SNIPPET: examples -->
  * </pre>
  * 
- *
- *
  * @author Jason Carreira
  * @version $Date$ $Id$
  */

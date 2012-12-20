@@ -10,6 +10,10 @@ public class ValidationAction {
     private Short shortMinValue;
     private Short shortMaxValue;
 
+    private Long longRange;
+    private Long longMinValue;
+    private Long longMaxValue;
+
     public Integer getIntRange() {
         return intRange;
     }
@@ -57,4 +61,29 @@ public class ValidationAction {
     public void setShortMaxValue(Short shortMaxValue) {
         this.shortMaxValue = shortMaxValue;
     }
+
+    public Long getLongRange() {
+        return longRange;
+    }
+
+    public void setLongRange(Long longRange) {
+        this.longRange = longRange;
+    }
+
+    public Long getLongMinValue() {
+        return longMinValue;
+    }
+
+    public void setLongMinValue(Long longMinValue) {
+        this.longMinValue = longMinValue;
+    }
+
+    public Long getLongMaxValue() {
+        return longMaxValue;
+    }
+
+    public void setLongMaxValue(Long longMaxValue) {
+        this.longMaxValue = longMaxValue;
+    }
+
 }

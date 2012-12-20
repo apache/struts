@@ -401,18 +401,19 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     private List<URL> readUrls() throws IOException {
-        List<URL> list = buildUrlSet().getUrls();
+        List<URL> resourceUrls = new ArrayList<URL>();
         // Usually the "classes" dir.
         ArrayList<URL> classesList = Collections.list(getClassLoaderInterface().getResources(""));
         for (URL url : classesList) {
-            list.addAll(fileManager.getAllPhysicalUrls(url));
+            resourceUrls.addAll(fileManager.getAllPhysicalUrls(url));
         }
-        return list;
+        return buildUrlSet(resourceUrls).getUrls();
     }
 
-    private UrlSet buildUrlSet() throws IOException {
+    private UrlSet buildUrlSet(List<URL> resourceUrls) throws IOException {
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
-        UrlSet urlSet = new UrlSet(classLoaderInterface, this.fileProtocols);
+        UrlSet urlSet = new UrlSet(resourceUrls);
+        urlSet.include(new UrlSet(classLoaderInterface, this.fileProtocols));
 
         //excluding the urls found by the parent class loader is desired, but fails in JBoss (all urls are removed)
         if (excludeParentClassLoader) {

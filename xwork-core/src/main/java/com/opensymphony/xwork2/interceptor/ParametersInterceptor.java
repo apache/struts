@@ -378,7 +378,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean acceptableName(String name) {
-        return isWithinLengthLimit(name) && isAccepted(name) && !isExcluded(name);
+        boolean accepted = isWithinLengthLimit(name) && isAccepted(name) && !isExcluded(name);
+        if (devMode && accepted) { // notify only when in devMode
+            LOG.debug("Parameter [#0] was accepted and will be appended to action!", name);
+        }
+        return accepted;
     }
 
 	protected boolean isWithinLengthLimit( String name ) {
@@ -418,7 +422,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 }
             }
         }
-        notifyDeveloper("Parameter [#0] is not on the excludeParams list of patterns and will be appended to action!", paramName);
         return false;
     }
 

@@ -59,8 +59,8 @@ public class LongRangeFieldValidatorTest extends XWorkTestCase {
 
     private LongRangeFieldValidator prepareValidator(ValidationAction action, ValidatorContext context) {
         LongRangeFieldValidator validator = new LongRangeFieldValidator();
-        validator.setMax("${longMaxValue}");
-        validator.setMin("${longMinValue}");
+        validator.setMaxExpression("${longMaxValue}");
+        validator.setMinExpression("${longMinValue}");
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(action);
         validator.setValueStack(valueStack);

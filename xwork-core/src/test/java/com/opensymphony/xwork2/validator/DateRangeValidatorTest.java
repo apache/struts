@@ -15,13 +15,19 @@
  */
 package com.opensymphony.xwork2.validator;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -40,19 +46,25 @@ public class DateRangeValidatorTest extends XWorkTestCase {
      * because the action config sets date to 12/20/2002 while expected range is Dec 22-25.
      */
     public void testRangeValidation() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null);
+        Calendar date = Calendar.getInstance();
+        date.set(2002, Calendar.NOVEMBER, 20);
+        Map<String, Object> context = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("date", date.getTime());
+        context.put(ActionContext.PARAMETERS, params);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
-        Map errors = ((ValidationAware) proxy.getAction()).getFieldErrors();
-        Iterator it = errors.entrySet().iterator();
+        Map<String, List<String>> errors = ((ValidationAware) proxy.getAction()).getFieldErrors();
 
-        List errorMessages = (List) errors.get("date");
+        List<String> errorMessages = errors.get("date");
         assertNotNull("Expected date range validation error message.", errorMessages);
         assertEquals(1, errorMessages.size());
 
-        String errorMessage = (String) errorMessages.get(0);
-        assertNotNull(errorMessage);
+        String errorMessage = errorMessages.get(0);
+        assertEquals("The date must be between 12-22-2002 and 12-25-2002.", errorMessage);
     }
 
     public void testGetSetMinMax() throws Exception {

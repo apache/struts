@@ -17,20 +17,19 @@ package com.opensymphony.xwork2.validator.validators;
 
 import java.util.Date;
 
-
 /**
  * <!-- START SNIPPET: javadoc -->
- * 
+ *
  * Field Validator that checks if the date supplied is within a specific range.
- * 
+ *
  * <b>NOTE:</b> If no date converter is specified, XWorkBasicConverter will kick
- * in to do the date conversion, which by default using the <code>Date.SHORT</code> format using 
- * the a programmatically specified locale else falling back to the system 
+ * in to do the date conversion, which by default using the <code>Date.SHORT</code> format using
+ * the a problematically specified locale else falling back to the system
  * default locale.
- * 
- * 
+ *
+ *
  * <!-- END SNIPPET: javadoc -->
- * 
+ *
  * <p/>
  *
  * <!-- START SNIPPET: parameters -->
@@ -38,50 +37,64 @@ import java.util.Date;
  * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
  *      <li>min - the min date range. If not specified will not be checked.</li>
  *      <li>max - the max date range. If not specified will not be checked.</li>
+ *      <li>parse - if set to true, minExpression and maxExpression will be evaluated to find min/max</li>
+ *      <li>minExpression - expression to calculate the minimum value (if none is specified, it will not be checked) </li>
+ *      <li>maxExpression - expression to calculate the maximum value (if none is specified, it will not be checked) </li>
  * </ul>
+ *
+ * You can either use the min / max value or minExpression / maxExpression (when parse is set to true) -
+ * using expression can be slightly slower, see the example below.
+ * WARNING! Do not use ${minExpression} and ${maxExpression} as an expression as this will turn into infinitive loop!
+ *
  * <!-- END SNIPPET: parameters -->
- * 
- * 
+ *
+ *
  * <pre>
  * <!-- START SNIPPET: examples -->
- *    &lt;validators>
- *    		&lt;!-- Plain Validator syntax --&gt;
- *    		&lt;validator type="date"&gt;
- *    	        &lt;param name="fieldName"&gt;birthday&lt;/param&gt;
- *              &lt;param name="min"&gt;01/01/1990&lt;/param&gt;
- *              &lt;param name="max"&gt;01/01/2000&lt;/param&gt;
- *              &lt;message&gt;Birthday must be within ${min} and ${max}&lt;/message&gt;
- *    		&lt;/validator&gt;
- *    
- *          &lt;!-- Field Validator Syntax --&gt;
- *          &lt;field name="birthday"&gt;
- *          	&lt;field-validator type="date"&gt;
- *           	    &lt;param name="min"&gt;01/01/1990&lt;/param&gt;
- *                  &lt;param name="max"&gt;01/01/2000&lt;/param&gt;
- *                  &lt;message&gt;Birthday must be within ${min} and ${max}&lt;/message&gt;
- *          	&lt;/field&gt;
- *          &lt;/field&gt;
- *    
- *    &lt;/validators&gt;
+ * &lt;validators>
+ *     &lt;!-- Plain Validator syntax --&gt;
+ *     &lt;validator type="date"&gt;
+ *         &lt;param name="fieldName"&gt;birthday&lt;/param&gt;
+ *         &lt;param name="min"&gt;01/01/1990&lt;/param&gt;
+ *         &lt;param name="max"&gt;01/01/2000&lt;/param&gt;
+ *         &lt;message&gt;Birthday must be within ${min} and ${max}&lt;/message&gt;
+ *     &lt;/validator&gt;
+ *
+ *     &lt;!-- Field Validator Syntax --&gt;
+ *     &lt;field name="birthday"&gt;
+ *         &lt;field-validator type="date"&gt;
+ *      	   &lt;param name="min"&gt;01/01/1990&lt;/param&gt;
+ *             &lt;param name="max"&gt;01/01/2000&lt;/param&gt;
+ *             &lt;message&gt;Birthday must be within ${min} and ${max}&lt;/message&gt;
+ *     	   &lt;/field&gt;
+ *     &lt;/field&gt;
+ *
+ *     &lt;!-- Field Validator Syntax with expression --&gt;
+ *     &lt;field name="birthday"&gt;
+ *         &lt;field-validator type="date"&gt;
+ *             &lt;param name="parse"&gt;true&lt;/param&gt;
+ *             &lt;param name="minExpression"&gt;${minValue}&lt;/param&gt; &lt;!-- will be evaluated as: Date getMinValue() --&gt;
+ *             &lt;param name="maxExpression"&gt;${maxValue}&lt;/param&gt; &lt;!-- will be evaluated as: Date getMaxValue() --&gt;
+ *             &lt;message&gt;Age needs to be between ${minExpression} and ${maxExpression}&lt;/message&gt;
+ *         &lt;/field-validator&gt;
+ *     &lt;/field&gt;
+ * &lt;/validators&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
- * 
+ *
  *
  * @author Jason Carreira
  * @version $Date$ $Id$
  */
-public class DateRangeFieldValidator extends AbstractRangeValidator {
+public class DateRangeFieldValidator extends AbstractRangeValidator<Date> {
 
-    private Date max;
     private Date min;
+    private Date max;
+    private String minExpression;
+    private String maxExpression;
 
-
-    public void setMax(Date max) {
-        this.max = max;
-    }
-
-    public Date getMax() {
-        return max;
+    public DateRangeFieldValidator() {
+        super(Date.class);
     }
 
     public void setMin(Date min) {
@@ -92,13 +105,44 @@ public class DateRangeFieldValidator extends AbstractRangeValidator {
         return min;
     }
 
-    @Override
-    protected Comparable getMaxComparatorValue() {
-        return max;
+    public String getMinExpression() {
+        return minExpression;
+    }
+
+    public void setMinExpression(String minExpression) {
+        this.minExpression = minExpression;
     }
 
     @Override
-    protected Comparable getMinComparatorValue() {
-        return min;
+    public Date getMinComparatorValue() {
+        if (parse) {
+            return parse(getMinExpression());
+        }
+        return getMin();
     }
+
+    public void setMax(Date max) {
+        this.max = max;
+    }
+
+    public Date getMax() {
+        return max;
+    }
+
+    public String getMaxExpression() {
+        return maxExpression;
+    }
+
+    public void setMaxExpression(String maxExpression) {
+        this.maxExpression = maxExpression;
+    }
+
+    @Override
+    public Date getMaxComparatorValue() {
+        if (parse) {
+            return parse(getMaxExpression());
+        }
+        return getMax();
+    }
+
 }

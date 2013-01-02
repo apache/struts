@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.validator.ValidationException;
 
 
@@ -25,6 +26,12 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * @author Cameron Braid
  */
 public abstract class AbstractRangeValidator<T extends Comparable> extends FieldValidatorSupport {
+
+    private final Class<T> type;
+
+    protected AbstractRangeValidator(Class<T> type) {
+        this.type = type;
+    }
 
     public void validate(Object object) throws ValidationException {
         Object obj = getFieldValue(getFieldName(), object);
@@ -49,16 +56,15 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
         }
     }
 
+    protected T parse(String expression) {
+        if (expression == null) {
+            return null;
+        }
+        return (T) TextParseUtil.translateVariables('$', expression, stack, type);
+    }
+
     protected abstract T getMaxComparatorValue();
 
     protected abstract T getMinComparatorValue();
 
-    protected String safeConditionalParse(String expression) {
-        Object value = conditionalParse(expression);
-        if (value != null) {
-            return value.toString();
-        } else {
-            return null;
-        }
-    }
 }

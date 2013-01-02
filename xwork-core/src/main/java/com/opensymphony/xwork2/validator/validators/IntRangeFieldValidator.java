@@ -19,25 +19,28 @@ package com.opensymphony.xwork2.validator.validators;
  * <!-- START SNIPPET: javadoc -->
  * Field Validator that checks if the integer specified is within a certain range.
  * <!-- END SNIPPET: javadoc -->
- * 
- * 
+ *
+ *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
  * 		<li>min - the minimum value (if none is specified, it will not be checked) </li>
  * 		<li>max - the maximum value (if none is specified, it will not be checked) </li>
+ *      <li>parse - if set to true, minExpression and maxExpression will be evaluated to find min/max</li>
+ *      <li>minExpression - expression to calculate the minimum value (if none is specified, it will not be checked) </li>
+ *      <li>maxExpression - expression to calculate the maximum value (if none is specified, it will not be checked) </li>
  * </ul>
  *
- * The min / max value can be specified as an expression, but then you must also enable parsing it by specifying <strong>parse</strong> param
- * as in the example below.
- * WARNING! Do not use ${min} and ${max} as an expression as this will turn into infinitive loop!
+ * You can either use the min / max value or minExpression / maxExpression (when parse is set to true) -
+ * using expression can be slightly slower, see the example below.
+ * WARNING! Do not use ${minExpression} and ${maxExpression} as an expression as this will turn into infinitive loop!
  *
  * <!-- END SNIPPET: parameters -->
- * 
- * 
+ *
+ *
  * <pre>
  * <!-- START SNIPPET: examples -->
- *	&lt;validators>
+ * 	&lt;validators>
  *      &lt;!-- Plain Validator Syntax --&gt;
  *      &lt;validator type="int">
  *          &lt;param name="fieldName"&gt;age&lt;/param&gt;
@@ -59,55 +62,75 @@ package com.opensymphony.xwork2.validator.validators;
  *      &lt;field name="age"&gt;
  *          &lt;field-validator type="int"&gt;
  *              &lt;param name="parse"&gt;true&lt;/param&gt;
- *              &lt;param name="${minValue}"&gt;20&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinValue() --&gt;
- *              &lt;param name="${maxValue}"&gt;50&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxValue() --&gt;
- *              &lt;message&gt;Age needs to be between ${min} and ${max}&lt;/message&gt;
+ *              &lt;param name="minExpression"&gt;${minValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinValue() --&gt;
+ *              &lt;param name="maxExpression"&gt;${maxValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxValue() --&gt;
+ *              &lt;message&gt;Age needs to be between ${minExpression} and ${maxExpression}&lt;/message&gt;
  *          &lt;/field-validator&gt;
  *      &lt;/field&gt;
  * &lt;/validators&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
- * 
+ *
  * @author Jason Carreira
  * @version $Date$ $Id$
  */
 public class IntRangeFieldValidator extends AbstractRangeValidator<Integer> {
 
-    private String max = null;
-    private String min = null;
+    private Integer min = null;
+    private Integer max = null;
+    private String minExpression;
+    private String maxExpression;
 
-    public void setMax(String max) {
-        this.max = max;
+    public IntRangeFieldValidator() {
+        super(Integer.class);
     }
 
-    public String getMax() {
-        return safeConditionalParse(max);
-    }
-
-    @Override
-    public Integer getMaxComparatorValue() {
-        return parseInt(getMax());
-    }
-
-    public void setMin(String min) {
+    public void setMin(Integer min) {
         this.min = min;
     }
 
-    public String getMin() {
-        return safeConditionalParse(min);
+    public Integer getMin() {
+        return min;
+    }
+
+    public String getMinExpression() {
+        return minExpression;
+    }
+
+    public void setMinExpression(String minExpression) {
+        this.minExpression = minExpression;
     }
 
     @Override
     public Integer getMinComparatorValue() {
-        return parseInt(getMin());
+        if (parse) {
+            return parse(getMinExpression());
+        }
+        return getMin();
     }
 
-    private Integer parseInt(String value) {
-        if (value != null) {
-            return Integer.parseInt(value);
-        } else {
-            return null;
+    public void setMax(Integer max) {
+        this.max = max;
+    }
+
+    public Integer getMax() {
+        return max;
+    }
+
+    public String getMaxExpression() {
+        return maxExpression;
+    }
+
+    public void setMaxExpression(String maxExpression) {
+        this.maxExpression = maxExpression;
+    }
+
+    @Override
+    public Integer getMaxComparatorValue() {
+        if (parse) {
+            return parse(getMaxExpression());
         }
+        return getMax();
     }
 
 }

@@ -59,8 +59,8 @@ public class IntRangeFieldValidatorTest extends XWorkTestCase {
 
     private IntRangeFieldValidator prepareValidator(ValidationAction action, ValidatorContext context) {
         IntRangeFieldValidator validator = new IntRangeFieldValidator();
-        validator.setMax("${intMaxValue}");
-        validator.setMin("${intMinValue}");
+        validator.setMaxExpression("${intMaxValue}");
+        validator.setMinExpression("${intMinValue}");
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(action);
         validator.setValueStack(valueStack);

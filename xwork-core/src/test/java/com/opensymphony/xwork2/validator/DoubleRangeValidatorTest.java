@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -22,11 +23,17 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
     private DoubleRangeFieldValidator val;
 
     public void testRangeValidationWithError() throws Exception {
+        //Explicitly set an out-of-range double for DoubleRangeValidatorTest
+        Map<String, Object> context = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("percentage", 100.0123d);
+        context.put(ActionContext.PARAMETERS, params);
+
         // must set a locale to US as error message contains a locale dependent number (see XW-490)
         Locale defLocale = Locale.getDefault();
         Locale.setDefault(Locale.US);
         
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -45,7 +52,12 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
     }
 
     public void testRangeValidationNoError() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", null);
+        Map<String, Object> context = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("percentage", 1.234567d);
+        context.put(ActionContext.PARAMETERS, params);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -183,6 +195,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         loadConfigurationProviders(provider,  new MockConfigurationProvider());
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
+        ActionContext.getContext().setParameters(new HashMap<String, Object>());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.opensymphony.xwork2.validator.validators;
 
+import java.util.Date;
+
 public class ValidationAction {
 
     private Integer intRange;
@@ -13,6 +15,11 @@ public class ValidationAction {
     private Long longRange;
     private Long longMinValue;
     private Long longMaxValue;
+
+    private Date dateRange;
+    private Date dateMinValue;
+    private Date dateMaxValue;
+    private String dateFormat;
 
     public Integer getIntRange() {
         return intRange;
@@ -86,4 +93,35 @@ public class ValidationAction {
         this.longMaxValue = longMaxValue;
     }
 
+    public Date getDateRange() {
+        return dateRange;
+    }
+
+    public void setDateRange(Date dateRange) {
+        this.dateRange = dateRange;
+    }
+
+    public Date getDateMinValue() {
+        return dateMinValue;
+    }
+
+    public void setDateMinValue(Date dateMinValue) {
+        this.dateMinValue = dateMinValue;
+    }
+
+    public Date getDateMaxValue() {
+        return dateMaxValue;
+    }
+
+    public void setDateMaxValue(Date dateMaxValue) {
+        this.dateMaxValue = dateMaxValue;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
 }

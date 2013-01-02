@@ -15,11 +15,19 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor;
@@ -30,6 +38,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +59,9 @@ public class MockConfigurationProvider implements ConfigurationProvider {
     public static final String VALIDATION_ACTION_NAME = "validationInterceptorTest";
     public static final String VALIDATION_ALIAS_NAME = "validationAlias";
     public static final String VALIDATION_SUBPROPERTY_NAME = "subproperty";
+
+    private static final Map<String,String> EMPTY_STRING_MAP = Collections.emptyMap();
+
     private Configuration configuration;
     private Map<String,String> params;
     private ObjectFactory objectFactory;
@@ -77,11 +89,11 @@ public class MockConfigurationProvider implements ConfigurationProvider {
     public void loadPackages() {
         
         PackageConfig.Builder defaultPackageContext = new PackageConfig.Builder("defaultPackage");
-        HashMap params = new HashMap();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("bar", "5");
 
-        HashMap results = new HashMap();
-        HashMap successParams = new HashMap();
+        Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
+        Map<String, String> successParams = new HashMap<String, String>();
         successParams.put("actionName", "bar");
         results.put("success", new ResultConfig.Builder("success", ActionChainResult.class.getName()).addParams(successParams).build());
 
@@ -90,8 +102,8 @@ public class MockConfigurationProvider implements ConfigurationProvider {
             .build();
         defaultPackageContext.addActionConfig(FOO_ACTION_NAME, fooActionConfig);
 
-        results = new HashMap();
-        successParams = new HashMap();
+        results = new HashMap<String, ResultConfig>();
+        successParams = new HashMap<String, String>();
         successParams.put("actionName", "bar");
         results.put("success", new ResultConfig.Builder("success", ActionChainResult.class.getName()).addParams(successParams).build());
 
@@ -106,9 +118,9 @@ public class MockConfigurationProvider implements ConfigurationProvider {
 
         interceptors = new ArrayList<InterceptorMapping>();
         interceptors.add(new InterceptorMapping("model", 
-                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ModelDrivenInterceptor.class.getName()).build(), new HashMap())));
+                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ModelDrivenInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
         interceptors.add(new InterceptorMapping("params",
-                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ParametersInterceptor.class.getName()).build(), new HashMap())));
+                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ParametersInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
 
         ActionConfig modelParamActionConfig = new ActionConfig.Builder("defaultPackage", MODEL_DRIVEN_PARAM_TEST, ModelDrivenAction.class.getName())
             .addInterceptors(interceptors)
@@ -122,28 +134,23 @@ public class MockConfigurationProvider implements ConfigurationProvider {
         
 
         results = new HashMap<String, ResultConfig>();
-        successParams = new HashMap();
+        successParams = new HashMap<String, String>();
         successParams.put("actionName", "bar");
         results.put("success", new ResultConfig.Builder("success", ActionChainResult.class.getName()).addParams(successParams).build());
         results.put(Action.ERROR, new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build());
 
         interceptors = new ArrayList<InterceptorMapping>();
         interceptors.add(new InterceptorMapping("staticParams", 
-                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", StaticParametersInterceptor.class.getName()).build(), new HashMap())));
+                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", StaticParametersInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
         interceptors.add(new InterceptorMapping("model", 
-                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ModelDrivenInterceptor.class.getName()).build(), new HashMap())));
+                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ModelDrivenInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
         interceptors.add(new InterceptorMapping("params", 
-                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ParametersInterceptor.class.getName()).build(), new HashMap())));
+                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ParametersInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
         interceptors.add(new InterceptorMapping("validation", 
-                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), new HashMap())));
+                objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
 
         //Explicitly set an out-of-range date for DateRangeValidatorTest
-        params = new HashMap();
-        params.put("date", new java.util.Date(2002 - 1900, 11, 20));
-
-        //Explicitly set an out-of-range double for DoubleRangeValidatorTest
-        params.put("percentage", new Double(100.0123));
-
+        params = new HashMap<String, String>();
         ActionConfig validationActionConfig = new ActionConfig.Builder("defaultPackage", VALIDATION_ACTION_NAME, SimpleAction.class.getName())
             .addInterceptors(interceptors)
             .addParams(params)
@@ -156,8 +163,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
                 new ActionConfig.Builder(validationActionConfig).name(VALIDATION_SUBPROPERTY_NAME).build());
 
 
-        params = new HashMap();
-        params.put("percentage", new Double(1.234567));
+        params = new HashMap<String, String>();
         ActionConfig percentageActionConfig = new ActionConfig.Builder("defaultPackage", "percentage", SimpleAction.class.getName())
                 .addParams(params)
                 .addResultConfigs(results)

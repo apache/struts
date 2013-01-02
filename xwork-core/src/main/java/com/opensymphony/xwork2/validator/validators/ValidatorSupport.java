@@ -44,10 +44,10 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
     protected String messageKey;
     private ValidatorContext validatorContext;
     private boolean shortCircuit;
-    private boolean parse;
+    protected boolean parse;
     private String type;
     private String[] messageParameters;
-    private ValueStack stack;
+    protected ValueStack stack;
 
 
     public void setValueStack(ValueStack stack) {

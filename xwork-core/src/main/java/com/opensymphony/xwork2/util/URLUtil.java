@@ -27,10 +27,6 @@ import java.net.URL;
 public class URLUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(URLUtil.class);
-    public static final String JBOSS5_VFS = "vfs";
-    public static final String JBOSS5_VFSZIP = "vfszip";
-    public static final String JBOSS5_VFSMEMORY = "vfsmemory";
-    public static final String JBOSS5_VFSFILE = "vfsfile";
 
     /**
      * Verify That the given String is in valid URL format.
@@ -38,6 +34,9 @@ public class URLUtil {
      * @return a boolean indicating whether the URL seems to be incorrect.
      */
     public static boolean verifyUrl(String url) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Checking if url [#0] is valid", url);
+        }
         if (url == null) {
             return false;
         }
@@ -52,6 +51,9 @@ public class URLUtil {
 
             return true;
         } catch (MalformedURLException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Url [#0] is invalid: #1", e, url, e.getMessage());
+            }
             return false;
         }
     }

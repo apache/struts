@@ -33,9 +33,11 @@ package com.opensymphony.xwork2.validator.validators;
  *
  * You can either use the min / max value or minExpression / maxExpression (when parse is set to true) -
  * using expression can be slightly slower, see the example below.
- * WARNING! Do not use ${minExpression} and ${maxExpression} as an expression as this will turn into infinitive loop!
- *
  * <!-- END SNIPPET: parameters -->
+ *
+ * <!-- START SNIPPET: parameters-warning -->
+ * Do not use ${minExpression} and ${maxExpression} as an expression as this will turn into infinitive loop!
+ * <!-- END SNIPPET: parameters-warning -->
  *
  * <pre>
  * <!-- START SNIPPET: examples -->

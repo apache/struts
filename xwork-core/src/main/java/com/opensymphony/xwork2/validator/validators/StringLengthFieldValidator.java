@@ -35,10 +35,12 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *    <li>minLength - The min length of the field value. Default ignore. Can be specified as OGNL expression when parse is set to true.</li>
  *    <li>trim - Trim the field value before evaluating its min/max length. Default true. Can be specified as OGNL expression when parse is set to true.</li>
  * </ul>
- * WARNING! Do not use ${minLength}, ${maxLength} and ${trim} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters -->
  * 
- * 
+ * <!-- START SNIPPET: parameters-warning -->
+ * Do not use ${minLength}, ${maxLength} and ${trim} as an expression as this will turn into infinitive loop!
+ * <!-- END SNIPPET: parameters-warning -->
+ *
  * <pre>
  * <!--START SNIPPET: example -->
  *      &lt;validators&gt;

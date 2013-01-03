@@ -85,7 +85,7 @@ END SNIPPET: supported-validators
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
             <#elseif validator.validatorType = "email">
-            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match(/\b^['_a-z0-9-\+]+(\.['_a-z0-9-\+]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tel|travel|xxx)$\b/gi)==null) {
+            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match("${validator.expression}")==null) {
                 addError(field, error);
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>

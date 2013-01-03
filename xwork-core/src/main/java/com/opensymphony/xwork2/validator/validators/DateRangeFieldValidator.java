@@ -88,61 +88,8 @@ import java.util.Date;
  */
 public class DateRangeFieldValidator extends AbstractRangeValidator<Date> {
 
-    private Date min;
-    private Date max;
-    private String minExpression;
-    private String maxExpression;
-
     public DateRangeFieldValidator() {
         super(Date.class);
-    }
-
-    public void setMin(Date min) {
-        this.min = min;
-    }
-
-    public Date getMin() {
-        return min;
-    }
-
-    public String getMinExpression() {
-        return minExpression;
-    }
-
-    public void setMinExpression(String minExpression) {
-        this.minExpression = minExpression;
-    }
-
-    @Override
-    public Date getMinComparatorValue() {
-        if (parse) {
-            return parse(getMinExpression());
-        }
-        return getMin();
-    }
-
-    public void setMax(Date max) {
-        this.max = max;
-    }
-
-    public Date getMax() {
-        return max;
-    }
-
-    public String getMaxExpression() {
-        return maxExpression;
-    }
-
-    public void setMaxExpression(String maxExpression) {
-        this.maxExpression = maxExpression;
-    }
-
-    @Override
-    public Date getMaxComparatorValue() {
-        if (parse) {
-            return parse(getMaxExpression());
-        }
-        return getMax();
     }
 
 }

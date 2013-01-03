@@ -15,7 +15,6 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.validator.ValidationException;
 
 
@@ -27,7 +26,13 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public abstract class AbstractRangeValidator<T extends Comparable> extends FieldValidatorSupport {
 
-    private final Class<T> type;
+    protected final Class<T> type;
+
+    private T min;
+    private T max;
+
+    private String minExpression;
+    private String maxExpression;
 
     protected AbstractRangeValidator(Class<T> type) {
         this.type = type;
@@ -56,15 +61,50 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
         }
     }
 
-    protected T parse(String expression) {
-        if (expression == null) {
-            return null;
+    public T getMinComparatorValue() {
+        if (parse) {
+            return (T) parse(getMinExpression(), type);
         }
-        return (T) TextParseUtil.translateVariables('$', expression, stack, type);
+        return getMin();
     }
 
-    protected abstract T getMaxComparatorValue();
+    public void setMin(T min) {
+        this.min = min;
+    }
 
-    protected abstract T getMinComparatorValue();
+    public T getMin() {
+        return min;
+    }
+
+    public String getMinExpression() {
+        return minExpression;
+    }
+
+    public void setMinExpression(String minExpression) {
+        this.minExpression = minExpression;
+    }
+
+    public void setMax(T max) {
+        this.max = max;
+    }
+
+    public T getMax() {
+        return max;
+    }
+
+    public String getMaxExpression() {
+        return maxExpression;
+    }
+
+    public void setMaxExpression(String maxExpression) {
+        this.maxExpression = maxExpression;
+    }
+
+    public T getMaxComparatorValue() {
+        if (parse) {
+            return (T) parse(getMaxExpression(), type);
+        }
+        return getMax();
+    }
 
 }

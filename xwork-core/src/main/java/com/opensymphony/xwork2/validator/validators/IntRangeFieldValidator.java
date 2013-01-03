@@ -76,61 +76,8 @@ package com.opensymphony.xwork2.validator.validators;
  */
 public class IntRangeFieldValidator extends AbstractRangeValidator<Integer> {
 
-    private Integer min = null;
-    private Integer max = null;
-    private String minExpression;
-    private String maxExpression;
-
     public IntRangeFieldValidator() {
         super(Integer.class);
-    }
-
-    public void setMin(Integer min) {
-        this.min = min;
-    }
-
-    public Integer getMin() {
-        return min;
-    }
-
-    public String getMinExpression() {
-        return minExpression;
-    }
-
-    public void setMinExpression(String minExpression) {
-        this.minExpression = minExpression;
-    }
-
-    @Override
-    public Integer getMinComparatorValue() {
-        if (parse) {
-            return parse(getMinExpression());
-        }
-        return getMin();
-    }
-
-    public void setMax(Integer max) {
-        this.max = max;
-    }
-
-    public Integer getMax() {
-        return max;
-    }
-
-    public String getMaxExpression() {
-        return maxExpression;
-    }
-
-    public void setMaxExpression(String maxExpression) {
-        this.maxExpression = maxExpression;
-    }
-
-    @Override
-    public Integer getMaxComparatorValue() {
-        if (parse) {
-            return parse(getMaxExpression());
-        }
-        return getMax();
     }
 
 }

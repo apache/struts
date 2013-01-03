@@ -75,61 +75,8 @@ package com.opensymphony.xwork2.validator.validators;
  */
 public class LongRangeFieldValidator extends AbstractRangeValidator<Long> {
 
-    private Long min;
-    private Long max;
-    private String minExpression;
-    private String maxExpression;
-
     public LongRangeFieldValidator() {
         super(Long.class);
-    }
-
-    public void setMin(Long min) {
-        this.min = min;
-    }
-
-    public Long getMin() {
-        return min;
-    }
-
-    public String getMinExpression() {
-        return minExpression;
-    }
-
-    public void setMinExpression(String minExpression) {
-        this.minExpression = minExpression;
-    }
-
-    @Override
-    public Long getMinComparatorValue() {
-        if (parse) {
-            return parse(getMinExpression());
-        }
-        return getMin();
-    }
-
-    public void setMax(Long max) {
-        this.max = max;
-    }
-
-    public Long getMax() {
-        return max;
-    }
-
-    public String getMaxExpression() {
-        return maxExpression;
-    }
-
-    public void setMaxExpression(String maxExpression) {
-        this.maxExpression = maxExpression;
-    }
-
-    @Override
-    public Long getMaxComparatorValue() {
-        if (parse) {
-            return parse(getMaxExpression());
-        }
-        return getMax();
     }
 
 }

@@ -43,36 +43,37 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *
  * <pre>
  * <!--START SNIPPET: example -->
- *      &lt;validators&gt;
- *           &lt;!-- Plain Validator Syntax --&gt;
- *           &lt;validator type="stringlength"&gt;
- *                &lt;param name="fieldName"&gt;myPurchaseCode&lt;/param&gt;
- *                &lt;param name="minLength"&gt;10&lt;/param&gt;
- *                &lt;param name="maxLength"&gt;10&lt;/param&gt;
- *                &lt;param name="trim"&gt;true&lt;/param&gt;
- *                &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;		
- *            &lt;/validator&gt;
- * 
- *            &lt;!-- Field Validator Syntax --&gt;
- *            &lt;field name="myPurchaseCode"&gt;
- *                &lt;field-validator type="stringlength"&gt;
- *                     &lt;param name="minLength"&gt;10&lt;/param&gt;
- *                     &lt;param name="maxLength"&gt;10&lt;/param&gt;
- *                     &lt;param name="trim"&gt;true&lt;/param&gt;
- *                     &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
- *                &lt;/field-validator&gt;
- *            &lt;/field&gt;
+ * &lt;validators&gt;
+ *     &lt;!-- Plain Validator Syntax --&gt;
+ *     &lt;validator type="stringlength"&gt;
+ *         &lt;param name="fieldName"&gt;myPurchaseCode&lt;/param&gt;
+ *         &lt;param name="minLength"&gt;10&lt;/param&gt;
+ *         &lt;param name="maxLength"&gt;10&lt;/param&gt;
+ *         &lt;param name="trim"&gt;true&lt;/param&gt;
+ *         &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
+ *     &lt;/validator&gt;
  *
- *            &lt;!-- Field Validator Syntax with expression --&gt;
- *            &lt;field name="myPurchaseCode"&gt;
- *                &lt;field-validator type="stringlength"&gt;
- *                     &lt;param name="minLength"&gt;${minLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinLengthValue() --&gt;
- *                     &lt;param name="maxLength"&gt;${maxLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxLengthValue() --&gt;
- *                     &lt;param name="trim"&gt;${trimValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimValue() --&gt;
- *                     &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
- *                &lt;/field-validator&gt;
- *            &lt;/field&gt;
- *      &lt;/validators&gt;
+ *     &lt;!-- Field Validator Syntax --&gt;
+ *     &lt;field name="myPurchaseCode"&gt;
+ *         &lt;field-validator type="stringlength"&gt;
+ *              &lt;param name="minLength"&gt;10&lt;/param&gt;
+ *              &lt;param name="maxLength"&gt;10&lt;/param&gt;
+ *              &lt;param name="trim"&gt;true&lt;/param&gt;
+ *              &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
+ *         &lt;/field-validator&gt;
+ *     &lt;/field&gt;
+ *
+ *     &lt;!-- Field Validator Syntax with expression --&gt;
+ *     &lt;field name="myPurchaseCode"&gt;
+ *         &lt;field-validator type="stringlength"&gt;
+ *              &lt;param name="parse"&gt;true&lt;/param&gt;
+ *              &lt;param name="minLength"&gt;${minLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinLengthValue() --&gt;
+ *              &lt;param name="maxLength"&gt;${maxLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxLengthValue() --&gt;
+ *              &lt;param name="trim"&gt;${trimValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimValue() --&gt;
+ *              &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
+ *         &lt;/field-validator&gt;
+ *     &lt;/field&gt;
+ * &lt;/validators&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 

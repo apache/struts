@@ -60,6 +60,7 @@ package com.opensymphony.xwork2.validator.validators;
  *     &lt;!-- Field Validator Syntax with expressions --&gt;
  *     &lt;field name="myEmail"&gt;
  *        &lt;field-validator type="email"&gt;
+ *           &lt;param name="parse"&gt;true&lt;/param&gt;*
  *           &lt;param name="expression"&gt;${emailPattern}&lt;/param&gt; &lt;!-- will be evaluated as: String getEmailPattern() --&gt;
  *           &lt;param name="caseSensitive"&gt;${emailCaseSensitive}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getEmailCaseSensitive() --&gt;
  *           &lt;param name="trim"&gt;${trimEmail}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimEmail() --&gt;

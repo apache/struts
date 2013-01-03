@@ -18,7 +18,6 @@ package com.opensymphony.xwork2.validator.validators;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.util.URLUtil;
 
-
 /**
  * <!-- START SNIPPET: javadoc -->
  * 
@@ -40,20 +39,20 @@ import com.opensymphony.xwork2.util.URLUtil;
  *
  * <pre>
  * <!-- START SNIPPET: examples -->
- * 
- *     &lt;validators&gt;
- *          &lt;!-- Plain Validator Syntax --&gt;
- *          &lt;validator type="url"&gt;
- *              &lt;param name="fieldName"&gt;myHomePage&lt;/param&gt;
+ * &lt;validators&gt;
+ *      &lt;!-- Plain Validator Syntax --&gt;
+ *      &lt;validator type="url"&gt;
+ *          &lt;param name="fieldName"&gt;myHomePage&lt;/param&gt;
+ *          &lt;message&gt;Invalid homepage url&lt;/message&gt;
+ *      &lt;/validator&gt;
+ *
+ *      &lt;!-- Field Validator Syntax --&gt;
+ *      &lt;field name="myHomepage"&gt;
+ *          &lt;field-validator type="url"&gt;
  *              &lt;message&gt;Invalid homepage url&lt;/message&gt;
- *          &lt;/validator&gt;
- *          
- *          &lt;!-- Field Validator Syntax --&gt;
- *          &lt;field name="myHomepage"&gt;
- *              &lt;message&gt;Invalid homepage url&lt;/message&gt;
- *          &lt;/field&gt;
- *     &lt;/validators&gt;
- *     
+ *          &lt;/field-validator&gt;
+ *      &lt;/field&gt;
+ * &lt;/validators&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
  *

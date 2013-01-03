@@ -47,7 +47,7 @@ import java.util.Date;
  * <!-- END SNIPPET: parameters -->
  *
  * <!-- START SNIPPET: parameters-warning -->
- * WARNING! Do not use ${minExpression} and ${maxExpression} as an expression as this will turn into infinitive loop!
+ * Do not use ${minExpression} and ${maxExpression} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters-warning -->
  *
  * <pre>

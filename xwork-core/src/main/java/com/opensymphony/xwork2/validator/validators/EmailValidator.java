@@ -27,8 +27,6 @@ package com.opensymphony.xwork2.validator.validators;
  * </pre>
  *
  * You can also specify expression, caseSensitive and trim params as a OGNL expression, see the example below.
- * WARNING! Do not use ${expression}, ${caseSensitive} and ${trim} as an expression as this will turn into infinitive loop!
- *
  * <!-- END SNIPPET: javadoc -->
  * 
  * 
@@ -37,7 +35,10 @@ package com.opensymphony.xwork2.validator.validators;
  * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
- * 
+ *
+ * <!-- START SNIPPET: parameters-warning -->
+ * Do not use ${expression}, ${caseSensitive} and ${trim} as an expression as this will turn into infinitive loop!
+ * <!-- END SNIPPET: parameters-warning -->
  * 
  * <pre>
  * <!-- START SNIPPET: example -->

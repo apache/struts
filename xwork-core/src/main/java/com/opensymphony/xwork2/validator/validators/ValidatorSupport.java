@@ -180,6 +180,13 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
         return expression;
     }
 
+    protected Object parse(String expression, Class type) {
+        if (expression == null) {
+            return null;
+        }
+        return TextParseUtil.translateVariables('$', expression, stack, type);
+    }
+
     /**
      * Return the field value named <code>name</code> from <code>object</code>,
      * <code>object</code> should have the appropriate getter/setter.

@@ -16,7 +16,6 @@
 
 package com.opensymphony.xwork2.validator.validators;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.validator.ValidationException;
 
 import java.util.regex.Matcher;
@@ -122,13 +121,6 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         } else {
             this.expression = expression;
         }
-    }
-
-    protected Object parse(String expression, Class type) {
-        if (expression == null) {
-            return null;
-        }
-        return TextParseUtil.translateVariables('$', expression, stack, type);
     }
 
     /**

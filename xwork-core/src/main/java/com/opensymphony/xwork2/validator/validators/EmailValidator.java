@@ -18,16 +18,17 @@ package com.opensymphony.xwork2.validator.validators;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * EmailValidator checks that a given String field, if not empty,
- * is a valid email address.
- * <p/>
- * <p/>
- * The regular expression used to validate that the string is an email address
- * is:
- * </p>
+ * EmailValidator checks that a given String field, if not empty, is a valid email address.
+ *
+ * The regular expression used to validate that the string is an email address is:
+ *
  * <pre>
  * \\b^['_a-z0-9-\\+]+(\\.['_a-z0-9-\\+]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tel|travel|xxx)$\\b
  * </pre>
+ *
+ * You can also specify expression, caseSensitive and trim params as a OGNL expression, see the example below.
+ * WARNING! Do not use ${expression}, ${caseSensitive} and ${trim} as an expression as this will turn into infinitive loop!
+ *
  * <!-- END SNIPPET: javadoc -->
  * 
  * 
@@ -54,6 +55,16 @@ package com.opensymphony.xwork2.validator.validators;
  *           &lt;message&gt;Must provide a valid email&lt;/message&gt;
  *        &lt;/field-validator&gt;
  *     &lt;/field&gt;
+ *
+ *     &lt;!-- Field Validator Syntax with expressions --&gt;
+ *     &lt;field name="myEmail"&gt;
+ *        &lt;field-validator type="email"&gt;
+ *           &lt;param name="expression"&gt;${emailPattern}&lt;/param&gt; &lt;!-- will be evaluated as: String getEmailPattern() --&gt;
+ *           &lt;param name="caseSensitive"&gt;${emailCaseSensitive}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getEmailCaseSensitive() --&gt;
+ *           &lt;param name="trim"&gt;${trimEmail}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimEmail() --&gt;
+ *           &lt;message&gt;Must provide a valid email&lt;/message&gt;
+ *        &lt;/field-validator&gt;
+ *     &lt;/field&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -69,9 +80,7 @@ public class EmailValidator extends RegexFieldValidator {
 
     public EmailValidator() {
         setExpression(emailAddressPattern);
-        setCaseSensitive(false);
+        setCaseSensitive("false");
     }
 
 }
-
-

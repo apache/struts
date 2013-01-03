@@ -16,6 +16,7 @@
 
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.validator.ValidationException;
 
 import java.util.regex.Matcher;
@@ -116,7 +117,18 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Sets the regular expression to be matched.
      */
     public void setExpression(String expression) {
-        this.expression = expression;
+        if (parse) {
+            this.expression = (String) parse(expression, String.class);
+        } else {
+            this.expression = expression;
+        }
+    }
+
+    protected Object parse(String expression, Class type) {
+        if (expression == null) {
+            return null;
+        }
+        return TextParseUtil.translateVariables('$', expression, stack, type);
     }
 
     /**
@@ -131,8 +143,12 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Sets whether the expression should be matched against in
      * a case-sensitive way.  Default is <code>true</code>.
      */
-    public void setCaseSensitive(boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
+    public void setCaseSensitive(String caseSensitive) {
+        if (parse) {
+            this.caseSensitive = (Boolean) parse(caseSensitive, Boolean.class);
+        } else {
+            this.caseSensitive = Boolean.parseBoolean(caseSensitive);
+        }
     }
 
     /**
@@ -147,8 +163,12 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Sets whether the expression should be trimed before matching.
      * Default is <code>true</code>.
      */
-    public void setTrim(boolean trim) {
-        this.trim = trim;
+    public void setTrim(String trim) {
+        if (parse) {
+            this.trim = (Boolean) parse(trim, Boolean.class);
+        } else {
+            this.trim = Boolean.parseBoolean(trim);
+        }
     }
 
 }

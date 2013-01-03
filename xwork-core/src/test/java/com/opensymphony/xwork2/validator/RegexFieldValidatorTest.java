@@ -60,7 +60,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         ActionContext.getContext().setValueStack(stack);
 
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setTrim(false);
+        validator.setTrim("false");
         validator.setExpression("^Sec.*\\s");
         validator.setValidatorContext(new GenericValidatorContext(new Object()));
         validator.setFieldName("username");
@@ -127,7 +127,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
     public void testIsTrimmed() throws Exception {
         RegexFieldValidator validator = new RegexFieldValidator();
         assertEquals(true, validator.isTrimed());
-        validator.setTrim(false);
+        validator.setTrim("false");
         assertEquals(false, validator.isTrimed());
     }
 

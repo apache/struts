@@ -85,7 +85,7 @@ END SNIPPET: supported-validators
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
             <#elseif validator.validatorType = "email">
-            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match("${validator.expression}")==null) {
+            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match("${validator.expression?js_string}")==null) {
                 addError(field, error);
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>

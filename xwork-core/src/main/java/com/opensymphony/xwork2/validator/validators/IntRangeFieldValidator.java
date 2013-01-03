@@ -41,7 +41,7 @@ package com.opensymphony.xwork2.validator.validators;
  *
  * <pre>
  * <!-- START SNIPPET: examples -->
- * 	&lt;validators>
+ * &lt;validators>
  *      &lt;!-- Plain Validator Syntax --&gt;
  *      &lt;validator type="int">
  *          &lt;param name="fieldName"&gt;age&lt;/param&gt;

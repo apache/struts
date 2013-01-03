@@ -26,42 +26,52 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *
  * <!-- START SNIPPET: parameters -->
  * <ul>
- *                 <li>fieldName - The field name this validator is validating. Required if using
-Plain-Validator Syntax otherwise not required</li>
- *                 <li>minInclusive - the minimum inclusive value in FloatValue format specified by Java language (if none is specified, it will
-not be checked) </li>
- *                 <li>maxInclusive - the maximum inclusive value in FloatValue format specified by Java language (if none is specified, it will
-not be checked) </li>
- *                 <li>minExclusive - the minimum exclusive value in FloatValue format specified by Java language (if none is specified, it will
-not be checked) </li>
- *                 <li>maxExclusive - the maximum exclusive value in FloatValue format specified by Java language (if none is specified, it will
-not be checked) </li>
+ *     <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
+ *     <li>minInclusive - the minimum inclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>maxInclusive - the maximum inclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>minExclusive - the minimum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>maxExclusive - the maximum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
  * </ul>
+ *
+ * You can specify minInclusive, maxInclusive, minExclusive and maxExclusive as a OGNL expression, see example below.
  * <!-- END SNIPPET: parameters -->
+ *
+ *
+ * <!-- START SNIPPET: parameters-warning -->
+ * Do not use ${minInclusive}, ${maxInclusive}, ${minExclusive} and ${maxExclusive} as an expression as this will turn into infinitive loop!
+ * <!-- END SNIPPET: parameters-warning -->
  *
  *
  * <pre>
  * <!-- START SNIPPET: examples -->
- *                 &lt;validators>
- *           &lt;!-- Plain Validator Syntax --&gt;
- *           &lt;validator type="double">
- *               &lt;param name="fieldName"&gt;percentage&lt;/param&gt;
- *               &lt;param name="minInclusive"&gt;20.1&lt;/param&gt;
- *               &lt;param name="maxInclusive"&gt;50.1&lt;/param&gt;
- *               &lt;message&gt;Age needs to be between ${minInclusive} and
-${maxInclusive} (inclusive)&lt;/message&gt;
- *           &lt;/validator&gt;
+ * &lt;validators>
+ *     &lt;!-- Plain Validator Syntax --&gt;
+ *         &lt;validator type="double">
+ *         &lt;param name="fieldName"&gt;percentage&lt;/param&gt;
+ *         &lt;param name="minInclusive"&gt;20.1&lt;/param&gt;
+ *         &lt;param name="maxInclusive"&gt;50.1&lt;/param&gt;
+ *         &lt;message&gt;Age needs to be between ${minInclusive} and ${maxInclusive} (inclusive)&lt;/message&gt;
+ *     &lt;/validator&gt;
  *
- *           &lt;!-- Field Validator Syntax --&gt;
- *           &lt;field name="percentage"&gt;
- *               &lt;field-validator type="double"&gt;
- *                   &lt;param name="minExclusive"&gt;0.123&lt;/param&gt;
- *                   &lt;param name="maxExclusive"&gt;99.98&lt;/param&gt;
- *                   &lt;message&gt;Percentage needs to be between ${minExclusive}
-and ${maxExclusive} (exclusive)&lt;/message&gt;
- *               &lt;/field-validator&gt;
- *           &lt;/field&gt;
- *      &lt;/validators&gt;
+ *     &lt;!-- Field Validator Syntax --&gt;
+ *     &lt;field name="percentage"&gt;
+ *         &lt;field-validator type="double"&gt;
+ *             &lt;param name="minExclusive"&gt;0.123&lt;/param&gt;
+ *             &lt;param name="maxExclusive"&gt;99.98&lt;/param&gt;
+ *             &lt;message&gt;Percentage needs to be between ${minExclusive} and ${maxExclusive} (exclusive)&lt;/message&gt;
+ *         &lt;/field-validator&gt;
+ *     &lt;/field&gt;
+ *
+ *     &lt;!-- Field Validator Syntax with expression --&gt;
+ *     &lt;field name="percentage"&gt;
+ *         &lt;field-validator type="double"&gt;
+ *             &lt;param name="parse"&gt;true&lt;/param&gt;
+ *             &lt;param name="minExclusive"&gt;${minExclusiveValue}&lt;/param&gt; &lt;!-- will be evaluated as: Double getMinExclusiveValue() --&gt;
+ *             &lt;param name="maxExclusive"&gt;${maxExclusive}&lt;/param&gt; &lt;!-- will be evaluated as: Double getMaxExclusive() --&gt;
+ *             &lt;message&gt;Percentage needs to be between ${minExclusive} and ${maxExclusive} (exclusive)&lt;/message&gt;
+ *         &lt;/field-validator&gt;
+ *     &lt;/field&gt;
+ * &lt;/validators&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
  *
@@ -70,7 +80,6 @@ and ${maxExclusive} (exclusive)&lt;/message&gt;
  *
  * @version $Id$
  */
-// START SNIPPET: field-level-validator
 public class DoubleRangeFieldValidator extends FieldValidatorSupport {
     
     String maxInclusive = null;
@@ -105,14 +114,22 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
         }
     }
 
-    private void parseParameterValues() {
-        this.minInclusiveValue = parseDouble(minInclusive);
-        this.maxInclusiveValue = parseDouble(maxInclusive);
-        this.minExclusiveValue = parseDouble(minExclusive);
-        this.maxExclusiveValue = parseDouble(maxExclusive);
+    protected void parseParameterValues() {
+        this.minInclusiveValue = parseValue(minInclusive);
+        this.maxInclusiveValue = parseValue(maxInclusive);
+        this.minExclusiveValue = parseValue(minExclusive);
+        this.maxExclusiveValue = parseValue(maxExclusive);
     }
 
-    private Double parseDouble (String value) {
+    protected Double parseValue(String value) {
+        if (parse) {
+            return (Double) parse(value, Double.class);
+        } else {
+            return parseDouble(value);
+        }
+    }
+
+    protected Double parseDouble (String value) {
         if (value != null) {
             try {
                 return Double.valueOf(value);
@@ -156,5 +173,5 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
     public void setMaxExclusive(String maxExclusive) {
         this.maxExclusive = maxExclusive;
     }
+
 }
-// END SNIPPET: field-level-validator

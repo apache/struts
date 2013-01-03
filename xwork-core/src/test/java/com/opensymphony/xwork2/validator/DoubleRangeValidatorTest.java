@@ -187,6 +187,35 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         assertTrue(!context.hasErrors()); // should pass as null value passed in
     }
 
+    public void testExpressionParams() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        ActionSupport action = new ActionSupport() {
+
+            public Double getMinInclusiveValue() {return 10d;}
+            public Double getMaxInclusiveValue() {return 11d;}
+            public Double getMinExclusiveValue() {return 13d;}
+            public Double getMaxExclusiveValue() {return 14d;}
+            public Double getPrice() {return 15d;}
+        };
+
+        stack.push(action);
+
+        val.setParse(true);
+        val.setMinInclusive("${minInclusiveValue}");
+        val.setMaxInclusive("${maxInclusiveValue}");
+        val.setMinExclusive("${minExclusiveValue}");
+        val.setMaxExclusive("${maxExclusiveValue}");
+
+        val.setFieldName("price");
+        val.setDefaultMessage("Price is wrong!");
+
+        DelegatingValidatorContext context = new DelegatingValidatorContext(action);
+        val.setValidatorContext(context);
+
+        val.validate(action);
+        assertTrue(action.getFieldErrors().get("price").size() == 1);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

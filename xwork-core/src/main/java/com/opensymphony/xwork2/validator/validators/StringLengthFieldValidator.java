@@ -31,10 +31,11 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * <!-- START SNIPPET: parameters -->
  * <ul>
  *    <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- *    <li>maxLength - The max length of the field value. Default ignore.</li>
- *    <li>minLength - The min length of the field value. Default ignore.</li>
- *    <li>trim - Trim the field value before evaluating its min/max length. Default true</li>
+ *    <li>maxLength - The max length of the field value. Default ignore. Can be specified as OGNL expression when parse is set to true.</li>
+ *    <li>minLength - The min length of the field value. Default ignore. Can be specified as OGNL expression when parse is set to true.</li>
+ *    <li>trim - Trim the field value before evaluating its min/max length. Default true. Can be specified as OGNL expression when parse is set to true.</li>
  * </ul>
+ * WARNING! Do not use ${minLength}, ${maxLength} and ${trim} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters -->
  * 
  * 
@@ -59,6 +60,16 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *                     &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
  *                &lt;/field-validator&gt;
  *            &lt;/field&gt;
+ *
+ *            &lt;!-- Field Validator Syntax with expression --&gt;
+ *            &lt;field name="myPurchaseCode"&gt;
+ *                &lt;field-validator type="stringlength"&gt;
+ *                     &lt;param name="minLength"&gt;${minLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinLengthValue() --&gt;
+ *                     &lt;param name="maxLength"&gt;${maxLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxLengthValue() --&gt;
+ *                     &lt;param name="trim"&gt;${trimValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimValue() --&gt;
+ *                     &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
+ *                &lt;/field-validator&gt;
+ *            &lt;/field&gt;
  *      &lt;/validators&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -71,33 +82,44 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public class StringLengthFieldValidator extends FieldValidatorSupport {
 
-    private boolean doTrim = true;
+    private boolean trim = true;
     private int maxLength = -1;
     private int minLength = -1;
 
-
-    public void setMaxLength(int maxLength) {
-        this.maxLength = maxLength;
+    public void setMaxLength(String maxLength) {
+        if (parse) {
+            this.maxLength = (Integer) parse(maxLength, Integer.class);
+        } else {
+            this.maxLength = Integer.valueOf(maxLength);
+        }
     }
 
     public int getMaxLength() {
         return maxLength;
     }
 
-    public void setMinLength(int minLength) {
-        this.minLength = minLength;
+    public void setMinLength(String minLength) {
+        if (parse) {
+            this.minLength = (Integer) parse(minLength, Integer.class);
+        } else {
+            this.minLength = Integer.parseInt(minLength);
+        }
     }
 
     public int getMinLength() {
         return minLength;
     }
 
-    public void setTrim(boolean trim) {
-        doTrim = trim;
+    public void setTrim(String trim) {
+        if (parse) {
+            this.trim = (Boolean) parse(trim, Boolean.class);
+        } else {
+            this.trim = Boolean.parseBoolean(trim);
+        }
     }
 
-    public boolean getTrim() {
-        return doTrim;
+    public boolean isTrim() {
+        return trim;
     }
 
     public void validate(Object object) throws ValidationException {
@@ -108,11 +130,11 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
             // use a required validator for these
             return;
         }
-        if (doTrim) {
+        if (trim) {
             val = val.trim();
-            if (val.length() <= 0) { 
-            	// use a required validator
-            	return;
+            if (val.length() <= 0) {
+                // use a required validator
+                return;
             }
         }
 
@@ -122,4 +144,5 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
             addFieldError(fieldName, object);
         }
     }
+
 }

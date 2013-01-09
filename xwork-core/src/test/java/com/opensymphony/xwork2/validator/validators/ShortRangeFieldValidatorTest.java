@@ -58,16 +58,19 @@ public class ShortRangeFieldValidatorTest extends XWorkTestCase {
     }
 
     private ShortRangeFieldValidator prepareValidator(ValidationAction action, ValidatorContext context) {
-        ShortRangeFieldValidator validator = new ShortRangeFieldValidator();
-        validator.setMaxExpression("${shortMaxValue}");
-        validator.setMinExpression("${shortMinValue}");
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(action);
+
+        ShortRangeFieldValidator validator = new ShortRangeFieldValidator();
         validator.setValueStack(valueStack);
+        validator.setParse(true);
+
+        validator.setMaxExpression("${shortMaxValue}");
+        validator.setMinExpression("${shortMinValue}");
         validator.setValidatorContext(context);
         validator.setFieldName("shortRange");
-        validator.setParse(true);
         validator.setDefaultMessage("Max is ${shortMaxValue}, min is ${shortMinValue} but value is ${shortRange}");
+
         return validator;
     }
 

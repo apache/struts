@@ -2,8 +2,8 @@
 <validators>
     <field name="myUpDownSelectTag">
         <field-validator type="double">
-            <param name="minInclusive">6000.10</param>
-            <param name="maxInclusive">10000.10</param>
+            <param name="minInclusive">6000.1</param>
+            <param name="maxInclusive">10000.1</param>
             <message>bar must be between ${minInclusive} and ${maxInclusive}.</message>
         </field-validator>
     </field>

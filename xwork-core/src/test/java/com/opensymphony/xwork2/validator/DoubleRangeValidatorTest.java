@@ -38,7 +38,6 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
         Map<String, List<String>> errors = ((ValidationAware) proxy.getAction()).getFieldErrors();
-        Iterator it = errors.entrySet().iterator();
 
         List<String> errorMessages = errors.get("percentage");
         assertNotNull("Expected double range validation error message.", errorMessages);
@@ -82,8 +81,8 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         stack.push(prod);
         ActionContext.getContext().setValueStack(stack);
 
-        val.setMinInclusive("0");
-        val.setMaxInclusive("10");
+        val.setMinInclusive(0d);
+        val.setMaxInclusive(10d);
         val.setFieldName("price");
         val.validate(prod);
     }
@@ -92,14 +91,14 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         MyTestProduct prod = new MyTestProduct();
         prod.setName("coca cola");
         prod.setPrice(5.99);
-        prod.setVolume(new Double(12.34));
+        prod.setVolume(12.34d);
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(prod);
         ActionContext.getContext().setValueStack(stack);
 
-        val.setMinInclusive("0");
-        val.setMaxInclusive("30");
+        val.setMinInclusive(0d);
+        val.setMaxInclusive(30d);
         val.setFieldName("volume");
         val.validate(prod);
     }
@@ -112,8 +111,8 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         stack.push(prod);
         ActionContext.getContext().setValueStack(stack);
 
-        val.setMinInclusive("0");
-        val.setMaxInclusive("10");
+        val.setMinInclusive(0d);
+        val.setMaxInclusive(10d);
         val.setFieldName("name");
 
         DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
@@ -121,8 +120,8 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
         val.validate(prod);
 
-        assertEquals("0", val.getMinInclusive());
-        assertEquals("10", val.getMaxInclusive());
+        assertEquals(0d, val.getMinInclusive());
+        assertEquals(10d, val.getMaxInclusive());
     }
 
     public void testEdgeOfMaxRange() throws Exception {
@@ -139,15 +138,15 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
         val.setValidatorContext(context);
 
-        val.setMaxInclusive("9.95");
+        val.setMaxInclusive(9.95d);
         val.validate(prod); // should pass
         assertTrue(!context.hasErrors());
-        assertEquals("9.95", val.getMaxInclusive());
+        assertEquals(9.95d, val.getMaxInclusive());
 
-        val.setMaxExclusive("9.95");
+        val.setMaxExclusive(9.95d);
         val.validate(prod); // should not pass
         assertTrue(context.hasErrors());
-        assertEquals("9.95", val.getMaxExclusive());
+        assertEquals(9.95d, val.getMaxExclusive());
     }
 
     public void testEdgeOfMinRange() throws Exception {
@@ -164,11 +163,11 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
         val.setValidatorContext(context);
 
-        val.setMinInclusive("9.95");
+        val.setMinInclusive(9.95d);
         val.validate(prod); // should pass
         assertTrue(!context.hasErrors());
 
-        val.setMinExclusive("9.95");
+        val.setMinExclusive(9.95d);
         val.validate(prod); // should not pass
         assertTrue(context.hasErrors());
     }
@@ -182,9 +181,36 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
         val.setValidatorContext(context);
 
-        val.setMinInclusive("9.95");
+        val.setMinInclusive(9.95d);
         val.validate(null);
         assertTrue(!context.hasErrors()); // should pass as null value passed in
+    }
+
+    public void testRangeValidationWithExpressionsFail() throws Exception {
+        //Explicitly set an out-of-range double for DoubleRangeValidatorTest
+        Map<String, Object> context = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("percentage", 100.0123d);
+        context.put(ActionContext.PARAMETERS, params);
+
+        // must set a locale to US as error message contains a locale dependent number (see XW-490)
+        Locale defLocale = Locale.getDefault();
+        Locale.setDefault(Locale.US);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, context);
+        proxy.execute();
+        assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
+
+        Map<String, List<String>> errors = ((ValidationAware) proxy.getAction()).getFieldErrors();
+        List<String> errorMessages = errors.get("percentage");
+        assertNotNull("Expected double range validation error message.", errorMessages);
+        assertEquals(1, errorMessages.size());
+
+        String errorMessage = errorMessages.get(0);
+        assertNotNull("Expecting: percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
+        assertEquals("percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
+
+        Locale.setDefault(defLocale);
     }
 
     public void testExpressionParams() throws Exception {
@@ -201,10 +227,10 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         stack.push(action);
 
         val.setParse(true);
-        val.setMinInclusive("${minInclusiveValue}");
-        val.setMaxInclusive("${maxInclusiveValue}");
-        val.setMinExclusive("${minExclusiveValue}");
-        val.setMaxExclusive("${maxExclusiveValue}");
+        val.setMinInclusiveExpression("${minInclusiveValue}");
+        val.setMaxInclusiveExpression("${maxInclusiveValue}");
+        val.setMinExclusiveExpression("${minExclusiveValue}");
+        val.setMaxExclusiveExpression("${maxExclusiveValue}");
 
         val.setFieldName("price");
         val.setDefaultMessage("Price is wrong!");

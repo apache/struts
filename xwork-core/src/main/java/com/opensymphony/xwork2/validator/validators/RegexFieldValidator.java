@@ -25,8 +25,7 @@ import java.util.regex.Pattern;
  * <!-- START SNIPPET: javadoc -->
  * Validates a string field using a regular expression.
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * 
+ *
  * 
  * <!-- START SNIPPET: parameters -->
  * <ul>
@@ -40,20 +39,20 @@ import java.util.regex.Pattern;
  * 
  * <pre>
  * <!-- START SNIPPET: example -->
- *    &lt;validators&gt;
- *        &lt;!-- Plain Validator Syntax --&gt;
- *        &lt;validator type="regex"&gt;
- *            &lt;param name="fieldName"&gt;myStrangePostcode&lt;/param&gt;
- *            &lt;param name="expression"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&lt;&gt;/param&gt;
- *        &lt;/validator&gt;
- *    
- *        &lt;!-- Field Validator Syntax --&gt;
- *        &lt;field name="myStrangePostcode"&gt;
- *            &lt;field-validator type="regex"&gt;
- *               &lt;param name="expression"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&gt;&lt;/param&gt;
- *            &lt;/field-validator&gt;
- *        &lt;/field&gt;
- *    &lt;/validators&gt;
+ * &lt;validators&gt;
+ *     &lt;!-- Plain Validator Syntax --&gt;
+ *     &lt;validator type="regex"&gt;
+ *         &lt;param name="fieldName"&gt;myStrangePostcode&lt;/param&gt;
+ *         &lt;param name="expression"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&lt;&gt;/param&gt;
+ *     &lt;/validator&gt;
+ *
+ *     &lt;!-- Field Validator Syntax --&gt;
+ *     &lt;field name="myStrangePostcode"&gt;
+ *         &lt;field-validator type="regex"&gt;
+ *             &lt;param name="expression"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&gt;&lt;/param&gt;
+ *         &lt;/field-validator&gt;
+ *     &lt;/field&gt;
+ * &lt;/validators&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

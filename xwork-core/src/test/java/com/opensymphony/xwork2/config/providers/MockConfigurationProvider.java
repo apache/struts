@@ -59,6 +59,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
     public static final String VALIDATION_ACTION_NAME = "validationInterceptorTest";
     public static final String VALIDATION_ALIAS_NAME = "validationAlias";
     public static final String VALIDATION_SUBPROPERTY_NAME = "subproperty";
+    public static final String EXPRESSION_VALIDATION_ACTION = "expressionValidationAction";
 
     private static final Map<String,String> EMPTY_STRING_MAP = Collections.emptyMap();
 
@@ -176,6 +177,12 @@ public class MockConfigurationProvider implements ConfigurationProvider {
                 .addResultConfig(new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build())
                 .build();
         defaultPackageContext.addActionConfig(barActionConfig.getName(), barActionConfig);
+
+        ActionConfig expressionValidationActionConfig = new ActionConfig.Builder("defaultPackage", EXPRESSION_VALIDATION_ACTION, SimpleAction.class.getName())
+                .addInterceptors(interceptors)
+                .addResultConfigs(results)
+                .build();
+        defaultPackageContext.addActionConfig(EXPRESSION_VALIDATION_ACTION, expressionValidationActionConfig);
 
         configuration.addPackageConfig("defaultPackage", defaultPackageContext.build());
     }

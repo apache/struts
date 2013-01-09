@@ -31,14 +31,21 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *     <li>maxInclusive - the maximum inclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
  *     <li>minExclusive - the minimum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
  *     <li>maxExclusive - the maximum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>minInclusiveExpression - the minimum inclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
+ *     <li>maxInclusiveExpression - the maximum inclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
+ *     <li>minExclusiveExpression - the minimum exclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
+ *     <li>maxExclusiveExpression - the maximum exclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
  * </ul>
  *
- * You can specify minInclusive, maxInclusive, minExclusive and maxExclusive as a OGNL expression, see example below.
+ * You can specify either minInclusive, maxInclusive, minExclusive and maxExclusive or minInclusiveExpression, maxInclusiveExpression,
+ * minExclusiveExpression and maxExclusiveExpression as a OGNL expression, see example below. You can always try to mix params
+ * but be aware that such behaviour was not tested.
  * <!-- END SNIPPET: parameters -->
  *
  *
  * <!-- START SNIPPET: parameters-warning -->
- * Do not use ${minInclusive}, ${maxInclusive}, ${minExclusive} and ${maxExclusive} as an expression as this will turn into infinitive loop!
+ * Do not use ${minInclusiveExpression}, ${maxInclusiveExpression}, ${minExclusiveExpressionExpression} and ${maxExclusive}
+ * as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters-warning -->
  *
  *
@@ -65,9 +72,8 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *     &lt;!-- Field Validator Syntax with expression --&gt;
  *     &lt;field name="percentage"&gt;
  *         &lt;field-validator type="double"&gt;
- *             &lt;param name="parse"&gt;true&lt;/param&gt;
- *             &lt;param name="minExclusive"&gt;${minExclusiveValue}&lt;/param&gt; &lt;!-- will be evaluated as: Double getMinExclusiveValue() --&gt;
- *             &lt;param name="maxExclusive"&gt;${maxExclusive}&lt;/param&gt; &lt;!-- will be evaluated as: Double getMaxExclusive() --&gt;
+ *             &lt;param name="minExclusiveExpression"&gt;${minExclusiveValue}&lt;/param&gt; &lt;!-- will be evaluated as: Double getMinExclusiveValue() --&gt;
+ *             &lt;param name="maxExclusiveExpression"&gt;${maxExclusiveValue}&lt;/param&gt; &lt;!-- will be evaluated as: Double getMaxExclusiveValue() --&gt;
  *             &lt;message&gt;Percentage needs to be between ${minExclusive} and ${maxExclusive} (exclusive)&lt;/message&gt;
  *         &lt;/field-validator&gt;
  *     &lt;/field&gt;
@@ -82,15 +88,10 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public class DoubleRangeFieldValidator extends FieldValidatorSupport {
     
-    String maxInclusive = null;
-    String minInclusive = null;
-    String minExclusive = null;
-    String maxExclusive = null;
-
-    Double maxInclusiveValue = null;
-    Double minInclusiveValue = null;
-    Double minExclusiveValue = null;
-    Double maxExclusiveValue = null;
+    private Double maxInclusive = null;
+    private Double minInclusive = null;
+    private Double minExclusive = null;
+    private Double maxExclusive = null;
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
@@ -105,73 +106,60 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
             return;
         }
 
-        parseParameterValues();
-        if ((maxInclusiveValue != null && value.compareTo(maxInclusiveValue) > 0) ||
-                (minInclusiveValue != null && value.compareTo(minInclusiveValue) < 0) ||
-                (maxExclusiveValue != null && value.compareTo(maxExclusiveValue) >= 0) ||
-                (minExclusiveValue != null && value.compareTo(minExclusiveValue) <= 0)) {
+        if ((maxInclusive != null && value.compareTo(maxInclusive) > 0) ||
+                (minInclusive != null && value.compareTo(minInclusive) < 0) ||
+                (maxExclusive != null && value.compareTo(maxExclusive) >= 0) ||
+                (minExclusive != null && value.compareTo(minExclusive) <= 0)) {
             addFieldError(fieldName, object);
         }
     }
 
-    protected void parseParameterValues() {
-        this.minInclusiveValue = parseValue(minInclusive);
-        this.maxInclusiveValue = parseValue(maxInclusive);
-        this.minExclusiveValue = parseValue(minExclusive);
-        this.maxExclusiveValue = parseValue(maxExclusive);
-    }
-
-    protected Double parseValue(String value) {
-        if (parse) {
-            return (Double) parse(value, Double.class);
-        } else {
-            return parseDouble(value);
-        }
-    }
-
-    protected Double parseDouble (String value) {
-        if (value != null) {
-            try {
-                return Double.valueOf(value);
-            } catch (NumberFormatException e) {
-                if (log.isWarnEnabled()) {
-                    log.warn("DoubleRangeFieldValidator - [parseDouble]: Unable to parse given double parameter " + value);
-                }
-            }
-        }
-        return null;
-    }
-
-    public void setMaxInclusive(String maxInclusive) {
+    public void setMaxInclusive(Double maxInclusive) {
         this.maxInclusive = maxInclusive;
     }
 
-    public String getMaxInclusive() {
+    public Double getMaxInclusive() {
         return maxInclusive;
     }
 
-    public void setMinInclusive(String minInclusive) {
+    public void setMinInclusive(Double minInclusive) {
         this.minInclusive = minInclusive;
     }
 
-    public String getMinInclusive() {
+    public Double getMinInclusive() {
         return minInclusive;
     }
 
-    public String getMinExclusive() {
+    public Double getMinExclusive() {
         return minExclusive;
     }
 
-    public void setMinExclusive(String minExclusive) {
+    public void setMinExclusive(Double minExclusive) {
         this.minExclusive = minExclusive;
     }
 
-    public String getMaxExclusive() {
+    public Double getMaxExclusive() {
         return maxExclusive;
     }
 
-    public void setMaxExclusive(String maxExclusive) {
+    public void setMaxExclusive(Double maxExclusive) {
         this.maxExclusive = maxExclusive;
+    }
+
+    public void setMinInclusiveExpression(String minInclusiveExpression) {
+        this.minInclusive = (Double) parse(minInclusiveExpression, Double.class);
+    }
+
+    public void setMaxInclusiveExpression(String maxInclusiveExpression) {
+        this.maxInclusive = (Double) parse(maxInclusiveExpression, Double.class);
+    }
+
+    public void setMinExclusiveExpression(String minExclusiveExpression) {
+        this.minExclusive = (Double) parse(minExclusiveExpression, Double.class);
+    }
+
+    public void setMaxExclusiveExpression(String maxExclusiveExpression) {
+        this.maxExclusive = (Double) parse(maxExclusiveExpression, Double.class);
     }
 
 }

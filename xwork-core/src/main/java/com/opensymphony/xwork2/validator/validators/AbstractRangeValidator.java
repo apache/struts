@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.validator.ValidationException;
 
 
@@ -26,13 +28,12 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public abstract class AbstractRangeValidator<T extends Comparable> extends FieldValidatorSupport {
 
-    protected final Class<T> type;
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractRangeValidator.class);
+
+    private final Class<T> type;
 
     private T min;
     private T max;
-
-    private String minExpression;
-    private String maxExpression;
 
     protected AbstractRangeValidator(Class<T> type) {
         this.type = type;
@@ -49,23 +50,16 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
         }
 
         // only check for a minimum value if the min parameter is set
-        T minComparatorValue = getMinComparatorValue();
+        T minComparatorValue = getMin();
         if ((minComparatorValue != null) && (value.compareTo(minComparatorValue) < 0)) {
             addFieldError(getFieldName(), object);
         }
 
         // only check for a maximum value if the max parameter is set
-        T maxComparatorValue = getMaxComparatorValue();
+        T maxComparatorValue = getMax();
         if ((maxComparatorValue != null) && (value.compareTo(maxComparatorValue) > 0)) {
             addFieldError(getFieldName(), object);
         }
-    }
-
-    public T getMinComparatorValue() {
-        if (parse) {
-            return (T) parse(getMinExpression(), type);
-        }
-        return getMin();
     }
 
     public void setMin(T min) {
@@ -76,12 +70,11 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
         return min;
     }
 
-    public String getMinExpression() {
-        return minExpression;
-    }
-
     public void setMinExpression(String minExpression) {
-        this.minExpression = minExpression;
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("${minExpression} was defined as [#0]", minExpression);
+        }
+        this.min = (T) parse(minExpression, type);
     }
 
     public void setMax(T max) {
@@ -92,19 +85,11 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
         return max;
     }
 
-    public String getMaxExpression() {
-        return maxExpression;
-    }
-
     public void setMaxExpression(String maxExpression) {
-        this.maxExpression = maxExpression;
-    }
-
-    public T getMaxComparatorValue() {
-        if (parse) {
-            return (T) parse(getMaxExpression(), type);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("${maxExpression} was defined as [#0]", maxExpression);
         }
-        return getMax();
+        this.max = (T) parse(maxExpression, type);
     }
 
 }

@@ -42,10 +42,10 @@
          //validatorname:double
          if(form.elements['myUpDownSelectTag']){
             field=form.elements['myUpDownSelectTag'];
-            var error="bar must be between 6000.10 and 10000.10.";
+            var error="bar must be between 6000.1 and 10000.1.";
             if(continueValidation && field.value!=null){
                 var value = parseFloat(field.value);
-                if(value<6000.10||value>10000.10||false||false){
+                if(value<6000.1||value>10000.1||false||false){
                     addError(field,error);
                     errors=true;
                  }

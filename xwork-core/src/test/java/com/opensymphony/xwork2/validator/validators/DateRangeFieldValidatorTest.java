@@ -67,16 +67,19 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     }
 
     private DateRangeFieldValidator prepareValidator(ValidationAction action, ValidatorContext context) {
-        DateRangeFieldValidator validator = new DateRangeFieldValidator();
-        validator.setMaxExpression("${dateMaxValue}");
-        validator.setMinExpression("${dateMinValue}");
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(action);
+
+        DateRangeFieldValidator validator = new DateRangeFieldValidator();
         validator.setValueStack(valueStack);
+        validator.setParse(true);
+
+        validator.setMaxExpression("${dateMaxValue}");
+        validator.setMinExpression("${dateMinValue}");
         validator.setValidatorContext(context);
         validator.setFieldName("dateRange");
-        validator.setParse(true);
         validator.setDefaultMessage("Max is ${dateMaxValue}, min is ${dateMinValue} but value is ${dateRange}");
+
         return validator;
     }
 

@@ -8,8 +8,11 @@ import com.opensymphony.xwork2.validator.ValidatorContext;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateRangeFieldValidatorTest extends XWorkTestCase {
+
+    private Locale copy;
 
     public void testPassValidation() throws Exception {
         // given
@@ -35,7 +38,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
 
         // then
         assertTrue(context.getFieldErrors().size() == 1);
-        assertEquals("Max is 12/12/13, min is 1/1/13 but value is 3/3/12", context.getFieldErrors().get("dateRange").get(0));
+        assertEquals("Max is 12.12.13, min is 01.01.13 but value is 03.03.12", context.getFieldErrors().get("dateRange").get(0));
     }
 
     public void testMaxValidation() throws Exception {
@@ -49,7 +52,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
 
         // then
         assertTrue(context.getFieldErrors().size() == 1);
-        assertEquals("Max is 12/12/13, min is 1/1/13 but value is 4/4/14", context.getFieldErrors().get("dateRange").get(0));
+        assertEquals("Max is 12.12.13, min is 01.01.13 but value is 04.04.14", context.getFieldErrors().get("dateRange").get(0));
     }
 
     private ValidationAction prepareAction(Date range) {
@@ -81,6 +84,19 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
         validator.setDefaultMessage("Max is ${dateMaxValue}, min is ${dateMinValue} but value is ${dateRange}");
 
         return validator;
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        copy = Locale.getDefault();
+        Locale.setDefault(new Locale("DE"));
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        Locale.setDefault(copy);
     }
 
 }

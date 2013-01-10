@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.util.logging;
 
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
+import com.opensymphony.xwork2.util.logging.slf4j.Slf4jLoggerFactory;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -59,11 +60,17 @@ public abstract class LoggerFactory {
         try {
             if (factory == null) {
                 try {
-                    Class.forName("org.apache.commons.logging.LogFactory");
-                    factory = new com.opensymphony.xwork2.util.logging.commons.CommonsLoggerFactory();
+                    Class.forName("org.slf4j.LoggerFactory");
+                    factory = new Slf4jLoggerFactory();
                 } catch (ClassNotFoundException ex) {
-                    // commons logging not found, falling back to jdk logging
-                    factory = new JdkLoggerFactory();
+                    //slf4j not found try commons LogFactory
+                    try {
+                        Class.forName("org.apache.commons.logging.LogFactory");
+                        factory = new com.opensymphony.xwork2.util.logging.commons.CommonsLoggerFactory();
+                    } catch (ClassNotFoundException cnfex) {
+                        // commons logging not found, falling back to jdk logging
+                        factory = new JdkLoggerFactory();
+                    }
                 }
             }
             return factory;

@@ -3,24 +3,32 @@ package com.opensymphony.xwork2.validator.validators;
 import com.opensymphony.xwork2.validator.ValidationException;
 
 /**
- * <code>ConditionalVisitorFieldValidator</code>
+ * <!-- START SNIPPET: javadoc -->
+ * The ConditionalVisitorFieldValidator will forward validation to the VisitorFieldValidator
+ * only if the expression will evaluate to true.
+ * <!-- END SNIPPET: javadoc -->
  *
+ * <!-- START SNIPPET: parameters -->
+ * <ul>
+ *     <li>expression - an OGNL expression which should evaluate to true to pass validation to the VisitorFieldValidator</li>
+ * </ul>
+ * <!-- END SNIPPET: parameters -->
  *
+ * <pre>
+ * <!-- START SNIPPET: example -->
  * &lt;field name="colleaguePosition"&gt;
- *   &lt;field-validator type="fieldexpression" short-circuit="true"&gt;
- *     reason == 'colleague' and colleaguePositionID == '_CHOOSE_'
- *     &lt;message&gt;You must choose a position where you worked with this person,
- * or choose "Other..."&lt;/message&gt;
- *   &lt;/field-validator&gt;
- *   &lt;field-validator type="conditionalvisitor"&gt;
- *     reason == 'colleague' and colleaguePositionID == 'OTHER'
- *     &lt;message/&gt;
- *   &lt;/field-validator&gt;
+ *     &lt;field-validator type="conditionalvisitor"&gt;
+ *         &lt;param name="expression"&gt;reason == 'colleague' and colleaguePositionID == 'OTHER'&lt;/param&gt;
+ *         &lt;message&gt;You must select reason Colleague and position Other&lt;/message&gt;
+ *     &lt;/field-validator&gt;
  * &lt;/field&gt;
+ * <!-- END SNIPPET: example -->
+ * </pre>
  *
  * @author Matt Raible
  */
 public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
+
     private String expression;
 
     public void setExpression(String expression) {
@@ -58,11 +66,9 @@ public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
 
         try {
             obj = getFieldValue(expression, object);
-        }
-        catch (ValidationException e) {
+        } catch (ValidationException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // let this pass, but it will be logged right below
         }
 
@@ -74,4 +80,5 @@ public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
 
         return answer;
     }
+
 } 

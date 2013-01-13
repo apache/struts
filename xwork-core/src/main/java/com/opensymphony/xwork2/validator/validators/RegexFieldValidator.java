@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
  *    <li>caseSensitive - Boolean (Optional). Sets whether the expression should be matched against in a case-sensitive way. Default is <code>true</code>.</li>
  *    <li>trim - Boolean (Optional). Sets whether the expression should be trimed before matching. Default is <code>true</code>.</li>
  * </ul>
+ * You can mix normal params with expression aware params but thus was not tested
  * <!-- END SNIPPET: parameters -->
  * 
  * 
@@ -43,13 +44,22 @@ import java.util.regex.Pattern;
  *     &lt;!-- Plain Validator Syntax --&gt;
  *     &lt;validator type="regex"&gt;
  *         &lt;param name="fieldName"&gt;myStrangePostcode&lt;/param&gt;
- *         &lt;param name="expression"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&lt;&gt;/param&gt;
+ *         &lt;param name="regex"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&lt;&gt;/param&gt;
  *     &lt;/validator&gt;
  *
  *     &lt;!-- Field Validator Syntax --&gt;
  *     &lt;field name="myStrangePostcode"&gt;
  *         &lt;field-validator type="regex"&gt;
- *             &lt;param name="expression"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&gt;&lt;/param&gt;
+ *             &lt;param name="regex"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&gt;&lt;/param&gt;
+ *         &lt;/field-validator&gt;
+ *     &lt;/field&gt;
+ *
+ *     &lt;!-- Field Validator Syntax with expressions --&gt;
+ *     &lt;field name="myStrangePostcode"&gt;
+ *         &lt;field-validator type="regex"&gt;
+ *             &lt;param name="regexExpression"&gt;${regexValue}&lt;/param&gt; &lt;!-- will be evaluated as: String getRegexValue() --&gt;
+ *             &lt;param name="caseSensitiveExpression"&gt;${caseSensitiveValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getCaseSensitiveValue() --&gt;
+ *             &lt;param name="trimExpression"&gt;${trimValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimValue() --&gt;
  *         &lt;/field-validator&gt;
  *     &lt;/field&gt;
  * &lt;/validators&gt;
@@ -61,7 +71,7 @@ import java.util.regex.Pattern;
  */
 public class RegexFieldValidator extends FieldValidatorSupport {
 
-    private String expression;
+    private String regex;
     private boolean caseSensitive = true;
     private boolean trim = true;
 
@@ -70,7 +80,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         Object value = this.getFieldValue(fieldName, object);
         // if there is no value - don't do comparison
         // if a value is required, a required validator should be added to the field
-        if (value == null || expression == null) {
+        if (value == null || regex == null) {
             return;
         }
 
@@ -88,9 +98,9 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         // match against expression
         Pattern pattern;
         if (isCaseSensitive()) {
-            pattern = Pattern.compile(expression);
+            pattern = Pattern.compile(regex);
         } else {
-            pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+            pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         }
 
         String compare = (String) value;
@@ -107,19 +117,22 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     /**
      * @return Returns the regular expression to be matched.
      */
-    public String getExpression() {
-        return expression;
+    public String getRegex() {
+        return regex;
     }
 
     /**
-     * Sets the regular expression to be matched.
+     * Sets the regular expression to be matched
      */
-    public void setExpression(String expression) {
-        if (parse) {
-            this.expression = (String) parse(expression, String.class);
-        } else {
-            this.expression = expression;
-        }
+    public void setRegex(String regex) {
+        this.regex = regex;
+    }
+
+    /**
+     * Sets the regular expression as an OGNL expression to be matched
+     */
+    public void setRegexExpression(String regexExpression) {
+        this.regex = (String) parse(regexExpression, String.class);
     }
 
     /**
@@ -134,12 +147,15 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Sets whether the expression should be matched against in
      * a case-sensitive way.  Default is <code>true</code>.
      */
-    public void setCaseSensitive(String caseSensitive) {
-        if (parse) {
-            this.caseSensitive = (Boolean) parse(caseSensitive, Boolean.class);
-        } else {
-            this.caseSensitive = Boolean.parseBoolean(caseSensitive);
-        }
+    public void setCaseSensitive(Boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
+    }
+
+    /**
+     * Allows specify caseSensitive param as an OGNL expression
+     */
+    public void setCaseSensitiveExpression(String caseSensitiveExpression) {
+        this.caseSensitive = (Boolean) parse(caseSensitiveExpression, Boolean.class);
     }
 
     /**
@@ -154,12 +170,15 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Sets whether the expression should be trimed before matching.
      * Default is <code>true</code>.
      */
-    public void setTrim(String trim) {
-        if (parse) {
-            this.trim = (Boolean) parse(trim, Boolean.class);
-        } else {
-            this.trim = Boolean.parseBoolean(trim);
-        }
+    public void setTrim(Boolean trim) {
+        this.trim = trim;
+    }
+
+    /**
+     * Allows specify trim param as an OGNL expression
+     */
+    public void setTrimExpression(String trimExpression) {
+        this.trim = (Boolean) parse(trimExpression, Boolean.class);
     }
 
 }

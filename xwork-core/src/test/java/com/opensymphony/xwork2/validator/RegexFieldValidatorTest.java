@@ -40,7 +40,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         ActionContext.getContext().setValueStack(stack);
 
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setExpression("^Sec.*");
+        validator.setRegex("^Sec.*");
         validator.setValidatorContext(new GenericValidatorContext(new Object()));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
@@ -60,8 +60,8 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         ActionContext.getContext().setValueStack(stack);
 
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setTrim("false");
-        validator.setExpression("^Sec.*\\s");
+        validator.setTrim(false);
+        validator.setRegex("^Sec.*\\s");
         validator.setValidatorContext(new GenericValidatorContext(new Object()));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
@@ -81,7 +81,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         ActionContext.getContext().setValueStack(stack);
 
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setExpression("^Sec.*");
+        validator.setRegex("^Sec.*");
         validator.setValidatorContext(new GenericValidatorContext(new Object()));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
@@ -106,7 +106,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         ActionContext.getContext().setValueStack(stack);
 
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setExpression("^Sec.*");
+        validator.setRegex("^Sec.*");
         validator.setValidatorContext(new GenericValidatorContext(new Object()));
         validator.setFieldName(null);
         validator.setValueStack(ActionContext.getContext().getValueStack());
@@ -120,14 +120,14 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
 
     public void testGetExpression() throws Exception {
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setExpression("^Hello.*");
-        assertEquals("^Hello.*", validator.getExpression());
+        validator.setRegex("^Hello.*");
+        assertEquals("^Hello.*", validator.getRegex());
     }
 
     public void testIsTrimmed() throws Exception {
         RegexFieldValidator validator = new RegexFieldValidator();
         assertEquals(true, validator.isTrimed());
-        validator.setTrim("false");
+        validator.setTrim(false);
         assertEquals(false, validator.isTrimed());
     }
 
@@ -139,7 +139,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         ActionContext.getContext().setValueStack(stack);
 
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setExpression("^Sec.*");
+        validator.setRegex("^Sec.*");
         validator.setValidatorContext(new GenericValidatorContext(new Object()));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
@@ -159,7 +159,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         ActionContext.getContext().setValueStack(stack);
 
         RegexFieldValidator validator = new RegexFieldValidator();
-        validator.setExpression("[0-9][0-9]");
+        validator.setRegex("[0-9][0-9]");
         validator.setValidatorContext(new GenericValidatorContext(new Object()));
         validator.setFieldName("age");
         validator.setValueStack(ActionContext.getContext().getValueStack());

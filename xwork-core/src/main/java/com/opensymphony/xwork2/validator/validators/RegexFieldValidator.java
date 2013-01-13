@@ -30,9 +30,12 @@ import java.util.regex.Pattern;
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * 	  <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- *    <li>expression - The RegExp expression  REQUIRED</li>
+ *    <li>regexp - The RegExp expression</li>
  *    <li>caseSensitive - Boolean (Optional). Sets whether the expression should be matched against in a case-sensitive way. Default is <code>true</code>.</li>
- *    <li>trim - Boolean (Optional). Sets whether the expression should be trimed before matching. Default is <code>true</code>.</li>
+ *    <li>trim - Boolean (Optional). Sets whether the expression should be trimmed before matching. Default is <code>true</code>.</li>
+ *    <li>regexExpression - String (Optional). Defines regExp expression as an OGNL expression - will be evaluated to String</li>
+ *    <li>caseSensitiveExpression - String (Optional). Defines caseSensitive param as an OGNL expression - will be evaluated to Boolean.</li>
+ *    <li>trimExpression - String (Optional). Defines trim param as an OGNL expression - will be evaluated to Boolean</li>
  * </ul>
  * You can mix normal params with expression aware params but thus was not tested
  * <!-- END SNIPPET: parameters -->

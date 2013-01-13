@@ -34,10 +34,11 @@ package com.opensymphony.xwork2.validator.validators;
  * <ul>
  * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
  * </ul>
+ * Check also documentation of the RegexpValidator for more details - the EmailValidator bases on it.
  * <!-- END SNIPPET: parameters -->
  *
  * <!-- START SNIPPET: parameters-warning -->
- * Do not use ${expression}, ${caseSensitive} and ${trim} as an expression as this will turn into infinitive loop!
+ * Do not use ${regexExpression}, ${caseSensitiveExpression} and ${trimExpression} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters-warning -->
  * 
  * <pre>
@@ -60,7 +61,6 @@ package com.opensymphony.xwork2.validator.validators;
  *     &lt;!-- Field Validator Syntax with expressions --&gt;
  *     &lt;field name="myEmail"&gt;
  *        &lt;field-validator type="email"&gt;
- *           &lt;param name="parse"&gt;true&lt;/param&gt;*
  *           &lt;param name="regexExpression"&gt;${emailPattern}&lt;/param&gt; &lt;!-- will be evaluated as: String getEmailPattern() --&gt;
  *           &lt;param name="caseSensitiveExpression"&gt;${emailCaseSensitive}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getEmailCaseSensitive() --&gt;
  *           &lt;param name="trimExpression"&gt;${trimEmail}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimEmail() --&gt;

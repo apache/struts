@@ -41,14 +41,9 @@ public class ValidatorSupportTest extends XWorkTestCase {
 			};
             validator.setValueStack(ActionContext.getContext().getValueStack());
 
-            validator.setParse(true);
-			String result1 = validator.conditionalParse("${#something}").toString();
-
-			validator.setParse(false);
-			String result2 = validator.conditionalParse("${#something}").toString();
+			String result1 = validator.parse("${#something}", String.class).toString();
 
 			assertEquals(result1, "somevalue");
-			assertEquals(result2, "${#something}");
 		}
 		finally {
 			ActionContext.getContext().setValueStack(oldStack);

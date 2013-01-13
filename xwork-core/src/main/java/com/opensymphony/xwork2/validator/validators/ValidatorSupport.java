@@ -44,7 +44,6 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
     protected String messageKey;
     private ValidatorContext validatorContext;
     private boolean shortCircuit;
-    protected boolean parse;
     private String type;
     private String[] messageParameters;
     protected ValueStack stack;
@@ -62,14 +61,6 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
 
     public String getDefaultMessage() {
         return defaultMessage;
-    }
-
-    public void setParse(boolean parse) {
-        this.parse = parse;
-    }
-
-    public boolean getParse() {
-        return parse;
     }
 
     public String getMessage(Object object) {
@@ -167,19 +158,12 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
     }
 
     /**
-     * Parse <code>expression</code> passed in against value stack. Only parse
-     * when 'parse' param is set to true, else just returns the expression unparsed.
+     * Parse <code>expression</code> passed in against value stack.
      *
-     * @param expression
+     * @param expression an OGNL expression
+     * @param type type to return
      * @return Object
      */
-    protected Object conditionalParse(String expression) {
-        if (parse) {
-            return TextParseUtil.translateVariables('$', expression, stack);
-        }
-        return expression;
-    }
-
     protected Object parse(String expression, Class type) {
         if (expression == null) {
             return null;
@@ -191,8 +175,8 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
      * Return the field value named <code>name</code> from <code>object</code>,
      * <code>object</code> should have the appropriate getter/setter.
      *
-     * @param name
-     * @param object
+     * @param name name of the field
+     * @param object to search field name on
      * @return Object as field value
      * @throws ValidationException
      */

@@ -63,7 +63,6 @@ public class IntRangeFieldValidatorTest extends XWorkTestCase {
 
         IntRangeFieldValidator validator = new IntRangeFieldValidator();
         validator.setValueStack(valueStack);
-        validator.setParse(true);
 
         validator.setMaxExpression("${intMaxValue}");
         validator.setMinExpression("${intMinValue}");

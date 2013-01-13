@@ -63,7 +63,6 @@ public class ShortRangeFieldValidatorTest extends XWorkTestCase {
 
         ShortRangeFieldValidator validator = new ShortRangeFieldValidator();
         validator.setValueStack(valueStack);
-        validator.setParse(true);
 
         validator.setMaxExpression("${shortMaxValue}");
         validator.setMinExpression("${shortMinValue}");

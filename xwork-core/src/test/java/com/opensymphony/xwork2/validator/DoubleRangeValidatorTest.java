@@ -226,7 +226,6 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
         stack.push(action);
 
-        val.setParse(true);
         val.setMinInclusiveExpression("${minInclusiveValue}");
         val.setMaxInclusiveExpression("${maxInclusiveValue}");
         val.setMinExclusiveExpression("${minExclusiveValue}");

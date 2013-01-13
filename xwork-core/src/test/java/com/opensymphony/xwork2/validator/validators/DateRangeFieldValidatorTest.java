@@ -75,7 +75,6 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
 
         DateRangeFieldValidator validator = new DateRangeFieldValidator();
         validator.setValueStack(valueStack);
-        validator.setParse(true);
 
         validator.setMaxExpression("${dateMaxValue}");
         validator.setMinExpression("${dateMinValue}");

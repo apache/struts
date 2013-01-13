@@ -31,14 +31,17 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * <!-- START SNIPPET: parameters -->
  * <ul>
  *    <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- *    <li>maxLength - The max length of the field value. Default ignore. Can be specified as OGNL expression when parse is set to true.</li>
- *    <li>minLength - The min length of the field value. Default ignore. Can be specified as OGNL expression when parse is set to true.</li>
- *    <li>trim - Trim the field value before evaluating its min/max length. Default true. Can be specified as OGNL expression when parse is set to true.</li>
+ *    <li>maxLength - Integer. The max length of the field value. Default ignore.</li>
+ *    <li>minLength - Integer. The min length of the field value. Default ignore.</li>
+ *    <li>trim - (Optional) Boolean, default true. Trim the field value before evaluating its min/max length. Default true.</li>
+ *    <li>maxLengthExpression - (Optional) String. Defines the max length param as an OGNL expression</li>
+ *    <li>minLengthExpression - (Optional) String. Defines the min length param as an OGNL expression</li>
+ *    <li>trimExpression - (Optional) String. Defines th trim param as an OGNL expression</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
  * 
  * <!-- START SNIPPET: parameters-warning -->
- * Do not use ${minLength}, ${maxLength} and ${trim} as an expression as this will turn into infinitive loop!
+ * Do not use ${minLengthExpression}, ${maxLengthExpression} and ${trimExpression} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters-warning -->
  *
  * <pre>
@@ -66,10 +69,9 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *     &lt;!-- Field Validator Syntax with expression --&gt;
  *     &lt;field name="myPurchaseCode"&gt;
  *         &lt;field-validator type="stringlength"&gt;
- *              &lt;param name="parse"&gt;true&lt;/param&gt;
- *              &lt;param name="minLength"&gt;${minLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinLengthValue() --&gt;
- *              &lt;param name="maxLength"&gt;${maxLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxLengthValue() --&gt;
- *              &lt;param name="trim"&gt;${trimValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimValue() --&gt;
+ *              &lt;param name="minLengthExpression"&gt;${minLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMinLengthValue() --&gt;
+ *              &lt;param name="maxLengthExpression"&gt;${maxLengthValue}&lt;/param&gt; &lt;!-- will be evaluated as: Integer getMaxLengthValue() --&gt;
+ *              &lt;param name="trimExpression"&gt;${trimValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimValue() --&gt;
  *              &lt;message&gt;Your purchase code needs to be 10 characters long&lt;/message&gt;
  *         &lt;/field-validator&gt;
  *     &lt;/field&gt;
@@ -89,36 +91,36 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     private int maxLength = -1;
     private int minLength = -1;
 
-    public void setMaxLength(String maxLength) {
-        if (parse) {
-            this.maxLength = (Integer) parse(maxLength, Integer.class);
-        } else {
-            this.maxLength = Integer.valueOf(maxLength);
-        }
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public void setMaxLengthExpression(String maxLengthExpression) {
+        this.maxLength = (Integer) parse(maxLengthExpression, Integer.class);
     }
 
     public int getMaxLength() {
         return maxLength;
     }
 
-    public void setMinLength(String minLength) {
-        if (parse) {
-            this.minLength = (Integer) parse(minLength, Integer.class);
-        } else {
-            this.minLength = Integer.parseInt(minLength);
-        }
+    public void setMinLength(int minLength) {
+        this.minLength = minLength;
+    }
+
+    public void setMinLengthExpression(String minLengthExpression) {
+        this.minLength = (Integer) parse(minLengthExpression, Integer.class);
     }
 
     public int getMinLength() {
         return minLength;
     }
 
-    public void setTrim(String trim) {
-        if (parse) {
-            this.trim = (Boolean) parse(trim, Boolean.class);
-        } else {
-            this.trim = Boolean.parseBoolean(trim);
-        }
+    public void setTrim(boolean trim) {
+        this.trim = trim;
+    }
+
+    public void setTrimExpression(String trimExpression) {
+        this.trim = (Boolean) parse(trimExpression, Boolean.class);
     }
 
     public boolean isTrim() {

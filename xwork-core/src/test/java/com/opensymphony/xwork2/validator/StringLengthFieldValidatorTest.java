@@ -34,7 +34,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testStringLengthEmptyNoTrim1() throws Exception {
 		action.setMyField("");
 		
-		validator.setTrim("false");
+		validator.setTrim(false);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), "");
@@ -44,7 +44,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testStringLengthNullNoTrim() throws Exception {
 		action.setMyField(null);
 
-		validator.setTrim("false");
+		validator.setTrim(false);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), null);
@@ -54,7 +54,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testStringLengthEmptyTrim1() throws Exception {
 		action.setMyField("   ");
 		
-		validator.setTrim("true");
+		validator.setTrim(true);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), "   ");
@@ -64,7 +64,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testStringLengthEmptyNoTrim2() throws Exception {
 		action.setMyField("          ");
 		
-		validator.setTrim("false");
+		validator.setTrim(false);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), "          ");
@@ -75,7 +75,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testStringLengthNullTrim() throws Exception {
 		action.setMyField(null);
 
-		validator.setTrim("true");
+		validator.setTrim(true);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), null);
@@ -85,7 +85,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testInvalidStringLengthNoTrim() throws Exception {
 		action.setMyField("abcdefghijklmn");
 		
-		validator.setTrim("false");
+		validator.setTrim(false);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), "abcdefghijklmn");
@@ -95,7 +95,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testInvalidStringLengthTrim() throws Exception {
 		action.setMyField("abcdefghijklmn   ");
 		
-		validator.setTrim("true");
+		validator.setTrim(true);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), "abcdefghijklmn   ");
@@ -105,7 +105,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testValidStringLengthNoTrim() throws Exception {
 		action.setMyField("   ");
 		
-		validator.setTrim("false");
+		validator.setTrim(false);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), "   ");
@@ -115,7 +115,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 	public void testValidStringLengthTrim() throws Exception {
 		action.setMyField("asd          ");
 		
-		validator.setTrim("true");
+		validator.setTrim(true);
 		validator.validate(action);
 		
 		assertEquals(action.getMyField(), "asd          ");
@@ -126,8 +126,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
         assertEquals(2, validator.getMinLength());
         action.setMinLengthValue(10);
 
-        validator.setParse(true);
-        validator.setMinLength("${minLengthValue}");
+        validator.setMinLengthExpression("${minLengthValue}");
 
         assertEquals(10, validator.getMinLength());
     }
@@ -136,8 +135,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
         assertEquals(5, validator.getMaxLength());
         action.setMaxLengthValue(100);
 
-        validator.setParse(true);
-        validator.setMaxLength("${maxLengthValue}");
+        validator.setMaxLengthExpression("${maxLengthValue}");
 
         assertEquals(100, validator.getMaxLength());
     }
@@ -146,8 +144,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
         assertTrue(validator.isTrim());
         action.setTrimValue(false);
 
-        validator.setParse(true);
-        validator.setTrim("${trimValue}");
+        validator.setTrimExpression("${trimValue}");
 
         assertFalse(validator.isTrim());
     }
@@ -164,8 +161,8 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 		validator.setFieldName("myField");
 		validator.setMessageKey("error");
 		validator.setValidatorContext(new DelegatingValidatorContext(action));
-		validator.setMaxLength("5");
-		validator.setMinLength("2");
+		validator.setMaxLength(5);
+		validator.setMinLength(2);
         validator.setValueStack(valueStack);
     }
 	

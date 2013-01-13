@@ -95,7 +95,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         validator.setFieldName("myEmail");
         validator.setDefaultMessage("invalid email");
         validator.setParse(true);
-        validator.setExpression("${emailExpression}");
+        validator.setRegexExpression("${emailExpression}");
 
         validator.validate(action);
         valueStack.pop();
@@ -124,7 +124,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         validator.setValueStack(valueStack);
 
         validator.setParse(true);
-        validator.setCaseSensitive("${emailCaseSensitive}");
+        validator.setCaseSensitiveExpression("${emailCaseSensitive}");
 
         valueStack.pop();
 
@@ -152,7 +152,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         validator.setValueStack(valueStack);
 
         validator.setParse(true);
-        validator.setTrim("${trimEmail}");
+        validator.setTrimExpression("${trimEmail}");
 
         valueStack.pop();
 

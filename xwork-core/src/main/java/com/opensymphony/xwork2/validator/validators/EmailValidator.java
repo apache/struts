@@ -61,9 +61,9 @@ package com.opensymphony.xwork2.validator.validators;
  *     &lt;field name="myEmail"&gt;
  *        &lt;field-validator type="email"&gt;
  *           &lt;param name="parse"&gt;true&lt;/param&gt;*
- *           &lt;param name="expression"&gt;${emailPattern}&lt;/param&gt; &lt;!-- will be evaluated as: String getEmailPattern() --&gt;
- *           &lt;param name="caseSensitive"&gt;${emailCaseSensitive}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getEmailCaseSensitive() --&gt;
- *           &lt;param name="trim"&gt;${trimEmail}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimEmail() --&gt;
+ *           &lt;param name="regexExpression"&gt;${emailPattern}&lt;/param&gt; &lt;!-- will be evaluated as: String getEmailPattern() --&gt;
+ *           &lt;param name="caseSensitiveExpression"&gt;${emailCaseSensitive}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getEmailCaseSensitive() --&gt;
+ *           &lt;param name="trimExpression"&gt;${trimEmail}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimEmail() --&gt;
  *           &lt;message&gt;Must provide a valid email&lt;/message&gt;
  *        &lt;/field-validator&gt;
  *     &lt;/field&gt;
@@ -81,8 +81,8 @@ public class EmailValidator extends RegexFieldValidator {
     	"\\b^['_a-z0-9-\\+]+(\\.['_a-z0-9-\\+]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tel|travel|xxx)$\\b";
 
     public EmailValidator() {
-        setExpression(emailAddressPattern);
-        setCaseSensitive("false");
+        setRegex(emailAddressPattern);
+        setCaseSensitive(false);
     }
 
 }

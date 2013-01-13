@@ -39,8 +39,11 @@ import java.util.regex.Pattern;
  * </ul>
  * You can mix normal params with expression aware params but thus was not tested
  * <!-- END SNIPPET: parameters -->
- * 
- * 
+ *
+ * <!-- START SNIPPET: parameters-warning -->
+ * Do not use ${regexExpression}, ${caseSensitiveExpression} and ${trimExpression} as an expression as this will turn into infinitive loop!
+ * <!-- END SNIPPET: parameters-warning -->
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;validators&gt;

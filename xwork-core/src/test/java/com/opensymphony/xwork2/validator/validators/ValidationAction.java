@@ -20,6 +20,7 @@ public class ValidationAction {
     private Date dateMinValue;
     private Date dateMaxValue;
     private String dateFormat;
+    private String stringValue;
 
     public Integer getIntRange() {
         return intRange;
@@ -123,5 +124,13 @@ public class ValidationAction {
 
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
+    }
+
+    public void setStringValue(String stringValue) {
+        this.stringValue = stringValue;
+    }
+
+    public String getStringValue() {
+        return stringValue;
     }
 }

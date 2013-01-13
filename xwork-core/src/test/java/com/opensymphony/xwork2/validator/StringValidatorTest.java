@@ -15,16 +15,20 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ValidationAwareSupport;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.test.Equidae;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import org.easymock.EasyMock;
 
 import java.util.List;
 import java.util.Map;
-
-import org.easymock.EasyMock;
 
 /**
  * @author Mark Woon
@@ -183,10 +187,10 @@ public class StringValidatorTest extends XWorkTestCase {
         RequiredStringValidator val = new RequiredStringValidator();
 
         val.setTrim(true);
-        assertEquals(true, val.getTrim());
+        assertEquals(true, val.isTrim());
 
         val.setTrim(false);
-        assertEquals(false, val.getTrim());
+        assertEquals(false, val.isTrim());
     }
 
     @Override

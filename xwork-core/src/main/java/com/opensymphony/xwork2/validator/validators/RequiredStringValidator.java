@@ -29,11 +29,15 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- *      <li>trim - trim the field name value before validating (default is true)</li>
+ *      <li>trim - (Optional) Boolean, default true. Trims the field name value before validating.</li>
+ *      <li>trimExpression - (Optional) String. Specifies the trim param as an OGNL expression.</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
  * 
- * 
+ * <!-- START SNIPPET: parameters-warning -->
+ * Do not use ${trimExpression} as an expression as this will turn into infinitive loop!
+ * <!-- END SNIPPET: parameters-warning -->
+ *
  * <pre>
  * <!-- START SNIPPET: examples -->
  *     &lt;validators&gt;
@@ -51,6 +55,14 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *                 &lt;message&gt;username is required&lt;/message&gt;
  *            &lt;/field-validator&gt;
  *         &lt;/field&gt;
+ *
+ *         &lt;!-- Field-Validator Syntax with expression --&gt;
+ *         &lt;field name="username"&gt;
+ *         	  &lt;field-validator type="requiredstring"&gt;
+ *                 &lt;param name="trimExpression"&gt;${trimValue}&lt;/param&gt; &lt;!-- will be evaluated as: boolean getTrimValue() --&gt;
+ *                 &lt;message&gt;username is required&lt;/message&gt;
+ *            &lt;/field-validator&gt;
+ *         &lt;/field&gt;
  *     &lt;/validators&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
@@ -60,15 +72,18 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public class RequiredStringValidator extends FieldValidatorSupport {
 
-    private boolean doTrim = true;
-
+    private boolean trim = true;
 
     public void setTrim(boolean trim) {
-        doTrim = trim;
+        this.trim = trim;
     }
 
-    public boolean getTrim() {
-        return doTrim;
+    public void setTrimExpression(String trimExpression) {
+        trim = (Boolean) parse(trimExpression, Boolean.class);
+    }
+
+    public boolean isTrim() {
+        return trim;
     }
 
     public void validate(Object object) throws ValidationException {
@@ -80,7 +95,7 @@ public class RequiredStringValidator extends FieldValidatorSupport {
         } else {
             String s = (String) value;
 
-            if (doTrim) {
+            if (trim) {
                 s = s.trim();
             }
 
@@ -89,4 +104,5 @@ public class RequiredStringValidator extends FieldValidatorSupport {
             }
         }
     }
+
 }

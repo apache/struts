@@ -155,7 +155,7 @@ public @interface TypeConversion {
 
     /**
      * The ConversionRule can be a PROPERTY, KEY, KEY_PROPERTY, ELEMENT, COLLECTION (deprecated) or a MAP.
-     * Note: Collection and Map vonversion rules can be determined via com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer.
+     * Note: Collection and Map conversion rules can be determined via com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer.
      *
      * @see com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer
      */

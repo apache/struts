@@ -440,6 +440,9 @@ public class XWorkConverter extends DefaultTypeConverter {
                     }
                     return converter;
                 } catch (Throwable t) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Got exception trying to resolve convert for class [#0] and property [#1]", t, clazz.getName(), property);
+                    }
                     noMapping.add(clazz);
                 }
             }
@@ -753,7 +756,7 @@ public class XWorkConverter extends DefaultTypeConverter {
 
         if (reloadingConfigs) {
             URL fileUrl = ClassLoaderUtil.getResource(buildConverterFilename(clazz), clazz);
-            if (fileManager.fileNeedsReloading(fileUrl.toString())) {
+            if (fileManager.fileNeedsReloading(fileUrl)) {
                 mapping = buildConverterMapping(clazz);
             }
         }

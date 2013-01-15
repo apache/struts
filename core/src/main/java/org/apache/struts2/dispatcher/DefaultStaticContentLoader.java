@@ -62,10 +62,11 @@ import java.util.StringTokenizer;
  * <p/>
  */
 public class DefaultStaticContentLoader implements StaticContentLoader {
+
     /**
      * Provide a logging instance.
      */
-    private Logger log;
+    private Logger LOG = LoggerFactory.getLogger(DefaultStaticContentLoader.class);
 
     /**
      * Store set of path prefixes to use with static resources.
@@ -137,7 +138,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             packages = param + " " + packages;
         }
         this.pathPrefixes = parse(packages);
-        initLogging(filterConfig);
     }
 
     protected String getAdditionalPackages() {
@@ -213,8 +213,9 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             try {
                 ifModifiedSince = request.getDateHeader("If-Modified-Since");
             } catch (Exception e) {
-                log.warn("Invalid If-Modified-Since header value: '"
-                        + request.getHeader("If-Modified-Since") + "', ignoring");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Invalid If-Modified-Since header value: '#0', ignoring", request.getHeader("If-Modified-Since"));
+                }
             }
             long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
             long now = cal.getTimeInMillis();
@@ -255,29 +256,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
                 is.close();
             }
         }
-    }
-
-    private void initLogging(HostConfig filterConfig) {
-        String factoryName = filterConfig.getInitParameter("loggerFactory");
-        if (factoryName != null) {
-            try {
-                Class cls = ClassLoaderUtil.loadClass(factoryName, this.getClass());
-                LoggerFactory fac = (LoggerFactory)cls.newInstance();
-                LoggerFactory.setLoggerFactory(fac);
-            } catch (InstantiationException e) {
-                System.err.println("Unable to instantiate logger factory: "+factoryName+", using default");
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                System.err.println("Unable to access logger factory: "+factoryName+", using default");
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                System.err.println("Unable to locate logger factory class: "+factoryName+", using default");
-                e.printStackTrace();
-            }
-        }
-
-        log = LoggerFactory.getLogger(DefaultStaticContentLoader.class);
-
     }
 
     /**

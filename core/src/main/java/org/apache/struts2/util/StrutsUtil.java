@@ -117,7 +117,9 @@ public class StrutsUtil {
             return responseWrapper.getData();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot include #0", e, aName.toString());
+            }
             throw e;
         }
     }
@@ -126,6 +128,9 @@ public class StrutsUtil {
         try {
             return URLEncoder.encode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot encode URL [#0]", e, s);
+            }
             return s;
         }
     }

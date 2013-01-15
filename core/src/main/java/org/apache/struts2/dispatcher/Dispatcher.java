@@ -285,7 +285,7 @@ public class Dispatcher {
             }
             catch(Exception e) {
                 // catch any exception that may occurred during destroy() and log it
-                LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
+                LOG.error("exception occurred while destroying ObjectFactory [#0]", e, objectFactory.toString());
             }
         }
 

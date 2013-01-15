@@ -44,7 +44,9 @@ public class JBossFileManager extends DefaultFileManager {
             Class.forName(VFS_JBOSS5);
             return true;
         } catch (ClassNotFoundException e) {
-            LOG.debug("Cannot load [#0] class, not a JBoss 5!", VFS_JBOSS7);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot load [#0] class, not a JBoss 5!", VFS_JBOSS7);
+            }
             return false;
         }
     }
@@ -54,7 +56,9 @@ public class JBossFileManager extends DefaultFileManager {
             Class.forName(VFS_JBOSS7);
             return true;
         } catch (ClassNotFoundException e) {
-            LOG.debug("Cannot load [#0] class, not a JBoss 7!", VFS_JBOSS7);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot load [#0] class, not a JBoss 7!", VFS_JBOSS7);
+            }
             return false;
         }
     }
@@ -79,7 +83,9 @@ public class JBossFileManager extends DefaultFileManager {
             try {
                 return getJBossPhysicalUrl(url);
             } catch (IOException e) {
-                LOG.error(e.getMessage(), e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error(e.getMessage(), e);
+                }
                 return null;
             }
         } else {

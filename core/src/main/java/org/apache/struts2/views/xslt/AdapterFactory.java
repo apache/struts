@@ -21,10 +21,6 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -32,6 +28,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * AdapterFactory produces Node adapters for Java object types.
@@ -215,11 +215,9 @@ public class AdapterFactory {
             return adapterNode;
 
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            throw new StrutsException("Cannot adapt " + propertyValue + " (" + propertyName + ") :" + e.getMessage());
+            throw new StrutsException("Cannot adapt " + propertyValue + " (" + propertyName + ") :" + e.getMessage(), e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
-            throw new StrutsException("Cannot adapt " + propertyValue + " (" + propertyName + ") :" + e.getMessage());
+            throw new StrutsException("Cannot adapt " + propertyValue + " (" + propertyName + ") :" + e.getMessage(), e);
         }
     }
 

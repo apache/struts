@@ -81,11 +81,11 @@ public abstract class TagModel implements TemplateTransformModel {
                 // the value should ALWAYS be a decendant of TemplateModel
                 if (value instanceof TemplateModel) {
                     try {
-                        map.put(entry.getKey(), objectWrapper
-                            .unwrap((TemplateModel) value));
+                        map.put(entry.getKey(), objectWrapper.unwrap((TemplateModel) value));
                     } catch (TemplateModelException e) {
-                        LOG.error("failed to unwrap [" + value
-                            + "] it will be ignored", e);
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("failed to unwrap [#0] it will be ignored", e, value.toString());
+                        }
                     }
                 }
                 // if it doesn't, we'll do it the old way by just returning the toString() representation
@@ -123,7 +123,9 @@ public abstract class TagModel implements TemplateTransformModel {
                     try {
                         map.put(entry.getKey(), ((SimpleSequence) value).toList());
                     } catch (TemplateModelException e) {
-                        LOG.error("There was a problem converting a SimpleSequence to a list", e);
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("There was a problem converting a SimpleSequence to a list", e);
+                        }
                     }
                 }
             }

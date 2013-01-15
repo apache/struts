@@ -281,8 +281,9 @@ public class OgnlUtil {
             fromPds = getPropertyDescriptors(from);
             toPds = getPropertyDescriptors(to);
         } catch (IntrospectionException e) {
-            LOG.error("An error occured", e);
-
+            if (LOG.isErrorEnabled()) {
+                LOG.error("An error occured", e);
+            }
             return;
         }
 
@@ -309,7 +310,9 @@ public class OgnlUtil {
                             Object value = Ognl.getValue(expr, contextFrom, from);
                             Ognl.setValue(expr, contextTo, to, value);
                         } catch (OgnlException e) {
-                            // ignore, this is OK
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("Got OGNL exception", e);
+                            }
                         }
                     }
 

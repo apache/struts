@@ -21,12 +21,17 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.ErrorListener;
@@ -40,19 +45,11 @@ import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -398,7 +395,9 @@ public class XSLTResult implements Result {
             }
 
         } catch (Exception e) {
-            LOG.error("Unable to render XSLT Template, '" + location + "'", e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Unable to render XSLT Template, '#0'", e, location);
+            }
             throw e;
         }
     }

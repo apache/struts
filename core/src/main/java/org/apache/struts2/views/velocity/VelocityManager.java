@@ -156,7 +156,9 @@ public class VelocityManager {
             ctx = ServletActionContext.getServletContext();
         } catch (NullPointerException npe) {
             // in case this was used outside the lifecycle of struts servlet
-            LOG.debug("internal toolbox context ignored");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("internal toolbox context ignored");
+            }
         }
 
         if (toolboxManager != null && ctx != null) {
@@ -454,8 +456,7 @@ public class VelocityManager {
         try {
             velocityEngine.init(p);
         } catch (Exception e) {
-            String gripe = "Unable to instantiate VelocityEngine!";
-            throw new StrutsException(gripe, e);
+            throw new StrutsException("Unable to instantiate VelocityEngine!", e);
         }
 
         return velocityEngine;

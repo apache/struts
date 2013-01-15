@@ -388,7 +388,9 @@ public class XWorkConverter extends DefaultTypeConverter {
             try {
                 clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
             } catch (ClassNotFoundException cnfe) {
-                //swallow
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Cannot load class #0", cnfe, className);
+                }
             }
 
             result = lookupSuper(clazz);
@@ -565,7 +567,9 @@ public class XWorkConverter extends DefaultTypeConverter {
                 }
             }
         } catch (Exception ex) {
-            LOG.error("Problem loading properties for " + clazz.getName(), ex);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Problem loading properties for #0", ex, clazz.getName());
+            }
         }
 
         // Process annotations
@@ -632,6 +636,9 @@ public class XWorkConverter extends DefaultTypeConverter {
                                 }
                             }
                         } catch (Exception e) {
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("Got exception for #0", e, key);
+                            }
                         }
                     }
                 }
@@ -707,6 +714,9 @@ public class XWorkConverter extends DefaultTypeConverter {
                                 }
                             }
                         } catch (Exception e) {
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("Got exception for #0", e, key);
+                            }
                         }
                     }
                 }
@@ -813,7 +823,9 @@ public class XWorkConverter extends DefaultTypeConverter {
             if (require) {
                 throw new XWorkException("Cannot load conversion properties file: "+propsName, ex);
             } else {
-                LOG.debug("Cannot load conversion properties file: "+propsName, ex);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Cannot load conversion properties file: #0", ex, propsName);
+                }
             }
         }
     }

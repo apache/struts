@@ -21,14 +21,13 @@
 
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspException;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.IteratorComponent;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
 
 /**
  * @see IteratorComponent
@@ -93,7 +92,7 @@ public class IteratorTag extends ContextBeanTag {
                 try {
                     bodyContent.writeOut(bodyContent.getEnclosingWriter());
                 } catch (Exception e) {
-                    throw new JspException(e.getMessage());
+                    throw new JspException(e);
                 }
             }
             return SKIP_BODY;

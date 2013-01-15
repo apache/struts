@@ -46,7 +46,7 @@ public class StrutsResourceLoader extends ClasspathResourceLoader {
         try {
             return ClassLoaderUtil.getResourceAsStream(name, StrutsResourceLoader.class);
         } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage());
+            throw new ResourceNotFoundException(e);
         }
     }
 }

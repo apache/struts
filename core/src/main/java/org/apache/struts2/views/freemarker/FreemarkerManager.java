@@ -253,7 +253,9 @@ public class FreemarkerManager {
             try {
                 init(servletContext);
             } catch (TemplateException e) {
-                LOG.error("Cannot load freemarker configuration: ",e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Cannot load freemarker configuration: ",e);
+                }
             }
 //            config = createConfiguration(servletContext);
 
@@ -409,7 +411,9 @@ public class FreemarkerManager {
                  }
              }
          } catch (IOException e) {
-             LOG.error("Invalid template path specified: " + e.getMessage(), e);
+             if (LOG.isErrorEnabled()) {
+                LOG.error("Invalid template path specified: #0", e, e.getMessage());
+             }
          }
 
          // presume that most apps will require the class and webapp template loader
@@ -459,9 +463,13 @@ public class FreemarkerManager {
                 }
             }
         } catch (IOException e) {
-            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
+            }
         } catch (TemplateException e) {
-            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
+            }
         } finally {
             if (in != null) {
                 try {

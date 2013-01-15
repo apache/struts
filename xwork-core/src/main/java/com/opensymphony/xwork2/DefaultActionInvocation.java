@@ -201,7 +201,9 @@ public class DefaultActionInvocation implements ActionInvocation {
         try {
             resultConfig = results.get(resultCode);
         } catch (NullPointerException e) {
-            // swallow
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Got NPE trying to read result configuration for resultCode [#0]", resultCode);
+            }
         }
         
         if (resultConfig == null) {
@@ -213,7 +215,9 @@ public class DefaultActionInvocation implements ActionInvocation {
             try {
                 return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
             } catch (Exception e) {
-                LOG.error("There was an exception while instantiating the result of type " + resultConfig.getClassName(), e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("There was an exception while instantiating the result of type #0", e, resultConfig.getClassName());
+                }
                 throw new XWorkException(e, resultConfig);
             }
         } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {

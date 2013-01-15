@@ -82,10 +82,14 @@ public class DomHelper {
                 factory = (SAXParserFactory) clazz.newInstance();
             }
             catch (ClassNotFoundException e) {
-                LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': " + parserProp, e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': #0", e, parserProp);
+                }
             }
             catch (Exception e) {
-                LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': " + parserProp, e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': #0", e, parserProp);
+                }
             }
         }
 
@@ -148,10 +152,14 @@ public class DomHelper {
                     FACTORY = (SAXTransformerFactory) clazz.newInstance();
                 }
                 catch (ClassNotFoundException e) {
-                    LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': " + parserProp, e);
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': #0", e, parserProp);
+                    }
                 }
                 catch (Exception e) {
-                    LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': " + parserProp, e);
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': #0", e, parserProp);
+                    }
                 }
             }
 

@@ -150,7 +150,7 @@ public class ConfigurationManager {
             containerProvider.destroy();
         } catch (Exception e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Error while destroying container provider [" + containerProvider + "]", e);
+                LOG.warn("Error while destroying container provider [#0]", e, containerProvider.toString());
             }
         }
     }
@@ -221,7 +221,7 @@ public class ConfigurationManager {
                 containerProvider.destroy();
             } catch (Exception e) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("error while destroying configuration provider [" + containerProvider + "]", e);
+                    LOG.warn("error while destroying configuration provider [#0]", e, containerProvider.toString());
                 }
             }
         }

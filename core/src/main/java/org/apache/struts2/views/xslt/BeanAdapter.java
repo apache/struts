@@ -21,6 +21,12 @@
 
 package org.apache.struts2.views.xslt;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsException;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -30,13 +36,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.struts2.StrutsException;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -123,7 +122,9 @@ public class BeanAdapter extends AbstractAdapterElement {
                 } catch (Exception e) {
                     if (e instanceof InvocationTargetException)
                         e = (Exception) ((InvocationTargetException) e).getTargetException();
-                    log.error("Cannot access bean property: "+propertyName, e);
+                    if (log.isErrorEnabled()) {
+                        log.error("Cannot access bean property: #0", e, propertyName);
+                    }
                     continue;
                 }
 

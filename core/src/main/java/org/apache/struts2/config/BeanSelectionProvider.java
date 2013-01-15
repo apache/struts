@@ -348,11 +348,11 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                 String name = customBundles.nextToken();
                 try {
                     if (LOG.isInfoEnabled()) {
-                	    LOG.info("Loading global messages from " + name);
+                	    LOG.info("Loading global messages from [#0]", name);
                     }
                     LocalizedTextUtil.addDefaultResourceBundle(name);
                 } catch (Exception e) {
-                    LOG.error("Could not find messages file " + name + ".properties. Skipping");
+                    LOG.error("Could not find messages file #0.properties. Skipping", name);
                 }
             }
         }

@@ -140,7 +140,9 @@ public class InstantiatingNullHandler implements NullHandler {
 
             return param;
         } catch (Exception e) {
-            LOG.error("Could not create and/or set value back on to object", e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Could not create and/or set value back on to object", e);
+            }
         }
 
         return null;

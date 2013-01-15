@@ -15,19 +15,32 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
-import java.util.*;
+import java.net.HttpURLConnection;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * @author David Blevins
@@ -823,6 +836,9 @@ public class ResourceFinder {
 
                 }
             } catch (Exception e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got exception loading resources for #0", e, uri);
+                }
             }
         }
 
@@ -855,6 +871,9 @@ public class ResourceFinder {
 
                 }
             } catch (Exception e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got exception search for subpackages for #0", e, uri);
+                }
             }
         }
 
@@ -887,6 +906,9 @@ public class ResourceFinder {
                     result.put(location, convertPathsToPackages(resources));
                 }
             } catch (Exception e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got exception finding subpackages for #0", e, uri);
+                }
             }
         }
 

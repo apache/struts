@@ -206,9 +206,13 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
                 return sb.toString();
             } catch (IntrospectionException e) {
-                e.printStackTrace();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got exception in callMethod", e);
+                }
             } catch (OgnlException e) {
-                e.printStackTrace();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got exception in callMethod", e);
+                }
             }
 
             return null;
@@ -273,7 +277,9 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                 }
             }
         } catch (Exception e) {
-            // just try the old fashioned way
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Got exception when tried to get class for name [#0]", e, className);
+            }
         }
 
         return Thread.currentThread().getContextClassLoader().loadClass(className);

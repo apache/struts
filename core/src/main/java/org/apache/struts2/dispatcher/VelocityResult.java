@@ -159,15 +159,15 @@ public class VelocityResult extends StrutsResultSupport {
             // to do it all the time (WW-829). Since Velocity support is being deprecated, we'll oblige :)
             writer.flush();
         } catch (Exception e) {
-            LOG.error("Unable to render Velocity Template, '" + finalLocation + "'", e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Unable to render Velocity Template, '#0'", e, finalLocation);
+            }
             throw e;
         } finally {
             if (usedJspFactory) {
                 jspFactory.releasePageContext(pageContext);
             }
         }
-
-        return;
     }
 
     /**

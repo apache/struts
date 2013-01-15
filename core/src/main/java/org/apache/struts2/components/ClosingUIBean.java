@@ -21,16 +21,14 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Writer;
 
 /**
  * ClosingUIBean is the standard superclass for UI components such as div etc.
@@ -59,7 +57,6 @@ public abstract class ClosingUIBean extends UIBean {
             mergeTemplate(writer, buildTemplateName(openTemplate, getDefaultOpenTemplate()));
         } catch (Exception e) {
             LOG.error("Could not open template", e);
-            e.printStackTrace();
         }
 
         return result;

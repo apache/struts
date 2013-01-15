@@ -244,7 +244,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             if (!optional) {
                                 throw new ConfigurationException("Unable to load bean: type:" + type + " class:" + impl, ex, childNode);
                             } else {
-                                LOG.debug("Unable to load optional class: " + ex);
+                                if (LOG.isDebugEnabled()) {
+                                    LOG.debug("Unable to load optional class: #0", ex, impl);
+                                }
                             }
                         }
                     } else if ("constant".equals(nodeName)) {
@@ -475,18 +477,18 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             }
         } catch (ClassNotFoundException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Class not found for action [" + className + "]", e);
+                LOG.debug("Class not found for action [#0]", e, className);
             }
             throw new ConfigurationException("Action class [" + className + "] not found", loc);
         } catch (NoSuchMethodException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("No constructor found for action [" + className + "]", e);
+                LOG.debug("No constructor found for action [#0]", e, className);
             }
             throw new ConfigurationException("Action class [" + className + "] does not have a public no-arg constructor", e, loc);
         } catch (RuntimeException ex) {
             // Probably not a big deal, like request or session-scoped Spring 2 beans that need a real request
             if (LOG.isInfoEnabled()) {
-            LOG.info("Unable to verify action class [" + className + "] exists at initialization");
+                LOG.info("Unable to verify action class [#0] exists at initialization", className);
             }
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Action verification cause", ex);
@@ -494,7 +496,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         } catch (Exception ex) {
             // Default to failing fast
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Unable to verify action class [" + className + "]", ex);
+                LOG.debug("Unable to verify action class [#0]", ex, className);
             }
             throw new ConfigurationException(ex, loc);
         }
@@ -567,7 +569,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     paramName = (String) clazz.getField("DEFAULT_PARAM").get(null);
                 }
                 catch (Throwable t) {
-                    // if we get here, the result type doesn't have a default param defined.
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("The result type doesn't have a default param defined", t);
+                    }
                 }
                 ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name, className).defaultResultParam(paramName)
                         .location(DomHelper.getLocationObject(resultTypeElement));
@@ -592,13 +596,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             return objectFactory.getClassInstance(className);
         } catch (ClassNotFoundException e) {
             if (LOG.isWarnEnabled()) {
-            LOG.warn("Result class [" + className + "] doesn't exist (ClassNotFoundException) at " +
-                    loc.toString() + ", ignoring", e);
+                LOG.warn("Result class [#0] doesn't exist (ClassNotFoundException) at #1, ignoring", e, className, loc.toString());
             }
         } catch (NoClassDefFoundError e) {
             if (LOG.isWarnEnabled()) {
-            LOG.warn("Result class [" + className + "] doesn't exist (NoClassDefFoundError) at " +
-                    loc.toString() + ", ignoring", e);
+                LOG.warn("Result class [#0] doesn't exist (NoClassDefFoundError) at #1, ignoring", e, className, loc.toString());
             }
         }
 
@@ -1012,8 +1014,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                         throw new ConfigurationException("Unable to load " + url, e);
                     }
                 } catch (Exception e) {
-                    final String s = "Caught exception while loading file " + fileName;
-                    throw new ConfigurationException(s, e, includeElement);
+                    throw new ConfigurationException("Caught exception while loading file " + fileName, e, includeElement);
                 } finally {
                     if (is != null) {
                         try {

@@ -133,8 +133,7 @@ public class PrepareOperations {
             // parameters might not be accessible through before encoding (ww-1278)
             request = dispatcher.wrapRequest(request, servletContext);
         } catch (IOException e) {
-            String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-            throw new ServletException(message, e);
+            throw new ServletException("Could not wrap servlet request with MultipartRequestWrapper!", e);
         }
         return request;
     }

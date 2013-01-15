@@ -183,8 +183,9 @@ public class DefaultUrlHelper implements UrlHelper {
         try {
             result = encodeResult ? response.encodeURL(result) : result;
         } catch (Exception ex) {
-            // Could not encode the URL for some reason
-            // Use it unchanged
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Could not encode the URL for some reason, use it unchanged", ex);
+            }
             result = link.toString();
         }
 
@@ -259,7 +260,7 @@ public class DefaultUrlHelper implements UrlHelper {
             return URLEncoder.encode(translatedInput, encoding);
         } catch (UnsupportedEncodingException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Could not encode URL parameter '" + input + "', returning value un-encoded");
+                LOG.warn("Could not encode URL parameter '#0', returning value un-encoded", input);
             }
             return translatedInput;
         }
@@ -271,7 +272,7 @@ public class DefaultUrlHelper implements UrlHelper {
             return URLDecoder.decode(translatedInput, encoding);
         } catch (UnsupportedEncodingException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Could not encode URL parameter '" + input + "', returning value un-encoded");
+                LOG.warn("Could not encode URL parameter '#0', returning value un-encoded", input);
             }
             return translatedInput;
         }

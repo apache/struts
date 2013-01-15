@@ -275,21 +275,19 @@ public class Date extends ContextBean {
     }
 
     public boolean end(Writer writer, String body) {
-        String msg = null;
+        String msg;
         java.util.Date date = null;
         // find the name on the valueStack
         try {
             //suport Calendar also
             Object dateObject = findValue(name);
-            if (dateObject instanceof java.util.Date)
+            if (dateObject instanceof java.util.Date) {
                 date = (java.util.Date) dateObject;
-            else if(dateObject instanceof Calendar)
+            } else if(dateObject instanceof Calendar){
                 date = ((Calendar) dateObject).getTime();
+            }
         } catch (Exception e) {
-            LOG.error("Could not convert object with key '" + name
-                    + "' to a java.util.Date instance");
-            // bad date, return a blank instead ?
-            msg = "";
+            LOG.error("Could not convert object with key '#0' to a java.util.Date instance", name);
         }
 
         //try to find the format on the stack

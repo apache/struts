@@ -114,7 +114,9 @@ public class ParameterRemoverInterceptor extends AbstractInterceptor {
                                 parameters.remove(removeName);
                             }
                         } catch (Exception e) {
-                            LOG.error("Failed to convert parameter to string", e);
+                            if (LOG.isErrorEnabled()) {
+                                LOG.error("Failed to convert parameter to string", e);
+                            }
                         }
                     }
                 }

@@ -21,14 +21,14 @@
 
 package org.apache.struts2.util;
 
-import java.math.BigInteger;
-import java.util.Map;
-import java.util.Random;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * TokenHelper
@@ -90,8 +90,10 @@ public class TokenHelper {
 			session.put(buildTokenSessionAttributeName(tokenName), token);
 		} catch ( IllegalStateException e ) {
 			// WW-1182 explain to user what the problem is
-			String msg = "Error creating HttpSession due response is commited to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: " + e.getMessage();
-			LOG.error(msg, e);
+            String msg = "Error creating HttpSession due response is commited to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: " + e.getMessage();
+            if (LOG.isErrorEnabled()) {
+                LOG.error(msg, e);
+            }
 			throw new IllegalArgumentException(msg);
 		}
 	}

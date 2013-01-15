@@ -21,13 +21,13 @@
 
 package org.apache.struts2.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -168,7 +168,8 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
             }
             catch(Exception e) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("decider ["+decider+"] encountered an error while decide adding element ["+element+"], element will be ignored, it will not appeared in subseted iterator", e);
+                    LOG.warn("Decider [#0] encountered an error while decide adding element [#1], element will be ignored, it will not appeared in subseted iterator",
+                            e, decider.toString(), element.toString());
                 }
                 return false;
             }

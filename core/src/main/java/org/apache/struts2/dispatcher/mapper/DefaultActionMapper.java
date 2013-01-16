@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
@@ -37,7 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -315,7 +315,8 @@ public class DefaultActionMapper implements ActionMapper {
 
         handleSpecialParameters(request, mapping);
 
-        if (mapping.getName() == null) {
+        // if Action name is empty it can be a request to static resource, return null to handle that case
+        if (StringUtils.isEmpty(mapping.getName())) {
             return null;
         }
 
@@ -353,9 +354,8 @@ public class DefaultActionMapper implements ActionMapper {
         // handle special parameter prefixes.
         Set<String> uniqueParameters = new HashSet<String>();
         Map parameterMap = request.getParameterMap();
-        for (Iterator iterator = parameterMap.keySet().iterator(); iterator
-                .hasNext();) {
-            String key = (String) iterator.next();
+        for (Object o : parameterMap.keySet()) {
+            String key = (String) o;
 
             // Strip off the image button location info, if found
             if (key.endsWith(".x") || key.endsWith(".y")) {
@@ -364,8 +364,7 @@ public class DefaultActionMapper implements ActionMapper {
 
             // Ensure a parameter doesn't get processed twice
             if (!uniqueParameters.contains(key)) {
-                ParameterAction parameterAction = (ParameterAction) prefixTrie
-                        .get(key);
+                ParameterAction parameterAction = (ParameterAction) prefixTrie.get(key);
                 if (parameterAction != null) {
                     parameterAction.execute(key, mapping);
                     uniqueParameters.add(key);
@@ -486,7 +485,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (extensions == null) {
             return null;
         } else {
-            return (String) extensions.get(0);
+            return extensions.get(0);
         }
     }
 

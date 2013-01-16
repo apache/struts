@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -92,8 +93,9 @@ public class FilterDispatcherTest extends StrutsTestCase {
                 return _dispatcher;
             }
         };
-        filter.setActionMapper(new InnerActionMapper());
         filter.init(filterConfig);
+        // set ActionMapper after init() as all dependencies will be injected in init()
+        filter.setActionMapper(new InnerActionMapper());
         _dispatcher.setDefaultEncoding("UTF-16_DUMMY");
         filter.doFilter(req, res, chain);
 
@@ -157,7 +159,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
     public static class InnerActionMapper implements ActionMapper {
 
         public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager config) {
-            return new ActionMapping();
+            return new ActionMapping("action", "/", null, Collections.<String, Object>emptyMap());
         }
 
         public ActionMapping getMappingFromActionName(String actionName) {

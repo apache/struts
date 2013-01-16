@@ -570,7 +570,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 }
                 catch (Throwable t) {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("The result type doesn't have a default param defined", t);
+                        LOG.debug("The result type #0 doesn't have a default param [DEFAULT_PARAM] defined", t, className);
                     }
                 }
                 ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name, className).defaultResultParam(paramName)

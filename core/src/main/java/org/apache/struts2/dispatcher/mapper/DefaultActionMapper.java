@@ -163,19 +163,13 @@ import java.util.Set;
 public class DefaultActionMapper implements ActionMapper {
 
     protected static final String METHOD_PREFIX = "method:";
-
     protected static final String ACTION_PREFIX = "action:";
-
     protected static final String REDIRECT_PREFIX = "redirect:";
-
     protected static final String REDIRECT_ACTION_PREFIX = "redirectAction:";
 
     protected boolean allowDynamicMethodCalls = true;
-
     protected boolean allowSlashesInActionNames = false;
-
     protected boolean alwaysSelectFullNamespace = false;
-
     protected PrefixTrie prefixTrie = null;
 
     protected List<String> extensions = new ArrayList<String>() {{
@@ -292,12 +286,15 @@ public class DefaultActionMapper implements ActionMapper {
         return parseActionName(mapping);
     }
 
+    public boolean isSlashesInActionNames() {
+        return allowSlashesInActionNames;
+    }
+
     /*
      * (non-Javadoc)
      *
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
-
     public ActionMapping getMapping(HttpServletRequest request,
                                     ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
@@ -440,7 +437,7 @@ public class DefaultActionMapper implements ActionMapper {
      *
      * @param name The action name
      * @return The action name without its extension
-     * @deprecated Since 2.1, use {@link #dropExtension(java.lang.String,org.apache.struts2.dispatcher.mapper.ActionMapping)} instead
+     * @deprecated Since 2.1, use {@link #dropExtension(java.lang.String, org.apache.struts2.dispatcher.mapper.ActionMapping)} instead
      */
     protected String dropExtension(String name) {
         return dropExtension(name, new ActionMapping());
@@ -517,29 +514,64 @@ public class DefaultActionMapper implements ActionMapper {
      *
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
      */
-
     public String getUriFromActionMapping(ActionMapping mapping) {
         StringBuilder uri = new StringBuilder();
 
+        handleNamespace(mapping, uri);
+        handleName(mapping, uri);
+        handleDynamicMethod(mapping, uri);
+        handleExtension(mapping, uri);
+        handleParams(mapping, uri);
+
+        return uri.toString();
+    }
+
+    protected void handleNamespace(ActionMapping mapping, StringBuilder uri) {
         if (mapping.getNamespace() != null) {
             uri.append(mapping.getNamespace());
             if (!"/".equals(mapping.getNamespace())) {
                 uri.append("/");
             }
         }
+    }
+
+    protected void handleName(ActionMapping mapping, StringBuilder uri) {
         String name = mapping.getName();
-        String params = "";
         if (name.indexOf('?') != -1) {
-            params = name.substring(name.indexOf('?'));
             name = name.substring(0, name.indexOf('?'));
         }
         uri.append(name);
+    }
 
-        if (null != mapping.getMethod() && !"".equals(mapping.getMethod())) {
-            uri.append("!").append(mapping.getMethod());
+    protected void handleDynamicMethod(ActionMapping mapping, StringBuilder uri) {
+        // See WW-3965
+        if (StringUtils.isNotEmpty(mapping.getMethod())) {
+            if (allowDynamicMethodCalls) {
+                // handle "name!method" convention.
+                String name = mapping.getName();
+                if (!name.contains("!")) {
+                    // Append the method as no bang found
+                    uri.append("!").append(mapping.getMethod());
+                }
+            } else {
+                uri.append("!").append(mapping.getMethod());
+            }
         }
+    }
 
-        String extension = mapping.getExtension();
+    protected void handleExtension(ActionMapping mapping, StringBuilder uri) {
+        String extension = lookupExtension(mapping.getExtension());
+
+        if (extension != null) {
+            if (extension.length() == 0 || (extension.length() > 0 && uri.indexOf('.' + extension) == -1)) {
+                if (extension.length() > 0) {
+                    uri.append(".").append(extension);
+                }
+            }
+        }
+    }
+
+    protected String lookupExtension(String extension) {
         if (extension == null) {
             // Look for the current extension, if available
             ActionContext context = ActionContext.getContext();
@@ -553,24 +585,18 @@ public class DefaultActionMapper implements ActionMapper {
                 extension = getDefaultExtension();
             }
         }
+        return extension;
+    }
 
-        if (extension != null) {
-            if (extension.length() == 0 || (extension.length() > 0 && uri.indexOf('.' + extension) == -1)) {
-                if (extension.length() > 0) {
-                    uri.append(".").append(extension);
-                }
-            }
+    protected void handleParams(ActionMapping mapping, StringBuilder uri) {
+        String name = mapping.getName();
+        String params = "";
+        if (name.indexOf('?') != -1) {
+            params = name.substring(name.indexOf('?'));
         }
         if (params.length() > 0) {
             uri.append(params);
         }
-
-        return uri.toString();
-    }
-
-
-    public boolean isSlashesInActionNames() {
-        return allowSlashesInActionNames;
     }
 
 }

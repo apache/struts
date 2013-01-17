@@ -459,10 +459,10 @@ public abstract class UIBean extends Component {
     protected String label;
     protected String labelPosition;
     protected String labelSeparator;
-    protected String requiredposition;
+    protected String requiredPosition;
     protected String errorPosition;
     protected String name;
-    protected String required;
+    protected String requiredLabel;
     protected String tabindex;
     protected String value;
     protected String title;
@@ -669,16 +669,16 @@ public abstract class UIBean extends Component {
             addParameter("labelposition", findString(labelPosition));
         }
 
-        if (requiredposition != null) {
-            addParameter("requiredposition", findString(requiredposition));
+        if (requiredPosition != null) {
+            addParameter("requiredposition", findString(requiredPosition));
         }
 
         if (errorPosition != null) {
             addParameter("errorposition", findString(errorPosition));
         }
         
-        if (required != null) {
-            addParameter("required", findValue(required, Boolean.class));
+        if (requiredLabel != null) {
+            addParameter("required", findValue(requiredLabel, Boolean.class));
         }
 
         if (disabled != null) {
@@ -1077,8 +1077,8 @@ public abstract class UIBean extends Component {
     }
 
     @StrutsTagAttribute(description="Define required position of required form element (left|right)")
-    public void setRequiredposition(String requiredposition) {
-        this.requiredposition = requiredposition;
+    public void setRequiredPosition(String requiredPosition) {
+        this.requiredPosition = requiredPosition;
     }
 
     @StrutsTagAttribute(description="Define error position of form element (top|bottom)")
@@ -1092,8 +1092,8 @@ public abstract class UIBean extends Component {
     }
 
     @StrutsTagAttribute(description="If set to true, the rendered element will indicate that input is required", type="Boolean", defaultValue="false")
-    public void setRequired(String required) {
-        this.required = required;
+    public void setRequiredLabel(String requiredLabel) {
+        this.requiredLabel = requiredLabel;
     }
 
     @StrutsTagAttribute(description="Set the html tabindex attribute on rendered html element")

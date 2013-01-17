@@ -97,10 +97,10 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setLabel(label);
         uiBean.setLabelSeparator(labelSeparator);
         uiBean.setLabelposition(labelPosition);
-        uiBean.setRequiredposition(requiredposition);
+        uiBean.setRequiredPosition(requiredposition);
         uiBean.setErrorPosition(errorPosition);
         uiBean.setName(name);
-        uiBean.setRequired(required);
+        uiBean.setRequiredLabel(required);
         uiBean.setTabindex(tabindex);
         uiBean.setValue(value);
         uiBean.setTemplate(template);

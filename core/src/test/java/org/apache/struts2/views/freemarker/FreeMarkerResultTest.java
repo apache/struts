@@ -226,7 +226,8 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         String expectedJDK16 =
                 "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
                 + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
-                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>";
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
+                + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
 
         String result = stringWriter.toString();
 

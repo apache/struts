@@ -197,10 +197,7 @@ public class DispatcherTest extends StrutsTestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
                 reloadConfigs);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
-                reloadConfigs);
 
-        mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expect("destroy");
@@ -227,12 +224,10 @@ public class DispatcherTest extends StrutsTestCase {
         
         Map<String, PackageConfig> packageConfigs = new HashMap<String, PackageConfig>();
         packageConfigs.put("test", packageConfig);
-        
+
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
         String reloadConfigs = container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
-                reloadConfigs);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
                 reloadConfigs);
 

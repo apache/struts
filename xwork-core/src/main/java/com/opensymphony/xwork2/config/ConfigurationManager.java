@@ -19,7 +19,6 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -46,6 +45,7 @@ public class ConfigurationManager {
     private List<PackageProvider> packageProviders = new CopyOnWriteArrayList<PackageProvider>();
     protected String defaultFrameworkBeanName;
     private boolean providersChanged = false;
+    private boolean reloadConfigs = true; // for the first time
 
     public ConfigurationManager() {
         this("xwork");
@@ -70,7 +70,7 @@ public class ConfigurationManager {
                 throw new ConfigurationException("Unable to load configuration.", e);
             }
         } else {
-            conditionalReload(configuration.getContainer());
+            conditionalReload();
         }
 
         return configuration;
@@ -169,10 +169,8 @@ public class ConfigurationManager {
 
     /**
      * Reloads the Configuration files if the configuration files indicate that they need to be reloaded.
-     * @param container current container used to obtain instance of {@link com.opensymphony.xwork2.util.fs.DefaultFileManager}
      */
-    public synchronized void conditionalReload(Container container) {
-        boolean reloadConfigs = Boolean.parseBoolean(container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION));
+    public synchronized void conditionalReload() {
         if (reloadConfigs || providersChanged) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Checking ConfigurationProviders for reload.");
@@ -185,7 +183,16 @@ public class ConfigurationManager {
             if (reload) {
                 reloadProviders(providers);
             }
+            updateReloadConfigsFlag();
             providersChanged = false;
+        }
+    }
+
+    private void updateReloadConfigsFlag() {
+        reloadConfigs = Boolean.parseBoolean(configuration.getContainer().getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Updating [#0], current value is [#1], new value [#2]",
+                    XWorkConstants.RELOAD_XML_CONFIGURATION, String.valueOf(reloadConfigs), String.valueOf(reloadConfigs));
         }
     }
 
@@ -194,7 +201,7 @@ public class ConfigurationManager {
             for (PackageProvider provider : packageProviders) {
                 if (provider.needsReload()) {
                     if (LOG.isInfoEnabled()) {
-                        LOG.info("Detected package provider " + provider + " needs to be reloaded.  Reloading all providers.");
+                        LOG.info("Detected package provider [#0] needs to be reloaded. Reloading all providers.", provider.toString());
                     }
                     return true;
                 }
@@ -207,7 +214,7 @@ public class ConfigurationManager {
         for (ContainerProvider provider : providers) {
             if (provider.needsReload()) {
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("Detected container provider " + provider + " needs to be reloaded.  Reloading all providers.");
+                    LOG.info("Detected container provider [#0] needs to be reloaded. Reloading all providers.", provider.toString());
                 }
                 return true;
             }

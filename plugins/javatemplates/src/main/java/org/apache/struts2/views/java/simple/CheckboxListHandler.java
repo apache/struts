@@ -72,13 +72,13 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
 	                .addIfTrue("readonly", params.get("readonly"))
 	                .addIfTrue("disabled", disabled)
 	                .addIfExists("tabindex", params.get("tabindex"))
-	                .addIfExists("id", name + "-" + Integer.toString(cnt++));
+                    .addIfExists("id", id + "-" + Integer.toString(cnt));
 		        start("input", a);
 		        end("input");
 
                 //Label section
                 a = new Attributes();
-                a.add("for",id)
+                a.add("for",id + "-" + Integer.toString(cnt))
                 	.addIfExists("class", params.get("cssClass"))
                 	.addIfExists("style", params.get("cssStyle"));
                 super.start("label", a);
@@ -97,7 +97,7 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
                 end("input");
 
                 stack.pop();
-
+                cnt++;
             }
         }
     }

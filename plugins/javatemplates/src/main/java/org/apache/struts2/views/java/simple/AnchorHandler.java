@@ -20,36 +20,40 @@
  */
 package org.apache.struts2.views.java.simple;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class AnchorHandler extends AbstractTagHandler implements TagGenerator {
+
     public void generate() throws IOException {
-        //all rendering must happend at the end of the tag, so we can support nested params
+        Map<String, Object> params = context.getParameters();
+
+        Attributes attrs = new Attributes();
+        attrs.addIfExists("name", params.get("name"))
+                .addIfExists("id", params.get("id"))
+                .addIfExists("class", params.get("cssClass"))
+                .addIfExists("style", params.get("cssStyle"))
+                .addIfExists("href", params.get("href"), false)
+                .addIfExists("title", params.get("title"))
+                .addIfExists("tabindex", params.get("tabindex"));
+        start("a", attrs);
     }
 
     public static class CloseHandler extends AbstractTagHandler implements TagGenerator {
+
         public void generate() throws IOException {
             Map<String, Object> params = context.getParameters();
-
-            Attributes attrs = new Attributes();
-
-            attrs.addIfExists("name", params.get("name"))
-                    .addIfExists("id", params.get("id"))
-                    .addIfExists("class", params.get("cssClass"))
-                    .addIfExists("style", params.get("cssStyle"))
-                    .addIfExists("href", params.get("href"), false)
-                    .addIfExists("title", params.get("title"))
-                    .addIfExists("tabindex", params.get("tabindex"));
-            start("a", attrs);
             String body = (String) params.get("body");
-            if (StringUtils.isNotEmpty(body))
+            if (StringUtils.isNotEmpty(body)) {
                 characters(body, false);
+            }
             end("a");
         }
+
     }
+
 }

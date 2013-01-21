@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * <p/> <u>Annotation usage:</u>
  *
  * <!-- START SNIPPET: usage -->
- * The Conversion annotation must be applied at Type level. Check also [TypeConversion Annotation] for more examples!
+ * The Conversion annotation must be applied at Type level.
  * <!-- END SNIPPET: usage -->
  *
  * <p/> <u>Annotation parameters:</u>

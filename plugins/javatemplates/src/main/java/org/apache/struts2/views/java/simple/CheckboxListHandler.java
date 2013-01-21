@@ -68,7 +68,7 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
                 a.add("type", "checkbox")
 	                .add("name", name)
 	                .add("value", itemKeyStr)
-	                .addIfTrue("checked", params.get("nameValue"))
+	                .addIfTrue("checked", isChecked(params, itemKeyStr))
 	                .addIfTrue("readonly", params.get("readonly"))
 	                .addIfTrue("disabled", disabled)
 	                .addIfExists("tabindex", params.get("tabindex"))
@@ -101,4 +101,18 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
             }
         }
     }
+
+    private Boolean isChecked(Map<String, Object> params, String itemKeyStr) {
+        Boolean checked = false;
+        if (itemKeyStr != null) {
+            String[] nameValues = (String[]) params.get("nameValue");
+            for (String value : nameValues) {
+                if (checked = value.equalsIgnoreCase(itemKeyStr)) {
+                    break;
+                }
+            }
+        }
+        return checked;
+    }
+
 }

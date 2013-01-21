@@ -22,13 +22,13 @@ import java.lang.annotation.Target;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>A marker annotation for type conversions at Type level.
+ * A marker annotation for type conversions at Type level.
  * <!-- END SNIPPET: description -->
  *
  * <p/> <u>Annotation usage:</u>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The Conversion annotation must be applied at Type level.
+ * The Conversion annotation must be applied at Type level. Check also [TypeConversion Annotation] for more examples!
  * <!-- END SNIPPET: usage -->
  *
  * <p/> <u>Annotation parameters:</u>
@@ -58,8 +58,24 @@ import java.lang.annotation.Target;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &#64;Conversion()
+ * &#64;Conversion(
+ *     conversions = {
+ *          // key must be the name of a property for which converter should be used
+ *          &#64;TypeConversion(key = "date", converter = "org.demo.converter.DateConverter")
+ *     }
+ * )
  * public class ConversionAction implements Action {
+ *
+ *     private Date date;
+ *
+ *     public setDate(Date date) {
+ *         this.date = date;
+ *     }
+ *
+ *     public Date getDate() {
+ *         return date;
+ *     }
+ *
  * }
  *
  * <!-- END SNIPPET: example -->

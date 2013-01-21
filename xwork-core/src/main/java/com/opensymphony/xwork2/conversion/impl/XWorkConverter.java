@@ -20,8 +20,8 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.XWorkMessages;
 import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.XWorkMessages;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.annotations.Conversion;
 import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
@@ -29,10 +29,15 @@ import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.AnnotationUtils;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,10 +45,16 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.text.MessageFormat;
 
 
 /**
@@ -587,7 +598,11 @@ public class XWorkConverter extends DefaultTypeConverter {
                         break;
                     }
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug(key + ":" + key);
+                        if (StringUtils.isEmpty(key)) {
+                            LOG.debug("WARNING! key of @TypeConversion [#0] applied to [#1] is empty!", tc.converter(), clazz.getName());
+                        } else {
+                            LOG.debug("TypeConversion [#0] with key: [#1]", tc.converter(), key);
+                        }
                     }
 
                     if (key != null) {

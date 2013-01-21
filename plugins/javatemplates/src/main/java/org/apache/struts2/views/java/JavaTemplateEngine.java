@@ -20,19 +20,22 @@
  */
 package org.apache.struts2.views.java;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.BaseTemplateEngine;
 import org.apache.struts2.components.template.Template;
+import org.apache.struts2.components.template.TemplateEngine;
+import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.views.java.simple.SimpleTheme;
 
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Template engine that renders tags using java implementations
@@ -41,26 +44,59 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaTemplateEngine.class);
 
-    private Themes themes = new Themes() {{
-        add(new SimpleTheme());
-    }};
+    // The struts template engine manager
+    protected TemplateEngineManager templateEngineManager;
+
+    // The struts default template type. If struts ever changes this will need updating.
+    private String defaultTemplateType = "ftl";
+
+    @Inject
+    public void setTemplateEngineManager(TemplateEngineManager mgr) {
+        this.templateEngineManager = mgr;
+    }
+
+    private Themes themes = new Themes() {
+        {
+            add(new SimpleTheme());
+        }
+    };
 
     @Override
     protected String getSuffix() {
         return "java";
     }
 
-    public void renderTemplate(TemplateRenderingContext templateContext)
-            throws Exception {
+    public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
         Template t = templateContext.getTemplate();
         Theme theme = themes.get(t.getTheme());
         if (theme == null) {
-            throw new StrutsException("Cannot render tag [" + t.getName() + "] because theme [" + t.getTheme() + "] was not found.");
+            // Theme not supported, so do what struts would have done if we were not here.
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Theme not found [#0] trying default template engine using template type [#1]", t.getTheme(), defaultTemplateType);
+            }
+            final TemplateEngine engine = templateEngineManager.getTemplateEngine(templateContext.getTemplate(), defaultTemplateType);
+
+            if (engine == null) {
+                // May be the default template has changed?
+                throw new ConfigurationException("Unable to find a TemplateEngine for template type '" + defaultTemplateType
+                        + "' whilst trying to render template " + templateContext.getTemplate());
+            } else {
+                try {
+                    // Retry render
+                    engine.renderTemplate(templateContext);
+                } catch (Exception e) {
+                    // Give up and throw a new StrutsException(e);
+                    throw new StrutsException("Cannot render tag [" + t.getName() + "] because theme ["
+                            + t.getTheme() + "] was not found.", e);
+                }
+            }
+        } else {
+            // Render our template
+            theme.renderTag(t.getName(), templateContext);
         }
-        theme.renderTag(t.getName(), templateContext);
     }
 
-    private class Themes {
+    private static class Themes {
         private HashMap<String, Theme> themes = new HashMap<String, Theme>();
 
         public void add(Theme theme) {
@@ -80,27 +116,45 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
      */
     @Inject(value = "struts.javatemplates.customThemes", required = false)
     public void setThemeClasses(String themeClasses) {
-
         StringTokenizer customThemes = new StringTokenizer(themeClasses, ",");
-
         while (customThemes.hasMoreTokens()) {
             String themeClass = customThemes.nextToken().trim();
             try {
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("Registering custom theme '" + themeClass + "' to javatemplates engine");
+                    LOG.info("Registering custom theme [#0] to javatemplates engine", themeClass);
                 }
-
-                //FIXME: This means Themes must have no-arg constructor - should use object factory here
-                //ObjectFactory.getObjectFactory().buildBean(ClassLoaderUtil.loadClass(themeClass, getClass()), null);
-                themes.add((Theme) ClassLoaderUtil.loadClass(themeClass, getClass()).newInstance());
-
+                ObjectFactory factory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
+                Theme theme = (Theme) factory.buildBean(themeClass, new HashMap<String, Object>());
+                themes.add(theme);
             } catch (ClassCastException cce) {
-                LOG.error("Invalid java them class '" + themeClass + "'. Class does not implement 'org.apache.struts2.views.java.Theme' interface");
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Invalid java them class [#0]. Class does not implement 'org.apache.struts2.views.java.Theme' interface", cce, themeClass);
+                }
             } catch (ClassNotFoundException cnf) {
-                LOG.error("Invalid java theme class '" + themeClass + "'. Class not found");
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Invalid java theme class [#0]. Class not found!", cnf, themeClass);
+                }
             } catch (Exception e) {
-                LOG.error("Could not find messages file " + themeClass + ".properties. Skipping");
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Could not find messages file [#0].properties. Skipping!", e, themeClass);
+                }
             }
         }
     }
+
+    /**
+     * Allows for providing an alternative default struts theme. Will default to "ftl" otherwise.
+     *
+     * @param defaultTemplateTheme the struts default theme
+     */
+    @Inject(value = "struts.javatemplates.defaultTemplateType", required = false)
+    public void setDefaultTemplateType(String defaultTemplateTheme) {
+        // Make sure we don't set ourself as default for race condition
+        if (defaultTemplateTheme != null && !defaultTemplateTheme.equalsIgnoreCase(getSuffix())) {
+            this.defaultTemplateType = defaultTemplateTheme.toLowerCase();
+        } else if(LOG.isErrorEnabled()) {
+            LOG.error("Invalid struts.javatemplates.defaultTemplateType value. Cannot be [#0]!", getSuffix());
+        }
+    }
+
 }

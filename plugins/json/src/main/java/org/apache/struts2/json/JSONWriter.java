@@ -408,18 +408,18 @@ public class JSONWriter {
             }
 
             Object key = entry.getKey();
+            if (key == null) {
+                LOG.error("Cannot build expression for null key in #0", exprStack);
+                continue;
+            }
+
             String expr = null;
             if (this.buildExpr) {
-                if (key == null) {
-                    LOG.error("Cannot build expression for null key in " + this.exprStack);
+                expr = this.expandExpr(key.toString());
+                if (this.shouldExcludeProperty(expr)) {
                     continue;
-                } else {
-                    expr = this.expandExpr(key.toString());
-                    if (this.shouldExcludeProperty(expr)) {
-                        continue;
-                    }
-                    expr = this.setExprStack(expr);
                 }
+                expr = this.setExprStack(expr);
             }
             if (hasData) {
                 this.add(',');
@@ -427,8 +427,7 @@ public class JSONWriter {
             hasData = true;
             if (!warnedNonString && !(key instanceof String)) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on "
-                        + key.getClass().getName());
+                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on #0", key.getClass().getName());
                 }
                 warnedNonString = true;
             }

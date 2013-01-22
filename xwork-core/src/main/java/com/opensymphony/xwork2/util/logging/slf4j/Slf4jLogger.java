@@ -45,8 +45,6 @@ public class Slf4jLogger implements Logger {
         log.info(LoggerUtils.format(msg, args), ex);
     }
 
-    
-
     public boolean isInfoEnabled() {
         return log.isInfoEnabled();
     }
@@ -64,6 +62,10 @@ public class Slf4jLogger implements Logger {
     }
     
     public void debug(String msg, String... args) {
+        log.debug(LoggerUtils.format(msg, args));
+    }
+
+    public void debug(String msg, Object... args) {
         log.debug(LoggerUtils.format(msg, args));
     }
 

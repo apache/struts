@@ -15,6 +15,9 @@
  */
 package com.opensymphony.xwork2.util.logging;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Logging utility methods
  */
@@ -67,6 +70,14 @@ public class LoggerUtils {
         }
         return msg;
         
+    }
+
+    public static String format(String msg, Object[] args) {
+        List<String> strArgs = new LinkedList<String>();
+        for (Object arg : args) {
+            strArgs.add(arg != null ? arg.toString() : "(null)");
+        }
+        return format(msg, strArgs.toArray(new String[strArgs.size()]));
     }
 
 }

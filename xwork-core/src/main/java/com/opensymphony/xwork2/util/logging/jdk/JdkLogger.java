@@ -75,6 +75,10 @@ public class JdkLogger implements Logger {
         log.log(Level.FINE, LoggerUtils.format(msg, args));
     }
 
+    public void debug(String msg, Object... args) {
+        log.log(Level.FINE, LoggerUtils.format(msg, args));
+    }
+
     public void debug(String msg, Throwable ex, String... args) {
         log.log(Level.FINE, LoggerUtils.format(msg, args), ex);
     }

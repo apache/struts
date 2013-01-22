@@ -1243,7 +1243,6 @@ public abstract class UIBean extends Component {
         Set<String> standardAttributes = standardAttributesMap.get(clz);
         if (standardAttributes == null) {
             standardAttributes = new HashSet<String>();
-            standardAttributesMap.put(clz, standardAttributes);
             while (clz != null) {
                 for (Field f : clz.getDeclaredFields()) {
                     if (Modifier.isProtected(f.getModifiers())
@@ -1257,6 +1256,7 @@ public abstract class UIBean extends Component {
                     clz = clz.getSuperclass();
                 }
             }
+            standardAttributesMap.put(clz, standardAttributes);
         }
 		return standardAttributes;
 	}

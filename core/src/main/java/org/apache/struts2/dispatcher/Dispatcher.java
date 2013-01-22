@@ -432,6 +432,8 @@ public class Dispatcher {
         boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD));
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
+        ContainerHolder.store(container);
+
         return container;
     }
 
@@ -908,8 +910,10 @@ public class Dispatcher {
      * Modify the ConfigurationManager instance
      *
      * @param mgr The configuration manager
+     * @deprecated should be removed as is used only in tests
      */
     public void setConfigurationManager(ConfigurationManager mgr) {
+        ContainerHolder.clear();
         this.configurationManager = mgr;
     }
 
@@ -918,6 +922,9 @@ public class Dispatcher {
      * @return Our dependency injection container
      */
     public Container getContainer() {
+        if (ContainerHolder.get() != null) {
+            return ContainerHolder.get();
+        }
         ConfigurationManager mgr = getConfigurationManager();
         if (mgr == null) {
             throw new IllegalStateException("The configuration manager shouldn't be null");
@@ -926,8 +933,11 @@ public class Dispatcher {
             if (config == null) {
                 throw new IllegalStateException("Unable to load configuration");
             } else {
-                return config.getContainer();
+                Container container = config.getContainer();
+                ContainerHolder.store(container);
+                return container;
             }
         }
     }
+
 }

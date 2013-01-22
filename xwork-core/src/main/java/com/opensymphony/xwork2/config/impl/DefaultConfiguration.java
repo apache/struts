@@ -69,6 +69,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import ognl.PropertyAccessor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -337,8 +338,6 @@ public class DefaultConfiguration implements Configuration {
                     configs.put(actionName, buildFullActionConfig(packageConfig, baseConfig));
                 }
 
-
-
                 namespaceActionConfigs.put(namespace, configs);
                 if (packageConfig.getFullDefaultActionRef() != null) {
                     namespaceConfigs.put(namespace, packageConfig.getFullDefaultActionRef());
@@ -346,7 +345,9 @@ public class DefaultConfiguration implements Configuration {
             }
         }
 
-        return new RuntimeConfigurationImpl(namespaceActionConfigs, namespaceConfigs);
+        PatternMatcher<int[]> matcher = container.getInstance(PatternMatcher.class);
+        return new RuntimeConfigurationImpl(Collections.unmodifiableMap(namespaceActionConfigs),
+                Collections.unmodifiableMap(namespaceConfigs), matcher);
     }
 
     private void setDefaultResults(Map<String, ResultConfig> results, PackageConfig packageContext) {
@@ -396,8 +397,6 @@ public class DefaultConfiguration implements Configuration {
             }
         }
 
-
-
         return new ActionConfig.Builder(baseConfig)
             .addParams(params)
             .addResultConfigs(results)
@@ -408,25 +407,24 @@ public class DefaultConfiguration implements Configuration {
     }
 
 
-    private class RuntimeConfigurationImpl implements RuntimeConfiguration {
+    private static class RuntimeConfigurationImpl implements RuntimeConfiguration {
+
         private Map<String, Map<String, ActionConfig>> namespaceActionConfigs;
         private Map<String, ActionConfigMatcher> namespaceActionConfigMatchers;
         private NamespaceMatcher namespaceMatcher;
         private Map<String, String> namespaceConfigs;
 
-        public RuntimeConfigurationImpl(Map<String, Map<String, ActionConfig>> namespaceActionConfigs, Map<String, String> namespaceConfigs) {
+        public RuntimeConfigurationImpl(Map<String, Map<String, ActionConfig>> namespaceActionConfigs,
+                                        Map<String, String> namespaceConfigs,
+                                        PatternMatcher<int[]> matcher) {
             this.namespaceActionConfigs = namespaceActionConfigs;
             this.namespaceConfigs = namespaceConfigs;
-
-            PatternMatcher<int[]> matcher = container.getInstance(PatternMatcher.class);
 
             this.namespaceActionConfigMatchers = new LinkedHashMap<String, ActionConfigMatcher>();
             this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet());
 
             for (String ns : namespaceActionConfigs.keySet()) {
-                namespaceActionConfigMatchers.put(ns,
-                        new ActionConfigMatcher(matcher,
-                                namespaceActionConfigs.get(ns), true));
+                namespaceActionConfigMatchers.put(ns, new ActionConfigMatcher(matcher, namespaceActionConfigs.get(ns), true));
             }
         }
 
@@ -439,7 +437,7 @@ public class DefaultConfiguration implements Configuration {
          * @param namespace the namespace for the action or null for the empty namespace, ""
          * @return the configuration information for action requested
          */
-        public synchronized ActionConfig getActionConfig(String namespace, String name) {
+        public ActionConfig getActionConfig(String namespace, String name) {
             ActionConfig config = findActionConfigInNamespace(namespace, name);
 
             // try wildcarded namespaces
@@ -466,7 +464,7 @@ public class DefaultConfiguration implements Configuration {
             return config;
         }
 
-        ActionConfig findActionConfigInNamespace(String namespace, String name) {
+        private ActionConfig findActionConfigInNamespace(String namespace, String name) {
             ActionConfig config = null;
             if (namespace == null) {
                 namespace = "";
@@ -494,7 +492,7 @@ public class DefaultConfiguration implements Configuration {
          *
          * @return a Map of namespace - > Map of ActionConfig objects, with the key being the action name
          */
-        public synchronized Map<String, Map<String, ActionConfig>>  getActionConfigs() {
+        public Map<String, Map<String, ActionConfig>>  getActionConfigs() {
             return namespaceActionConfigs;
         }
 

@@ -38,6 +38,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.components.Form;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 import org.easymock.EasyMock;
@@ -249,6 +250,8 @@ public class FormTagTest extends AbstractUITagTest {
             }
         });
 
+        Dispatcher.getInstance().setConfigurationManager(configurationManager);
+
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
@@ -336,6 +339,8 @@ public class FormTagTest extends AbstractUITagTest {
                 }
             });
 
+            Dispatcher.getInstance().setConfigurationManager(configurationManager);
+
             FormTag tag = new FormTag();
             tag.setPageContext(pageContext);
             tag.setName("myForm");
@@ -420,6 +425,8 @@ public class FormTagTest extends AbstractUITagTest {
             }
         });
 
+        Dispatcher.getInstance().setConfigurationManager(configurationManager);
+
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
@@ -500,6 +507,8 @@ public class FormTagTest extends AbstractUITagTest {
                 };
             }
         });
+
+        Dispatcher.getInstance().setConfigurationManager(configurationManager);
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);

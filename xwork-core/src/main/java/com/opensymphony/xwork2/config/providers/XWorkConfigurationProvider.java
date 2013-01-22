@@ -15,12 +15,22 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
+import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
+import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.TypeConverterCreator;
+import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.ArrayConverter;
 import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
 import com.opensymphony.xwork2.conversion.impl.DateConverter;
+import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor;
+import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
+import com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterCreator;
+import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
@@ -92,7 +102,15 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
         builder.factory(com.opensymphony.xwork2.ObjectFactory.class)
                 .factory(ActionProxyFactory.class, DefaultActionProxyFactory.class, Scope.SINGLETON)
                 .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)
+
                 .factory(XWorkConverter.class, Scope.SINGLETON)
+                .factory(XWorkBasicConverter.class, Scope.SINGLETON)
+                .factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON)
+                .factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON)
+                .factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON)
+                .factory(TypeConverterCreator.class, DefaultTypeConverterCreator.class, Scope.SINGLETON)
+                .factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON)
+
                 .factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON)
                 .factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON)
                 .factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON)
@@ -107,18 +125,18 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(PropertyAccessor.class, Enumeration.class.getName(), XWorkEnumerationAccessor.class, Scope.SINGLETON)
                 .factory(UnknownHandlerManager.class, DefaultUnknownHandlerManager.class, Scope.SINGLETON)
 
-                        // silly workarounds for ognl since there is no way to flush its caches
+                // silly workarounds for ognl since there is no way to flush its caches
                 .factory(PropertyAccessor.class, List.class.getName(), XWorkListPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, ArrayList.class.getName(), XWorkListPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, HashSet.class.getName(), XWorkCollectionPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, Set.class.getName(), XWorkCollectionPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, HashMap.class.getName(), XWorkMapPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, Map.class.getName(), XWorkMapPropertyAccessor.class, Scope.SINGLETON)
-
                 .factory(PropertyAccessor.class, Collection.class.getName(), XWorkCollectionPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, ObjectProxy.class.getName(), ObjectProxyPropertyAccessor.class, Scope.SINGLETON)
                 .factory(MethodAccessor.class, Object.class.getName(), XWorkMethodAccessor.class, Scope.SINGLETON)
                 .factory(MethodAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON)
+
                 .factory(NullHandler.class, Object.class.getName(), InstantiatingNullHandler.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, AnnotationActionValidatorManager.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, "no-annotations", DefaultActionValidatorManager.class, Scope.SINGLETON)
@@ -126,7 +144,6 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON)
                 .factory(LocaleProvider.class, DefaultLocaleProvider.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
-                .factory(XWorkBasicConverter.class, Scope.SINGLETON)
                 .factory(CollectionConverter.class, Scope.SINGLETON)
                 .factory(ArrayConverter.class, Scope.SINGLETON)
                 .factory(DateConverter.class, Scope.SINGLETON)

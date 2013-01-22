@@ -37,12 +37,22 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
+import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
+import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
+import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.conversion.TypeConverterCreator;
+import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.ArrayConverter;
 import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
 import com.opensymphony.xwork2.conversion.impl.DateConverter;
+import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor;
+import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
+import com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterCreator;
+import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
@@ -289,7 +299,14 @@ public class DefaultConfiguration implements Configuration {
         }
         builder.factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON);
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
+
         builder.factory(XWorkConverter.class, Scope.SINGLETON);
+        builder.factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON);
+        builder.factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON);
+        builder.factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON);
+        builder.factory(TypeConverterCreator.class, DefaultTypeConverterCreator.class, Scope.SINGLETON);
+        builder.factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON);
+
         builder.factory(XWorkBasicConverter.class, Scope.SINGLETON);
         builder.factory(TypeConverter.class, XWorkConstants.COLLECTION_CONVERTER,  CollectionConverter.class, Scope.SINGLETON);
         builder.factory(TypeConverter.class, XWorkConstants.ARRAY_CONVERTER, ArrayConverter.class, Scope.SINGLETON);

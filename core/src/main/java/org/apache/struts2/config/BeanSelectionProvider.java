@@ -32,7 +32,12 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
+import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
+import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.TypeConverterCreator;
+import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.ArrayConverter;
 import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
 import com.opensymphony.xwork2.conversion.impl.DateConverter;
@@ -241,6 +246,36 @@ import java.util.StringTokenizer;
  *     <td>singleton</td>
  *     <td>Converter used to convert any object to String and back</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor</td>
+ *     <td>struts.conversion.properties.processor</td>
+ *     <td>singleton</td>
+ *     <td>Process Properties to create converters</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor</td>
+ *     <td>struts.converter.file.processor</td>
+ *     <td>singleton</td>
+ *     <td>Process <class>-conversion.properties file create converters</class></td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor</td>
+ *     <td>struts.converter.annotation.processor</td>
+ *     <td>singleton</td>
+ *     <td>Process TypeConversion annotation to create converters</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.TypeConverterCreator</td>
+ *     <td>struts.converter.creator</td>
+ *     <td>singleton</td>
+ *     <td>Creates user converters</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.conversion.TypeConverterHolder</td>
+ *     <td>struts.converter.holder</td>
+ *     <td>singleton</td>
+ *     <td>Holds user converters' instances</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
@@ -287,8 +322,22 @@ public class BeanSelectionProvider implements ConfigurationProvider {
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
+
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
+        alias(CollectionConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION, builder, props);
+        alias(ArrayConverter.class, StrutsConstants.STRUTS_CONVERTER_ARRAY, builder, props);
+        alias(DateConverter.class, StrutsConstants.STRUTS_CONVERTER_DATE, builder, props);
+        alias(NumberConverter.class, StrutsConstants.STRUTS_CONVERTER_NUMBER, builder, props);
+        alias(StringConverter.class, StrutsConstants.STRUTS_CONVERTER_STRING, builder, props);
+
+        alias(ConversionPropertiesProcessor.class, StrutsConstants.STRUTS_CONVERTER_PROPERTIES_PROCESSOR, builder, props);
+        alias(ConversionFileProcessor.class, StrutsConstants.STRUTS_CONVERTER_FILE_PROCESSOR, builder, props);
+        alias(ConversionAnnotationProcessor.class, StrutsConstants.STRUTS_CONVERTER_ANNOTATION_PROCESSOR, builder, props);
+        alias(TypeConverterCreator.class, StrutsConstants.STRUTS_CONVERTER_CREATOR, builder, props);
+        alias(TypeConverterHolder.class, StrutsConstants.STRUTS_CONVERTER_HOLDER, builder, props);
+
         alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.DEFAULT);
+
         alias(LocaleProvider.class, StrutsConstants.STRUTS_LOCALE_PROVIDER, builder, props);
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);
         alias(ObjectTypeDeterminer.class, StrutsConstants.STRUTS_OBJECTTYPEDETERMINER, builder, props);
@@ -305,12 +354,6 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(StaticContentLoader.class, StrutsConstants.STRUTS_STATIC_CONTENT_LOADER, builder, props);
         alias(UnknownHandlerManager.class, StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, builder, props);
         alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);
-
-        alias(CollectionConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION, builder, props);
-        alias(ArrayConverter.class, StrutsConstants.STRUTS_CONVERTER_ARRAY, builder, props);
-        alias(DateConverter.class, StrutsConstants.STRUTS_CONVERTER_DATE, builder, props);
-        alias(NumberConverter.class, StrutsConstants.STRUTS_CONVERTER_NUMBER, builder, props);
-        alias(StringConverter.class, StrutsConstants.STRUTS_CONVERTER_STRING, builder, props);
 
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");

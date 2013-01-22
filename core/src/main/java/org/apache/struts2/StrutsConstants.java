@@ -246,4 +246,10 @@ public final class StrutsConstants {
     /** Enable handling exceptions by Dispatcher - true by default **/
     public static final String STRUTS_HANDLE_EXCEPTION = "struts.handle.exception";
 
+    public static final String STRUTS_CONVERTER_PROPERTIES_PROCESSOR = "struts.converter.properties.processor";
+    public static final String STRUTS_CONVERTER_FILE_PROCESSOR = "struts.converter.file.processor";
+    public static final String STRUTS_CONVERTER_ANNOTATION_PROCESSOR = "struts.converter.annotation.processor";
+    public static final String STRUTS_CONVERTER_CREATOR = "struts.converter.creator";
+    public static final String STRUTS_CONVERTER_HOLDER = "struts..converter.holder";
+
 }

@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * UIBean is the standard superclass of all Struts UI components.
@@ -502,7 +503,7 @@ public abstract class UIBean extends Component {
     protected TemplateEngineManager templateEngineManager;
 
     // dynamic attributes support for tags used with FreeMarker templates
-    protected static Map<Class, Set<String>> standardAttributesMap = new ConcurrentHashMap<Class, Set<String>>();
+    protected static ConcurrentMap<Class, Set<String>> standardAttributesMap = new ConcurrentHashMap<Class, Set<String>>();
 
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
     public void setDefaultTemplateDir(String dir) {
@@ -1256,7 +1257,7 @@ public abstract class UIBean extends Component {
                     clz = clz.getSuperclass();
                 }
             }
-            standardAttributesMap.put(clz, standardAttributes);
+            standardAttributesMap.putIfAbsent(clz, standardAttributes);
         }
 		return standardAttributes;
 	}

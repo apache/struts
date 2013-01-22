@@ -22,7 +22,12 @@ import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import ognl.*;
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.SimpleNode;
+import ognl.TypeConverter;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -33,6 +38,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 
 /**
@@ -44,8 +50,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OgnlUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(OgnlUtil.class);
-    private ConcurrentHashMap<String, Object> expressions = new ConcurrentHashMap<String, Object>();
-    private final ConcurrentHashMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<Class, BeanInfo>();
+    private ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<String, Object>();
+    private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<Class, BeanInfo>();
 
     private TypeConverter defaultConverter;
     static boolean devMode = false;
@@ -240,7 +246,7 @@ public class OgnlUtil {
             Object o = expressions.get(expression);
             if (o == null) {
                 o = Ognl.parseExpression(expression);
-                expressions.put(expression, o);
+                expressions.putIfAbsent(expression, o);
             }
             return o;
         } else
@@ -416,7 +422,7 @@ public class OgnlUtil {
             beanInfo = beanInfoCache.get(clazz);
             if (beanInfo == null) {
                 beanInfo = Introspector.getBeanInfo(clazz, Object.class);
-                beanInfoCache.put(clazz, beanInfo);
+                beanInfoCache.putIfAbsent(clazz, beanInfo);
             }
             return beanInfo;
         }

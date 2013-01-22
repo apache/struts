@@ -251,7 +251,7 @@ public class LocalizedTextUtil {
         try {
             if (!bundlesMap.containsKey(key)) {
                 bundle = ResourceBundle.getBundle(aBundleName, locale, Thread.currentThread().getContextClassLoader());
-                bundlesMap.put(key, bundle);
+                bundlesMap.putIfAbsent(key, bundle);
             }
 
             bundle = bundlesMap.get(key);
@@ -260,18 +260,18 @@ public class LocalizedTextUtil {
                 try {
                     if (!bundlesMap.containsKey(key)) {
                         bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoader);
-                        bundlesMap.put(key, bundle);
+                        bundlesMap.putIfAbsent(key, bundle);
                     }
 
                     bundle = bundlesMap.get(key);
 
                 } catch (MissingResourceException e) {
                     bundle = EMPTY_BUNDLE;
-                    bundlesMap.put(key, bundle);
+                    bundlesMap.putIfAbsent(key, bundle);
                 }
             } else {
                 bundle = EMPTY_BUNDLE;
-                bundlesMap.put(key, bundle);
+                bundlesMap.putIfAbsent(key, bundle);
             }
         }
         return (bundle == EMPTY_BUNDLE) ? null : bundle;

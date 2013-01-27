@@ -21,40 +21,55 @@
 
 package org.apache.struts2.rest;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static javax.servlet.http.HttpServletResponse.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 /**
  * Default implementation of rest info that uses fluent-style construction
  */
 public class DefaultHttpHeaders implements HttpHeaders {
-    String resultCode;
-    int status = SC_OK;
-    Object etag;
-    Object locationId;
-    String location;
-    boolean disableCaching;
-    boolean noETag = false;
-    Date lastModified;
-    
-    public DefaultHttpHeaders() {}
-    
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultHttpHeaders.class);
+
+    private static final String IF_MODIFIED_SINCE_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    private static final SimpleDateFormat IF_MODIFIED_SINCE_FORMAT = new SimpleDateFormat(IF_MODIFIED_SINCE_DATE_FORMAT);
+
+    private String resultCode;
+    private int status = SC_OK;
+    private Object etag;
+    private Object locationId;
+    private String location;
+    private boolean disableCaching;
+    private boolean noETag = false;
+    private Date lastModified;
+
+    public DefaultHttpHeaders() {
+    }
+
     public DefaultHttpHeaders(String result) {
         resultCode = result;
     }
-    
+
     public DefaultHttpHeaders renderResult(String code) {
         this.resultCode = code;
         return this;
     }
-    
+
     public DefaultHttpHeaders withStatus(int code) {
         this.status = code;
         return this;
     }
-    
+
     public DefaultHttpHeaders withETag(Object etag) {
         this.etag = etag;
         return this;
@@ -64,27 +79,27 @@ public class DefaultHttpHeaders implements HttpHeaders {
         this.noETag = true;
         return this;
     }
-    
+
     public DefaultHttpHeaders setLocationId(Object id) {
         this.locationId = id;
         return this;
     }
-    
+
     public DefaultHttpHeaders setLocation(String loc) {
         this.location = loc;
         return this;
     }
-    
+
     public DefaultHttpHeaders lastModified(Date date) {
         this.lastModified = date;
         return this;
     }
-    
+
     public DefaultHttpHeaders disableCaching() {
         this.disableCaching = true;
         return this;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.struts2.rest.HttpHeaders#apply(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
      */
@@ -108,9 +123,9 @@ public class DefaultHttpHeaders implements HttpHeaders {
             int lastSlash = url.lastIndexOf("/");
             int lastDot = url.lastIndexOf(".");
             if (lastDot > lastSlash && lastDot > -1) {
-                url = url.substring(0, lastDot)+"/"+locationId+url.substring(lastDot);
+                url = url.substring(0, lastDot) + "/" + locationId + url.substring(lastDot);
             } else {
-                url += "/"+locationId;
+                url += "/" + locationId;
             }
             response.setHeader("Location", url);
             status = SC_CREATED;
@@ -130,16 +145,13 @@ public class DefaultHttpHeaders implements HttpHeaders {
             }
 
             String reqLastModified = request.getHeader("If-Modified-Since");
-            if (lastModified != null) {
-                if (String.valueOf(lastModified.getTime()).equals(reqLastModified)) {
-                    lastModifiedNotChanged = true;
-                }
-
+            if (lastModified != null && reqLastModified != null) {
+                lastModifiedNotChanged = compareIfModifiedSince(reqLastModified);
             }
 
             if ((etagNotChanged && lastModifiedNotChanged) ||
-                (etagNotChanged && reqLastModified == null) ||
-                (lastModifiedNotChanged && reqETag == null)) {
+                    (etagNotChanged && reqLastModified == null) ||
+                    (lastModifiedNotChanged && reqETag == null)) {
                 status = SC_NOT_MODIFIED;
             }
         }
@@ -148,19 +160,30 @@ public class DefaultHttpHeaders implements HttpHeaders {
         return resultCode;
     }
 
+    private boolean compareIfModifiedSince(String reqLastModified) {
+        try {
+            if (lastModified.compareTo(IF_MODIFIED_SINCE_FORMAT.parse(reqLastModified)) >= 0) {
+                return true;
+            }
+        } catch (ParseException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Got error parsing If-Modified-Since header value [#0] as [#1]!", e, reqLastModified, IF_MODIFIED_SINCE_DATE_FORMAT);
+            }
+            return false;
+        }
+        return false;
+    }
+
     public int getStatus() {
         return status;
     }
-    
+
     public void setStatus(int s) {
-    	status = s;
+        status = s;
     }
 
-	public String getResultCode() {
-		return resultCode;
-	}
-    
-    
-    
-    
+    public String getResultCode() {
+        return resultCode;
+    }
+
 }

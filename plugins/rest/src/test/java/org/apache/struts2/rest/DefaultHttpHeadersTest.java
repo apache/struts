@@ -25,8 +25,13 @@ import junit.framework.TestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class DefaultHttpHeadersTest extends TestCase {
     private MockHttpServletResponse mockResponse;
@@ -128,7 +133,7 @@ public class DefaultHttpHeadersTest extends TestCase {
         Date now = new Date();
         DefaultHttpHeaders headers = new DefaultHttpHeaders()
                 .lastModified(now);
-        mockRequest.addHeader("If-Modified-Since", String.valueOf(now.getTime()));
+        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(now));
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());
@@ -144,13 +149,31 @@ public class DefaultHttpHeadersTest extends TestCase {
         assertEquals(SC_OK, mockResponse.getStatus());
     }
 
+    public void testLastModifiedSince() {
+        Date now = new Date();
+        DefaultHttpHeaders headers = new DefaultHttpHeaders().lastModified(now);
+        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(now));
+        headers.apply(mockRequest, mockResponse, new Object());
+
+        assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());
+    }
+
+    public void testLastModifiedSinceIsOlder() {
+        Date now = new Date();
+        DefaultHttpHeaders headers = new DefaultHttpHeaders().lastModified(now);
+        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(new Date(now.getTime() - 1000 * 60 * 60)));
+        headers.apply(mockRequest, mockResponse, new Object());
+
+        assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());
+    }
+
     public void testConditionalGetForLastModifiedAndETag() {
         Date now = new Date();
         DefaultHttpHeaders headers = new DefaultHttpHeaders()
                 .lastModified(now)
                 .withETag("asdf");
         mockRequest.addHeader("If-None-Match", "asdf");
-        mockRequest.addHeader("If-Modified-Since", String.valueOf(now.getTime()));
+        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(now));
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());

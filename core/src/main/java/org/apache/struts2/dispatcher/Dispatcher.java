@@ -681,21 +681,20 @@ public class Dispatcher {
             File multipartSaveDir = new File(saveDir);
 
             if (!multipartSaveDir.exists()) {
-                if (!multipartSaveDir.mkdir()) {
+                if (!multipartSaveDir.mkdirs()) {
                     String logMessage;
-        	    try {
-                        logMessage = "Could not find create multipart save directory '"+multipartSaveDir.getCanonicalPath()+"'.";
-        	    } catch (IOException e) {
-                        logMessage = "Could not find create multipart save directory '"+multipartSaveDir.toString()+"'.";
-        	    }
-        	    if(devMode) {
+                    try {
+                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
+                    } catch (IOException e) {
+                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.toString() + "'.";
+                    }
+                    if (devMode) {
                         LOG.error(logMessage);
-        	    }
-        	    else {
+                    } else {
                         if (LOG.isWarnEnabled()) {
                             LOG.warn(logMessage);
                         }
-        	    }
+                    }
                 }
             }
         }

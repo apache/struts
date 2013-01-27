@@ -139,9 +139,9 @@ public class Dispatcher {
     private String multipartSaveDir;
 
     /**
-     * Stores the value of StrutsConstants.STRUTS_MULTIPART_HANDLER setting
+     * Stores reference to instance of {@link MultiPartRequest} implementation defined by {@link StrutsConstants#STRUTS_MULTIPART_PARSER}
      */
-    private String multipartHandlerName;
+    private MultiPartRequest multipartHandler;
 
     /**
      * Provide list of default configuration files.
@@ -252,9 +252,9 @@ public class Dispatcher {
         multipartSaveDir = val;
     }
 
-    @Inject(StrutsConstants.STRUTS_MULTIPART_HANDLER)
-    public void setMultipartHandler(String val) {
-        multipartHandlerName = val;
+    @Inject
+    public void setMultipartHandler(MultiPartRequest multiPartRequest) {
+        this.multipartHandler = multiPartRequest;
     }
 
     @Inject
@@ -774,19 +774,8 @@ public class Dispatcher {
 
         String content_type = request.getContentType();
         if (content_type != null && content_type.contains("multipart/form-data")) {
-            MultiPartRequest mpr = null;
-            //check for alternate implementations of MultiPartRequest
-            Set<String> multiNames = getContainer().getInstanceNames(MultiPartRequest.class);
-            for (String multiName : multiNames) {
-                if (multiName.equals(multipartHandlerName)) {
-                    mpr = getContainer().getInstance(MultiPartRequest.class, multiName);
-                }
-            }
-            if (mpr == null ) {
-                mpr = getContainer().getInstance(MultiPartRequest.class);
-            }
             LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
-            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext), provider);
+            request = new MultiPartRequestWrapper(multipartHandler, request, getSaveDir(servletContext), provider);
         } else {
             request = new StrutsRequestWrapper(request);
         }

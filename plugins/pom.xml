@@ -67,6 +67,7 @@
         <module>embeddedjsp</module>
         <module>gxp</module>
         <module>cdi</module>
+        <module>tiles3</module>
     </modules>
 
     <dependencies>

@@ -50,12 +50,12 @@ public class RestWorkflowInterceptorTest extends TestCase {
         mockContentTypeHandlerManager.expectAndReturn("handleResult", new AnyConstraintMatcher() {
             public boolean matches(Object[] args) {
                 DefaultHttpHeaders headers = (DefaultHttpHeaders) args[1];
-                return 666 == headers.status;
+                return 666 == headers.getStatus();
             }
         }, null);
         wf.setContentTypeHandlerManager((ContentTypeHandlerManager) mockContentTypeHandlerManager.proxy());
 
-        ActionContext.setContext(new ActionContext(new HashMap() {{
+        ActionContext.setContext(new ActionContext(new HashMap<String, Object>() {{
             put(ServletActionContext.ACTION_MAPPING, new ActionMapping());
         }}));
         wf.doIntercept((ActionInvocation) mockActionInvocation.proxy());

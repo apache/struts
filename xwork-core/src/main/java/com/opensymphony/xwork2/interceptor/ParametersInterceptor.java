@@ -46,13 +46,13 @@ import java.util.regex.Pattern;
 /**
  * <!-- START SNIPPET: description -->
  * This interceptor sets all parameters on the value stack.
- * <p/>
+ *
  * This interceptor gets all parameters from {@link ActionContext#getParameters()} and sets them on the value stack by
  * calling {@link ValueStack#setValue(String, Object)}, typically resulting in the values submitted in a form
  * request being applied to an action in the value stack. Note that the parameter map must contain a String key and
  * often containers a String[] for the value.
- * <p/>
- * <p/> The interceptor takes one parameter named 'ordered'. When set to true action properties are guaranteed to be
+ *
+ * The interceptor takes one parameter named 'ordered'. When set to true action properties are guaranteed to be
  * set top-down which means that top action's properties are set first. Then it's subcomponents properties are set.
  * The reason for this order is to enable a 'factory' pattern. For example, let's assume that one has an action
  * that contains a property named 'modelClass' that allows to choose what is the underlying implementation of model.
@@ -60,41 +60,39 @@ import java.util.regex.Pattern;
  * implementation during action.setModelClass() call. Similiarily it's possible to use action.setPrimaryKey()
  * property set call to actually load the model class from persistent storage. Without any assumption on parameter
  * order you have to use patterns like 'Preparable'.
- * <p/>
- * <p/> Because parameter names are effectively OGNL statements, it is important that security be taken in to account.
+ *
+ * Because parameter names are effectively OGNL statements, it is important that security be taken in to account.
  * This interceptor will not apply any values in the parameters map if the expression contains an assignment (=),
  * multiple expressions (,), or references any objects in the context (#). This is all done in the {@link
  * #acceptableName(String)} method. In addition to this method, if the action being invoked implements the {@link
  * ParameterNameAware} interface, the action will be consulted to determine if the parameter should be set.
- * <p/>
- * <p/> In addition to these restrictions, a flag ({@link ReflectionContextState#DENY_METHOD_EXECUTION}) is set such that
+ *
+ * In addition to these restrictions, a flag ({@link ReflectionContextState#DENY_METHOD_EXECUTION}) is set such that
  * no methods are allowed to be invoked. That means that any expression such as <i>person.doSomething()</i> or
  * <i>person.getName()</i> will be explicitely forbidden. This is needed to make sure that your application is not
  * exposed to attacks by malicious users.
- * <p/>
- * <p/> While this interceptor is being invoked, a flag ({@link ReflectionContextState#CREATE_NULL_OBJECTS}) is turned
+ *
+ * While this interceptor is being invoked, a flag ({@link ReflectionContextState#CREATE_NULL_OBJECTS}) is turned
  * on to ensure that any null reference is automatically created - if possible. See the type conversion documentation
  * and the {@link InstantiatingNullHandler} javadocs for more information.
- * <p/>
- * <p/> Finally, a third flag ({@link XWorkConverter#REPORT_CONVERSION_ERRORS}) is set that indicates any errors when
+ *
+ * Finally, a third flag ({@link XWorkConverter#REPORT_CONVERSION_ERRORS}) is set that indicates any errors when
  * converting the the values to their final data type (String[] -&gt; int) an unrecoverable error occured. With this
  * flag set, the type conversion errors will be reported in the action context. See the type conversion documentation
  * and the {@link XWorkConverter} javadocs for more information.
- * <p/>
- * <p/> If you are looking for detailed logging information about your parameters, turn on DEBUG level logging for this
+ *
+ * If you are looking for detailed logging information about your parameters, turn on DEBUG level logging for this
  * interceptor. A detailed log of all the parameter keys and values will be reported.
- * <p/>
- * <p/>
+ *
  * <b>Note:</b> Since XWork 2.0.2, this interceptor extends {@link MethodFilterInterceptor}, therefore being
  * able to deal with excludeMethods / includeMethods parameters. See [Workflow Interceptor]
  * (class {@link DefaultWorkflowInterceptor}) for documentation and examples on how to use this feature.
- * <p/>
  * <!-- END SNIPPET: description -->
- * <p/>
- * <p/> <u>Interceptor parameters:</u>
- * <p/>
+ *
+ * <u>Interceptor parameters:</u>
+ *
  * <!-- START SNIPPET: parameters -->
- * <p/>
+ *
  * <ul>
  * <li>ordered - set to true if you want the top-down property setter behaviour</li>
  * <li>acceptParamNames - a comma delimited list of regular expressions to describe a whitelist of accepted parameter names.
@@ -102,21 +100,32 @@ import java.util.regex.Pattern;
  * <li>excludeParams - a comma delimited list of regular expressions to describe a blacklist of not allowed parameter names</li>
  * <li>paramNameMaxLength - the maximum length of parameter names; parameters with longer names will be ignored; the default is 100 characters</li>
  * </ul>
- * <p/>
+ *
  * <!-- END SNIPPET: parameters -->
- * <p/>
- * <p/> <u>Extending the interceptor:</u>
- * <p/>
+ *
+ *  <u>Extending the interceptor:</u>
+ *
  * <!-- START SNIPPET: extending -->
- * <p/>
- * <p/> The best way to add behavior to this interceptor is to utilize the {@link ParameterNameAware} interface in your
+ *
+ *  The best way to add behavior to this interceptor is to utilize the {@link ParameterNameAware} interface in your
  * actions. However, if you wish to apply a global rule that isn't implemented in your action, then you could extend
  * this interceptor and override the {@link #acceptableName(String)} method.
- * <p/>
+ *
  * <!-- END SNIPPET: extending -->
- * <p/>
- * <p/> <u>Example code:</u>
- * <p/>
+ *
+ *
+ * <!-- START SNIPPET: extending-warning -->
+ * Using {@link ParameterNameAware} could be dangerous as @{link ParameterNameAware#acceptableParameterName(String)} takes precedence
+ * over ParametersInterceptor which means if ParametersInterceptor excluded given parameter name you can accept it with
+ * @{link ParameterNameAware#acceptableParameterName(String)}.
+ *
+ * The best idea is to define very tight restrictions with ParametersInterceptor and relax them per action with
+ * @{link ParameterNameAware#acceptableParameterName(String)}
+ * <!-- END SNIPPET: extending-warning -->
+ *
+ *
+ * <u>Example code:</u>
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;

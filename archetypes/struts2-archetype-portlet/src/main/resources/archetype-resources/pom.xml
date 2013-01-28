@@ -3,11 +3,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>\${groupId}</groupId>
-    <artifactId>\${artifactId}</artifactId>
-    <version>\${version}</version>
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
     <packaging>war</packaging>
-    <name>\${artifactId}</name>
+    <name>${artifactId}</name>
 
     <properties>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,13 +25,13 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-core</artifactId>
-            <version>\${struts2.version}</version>
+            <version>${struts2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-portlet-plugin</artifactId>
-            <version>\${struts2.version}</version>
+            <version>${struts2.version}</version>
         </dependency>
 
         <dependency>
@@ -68,7 +68,7 @@
 						<artifactId>maven-war-plugin</artifactId>
 						<version>${plugin.war.version}</version>
 						<configuration>
-							<webXml>\${project.build.directory}/pluto-resources/web.xml</webXml>
+							<webXml>${project.build.directory}/pluto-resources/web.xml</webXml>
 						</configuration>
 					</plugin>
 					<!-- bind 'pluto2:assemble' goal to 'generate-resources' lifecycle -->

@@ -55,7 +55,7 @@
     <distributionManagement>
         <site>
             <id>struts2-site</id>
-            <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/struts/content/dev/2.x/</url>
+            <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/struts/content/development/2.x/</url>
         </site>
     </distributionManagement>
 

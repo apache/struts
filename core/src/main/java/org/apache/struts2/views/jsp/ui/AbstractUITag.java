@@ -48,7 +48,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String requiredposition;
     protected String errorPosition;
     protected String name;
-    protected String required;
+    protected String requiredLabel;
     protected String tabindex;
     protected String value;
     protected String template;
@@ -100,7 +100,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setRequiredPosition(requiredposition);
         uiBean.setErrorPosition(errorPosition);
         uiBean.setName(name);
-        uiBean.setRequiredLabel(required);
+        uiBean.setRequiredLabel(requiredLabel);
         uiBean.setTabindex(tabindex);
         uiBean.setValue(value);
         uiBean.setTemplate(template);
@@ -181,8 +181,8 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.name = name;
     }
 
-    public void setRequired(String required) {
-        this.required = required;
+    public void setRequiredLabel(String requiredLabel) {
+        this.requiredLabel = requiredLabel;
     }
 
     public void setTabindex(String tabindex) {

@@ -30,20 +30,20 @@
     <bannerRight>
         <name>Apache Struts</name>
         <src>images/struts2.png</src>
-        <href>http://struts.apache.org/2.x/index.html</href>
+        <href>2.x/index.html</href>
     </bannerRight>
     <body>
         <links>
             <item name="Apache"
                   href="http://www.apache.org/"/>
             <item name="Struts"
-                  href="http://struts.apache.org/index.html"/>
+                  href="/"/>
         </links>
         <menu name="Struts 2">
             <item name="Welcome"
                   href="index.html"/>
             <item name="Releases"
-                  href="http://struts.apache.org/downloads.html"/>
+                  href="downloads.html"/>
             <item name="Thanks!"
                   href="http://apache.org/foundation/thanks.html"/>
             <item name="Sponsorship"
@@ -65,7 +65,7 @@
 
         <menu name="Support">
             <item name="User Mailing List"
-                  href="http://struts.apache.org/mail.html"/>
+                  href="mail.html"/>
             <item name="Issue Tracker (JIRA)"
                   href="https://issues.apache.org/jira/browse/WW"/>
             <item name="Wiki Pages"
@@ -134,21 +134,21 @@
 
         <menu name="Development">
             <item name="Struts 2.x Draft Docs"
-                  href="http://struts.apache.org/2.x/index.html"/>
+                  href="index.html"/>
             <item name="How to Help FAQ"
-                  href="http://struts.apache.org/helping.html"/>
+                  href="helping.html"/>
             <item name="Development Lists"
-                  href="http://struts.apache.org/dev/dev-mail.html"/>
+                  href="dev/dev-mail.html"/>
             <item name="Source Code"
-                  href="http://struts.apache.org/dev/builds.html"/>
+                  href="dev/builds.html"/>
             <item name="Release Guidelines"
-                  href="http://struts.apache.org/dev/releases.html"/>
+                  href="dev/releases.html"/>
             <item name="Volunteers"
-                  href="http://struts.apache.org/dev/volunteers.html"/>
+                  href="dev/volunteers.html"/>
             <item name="PMC Charter"
-                  href="http://struts.apache.org/dev/bylaws.html"/>
+                  href="dev/bylaws.html"/>
             <item name="Sandbox"
-                  href="http://struts.apache.org/struts-sandbox/index.html"/>
+                  href="struts-sandbox/index.html"/>
             <item name="Source Repository"
                   href="http://svn.apache.org/viewcvs.cgi/struts/"/>
         </menu>

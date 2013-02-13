@@ -183,7 +183,7 @@
             <subsection>
             <p>
             To download the framework, visit
-            <a href="http://struts.apache.org/download.cgi#struts210">
+            <a href="http://struts.apache.org/download.cgi#struts${aname}">
                Apache Struts Distributions.
             </a>
             For more about Apache Struts 2, visit

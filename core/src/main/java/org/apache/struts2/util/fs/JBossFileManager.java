@@ -2,12 +2,14 @@ package org.apache.struts2.util.fs;
 
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.FileRevision;
+import com.opensymphony.xwork2.util.fs.JarEntryRevision;
 import com.opensymphony.xwork2.util.fs.Revision;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,7 +47,7 @@ public class JBossFileManager extends DefaultFileManager {
             return true;
         } catch (ClassNotFoundException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot load [#0] class, not a JBoss 5!", VFS_JBOSS7);
+                LOG.debug("Cannot load [#0] class, not a JBoss 5!", VFS_JBOSS5);
             }
             return false;
         }
@@ -70,7 +72,15 @@ public class JBossFileManager extends DefaultFileManager {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Creating revision for URL: " + fileName);
             }
-            Revision revision = FileRevision.build(normalizeToFileProtocol(fileUrl));
+            URL normalizedUrl = normalizeToFileProtocol(fileUrl);
+            Revision revision;
+            if ("file".equals(normalizedUrl.getProtocol())) {
+                revision = FileRevision.build(normalizedUrl);
+            } else if ("jar".equals(normalizedUrl.getProtocol())) {
+                revision = JarEntryRevision.build(normalizedUrl);
+            } else {
+                revision = Revision.build(normalizedUrl);
+            }
             files.put(fileName, revision);
         } else {
             super.monitorFile(fileUrl);
@@ -122,41 +132,66 @@ public class JBossFileManager extends DefaultFileManager {
      */
     protected URL getJBossPhysicalUrl(URL url) throws IOException {
         Object content = url.openConnection().getContent();
-        try {
-            String s = content.getClass().toString();
-            if (s.startsWith("class org.jboss.vfs.VirtualFile")) { // JBoss 7 and probably 6
-                File physicalFile = readJBossPhysicalFile(content);
-                return physicalFile.toURI().toURL();
-            } else if (s.startsWith("class org.jboss.virtual.VirtualFile")) { // JBoss 5
-                String fileName = url.toExternalForm();
-                return new URL("file", null, fileName.substring(fileName.indexOf(":") + 1));
-            }
-        } catch (Exception e) {
-            LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile.", e);
+        String classContent = content.getClass().toString();
+        if (classContent.startsWith("class org.jboss.vfs.VirtualFile")) { // JBoss 7 and probably 6
+            File physicalFile = readJBossPhysicalFile(content);
+            return physicalFile.toURI().toURL();
+        } else if (classContent.startsWith("class org.jboss.virtual.VirtualFile")) { // JBoss 5
+            return readJBoss5Url(content);
         }
         return url;
-    }
-
-    private File readJBossPhysicalFile(Object content) throws Exception {
-        Method method = content.getClass().getDeclaredMethod("getPhysicalFile");
-        return (File) method.invoke(content);
     }
 
     private List<URL> getAllJBossPhysicalUrls(URL url) throws IOException {
         List<URL> urls = new ArrayList<URL>();
         Object content = url.openConnection().getContent();
-        try {
-            if (content.getClass().toString().startsWith("class org.jboss.vfs.VirtualFile")) {
-                File physicalFile = readJBossPhysicalFile(content);
+        String classContent = content.getClass().toString();
+        if (classContent.startsWith("class org.jboss.vfs.VirtualFile")) {
+            File physicalFile = readJBossPhysicalFile(content);
+            if (physicalFile != null) {
                 readFile(urls, physicalFile);
                 readFile(urls, physicalFile.getParentFile());
-            } else {
-                urls.add(url);
             }
-        } catch (Exception e) {
-            LOG.warn("Error calling getPhysicalFile() on JBoss VirtualFile!", e);
+        } else if (classContent.startsWith("class org.jboss.virtual.VirtualFile")) {
+            URL physicalUrl = readJBoss5Url(content);
+            if (physicalUrl != null) {
+                urls.add(physicalUrl);
+            }
+        } else {
+            urls.add(url);
         }
         return urls;
+    }
+
+    private File readJBossPhysicalFile(Object content) {
+        try {
+            Method method = content.getClass().getDeclaredMethod("getPhysicalFile");
+            return (File) method.invoke(content);
+        } catch (NoSuchMethodException e) {
+            LOG.error("Provided class content [#0] is not a JBoss VirtualFile, getPhysicalFile() method not found!", e, content.getClass().getSimpleName());
+        } catch (InvocationTargetException e) {
+            LOG.error("Cannot invoke getPhysicalFile() method!", e);
+        } catch (IllegalAccessException e) {
+            LOG.error("Cannot access getPhysicalFile() method!", e);
+        }
+        return null;
+    }
+
+    private URL readJBoss5Url(Object content) {
+        try {
+            Method method = content.getClass().getDeclaredMethod("getHandler");
+            method.setAccessible(true);
+            Object handler = method.invoke(content);
+            method = handler.getClass().getMethod("getRealURL");
+            return (URL) method.invoke(handler);
+        } catch (NoSuchMethodException e) {
+            LOG.error("Provided class content [#0] is not a JBoss VirtualFile, getHandler() or getRealURL() method not found!", e, content.getClass().getSimpleName());
+        } catch (InvocationTargetException e) {
+            LOG.error("Cannot invoke getHandler() or getRealURL() method!", e);
+        } catch (IllegalAccessException e) {
+            LOG.error("Cannot access getHandler() or getRealURL() method!", e);
+        }
+        return null;
     }
 
     private void readFile(List<URL> urls, File physicalFile) throws MalformedURLException {

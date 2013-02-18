@@ -45,14 +45,6 @@ public class FileRevision extends Revision {
         return file;
     }
 
-    public void setLastModified(long lastModified) {
-        this.lastModified = lastModified;
-    }
-
-    public long getLastModified() {
-        return lastModified;
-    }
-
     public boolean needsReloading() {
         return this.lastModified < this.file.lastModified();
     }

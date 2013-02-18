@@ -94,7 +94,7 @@ public class DefaultFileManager implements FileManager {
             LOG.debug("Creating revision for URL: " + fileName);
         }
         if (isJarURL(fileUrl)) {
-            revision = JarEntryRevision.build(fileUrl, this);
+            revision = JarEntryRevision.build(normalizeToFileProtocol(fileUrl));
         } else {
             revision = FileRevision.build(fileUrl);
         }

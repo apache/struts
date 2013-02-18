@@ -7,7 +7,7 @@ import java.net.URL;
  */
 public class Revision {
 
-    public Revision() {
+    protected Revision() {
     }
 
     public boolean needsReloading() {

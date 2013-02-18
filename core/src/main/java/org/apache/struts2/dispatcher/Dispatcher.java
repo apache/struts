@@ -139,9 +139,9 @@ public class Dispatcher {
     private String multipartSaveDir;
 
     /**
-     * Stores reference to instance of {@link MultiPartRequest} implementation defined by {@link StrutsConstants#STRUTS_MULTIPART_PARSER}
+     * Stores the value of StrutsConstants.STRUTS_MULTIPART_HANDLER setting
      */
-    private MultiPartRequest multipartHandler;
+    private String multipartHandlerName;
 
     /**
      * Provide list of default configuration files.
@@ -252,9 +252,9 @@ public class Dispatcher {
         multipartSaveDir = val;
     }
 
-    @Inject
-    public void setMultipartHandler(MultiPartRequest multiPartRequest) {
-        this.multipartHandler = multiPartRequest;
+    @Inject(StrutsConstants.STRUTS_MULTIPART_PARSER)
+    public void setMultipartHandler(String val) {
+        multipartHandlerName = val;
     }
 
     @Inject
@@ -774,13 +774,35 @@ public class Dispatcher {
 
         String content_type = request.getContentType();
         if (content_type != null && content_type.contains("multipart/form-data")) {
+            MultiPartRequest mpr = getMultiPartRequest();
             LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
-            request = new MultiPartRequestWrapper(multipartHandler, request, getSaveDir(servletContext), provider);
+            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext), provider);
         } else {
             request = new StrutsRequestWrapper(request);
         }
 
         return request;
+    }
+
+    /**
+     * On each request it must return a new instance as implementation could be not thread safe
+     * and thus ensure of resource clean up
+     *
+     * @return
+     */
+    protected MultiPartRequest getMultiPartRequest() {
+        MultiPartRequest mpr = null;
+        //check for alternate implementations of MultiPartRequest
+        Set<String> multiNames = getContainer().getInstanceNames(MultiPartRequest.class);
+        for (String multiName : multiNames) {
+            if (multiName.equals(multipartHandlerName)) {
+                mpr = getContainer().getInstance(MultiPartRequest.class, multiName);
+            }
+        }
+        if (mpr == null ) {
+            mpr = getContainer().getInstance(MultiPartRequest.class);
+        }
+        return mpr;
     }
 
     /**

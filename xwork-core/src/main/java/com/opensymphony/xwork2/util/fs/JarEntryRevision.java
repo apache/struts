@@ -1,5 +1,6 @@
 package com.opensymphony.xwork2.util.fs;
 
+import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.io.FileUtils;
@@ -23,7 +24,7 @@ public class JarEntryRevision extends Revision {
     private String fileNameInJar;
     private long lastModified;
 
-    public static Revision build(URL fileUrl) {
+    public static Revision build(URL fileUrl, FileManager fileManager) {
         // File within a Jar
         // Find separator index of jar filename and filename within jar
         String jarFileName = "";
@@ -44,9 +45,14 @@ public class JarEntryRevision extends Revision {
             int index = separatorIndex + JAR_FILE_NAME_SEPARATOR.length();
             String fileNameInJar = fileName.substring(index).replaceAll("%20", " ");
 
-            JarFile jarFile = new JarFile(FileUtils.toFile(fileUrl));
-            ZipEntry entry = jarFile.getEntry(fileNameInJar);
-            return new JarEntryRevision(jarFileName, fileNameInJar, entry.getTime());
+            URL url = fileManager.normalizeToFileProtocol(fileUrl);
+            if (url != null) {
+                JarFile jarFile = new JarFile(FileUtils.toFile(url));
+                ZipEntry entry = jarFile.getEntry(fileNameInJar);
+                return new JarEntryRevision(jarFileName, fileNameInJar, entry.getTime());
+            } else {
+                return null;
+            }
         } catch (Throwable e) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Could not create JarEntryRevision for [#0]!", e, jarFileName);

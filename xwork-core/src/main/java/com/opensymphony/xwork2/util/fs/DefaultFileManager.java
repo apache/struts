@@ -123,12 +123,17 @@ public class DefaultFileManager implements FileManager {
             if (jarMatcher.matches()) {
                 String path = jarMatcher.group(JAR_FILE_PATH);
                 return new URL("file", "", path);
+            } else if ("file".equals(url.getProtocol())) {
+                return url; // it's already a file
             } else {
-                return null; //it is not a jar or zip file
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Could not normalize URL [#0] to file protocol!", url.toString());
+                }
+                return null;
             }
         } catch (MalformedURLException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Error opening url [#0]", e, url.toString());
+                LOG.warn("Error normalizing URL [#0] to file protocol!", e, url.toString());
             }
             return null;
         }

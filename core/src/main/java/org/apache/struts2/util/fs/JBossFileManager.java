@@ -73,6 +73,9 @@ public class JBossFileManager extends DefaultFileManager {
                 LOG.debug("Creating revision for URL: " + fileName);
             }
             URL normalizedUrl = normalizeToFileProtocol(fileUrl);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Normalized URL for [#0] is [#1]", fileName, normalizedUrl.toString());
+            }
             Revision revision;
             if ("file".equals(normalizedUrl.getProtocol())) {
                 revision = FileRevision.build(normalizedUrl);
@@ -133,6 +136,9 @@ public class JBossFileManager extends DefaultFileManager {
     protected URL getJBossPhysicalUrl(URL url) throws IOException {
         Object content = url.openConnection().getContent();
         String classContent = content.getClass().toString();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Reading physical URL for [#0]", url.toString());
+        }
         if (classContent.startsWith("class org.jboss.vfs.VirtualFile")) { // JBoss 7 and probably 6
             File physicalFile = readJBossPhysicalFile(content);
             return physicalFile.toURI().toURL();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -72,7 +73,7 @@
             <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
-            <comments />
+            <comments/>
         </license>
     </licenses>
 
@@ -89,7 +90,7 @@
         <tiles.version>2.0.6</tiles.version>
 
         <!-- SCM Site Configuration -->
-        <site.mainDirectory>${user.home}/struts2-site</site.mainDirectory>
+        <site.mainDirectory>${project.build.directory}/site</site.mainDirectory>
         <siteContent.path>${site.mainDirectory}/staging</siteContent.path>
         <scmCheckout.path>${site.mainDirectory}/scm</scmCheckout.path>
         <siteDeploy.url>file://${siteContent.path}</siteDeploy.url>
@@ -315,6 +316,7 @@
                 <version>3.1</version>
                 <configuration>
                     <stagingSiteURL>${siteDeploy.url}</stagingSiteURL>
+                    <relativizeDecorationLinks>false</relativizeDecorationLinks>
                 </configuration>
             </plugin>
         </plugins>

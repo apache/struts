@@ -44,19 +44,19 @@ public class Skill implements IdEntity {
 	}
 
 	public String getName() {
-		return name;
+		return StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(name));
 	}
 
 	public void setName(String name) {
-		this.name = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(name));
+		this.name = name;
 	}
 
 	public String getDescription() {
-		return description;
+		return StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(description));
 	}
 
 	public void setDescription(String description) {
-		this.description = StringEscapeUtils.escapeEcmaScript(StringEscapeUtils.escapeHtml4(description));
+		this.description = description;
 	}
 
 	public Serializable getId() {

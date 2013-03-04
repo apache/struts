@@ -881,7 +881,7 @@ public abstract class UIBean extends Component {
         if (name != null) {
             return name.replaceAll("[\\/\\.\\[\\]]", "_");
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -895,7 +895,7 @@ public abstract class UIBean extends Component {
         if (val != null) {
             return val.replaceAll("\"", "&#34;");
         } else {
-            return "";
+            return null;
         }
     }
 

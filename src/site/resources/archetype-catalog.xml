@@ -7,42 +7,42 @@
         <archetype>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-archetype-blank</artifactId>
-            <version>2.3.11</version>
+            <version>2.3.12</version>
             <repository>http://repo1.maven.org/maven2/</repository>
             <description>Struts 2 Archetypes - Blank</description>
         </archetype>
         <archetype>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-archetype-convention</artifactId>
-            <version>2.3.11</version>
+            <version>2.3.12</version>
             <repository>http://repo1.maven.org/maven2/</repository>
             <description>Struts 2 Archetypes - Blank Convention</description>
         </archetype>
         <archetype>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-archetype-dbportlet</artifactId>
-            <version>2.3.11</version>
+            <version>2.3.12</version>
             <repository>http://repo1.maven.org/maven2/</repository>
             <description>Struts 2 Archetypes - Database Portlet</description>
         </archetype>
         <archetype>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-archetype-plugin</artifactId>
-            <version>2.3.11</version>
+            <version>2.3.12</version>
             <repository>http://repo1.maven.org/maven2/</repository>
             <description>Struts 2 Archetypes - Plugin</description>
         </archetype>
         <archetype>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-archetype-portlet</artifactId>
-            <version>2.3.11</version>
+            <version>2.3.12</version>
             <repository>http://repo1.maven.org/maven2/</repository>
             <description>Struts 2 Archetypes - Portlet</description>
         </archetype>
         <archetype>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-archetype-starter</artifactId>
-            <version>2.3.11</version>
+            <version>2.3.12</version>
             <repository>http://repo1.maven.org/maven2/</repository>
             <description>Struts 2 Archetypes - Starter</description>
         </archetype>

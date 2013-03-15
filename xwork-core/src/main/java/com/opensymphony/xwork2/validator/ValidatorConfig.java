@@ -34,7 +34,7 @@ import java.util.Map;
 public class ValidatorConfig extends Located {
 
     private String type;
-    private Map<String,String> params;
+    private Map<String, Object> params;
     private String defaultMessage;
     private String messageKey;
     private boolean shortCircuit;
@@ -45,12 +45,12 @@ public class ValidatorConfig extends Located {
      */
     protected ValidatorConfig(String validatorType) {
         this.type = validatorType;
-        params = new LinkedHashMap<String, String>();
+        params = new LinkedHashMap<String, Object>();
     }
 
     protected ValidatorConfig(ValidatorConfig orig) {
         this.type = orig.type;
-        this.params = new LinkedHashMap<String,String>(orig.params);
+        this.params = new LinkedHashMap<String,Object>(orig.params);
         this.defaultMessage = orig.defaultMessage;
         this.messageKey = orig.messageKey;
         this.shortCircuit = orig.shortCircuit;
@@ -82,7 +82,7 @@ public class ValidatorConfig extends Located {
     /**
      * @return Returns the configured params to set on the validator. 
      */
-    public Map<String, String> getParams() {
+    public Map<String, Object> getParams() {
         return params;
     }
     
@@ -138,14 +138,14 @@ public class ValidatorConfig extends Located {
             return this;
         }
 
-        public Builder addParam(String name, String value) {
+        public Builder addParam(String name, Object value) {
             if (value != null && name != null) {
                 target.params.put(name, value);
             }
             return this;
         }
 
-        public Builder addParams(Map<String,String> params) {
+        public Builder addParams(Map<String,Object> params) {
             target.params.putAll(params);
             return this;
         }

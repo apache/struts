@@ -40,6 +40,7 @@ import java.util.List;
 public abstract class ValidatorSupport implements Validator, ShortCircuitableValidator {
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
+
     protected String defaultMessage = "";
     protected String messageKey;
     private ValidatorContext validatorContext;

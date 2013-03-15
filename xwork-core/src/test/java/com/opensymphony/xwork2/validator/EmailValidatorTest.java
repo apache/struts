@@ -55,7 +55,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         assertFalse(verifyEmailValidity("aaa@aa.aaaaaaa"));
         assertFalse(verifyEmailValidity("+ferdamravenec@yahoo.com"));
 
-        assertFalse(verifyEmailValidityWithExpression("tmjee@yahoo.co", "\\b^[a-z]+@[a-z]+(\\.[a-z]+)*\\.com$\\b"));
+        assertTrue(verifyEmailValidityWithExpression("tmjee@yahoo.co", "\\b^[a-z]+@[a-z]+(\\.[a-z]+)*\\.com$\\b"));
     }
 
     protected boolean verifyEmailValidity(final String email) throws Exception {
@@ -97,7 +97,6 @@ public class EmailValidatorTest extends XWorkTestCase {
         validator.setRegexExpression("${emailExpression}");
 
         validator.validate(action);
-        valueStack.pop();
 
         return (action.getFieldErrors().size() == 0);
     }
@@ -124,8 +123,6 @@ public class EmailValidatorTest extends XWorkTestCase {
 
         validator.setCaseSensitiveExpression("${emailCaseSensitive}");
 
-        valueStack.pop();
-
         return validator;
     }
 
@@ -150,8 +147,6 @@ public class EmailValidatorTest extends XWorkTestCase {
         validator.setValueStack(valueStack);
 
         validator.setTrimExpression("${trimEmail}");
-
-        valueStack.pop();
 
         return validator;
     }

@@ -16,7 +16,10 @@
 
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,16 +80,25 @@ import java.util.regex.Pattern;
  */
 public class RegexFieldValidator extends FieldValidatorSupport {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RegexFieldValidator.class);
+
     private String regex;
-    private boolean caseSensitive = true;
-    private boolean trim = true;
+    private String regexExpression;
+    private Boolean caseSensitive = true;
+    private String caseSensitiveExpression = "";
+    private Boolean trim = true;
+    private String trimExpression = "";
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
         Object value = this.getFieldValue(fieldName, object);
         // if there is no value - don't do comparison
         // if a value is required, a required validator should be added to the field
-        if (value == null || regex == null) {
+        String regexToUse = getRegex();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Defined regexp as [#0]", regexToUse);
+        }
+        if (value == null || regexToUse == null) {
             return;
         }
 
@@ -104,13 +116,13 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         // match against expression
         Pattern pattern;
         if (isCaseSensitive()) {
-            pattern = Pattern.compile(regex);
+            pattern = Pattern.compile(regexToUse);
         } else {
-            pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+            pattern = Pattern.compile(regexToUse, Pattern.CASE_INSENSITIVE);
         }
 
         String compare = (String) value;
-        if ( trim ) {
+        if ( isTrimed() ) {
             compare = compare.trim();
         }
         Matcher matcher = pattern.matcher( compare );
@@ -124,7 +136,13 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * @return Returns the regular expression to be matched.
      */
     public String getRegex() {
-        return regex;
+        if (StringUtils.isNotEmpty(regex)) {
+            return regex;
+        } else if (StringUtils.isNotEmpty(regexExpression)) {
+            return (String) parse(regexExpression, String.class);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -138,7 +156,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Sets the regular expression as an OGNL expression to be matched
      */
     public void setRegexExpression(String regexExpression) {
-        this.regex = (String) parse(regexExpression, String.class);
+        this.regexExpression = regexExpression;
     }
 
     /**
@@ -146,6 +164,9 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      *         a case-sensitive way.  Default is <code>true</code>.
      */
     public boolean isCaseSensitive() {
+        if (StringUtils.isNotEmpty(caseSensitiveExpression)) {
+            return (Boolean) parse(caseSensitiveExpression, Boolean.class);
+        }
         return caseSensitive;
     }
 
@@ -161,7 +182,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Allows specify caseSensitive param as an OGNL expression
      */
     public void setCaseSensitiveExpression(String caseSensitiveExpression) {
-        this.caseSensitive = (Boolean) parse(caseSensitiveExpression, Boolean.class);
+        this.caseSensitiveExpression = caseSensitiveExpression;
     }
 
     /**
@@ -169,6 +190,9 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Default is <code>true</code>.
      */
     public boolean isTrimed() {
+        if (StringUtils.isNotEmpty(trimExpression)) {
+            return (Boolean) parse(trimExpression, Boolean.class);
+        }
         return trim;
     }
 
@@ -184,7 +208,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
      * Allows specify trim param as an OGNL expression
      */
     public void setTrimExpression(String trimExpression) {
-        this.trim = (Boolean) parse(trimExpression, Boolean.class);
+        this.trimExpression = trimExpression;
     }
 
 }

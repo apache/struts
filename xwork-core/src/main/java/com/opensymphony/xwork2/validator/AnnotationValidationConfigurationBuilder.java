@@ -367,7 +367,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processExpressionValidatorAnnotation(ExpressionValidator v, String fieldName, String methodName) {
         String validatorType = "expression";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -388,7 +388,7 @@ public class AnnotationValidationConfigurationBuilder {
 
     private ValidatorConfig processCustomValidatorAnnotation(CustomValidator v, String fieldName, String methodName) {
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -429,7 +429,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processRegexFieldValidatorAnnotation(RegexFieldValidator v, String fieldName, String methodName) {
         String validatorType = "regex";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -437,12 +437,17 @@ public class AnnotationValidationConfigurationBuilder {
             params.put("fieldName", v.fieldName());
         }
 
-        params.put("expression", v.expression());
+        params.put("regex", v.regex());
+        params.put("regexExpression", v.regexExpression());
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
             .addParams(params)
             .addParam("methodName", methodName)
+            .addParam("trim", v.trim())
+            .addParam("trimExpression", v.trimExpression())
+            .addParam("caseSensitive", v.caseSensitive())
+            .addParam("caseSensitiveExpression", v.caseSensitiveExpression())
             .shortCircuit(v.shortCircuit())
             .defaultMessage(v.message())
             .messageKey(v.key())
@@ -452,7 +457,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processConditionalVisitorFieldValidatorAnnotation(ConditionalVisitorFieldValidator v, String fieldName, String methodName) {
         String validatorType = "conditionalvisitor";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -480,7 +485,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         String validatorType = "visitor";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -504,7 +509,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processUrlValidatorAnnotation(UrlValidator v, String fieldName, String methodName) {
         String validatorType = "url";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -525,7 +530,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processStringLengthFieldValidatorAnnotation(StringLengthFieldValidator v, String fieldName, String methodName) {
         String validatorType = "stringlength";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -572,7 +577,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processRequiredStringValidatorAnnotation(RequiredStringValidator v, String fieldName, String methodName) {
         String validatorType = "requiredstring";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -595,7 +600,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processRequiredFieldValidatorAnnotation(RequiredFieldValidator v, String fieldName, String methodName) {
         String validatorType = "required";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -616,7 +621,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processIntRangeFieldValidatorAnnotation(IntRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "int";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -644,7 +649,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processShortRangeFieldValidatorAnnotation(ShortRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "short";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -672,7 +677,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processDoubleRangeFieldValidatorAnnotation(DoubleRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "double";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -707,7 +712,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processFieldExpressionValidatorAnnotation(FieldExpressionValidator v, String fieldName, String methodName) {
         String validatorType = "fieldexpression";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -730,7 +735,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processEmailValidatorAnnotation(EmailValidator v, String fieldName, String methodName) {
         String validatorType = "email";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -751,7 +756,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processDateRangeFieldValidatorAnnotation(DateRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "date";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -780,7 +785,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processConversionErrorFieldValidatorAnnotation(ConversionErrorFieldValidator v, String fieldName, String methodName) {
         String validatorType = "conversion";
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);

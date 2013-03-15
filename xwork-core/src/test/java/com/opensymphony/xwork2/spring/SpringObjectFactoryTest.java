@@ -19,7 +19,15 @@ package com.opensymphony.xwork2.spring;
  * Created on Mar 8, 2004
  */
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
@@ -39,7 +47,6 @@ import org.springframework.aop.interceptor.DebugInterceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.StaticApplicationContext;
@@ -107,7 +114,7 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
     }
 
     public void testFallsBackToDefaultObjectFactoryValidatorBuilding() throws Exception {
-        Validator validator = objectFactory.buildValidator(RequiredStringValidator.class.getName(), new HashMap<String, String>(), null);
+        Validator validator = objectFactory.buildValidator(RequiredStringValidator.class.getName(), new HashMap<String, Object>(), null);
 
         assertEquals(RequiredStringValidator.class, validator.getClass());
     }
@@ -143,7 +150,7 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
     public void testObtainValidatorBySpringName() throws Exception {
         sac.registerPrototype("expression-validator", ExpressionValidator.class, new MutablePropertyValues());
 
-        Validator validator = objectFactory.buildValidator("expression-validator", new HashMap<String, String>(), null);
+        Validator validator = objectFactory.buildValidator("expression-validator", new HashMap<String, Object>(), null);
 
         assertEquals(ExpressionValidator.class, validator.getClass());
     }

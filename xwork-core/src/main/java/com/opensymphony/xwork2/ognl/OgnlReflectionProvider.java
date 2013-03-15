@@ -55,7 +55,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
         
     }
 
-    public void setProperties(Map<String, String> properties, Object o) {
+    public void setProperties(Map<String, ?> properties, Object o) {
         ognlUtil.setProperties(properties, o);
     }
 

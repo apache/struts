@@ -43,7 +43,7 @@ public interface ReflectionProvider {
      * @param properties
      * @param o
      */
-    void setProperties(Map<String, String> properties, Object o);
+    void setProperties(Map<String, ?> properties, Object o);
     
     /**
      *  This method returns a PropertyDescriptor for the given class and property name using

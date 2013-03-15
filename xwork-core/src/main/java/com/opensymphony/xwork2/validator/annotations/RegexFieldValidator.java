@@ -113,7 +113,17 @@ public @interface RegexFieldValidator {
     String fieldName() default "";
 
 
-    String expression();
+    String regex() default "";
+
+    String regexExpression() default "";
+
+    boolean trim() default true;
+
+    String trimExpression() default "";
+
+    boolean caseSensitive() default true;
+
+    String caseSensitiveExpression() default "";
 
     /**
      * If this is activated, the validator will be used as short-circuit.

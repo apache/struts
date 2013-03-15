@@ -88,13 +88,13 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
             // it will not cause field-level validator to be kicked off.
             {
                 NodeList validatorNodes = doc.getElementsByTagName("validator");
-                addValidatorConfigs(validatorFactory, validatorNodes, new HashMap<String, String>(), validatorCfgs);
+                addValidatorConfigs(validatorFactory, validatorNodes, new HashMap<String, Object>(), validatorCfgs);
             }
 
             for (int i = 0; i < fieldNodes.getLength(); i++) {
                 Element fieldElement = (Element) fieldNodes.item(i);
                 String fieldName = fieldElement.getAttribute("name");
-                Map<String, String> extraParams = new HashMap<String, String>();
+                Map<String, Object> extraParams = new HashMap<String, Object>();
                 extraParams.put("fieldName", fieldName);
 
                 NodeList validatorNodes = fieldElement.getElementsByTagName("field-validator");
@@ -127,7 +127,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
 
                 try {
                     // catch any problems here
-                    objectFactory.buildValidator(className, new HashMap<String, String>(), null);
+                    objectFactory.buildValidator(className, new HashMap<String, Object>(), null);
                     validators.put(name, className);
                 } catch (Exception e) {
                     throw new ConfigurationException("Unable to load validator class " + className, e, validatorElement);
@@ -166,11 +166,11 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
         return value.toString().trim();
     }
 
-    private void addValidatorConfigs(ValidatorFactory factory, NodeList validatorNodes, Map<String, String> extraParams, List<ValidatorConfig> validatorCfgs) {
+    private void addValidatorConfigs(ValidatorFactory factory, NodeList validatorNodes, Map<String, Object> extraParams, List<ValidatorConfig> validatorCfgs) {
         for (int j = 0; j < validatorNodes.getLength(); j++) {
             Element validatorElement = (Element) validatorNodes.item(j);
             String validatorType = validatorElement.getAttribute("type");
-            Map<String, String> params = new HashMap<String, String>(extraParams);
+            Map<String, Object> params = new HashMap<String, Object>(extraParams);
 
             params.putAll(XmlHelper.getParams(validatorElement));
 

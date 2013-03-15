@@ -41,6 +41,8 @@ public interface Logger {
 
     void warn(String msg, String... args);
 
+    void warn(String msg, Object... args);
+
     void warn(String msg, Throwable ex, String... args);
 
     boolean isWarnEnabled();

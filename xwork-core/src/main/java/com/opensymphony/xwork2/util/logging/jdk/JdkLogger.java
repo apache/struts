@@ -63,6 +63,10 @@ public class JdkLogger implements Logger {
         log.log(Level.WARNING, LoggerUtils.format(msg, args));
     }
 
+    public void warn(String msg, Object... args) {
+        log.log(Level.WARNING, LoggerUtils.format(msg, args));
+    }
+
     public void warn(String msg, Throwable ex, String... args) {
         log.log(Level.WARNING, LoggerUtils.format(msg, args), ex);
     }

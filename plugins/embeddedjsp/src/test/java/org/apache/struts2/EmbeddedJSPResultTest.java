@@ -25,6 +25,8 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.TextParser;
+import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
@@ -275,6 +277,8 @@ public class EmbeddedJSPResultTest extends TestCase {
         //mock container
         Container container = EasyMock.createNiceMock(Container.class);
         EasyMock.expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
+        TextParser parser = new OgnlTextParser();
+        EasyMock.expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
         EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<String>()).anyTimes();
         EasyMock.expect(container.getInstance(FileManager.class)).andReturn(fileManager).anyTimes();
 

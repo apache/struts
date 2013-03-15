@@ -49,10 +49,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.PatternMatcher;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -276,6 +273,13 @@ import java.util.StringTokenizer;
  *     <td>singleton</td>
  *     <td>Holds user converters' instances</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.util.TextParser</td>
+ *     <td>struts.expression.parser</td>
+ *     <td>singleton</td>
+ *     <td>Used to parse expressions like ${foo.bar} or %{bar.foo} but it is up tp the TextParser's
+ *         implementation what kind of opening char to use (#, $, %, etc)</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
@@ -354,6 +358,8 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(StaticContentLoader.class, StrutsConstants.STRUTS_STATIC_CONTENT_LOADER, builder, props);
         alias(UnknownHandlerManager.class, StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, builder, props);
         alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);
+
+        alias(TextParser.class, StrutsConstants.STRUTS_EXPRESSION_PARSER, builder, props);
 
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");

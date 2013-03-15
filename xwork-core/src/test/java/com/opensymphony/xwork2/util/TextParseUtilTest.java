@@ -40,7 +40,7 @@ public class TextParseUtilTest extends XWorkTestCase {
 		});
 
 		TextParseUtil.ParsedValueEvaluator evaluator = new TextParseUtil.ParsedValueEvaluator() {
-			public Object evaluate(Object parsedValue) {
+			public Object evaluate(String parsedValue) {
 				return parsedValue.toString()+"Something";
 			}
 		};
@@ -53,7 +53,7 @@ public class TextParseUtilTest extends XWorkTestCase {
     public void testTranslateVariables() {
         ValueStack stack = ActionContext.getContext().getValueStack();
 
-        Object s = TextParseUtil.translateVariables("foo: ${{1, 2, 3}}, bar: ${1}", stack);
+        Object s = TextParseUtil.translateVariables("foo: ${{1, 2, 3}}, bar: %{1}", stack);
         assertEquals("foo: [1, 2, 3], bar: 1", s);
 
         s = TextParseUtil.translateVariables("foo: %{{1, 2, 3}}, bar: %{1}", stack);

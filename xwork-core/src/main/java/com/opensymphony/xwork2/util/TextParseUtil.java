@@ -22,8 +22,6 @@ import com.opensymphony.xwork2.inject.Container;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 
 /**
  * Utility class for text parsing.
@@ -153,84 +151,26 @@ public class TextParseUtil {
      * @param evaluator
      * @return Converted object from variable translation.
      */
-    public static Object translateVariables(char[] openChars, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator, int maxLoopCount) {
-        // deal with the "pure" expressions first!
-        //expression = expression.trim();
-        Object result = expression;
-        for (char open : openChars) {
-            int loopCount = 1;
-            int pos = 0;
+    public static Object translateVariables(char[] openChars, String expression, final ValueStack stack, final Class asType, final ParsedValueEvaluator evaluator, int maxLoopCount) {
 
-            //this creates an implicit StringBuffer and shouldn't be used in the inner loop
-            final String lookupChars = open + "{";
 
-            while (true) {
-                int start = expression.indexOf(lookupChars, pos);
-                if (start == -1) {
-                    pos = 0;
-                    loopCount++;
-                    start = expression.indexOf(lookupChars);
+        ParsedValueEvaluator ognlEval = new ParsedValueEvaluator() {
+            public Object evaluate(String parsedValue) {
+                Object o = stack.findValue(parsedValue, asType);
+                if (evaluator != null) {
+                    o = evaluator.evaluate(o.toString());
                 }
-                if (loopCount > maxLoopCount) {
-                    // translateVariables prevent infinite loop / expression recursive evaluation
-                    break;
-                }
-                int length = expression.length();
-                int x = start + 2;
-                int end;
-                char c;
-                int count = 1;
-                while (start != -1 && x < length && count != 0) {
-                    c = expression.charAt(x++);
-                    if (c == '{') {
-                        count++;
-                    } else if (c == '}') {
-                        count--;
-                    }
-                }
-                end = x - 1;
-
-                if ((start != -1) && (end != -1) && (count == 0)) {
-                    String var = expression.substring(start + 2, end);
-
-                    Object o = stack.findValue(var, asType);
-                    if (evaluator != null) {
-                    	o = evaluator.evaluate(o);
-                    }
-
-
-                    String left = expression.substring(0, start);
-                    String right = expression.substring(end + 1);
-                    String middle = null;
-                    if (o != null) {
-                        middle = o.toString();
-                        if (StringUtils.isEmpty(left)) {
-                            result = o;
-                        } else {
-                            result = left.concat(middle);
-                        }
-
-                        if (StringUtils.isNotEmpty(right)) {
-                            result = result.toString().concat(right);
-                        }
-
-                        expression = left.concat(middle).concat(right);
-                    } else {
-                        // the variable doesn't exist, so don't display anything
-                        expression = left.concat(right);
-                        result = expression;
-                    }
-                    pos = (left != null && left.length() > 0 ? left.length() - 1: 0) +
-                          (middle != null && middle.length() > 0 ? middle.length() - 1: 0) +
-                          1;
-                    pos = Math.max(pos, 1);
-                } else {
-                    break;
-                }
+                return o;
             }
-        }
+        };
+
+
+        TextParser parser = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(TextParser.class);
 
         XWorkConverter conv = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
+
+        Object result = parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
+
         return conv.convertValue(stack.getContext(), result, asType);
     }
 
@@ -279,6 +219,6 @@ public class TextParseUtil {
     	 * @param parsedValue - value parsed by ognl value stack
     	 * @return return the evaluted value.
     	 */
-    	Object evaluate(Object parsedValue);
+    	Object evaluate(String parsedValue);
     }
 }

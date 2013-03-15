@@ -24,10 +24,12 @@ package org.apache.struts2.views.java.simple;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.TextParser;
+import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.template.Template;
@@ -107,6 +109,8 @@ public abstract class AbstractTest extends TestCase {
         XWorkConverter converter = new ConverterEx();
         EasyMock.expect(container.getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)).andReturn("true").anyTimes();
         EasyMock.expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
+        TextParser parser = new OgnlTextParser();
+        EasyMock.expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
         stackContext.put(ActionContext.CONTAINER, container);
 
 

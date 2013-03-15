@@ -197,13 +197,13 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
         if (parse && param != null && invocation != null) {
             return TextParseUtil.translateVariables(param, invocation.getStack(),
                     new TextParseUtil.ParsedValueEvaluator() {
-                        public Object evaluate(Object parsedValue) {
+                        public Object evaluate(String parsedValue) {
                             if (encode) {
                                 if (parsedValue != null) {
                                     try {
                                         // use UTF-8 as this is the recommended encoding by W3C to
                                         // avoid incompatibilities.
-                                        return URLEncoder.encode(parsedValue.toString(), "UTF-8");
+                                        return URLEncoder.encode(parsedValue, "UTF-8");
                                     }
                                     catch(UnsupportedEncodingException e) {
                                         if (LOG.isWarnEnabled()) {

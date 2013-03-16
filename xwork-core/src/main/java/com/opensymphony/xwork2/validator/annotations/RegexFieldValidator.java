@@ -55,6 +55,12 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'>i18n key from language specific properties file.</td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>messageParams</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>Additional params to be used to customize message - will be evaluated against the Value Stack</td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'>fieldName</td>
  * <td class='confluenceTd'>no</td>
  * <td class='confluenceTd'>&nbsp;</td>
@@ -103,6 +109,11 @@ public @interface RegexFieldValidator {
     String message() default "";
 
     /**
+     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     */
+    String[] messageParams() default {};
+
+    /**
      * The message key to lookup for i18n.
      */
     String key() default "";
@@ -112,17 +123,47 @@ public @interface RegexFieldValidator {
      */
     String fieldName() default "";
 
-
+    /**
+     * Regex used to evaluate field against it
+     *
+     * @return String regular expression
+     */
     String regex() default "";
 
+    /**
+     * Defines regex as an expression which first will be evaluated against the Value Stack to get proper regex.
+     * Thus allow to dynamically change regex base on user actions.
+     *
+     * @return String an expression which starts with '$' or '%'
+     */
     String regexExpression() default "";
 
+    /**
+     * To trim or not the value, default true - trim
+     *
+     * @return boolean trim or not the value before validation
+     */
     boolean trim() default true;
 
+    /**
+     * Allows specify trim as an expression which will be evaluated during validation
+     *
+     * @return String an expression which starts with '$' or '%'
+     */
     String trimExpression() default "";
 
+    /**
+     * Match the value in case sensitive manner, default true
+     *
+     * @return boolean use case sensitive match or not
+     */
     boolean caseSensitive() default true;
 
+    /**
+     * Allows specify caseSensitive as an expression which will be evaluated during validation
+     *
+     * @return boolean use case sensitive match or not
+     */
     String caseSensitiveExpression() default "";
 
     /**
@@ -137,4 +178,5 @@ public @interface RegexFieldValidator {
      * The validation type for this field/method.
      */
     ValidatorType type() default ValidatorType.FIELD;
+
 }

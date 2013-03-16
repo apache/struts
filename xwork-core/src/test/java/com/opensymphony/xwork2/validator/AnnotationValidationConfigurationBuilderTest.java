@@ -14,8 +14,10 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,7 @@ import java.util.Map;
 /**
  * Simple test to check if validation Annotations match given validator class
  */
-public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase{
+public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase {
 
     public void testValidationAnnotation() throws Exception {
         // given
@@ -33,11 +35,9 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase{
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 1);
+        assertEquals(validators.size(), 2);
         for (Validator validator : validators) {
-            if (validator.getValidatorType().equals("regex")) {
-                validateRegexValidator((RegexFieldValidator) validator);
-            }
+            validate(validator);
         }
     }
 
@@ -52,13 +52,28 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase{
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 1);
+        assertEquals(validators.size(), 2);
         for (Validator validator : validators) {
-            if (validator.getValidatorType().equals("regex")) {
-                validator.setValueStack(valueStack);
-                validateRegexValidator((RegexFieldValidator) validator);
-            }
+            validator.setValueStack(valueStack);
+            validate(validator);
         }
+    }
+
+    private void validate(Validator validator) {
+        if (validator.getValidatorType().equals("regex")) {
+            validateRegexValidator((RegexFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("conditionalvisitor")) {
+            validateConditionalFieldVisitorValidator((ConditionalVisitorFieldValidator) validator);
+        }
+    }
+
+    private void validateConditionalFieldVisitorValidator(ConditionalVisitorFieldValidator validator) {
+        assertEquals("foo+bar", validator.getExpression());
+        assertEquals("some", validator.getContext());
+        assertEquals("Foo doesn't match!", validator.getDefaultMessage());
+        assertEquals("bar", validator.getFieldName());
+        assertEquals("conditional.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
     }
 
     private void validateRegexValidator(RegexFieldValidator validator) {
@@ -69,6 +84,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase{
         assertEquals(true, validator.isShortCircuit());
         assertEquals(false, validator.isTrimed());
         assertEquals(false, validator.isCaseSensitive());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
     }
 
     private AnnotationActionValidatorManager createValidationManager(final Class<? extends ActionSupport> actionClass) throws Exception {

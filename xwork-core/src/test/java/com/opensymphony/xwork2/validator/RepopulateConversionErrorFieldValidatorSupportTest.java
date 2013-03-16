@@ -38,7 +38,7 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 	ActionSupport action;
 	
 	public void testUseFullFieldName() throws Exception {
-		validator2.setRepopulateField("true");
+		validator2.setRepopulateField(true);
 		validator2.validate(action);
 		
 		ActionContext.getContext().getActionInvocation().invoke();
@@ -51,7 +51,7 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 	
 	public void testGetterSetterGetsCalledApropriately1() throws Exception {
 		
-		validator1.setRepopulateField("true");
+		validator1.setRepopulateField(true);
 		validator1.validate(action);
 
 		
@@ -65,7 +65,7 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 	
 	public void testGetterSetterGetsCalledApropriately2() throws Exception {
 		
-		validator1.setRepopulateField("false");
+		validator1.setRepopulateField(false);
 		validator1.validate(action);
 
 		

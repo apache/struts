@@ -136,21 +136,19 @@ public abstract class RepopulateConversionErrorFieldValidatorSupport extends Fie
 
     private static final Logger LOG = LoggerFactory.getLogger(RepopulateConversionErrorFieldValidatorSupport.class);
 
-    private String repopulateFieldAsString = "false";
-    private boolean repopulateFieldAsBoolean = false;
+    private boolean repopulateField = false;
 
-    public String getRepopulateField() {
-        return repopulateFieldAsString;
+    public boolean isRepopulateField() {
+        return repopulateField;
     }
 
-    public void setRepopulateField(String repopulateField) {
-        this.repopulateFieldAsString = repopulateField == null ? repopulateField : repopulateField.trim();
-        this.repopulateFieldAsBoolean = "true".equalsIgnoreCase(this.repopulateFieldAsString) ? (true) : (false);
+    public void setRepopulateField(boolean repopulateField) {
+        this.repopulateField = repopulateField;
     }
 
     public void validate(Object object) throws ValidationException {
         doValidate(object);
-        if (repopulateFieldAsBoolean) {
+        if (repopulateField) {
             repopulateField(object);
         }
     }

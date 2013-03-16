@@ -799,9 +799,11 @@ public class AnnotationValidationConfigurationBuilder {
         return new ValidatorConfig.Builder(validatorType)
             .addParams(params)
             .addParam("methodName", methodName)
+            .addParam("repopulateField", v.repopulateField())
             .shortCircuit(v.shortCircuit())
             .defaultMessage(v.message())
             .messageKey(v.key())
+            .messageParams(v.messageParams())
             .build();
     }
 

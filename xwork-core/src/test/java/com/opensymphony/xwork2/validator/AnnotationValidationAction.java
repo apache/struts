@@ -2,6 +2,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.validator.annotations.ConditionalVisitorFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 
 /**
@@ -15,6 +16,8 @@ public class AnnotationValidationAction extends ActionSupport {
     @ConditionalVisitorFieldValidator(expression = "foo+bar", context = "some", appendPrefix = false, fieldName = "bar",
             key = "conditional.key", message = "Foo doesn't match!", shortCircuit = true,
             messageParams = {"one", "two", "three"})
+    @ConversionErrorFieldValidator(fieldName = "bar", key = "conversion.key", message = "Foo conversion error!",
+            shortCircuit = true, repopulateField = true, messageParams = {"one", "three"})
     public String execute() {
         return SUCCESS;
     }

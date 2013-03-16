@@ -15,6 +15,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValidator;
+import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
 import java.util.Arrays;
@@ -35,7 +36,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 2);
+        assertEquals(validators.size(), 3);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -52,7 +53,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 2);
+        assertEquals(validators.size(), 3);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -64,7 +65,18 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateRegexValidator((RegexFieldValidator) validator);
         } else if (validator.getValidatorType().equals("conditionalvisitor")) {
             validateConditionalFieldVisitorValidator((ConditionalVisitorFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("conversion")) {
+            validateConversionFieldErrorVisitorValidator((ConversionErrorFieldValidator) validator);
         }
+    }
+
+    private void validateConversionFieldErrorVisitorValidator(ConversionErrorFieldValidator validator) {
+        assertEquals("bar", validator.getFieldName());
+        assertEquals("conversion.key", validator.getMessageKey());
+        assertEquals("Foo conversion error!", validator.getDefaultMessage());
+        assertEquals(true, validator.isRepopulateField());
+        assertEquals(true, validator.isShortCircuit());
+        assertTrue(Arrays.equals(new String[]{"one", "three"}, validator.getMessageParameters()));
     }
 
     private void validateConditionalFieldVisitorValidator(ConditionalVisitorFieldValidator validator) {
@@ -72,6 +84,8 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         assertEquals("some", validator.getContext());
         assertEquals("Foo doesn't match!", validator.getDefaultMessage());
         assertEquals("bar", validator.getFieldName());
+        assertEquals(false, validator.isAppendPrefix());
+        assertEquals(true, validator.isShortCircuit());
         assertEquals("conditional.key", validator.getMessageKey());
         assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
     }

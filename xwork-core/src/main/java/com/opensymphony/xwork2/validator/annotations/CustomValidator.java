@@ -55,6 +55,12 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'>i18n key from language specific properties file.</td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>messageParams</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>Additional params to be used to customize message - will be evaluated against the Value Stack</td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'>fieldName</td>
  * <td class='confluenceTd'>no</td>
  * <td class='confluenceTd'>&nbsp;</td>
@@ -69,8 +75,8 @@ import java.lang.annotation.Target;
  * <tr>
  * <td class='confluenceTd'>type</td>
  * <td class='confluenceTd'>yes</td>
- * <td class='confluenceTd'>ValidatorType.FIELD</td>
- * <td class='confluenceTd'>Enum value from ValidatorType. Either FIELD or SIMPLE can be used here.</td>
+ * <td class='confluenceTd'>name of validator</td>
+ * <td class='confluenceTd'>Simple string which identifies that validator among other</td>
  * </tr>
  * </table>
  * <!-- END SNIPPET: parameters -->
@@ -105,6 +111,11 @@ public @interface CustomValidator {
     String message() default "";
 
     String key() default "";
+
+    /**
+     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     */
+    String[] messageParams() default {};
 
     public ValidationParameter[] parameters() default {};
 

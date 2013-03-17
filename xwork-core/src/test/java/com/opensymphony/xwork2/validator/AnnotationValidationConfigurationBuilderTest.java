@@ -36,7 +36,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 3);
+        assertEquals(validators.size(), 4);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -53,7 +53,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 3);
+        assertEquals(validators.size(), 4);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -67,7 +67,18 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateConditionalFieldVisitorValidator((ConditionalVisitorFieldValidator) validator);
         } else if (validator.getValidatorType().equals("conversion")) {
             validateConversionFieldErrorVisitorValidator((ConversionErrorFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("myValidator")) {
+            validateMyValidator((MyValidator) validator);
         }
+    }
+
+    private void validateMyValidator(MyValidator validator) {
+        assertEquals("Foo is invalid!", validator.getDefaultMessage());
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("foo.invalid", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(1, validator.getValue());
     }
 
     private void validateConversionFieldErrorVisitorValidator(ConversionErrorFieldValidator validator) {
@@ -133,6 +144,9 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
 
         AnnotationActionValidatorManager manager = new AnnotationActionValidatorManager();
         container.inject(manager);
+
+        ValidatorFactory vf = container.getInstance(ValidatorFactory.class);
+        vf.registerValidator("myValidator", MyValidator.class.getName());
 
         return manager;
     }

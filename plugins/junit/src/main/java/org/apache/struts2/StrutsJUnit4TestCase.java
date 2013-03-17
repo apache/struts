@@ -41,9 +41,11 @@ import org.springframework.mock.web.MockServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.*;
@@ -197,6 +199,23 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
         pageContext = new MockPageContext(servletContext, request, response);
+    }
+
+    public void finishExecution() {
+        HttpSession session = this.request.getSession();
+        Enumeration attributeNames = session.getAttributeNames();
+
+        MockHttpServletRequest nextRequest = new MockHttpServletRequest();
+
+        while (attributeNames.hasMoreElements()) {
+            String key = (String) attributeNames.nextElement();
+            Object attribute = session.getAttribute(key);
+            nextRequest.getSession().setAttribute(key, attribute);
+        }
+
+        this.response = new MockHttpServletResponse();
+        this.request = nextRequest;
+        this.pageContext = new MockPageContext(servletContext, request, response);
     }
 
     /**

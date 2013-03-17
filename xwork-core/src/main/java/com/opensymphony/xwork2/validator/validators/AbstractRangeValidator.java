@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.validator.validators;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -33,7 +34,9 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
     private final Class<T> type;
 
     private T min;
+    private String minExpression;
     private T max;
+    private String maxExpression;
 
     protected AbstractRangeValidator(Class<T> type) {
         this.type = type;
@@ -67,14 +70,20 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
     }
 
     public T getMin() {
-        return min;
+        if (min != null) {
+            return min;
+        } else if (StringUtils.isNotEmpty(minExpression)) {
+            return (T) parse(minExpression, type);
+        } else {
+            return null;
+        }
     }
 
     public void setMinExpression(String minExpression) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("${minExpression} was defined as [#0]", minExpression);
         }
-        this.min = (T) parse(minExpression, type);
+        this.minExpression = minExpression;
     }
 
     public void setMax(T max) {
@@ -82,14 +91,20 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
     }
 
     public T getMax() {
-        return max;
+        if (max != null) {
+            return max;
+        } else if (StringUtils.isNotEmpty(maxExpression)) {
+            return (T) parse(maxExpression, type);
+        } else {
+            return null;
+        }
     }
 
     public void setMaxExpression(String maxExpression) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("${maxExpression} was defined as [#0]", maxExpression);
         }
-        this.max = (T) parse(maxExpression, type);
+        this.maxExpression = maxExpression;
     }
 
 }

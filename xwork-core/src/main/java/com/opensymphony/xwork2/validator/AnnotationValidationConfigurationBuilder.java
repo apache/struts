@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.validator.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -559,12 +560,16 @@ public class AnnotationValidationConfigurationBuilder {
             .build();
     }
 
-    private Date parseDateString(String value) {
+    private Date parseDateString(String value, String format) {
 
+        SimpleDateFormat d0 = null;
+        if (StringUtils.isNotEmpty(format)) {
+            d0 = new SimpleDateFormat(format);
+        }
         SimpleDateFormat d1 = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, Locale.getDefault());
         SimpleDateFormat d2 = (SimpleDateFormat)DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.getDefault());
         SimpleDateFormat d3 = (SimpleDateFormat)DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
-        SimpleDateFormat[] dfs = {d1, d2, d3};
+        SimpleDateFormat[] dfs = (d0 != null ? new SimpleDateFormat[]{d0, d1, d2, d3} : new SimpleDateFormat[]{d1, d2, d3});
         for (SimpleDateFormat df : dfs)
             try {
                 Date check = df.parse(value);
@@ -574,7 +579,6 @@ public class AnnotationValidationConfigurationBuilder {
             } catch (ParseException ignore) {
             }
         return null;
-
     }
 
     private ValidatorConfig processRequiredStringValidatorAnnotation(RequiredStringValidator v, String fieldName, String methodName) {
@@ -767,12 +771,19 @@ public class AnnotationValidationConfigurationBuilder {
             params.put("fieldName", v.fieldName());
         }
         if ( v.min() != null && v.min().length() > 0) {
-             final Date minDate = parseDateString(v.min());
-             params.put("min", String.valueOf(minDate == null ? v.min() : minDate));
+             final Date minDate = parseDateString(v.min(), v.dateFormat());
+             params.put("min", minDate == null ? v.min() : minDate);
         }
         if ( v.max() != null && v.max().length() > 0) {
-             final Date maxDate = parseDateString(v.max());
-             params.put("max", String.valueOf(maxDate == null ? v.max() : maxDate));
+             final Date maxDate = parseDateString(v.max(), v.dateFormat());
+             params.put("max", maxDate == null ? v.max() : maxDate);
+        }
+
+        if (StringUtils.isNotEmpty(v.minExpression())) {
+            params.put("minExpression", v.minExpression());
+        }
+        if (StringUtils.isNotEmpty(v.maxExpression())) {
+            params.put("maxExpression", v.maxExpression());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
@@ -782,6 +793,7 @@ public class AnnotationValidationConfigurationBuilder {
             .shortCircuit(v.shortCircuit())
             .defaultMessage(v.message())
             .messageKey(v.key())
+            .messageParams(v.messageParams())
             .build();
     }
 

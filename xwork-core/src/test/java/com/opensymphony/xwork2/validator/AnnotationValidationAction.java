@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.validator.annotations.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.CustomValidator;
+import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
@@ -26,6 +27,8 @@ public class AnnotationValidationAction extends ActionSupport {
                     @ValidationParameter(name = "value", value = "1")
             }
     )
+    @DateRangeFieldValidator(fieldName = "foo", key = "date.foo", max = "2012", min = "2011", dateFormat = "yyyy",
+            message = "Foo isn't in range!", shortCircuit = true, messageParams = {"one", "two", "three"})
     public String execute() {
         return SUCCESS;
     }

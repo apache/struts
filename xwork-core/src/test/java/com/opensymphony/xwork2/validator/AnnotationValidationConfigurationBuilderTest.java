@@ -16,8 +16,11 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidator;
+import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +39,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 4);
+        assertEquals(validators.size(), 5);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -53,14 +56,14 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 4);
+        assertEquals(validators.size(), 5);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
         }
     }
 
-    private void validate(Validator validator) {
+    private void validate(Validator validator) throws Exception {
         if (validator.getValidatorType().equals("regex")) {
             validateRegexValidator((RegexFieldValidator) validator);
         } else if (validator.getValidatorType().equals("conditionalvisitor")) {
@@ -69,7 +72,19 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateConversionFieldErrorVisitorValidator((ConversionErrorFieldValidator) validator);
         } else if (validator.getValidatorType().equals("myValidator")) {
             validateMyValidator((MyValidator) validator);
+        } else if (validator.getValidatorType().equals("date")) {
+            validateDateRangeFieldValidator((DateRangeFieldValidator) validator);
         }
+    }
+
+    private void validateDateRangeFieldValidator(DateRangeFieldValidator validator) throws ParseException {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("Foo isn't in range!", validator.getDefaultMessage());
+        assertEquals("date.foo", validator.getMessageKey());
+        assertEquals(true, validator.isShortCircuit());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(new SimpleDateFormat("yyyy").parse("2011"), validator.getMin());
+        assertEquals(new SimpleDateFormat("yyyy").parse("2012"), validator.getMax());
     }
 
     private void validateMyValidator(MyValidator validator) {

@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidat
 import com.opensymphony.xwork2.validator.annotations.CustomValidator;
 import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
@@ -33,6 +34,8 @@ public class AnnotationValidationAction extends ActionSupport {
     @DoubleRangeFieldValidator(minExclusive = "1.2", maxExclusive = "1.4", minInclusive = "0", maxInclusive = "0.1",
             fieldName = "foo", key = "double.key", message = "Foo is out of range!", shortCircuit = true,
             messageParams = {"one", "two", "three"})
+    @EmailValidator(message = "Foo isn't a valid e-mail!", fieldName = "foo", key = "email.key",
+            messageParams = {"one", "two", "three"}, shortCircuit = true)
     public String execute() {
         return SUCCESS;
     }

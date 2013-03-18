@@ -59,6 +59,8 @@ package com.opensymphony.xwork2.validator.validators;
  *     &lt;/field&gt;
  *
  *     &lt;!-- Field Validator Syntax with expressions --&gt;
+ *     &lt;!-- Only available when used with xml based configuration, if you want to have the same
+ *             flexibility with annotations use @RegexFieldValidator instead --&gt;
  *     &lt;field name="myEmail"&gt;
  *        &lt;field-validator type="email"&gt;
  *           &lt;param name="regexExpression"&gt;${emailPattern}&lt;/param&gt; &lt;!-- will be evaluated as: String getEmailPattern() --&gt;
@@ -77,11 +79,11 @@ package com.opensymphony.xwork2.validator.validators;
 public class EmailValidator extends RegexFieldValidator {
 
 	// see XW-371 
-    public static final String emailAddressPattern =
+    public static final String EMAIL_ADDRESS_PATTERN =
     	"\\b^['_a-z0-9-\\+]+(\\.['_a-z0-9-\\+]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tel|travel|xxx)$\\b";
 
     public EmailValidator() {
-        setRegex(emailAddressPattern);
+        setRegex(EMAIL_ADDRESS_PATTERN);
         setCaseSensitive(false);
     }
 

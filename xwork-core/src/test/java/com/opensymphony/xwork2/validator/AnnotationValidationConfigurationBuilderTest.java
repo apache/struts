@@ -18,6 +18,7 @@ import com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValid
 import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.EmailValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
 import java.text.ParseException;
@@ -40,7 +41,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 6);
+        assertEquals(validators.size(), 7);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -57,7 +58,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 6);
+        assertEquals(validators.size(), 7);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -77,7 +78,20 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateDateRangeFieldValidator((DateRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("double")) {
             validateDoubleRangeFieldValidator((DoubleRangeFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("email")) {
+            validateEmailValidator((EmailValidator) validator);
         }
+    }
+
+    private void validateEmailValidator(EmailValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals(EmailValidator.EMAIL_ADDRESS_PATTERN, validator.getRegex());
+        assertEquals("Foo isn't a valid e-mail!", validator.getDefaultMessage());
+        assertEquals("email.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(false, validator.isCaseSensitive());
+        assertEquals(true, validator.isTrimed());
     }
 
     private void validateDoubleRangeFieldValidator(DoubleRangeFieldValidator validator) {

@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidato
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
+import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
 import java.text.ParseException;
@@ -41,7 +42,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 7);
+        assertEquals(validators.size(), 8);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -58,7 +59,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 7);
+        assertEquals(validators.size(), 8);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -80,7 +81,17 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateDoubleRangeFieldValidator((DoubleRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("email")) {
             validateEmailValidator((EmailValidator) validator);
+        } else if (validator.getValidatorType().equals("expression")) {
+            validateExpressionValidator((ExpressionValidator) validator);
         }
+    }
+
+    private void validateExpressionValidator(ExpressionValidator validator) {
+        assertEquals("expression.key", validator.getMessageKey());
+        assertEquals("Is not true!", validator.getDefaultMessage());
+        assertEquals("true", validator.getExpression());
+        assertEquals(true, validator.isShortCircuit());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
     }
 
     private void validateEmailValidator(EmailValidator validator) {

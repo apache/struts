@@ -17,7 +17,6 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 
-
 /**
  * <!-- START SNIPPET: javadoc -->
  * A Non-Field Level validator that validates based on regular expression supplied.
@@ -44,11 +43,9 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *
  * @author Jason Carreira
  */
-// START SNIPPET: global-level-validator
 public class ExpressionValidator extends ValidatorSupport {
 
     private String expression;
-
 
     public void setExpression(String expression) {
         this.expression = expression;
@@ -73,14 +70,14 @@ public class ExpressionValidator extends ValidatorSupport {
         if ((obj != null) && (obj instanceof Boolean)) {
             answer = (Boolean) obj;
         } else {
-            log.warn("Got result of " + obj + " when trying to get Boolean.");
+            log.warn("Got result of [#0] when trying to get Boolean.", obj);
         }
 
-        if (!answer.booleanValue()) {
-            if (log.isDebugEnabled()) log.debug("Validation failed on expression " + expression + " with validated object "+ object);
+        if (!answer) {
+            if (log.isDebugEnabled()) {
+                log.debug("Validation failed on expression [#0] with validated object [#1]", expression, object);
+            }
             addActionError(object);
         }
     }
 }
-// END SNIPPET: global-level-validator 
-

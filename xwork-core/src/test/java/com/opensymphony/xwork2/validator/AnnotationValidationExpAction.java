@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
@@ -46,6 +47,9 @@ public class AnnotationValidationExpAction extends ActionSupport {
     @ExpressionValidator(expression = "true", message = "Is not true!", key = "expression.key",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @FieldExpressionValidator(expression = "true", fieldName = "foo", key = "fieldexpression.key", message = "It is not true!",
+            messageParams = {"one", "two", "three"}, shortCircuit = true)
+    @IntRangeFieldValidator(fieldName = "foo", key = "int.key", message = "Foo is out of range!",
+            maxExpression = "${intMax}", minExpression = "${intMin}",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     public String execute() {
         return SUCCESS;
@@ -85,6 +89,14 @@ public class AnnotationValidationExpAction extends ActionSupport {
 
     public Double getDoubleMaxInclusiveExpression() {
         return 0.1;
+    }
+
+    public int getIntMax() {
+        return 10;
+    }
+
+    public int getIntMin() {
+        return 1;
     }
 
 }

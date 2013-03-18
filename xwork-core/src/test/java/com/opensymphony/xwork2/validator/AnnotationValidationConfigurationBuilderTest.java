@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.FieldExpressionValidator;
+import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
 import java.text.ParseException;
@@ -43,7 +44,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 9);
+        assertEquals(validators.size(), 10);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -60,7 +61,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 9);
+        assertEquals(validators.size(), 10);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -86,7 +87,19 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateExpressionValidator((ExpressionValidator) validator);
         } else if (validator.getValidatorType().equals("fieldexpression")) {
             validateFieldExpressionValidator((FieldExpressionValidator) validator);
+        } else if (validator.getValidatorType().equals("int")) {
+            validateIntRangeFieldValidator((IntRangeFieldValidator) validator);
         }
+    }
+
+    private void validateIntRangeFieldValidator(IntRangeFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("int.key", validator.getMessageKey());
+        assertEquals("Foo is out of range!", validator.getDefaultMessage());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(Integer.valueOf(10), validator.getMax());
+        assertEquals(Integer.valueOf(1), validator.getMin());
     }
 
     private void validateFieldExpressionValidator(FieldExpressionValidator validator) {

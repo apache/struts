@@ -56,6 +56,12 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'>i18n key from language specific properties file.</td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>messageParams</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>Additional params to be used to customize message - will be evaluated against the Value Stack</td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'>fieldName</td>
  * <td class='confluenceTd'>no</td>
  * <td class='confluenceTd'>&nbsp;</td>
@@ -104,7 +110,7 @@ import java.lang.annotation.Target;
  * <!-- START SNIPPET: example -->
  * &#64;IntRangeFieldValidator(message = "Default message", key = "i18n.key", shortCircuit = true, min = "0", max = "42")
  *
- * &#64;IntRangeFieldValidator(message = "Default message", key = "i18n.key", shortCircuit = true, min = "${minValue}", max = "${maxValue}" parse="true")
+ * &#64;IntRangeFieldValidator(message = "Default message", key = "i18n.key", shortCircuit = true, minExpression = "${minValue}", maxExpression = "${maxValue}")
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -122,9 +128,19 @@ public @interface IntRangeFieldValidator {
     String min() default "";
 
     /**
-     *  Integer property. The maximum number can be.
+     * The minimum number can be defined as an expression
+     */
+    String minExpression() default "";
+
+    /**
+     * Integer property. The maximum number can be.
      */
     String max() default "";
+
+    /**
+     * The maximum number can be defined as an expression
+     */
+    String maxExpression() default "";
 
     /**
      * The default error message for this validator.
@@ -136,6 +152,11 @@ public @interface IntRangeFieldValidator {
      * The message key to lookup for i18n.
      */
     String key() default "";
+
+    /**
+     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     */
+    String[] messageParams() default {};
 
     /**
      * The optional fieldName for SIMPLE validator types.

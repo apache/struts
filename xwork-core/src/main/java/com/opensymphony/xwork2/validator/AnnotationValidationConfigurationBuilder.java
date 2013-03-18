@@ -607,6 +607,7 @@ public class AnnotationValidationConfigurationBuilder {
                 .addParam("methodName", methodName)
                 .shortCircuit(v.shortCircuit())
                 .defaultMessage(v.message())
+                .messageParams(v.messageParams())
                 .messageKey(v.key())
                 .build();
     }

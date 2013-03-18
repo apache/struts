@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.validator.validators.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,7 +46,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 11);
+        assertEquals(validators.size(), 12);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -62,7 +63,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 11);
+        assertEquals(validators.size(), 12);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -92,7 +93,18 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateIntRangeFieldValidator((IntRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("required")) {
             validateRequiredFieldValidator((RequiredFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("requiredstring")) {
+            validateRequiredStringValidator((RequiredStringValidator) validator);
         }
+    }
+
+    private void validateRequiredStringValidator(RequiredStringValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("requiredstring.key", validator.getMessageKey());
+        assertEquals("Foo is required!", validator.getDefaultMessage());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(false, validator.isTrim());
     }
 
     private void validateRequiredFieldValidator(RequiredFieldValidator validator) {

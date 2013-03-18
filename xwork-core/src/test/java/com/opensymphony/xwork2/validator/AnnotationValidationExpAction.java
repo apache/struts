@@ -12,6 +12,7 @@ import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
 import java.text.ParseException;
@@ -54,6 +55,8 @@ public class AnnotationValidationExpAction extends ActionSupport {
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @RequiredFieldValidator(fieldName = "foo", key = "required.key", message = "Foo is required!",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
+    @RequiredStringValidator(fieldName = "foo", key = "requiredstring.key", message = "Foo is required!",
+            messageParams = {"one", "two", "three"}, shortCircuit = true, trim = false)
     public String execute() {
         return SUCCESS;
     }

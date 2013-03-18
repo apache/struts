@@ -104,12 +104,10 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     }
 
     public int getMaxLength() {
-        if (maxLength > -1) {
-            return maxLength;
-        } else if (StringUtils.isNotEmpty(maxLengthExpression)) {
+        if (StringUtils.isNotEmpty(maxLengthExpression)) {
             return (Integer) parse(maxLengthExpression, Integer.class);
         }
-        return -1;
+        return maxLength;
     }
 
     public void setMinLength(int minLength) {
@@ -121,12 +119,10 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     }
 
     public int getMinLength() {
-        if (minLength > -1) {
-            return minLength;
-        } else if (StringUtils.isNotEmpty(minLengthExpression)) {
+        if (StringUtils.isNotEmpty(minLengthExpression)) {
             return (Integer) parse(minLengthExpression, Integer.class);
         }
-        return -1;
+        return minLength;
     }
 
     public void setTrim(boolean trim) {

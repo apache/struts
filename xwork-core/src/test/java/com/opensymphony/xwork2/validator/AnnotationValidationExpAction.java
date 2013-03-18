@@ -14,6 +14,7 @@ import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.ShortRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
 import java.text.ParseException;
@@ -61,6 +62,9 @@ public class AnnotationValidationExpAction extends ActionSupport {
     @ShortRangeFieldValidator(fieldName = "foo", key = "short.key", message = "Foo is out of range!",
             minExpression = "${shortMin}", maxExpression = "${shortMax}",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
+    @StringLengthFieldValidator(fieldName = "foo", key = "stringlength.key", message = "Foo is too long!",
+            maxLengthExpression = "${maxLength}", minLengthExpression = "${minLength}", shortCircuit = true, trimExpression = "${false}",
+            messageParams = {"one", "two", "three"})
     public String execute() {
         return SUCCESS;
     }
@@ -116,5 +120,14 @@ public class AnnotationValidationExpAction extends ActionSupport {
     public short getShortMax() {
         return 10;
     }
+
+    public int getMaxLength() {
+        return 10;
+    }
+
+    public int getMinLength() {
+        return 1;
+    }
+
 
 }

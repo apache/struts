@@ -545,18 +545,27 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
-        if (v.maxLength() != null && v.maxLength().length() > 0) {
+        if (StringUtils.isNotEmpty(v.maxLength())) {
             params.put("maxLength", v.maxLength());
         }
-        if (v.minLength() != null && v.minLength().length() > 0) {
+        if (StringUtils.isNotEmpty(v.minLength())) {
             params.put("minLength", v.minLength());
         }
-        params.put("trim", String.valueOf(v.trim()));
-
+        if (StringUtils.isNotEmpty(v.maxLengthExpression())) {
+            params.put("maxLengthExpression", v.maxLengthExpression());
+        }
+        if (StringUtils.isNotEmpty(v.minLengthExpression())) {
+            params.put("minLengthExpression", v.minLengthExpression());
+        }
+        if (StringUtils.isNotEmpty(v.trimExpression())){
+            params.put("trimExpression", v.trimExpression());
+        } else {
+            params.put("trim", String.valueOf(v.trim()));
+        }
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
                 .addParams(params)
@@ -564,6 +573,7 @@ public class AnnotationValidationConfigurationBuilder {
                 .shortCircuit(v.shortCircuit())
                 .defaultMessage(v.message())
                 .messageKey(v.key())
+                .messageParams(v.messageParams())
                 .build();
     }
 

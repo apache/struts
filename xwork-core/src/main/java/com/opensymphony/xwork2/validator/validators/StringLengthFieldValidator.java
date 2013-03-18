@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -26,24 +27,24 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * String before performing the length check.  If unspecified, the String will be trimmed.
  * <!-- END SNIPPET: javadoc -->
  * <p/>
- * 
- * 
+ * <p/>
+ * <p/>
  * <!-- START SNIPPET: parameters -->
  * <ul>
- *    <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- *    <li>maxLength - Integer. The max length of the field value. Default ignore.</li>
- *    <li>minLength - Integer. The min length of the field value. Default ignore.</li>
- *    <li>trim - (Optional) Boolean, default true. Trim the field value before evaluating its min/max length. Default true.</li>
- *    <li>maxLengthExpression - (Optional) String. Defines the max length param as an OGNL expression</li>
- *    <li>minLengthExpression - (Optional) String. Defines the min length param as an OGNL expression</li>
- *    <li>trimExpression - (Optional) String. Defines th trim param as an OGNL expression</li>
+ * <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
+ * <li>maxLength - Integer. The max length of the field value. Default ignore.</li>
+ * <li>minLength - Integer. The min length of the field value. Default ignore.</li>
+ * <li>trim - (Optional) Boolean, default true. Trim the field value before evaluating its min/max length. Default true.</li>
+ * <li>maxLengthExpression - (Optional) String. Defines the max length param as an OGNL expression</li>
+ * <li>minLengthExpression - (Optional) String. Defines the min length param as an OGNL expression</li>
+ * <li>trimExpression - (Optional) String. Defines th trim param as an OGNL expression</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
- * 
+ * <p/>
  * <!-- START SNIPPET: parameters-warning -->
  * Do not use ${minLengthExpression}, ${maxLengthExpression} and ${trimExpression} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters-warning -->
- *
+ * <p/>
  * <pre>
  * <!--START SNIPPET: example -->
  * &lt;validators&gt;
@@ -78,7 +79,6 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * &lt;/validators&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
  *
  * @author Jason Carreira
  * @author Mark Woon
@@ -91,16 +91,25 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     private int maxLength = -1;
     private int minLength = -1;
 
+    private String maxLengthExpression;
+    private String minLengthExpression;
+    private String trimExpression;
+
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }
 
     public void setMaxLengthExpression(String maxLengthExpression) {
-        this.maxLength = (Integer) parse(maxLengthExpression, Integer.class);
+        this.maxLengthExpression = maxLengthExpression;
     }
 
     public int getMaxLength() {
-        return maxLength;
+        if (maxLength > -1) {
+            return maxLength;
+        } else if (StringUtils.isNotEmpty(maxLengthExpression)) {
+            return (Integer) parse(maxLengthExpression, Integer.class);
+        }
+        return -1;
     }
 
     public void setMinLength(int minLength) {
@@ -108,11 +117,16 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     }
 
     public void setMinLengthExpression(String minLengthExpression) {
-        this.minLength = (Integer) parse(minLengthExpression, Integer.class);
+        this.minLengthExpression = minLengthExpression;
     }
 
     public int getMinLength() {
-        return minLength;
+        if (minLength > -1) {
+            return minLength;
+        } else if (StringUtils.isNotEmpty(minLengthExpression)) {
+            return (Integer) parse(minLengthExpression, Integer.class);
+        }
+        return -1;
     }
 
     public void setTrim(boolean trim) {
@@ -120,10 +134,13 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     }
 
     public void setTrimExpression(String trimExpression) {
-        this.trim = (Boolean) parse(trimExpression, Boolean.class);
+        this.trimExpression = trimExpression;
     }
 
     public boolean isTrim() {
+        if (StringUtils.isNotEmpty(trimExpression)) {
+            return (Boolean) parse(trimExpression, Boolean.class);
+        }
         return trim;
     }
 
@@ -135,7 +152,7 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
             // use a required validator for these
             return;
         }
-        if (trim) {
+        if (isTrim()) {
             val = val.trim();
             if (val.length() <= 0) {
                 // use a required validator
@@ -143,9 +160,12 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
             }
         }
 
-        if ((minLength > -1) && (val.length() < minLength)) {
+        int minLengthToUse = getMinLength();
+        int maxLengthToUse = getMaxLength();
+
+        if ((minLengthToUse > -1) && (val.length() < minLengthToUse)) {
             addFieldError(fieldName, object);
-        } else if ((maxLength > -1) && (val.length() > maxLength)) {
+        } else if ((maxLengthToUse > -1) && (val.length() > maxLengthToUse)) {
             addFieldError(fieldName, object);
         }
     }

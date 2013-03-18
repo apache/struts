@@ -56,6 +56,12 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'>i18n key from language specific properties file.</td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>messageParams</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>Additional params to be used to customize message - will be evaluated against the Value Stack</td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'>fieldName</td>
  * <td class='confluenceTd'>no</td>
  * <td class='confluenceTd'>&nbsp;</td>
@@ -118,14 +124,29 @@ public @interface StringLengthFieldValidator {
     boolean trim() default true;
 
     /**
+     * Determines whether the String is trimmed before performing the length check but defined as an expression
+     */
+    String trimExpression() default "";
+
+    /**
      *  Integer property. The minimum length the String must be.
      */
     String minLength() default "";
 
     /**
+     * The minimum length the String must be defined as an expression
+     */
+    String minLengthExpression() default "";
+
+    /**
      *  Integer property. The maximum length the String can be.
      */
     String maxLength() default "";
+
+    /**
+     * The maximum length the String can be defined as an expression
+     */
+    String maxLengthExpression() default "";
 
     /**
      * The default error message for this validator.
@@ -137,6 +158,11 @@ public @interface StringLengthFieldValidator {
      * The message key to lookup for i18n.
      */
     String key() default "";
+
+    /**
+     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     */
+    String[] messageParams() default {};
 
     /**
      * The optional fieldName for SIMPLE validator types.

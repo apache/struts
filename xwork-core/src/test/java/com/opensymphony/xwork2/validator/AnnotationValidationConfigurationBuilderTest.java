@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,7 +48,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 13);
+        assertEquals(validators.size(), 14);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -64,7 +65,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 13);
+        assertEquals(validators.size(), 14);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -96,9 +97,22 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateRequiredFieldValidator((RequiredFieldValidator) validator);
         } else if (validator.getValidatorType().equals("requiredstring")) {
             validateRequiredStringValidator((RequiredStringValidator) validator);
-        }else if (validator.getValidatorType().equals("short")) {
+        } else if (validator.getValidatorType().equals("short")) {
             validateShortRangeFieldValidator((ShortRangeFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("stringlength")) {
+            validateStringLengthFieldValidator((StringLengthFieldValidator) validator);
         }
+    }
+
+    private void validateStringLengthFieldValidator(StringLengthFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("stringlength.key", validator.getMessageKey());
+        assertEquals("Foo is too long!", validator.getDefaultMessage());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(1, validator.getMinLength());
+        assertEquals(10, validator.getMaxLength());
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(false, validator.isTrim());
     }
 
     private void validateShortRangeFieldValidator(ShortRangeFieldValidator validator) {

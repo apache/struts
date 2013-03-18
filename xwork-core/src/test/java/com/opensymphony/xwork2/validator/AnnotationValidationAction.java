@@ -15,6 +15,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.ShortRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.UrlValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
 /**
@@ -57,6 +58,8 @@ public class AnnotationValidationAction extends ActionSupport {
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @StringLengthFieldValidator(fieldName = "foo", key = "stringlength.key", message = "Foo is too long!",
             maxLength = "10", minLength = "1", shortCircuit = true, trim = false, messageParams = {"one", "two", "three"})
+    @UrlValidator(fieldName = "foo", key = "url.key", message = "Foo isn't a valid URL!", shortCircuit = true,
+            messageParams = {"one", "two", "three"})
     public String execute() {
         return SUCCESS;
     }

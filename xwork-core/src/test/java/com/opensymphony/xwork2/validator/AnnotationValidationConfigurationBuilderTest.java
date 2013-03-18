@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.validators.URLValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 14);
+        assertEquals(validators.size(), 15);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -65,7 +66,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 14);
+        assertEquals(validators.size(), 15);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -101,7 +102,17 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateShortRangeFieldValidator((ShortRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("stringlength")) {
             validateStringLengthFieldValidator((StringLengthFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("url")) {
+            validateUrlValidator((URLValidator) validator);
         }
+    }
+
+    private void validateUrlValidator(URLValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("Foo isn't a valid URL!", validator.getDefaultMessage());
+        assertEquals("url.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
     }
 
     private void validateStringLengthFieldValidator(StringLengthFieldValidator validator) {

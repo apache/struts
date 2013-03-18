@@ -56,6 +56,12 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'>i18n key from language specific properties file.</td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>messageParams</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>Additional params to be used to customize message - will be evaluated against the Value Stack</td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'>fieldName</td>
  * <td class='confluenceTd'>no</td>
  * <td class='confluenceTd'>&nbsp;</td>
@@ -125,9 +131,19 @@ public @interface DoubleRangeFieldValidator {
     String minInclusive() default "";
 
     /**
+     * The inclusive minimum the number must be defined as an expression
+     */
+    String minInclusiveExpression() default "";
+
+    /**
      *  Double property. The inclusive minimum the number must be.
      */
     String maxInclusive() default "";
+
+    /**
+     *  The inclusive minimum the number must be defined as an expression
+     */
+    String maxInclusiveExpression() default "";
 
     /**
      *  Double property. The exclusive maximum number can be.
@@ -135,9 +151,19 @@ public @interface DoubleRangeFieldValidator {
     String minExclusive() default "";
 
     /**
+     *  The exclusive maximum number can be defined as an expression
+     */
+    String minExclusiveExpression() default "";
+
+    /**
      *  Double property. The exclusive maximum number can be.
      */
     String maxExclusive() default "";
+
+    /**
+     * The exclusive maximum number can be defined as an expression
+     */
+    String maxExclusiveExpression() default "";
 
     /**
      * The default error message for this validator.
@@ -149,6 +175,11 @@ public @interface DoubleRangeFieldValidator {
      * The message key to lookup for i18n.
      */
     String key() default "";
+
+    /**
+     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     */
+    String[] messageParams() default {};
 
     /**
      * The optional fieldName for SIMPLE validator types.

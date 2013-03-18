@@ -5,6 +5,7 @@ import com.opensymphony.xwork2.validator.annotations.ConditionalVisitorFieldVali
 import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.CustomValidator;
 import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
@@ -33,6 +34,10 @@ public class AnnotationValidationExpAction extends ActionSupport {
     )
     @DateRangeFieldValidator(fieldName = "foo", key = "date.foo", maxExpression = "${dateMax}", minExpression = "${dateMin}", dateFormat = "yyyy",
             message = "Foo isn't in range!", shortCircuit = true, messageParams = {"one", "two", "three"})
+    @DoubleRangeFieldValidator(minExclusiveExpression = "${doubleMinExclusiveExpression}", maxExclusiveExpression = "${doubleMaxExclusiveExpression}",
+            minInclusiveExpression = "${doubleMinInclusiveExpression}", maxInclusiveExpression = "${doubleMaxInclusiveExpression}",
+            fieldName = "foo", key = "double.key", message = "Foo is out of range!", shortCircuit = true,
+            messageParams = {"one", "two", "three"})
     public String execute() {
         return SUCCESS;
     }
@@ -55,6 +60,22 @@ public class AnnotationValidationExpAction extends ActionSupport {
 
     public Date getDateMax() throws ParseException {
         return new SimpleDateFormat("yyyy").parse("2012");
+    }
+
+    public Double getDoubleMinExclusiveExpression() {
+        return 1.2;
+    }
+
+    public Double getDoubleMaxExclusiveExpression() {
+        return 1.4;
+    }
+
+    public Double getDoubleMinInclusiveExpression() {
+        return 0.0;
+    }
+
+    public Double getDoubleMaxInclusiveExpression() {
+        return 0.1;
     }
 
 }

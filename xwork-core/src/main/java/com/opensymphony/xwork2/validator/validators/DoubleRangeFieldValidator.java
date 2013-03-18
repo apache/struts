@@ -17,6 +17,7 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -93,6 +94,11 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
     private Double minExclusive = null;
     private Double maxExclusive = null;
 
+    private String minInclusiveExpression;
+    private String maxInclusiveExpression;
+    private String minExclusiveExpression;
+    private String maxExclusiveExpression;
+
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
         Double value;
@@ -106,10 +112,15 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
             return;
         }
 
-        if ((maxInclusive != null && value.compareTo(maxInclusive) > 0) ||
-                (minInclusive != null && value.compareTo(minInclusive) < 0) ||
-                (maxExclusive != null && value.compareTo(maxExclusive) >= 0) ||
-                (minExclusive != null && value.compareTo(minExclusive) <= 0)) {
+        Double maxInclusiveToUse = getMaxInclusive();
+        Double minInclusiveToUse = getMinInclusive();
+        Double maxExclusiveToUse = getMaxExclusive();
+        Double minExclusiveToUse = getMinExclusive();
+
+        if ((maxInclusiveToUse != null && value.compareTo(maxInclusiveToUse) > 0) ||
+                (minInclusiveToUse != null && value.compareTo(minInclusiveToUse) < 0) ||
+                (maxExclusiveToUse != null && value.compareTo(maxExclusiveToUse) >= 0) ||
+                (minExclusiveToUse != null && value.compareTo(minExclusiveToUse) <= 0)) {
             addFieldError(fieldName, object);
         }
     }
@@ -119,6 +130,11 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
     }
 
     public Double getMaxInclusive() {
+        if (maxInclusive != null) {
+            return maxInclusive;
+        } else if (StringUtils.isNotEmpty(maxInclusiveExpression)) {
+            return (Double) parse(maxInclusiveExpression, Double.class);
+        }
         return maxInclusive;
     }
 
@@ -127,39 +143,54 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
     }
 
     public Double getMinInclusive() {
-        return minInclusive;
-    }
-
-    public Double getMinExclusive() {
-        return minExclusive;
+        if (minInclusive != null) {
+            return minInclusive;
+        } else if (StringUtils.isNotEmpty(minInclusiveExpression)) {
+            return (Double) parse(minInclusiveExpression, Double.class);
+        }
+        return null;
     }
 
     public void setMinExclusive(Double minExclusive) {
         this.minExclusive = minExclusive;
     }
 
-    public Double getMaxExclusive() {
-        return maxExclusive;
+    public Double getMinExclusive() {
+        if (minExclusive != null) {
+            return minExclusive;
+        } else if (StringUtils.isNotEmpty(minExclusiveExpression)) {
+            return (Double) parse(minExclusiveExpression, Double.class);
+        }
+        return null;
     }
 
     public void setMaxExclusive(Double maxExclusive) {
         this.maxExclusive = maxExclusive;
     }
 
+    public Double getMaxExclusive() {
+        if (maxExclusive != null) {
+            return maxExclusive;
+        } else if (StringUtils.isNotEmpty(maxExclusiveExpression)) {
+            return (Double) parse(maxExclusiveExpression, Double.class);
+        }
+        return null;
+    }
+
     public void setMinInclusiveExpression(String minInclusiveExpression) {
-        this.minInclusive = (Double) parse(minInclusiveExpression, Double.class);
+        this.minInclusiveExpression = minInclusiveExpression;
     }
 
     public void setMaxInclusiveExpression(String maxInclusiveExpression) {
-        this.maxInclusive = (Double) parse(maxInclusiveExpression, Double.class);
+        this.maxInclusiveExpression = maxInclusiveExpression;
     }
 
     public void setMinExclusiveExpression(String minExclusiveExpression) {
-        this.minExclusive = (Double) parse(minExclusiveExpression, Double.class);
+        this.minExclusiveExpression = minExclusiveExpression;
     }
 
     public void setMaxExclusiveExpression(String maxExclusiveExpression) {
-        this.maxExclusive = (Double) parse(maxExclusiveExpression, Double.class);
+        this.maxExclusiveExpression = maxExclusiveExpression;
     }
 
 }

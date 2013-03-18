@@ -17,6 +17,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
 import java.text.ParseException;
@@ -39,7 +40,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 5);
+        assertEquals(validators.size(), 6);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -56,7 +57,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 5);
+        assertEquals(validators.size(), 6);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -74,7 +75,21 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateMyValidator((MyValidator) validator);
         } else if (validator.getValidatorType().equals("date")) {
             validateDateRangeFieldValidator((DateRangeFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("double")) {
+            validateDoubleRangeFieldValidator((DoubleRangeFieldValidator) validator);
         }
+    }
+
+    private void validateDoubleRangeFieldValidator(DoubleRangeFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("double.key", validator.getMessageKey());
+        assertEquals("Foo is out of range!", validator.getDefaultMessage());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(1.4, validator.getMaxExclusive());
+        assertEquals(1.2, validator.getMinExclusive());
+        assertEquals(0.1, validator.getMaxInclusive());
+        assertEquals(0.0, validator.getMinInclusive());
     }
 
     private void validateDateRangeFieldValidator(DateRangeFieldValidator validator) throws ParseException {

@@ -706,6 +706,20 @@ public class AnnotationValidationConfigurationBuilder {
             params.put("maxExclusive", v.maxExclusive());
         }
 
+        if (StringUtils.isNotEmpty(v.minInclusiveExpression())) {
+            params.put("minInclusiveExpression", v.minInclusiveExpression());
+        }
+        if (StringUtils.isNotEmpty(v.maxInclusiveExpression())) {
+            params.put("maxInclusiveExpression", v.maxInclusiveExpression());
+        }
+
+        if (StringUtils.isNotEmpty(v.minExclusiveExpression())) {
+            params.put("minExclusiveExpression", v.minExclusiveExpression());
+        }
+        if (StringUtils.isNotEmpty(v.maxExclusiveExpression())) {
+            params.put("maxExclusiveExpression", v.maxExclusiveExpression());
+        }
+
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
             .addParams(params)
@@ -713,6 +727,7 @@ public class AnnotationValidationConfigurationBuilder {
             .shortCircuit(v.shortCircuit())
             .defaultMessage(v.message())
             .messageKey(v.key())
+            .messageParams(v.messageParams())
             .build();
     }
 

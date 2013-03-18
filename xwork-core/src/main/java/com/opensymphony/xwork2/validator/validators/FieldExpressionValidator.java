@@ -62,7 +62,6 @@ public class FieldExpressionValidator extends FieldValidatorSupport {
 
     private String expression;
 
-
     public void setExpression(String expression) {
         this.expression = expression;
     }

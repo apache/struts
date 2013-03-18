@@ -8,6 +8,7 @@ import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
@@ -43,6 +44,8 @@ public class AnnotationValidationExpAction extends ActionSupport {
     @EmailValidator(message = "Foo isn't a valid e-mail!", fieldName = "foo", key = "email.key",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @ExpressionValidator(expression = "true", message = "Is not true!", key = "expression.key",
+            messageParams = {"one", "two", "three"}, shortCircuit = true)
+    @FieldExpressionValidator(expression = "true", fieldName = "foo", key = "fieldexpression.key", message = "It is not true!",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     public String execute() {
         return SUCCESS;

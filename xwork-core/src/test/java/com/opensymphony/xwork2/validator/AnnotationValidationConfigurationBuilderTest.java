@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
+import com.opensymphony.xwork2.validator.validators.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
 import java.text.ParseException;
@@ -42,7 +43,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 8);
+        assertEquals(validators.size(), 9);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -59,7 +60,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 8);
+        assertEquals(validators.size(), 9);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -83,7 +84,18 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateEmailValidator((EmailValidator) validator);
         } else if (validator.getValidatorType().equals("expression")) {
             validateExpressionValidator((ExpressionValidator) validator);
+        } else if (validator.getValidatorType().equals("fieldexpression")) {
+            validateFieldExpressionValidator((FieldExpressionValidator) validator);
         }
+    }
+
+    private void validateFieldExpressionValidator(FieldExpressionValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("It is not true!", validator.getDefaultMessage());
+        assertEquals("fieldexpression.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals("true", validator.getExpression());
+        assertEquals(true, validator.isShortCircuit());
     }
 
     private void validateExpressionValidator(ExpressionValidator validator) {

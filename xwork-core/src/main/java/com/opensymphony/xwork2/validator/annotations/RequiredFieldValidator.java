@@ -55,6 +55,12 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'>i18n key from language specific properties file.</td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>messageParams</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>Additional params to be used to customize message - will be evaluated against the Value Stack</td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'>fieldName</td>
  * <td class='confluenceTd'>no</td>
  * <td class='confluenceTd'>&nbsp;</td>
@@ -101,6 +107,11 @@ public @interface RequiredFieldValidator {
      * The message key to lookup for i18n.
      */
     String key() default "";
+
+    /**
+     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     */
+    String[] messageParams() default {};
 
     /**
      * The optional fieldName for SIMPLE validator types.

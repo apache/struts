@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
+import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 10);
+        assertEquals(validators.size(), 11);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -61,7 +62,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 10);
+        assertEquals(validators.size(), 11);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -89,7 +90,17 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateFieldExpressionValidator((FieldExpressionValidator) validator);
         } else if (validator.getValidatorType().equals("int")) {
             validateIntRangeFieldValidator((IntRangeFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("required")) {
+            validateRequiredFieldValidator((RequiredFieldValidator) validator);
         }
+    }
+
+    private void validateRequiredFieldValidator(RequiredFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("Foo is required!", validator.getDefaultMessage());
+        assertEquals("required.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
     }
 
     private void validateIntRangeFieldValidator(IntRangeFieldValidator validator) {

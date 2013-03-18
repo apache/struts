@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
+import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,7 +50,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 15);
+        assertEquals(validators.size(), 16);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -66,7 +67,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 15);
+        assertEquals(validators.size(), 16);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -104,7 +105,18 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateStringLengthFieldValidator((StringLengthFieldValidator) validator);
         } else if (validator.getValidatorType().equals("url")) {
             validateUrlValidator((URLValidator) validator);
+        } else if (validator.getValidatorType().equals("visitor")) {
+            validateVisitorFieldValidator((VisitorFieldValidator) validator);
         }
+    }
+
+    private void validateVisitorFieldValidator(VisitorFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("visitorfield.key", validator.getMessageKey());
+        assertEquals("Foo isn't valid!", validator.getDefaultMessage());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(false, validator.isAppendPrefix());
+        assertEquals(true, validator.isShortCircuit());
     }
 
     private void validateUrlValidator(URLValidator validator) {

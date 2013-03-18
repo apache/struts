@@ -15,7 +15,25 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.validator.annotations.*;
+import com.opensymphony.xwork2.validator.annotations.ConditionalVisitorFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.CustomValidator;
+import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.EmailValidator;
+import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.ShortRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.UrlValidator;
+import com.opensymphony.xwork2.validator.annotations.Validation;
+import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -23,7 +41,12 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,12 +102,11 @@ public class AnnotationValidationConfigurationBuilder {
                 // Process single custom validator
                 if (a instanceof Validation) {
                     Validation v = (Validation) a;
-                    if ( v.validations() != null ) {
-                        for ( Validations val: v.validations()) {
-                            processValidationAnnotation(val , fieldName, methodName, result);
+                    if (v.validations() != null) {
+                        for (Validations val : v.validations()) {
+                            processValidationAnnotation(val, fieldName, methodName, result);
                         }
                     }
-
                 }
                 // Process single custom validator
                 else if (a instanceof ExpressionValidator) {
@@ -93,7 +115,6 @@ public class AnnotationValidationConfigurationBuilder {
                     if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process single custom validator
                 else if (a instanceof CustomValidator) {
@@ -102,133 +123,121 @@ public class AnnotationValidationConfigurationBuilder {
                     if (temp != null) {
                         result.add(temp);
                     }
-
                 }
-
                 // Process ConversionErrorFieldValidator
-                else if ( a instanceof ConversionErrorFieldValidator) {
+                else if (a instanceof ConversionErrorFieldValidator) {
                     ConversionErrorFieldValidator v = (ConversionErrorFieldValidator) a;
                     ValidatorConfig temp = processConversionErrorFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
 
                 }
                 // Process DateRangeFieldValidator
-                else if ( a instanceof DateRangeFieldValidator) {
+                else if (a instanceof DateRangeFieldValidator) {
                     DateRangeFieldValidator v = (DateRangeFieldValidator) a;
                     ValidatorConfig temp = processDateRangeFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
 
                 }
                 // Process EmailValidator
-                else if ( a instanceof EmailValidator) {
+                else if (a instanceof EmailValidator) {
                     EmailValidator v = (EmailValidator) a;
                     ValidatorConfig temp = processEmailValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process FieldExpressionValidator
-                else if ( a instanceof FieldExpressionValidator) {
+                else if (a instanceof FieldExpressionValidator) {
                     FieldExpressionValidator v = (FieldExpressionValidator) a;
                     ValidatorConfig temp = processFieldExpressionValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process IntRangeFieldValidator
-                else if ( a instanceof IntRangeFieldValidator) {
+                else if (a instanceof IntRangeFieldValidator) {
                     IntRangeFieldValidator v = (IntRangeFieldValidator) a;
                     ValidatorConfig temp = processIntRangeFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process ShortRangeFieldValidator
-                else if ( a instanceof ShortRangeFieldValidator) {
+                else if (a instanceof ShortRangeFieldValidator) {
                     ShortRangeFieldValidator v = (ShortRangeFieldValidator) a;
                     ValidatorConfig temp = processShortRangeFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process DoubleRangeFieldValidator
-                else if ( a instanceof DoubleRangeFieldValidator) {
+                else if (a instanceof DoubleRangeFieldValidator) {
                     DoubleRangeFieldValidator v = (DoubleRangeFieldValidator) a;
                     ValidatorConfig temp = processDoubleRangeFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process RequiredFieldValidator
-                else if ( a instanceof RequiredFieldValidator) {
+                else if (a instanceof RequiredFieldValidator) {
                     RequiredFieldValidator v = (RequiredFieldValidator) a;
                     ValidatorConfig temp = processRequiredFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process RequiredStringValidator
-                else if ( a instanceof RequiredStringValidator) {
+                else if (a instanceof RequiredStringValidator) {
                     RequiredStringValidator v = (RequiredStringValidator) a;
                     ValidatorConfig temp = processRequiredStringValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process StringLengthFieldValidator
-                else if ( a instanceof StringLengthFieldValidator) {
+                else if (a instanceof StringLengthFieldValidator) {
                     StringLengthFieldValidator v = (StringLengthFieldValidator) a;
                     ValidatorConfig temp = processStringLengthFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
                 }
                 // Process UrlValidator
-                else if ( a instanceof UrlValidator) {
+                else if (a instanceof UrlValidator) {
                     UrlValidator v = (UrlValidator) a;
                     ValidatorConfig temp = processUrlValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
 
                 }
                 // Process ConditionalVisitorFieldValidator
-                else if ( a instanceof ConditionalVisitorFieldValidator) {
+                else if (a instanceof ConditionalVisitorFieldValidator) {
                     ConditionalVisitorFieldValidator v = (ConditionalVisitorFieldValidator) a;
                     ValidatorConfig temp = processConditionalVisitorFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process VisitorFieldValidator
-                else if ( a instanceof VisitorFieldValidator) {
+                else if (a instanceof VisitorFieldValidator) {
                     VisitorFieldValidator v = (VisitorFieldValidator) a;
                     ValidatorConfig temp = processVisitorFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
                 // Process RegexFieldValidator
-                else if ( a instanceof RegexFieldValidator) {
+                else if (a instanceof RegexFieldValidator) {
                     RegexFieldValidator v = (RegexFieldValidator) a;
                     ValidatorConfig temp = processRegexFieldValidatorAnnotation(v, fieldName, methodName);
-                    if ( temp != null) {
+                    if (temp != null) {
                         result.add(temp);
                     }
-
                 }
             }
         }
@@ -238,7 +247,7 @@ public class AnnotationValidationConfigurationBuilder {
     private void processValidationAnnotation(Annotation a, String fieldName, String methodName, List<ValidatorConfig> result) {
         Validations validations = (Validations) a;
         CustomValidator[] cv = validations.customValidators();
-        if ( cv != null ) {
+        if (cv != null) {
             for (CustomValidator v : cv) {
                 ValidatorConfig temp = processCustomValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -247,7 +256,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         ExpressionValidator[] ev = validations.expressions();
-        if ( ev != null ) {
+        if (ev != null) {
             for (ExpressionValidator v : ev) {
                 ValidatorConfig temp = processExpressionValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -256,7 +265,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         ConversionErrorFieldValidator[] cef = validations.conversionErrorFields();
-        if ( cef != null ) {
+        if (cef != null) {
             for (ConversionErrorFieldValidator v : cef) {
                 ValidatorConfig temp = processConversionErrorFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -265,7 +274,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         DateRangeFieldValidator[] drfv = validations.dateRangeFields();
-        if ( drfv != null ) {
+        if (drfv != null) {
             for (DateRangeFieldValidator v : drfv) {
                 ValidatorConfig temp = processDateRangeFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -274,7 +283,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         EmailValidator[] emv = validations.emails();
-        if ( emv != null ) {
+        if (emv != null) {
             for (EmailValidator v : emv) {
                 ValidatorConfig temp = processEmailValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -283,7 +292,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         FieldExpressionValidator[] fev = validations.fieldExpressions();
-        if ( fev != null ) {
+        if (fev != null) {
             for (FieldExpressionValidator v : fev) {
                 ValidatorConfig temp = processFieldExpressionValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -292,7 +301,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         IntRangeFieldValidator[] irfv = validations.intRangeFields();
-        if ( irfv != null ) {
+        if (irfv != null) {
             for (IntRangeFieldValidator v : irfv) {
                 ValidatorConfig temp = processIntRangeFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -301,7 +310,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         RegexFieldValidator[] rfv = validations.regexFields();
-        if ( rfv != null ) {
+        if (rfv != null) {
             for (RegexFieldValidator v : rfv) {
                 ValidatorConfig temp = processRegexFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -310,7 +319,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         RequiredFieldValidator[] rv = validations.requiredFields();
-        if ( rv != null ) {
+        if (rv != null) {
             for (RequiredFieldValidator v : rv) {
                 ValidatorConfig temp = processRequiredFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -319,7 +328,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         RequiredStringValidator[] rsv = validations.requiredStrings();
-        if ( rsv != null ) {
+        if (rsv != null) {
             for (RequiredStringValidator v : rsv) {
                 ValidatorConfig temp = processRequiredStringValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -328,7 +337,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         StringLengthFieldValidator[] slfv = validations.stringLengthFields();
-        if ( slfv != null ) {
+        if (slfv != null) {
             for (StringLengthFieldValidator v : slfv) {
                 ValidatorConfig temp = processStringLengthFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -337,7 +346,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         UrlValidator[] uv = validations.urls();
-        if ( uv != null ) {
+        if (uv != null) {
             for (UrlValidator v : uv) {
                 ValidatorConfig temp = processUrlValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -346,7 +355,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         ConditionalVisitorFieldValidator[] cvfv = validations.conditionalVisitorFields();
-        if ( cvfv != null ) {
+        if (cvfv != null) {
             for (ConditionalVisitorFieldValidator v : cvfv) {
                 ValidatorConfig temp = processConditionalVisitorFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -355,7 +364,7 @@ public class AnnotationValidationConfigurationBuilder {
             }
         }
         VisitorFieldValidator[] vfv = validations.visitorFields();
-        if ( vfv != null ) {
+        if (vfv != null) {
             for (VisitorFieldValidator v : vfv) {
                 ValidatorConfig temp = processVisitorFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
@@ -378,12 +387,12 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
 
     }
 
@@ -393,7 +402,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -404,7 +413,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         Annotation[] recursedAnnotations = v.parameters();
 
-        if ( recursedAnnotations != null ) {
+        if (recursedAnnotations != null) {
             for (Annotation a2 : recursedAnnotations) {
 
                 if (a2 instanceof ValidationParameter) {
@@ -419,13 +428,13 @@ public class AnnotationValidationConfigurationBuilder {
         }
 
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .messageParams(v.messageParams())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
     }
 
     private ValidatorConfig processRegexFieldValidatorAnnotation(RegexFieldValidator v, String fieldName, String methodName) {
@@ -435,7 +444,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -444,17 +453,17 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .addParam("trim", v.trim())
-            .addParam("trimExpression", v.trimExpression())
-            .addParam("caseSensitive", v.caseSensitive())
-            .addParam("caseSensitiveExpression", v.caseSensitiveExpression())
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .messageParams(v.messageParams())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .addParam("trim", v.trim())
+                .addParam("trimExpression", v.trimExpression())
+                .addParam("caseSensitive", v.caseSensitive())
+                .addParam("caseSensitiveExpression", v.caseSensitiveExpression())
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
     }
 
     private ValidatorConfig processConditionalVisitorFieldValidatorAnnotation(ConditionalVisitorFieldValidator v, String fieldName, String methodName) {
@@ -464,7 +473,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -474,26 +483,24 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .messageParams(v.messageParams())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
     }
 
 
-
     private ValidatorConfig processVisitorFieldValidatorAnnotation(VisitorFieldValidator v, String fieldName, String methodName) {
-
         String validatorType = "visitor";
 
         Map<String, Object> params = new HashMap<String, Object>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -502,12 +509,12 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processUrlValidatorAnnotation(UrlValidator v, String fieldName, String methodName) {
@@ -517,18 +524,18 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processStringLengthFieldValidatorAnnotation(StringLengthFieldValidator v, String fieldName, String methodName) {
@@ -538,26 +545,26 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
-        if ( v.maxLength() != null && v.maxLength().length() > 0) {
+        if (v.maxLength() != null && v.maxLength().length() > 0) {
             params.put("maxLength", v.maxLength());
         }
-        if ( v.minLength() != null && v.minLength().length() > 0) {
+        if (v.minLength() != null && v.minLength().length() > 0) {
             params.put("minLength", v.minLength());
         }
         params.put("trim", String.valueOf(v.trim()));
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private Date parseDateString(String value, String format) {
@@ -567,8 +574,8 @@ public class AnnotationValidationConfigurationBuilder {
             d0 = new SimpleDateFormat(format);
         }
         SimpleDateFormat d1 = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, Locale.getDefault());
-        SimpleDateFormat d2 = (SimpleDateFormat)DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.getDefault());
-        SimpleDateFormat d3 = (SimpleDateFormat)DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
+        SimpleDateFormat d2 = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.getDefault());
+        SimpleDateFormat d3 = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
         SimpleDateFormat[] dfs = (d0 != null ? new SimpleDateFormat[]{d0, d1, d2, d3} : new SimpleDateFormat[]{d1, d2, d3});
         for (SimpleDateFormat df : dfs)
             try {
@@ -588,7 +595,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -596,12 +603,12 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processRequiredFieldValidatorAnnotation(RequiredFieldValidator v, String fieldName, String methodName) {
@@ -611,18 +618,18 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processIntRangeFieldValidatorAnnotation(IntRangeFieldValidator v, String fieldName, String methodName) {
@@ -632,25 +639,25 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
-        if ( v.min() != null && v.min().length() > 0) {
+        if (v.min() != null && v.min().length() > 0) {
             params.put("min", v.min());
         }
-        if ( v.max() != null && v.max().length() > 0) {
+        if (v.max() != null && v.max().length() > 0) {
             params.put("max", v.max());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processShortRangeFieldValidatorAnnotation(ShortRangeFieldValidator v, String fieldName, String methodName) {
@@ -660,25 +667,25 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
-        if ( v.min() != null && v.min().length() > 0) {
+        if (v.min() != null && v.min().length() > 0) {
             params.put("min", v.min());
         }
-        if ( v.max() != null && v.max().length() > 0) {
+        if (v.max() != null && v.max().length() > 0) {
             params.put("max", v.max());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processDoubleRangeFieldValidatorAnnotation(DoubleRangeFieldValidator v, String fieldName, String methodName) {
@@ -688,21 +695,21 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
-        if ( v.minInclusive() != null && v.minInclusive().length() > 0) {
+        if (v.minInclusive() != null && v.minInclusive().length() > 0) {
             params.put("minInclusive", v.minInclusive());
         }
-        if ( v.maxInclusive() != null && v.maxInclusive().length() > 0) {
+        if (v.maxInclusive() != null && v.maxInclusive().length() > 0) {
             params.put("maxInclusive", v.maxInclusive());
         }
 
-        if ( v.minExclusive() != null && v.minExclusive().length() > 0) {
+        if (v.minExclusive() != null && v.minExclusive().length() > 0) {
             params.put("minExclusive", v.minExclusive());
         }
-        if ( v.maxExclusive() != null && v.maxExclusive().length() > 0) {
+        if (v.maxExclusive() != null && v.maxExclusive().length() > 0) {
             params.put("maxExclusive", v.maxExclusive());
         }
 
@@ -722,13 +729,13 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .messageParams(v.messageParams())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
     }
 
     private ValidatorConfig processFieldExpressionValidatorAnnotation(FieldExpressionValidator v, String fieldName, String methodName) {
@@ -738,7 +745,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -746,12 +753,12 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processEmailValidatorAnnotation(EmailValidator v, String fieldName, String methodName) {
@@ -761,18 +768,18 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .build();
     }
 
     private ValidatorConfig processDateRangeFieldValidatorAnnotation(DateRangeFieldValidator v, String fieldName, String methodName) {
@@ -782,16 +789,16 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
-        if ( v.min() != null && v.min().length() > 0) {
-             final Date minDate = parseDateString(v.min(), v.dateFormat());
-             params.put("min", minDate == null ? v.min() : minDate);
+        if (v.min() != null && v.min().length() > 0) {
+            final Date minDate = parseDateString(v.min(), v.dateFormat());
+            params.put("min", minDate == null ? v.min() : minDate);
         }
-        if ( v.max() != null && v.max().length() > 0) {
-             final Date maxDate = parseDateString(v.max(), v.dateFormat());
-             params.put("max", maxDate == null ? v.max() : maxDate);
+        if (v.max() != null && v.max().length() > 0) {
+            final Date maxDate = parseDateString(v.max(), v.dateFormat());
+            params.put("max", maxDate == null ? v.max() : maxDate);
         }
 
         if (StringUtils.isNotEmpty(v.minExpression())) {
@@ -803,13 +810,13 @@ public class AnnotationValidationConfigurationBuilder {
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .messageParams(v.messageParams())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
     }
 
     private ValidatorConfig processConversionErrorFieldValidatorAnnotation(ConversionErrorFieldValidator v, String fieldName, String methodName) {
@@ -819,20 +826,20 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0 ) {
+        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)
-            .addParams(params)
-            .addParam("methodName", methodName)
-            .addParam("repopulateField", v.repopulateField())
-            .shortCircuit(v.shortCircuit())
-            .defaultMessage(v.message())
-            .messageKey(v.key())
-            .messageParams(v.messageParams())
-            .build();
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .addParam("repopulateField", v.repopulateField())
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
     }
 
     public List<ValidatorConfig> buildAnnotationClassValidatorConfigs(Class aClass) {
@@ -846,7 +853,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         Method[] methods = aClass.getDeclaredMethods();
 
-        if ( methods != null ) {
+        if (methods != null) {
             for (Method method : methods) {
                 temp = processAnnotations(method);
                 if (temp != null) {

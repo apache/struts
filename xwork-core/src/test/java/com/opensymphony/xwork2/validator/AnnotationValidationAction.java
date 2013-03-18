@@ -13,6 +13,7 @@ import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.ShortRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
 
 /**
@@ -51,6 +52,8 @@ public class AnnotationValidationAction extends ActionSupport {
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @RequiredStringValidator(fieldName = "foo", key = "requiredstring.key", message = "Foo is required!",
             messageParams = {"one", "two", "three"}, shortCircuit = true, trim = false)
+    @ShortRangeFieldValidator(fieldName = "foo", key = "short.key", message = "Foo is out of range!", min = "1", max = "10",
+            messageParams = {"one", "two", "three"}, shortCircuit = true)
     public String execute() {
         return SUCCESS;
     }

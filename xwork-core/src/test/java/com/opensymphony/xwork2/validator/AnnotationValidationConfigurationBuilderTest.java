@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +47,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 12);
+        assertEquals(validators.size(), 13);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -63,7 +64,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(new AnnotationValidationExpAction());
 
-        assertEquals(validators.size(), 12);
+        assertEquals(validators.size(), 13);
         for (Validator validator : validators) {
             validator.setValueStack(valueStack);
             validate(validator);
@@ -95,7 +96,19 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateRequiredFieldValidator((RequiredFieldValidator) validator);
         } else if (validator.getValidatorType().equals("requiredstring")) {
             validateRequiredStringValidator((RequiredStringValidator) validator);
+        }else if (validator.getValidatorType().equals("short")) {
+            validateShortRangeFieldValidator((ShortRangeFieldValidator) validator);
         }
+    }
+
+    private void validateShortRangeFieldValidator(ShortRangeFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("Foo is out of range!", validator.getDefaultMessage());
+        assertEquals("short.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(Short.valueOf("10"), validator.getMax());
+        assertEquals(Short.valueOf("1"), validator.getMin());
+        assertEquals(true, validator.isShortCircuit());
     }
 
     private void validateRequiredStringValidator(RequiredStringValidator validator) {

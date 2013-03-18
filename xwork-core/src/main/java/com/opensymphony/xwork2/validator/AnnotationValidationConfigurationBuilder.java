@@ -680,11 +680,17 @@ public class AnnotationValidationConfigurationBuilder {
             params.put("fieldName", v.fieldName());
         }
 
-        if (v.min() != null && v.min().length() > 0) {
+        if (StringUtils.isNotEmpty(v.min())) {
             params.put("min", v.min());
         }
-        if (v.max() != null && v.max().length() > 0) {
+        if (StringUtils.isNotEmpty(v.max())) {
             params.put("max", v.max());
+        }
+        if (StringUtils.isNotEmpty(v.maxExpression())) {
+            params.put("maxExpression", v.maxExpression());
+        }
+        if (StringUtils.isNotEmpty(v.minExpression())) {
+            params.put("minExpression", v.minExpression());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
@@ -694,6 +700,7 @@ public class AnnotationValidationConfigurationBuilder {
                 .shortCircuit(v.shortCircuit())
                 .defaultMessage(v.message())
                 .messageKey(v.key())
+                .messageParams(v.messageParams())
                 .build();
     }
 

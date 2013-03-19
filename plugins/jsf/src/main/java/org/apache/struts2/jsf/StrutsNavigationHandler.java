@@ -21,14 +21,13 @@
 
 package org.apache.struts2.jsf;
 
-import java.util.Map;
-
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.FacesContext;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+
+import javax.faces.application.NavigationHandler;
+import javax.faces.context.FacesContext;
+import java.util.Map;
 
 /**
  * Overrides the JFS navigation by delegating the result to handling by the core
@@ -60,7 +59,7 @@ public class StrutsNavigationHandler extends NavigationHandler {
     public void handleNavigation(FacesContext facesContext, String fromAction, String outcome) {
         ActionContext ctx = ActionContext.getContext();
         if (outcome != null) {
-            if (ctx == null && ctx.getActionInvocation() == null) {
+            if (ctx == null || ctx.getActionInvocation() == null) {
                 delegateToParentNavigation(facesContext, fromAction, outcome);
             } else {
                 ActionConfig config = ctx.getActionInvocation().getProxy().getConfig();

@@ -58,7 +58,7 @@
 	</field>
 	<field name="regexValidatorField">
 		<field-validator type="regex">
-			<param name="expression">.*\.txt</param>
+			<param name="regex">.*\.txt</param>
 			<message><![CDATA[ regexValidatorField must match a regexp (.*\.txt) if specified ]]></message>
 		</field-validator>
 	</field>

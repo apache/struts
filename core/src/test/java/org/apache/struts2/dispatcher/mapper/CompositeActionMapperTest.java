@@ -21,23 +21,14 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.StrutsConstants;
-import org.springframework.mock.web.MockHttpServletRequest;
-
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-
 import junit.framework.TestCase;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -49,9 +40,8 @@ public class CompositeActionMapperTest extends TestCase {
     Mock mockContainer;
     
     public void setUp() throws Exception {
-        compositeActionMapper = new CompositeActionMapper();
         mockContainer = new Mock(Container.class);
-        compositeActionMapper.setContainer((Container)mockContainer.proxy());
+        compositeActionMapper = new CompositeActionMapper((Container)mockContainer.proxy());
     }
     
 

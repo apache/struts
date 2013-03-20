@@ -66,6 +66,14 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+
+        <!-- Convention Plugin tests -->
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-convention-plugin</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Portlet -->
         <dependency>
             <groupId>javax.portlet</groupId>

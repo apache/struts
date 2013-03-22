@@ -183,6 +183,7 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
             .addParam("location", "someLocation")
             .addParam("prependServletContext", "true")
             .addParam("method", "someMethod")
+            .addParam("statusCode", "333")
             .addParam("param1", "value 1")
             .addParam("param2", "value 2")
             .addParam("param3", "value 3")
@@ -221,7 +222,6 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
-
         control.verify();
     }
 

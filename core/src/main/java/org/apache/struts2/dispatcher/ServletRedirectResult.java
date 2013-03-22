@@ -198,8 +198,9 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             if (resultConfig != null) {
                 Map<String, String> resultConfigParams = resultConfig.getParams();
 
+                List<String> prohibitedResultParams = getProhibitedResultParams();
                 for (Map.Entry<String, String> e : resultConfigParams.entrySet()) {
-                    if (!getProhibitedResultParams().contains(e.getKey())) {
+                    if (!prohibitedResultParams.contains(e.getKey())) {
                         String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue(), invocation);
                         if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
                             requestParameters.put(e.getKey(), potentialValue);
@@ -227,7 +228,18 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     }
 
     protected List<String> getProhibitedResultParams() {
-        return Arrays.asList(DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", "prependServletContext", "suppressEmptyParameters", "anchor");
+        return Arrays.asList(
+                DEFAULT_PARAM,
+                "namespace",
+                "method",
+                "encode",
+                "parse",
+                "location",
+                "prependServletContext",
+                "suppressEmptyParameters",
+                "anchor",
+                "statusCode"
+        );
     }
 
     /**

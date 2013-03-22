@@ -336,8 +336,7 @@ public class DefaultActionMapper implements ActionMapper {
      * @param request The request
      * @param mapping The action mapping
      */
-    public void handleSpecialParameters(HttpServletRequest request,
-                                        ActionMapping mapping) {
+    public void handleSpecialParameters(HttpServletRequest request, ActionMapping mapping) {
         // handle special parameter prefixes.
         Set<String> uniqueParameters = new HashSet<String>();
         Map parameterMap = request.getParameterMap();
@@ -367,8 +366,7 @@ public class DefaultActionMapper implements ActionMapper {
      * @param uri     The uri
      * @param mapping The action mapping to populate
      */
-    protected void parseNameAndNamespace(String uri, ActionMapping mapping,
-                                         ConfigurationManager configManager) {
+    protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
         if (lastSlash == -1) {
@@ -411,7 +409,7 @@ public class DefaultActionMapper implements ActionMapper {
             }
         }
 
-        if (!allowSlashesInActionNames && name != null) {
+        if (!allowSlashesInActionNames) {
             int pos = name.lastIndexOf('/');
             if (pos > -1 && pos < name.length() - 1) {
                 name = name.substring(pos + 1);

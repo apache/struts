@@ -295,8 +295,7 @@ public class DefaultActionMapper implements ActionMapper {
      *
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
-    public ActionMapping getMapping(HttpServletRequest request,
-                                    ConfigurationManager configManager) {
+    public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
 
@@ -309,22 +308,13 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         parseNameAndNamespace(uri, mapping, configManager);
-
         handleSpecialParameters(request, mapping);
-
-        // if Action name is empty it can be a request to static resource, return null to handle that case
-        if (StringUtils.isEmpty(mapping.getName())) {
-            return null;
-        }
-
-        parseActionName(mapping);
-
-        return mapping;
+        return parseActionName(mapping);
     }
 
     protected ActionMapping parseActionName(ActionMapping mapping) {
         if (mapping.getName() == null) {
-            return mapping;
+            return null;
         }
         if (allowDynamicMethodCalls) {
             // handle "name!method" convention.

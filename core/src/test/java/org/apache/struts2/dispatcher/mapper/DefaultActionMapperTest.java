@@ -21,17 +21,6 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.ServletRedirectResult;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
-import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
-import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
-
 import com.mockobjects.dynamic.Mock;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.ActionContext;
@@ -41,6 +30,16 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.ServletRedirectResult;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
+import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DefaultActionMapper test case.
@@ -257,8 +256,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     public void testGetMappingWithActionName_null() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMappingFromActionName(null);
-        assertEquals(null, mapping.getName());
-        assertEquals(null, mapping.getMethod());
+        assertNull(mapping);
     }
 
     public void testGetUri() throws Exception {

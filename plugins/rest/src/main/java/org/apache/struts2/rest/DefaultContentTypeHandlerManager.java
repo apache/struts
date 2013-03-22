@@ -78,24 +78,28 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
             }
         }
     }
-    
+
     /**
      * Gets the handler for the request by looking at the request content type and extension
-     * @param req The request
+     * @param request The request
      * @return The appropriate handler
      */
-    public ContentTypeHandler getHandlerForRequest(HttpServletRequest req) {
+    public ContentTypeHandler getHandlerForRequest(HttpServletRequest request) {
         ContentTypeHandler handler = null;
-        String contentType = req.getContentType();
+        String contentType = request.getContentType();
         if (contentType != null) {
-        	int index = contentType.indexOf(';');
-        	if( index != -1)
-        		contentType = contentType.substring(0,index).trim();
             handler = handlersByContentType.get(contentType);
+            if (handler == null) {
+                // strip off encoding and search again (e.g., application/json;charset=ISO-8859-1)
+                int index = contentType.indexOf(';');
+                if (index != -1) {
+                    contentType = contentType.substring(0, index).trim();
+                }
+                handler = handlersByContentType.get(contentType);
+            }
         }
-        
         if (handler == null) {
-            String extension = findExtension(req.getRequestURI());
+            String extension = findExtension(request.getRequestURI());
             handler = handlersByExtension.get(extension);
         }
         return handler;

@@ -394,6 +394,13 @@ public class XWorkConverter extends DefaultTypeConverter {
      * @return a TypeConverter to handle the specified class or null if none can be found
      */
     public TypeConverter lookup(Class clazz) {
+        if (clazz.isPrimitive()) {
+            /**
+             * if it is primitive use default converter which allows to define different converters per type
+             * @see XWorkBasicConverter
+             */
+            return defaultTypeConverter;
+        }
         return lookup(clazz.getName());
     }
 

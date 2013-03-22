@@ -60,15 +60,15 @@ public abstract class LoggerFactory {
         try {
             if (factory == null) {
                 try {
-                    Class.forName("org.slf4j.LoggerFactory");
-                    factory = new Slf4jLoggerFactory();
+                    Class.forName("org.apache.commons.logging.LogFactory");
+                    factory = new com.opensymphony.xwork2.util.logging.commons.CommonsLoggerFactory();
                 } catch (ClassNotFoundException ex) {
-                    //slf4j not found try commons LogFactory
+                    //commons-logging not found try slf4j LogFactory
                     try {
-                        Class.forName("org.apache.commons.logging.LogFactory");
-                        factory = new com.opensymphony.xwork2.util.logging.commons.CommonsLoggerFactory();
+                        Class.forName("org.slf4j.LoggerFactory");
+                        factory = new Slf4jLoggerFactory();
                     } catch (ClassNotFoundException cnfex) {
-                        // commons logging not found, falling back to jdk logging
+                        // slf4j not found, falling back to jdk logging
                         factory = new JdkLoggerFactory();
                     }
                 }

@@ -82,6 +82,11 @@ public class HttpHeaderResult implements Result {
     private static final long serialVersionUID = 195648957144219214L;
     private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderResult.class);
 
+    /**
+     * This result type doesn't have a default param, null is ok to reduce noice in logs
+     */
+    public static final String DEFAULT_PARAM = null;
+
     private boolean parse = true;
     private Map<String, String> headers;
     private int status = -1;

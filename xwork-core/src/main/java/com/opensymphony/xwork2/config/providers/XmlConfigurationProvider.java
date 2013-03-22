@@ -567,10 +567,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 String paramName = null;
                 try {
                     paramName = (String) clazz.getField("DEFAULT_PARAM").get(null);
-                }
-                catch (Throwable t) {
+                } catch (Throwable t) {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("The result type #0 doesn't have a default param [DEFAULT_PARAM] defined", t, className);
+                        LOG.debug("The result type [#0] doesn't have a default param [DEFAULT_PARAM] defined!", t, className);
                     }
                 }
                 ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name, className).defaultResultParam(paramName)

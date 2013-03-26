@@ -26,6 +26,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -102,6 +104,8 @@ import java.util.Locale;
 public class FreemarkerResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -3778230771704661631L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerResult.class);
 
     protected ActionInvocation invocation;
     protected Configuration configuration;
@@ -191,6 +195,16 @@ public class FreemarkerResult extends StrutsResultSupport {
                             parentCharArrayWriter.flush();
                             parentCharArrayWriter.writeTo(writer);
                         }
+                    } catch (TemplateException e) {
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("Error processing Freemarker result!", e);
+                        }
+                        throw e;
+                    } catch (IOException e) {
+                        if (LOG.isErrorEnabled()){
+                            LOG.error("Error processing Freemarker result!", e);
+                        }
+                        throw e;
                     } finally {
                         if (isTopTemplate && parentCharArrayWriter != null) {
                             req.removeAttribute(PARENT_TEMPLATE_WRITER);

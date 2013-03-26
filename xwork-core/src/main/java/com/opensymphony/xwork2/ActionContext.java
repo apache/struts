@@ -40,14 +40,8 @@ import java.util.Map;
  * @author Bill Lynch (docs)
  */
 public class ActionContext implements Serializable {
-    static ThreadLocal actionContext = new ThreadLocal();
 
-    /**
-     * Constant that indicates the action is running under a "development mode".
-     * This mode provides more feedback that is useful for developers but probably
-     * too verbose/error prone for production.
-     */
-    //public static final String DEV_MODE = "__devMode";
+    static ThreadLocal<ActionContext> actionContext = new ThreadLocal<ActionContext>();
 
     /**
      * Constant for the name of the action being executed.
@@ -100,8 +94,7 @@ public class ActionContext implements Serializable {
      */
     public static final String CONTAINER = "com.opensymphony.xwork2.ActionContext.container";
     
-    Map<String, Object> context;
-
+    private Map<String, Object> context;
 
     /**
      * Creates a new ActionContext initialized with another context.
@@ -164,16 +157,7 @@ public class ActionContext implements Serializable {
      * @return the ActionContext for the current thread, is never <tt>null</tt>.
      */
     public static ActionContext getContext() {
-        return (ActionContext) actionContext.get();
-
-        // Don't do lazy context creation, as it requires container; the creation of which may 
-        // precede the context creation
-        //if (context == null) {
-        //    ValueStack vs = ValueStackFactory.getFactory().createValueStack();
-        //    context = new ActionContext(vs.getContext());
-        //    setContext(context);
-        //}
-
+        return actionContext.get();
     }
 
     /**

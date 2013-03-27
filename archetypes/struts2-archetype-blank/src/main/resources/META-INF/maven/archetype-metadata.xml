@@ -18,11 +18,18 @@
     <fileSet filtered="false" packaged="true">
       <directory>src/main/resources</directory>
       <includes>
-          <include>**/*.properties</include>
+          <include>**/*package*.properties</include>
       </includes>
     </fileSet>
-    
-    <fileSet filtered="false" packaged="true">
+
+      <fileSet filtered="false" packaged="false">
+          <directory>src/main/resources</directory>
+          <includes>
+              <include>log4j.properties</include>
+          </includes>
+      </fileSet>
+
+      <fileSet filtered="false" packaged="true">
       <directory>src/main/resources</directory>
       <includes>
         <include>**/*-validation.xml</include>

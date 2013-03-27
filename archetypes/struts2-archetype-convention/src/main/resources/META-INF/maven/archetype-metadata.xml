@@ -19,7 +19,7 @@
         <fileSet filtered="false" packaged="true">
             <directory>src/main/resources</directory>
             <includes>
-                <include>**/*package*.properties</include>
+                <include>**/*.properties</include>
             </includes>
         </fileSet>
 

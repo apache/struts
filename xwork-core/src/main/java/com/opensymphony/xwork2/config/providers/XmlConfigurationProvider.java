@@ -245,7 +245,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                                 throw new ConfigurationException("Unable to load bean: type:" + type + " class:" + impl, ex, childNode);
                             } else {
                                 if (LOG.isDebugEnabled()) {
-                                    LOG.debug("Unable to load optional class: #0", ex, impl);
+                                    LOG.debug("Unable to load optional class: #0", impl);
                                 }
                             }
                         }

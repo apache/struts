@@ -98,7 +98,7 @@
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webAppSourceDirectory>\${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webAppConfig>
-                        <contextPath>/struts2-showcase</contextPath>
+                        <contextPath>/struts2-convention</contextPath>
                         <descriptor>\${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
                     </webAppConfig>
                 </configuration>

@@ -23,6 +23,17 @@ package org.apache.struts2.interceptor;
 
 import java.util.Map;
 
+/**
+ * Actions implementing the CookiesAware interface will receive
+ * a Map of filtered cookies via the setCookiesMap method.
+ *
+ * Please note that the {@link CookieInterceptor} needs to be
+ * activated to receive a cookies map.
+ */
 public interface CookiesAware {
+    /**
+     * Sets a map of filtered cookies.
+     * @param cookies the cookies
+     */
     void setCookiesMap(Map<String, String> cookies);
 }

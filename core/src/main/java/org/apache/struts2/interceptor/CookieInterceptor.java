@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
  * If cookiesValue is left empty it will assume that all cookie that match the cookieName
  * parameter will be injected into Struts' action.<p/>
  *
- * The action could implements {@link CookiesAware} in order to have a {@link Map}
+ * The action could implement {@link CookiesAware} in order to have a {@link Map}
  * of filtered cookies set into it. <p/>
  *
  * <!-- END SNIPPET: description -->

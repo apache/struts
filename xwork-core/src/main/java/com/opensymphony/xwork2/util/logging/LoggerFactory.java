@@ -30,7 +30,7 @@ public abstract class LoggerFactory {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     private static LoggerFactory factory;
-    
+
     public static void setLoggerFactory(LoggerFactory factory) {
         lock.writeLock().lock();
         try {
@@ -38,17 +38,17 @@ public abstract class LoggerFactory {
         } finally {
             lock.writeLock().unlock();
         }
-            
+
     }
-    
+
     public static Logger getLogger(Class<?> cls) {
         return getLoggerFactory().getLoggerImpl(cls);
     }
-    
+
     public static Logger getLogger(String name) {
         return getLoggerFactory().getLoggerImpl(name);
     }
-    
+
     protected static LoggerFactory getLoggerFactory() {
         lock.readLock().lock();
         try {
@@ -70,30 +70,30 @@ public abstract class LoggerFactory {
                         throw new XWorkException("System property [" + XWorkConstants.XWORK_LOGGER_FACTORY +
                                 "] was defined as [" + userLoggerFactory + "] but there is a problem to use that LoggerFactory!", e);
                     }
-                }
-                try {
-                    Class.forName("org.apache.commons.logging.LogFactory");
-                    factory = new com.opensymphony.xwork2.util.logging.commons.CommonsLoggerFactory();
-                } catch (ClassNotFoundException ex) {
-                    //commons-logging not found try slf4j LogFactory
+                } else {
                     try {
-                        Class.forName("org.slf4j.LoggerFactory");
-                        factory = new Slf4jLoggerFactory();
-                    } catch (ClassNotFoundException cnfex) {
-                        // slf4j not found, falling back to jdk logging
-                        factory = new JdkLoggerFactory();
+                        Class.forName("org.apache.commons.logging.LogFactory");
+                        factory = new com.opensymphony.xwork2.util.logging.commons.CommonsLoggerFactory();
+                    } catch (ClassNotFoundException ex) {
+                        //commons-logging not found try slf4j LogFactory
+                        try {
+                            Class.forName("org.slf4j.LoggerFactory");
+                            factory = new Slf4jLoggerFactory();
+                        } catch (ClassNotFoundException cnfex) {
+                            // slf4j not found, falling back to jdk logging
+                            factory = new JdkLoggerFactory();
+                        }
                     }
                 }
             }
             return factory;
-        }
-        finally {
+        } finally {
             lock.writeLock().unlock();
         }
     }
-    
+
     protected abstract Logger getLoggerImpl(Class<?> cls);
-    
-    protected abstract Logger getLoggerImpl(String name); 
+
+    protected abstract Logger getLoggerImpl(String name);
 
 }

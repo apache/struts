@@ -20,11 +20,11 @@
  */
 package org.apache.struts2.json;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
-import java.io.InputStream;
 import java.net.URL;
-import java.util.StringTokenizer;
 
 /**
  * Utility methods for test classes
@@ -42,14 +42,7 @@ public class TestUtils {
      * @return the normalized string
      */
     public static String normalize(Object obj, boolean appendSpace) {
-        StringTokenizer st = new StringTokenizer(obj.toString().trim(), " \t\r\n");
-        StringBuffer buffer = new StringBuffer(128);
-
-        while (st.hasMoreTokens()) {
-            buffer.append(st.nextToken());
-        }
-
-        return buffer.toString();
+        return StringUtils.normalizeSpace(obj.toString());
     }
 
     public static String normalize(URL url) throws Exception {
@@ -87,17 +80,6 @@ public class TestUtils {
         if (url == null)
             throw new Exception("unable to verify a null URL");
 
-        StringBuffer buffer = new StringBuffer(128);
-        InputStream in = url.openStream();
-        byte[] buf = new byte[4096];
-        int nbytes;
-
-        while ((nbytes = in.read(buf)) > 0) {
-            buffer.append(new String(buf, 0, nbytes));
-        }
-
-        in.close();
-
-        return buffer.toString();
+        return IOUtils.toString(url.openStream());
     }
 }

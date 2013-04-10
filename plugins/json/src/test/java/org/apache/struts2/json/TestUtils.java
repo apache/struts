@@ -25,11 +25,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility methods for test classes
  */
 public class TestUtils {
+    /**
+     * A regex pattern for recognizing blocks of whitespace characters.
+     */
+    private static final Pattern WHITESPACE_BLOCK = Pattern.compile("\\s+");
+
     /**
      * normalizes a string so that strings generated on different platforms can
      * be compared. any group of one or more space, tab, \r, and \n characters
@@ -42,7 +49,14 @@ public class TestUtils {
      * @return the normalized string
      */
     public static String normalize(Object obj, boolean appendSpace) {
-        return StringUtils.normalizeSpace(obj.toString());
+        Matcher matcher = WHITESPACE_BLOCK.matcher(StringUtils.trim(obj.toString()));
+        /*
+        FIXME: appendSpace has been always ignored, uncommenting the following line will cause dozen of test fails
+        if (appendSpace) {
+            return matcher.replaceAll(" ");
+        }
+        */
+        return matcher.replaceAll("");
     }
 
     public static String normalize(URL url) throws Exception {

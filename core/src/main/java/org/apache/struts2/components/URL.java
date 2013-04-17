@@ -21,19 +21,17 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -64,7 +62,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <!-- START SNIPPET: params -->
  *
  * <ul>
- *      <li>action (String) - (value or action choose either one, if both exist value takes precedence) action's name (alias) <li>
+ *      <li>action (String) - (value or action choose either one, if both exist value takes precedence) action's name (alias) </li>
  *      <li>value (String) - (value or action choose either one, if both exist value takes precedence) the url itself</li>
  *      <li>scheme (String) - http scheme (http, https) defaults to the scheme this request is in</li>
  *      <li>namespace - action's namespace</li>

@@ -68,9 +68,9 @@ import java.io.Writer;
  *      <li>namespace - action's namespace</li>
  *      <li>method (String) - action's method name, defaults to 'execute'</li>
  *      <li>encode (Boolean) - url encode the generated url. Defaults to 'true'.</li>
- *      <li>includeParams (String) - The includeParams attribute may have the value 'none', 'get' or 'all'. Defaults to 'get'.
- *                                   none - include no parameters in the URL
- *                                   get  - include only GET parameters in the URL (default)
+ *      <li>includeParams (String) - The includeParams attribute may have the value 'none', 'get' or 'all'. Defaults to 'none'.
+ *                                   none - include no parameters in the URL (default)
+ *                                   get  - include only GET parameters in the URL
  *                                   all  - include both GET and POST parameters in the URL
  *      </li>
  *      <li>includeContext (Boolean) - Specifies whether to include the web app context path. Defaults to 'true'.</li>

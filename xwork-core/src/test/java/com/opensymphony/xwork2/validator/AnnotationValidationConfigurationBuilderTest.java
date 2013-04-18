@@ -1,5 +1,6 @@
 package com.opensymphony.xwork2.validator;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.DefaultActionInvocation;
@@ -33,9 +34,8 @@ import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 /**
  * Simple test to check if validation Annotations match given validator class
@@ -44,7 +44,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
 
     public void testValidationAnnotation() throws Exception {
         // given
-        AnnotationActionValidatorManager manager = createValidationManager(AnnotationValidationAction.class);
+        AnnotationActionValidatorManager manager = createValidationManager(AnnotationValidationAction.class, Locale.US);
 
         // when
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
@@ -58,7 +58,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
 
     public void testValidationAnnotationExpParams() throws Exception {
         // given
-        AnnotationActionValidatorManager manager = createValidationManager(AnnotationValidationExpAction.class);
+        AnnotationActionValidatorManager manager = createValidationManager(AnnotationValidationExpAction.class, Locale.US);
 
         // when
         List<Validator> validators = manager.getValidators(AnnotationValidationExpAction.class, null);
@@ -265,7 +265,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
     }
 
-    private AnnotationActionValidatorManager createValidationManager(final Class<? extends ActionSupport> actionClass) throws Exception {
+    private AnnotationActionValidatorManager createValidationManager(final Class<? extends ActionSupport> actionClass, Locale locale) throws Exception {
         loadConfigurationProviders(new ConfigurationProvider() {
             public void destroy() {
 
@@ -290,10 +290,12 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             }
         });
 
-        Map<String, Object> context = new HashMap<String, Object>();
-        ActionInvocation invocation = new DefaultActionInvocation(context, true);
+        // ActionContext is destroyed during rebuilding configuration
+        ActionContext.getContext().setLocale(locale);
+
+        ActionInvocation invocation = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), true);
         container.inject(invocation);
-        invocation.init(actionProxyFactory.createActionProxy("", "annotation", null, context));
+        invocation.init(actionProxyFactory.createActionProxy("", "annotation", null, ActionContext.getContext().getContextMap()));
 
         AnnotationActionValidatorManager manager = new AnnotationActionValidatorManager();
         container.inject(manager);

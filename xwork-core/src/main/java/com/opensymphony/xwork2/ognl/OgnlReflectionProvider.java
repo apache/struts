@@ -45,12 +45,11 @@ public class OgnlReflectionProvider implements ReflectionProvider {
         }
     }
 
-    public void setProperties(Map<String, String> props, Object o, Map<String, Object> context) {
+    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context) {
         ognlUtil.setProperties(props, o, context);
     }
 
-    public void setProperties(Map<String, String> props, Object o, Map<String, Object> context,
-            boolean throwPropertyExceptions) throws ReflectionException{
+    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
         ognlUtil.setProperties(props, o, context, throwPropertyExceptions);
         
     }

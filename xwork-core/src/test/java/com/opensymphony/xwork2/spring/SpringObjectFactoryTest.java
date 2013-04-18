@@ -52,6 +52,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.StaticApplicationContext;
 
 import java.util.HashMap;
+import java.util.Map;
 
 // TODO: Document properly
 
@@ -114,7 +115,8 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
     }
 
     public void testFallsBackToDefaultObjectFactoryValidatorBuilding() throws Exception {
-        Validator validator = objectFactory.buildValidator(RequiredStringValidator.class.getName(), new HashMap<String, Object>(), null);
+        Map<String,Object> extraContext = new HashMap<String, Object>();
+        Validator validator = objectFactory.buildValidator(RequiredStringValidator.class.getName(), new HashMap<String, Object>(), extraContext);
 
         assertEquals(RequiredStringValidator.class, validator.getClass());
     }
@@ -150,7 +152,8 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
     public void testObtainValidatorBySpringName() throws Exception {
         sac.registerPrototype("expression-validator", ExpressionValidator.class, new MutablePropertyValues());
 
-        Validator validator = objectFactory.buildValidator("expression-validator", new HashMap<String, Object>(), null);
+        Map<String, Object> extraContext = new HashMap<String, Object>();
+        Validator validator = objectFactory.buildValidator("expression-validator", new HashMap<String, Object>(), extraContext);
 
         assertEquals(ExpressionValidator.class, validator.getClass());
     }

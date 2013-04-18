@@ -251,8 +251,8 @@ public class ObjectFactory implements Serializable {
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Validator buildValidator(String className, Map<String, Object> params, Map<String, Object> extraContext) throws Exception {
-        Validator validator = (Validator) buildBean(className, null);
-        reflectionProvider.setProperties(params, validator);
+        Validator validator = (Validator) buildBean(className, extraContext);
+        reflectionProvider.setProperties(params, validator, extraContext);
 
         return validator;
     }

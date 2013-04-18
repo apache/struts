@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.validator;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.providers.XmlHelper;
@@ -127,7 +128,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
 
                 try {
                     // catch any problems here
-                    objectFactory.buildValidator(className, new HashMap<String, Object>(), null);
+                    objectFactory.buildValidator(className, new HashMap<String, Object>(), ActionContext.getContext().getContextMap());
                     validators.put(name, className);
                 } catch (Exception e) {
                     throw new ConfigurationException("Unable to load validator class " + className, e, validatorElement);

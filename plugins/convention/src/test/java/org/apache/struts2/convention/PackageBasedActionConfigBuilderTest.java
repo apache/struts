@@ -760,9 +760,9 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                         public void setProperties(Map<String, ?> properties, Object o) {
                         }
 
-                        public void setProperties(Map<String, String> properties, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException {
+                        public void setProperties(Map<String, ?> properties, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException {
                             if (o instanceof ActionChainResult) {
-                                ((ActionChainResult)o).setActionName(properties.get("actionName"));
+                                ((ActionChainResult)o).setActionName(String.valueOf(properties.get("actionName")));
                             }
                         }
 

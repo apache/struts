@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.validator;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -29,9 +30,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.*;
-import java.util.zip.ZipInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 /**
@@ -64,7 +70,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
         try {
             // instantiate the validator, and set configured parameters
             //todo - can this use the ThreadLocal?
-            validator = objectFactory.buildValidator(className, cfg.getParams(), null); // ActionContext.getContext().getContextMap());
+            validator = objectFactory.buildValidator(className, cfg.getParams(), ActionContext.getContext().getContextMap());
         } catch (Exception e) {
             final String msg = "There was a problem creating a Validator of type " + className + " : caused by " + e.getMessage();
             throw new XWorkException(msg, e, cfg);

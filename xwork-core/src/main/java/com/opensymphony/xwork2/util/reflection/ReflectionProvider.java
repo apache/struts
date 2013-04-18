@@ -23,7 +23,7 @@ public interface ReflectionProvider {
      * @param o       the object
      * @param context the action context
      */
-    void setProperties(Map<String, String> props, Object o, Map<String, Object> context);
+    void setProperties(Map<String, ?> props, Object o, Map<String, Object> context);
 
     /**
      * Sets the object's properties using the default type converter.
@@ -34,7 +34,7 @@ public interface ReflectionProvider {
      * @param throwPropertyExceptions boolean which tells whether it should throw exceptions for
      *                                problems setting the properties
      */
-    void setProperties(Map<String, String> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException;
+    void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException;
     
     /**
      * Sets the properties on the object using the default context, defaulting to not throwing

@@ -36,15 +36,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class CompositeActionMapperTest extends TestCase {
 
-    CompositeActionMapper compositeActionMapper;
     Mock mockContainer;
     
     public void setUp() throws Exception {
         mockContainer = new Mock(Container.class);
-        compositeActionMapper = new CompositeActionMapper((Container)mockContainer.proxy());
     }
     
-
     public void testGetActionMappingAndUri1() throws Exception {
         ActionMapper mapper1 = new InnerActionMapper1();
         ActionMapper mapper2 = new InnerActionMapper2();
@@ -52,7 +49,7 @@ public class CompositeActionMapperTest extends TestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper1")), mapper1);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), mapper3);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper3")), mapper2);
-        compositeActionMapper.setActionMappers("mapper1,mapper2,mapper3");
+        CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2,mapper3");
         
         ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
         String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
@@ -70,7 +67,7 @@ public class CompositeActionMapperTest extends TestCase {
         ActionMapper mapper2 = new InnerActionMapper2();
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper1")), mapper1);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), mapper2);
-        compositeActionMapper.setActionMappers("mapper1,mapper2");
+        CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2");
 
         ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
         String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());

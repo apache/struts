@@ -29,7 +29,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,42 +37,8 @@ import java.util.List;
  *
  * A composite action mapper that is capable of delegating to a series of {@link ActionMapper} if the former
  * failed to obtained a valid {@link ActionMapping} or uri.
- * <p/>
- * It is configured through struts.properties.
- * <p/>
- * For example, with the following entries in struts.properties
- * <p/>
- * <pre>
- * &lt;bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" 
- *       class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" /&gt;
- * &lt;constant name="struts.mapper.composite" 
- *       value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper,org.apache.struts2.dispatcher.mapper.RestfulActionMapper,org.apache.struts2.dispatcher.mapper.Restful2ActionMapper" /&gt;
- * </pre>
- * <p/>
- * When {@link CompositeActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} or
- * {@link CompositeActionMapper#getUriFromActionMapping(ActionMapping)} is invoked,
- * {@link CompositeActionMapper} would go through these {@link ActionMapper}s in sequence
- * starting from {@link ActionMapper} identified by 'struts.mapper.composite.1', followed by
- * 'struts.mapper.composite.2' and finally 'struts.mapper.composite.3' (in this case) until either
- * one of the {@link ActionMapper} return a valid result (not null) or it runs out of {@link ActionMapper}
- * in which case it will just return null for both
- * {@link CompositeActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} and
- * {@link CompositeActionMapper#getUriFromActionMapping(ActionMapping)} methods.
- * <p/>
  *
- * For example with the following in struts-*.xml :-
- * <pre>
- *    &lt;bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" 
- *       class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" /&gt;
- *    &lt;constant name="struts.mapper.composite" 
- *       value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper,foo.bar.MyActionMapper,foo.bar.MyAnotherActionMapper" /&gt;
- * </pre>
- * <p/>
- * <code>CompositeActionMapper</code> will be configured with 3 ActionMapper, namely
- * "DefaultActionMapper", "MyActionMapper" and "MyAnotherActionMapper".
- * <code>CompositeActionMapper</code> would consult each of them in order described above.
- *
- * <!-- END SNIPPET: description -->
+ * More details: http://struts.apache.org/2.x/docs/actionmapper.html
  *
  * @see ActionMapper
  * @see ActionMapping
@@ -83,16 +49,11 @@ public class CompositeActionMapper implements ActionMapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(CompositeActionMapper.class);
 
-    protected Container container;
-    
-    protected List<ActionMapper> actionMappers = new ArrayList<ActionMapper>();
+    protected List<ActionMapper> actionMappers = new LinkedList<ActionMapper>();
 
-    public CompositeActionMapper(@Inject Container container) {
-        this.container = container;
-    }
-
-    @Inject(StrutsConstants.STRUTS_MAPPER_COMPOSITE)
-    public void setActionMappers(String list) {
+    @Inject
+    public CompositeActionMapper(Container container,
+                                 @Inject(value = StrutsConstants.STRUTS_MAPPER_COMPOSITE) String list) {
         if (list != null) {
             String[] arr = list.split(",");
             for (String name : arr) {
@@ -103,7 +64,6 @@ public class CompositeActionMapper implements ActionMapper {
             }
         }
     }
-
 
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
 

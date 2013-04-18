@@ -13,6 +13,7 @@ public final class XWorkConstants {
     public static final String DEV_MODE = "devMode";
     public static final String LOG_MISSING_PROPERTIES = "logMissingProperties";
     public static final String ENABLE_OGNL_EXPRESSION_CACHE = "enableOGNLExpressionCache";
+    public static final String ENABLE_OGNL_EVAL_EXPRESSION = "enableOGNLEvalExpression";
     public static final String RELOAD_XML_CONFIGURATION = "reloadXmlConfiguration";
     public static final String ALLOW_STATIC_METHOD_ACCESS = "allowStaticMethodAccess";
     public static final String XWORK_LOGGER_FACTORY = "xwork.loggerFactory";

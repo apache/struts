@@ -413,7 +413,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private UrlSet buildUrlSet(List<URL> resourceUrls) throws IOException {
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
         UrlSet urlSet = new UrlSet(resourceUrls);
-        urlSet.include(new UrlSet(classLoaderInterface, this.fileProtocols));
+        urlSet = urlSet.include(new UrlSet(classLoaderInterface, this.fileProtocols));
 
         //excluding the urls found by the parent class loader is desired, but fails in JBoss (all urls are removed)
         if (excludeParentClassLoader) {

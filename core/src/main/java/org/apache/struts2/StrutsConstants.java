@@ -228,6 +228,9 @@ public final class StrutsConstants {
     /** Enables caching of parsed OGNL expressions **/
     public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
 
+    /** Enables evaluation of OGNL expressions **/
+    public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = "struts.ognl.enableOGNLEvalExpression";
+
     /** The{@link org.apache.struts2.views.util.UrlHelper} implementation class **/
     public static final String STRUTS_URL_HELPER = "struts.view.urlHelper";
 

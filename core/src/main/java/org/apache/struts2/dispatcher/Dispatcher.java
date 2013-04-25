@@ -315,6 +315,9 @@ public class Dispatcher {
         	interceptor.destroy();
         }
 
+        // Clear container holder when application is unloaded / server shutdown
+        ContainerHolder.clear();
+
         //cleanup action context
         ActionContext.setContext(null);
 

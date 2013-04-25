@@ -27,7 +27,7 @@ class ContainerHolder {
     }
 
     public static void clear() {
-        ContainerHolder.instance.set(null);
+        ContainerHolder.instance.remove();
     }
 
 }

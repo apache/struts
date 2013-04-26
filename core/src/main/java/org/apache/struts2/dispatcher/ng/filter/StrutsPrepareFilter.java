@@ -25,7 +25,12 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.ng.InitOperations;
 import org.apache.struts2.dispatcher.ng.PrepareOperations;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,12 +42,12 @@ import java.util.regex.Pattern;
  */
 public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
-	protected static final String REQUEST_EXCLUDED_FROM_ACTION_MAPPING = StrutsPrepareFilter.class.getName() + ".REQUEST_EXCLUDED_FROM_ACTION_MAPPING";
+    protected static final String REQUEST_EXCLUDED_FROM_ACTION_MAPPING = StrutsPrepareFilter.class.getName() + ".REQUEST_EXCLUDED_FROM_ACTION_MAPPING";
 
     protected PrepareOperations prepare;
-	protected List<Pattern> excludedPatterns = null;
+    protected List<Pattern> excludedPatterns = null;
 
-	public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
         Dispatcher dispatcher = null;
         try {
@@ -51,7 +56,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             dispatcher = init.initDispatcher(config);
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
-			this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
         } finally {
@@ -77,19 +82,20 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             prepare.setEncodingAndLocale(request, response);
             prepare.createActionContext(request, response);
             prepare.assignDispatcherToThread();
-			if ( excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
-				request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, new Object());
-			} else {
-				request = prepare.wrapRequest(request);
-				prepare.findActionMapping(request, response);
-			}
+            if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
+                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, new Object());
+            } else {
+                request = prepare.wrapRequest(request);
+                prepare.findActionMapping(request, response);
+            }
             chain.doFilter(request, response);
         } finally {
             prepare.cleanupRequest(request);
         }
     }
 
-	public void destroy() {
+    public void destroy() {
         prepare.cleanupDispatcher();
     }
+
 }

@@ -27,7 +27,12 @@ import org.apache.struts2.dispatcher.ng.ExecuteOperations;
 import org.apache.struts2.dispatcher.ng.InitOperations;
 import org.apache.struts2.dispatcher.ng.PrepareOperations;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -41,7 +46,7 @@ import java.util.regex.Pattern;
 public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     protected PrepareOperations prepare;
     protected ExecuteOperations execute;
-	protected List<Pattern> excludedPatterns = null;
+    protected List<Pattern> excludedPatterns = null;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
@@ -54,7 +59,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
             execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
-			this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
         } finally {
@@ -63,7 +68,6 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             }
             init.cleanup();
         }
-
     }
 
     /**
@@ -81,20 +85,20 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             prepare.setEncodingAndLocale(request, response);
             prepare.createActionContext(request, response);
             prepare.assignDispatcherToThread();
-			if ( excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
-				chain.doFilter(request, response);
-			} else {
-				request = prepare.wrapRequest(request);
-				ActionMapping mapping = prepare.findActionMapping(request, response, true);
-				if (mapping == null) {
-					boolean handled = execute.executeStaticResourceRequest(request, response);
-					if (!handled) {
-						chain.doFilter(request, response);
-					}
-				} else {
-					execute.executeAction(request, response, mapping);
-				}
-			}
+            if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
+                chain.doFilter(request, response);
+            } else {
+                request = prepare.wrapRequest(request);
+                ActionMapping mapping = prepare.findActionMapping(request, response, true);
+                if (mapping == null) {
+                    boolean handled = execute.executeStaticResourceRequest(request, response);
+                    if (!handled) {
+                        chain.doFilter(request, response);
+                    }
+                } else {
+                    execute.executeAction(request, response, mapping);
+                }
+            }
         } finally {
             prepare.cleanupRequest(request);
         }
@@ -103,4 +107,5 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     public void destroy() {
         prepare.cleanupDispatcher();
     }
+
 }

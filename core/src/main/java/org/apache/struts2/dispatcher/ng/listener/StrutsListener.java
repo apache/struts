@@ -32,13 +32,13 @@ import javax.servlet.ServletContextListener;
  * Servlet listener for Struts.  The preferred way to use Struts is as a filter via the
  * {@link org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter} and its variants.
  * This might be useful if Struts config information is needed from other servlet listeners, like
- * Sitemesh or OSGi 
+ * Sitemesh or OSGi
  */
 public class StrutsListener implements ServletContextListener {
     private PrepareOperations prepare;
 
     public void contextInitialized(ServletContextEvent sce) {
-       InitOperations init = new InitOperations();
+        InitOperations init = new InitOperations();
         Dispatcher dispatcher = null;
         try {
             ListenerHostConfig config = new ListenerHostConfig(sce.getServletContext());

@@ -22,12 +22,17 @@ package org.apache.struts2.dispatcher.ng.filter;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.ng.PrepareOperations;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.ng.ExecuteOperations;
 import org.apache.struts2.dispatcher.ng.InitOperations;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.ng.PrepareOperations;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -63,15 +68,15 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-		if (excludeUrl(request)) {
-			chain.doFilter(request, response);
-			return;
-		}
+        if (excludeUrl(request)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         // This is necessary since we need the dispatcher instance, which was created by the prepare filter
-		if (execute == null) {
-			lazyInit();
-		}
+        if (execute == null) {
+            lazyInit();
+        }
 
         ActionMapping mapping = prepare.findActionMapping(request, response);
 
@@ -89,13 +94,14 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
         }
     }
 
-	private boolean excludeUrl(HttpServletRequest request) {
-		return request.getAttribute(StrutsPrepareFilter.REQUEST_EXCLUDED_FROM_ACTION_MAPPING) != null;
-	}
+    private boolean excludeUrl(HttpServletRequest request) {
+        return request.getAttribute(StrutsPrepareFilter.REQUEST_EXCLUDED_FROM_ACTION_MAPPING) != null;
+    }
 
     public void destroy() {
         prepare = null;
         execute = null;
         filterConfig = null;
     }
+
 }

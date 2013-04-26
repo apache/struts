@@ -21,15 +21,16 @@
 package org.apache.struts2.dispatcher.ng.servlet;
 
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.ng.ExecuteOperations;
 import org.apache.struts2.dispatcher.ng.InitOperations;
 import org.apache.struts2.dispatcher.ng.PrepareOperations;
-import org.apache.struts2.dispatcher.ng.ExecuteOperations;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.*;
 import java.io.IOException;
 
 /**
@@ -88,4 +89,5 @@ public class StrutsServlet extends HttpServlet {
     public void destroy() {
         prepare.cleanupDispatcher();
     }
+
 }

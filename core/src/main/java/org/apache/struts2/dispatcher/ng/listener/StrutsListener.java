@@ -20,8 +20,6 @@
  */
 package org.apache.struts2.dispatcher.ng.listener;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.ng.InitOperations;
@@ -41,15 +39,19 @@ public class StrutsListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent sce) {
        InitOperations init = new InitOperations();
+        Dispatcher dispatcher = null;
         try {
             ListenerHostConfig config = new ListenerHostConfig(sce.getServletContext());
             init.initLogging(config);
-            Dispatcher dispatcher = init.initDispatcher(config);
+            dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
             prepare = new PrepareOperations(config.getServletContext(), dispatcher);
             sce.getServletContext().setAttribute(StrutsStatics.SERVLET_DISPATCHER, dispatcher);
         } finally {
+            if (dispatcher != null) {
+                dispatcher.cleanUpAfterInit();
+            }
             init.cleanup();
         }
     }

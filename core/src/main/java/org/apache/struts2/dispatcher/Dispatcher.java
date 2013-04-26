@@ -815,6 +815,7 @@ public class Dispatcher {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper
      */
     public void cleanUpRequest(HttpServletRequest request) {
+        ContainerHolder.clear();
         if (!(request instanceof MultiPartRequestWrapper)) {
             return;
         }
@@ -895,7 +896,15 @@ public class Dispatcher {
         }
     }
 
-    
+    /**
+     * Cleanup any resources used to initialise Dispatcher
+     */
+    public void cleanUpAfterInit() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Cleaning up resources used to init Dispatcher");
+        }
+        ContainerHolder.clear();
+    }
 
     /**
      * Provide an accessor class for static XWork utility.

@@ -46,15 +46,19 @@ public class StrutsServlet extends HttpServlet {
     @Override
     public void init(ServletConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
+        Dispatcher dispatcher = null;
         try {
             ServletHostConfig config = new ServletHostConfig(filterConfig);
             init.initLogging(config);
-            Dispatcher dispatcher = init.initDispatcher(config);
+            dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
             execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
         } finally {
+            if (dispatcher != null) {
+                dispatcher.cleanUpAfterInit();
+            }
             init.cleanup();
         }
     }

@@ -45,10 +45,11 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
+        Dispatcher dispatcher = null;
         try {
             FilterHostConfig config = new FilterHostConfig(filterConfig);
             init.initLogging(config);
-            Dispatcher dispatcher = init.initDispatcher(config);
+            dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
@@ -57,6 +58,9 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
             postInit(dispatcher, filterConfig);
         } finally {
+            if (dispatcher != null) {
+                dispatcher.cleanUpAfterInit();
+            }
             init.cleanup();
         }
 

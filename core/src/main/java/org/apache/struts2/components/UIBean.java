@@ -153,7 +153,7 @@ import java.util.concurrent.ConcurrentMap;
  *          <td>define label position of form element (top/left), default to left</td>
  *       </tr>
  *       <tr>
- *          <td>requiredposition</td>
+ *          <td>requiredPosition</td>
  *          <td>xhtml</td>
  *          <td>String</td>
  *          <td>define required label position of form element (left/right), default to right</td>
@@ -671,7 +671,7 @@ public abstract class UIBean extends Component {
         }
 
         if (requiredPosition != null) {
-            addParameter("requiredposition", findString(requiredPosition));
+            addParameter("requiredPosition", findString(requiredPosition));
         }
 
         if (errorPosition != null) {

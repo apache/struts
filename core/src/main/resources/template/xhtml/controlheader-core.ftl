@@ -57,11 +57,11 @@
         class="label"<#t/>
 </#if>
     ><#t/>
-<#if parameters.required?default(false) && parameters.requiredposition?default("right") != 'right'>
+<#if parameters.required?default(false) && parameters.requiredPosition?default("right") != 'right'>
         <span class="required">*</span><#t/>
 </#if>
 ${parameters.label?html}<#t/>
-<#if parameters.required?default(false) && parameters.requiredposition?default("right") == 'right'>
+<#if parameters.required?default(false) && parameters.requiredPosition?default("right") == 'right'>
  <span class="required">*</span><#t/>
 </#if>
 ${parameters.labelseparator?default(":")?html}<#t/>

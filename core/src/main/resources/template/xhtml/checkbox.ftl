@@ -47,11 +47,11 @@
  class="checkboxLabel"<#rt/>
 </#if>
 >
-<#if parameters.required?default(false) && parameters.requiredposition?default("right") != 'right'>
+<#if parameters.required?default(false) && parameters.requiredPosition?default("right") != 'right'>
         <span class="required">*</span><#t/>
 </#if>
 ${parameters.label?html}<#t/>
-<#if parameters.required?default(false) && parameters.requiredposition?default("right") == 'right'>
+<#if parameters.required?default(false) && parameters.requiredPosition?default("right") == 'right'>
  <span class="required">*</span><#t/>
 </#if>
 :<#t/>
@@ -79,11 +79,11 @@ ${parameters.label?html}<#t/>
  class="checkboxLabel"<#rt/>
 </#if>
 >
-<#if parameters.required?default(false) && parameters.requiredposition?default("right") != 'right'>
+<#if parameters.required?default(false) && parameters.requiredPosition?default("right") != 'right'>
         <span class="required">*</span><#t/>
 </#if>
 ${parameters.label?html}<#t/>
-<#if parameters.required?default(false) && parameters.requiredposition?default("right") == 'right'>
+<#if parameters.required?default(false) && parameters.requiredPosition?default("right") == 'right'>
  <span class="required">*</span><#t/>
 </#if>
 :<#t/>

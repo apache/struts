@@ -33,7 +33,7 @@ Only the following validators are supported:
 * double validator
 END SNIPPET: supported-validators
 -->
-<#if ((parameters.validate?default(false) == true) && (parameters.performValidation?default(false) == true))>
+<#if ((parameters.validate!false == true) && (parameters.performValidation!false == true))>
 <script type="text/javascript">
     function validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}() {
         form = document.getElementById("${parameters.id}");
@@ -79,13 +79,13 @@ END SNIPPET: supported-validators
                 }
             }
             <#elseif validator.validatorType = "regex">
-            if (continueValidation && field.value != null && !field.value.match("${validator.expression?js_string}")) {
+            if (continueValidation && field.value != null && !field.value.match("${validator.regex?js_string}")) {
                 addError(field, error);
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
             <#elseif validator.validatorType = "email">
-            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match("${validator.expression?js_string}")==null) {
+            if (continueValidation && field.value != null && field.value.length > 0 && field.value.match("${validator.regex?js_string}")==null) {
                 addError(field, error);
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>
@@ -96,7 +96,7 @@ END SNIPPET: supported-validators
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
-            <#elseif validator.validatorType = "int">
+            <#elseif validator.validatorType = "int" || validator.validatorType = "short">
             if (continueValidation && field.value != null) {
                 if (<#if validator.min??>parseInt(field.value) <
                      ${validator.min?c}<#else>false</#if> ||
@@ -116,7 +116,6 @@ END SNIPPET: supported-validators
                         <#if validator.maxExclusive??>value >= ${validator.maxExclusive?c}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
-                    <#if validator.shortCircuit>continueValidation = false;</#if>
                 }
             }
             </#if>

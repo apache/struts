@@ -335,7 +335,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     private List<ValidatorConfig> loadFile(String fileName, Class clazz, boolean checkFile) {
         List<ValidatorConfig> retList = Collections.emptyList();
         URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
-        if ((checkFile && fileUrl != null && fileManager.fileNeedsReloading(fileUrl.toString())) || !validatorFileCache.containsKey(fileName)) {
+        if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
             InputStream is = null;
 
             try {

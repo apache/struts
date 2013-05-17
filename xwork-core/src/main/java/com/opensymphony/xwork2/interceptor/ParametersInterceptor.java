@@ -273,9 +273,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected void setParameters(Object action, ValueStack stack, final Map<String, Object> parameters) {
-        ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware)
-                ? (ParameterNameAware) action : null;
-
         Map<String, Object> params;
         Map<String, Object> acceptableParameters;
         if (ordered) {
@@ -289,11 +286,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String name = entry.getKey();
-
-            boolean acceptableName = acceptableName(name)
-                    || (parameterNameAware != null && parameterNameAware.acceptableParameterName(name));
-
-            if (acceptableName) {
+            if (isAcceptableParameter(name, action)) {
                 acceptableParameters.put(name, entry.getValue());
             }
         }
@@ -344,6 +337,18 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
 
         addParametersToContext(ActionContext.getContext(), acceptableParameters);
+    }
+
+    /**
+     * Checks if name of parameter can be accepted or thrown away
+     *
+     * @param name parameter name
+     * @param action current action
+     * @return true if parameter is accepted
+     */
+    protected boolean isAcceptableParameter(String name, Object action) {
+        ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware) ? (ParameterNameAware) action : null;
+        return acceptableName(name) || (parameterNameAware != null && parameterNameAware.acceptableParameterName(name));
     }
 
     /**

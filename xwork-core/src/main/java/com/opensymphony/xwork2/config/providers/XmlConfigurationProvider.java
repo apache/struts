@@ -507,6 +507,15 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
      * Create a PackageConfig from an XML element representing it.
      */
     protected PackageConfig addPackage(Element packageElement) throws ConfigurationException {
+        String packageName = packageElement.getAttribute("name");
+        PackageConfig packageConfig = configuration.getPackageConfig(packageName);
+        if (packageConfig != null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Package [#0] already loaded, skipping re-loading it and using existing PackageConfig [#1]", packageName, packageConfig);
+            }
+            return packageConfig;
+        }
+
         PackageConfig.Builder newPackage = buildPackageContext(packageElement);
 
         if (newPackage.isNeedsRefresh()) {

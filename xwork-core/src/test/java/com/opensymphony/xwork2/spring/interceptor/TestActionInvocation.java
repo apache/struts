@@ -70,4 +70,13 @@ public class TestActionInvocation implements ActionInvocation {
 
     public void init(ActionProxy proxy)  {
     }
+
+    public ActionInvocation serialize() {
+        return this;
+    }
+
+    public ActionInvocation deserialize(ActionContext actionContext) {
+        return this;
+    }
+
 }

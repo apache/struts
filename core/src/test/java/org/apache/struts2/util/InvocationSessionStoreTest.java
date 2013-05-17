@@ -21,17 +21,15 @@
 
 package org.apache.struts2.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.struts2.StrutsTestCase;
-
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.StrutsTestCase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -79,6 +77,8 @@ public class InvocationSessionStoreTest extends StrutsTestCase {
 
         invocationMock = new Mock(ActionInvocation.class);
         invocation = (ActionInvocation) invocationMock.proxy();
+        invocationMock.matchAndReturn("serialize", invocation);
+        invocationMock.matchAndReturn("deserialize", actionContext, invocation);
 
         actionContext.setValueStack(stack);
         invocationMock.matchAndReturn("getStack", stack);

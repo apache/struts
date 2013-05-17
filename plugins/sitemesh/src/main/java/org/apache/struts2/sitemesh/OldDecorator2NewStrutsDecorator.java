@@ -198,6 +198,15 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
 
         public void init(ActionProxy proxy) {
         }
+
+        public ActionInvocation serialize() {
+            return null;
+        }
+
+        public ActionInvocation deserialize(ActionContext actionContext) {
+            return null;
+        }
+
     }
 
 }

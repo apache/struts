@@ -160,4 +160,20 @@ public interface ActionInvocation extends Serializable {
 
     void init(ActionProxy proxy) ;
 
+    /**
+     * Prepares instance of ActionInvocation to be serializable,
+     * which simple means removing all unserializable fields, eg. Container
+     *
+     * @return ActionInvocation which can be serialize (eg. into HttpSession)
+     */
+    ActionInvocation serialize();
+
+    /**
+     * Performs opposite process to restore back ActionInvocation after deserialisation
+     *
+     * @param actionContext current {@link ActionContext}
+     * @return fully operational ActionInvocation
+     */
+    ActionInvocation deserialize(ActionContext actionContext);
+
 }

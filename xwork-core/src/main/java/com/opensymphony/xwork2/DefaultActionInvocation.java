@@ -77,8 +77,8 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected UnknownHandlerManager unknownHandlerManager;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
-        DefaultActionInvocation.this.extraContext = extraContext;
-        DefaultActionInvocation.this.pushAction = pushAction;
+        this.extraContext = extraContext;
+        this.pushAction = pushAction;
     }
 
     @Inject
@@ -489,6 +489,29 @@ public class DefaultActionInvocation implements ActionInvocation {
         } else {
             return (String) methodResult;
         }
+    }
+
+    /**
+     * Version ready to be serialize
+     *
+     * @return instance without reference to {@link Container}
+     */
+    public ActionInvocation serialize() {
+        DefaultActionInvocation that = this;
+        that.container = null;
+        return that;
+    }
+
+    /**
+     * Restoring Container
+     *
+     * @param actionContext current {@link ActionContext}
+     * @return instance which can be used to invoke action
+     */
+    public ActionInvocation deserialize(ActionContext actionContext) {
+        DefaultActionInvocation that = this;
+        that.container = actionContext.getContainer();
+        return that;
     }
 
 }

@@ -137,7 +137,6 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
             if (savedInvocation != null) {
                 // set the valuestack to the request scope
                 ValueStack stack = savedInvocation.getStack();
-                Map context = stack.getContext();
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
                 ActionContext savedContext = savedInvocation.getInvocationContext();

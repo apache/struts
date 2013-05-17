@@ -2,6 +2,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.mock.MockActionProxy;
+import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 
 import java.util.ArrayList;
@@ -44,16 +45,43 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(mockInterceptor3.isExecuted());
     }
 
+    public void testSerialization() throws Exception {
+        // given
+        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(new HashMap<String, Object>(), false);
+        actionInvocation.setContainer(new MockContainer());
 
-    class DefaultActionInvocationTester extends DefaultActionInvocation {
-        DefaultActionInvocationTester(List<InterceptorMapping> interceptorMappings) {
-            super(new HashMap<String, Object>(), false);
-            interceptors = interceptorMappings.iterator();
-            MockActionProxy actionProxy = new MockActionProxy();
-            actionProxy.setMethod("execute");
-            proxy = actionProxy;
-            action = new ActionSupport();
-        }
+        // when
+        DefaultActionInvocation serializable = (DefaultActionInvocation) actionInvocation.serialize();
+
+        // then
+        assertNull(actionInvocation.container);
+        assertNull(serializable.container);
     }
 
+    public void testDeserialization() throws Exception {
+        // given
+        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(new HashMap<String, Object>(), false);
+        MockContainer mockContainer = new MockContainer();
+        ActionContext.getContext().setContainer(mockContainer);
+
+        // when
+        DefaultActionInvocation deserializable = (DefaultActionInvocation) actionInvocation.deserialize(ActionContext.getContext());
+
+        // then
+        assertNotNull(actionInvocation.container);
+        assertNotNull(deserializable.container);
+        assertEquals(mockContainer, deserializable.container);
+    }
+
+}
+
+class DefaultActionInvocationTester extends DefaultActionInvocation {
+    DefaultActionInvocationTester(List<InterceptorMapping> interceptorMappings) {
+        super(new HashMap<String, Object>(), false);
+        interceptors = interceptorMappings.iterator();
+        MockActionProxy actionProxy = new MockActionProxy();
+        actionProxy.setMethod("execute");
+        proxy = actionProxy;
+        action = new ActionSupport();
+    }
 }

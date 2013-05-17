@@ -21,13 +21,13 @@
 
 package org.apache.struts2.util;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -62,7 +62,7 @@ public class InvocationSessionStore {
         ValueStack stack = invocationContext.invocation.getStack();
         ActionContext.getContext().setValueStack(stack);
 
-        return invocationContext.invocation;
+        return invocationContext.invocation.deserialize(ActionContext.getContext());
     }
 
     /**
@@ -73,7 +73,7 @@ public class InvocationSessionStore {
      * @param invocation
      */
     public static void storeInvocation(String key, String token, ActionInvocation invocation) {
-        InvocationContext invocationContext = new InvocationContext(invocation, token);
+        InvocationContext invocationContext = new InvocationContext(invocation.serialize(), token);
         Map invocationMap = getInvocationMap();
         invocationMap.put(key, invocationContext);
         setInvocationMap(invocationMap);

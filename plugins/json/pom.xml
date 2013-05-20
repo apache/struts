@@ -28,7 +28,7 @@
         <artifactId>struts2-plugins</artifactId>
         <version>2.3.15-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
+
     <artifactId>struts2-json-plugin</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 JSON Plugin</name>
@@ -59,7 +59,6 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 

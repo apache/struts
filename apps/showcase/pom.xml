@@ -28,7 +28,7 @@
         <artifactId>struts2-apps</artifactId>
         <version>2.3.15-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
+
     <artifactId>struts2-showcase</artifactId>
     <packaging>war</packaging>
     <name>Showcase Webapp</name>
@@ -38,7 +38,6 @@
         <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/</developerConnection>
         <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/showcase/</url>
     </scm>
-
 
     <profiles>
         <profile>
@@ -56,49 +55,41 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-struts1-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-dojo-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-jsf-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-config-browser-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-sitemesh-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-tiles-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-dwr-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-json-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -110,13 +101,11 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-convention-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-spring-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -139,12 +128,10 @@
         <dependency>
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
-            <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>uk.ltd.getahead</groupId>
             <artifactId>dwr</artifactId>
-            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

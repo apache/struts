@@ -28,7 +28,7 @@
         <artifactId>struts2-plugins</artifactId>
         <version>2.3.15-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
+
     <artifactId>struts2-rest-plugin</artifactId>
     <version>2.3.15-SNAPSHOT</version>
     <name>Struts 2 REST Plugin</name>

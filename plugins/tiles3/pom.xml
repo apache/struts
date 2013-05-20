@@ -39,21 +39,25 @@
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/tiles3/</url>
     </scm>
 
+    <properties>
+        <tiles3.version>3.0.1</tiles3.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-core</artifactId>
-            <version>3.0.1</version>
+            <version>${tiles3.version}</version> <!-- Version must defined here -->
         </dependency>
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-extras</artifactId>
-            <version>3.0.1</version>
+            <version>${tiles3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-jsp</artifactId>
-            <version>3.0.1</version>
+            <version>${tiles3.version}</version>
             <scope>runtime</scope>
         </dependency>
 

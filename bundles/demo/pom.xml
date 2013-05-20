@@ -6,7 +6,7 @@
         <artifactId>struts2-osgi-bundles</artifactId>
         <version>2.3.15-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
+
     <artifactId>struts2-osgi-demo-bundle</artifactId>
     <packaging>bundle</packaging>
     <name>Struts 2 OSGi Demo Bundle</name>
@@ -37,20 +37,12 @@
         
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-convention-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
          <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-plugin</artifactId>
-            <version>${project.version}</version>
         </dependency>
         
     </dependencies>

@@ -28,7 +28,6 @@
         <artifactId>struts2-parent</artifactId>
         <version>2.3.15-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
     <artifactId>struts2-core</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 Core</name>
@@ -112,7 +111,6 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.2</version>
                         <executions>
                             <execution>
                                 <id>attach-source</id>

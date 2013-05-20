@@ -28,7 +28,6 @@
         <version>2.3.15-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apache.struts</groupId>
     <artifactId>struts2-cdi-plugin</artifactId>
     <name>Struts 2 CDI Plugin</name>
     <packaging>jar</packaging>

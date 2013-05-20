@@ -28,7 +28,7 @@
         <artifactId>struts2-plugins</artifactId>
         <version>2.3.15-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
+
     <artifactId>struts2-struts1-plugin</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 Struts 1 Plugin</name>
@@ -48,7 +48,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 

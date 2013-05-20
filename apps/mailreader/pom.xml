@@ -28,7 +28,7 @@
       <artifactId>struts2-apps</artifactId>
       <version>2.3.15-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
+
     <artifactId>struts2-mailreader</artifactId>
     <packaging>war</packaging>
     <name>Mail Reader Webapp</name>

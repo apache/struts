@@ -215,11 +215,6 @@
         </ul>
 
         <p>
-         An alternate set of JARs for Java 4 are also available.
-         See the "J4" distribution.
-        </p>
-
-        <p>
          For a full list of requirements, including dependencies used by optional plugins,
          see <a href="struts2-core/dependencies.html">Project Dependencies</a>
         </p>

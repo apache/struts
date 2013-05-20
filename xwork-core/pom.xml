@@ -13,7 +13,6 @@
     <packaging>jar</packaging>
     <name>XWork: Core</name>
 
-
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/xwork-core/</connection>
         <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/xwork-core/</developerConnection>
@@ -23,65 +22,6 @@
     <properties>
         <currentVersion>${project.version}</currentVersion>
     </properties>
-
-    <profiles>
-        <profile>
-            <!--
-                   Run the translator for Java 1.4 compatiblity
-
-                   OS/X Sample:
-                   $ cd xwork/
-                   $ mvn clean install -Pj4 -Djava14.jar=$JAVA_HOME/../Classes/classes.jar
-
-                -->
-            <id>j4</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>retrotranslator-maven-plugin</artifactId>
-                        <version>1.0-alpha-4</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>translate-project</goal>
-                                </goals>
-                                <configuration>
-                                    <verify>false</verify>
-                                    <failonwarning>true</failonwarning>
-                                    <lazy>true</lazy>
-                                    <advanced>true</advanced>
-                                    <verbose>false</verbose>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <!--
-            <dependencies>
-                <dependency>
-                    <groupId>sun.jdk</groupId>
-                    <artifactId>rt</artifactId>
-                    <version>1.4.0</version>
-                    <scope>system</scope>
-                    <systemPath>${java14.jar}</systemPath>
-                </dependency>
-                <dependency>
-                    <groupId>net.sf.retrotranslator</groupId>
-                    <artifactId>retrotranslator-runtime</artifactId>
-                    <version>1.2.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.sf.retrotranslator</groupId>
-                    <artifactId>retrotranslator-transformer</artifactId>
-                    <version>1.2.1</version>
-                </dependency>
-            </dependencies>
-            -->
-        </profile>
-    </profiles>
 
     <build>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>

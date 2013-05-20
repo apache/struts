@@ -113,34 +113,6 @@
                 <module>../maven/struts-annotations</module>
             </modules>
         </profile>
-        <profile>
-            <id>j4</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>retrotranslator-maven-plugin</artifactId>
-                        <version>1.0-alpha-3</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>translate-project</goal>
-                                </goals>
-                                <configuration>
-                                    <verify>false</verify>
-                                    <failonwarning>true</failonwarning>
-                                    <lazy>true</lazy>
-                                    <advanced>true</advanced>
-                                    <verbose>false</verbose>
-                                    <destdir>${project.build.directory}/classes-retro</destdir>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 
 

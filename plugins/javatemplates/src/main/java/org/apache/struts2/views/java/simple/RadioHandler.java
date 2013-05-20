@@ -33,8 +33,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class RadioHandler extends AbstractTagHandler implements TagGenerator {
-    public void generate() throws IOException {
 
+    public void generate() throws IOException {
         Map<String, Object> params = context.getParameters();
 
         Object listObj = params.get("list");
@@ -59,19 +59,12 @@ public class RadioHandler extends AbstractTagHandler implements TagGenerator {
                 Object itemValue = findValue(listValue != null ? listValue : "top");
                 String itemValueStr = StringUtils.defaultString(itemValue == null ? null : itemValue.toString());
 
-                //Namevalue needs to cast to a string from object. It's object because the 
-                //Property can be defined as String or as Integer
-                String itemNameValueStr;
-                if (nameValue instanceof java.lang.Integer || nameValue instanceof java.lang.String)
-                    itemNameValueStr = nameValue.toString();
-                else
-                    itemNameValueStr = null;
+                // nameValue needs to cast to a string from object
+                String itemNameValueStr = (nameValue == null ? null : nameValue.toString());
 
                 //Checked value.  It's set to true if the nameValue (the value associated with the name which is typically set in 
                 //the action is equal to the current key value.
-                Boolean checked = itemKeyStr != null &&
-                        itemNameValueStr != null &&
-                        itemNameValueStr.equals(itemKeyStr);
+                Boolean checked = itemKeyStr != null && itemNameValueStr != null && itemNameValueStr.equals(itemKeyStr);
 
                 //Radio button section
                 String id = params.get("id") + Integer.toString(cnt++);
@@ -93,11 +86,13 @@ public class RadioHandler extends AbstractTagHandler implements TagGenerator {
                         .addIfExists("style", params.get("cssStyle"))
                         .addIfExists("title", params.get("title"));
                 super.start("label", a);
-                if (StringUtils.isNotEmpty(itemValueStr))
+                if (StringUtils.isNotEmpty(itemValueStr)) {
                     characters(itemValueStr);
+                }
                 super.end("label");
                 stack.pop();
             }
         }
     }
+
 }

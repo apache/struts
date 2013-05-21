@@ -48,4 +48,5 @@ public class VelocityBundleResourceLoader extends ClasspathResourceLoader {
             throw new ResourceNotFoundException(e.getMessage());
         }
     }
+
 }

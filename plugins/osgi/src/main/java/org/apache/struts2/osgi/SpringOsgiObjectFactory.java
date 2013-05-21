@@ -33,6 +33,7 @@ import java.util.Map;
  * to lookup beans
  */
 public class SpringOsgiObjectFactory extends ObjectFactory {
+
     private final static String SPRING_SERVICE_NAME = "org.springframework.context.ApplicationContext";
 
     private BundleAccessor bundleAccessor;
@@ -88,4 +89,5 @@ public class SpringOsgiObjectFactory extends ObjectFactory {
     public void setBundleAccessor(BundleAccessor bundleAccessor) {
         this.bundleAccessor = bundleAccessor;
     }
+
 }

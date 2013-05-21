@@ -28,5 +28,7 @@ import java.util.List;
  * @param <T> The type of the service
  */
 public interface ServiceAware<T> {
+
     void setServices(List<T> services);
+
 }

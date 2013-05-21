@@ -21,16 +21,16 @@
 
 package org.apache.struts2.osgi;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Map;
-import java.util.Set;
-
+import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Set;
 
 public interface BundleAccessor {
 
@@ -59,4 +59,5 @@ public interface BundleAccessor {
     void setBundleContext(BundleContext bundleContext);
 
     void setOsgiHost(OsgiHost osgiHost);
+
 }

@@ -1,7 +1,7 @@
 package org.apache.struts2.osgi.interceptor;
 
 import org.easymock.EasyMock;
-import org.apache.struts2.osgi.OsgiHost;
+import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 

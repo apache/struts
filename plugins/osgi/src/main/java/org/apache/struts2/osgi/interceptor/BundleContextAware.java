@@ -27,5 +27,7 @@ import org.osgi.framework.BundleContext;
  * the OsgiInterceptor must be applied to the action.
  */
 public interface BundleContextAware {
+
     void setBundleContext(BundleContext bundleContext);
+
 }

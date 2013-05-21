@@ -1,26 +1,39 @@
 package org.apache.struts2.osgi;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.osgi.host.OsgiHost;
 
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
- * ServletContextListener that starts Apache Felix
+ * ServletContextListener that starts Osgi host
  */
 public class StrutsOsgiListener implements ServletContextListener {
+
     public static final String OSGI_HOST = "__struts_osgi_host";
-    private FelixOsgiHost osgiHost;
+    public static final String PLATFORM_KEY = "struts.osgi.host";
+
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsOsgiListener.class);
+
+    private OsgiHost osgiHost;
 
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
-        osgiHost = new FelixOsgiHost();
+
+        String platform = servletContext.getInitParameter(PLATFORM_KEY);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Defined OSGi platform as [#0] via context-param [#1]", platform, PLATFORM_KEY);
+        }
+        osgiHost = OsgiHostFactory.createOsgiHost(platform);
         servletContext.setAttribute(OSGI_HOST, osgiHost);
         try {
             osgiHost.init(servletContext);
         } catch (Exception e) {
-            throw new StrutsException("Apache Felix failed to start", e);
+            throw new StrutsException("Cannot init OSGi platform!", e);
         }
     }
 
@@ -28,7 +41,8 @@ public class StrutsOsgiListener implements ServletContextListener {
         try {
             osgiHost.destroy();
         } catch (Exception e) {
-            throw new StrutsException("Apache Felix failed to stop", e);
+            throw new StrutsException("Cannot stop OSGi platform!", e);
         }
     }
+
 }

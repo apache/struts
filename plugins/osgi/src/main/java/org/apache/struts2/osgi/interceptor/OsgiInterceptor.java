@@ -20,28 +20,27 @@
  */
 package org.apache.struts2.osgi.interceptor;
 
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.inject.Inject;
-
-import javax.servlet.ServletContext;
-
-import org.apache.struts2.osgi.OsgiHost;
+import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import java.lang.reflect.Type;
+import javax.servlet.ServletContext;
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * If a class implements BundleContextAware, this interceptor will call the setBundleContext(BundleContext)
  * method on it. If a class implements ServiceAware<T>, this interceptor will call setService(List<T>)
  */
 public class OsgiInterceptor extends AbstractInterceptor {
+
     private static final Logger LOG = LoggerFactory.getLogger(OsgiInterceptor.class);
 
     private BundleContext bundleContext;
@@ -96,4 +95,5 @@ public class OsgiInterceptor extends AbstractInterceptor {
     public void setServletContext(ServletContext servletContext) {
         this.bundleContext = (BundleContext) servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT);
     }
+
 }

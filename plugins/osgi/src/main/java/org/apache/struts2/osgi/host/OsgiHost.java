@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.osgi;
+package org.apache.struts2.osgi.host;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.Bundle;

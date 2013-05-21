@@ -23,18 +23,19 @@ package org.apache.struts2.osgi;
 
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.Collections;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.osgi.framework.Bundle;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * ClassLoaderInterface instance that delegates to the singleton of DefaultBundleAccessor 
  */
 public class BundleClassLoaderInterface implements ClassLoaderInterface {
+
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         return DefaultBundleAccessor.getInstance().loadClass(name);
     }
@@ -44,6 +45,10 @@ public class BundleClassLoaderInterface implements ClassLoaderInterface {
     }
 
     public Enumeration<URL> getResources(String name) throws IOException {
+        Collection<URL> coll = DefaultBundleAccessor.getInstance().loadResources(name, true);
+        if (coll == null){
+            return new Hashtable<Object, URL>().elements();
+        }
         return Collections.enumeration(DefaultBundleAccessor.getInstance().loadResources(name, true));
     }
 
@@ -54,4 +59,5 @@ public class BundleClassLoaderInterface implements ClassLoaderInterface {
     public ClassLoaderInterface getParent() {
         return null;
     }
+
 }

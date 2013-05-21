@@ -18,26 +18,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.osgi;
 
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-
-import java.util.List;
-import java.util.Map;
+import org.apache.struts2.osgi.host.FelixOsgiHost;
+import org.apache.struts2.osgi.host.GlassfishOSGiHost;
+import org.apache.struts2.osgi.host.OsgiHost;
 
 /**
- * Implementations of this interface can load packages from a Bundle
+ * OsgiHostFactory that creates proper OsgiHost implementation according to
+ * context param from web.xml
+ * <p/>
+ * Two implementations are supported right now:
+ * - Apache Felix
+ * - Glassfish (which contains Apache Felix already)
  */
-public interface PackageLoader {
+public class OsgiHostFactory {
 
-    List<PackageConfig> loadPackages(Bundle bundle, BundleContext bundleContext, ObjectFactory objectFactory,
-                                     FileManagerFactory fileManagerFactory,
-                                     Map<String, PackageConfig> map) throws ConfigurationException;
+    public static final String GLASSFISH = "Glassfish";
+
+    private OsgiHostFactory() {
+    }
+
+    public static OsgiHost createOsgiHost(String platform) {
+        if (GLASSFISH.equalsIgnoreCase(platform)) {
+            return new GlassfishOSGiHost();
+        }
+        return new FelixOsgiHost();
+    }
 
 }

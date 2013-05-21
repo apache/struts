@@ -22,7 +22,6 @@
 package org.apache.struts2.osgi;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
@@ -34,6 +33,7 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.osgi.host.OsgiHost;
 import org.apache.struts2.osgi.loaders.VelocityBundleResourceLoader;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.Velocity;
@@ -52,11 +52,12 @@ import java.util.Set;
  * Struts package provider that starts the OSGi container and deelgates package loading
  */
 public class OsgiConfigurationProvider implements PackageProvider, BundleListener {
+
     private static final Logger LOG = LoggerFactory.getLogger(OsgiConfigurationProvider.class);
 
     private Configuration configuration;
     private ObjectFactory objectFactory;
-    private FileManager fileManager;
+    private FileManagerFactory fileManagerFactory;
 
     private OsgiHost osgiHost;
     private BundleContext bundleContext;
@@ -81,10 +82,10 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
         if (LOG.isTraceEnabled())
             LOG.trace("Loading packages from XML and Convention on startup");                
 
-        //init action contect
+        //init action context
         ActionContext ctx = ActionContext.getContext();
         if (ctx == null) {
-            ctx = new ActionContext(new HashMap());
+            ctx = createActionContext();
             ActionContext.setContext(ctx);
         }
 
@@ -95,13 +96,17 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
             String bundleName = bundle.getSymbolicName();
             if (shouldProcessBundle(bundle) && !bundleNames.contains(bundleName)) {
                 bundleNames.add(bundleName);
-                //load XML and COnvention config
+                //load XML and Convention config
                 loadConfigFromBundle(bundle);
             }
         }
 
         bundlesChanged = false;
         bundleContext.addBundleListener(this);
+    }
+
+    protected ActionContext createActionContext() {
+        return new ActionContext(new HashMap<String, Object>());
     }
 
     /**
@@ -117,7 +122,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
         //init action context
         ActionContext ctx = ActionContext.getContext();
         if (ctx == null) {
-            ctx = new ActionContext(new HashMap());
+            ctx = createActionContext();
             ActionContext.setContext(ctx);
         }
 
@@ -133,14 +138,14 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
             //XML config
             PackageLoader loader = new BundlePackageLoader();
-            for (PackageConfig pkg : loader.loadPackages(bundle, bundleContext, objectFactory, fileManager, configuration.getPackageConfigs())) {
+            for (PackageConfig pkg : loader.loadPackages(bundle, bundleContext, objectFactory, fileManagerFactory, configuration.getPackageConfigs())) {
                 configuration.addPackageConfig(pkg.getName(), pkg);
                 bundleAccessor.addPackageFromBundle(bundle, pkg.getName());
             }
 
             //Convention
             //get the existing packages before reloading the provider (se we can figure out what are the new packages)
-            Set<String> packagesBeforeLoading = new HashSet(configuration.getPackageConfigNames());
+            Set<String> packagesBeforeLoading = new HashSet<String>(configuration.getPackageConfigNames());
 
             PackageProvider conventionPackageProvider = configuration.getContainer().getInstance(PackageProvider.class, "convention.packageProvider");
             if (conventionPackageProvider != null) {
@@ -149,7 +154,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
                 conventionPackageProvider.loadPackages();
             }
 
-            Set<String> packagesAfterLoading = new HashSet(configuration.getPackageConfigNames());
+            Set<String> packagesAfterLoading = new HashSet<String>(configuration.getPackageConfigNames());
             packagesAfterLoading.removeAll(packagesBeforeLoading);
             if (!packagesAfterLoading.isEmpty()) {
                 //add the new packages to the map of bundle -> package
@@ -172,7 +177,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
      * Checks for "Struts2-Enabled" header in the bundle
      */
     protected boolean shouldProcessBundle(Bundle bundle) {
-        String strutsEnabled = (String) bundle.getHeaders().get(OsgiHost.OSGI_HEADER_STRUTS_ENABLED);
+        String strutsEnabled = bundle.getHeaders().get(OsgiHost.OSGI_HEADER_STRUTS_ENABLED);
 
         return "true".equalsIgnoreCase(strutsEnabled);
     }
@@ -205,16 +210,18 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
         this.servletContext = servletContext;
     }
 
+    @Inject
     public void setFileManagerFactory(FileManagerFactory fmFactory) {
-        this.fileManager = fmFactory.getFileManager();
+        this.fileManagerFactory = fmFactory;
     }
 
     public void destroy() {
         try {
             osgiHost.destroy();
         } catch (Exception e) {
-            if (LOG.isErrorEnabled())
+            if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to stop OSGi container", e);
+            }
         }
     }
 
@@ -246,10 +253,13 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
     protected void onBundleStopped(Bundle bundle) {
         Set<String> packages = bundleAccessor.getPackagesByBundle(bundle);
         if (!packages.isEmpty()) {
-            if (LOG.isTraceEnabled())
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("The bundle [#0] has been stopped. The packages [#1] will be disabled", bundle.getSymbolicName(), StringUtils.join(packages, ","));
-            for (String packageName : packages)
+            }
+            for (String packageName : packages) {
                 configuration.removePackageConfig(packageName);
+            }
         }
     }
+
 }

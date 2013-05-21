@@ -21,7 +21,7 @@
 
 package org.apache.struts2.osgi;
 
-import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -49,13 +49,14 @@ public class BundlePackageLoader implements PackageLoader {
     private static final Logger LOG = LoggerFactory.getLogger(BundlePackageLoader.class);
 
     public List<PackageConfig> loadPackages(Bundle bundle, BundleContext bundleContext, ObjectFactory objectFactory,
-                                            FileManager fileManager, Map<String, PackageConfig> pkgConfigs) throws ConfigurationException {
+                                            FileManagerFactory fileManagerFactory, Map<String, PackageConfig> pkgConfigs) throws ConfigurationException {
         Configuration config = new DefaultConfiguration("struts.xml");
         BundleConfigurationProvider prov = new BundleConfigurationProvider("struts.xml", bundle, bundleContext);
         for (PackageConfig pkg : pkgConfigs.values()) {
             config.addPackageConfig(pkg.getName(), pkg);
         }
         prov.setObjectFactory(objectFactory);
+        prov.setFileManagerFactory(fileManagerFactory);
         prov.init(config);
         prov.loadPackages();
 

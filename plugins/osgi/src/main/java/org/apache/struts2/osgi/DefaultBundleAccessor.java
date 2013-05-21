@@ -21,25 +21,28 @@
 
 package org.apache.struts2.osgi;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.util.*;
-import java.util.Map.Entry;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Helper class that find resources and loads classes from the list of bundles
@@ -139,8 +142,10 @@ public class DefaultBundleAccessor implements BundleAccessor {
         if (bundle != null) {
             List<URL> resources = new ArrayList<URL>();
             Enumeration e = bundle.getResources(name);
-            while (e.hasMoreElements()) {
-                resources.add(translate ? OsgiUtil.translateBundleURLToJarURL((URL) e.nextElement(), getCurrentBundle()) : (URL) e.nextElement());
+            if (e != null) {
+                while (e.hasMoreElements()) {
+                    resources.add(translate ? OsgiUtil.translateBundleURLToJarURL((URL) e.nextElement(), getCurrentBundle()) : (URL) e.nextElement());
+                }
             }
             return resources;
         }
@@ -151,7 +156,7 @@ public class DefaultBundleAccessor implements BundleAccessor {
     public URL loadResourceFromAllBundles(String name) throws IOException {
         for (Map.Entry<String, Bundle> entry : osgiHost.getActiveBundles().entrySet()) {
             Enumeration e = entry.getValue().getResources(name);
-            if (e.hasMoreElements()) {
+            if (e != null && e.hasMoreElements()) {
                 return (URL) e.nextElement();
             }
         }
@@ -208,4 +213,5 @@ public class DefaultBundleAccessor implements BundleAccessor {
     public void setOsgiHost(OsgiHost osgiHost) {
         this.osgiHost = osgiHost;
     }
+
 }

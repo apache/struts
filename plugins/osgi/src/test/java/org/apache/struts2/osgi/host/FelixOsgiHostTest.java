@@ -18,18 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.osgi;
+package org.apache.struts2.osgi.host;
 
 import junit.framework.TestCase;
+import org.apache.struts2.osgi.host.FelixOsgiHost;
 
 public class FelixOsgiHostTest extends TestCase {
+
+    private FelixOsgiHost felixHost = new FelixOsgiHost();
+
     public void testGetVersionFromString() {
-        assertEquals("2.1.1", FelixOsgiHost.getVersionFromString("2.1.1-SNAPSHOT"));
-        assertEquals("2.1.1", FelixOsgiHost.getVersionFromString("2.1.1.SNAPSHOT"));
-        assertEquals("2.1.1", FelixOsgiHost.getVersionFromString("something-2.1.1.SNAPSHOT"));
-        assertEquals("2.1.1", FelixOsgiHost.getVersionFromString("something-2-1-1.SNAPSHOT"));
-        assertEquals("2.1.0", FelixOsgiHost.getVersionFromString("something-2-1.SNAPSHOT"));
-        assertEquals("2.0.0", FelixOsgiHost.getVersionFromString("something-2.SNAPSHOT"));
-        assertEquals("1.0.0", FelixOsgiHost.getVersionFromString("something"));
+        assertEquals("2.1.1", felixHost.getVersionFromString("2.1.1-SNAPSHOT"));
+        assertEquals("2.1.1", felixHost.getVersionFromString("2.1.1.SNAPSHOT"));
+        assertEquals("2.1.1", felixHost.getVersionFromString("something-2.1.1.SNAPSHOT"));
+        assertEquals("2.1.1", felixHost.getVersionFromString("something-2-1-1.SNAPSHOT"));
+        assertEquals("2.1.0", felixHost.getVersionFromString("something-2-1.SNAPSHOT"));
+        assertEquals("2.0.0", felixHost.getVersionFromString("something-2.SNAPSHOT"));
+        assertEquals("1.0.0", felixHost.getVersionFromString("something"));
     }
+
 }

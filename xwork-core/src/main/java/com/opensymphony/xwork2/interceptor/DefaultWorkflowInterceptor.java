@@ -71,14 +71,14 @@ import java.lang.reflect.Method;
  * <p/>
  * <pre>
  * <!-- START SNIPPET: example -->
- * <p/>
+ *
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
  *     &lt;interceptor-ref name="params"/&gt;
  *     &lt;interceptor-ref name="validation"/&gt;
  *     &lt;interceptor-ref name="workflow"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * <p/>
+ *
  * &lt;-- In this case myMethod as well as mySecondMethod of the action class
  *        will not pass through the workflow process --&gt;
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
@@ -89,7 +89,7 @@ import java.lang.reflect.Method;
  *     &lt;/interceptor-ref name="workflow"&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * <p/>
+ *
  * &lt;-- In this case, the result named "error" will be used when
  *        an action / field error is found --&gt;
  * &lt;-- The Interceptor will only be applied for myWorkflowMethod method of action
@@ -104,7 +104,7 @@ import java.lang.reflect.Method;
  *     &lt;/interceptor-ref&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * <p/>
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -121,7 +121,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultWorkflowInterceptor.class);
 
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
-    
+
     private String inputResultName = Action.INPUT;
 
     /**
@@ -149,31 +149,73 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
             if (validationAwareAction.hasErrors()) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Errors on action " + validationAwareAction + ", returning result name 'input'");
+                    LOG.debug("Errors on action [#0], returning result name [#1]", validationAwareAction, inputResultName);
                 }
 
                 String resultName = inputResultName;
-
-                if (action instanceof ValidationWorkflowAware) {
-                    resultName = ((ValidationWorkflowAware) action).getInputResultName();
-                }
-
-                InputConfig annotation = action.getClass().getMethod(invocation.getProxy().getMethod(), EMPTY_CLASS_ARRAY).getAnnotation(InputConfig.class);
-                if (annotation != null) {
-                    if (!annotation.methodName().equals("")) {
-                        Method method = action.getClass().getMethod(annotation.methodName());
-                        resultName = (String) method.invoke(action);
-                    } else {
-                        resultName = annotation.resultName();
-                    }
-                }
-
+                resultName = processValidationWorkflowAware(action, resultName);
+                resultName = processInputConfig(action, invocation.getProxy().getMethod(), resultName);
+                resultName = processValidationErrorAware(action, resultName);
 
                 return resultName;
             }
         }
 
         return invocation.invoke();
+    }
+
+    /**
+     * Process {@link ValidationWorkflowAware} interface
+     */
+    private String processValidationWorkflowAware(final Object action, final String currentResultName) {
+        String resultName = currentResultName;
+        if (action instanceof ValidationWorkflowAware) {
+            resultName = ((ValidationWorkflowAware) action).getInputResultName();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Changing result name from [#0] to [#1] because of processing [#2] interface applied to [#3]",
+                        currentResultName, resultName, InputConfig.class.getSimpleName(), ValidationWorkflowAware.class.getSimpleName(), action);
+            }
+        }
+        return resultName;
+    }
+
+    /**
+     * Process {@link InputConfig} annotation applied to method
+     */
+    protected String processInputConfig(final Object action, final String method, final String currentResultName) throws Exception {
+        String resultName = currentResultName;
+        InputConfig annotation = action.getClass().getMethod(method, EMPTY_CLASS_ARRAY).getAnnotation(InputConfig.class);
+        if (annotation != null) {
+            if (!annotation.methodName().equals("")) {
+                Method m = action.getClass().getMethod(annotation.methodName());
+                resultName = (String) m.invoke(action);
+            } else {
+                resultName = annotation.resultName();
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Changing result name from [#0] to [#1] because of processing annotation [#2] on action [#3]",
+                        currentResultName, resultName, InputConfig.class.getSimpleName(), action);
+            }
+        }
+        return resultName;
+    }
+
+    /**
+     * Notify action if it implements {@see ValidationErrorAware} interface
+     */
+    protected String processValidationErrorAware(final Object action, final String currentResultName) {
+        String resultName = currentResultName;
+        if (action instanceof ValidationErrorAware) {
+            String validationErrorAwareResult = ((ValidationErrorAware) action).actionErrorOccurred();
+            if (validationErrorAwareResult != null) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Changing result name from [#0] to [#1] because of processing interface [#2] on action [#3]",
+                            currentResultName, resultName, ValidationErrorAware.class.getSimpleName(), action);
+                }
+                resultName = validationErrorAwareResult;
+            }
+        }
+        return resultName;
     }
 
 }

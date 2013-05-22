@@ -177,7 +177,8 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
      * Checks for "Struts2-Enabled" header in the bundle
      */
     protected boolean shouldProcessBundle(Bundle bundle) {
-        String strutsEnabled = bundle.getHeaders().get(OsgiHost.OSGI_HEADER_STRUTS_ENABLED);
+        // Cast to String is required on JDK7
+        String strutsEnabled = (String) bundle.getHeaders().get(OsgiHost.OSGI_HEADER_STRUTS_ENABLED);
 
         return "true".equalsIgnoreCase(strutsEnabled);
     }

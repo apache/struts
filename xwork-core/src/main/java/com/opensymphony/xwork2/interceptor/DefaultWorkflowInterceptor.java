@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
  * <b>This interceptor does not perform any validation</b>.
  * <p/>
- * <p/>This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
+ * This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
  * parameter. <b>excludeMethods</b> accepts a comma-delimited list of method names. For example, requests to
  * <b>foo!input.action</b> and <b>foo!back.action</b> will be skipped by this interceptor if you set the
  * <b>excludeMethods</b> parameter to "input, back".
@@ -42,33 +42,36 @@ import java.lang.reflect.Method;
  * all methods for both parameters.
  * See {@link MethodFilterInterceptor} for more info.
  * <p/>
- * <!-- END SNIPPET: description -->
- * <p/>
- * <p/> <u>Interceptor parameters:</u>
- * <p/>
- * <!-- START SNIPPET: parameters -->
- * <p/>
+ * This interceptor also supports the following interfaces which can implemented by actions:
  * <ul>
- * <p/>
+ *     <li>ValidationAware - implemented by ActionSupport class</li>
+ *     <li>ValidationWorkflowAware - allows changing result name programmatically</li>
+ *     <li>ValidationErrorAware - notifies action about errors and also allow change result name</li>
+ * </ul>
+ *
+ * You can also use InputConfig annotation to change result name returned when validation errors occurred.
+ *
+ * <!-- END SNIPPET: description -->
+ *
+ * <u>Interceptor parameters:</u>
+ *
+ * <!-- START SNIPPET: parameters -->
+ * <ul>
  * <li>inputResultName - Default to "input". Determine the result name to be returned when
  * an action / field error is found.</li>
- * <p/>
  * </ul>
- * <p/>
  * <!-- END SNIPPET: parameters -->
- * <p/>
- * <p/> <u>Extending the interceptor:</u>
- * <p/>
- * <p/>
- * <p/>
+ *
+ * <u>Extending the interceptor:</u>
+ *
  * <!-- START SNIPPET: extending -->
- * <p/>
+ *
  * There are no known extension points for this interceptor.
- * <p/>
+ *
  * <!-- END SNIPPET: extending -->
- * <p/>
- * <p/> <u>Example code:</u>
- * <p/>
+ *
+ * <u>Example code:</u>
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  *

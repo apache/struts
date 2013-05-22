@@ -30,8 +30,9 @@ public interface ValidationErrorAware {
     /**
      * Allows to notify action about occurred action/field errors
      *
-     * @return new result name or null to keep result of {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor}
+     * @param currentResultName current result name, action can change it or return the same
+     * @return new result name or passed currentResultName
      */
-    String actionErrorOccurred();
+    String actionErrorOccurred(final String currentResultName);
 
 }

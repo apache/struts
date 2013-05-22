@@ -37,7 +37,7 @@ public class ValidationErrorAwareTest extends XWorkTestCase {
 
     public void testNotChangeResultWhenNotifyAboutValidationError() throws Exception {
         // given
-        actionResult = null;
+        actionResult = Action.INPUT;
         ValidationInterceptor validationInterceptor = create();
 
         // when
@@ -56,7 +56,7 @@ public class ValidationErrorAwareTest extends XWorkTestCase {
         interceptor = new DefaultWorkflowInterceptor();
         ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
 
-        EasyMock.expect(action.actionErrorOccurred()).andAnswer(new IAnswer<String>() {
+        EasyMock.expect(action.actionErrorOccurred(EasyMock.<String>anyObject())).andAnswer(new IAnswer<String>() {
             public String answer() throws Throwable {
                 return actionResult;
             }

@@ -209,13 +209,10 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     protected String processValidationErrorAware(final Object action, final String currentResultName) {
         String resultName = currentResultName;
         if (action instanceof ValidationErrorAware) {
-            String validationErrorAwareResult = ((ValidationErrorAware) action).actionErrorOccurred();
-            if (validationErrorAwareResult != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Changing result name from [#0] to [#1] because of processing interface [#2] on action [#3]",
-                            currentResultName, resultName, ValidationErrorAware.class.getSimpleName(), action);
-                }
-                resultName = validationErrorAwareResult;
+            resultName = ((ValidationErrorAware) action).actionErrorOccurred(currentResultName);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Changing result name from [#0] to [#1] because of processing interface [#2] on action [#3]",
+                        currentResultName, resultName, ValidationErrorAware.class.getSimpleName(), action);
             }
         }
         return resultName;

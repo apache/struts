@@ -56,6 +56,7 @@ public class OgnlUtil {
     private TypeConverter defaultConverter;
     static boolean devMode = false;
     static boolean enableExpressionCache = true;
+    private boolean enableEvalExpression;
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -67,9 +68,18 @@ public class OgnlUtil {
         devMode = "true".equals(mode);
     }
 
-    @Inject("enableOGNLExpressionCache")
+    @Inject(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE)
     public static void setEnableExpressionCache(String cache) {
        enableExpressionCache = "true".equals(cache);
+    }
+
+    @Inject(value = XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, required = false)
+    public void setEnableEvalExpression(String evalExpression) {
+        enableEvalExpression = "true".equals(evalExpression);
+        if(enableEvalExpression){
+            LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
+                    "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
+        }
     }
 
     /**
@@ -217,7 +227,7 @@ public class OgnlUtil {
     }
 
     protected void setValue(String name, Map<String, Object> context, Object root, Object value, boolean evalName) throws OgnlException {
-        Object tree = compile(name);
+        Object tree = compile(name, context);
         if (!evalName && isEvalExpression(tree, context)) {
             throw new OgnlException("Eval expression cannot be used as parameter name");
         }
@@ -227,30 +237,46 @@ public class OgnlUtil {
     private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
         if (tree instanceof SimpleNode) {
             SimpleNode node = (SimpleNode) tree;
-            return node.isEvalChain((OgnlContext) context);
+            OgnlContext ognlContext = null;
+
+            if (context!=null && context instanceof OgnlContext) {
+                ognlContext = (OgnlContext) context;
+            }
+            return node.isEvalChain(ognlContext);
         }
         return false;
     }
 
     public Object getValue(String name, Map<String, Object> context, Object root) throws OgnlException {
-        return Ognl.getValue(compile(name), context, root);
+        return Ognl.getValue(compile(name, context), context, root);
     }
 
     public Object getValue(String name, Map<String, Object> context, Object root, Class resultType) throws OgnlException {
-        return Ognl.getValue(compile(name), context, root, resultType);
+        return Ognl.getValue(compile(name, context), context, root, resultType);
     }
 
 
     public Object compile(String expression) throws OgnlException {
+        return compile(expression, null);
+    }
+
+    public Object compile(String expression, Map<String, Object> context) throws OgnlException {
+        Object tree;
         if (enableExpressionCache) {
-            Object o = expressions.get(expression);
-            if (o == null) {
-                o = Ognl.parseExpression(expression);
-                expressions.putIfAbsent(expression, o);
+            tree = expressions.get(expression);
+            if (tree == null) {
+                tree = Ognl.parseExpression(expression);
+                expressions.putIfAbsent(expression, tree);
             }
-            return o;
-        } else
-            return Ognl.parseExpression(expression);
+        } else {
+            tree = Ognl.parseExpression(expression);
+        }
+
+        if (!enableEvalExpression && isEvalExpression(tree, context)) {
+            throw new OgnlException("Eval expressions has been disabled");
+        }
+
+        return tree;
     }
 
     /**
@@ -312,7 +338,7 @@ public class OgnlUtil {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
                     if ((toPd != null) && (toPd.getWriteMethod() != null)) {
                         try {
-                            Object expr = compile(fromPd.getName());
+                            Object expr = compile(fromPd.getName(), context);
                             Object value = Ognl.getValue(expr, contextFrom, from);
                             Ognl.setValue(expr, contextTo, to, value);
                         } catch (OgnlException e) {

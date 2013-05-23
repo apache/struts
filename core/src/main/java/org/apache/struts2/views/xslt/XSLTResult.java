@@ -238,6 +238,9 @@ public class XSLTResult implements Result {
     /** Indicates the ognl expression respresenting the bean which is to be exposed as xml. */
     private String exposedValue;
 
+    /** Indicates the status to return in the response */
+    private int status = 200;
+
     private boolean parse;
     private AdapterFactory adapterFactory;
 
@@ -307,6 +310,18 @@ public class XSLTResult implements Result {
         this.excludingPattern = excludingPattern;
     }
 
+    public String getStatus() {
+        return String.valueOf(status);
+    }
+
+    public void setStatus(String status) {
+        try {
+            this.status = Integer.valueOf(status);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Status value not number " + e.getMessage(), e);
+        }
+    }
+
     /**
      * If true, parse the stylesheet location for OGNL expressions.
      *
@@ -328,7 +343,7 @@ public class XSLTResult implements Result {
 
         try {
             HttpServletResponse response = ServletActionContext.getResponse();
-
+            response.setStatus(status);
             PrintWriter writer = response.getWriter();
 
             // Create a transformer for the stylesheet.

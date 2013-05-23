@@ -191,7 +191,20 @@ public class XSLTResultTest extends StrutsTestCase {
             assertEquals("Error transforming result", ex.getMessage());
         }
     }
-    
+
+    public void testStatusCode() throws Exception {
+        result.setParse(false);
+        result.setLocation("XSLTResultTest.xsl");
+        result.setStatus("302");
+        result.execute(mai);
+
+        String out = response.getContentAsString();
+
+        assertEquals(302, response.getStatus());
+        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         request = new MockHttpServletRequest();

@@ -21,21 +21,20 @@
 
 package org.apache.struts2.config;
 
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.StringTokenizer;
-
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
+
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class LegacyPropertiesConfigurationProvider implements ConfigurationProvider {
 
@@ -69,10 +68,10 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
         loadSettings(props, settings);
         
         // Set default locale by lazily resolving the locale property as needed into a Locale object
-        builder.factory(Locale.class, new Factory() {
+        builder.factory(Locale.class,  new Factory<Locale>() {
             private Locale locale;
 
-            public synchronized Object create(Context context) throws Exception {
+            public synchronized Locale create(Context context) throws Exception {
                 if (locale == null) {
                     String loc = context.getContainer().getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
                     if (loc != null) {

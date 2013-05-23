@@ -21,16 +21,14 @@
 
 package org.apache.struts2.config;
 
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.StringTokenizer;
-
-import org.apache.struts2.StrutsConstants;
-
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+
+import java.util.Iterator;
+import java.util.Locale;
 
 
 /**
@@ -73,6 +71,11 @@ class Settings {
      * to use when another implementation is not provided (plugged in).
      */
     static Settings defaultImpl;
+
+    /**
+     * Guard used to protect the defaultImpl initialisation.
+     */
+    private static final Object DEFAULT_LOCK = new Object();
 
     /**
      * An instance of the default locale as specified by the <code>struts.locale</code>  setting.
@@ -267,23 +270,27 @@ class Settings {
      */
     private static Settings getDefaultInstance() {
         if (defaultImpl == null) {
-            // Create bootstrap implementation
-            defaultImpl = new DefaultSettings();
+            synchronized (DEFAULT_LOCK) {
+                if (defaultImpl == null) {
+                    // Create bootstrap implementation
+                    defaultImpl = new DefaultSettings();
 
-            // Create default implementation
-            try {
-                String className = get(StrutsConstants.STRUTS_CONFIGURATION);
-
-                if (!className.equals(defaultImpl.getClass().getName())) {
+                    // Create default implementation
                     try {
-                        // singleton instances shouldn't be built accessing request or session-specific context data
-                        defaultImpl = (Settings) ObjectFactory.getObjectFactory().buildBean(Thread.currentThread().getContextClassLoader().loadClass(className), null);
-                    } catch (Exception e) {
-                        LOG.error("Settings: Could not instantiate the struts.configuration object, substituting the default implementation.", e);
+                        String className = get(StrutsConstants.STRUTS_CONFIGURATION);
+
+                        if (!className.equals(defaultImpl.getClass().getName())) {
+                            try {
+                                // singleton instances shouldn't be built accessing request or session-specific context data
+                                defaultImpl = (Settings) ObjectFactory.getObjectFactory().buildBean(Thread.currentThread().getContextClassLoader().loadClass(className), null);
+                            } catch (Exception e) {
+                                LOG.error("Settings: Could not instantiate the struts.configuration object, substituting the default implementation.", e);
+                            }
+                        }
+                    } catch (IllegalArgumentException ex) {
+                        // ignore
                     }
                 }
-            } catch (IllegalArgumentException ex) {
-                // ignore
             }
         }
 
@@ -294,7 +301,10 @@ class Settings {
      * Resets the default and any plugin Setting instance to null.
      */
     public static void reset() {
-        defaultImpl = null;
+        synchronized (DEFAULT_LOCK) {
+            defaultImpl = null;
+        }
         settingsImpl = null;
     }
+
 }

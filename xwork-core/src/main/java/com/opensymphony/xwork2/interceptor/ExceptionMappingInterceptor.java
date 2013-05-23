@@ -20,7 +20,9 @@ import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -190,9 +192,12 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
                 handleLogging(e);
             }
             List<ExceptionMappingConfig> exceptionMappings = invocation.getProxy().getConfig().getExceptionMappings();
-            String mappedResult = this.findResultFromExceptions(exceptionMappings, e);
-            if (mappedResult != null) {
-                result = mappedResult;
+            ExceptionMappingConfig mappingConfig = this.findMappingFromExceptions(exceptionMappings, e);
+            if (mappingConfig != null && mappingConfig.getResult()!=null) {
+                Map parameterMap = mappingConfig.getParams();
+                // create a mutable HashMap since some interceptors will remove parameters, and parameterMap is immutable
+                invocation.getInvocationContext().setParameters(new HashMap<String, Object>(parameterMap));
+                result = mappingConfig.getResult();
                 publishException(invocation, new ExceptionHolder(e));
             } else {
                 throw e;
@@ -248,9 +253,23 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     	}
     }
 
+    /**
+     * @deprecated since 2.3.15 please use #findMappingFromExceptions directly instead
+     */
     protected String findResultFromExceptions(List<ExceptionMappingConfig> exceptionMappings, Throwable t) {
-        String result = null;
+    	ExceptionMappingConfig result = findMappingFromExceptions(exceptionMappings, t);
+        return result==null?null:result.getResult();
+    }
 
+    /**
+     * Try to find appropriate {@link ExceptionMappingConfig} based on provided Throwable
+     *
+     * @param exceptionMappings list of defined exception mappings
+     * @param t caught exception
+     * @return appropriate mapping or null
+     */
+    protected ExceptionMappingConfig findMappingFromExceptions(List<ExceptionMappingConfig> exceptionMappings, Throwable t) {
+    	ExceptionMappingConfig config = null;
         // Check for specific exception mappings.
         if (exceptionMappings != null) {
             int deepest = Integer.MAX_VALUE;
@@ -259,12 +278,11 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
                 int depth = getDepth(exceptionMappingConfig.getExceptionClassName(), t);
                 if (depth >= 0 && depth < deepest) {
                     deepest = depth;
-                    result = exceptionMappingConfig.getResult();
+                    config = exceptionMappingConfig;
                 }
             }
         }
-
-        return result;
+        return config;
     }
 
     /**
@@ -301,4 +319,5 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     protected void publishException(ActionInvocation invocation, ExceptionHolder exceptionHolder) {
         invocation.getStack().push(exceptionHolder);
     }
+
 }

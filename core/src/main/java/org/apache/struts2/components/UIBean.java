@@ -43,7 +43,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -806,7 +805,7 @@ public abstract class UIBean extends Component {
 
             if ( name != null ) {
                 // list should have been created by the form component
-                List tags = (List) form.getParameters().get("tagNames");
+                List<String> tags = (List<String>) form.getParameters().get("tagNames");
                 tags.add(name);
             }
         }
@@ -829,8 +828,8 @@ public abstract class UIBean extends Component {
                 Map overallTooltipConfigMap = getTooltipConfig(form);
                 overallTooltipConfigMap.putAll(tooltipConfigMap); // override parent form's tooltip config
 
-                for (Iterator i = overallTooltipConfigMap.entrySet().iterator(); i.hasNext(); ) {
-                    Map.Entry entry = (Map.Entry) i.next();
+                for (Object o : overallTooltipConfigMap.entrySet()) {
+                    Map.Entry entry = (Map.Entry) o;
                     addParameter((String) entry.getKey(), entry.getValue());
                 }
             }
@@ -930,14 +929,14 @@ public abstract class UIBean extends Component {
 
     protected Map getTooltipConfig(UIBean component) {
         Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
-        Map tooltipConfig = new LinkedHashMap();
+        Map<String, String> tooltipConfig = new LinkedHashMap<String, String>();
 
         if (tooltipConfigObj instanceof Map) {
             // we get this if its configured using
             // 1] UI component's tooltipConfig attribute  OR
             // 2] <param name="tooltip" value="" /> param tag value attribute
 
-            tooltipConfig = new LinkedHashMap((Map)tooltipConfigObj);
+            tooltipConfig = new LinkedHashMap<String, String>((Map)tooltipConfigObj);
         } else if (tooltipConfigObj instanceof String) {
 
             // we get this if its configured using
@@ -945,17 +944,16 @@ public abstract class UIBean extends Component {
             String tooltipConfigStr = (String) tooltipConfigObj;
             String[] tooltipConfigArray = tooltipConfigStr.split("\\|");
 
-            for (int a=0; a<tooltipConfigArray.length; a++) {
-                String[] configEntry = ((String)tooltipConfigArray[a].trim()).split("=");
+            for (String aTooltipConfigArray : tooltipConfigArray) {
+                String[] configEntry = aTooltipConfigArray.trim().split("=");
                 String key = configEntry[0].trim();
-                String value = null;
+                String value;
                 if (configEntry.length > 1) {
                     value = configEntry[1].trim();
                     tooltipConfig.put(key, value);
-                }
-                else {
+                } else {
                     if (LOG.isWarnEnabled()) {
-                	LOG.warn("component "+component+" tooltip config param "+key+" has no value defined, skipped");
+                        LOG.warn("component " + component + " tooltip config param " + key + " has no value defined, skipped");
                     }
                 }
             }
@@ -970,7 +968,7 @@ public abstract class UIBean extends Component {
     }
 
     /**
-     * Create HTML id element for the component and populate this component parmaeter
+     * Create HTML id element for the component and populate this component parameter
      * map. Additionally, a parameter named escapedId is populated which contains the found id value filtered by
      * {@link #escape(String)}, needed eg. for naming Javascript identifiers based on the id value.
      *
@@ -981,18 +979,23 @@ public abstract class UIBean extends Component {
      *   <li>[this_component_name]</li>
      * </ol>
      *
-     * @param form
+     * @param form enclosing form tag
      */
     protected void populateComponentHtmlId(Form form) {
         String tryId;
+        String generatedId;
         if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
             tryId = findStringIfAltSyntax(id);
+        } else if (null == (generatedId = escape(name != null ? findString(name) : null))) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot determine id attribute for [#0], consider defining id, name or key attribute!", this);
+            }
+            tryId = null;
         } else if (form != null) {
-            tryId = form.getParameters().get("id") + "_"
-                    + escape(name != null ? findString(name) : null);
+            tryId = form.getParameters().get("id") + "_" + generatedId;
         } else {
-            tryId = escape(name != null ? findString(name) : null);
+            tryId = generatedId;
         }
         addParameter("id", tryId);
         addParameter("escapedId", escape(tryId));

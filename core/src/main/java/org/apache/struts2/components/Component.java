@@ -53,7 +53,7 @@ public class Component {
     public static final String COMPONENT_STACK = "__component_stack";
 
     protected ValueStack stack;
-    protected Map parameters;
+    protected Map<String, Object> parameters;
     protected ActionMapper actionMapper;
     protected boolean throwExceptionOnELFailure;
     private UrlHelper urlHelper;
@@ -65,7 +65,7 @@ public class Component {
      */
     public Component(ValueStack stack) {
         this.stack = stack;
-        this.parameters = new LinkedHashMap();
+        this.parameters = new LinkedHashMap<String, Object>();
         getComponentStack().push(this);
     }
 
@@ -107,10 +107,10 @@ public class Component {
      * Gets the component stack of this component.
      * @return the component stack of this component, never <tt>null</tt>.
      */
-    public Stack getComponentStack() {
-        Stack componentStack = (Stack) stack.getContext().get(COMPONENT_STACK);
+    public Stack<Component> getComponentStack() {
+        Stack<Component> componentStack = (Stack<Component>) stack.getContext().get(COMPONENT_STACK);
         if (componentStack == null) {
-            componentStack = new Stack();
+            componentStack = new Stack<Component>();
             stack.getContext().put(COMPONENT_STACK, componentStack);
         }
         return componentStack;
@@ -449,7 +449,7 @@ public class Component {
      * Gets the parameters.
      * @return the parameters. Is never <tt>null</tt>.
      */
-    public Map getParameters() {
+    public Map<String, Object> getParameters() {
         return parameters;
     }
 
@@ -457,7 +457,7 @@ public class Component {
      * Adds all the given parameters to this component's own parameters.
      * @param params the parameters to add.
      */
-    public void addAllParameters(Map params) {
+    public void addAllParameters(Map<String, Object> params) {
         parameters.putAll(params);
     }
 
@@ -472,7 +472,7 @@ public class Component {
      */
     public void addParameter(String key, Object value) {
         if (key != null) {
-            Map params = getParameters();
+            Map<String, Object> params = getParameters();
 
             if (value == null) {
                 params.remove(key);

@@ -21,15 +21,14 @@
 
 package org.apache.struts2.components;
 
-import java.util.Collections;
-import java.util.Map;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  *
@@ -83,6 +82,21 @@ public class UIBeanTest extends StrutsTestCase {
         txtFld.populateComponentHtmlId(form);
 
         assertEquals("formId_txtFldName", txtFld.getParameters().get("id"));
+    }
+
+    public void testPopulateComponentHtmlWithoutNameAndId() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        Form form = new Form(stack, req, res);
+        form.getParameters().put("id", "formId");
+
+        TextField txtFld = new TextField(stack, req, res);
+
+        txtFld.populateComponentHtmlId(form);
+
+        assertEquals(null, txtFld.getParameters().get("id"));
     }
 
     public void testEscape() throws Exception {
@@ -143,7 +157,7 @@ public class UIBeanTest extends StrutsTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        Map context = Collections.singletonMap("theme", new Integer(12));
+        Map context = Collections.singletonMap("theme", 12);
         ActionContext.getContext().put("attr", context);
 
         TextField txtFld = new TextField(stack, req, res);

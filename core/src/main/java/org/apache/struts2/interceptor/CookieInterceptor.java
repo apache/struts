@@ -86,10 +86,14 @@ import java.util.regex.Pattern;
  * <!-- START SNIPPET: extending -->
  *
  * <ul>
- *      populateCookieValueIntoStack - this method will decide if this cookie value is qualified to be
- *                                                                                                         populated into the value stack (hence into the action itself)
- *      injectIntoCookiesAwareAction - this method will inject selected cookies (as a java.util.Map) into
- *                                                                                                        action that implements {@link CookiesAware}.
+ *     <li>
+ *         populateCookieValueIntoStack - this method will decide if this cookie value is qualified
+ *         to be populated into the value stack (hence into the action itself)
+ *     </li>
+ *     <li>
+ *         injectIntoCookiesAwareAction - this method will inject selected cookies (as a java.util.Map)
+ *         into action that implements {@link CookiesAware}.
+ *     </li>
  * </ul>
  *
  * <!-- END SNIPPET: extending -->

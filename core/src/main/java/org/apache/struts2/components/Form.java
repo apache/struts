@@ -31,16 +31,22 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.FieldValidator;
+import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
-import org.apache.struts2.StrutsConstants;
+import com.opensymphony.xwork2.validator.ValidatorContext;
+import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -116,14 +122,17 @@ public class Form extends ClosingUIBean {
         super(stack, request, response);
     }
 
+    @Override
     protected boolean evaluateNameValue() {
         return false;
     }
 
+    @Override
     public String getDefaultOpenTemplate() {
         return OPEN_TEMPLATE;
     }
 
+    @Override
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
@@ -153,6 +162,7 @@ public class Form extends ClosingUIBean {
     * Revised for Portlet actionURL as form action, and add wwAction as hidden
     * field. Refer to template.simple/form.vm
     */
+    @Override
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
         if (validate != null) {
@@ -210,6 +220,7 @@ public class Form extends ClosingUIBean {
      *    <li>if an 'action' attribute is specified, it will be used as the id.</li>
      * </ol>
      */
+    @Override
     protected void populateComponentHtmlId(Form form) {
         if (id != null) {
             addParameter("id", escape(id));
@@ -262,19 +273,143 @@ public class Form extends ClosingUIBean {
             return Collections.EMPTY_LIST;
         }
 
-        List<Validator> all = actionValidatorManager.getValidators(actionClass, (String) getParameters().get("actionName"));
+        String formActionValue = findString(action);
+        ActionMapping mapping = actionMapper.getMappingFromActionName(formActionValue);
+        String actionName = mapping.getName();
+        String methodName = mapping.getMethod();
+
+        List<Validator> actionValidators = actionValidatorManager.getValidators(actionClass, actionName, methodName);
         List<Validator> validators = new ArrayList<Validator>();
-        for (Validator validator : all) {
-            if (validator instanceof FieldValidator) {
-                FieldValidator fieldValidator = (FieldValidator) validator;
-                if (fieldValidator.getFieldName().equals(name)) {
-                    validators.add(fieldValidator);
-                }
-            }
-        }
+
+        findFieldValidators(name, actionClass, actionName, actionValidators, validators, "");
 
         return validators;
     }
+
+    private void findFieldValidators(String name, Class actionClass, String actionName,
+            List<Validator> validatorList, List<Validator> retultValidators, String prefix) {
+
+        for (Validator validator : validatorList) {
+            if (validator instanceof FieldValidator) {
+                FieldValidator fieldValidator = (FieldValidator) validator;
+
+                if (validator instanceof VisitorFieldValidator) {
+                    VisitorFieldValidator vfValidator = (VisitorFieldValidator) fieldValidator;
+                    Class clazz = getVisitorReturnType(actionClass, vfValidator.getFieldName());
+                    if (clazz == null) {
+                        continue;
+                    }
+
+                    List<Validator> visitorValidators = actionValidatorManager.getValidators(clazz, actionName);
+                    String vPrefix = prefix + (vfValidator.isAppendPrefix() ? vfValidator.getFieldName() + "." : "");
+                    findFieldValidators(name, clazz, actionName, visitorValidators, retultValidators, vPrefix);
+                } else if ((prefix + fieldValidator.getFieldName()).equals(name)) {
+                    if (StringUtils.isNotBlank(prefix)) {
+                        //fixing field name for js side
+                        FieldVisitorValidatorWrapper wrap = new FieldVisitorValidatorWrapper(fieldValidator, prefix);
+                        retultValidators.add(wrap);
+                    } else {
+                        retultValidators.add(fieldValidator);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Wrap field validator, add visitor's field prefix to the field name.
+     * Javascript side is not aware of the visitor validators
+     * and does not know how to prefix the fields.
+     */
+    /*
+     * Class is public because Freemarker has problems accessing properties.
+     */
+    public static class FieldVisitorValidatorWrapper implements FieldValidator {
+        private FieldValidator fieldValidator;
+        private String namePrefix;
+        public FieldVisitorValidatorWrapper(FieldValidator fv, String namePrefix) {
+            this.fieldValidator = fv;
+            this.namePrefix = namePrefix;
+        }
+        public String getValidatorType() {
+            return "field-visitor";
+        }
+        public String getFieldName() {
+            return namePrefix + fieldValidator.getFieldName();
+        }
+        public FieldValidator getFieldValidator() {
+            return fieldValidator;
+        }
+        public void setFieldValidator(FieldValidator fieldValidator) {
+            this.fieldValidator = fieldValidator;
+        }
+        public String getDefaultMessage() {
+            return fieldValidator.getDefaultMessage();
+        }
+        public String getMessage(Object object) {
+            return fieldValidator.getMessage(object);
+        }
+        public String getMessageKey() {
+            return fieldValidator.getMessageKey();
+        }
+        public String[] getMessageParameters() {
+            return fieldValidator.getMessageParameters();
+        }
+        public ValidatorContext getValidatorContext() {
+            return fieldValidator.getValidatorContext();
+        }
+        public void setDefaultMessage(String message) {
+            fieldValidator.setDefaultMessage(message);
+        }
+        public void setFieldName(String fieldName) {
+            fieldValidator.setFieldName(fieldName);
+        }
+        public void setMessageKey(String key) {
+            fieldValidator.setMessageKey(key);
+        }
+        public void setMessageParameters(String[] messageParameters) {
+            fieldValidator.setMessageParameters(messageParameters);
+        }
+        public void setValidatorContext(ValidatorContext validatorContext) {
+            fieldValidator.setValidatorContext(validatorContext);
+        }
+        public void setValidatorType(String type) {
+            fieldValidator.setValidatorType(type);
+        }
+        public void setValueStack(ValueStack stack) {
+            fieldValidator.setValueStack(stack);
+        }
+        public void validate(Object object) throws ValidationException {
+            fieldValidator.validate(object);
+        }
+        public String getNamePrefix() {
+            return namePrefix;
+        }
+        public void setNamePrefix(String namePrefix) {
+            this.namePrefix = namePrefix;
+        }
+    }
+
+    /**
+     * Return type of visited object.
+     * @param actionClass
+     * @param visitorFieldName
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    protected Class getVisitorReturnType(Class actionClass, String visitorFieldName) {
+        if (visitorFieldName == null) {
+            return null;
+        }
+        String methodName = "get" + org.apache.commons.lang.StringUtils.capitalize(visitorFieldName);
+        try {
+            Method method = actionClass.getMethod(methodName, new Class[0]);
+            return method.getReturnType();
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
 
     /**
      * Get a incrementing sequence unique to this <code>Form</code> component.

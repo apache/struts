@@ -32,12 +32,32 @@
 </script>
 
 <script type="text/javascript">
+
     function validateForm_myAction() {
+        var getFieldValue = function(field) {
+            var type = field.type ? field.type : field[0].type;
+            if(type == 'select-one' || type == 'select-multiple') {
+                return (field.selectedIndex == -1 ? "" : field.options[field.selectedIndex].value);
+            } else if(type=='checkbox'||type=='radio') {
+                if(!field.length){
+                    field=[field];
+                }
+                for(var i=0; i < field.length; i++){
+                    if(field[i].checked) {
+                        return field[i].value;
+                    }
+                }
+                return "";
+            }
+            return field.value;
+        }
         form = document.getElementById("myAction");
         clearErrorMessages(form);
         clearErrorLabels(form);
         var errors = false;
         var continueValidation=true;
-        return !errors; }
+        return !errors;
+    }
+
 </script>
 

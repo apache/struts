@@ -33,23 +33,41 @@
 
 <script type="text/javascript">
     function validateForm_myAction() {
+        var getFieldValue = function(field) {
+            var type = field.type ? field.type : field[0].type;
+            if(type == 'select-one' || type == 'select-multiple') {
+                return (field.selectedIndex == -1 ? "" : field.options[field.selectedIndex].value);
+            } else if(type == 'checkbox' || type == 'radio') {
+                if(!field.length) {
+                    field = [field];
+                }
+                for(var i = 0; i < field.length; i++) {
+                    if(field[i].checked) {
+                        return field[i].value;
+                    }
+                }
+                return"";
+            }
+            return field.value;
+        }
         form = document.getElementById("myAction");
         clearErrorMessages(form);
         clearErrorLabels(form);
         var errors = false;
         var continueValidation = true;
-         //fieldname:myUpDownSelectTag
-         //validatorname:int
-         if(form.elements['myUpDownSelectTag']){
-            field=form.elements['myUpDownSelectTag'];
-            var error="bar must be between 6000 and 10000.";
-            if(continueValidation && field.value!=null){
-                if(parseInt(field.value)<6000||parseInt(field.value)>10000){
-                    addError(field,error);
-                    errors=true;
-                 }
-             }
-          }
-          return!errors;
-      }</script>
-
+        //fieldname:myUpDownSelectTag
+        //validatorname:int
+        if(form.elements['myUpDownSelectTag']) {
+            field = form.elements['myUpDownSelectTag'];
+            var error = "bar must be between 6000 and 10000.";
+            var fieldValue = getFieldValue(field);
+            if(continueValidation && fieldValue != null) {
+                if(parseInt(fieldValue) < 6000 || parseInt(fieldValue) > 10000) {
+                    addError(field, error);
+                    errors = true;
+                }
+            }
+        }
+    return !errors;
+    }
+</script>

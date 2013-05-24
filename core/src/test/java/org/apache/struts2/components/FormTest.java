@@ -21,18 +21,17 @@
 
 package org.apache.struts2.components;
 
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.easymock.EasyMock;
 
-import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
+import java.util.List;
 
 /**
  * <code>FormTest</code>
@@ -45,6 +44,7 @@ public class FormTest extends AbstractUITagTest {
         Form form = new Form(stack, request, response);
         container.inject(form);
         form.getParameters().put("actionClass", TestAction.class);
+        form.setAction("actionName");
         List v = form.getValidators("foo");
         assertEquals(1, v.size());
         assertEquals(RequiredFieldValidator.class, v.get(0).getClass());

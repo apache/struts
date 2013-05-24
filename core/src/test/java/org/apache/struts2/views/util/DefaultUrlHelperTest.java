@@ -380,7 +380,7 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
 
     public void testTranslateAndEncode() throws Exception {
         setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-        String result = urlHelper.translateAndEncode("\u65b0\u805e");
+        String result = urlHelper.encode("\u65b0\u805e");
         String expectedResult = "%E6%96%B0%E8%81%9E";
 
         assertEquals(result, expectedResult);
@@ -388,7 +388,7 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
 
     public void testTranslateAndDecode() throws Exception {
         setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-        String result = urlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
+        String result = urlHelper.decode("%E6%96%B0%E8%81%9E");
         String expectedResult = "\u65b0\u805e";
 
         assertEquals(result, expectedResult);

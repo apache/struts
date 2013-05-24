@@ -21,6 +21,8 @@
 
 package org.apache.struts2.views.java.simple;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.views.java.Attributes;
 
 import java.io.IOException;
@@ -36,8 +38,20 @@ public class DynamicAttributesHandler extends AbstractTagHandler {
      */
     @Override
     public void start(String name, Attributes a) throws IOException {
-        a.putAll((Map<String, String>) context.getParameters().get("dynamicAttributes"));
+        processDynamicAttributes(a);
         super.start(name, a);
+    }
+
+    protected void processDynamicAttributes(Attributes a) {
+        Map<String, String> dynamicAttributes = (Map<String, String>) context.getParameters().get("dynamicAttributes");
+        for (Map.Entry<String, String> entry : dynamicAttributes.entrySet()) {
+            if (altSyntax && ComponentUtils.isExpression(entry.getValue())) {
+                String value = ObjectUtils.defaultIfNull(findString(entry.getValue()), entry.getValue());
+                a.put(entry.getKey(), value);
+            } else {
+                a.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
 }

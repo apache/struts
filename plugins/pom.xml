@@ -92,23 +92,4 @@
 
     </dependencies>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>rat-maven-plugin</artifactId>
-                <version>1.0-alpha-2</version>
-                <configuration>
-                    <includes>
-                        <include>pom.xml</include>
-                        <include>src/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>src/main/resources/*LICENSE.txt</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
 </project>

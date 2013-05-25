@@ -29,8 +29,8 @@
     </bannerLeft>
     <bannerRight>
         <name>Apache Struts</name>
-        <src>images/struts2.png</src>
-        <href>http://struts.apache.org/2.x/index.html</href>
+        <src>http://struts.apache.org/images/struts.gif</src>
+        <href>http://struts.apache.org/</href>
     </bannerRight>
     <body>
         <links>
@@ -40,6 +40,7 @@
                   href="http://struts.apache.org/index.html"/>
         </links>
 
+        <menu ref="parent"/>
         <menu ref="reports"/>
 
     </body>

@@ -241,47 +241,45 @@ public class DefaultUrlHelper implements UrlHelper {
 
     private String buildParameterSubstring(String name, String value) {
         StringBuilder builder = new StringBuilder();
-        builder.append(translateAndEncode(name));
+        builder.append(encode(name));
         builder.append('=');
-        builder.append(translateAndEncode(value));
+        builder.append(encode(value));
         return builder.toString();
     }
 
-    /**
-     * Translates any script expressions using {@link com.opensymphony.xwork2.util.TextParseUtil#translateVariables} and
-     * encodes the URL using {@link java.net.URLEncoder#encode} with the encoding specified in the configuration.
-     *
-     * @param input
-     * @return the translated and encoded string
-     */
-    public String translateAndEncode(String input) {
-        String translatedInput = translateVariable(input);
-        try {
-            return URLEncoder.encode(translatedInput, encoding);
-        } catch (UnsupportedEncodingException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Could not encode URL parameter '#0', returning value un-encoded", input);
-            }
-            return translatedInput;
-        }
-    }
+	/**
+	 * Encodes the URL using {@link java.net.URLEncoder#encode} with the encoding specified in the configuration.
+	 *
+	 * @param input the input to encode
+	 * @return the encoded string
+	 */
+	public String encode( String input ) {
+		try {
+			return URLEncoder.encode(input, encoding);
+		} catch (UnsupportedEncodingException e) {
+			if (LOG.isWarnEnabled()) {
+				LOG.warn("Could not encode URL parameter '#0', returning value un-encoded", input);
+			}
+			return input;
+		}
+	}
 
-    public String translateAndDecode(String input) {
-        String translatedInput = translateVariable(input);
-        try {
-            return URLDecoder.decode(translatedInput, encoding);
-        } catch (UnsupportedEncodingException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Could not encode URL parameter '#0', returning value un-encoded", input);
-            }
-            return translatedInput;
-        }
-    }
-
-    private String translateVariable(String input) {
-        ValueStack valueStack = ServletActionContext.getContext().getValueStack();
-        return TextParseUtil.translateVariables(input, valueStack);
-    }
+	/**
+	 * Decodes the URL using {@link java.net.URLDecoder#decode(String, String)} with the encoding specified in the configuration.
+	 *
+	 * @param input the input to decode
+	 * @return the encoded string
+	 */
+	public String decode( String input ) {
+		try {
+			return URLDecoder.decode(input, encoding);
+		} catch (UnsupportedEncodingException e) {
+			if (LOG.isWarnEnabled()) {
+				LOG.warn("Could not decode URL parameter '#0', returning value un-decoded", input);
+			}
+			return input;
+		}
+	}
 
     public Map<String, Object> parseQueryString(String queryString, boolean forceValueArray) {
         Map<String, Object> queryParams = new LinkedHashMap<String, Object>();
@@ -299,8 +297,8 @@ public class DefaultUrlHelper implements UrlHelper {
                         paramValue = tmpParams[1];
                     }
                     if (paramName != null) {
-                        paramName = translateAndDecode(paramName);
-                        String translatedParamValue = translateAndDecode(paramValue);
+                        paramName = decode(paramName);
+                        String translatedParamValue = decode(paramValue);
 
                         if (queryParams.containsKey(paramName) || forceValueArray) {
                             // WW-1619 append new param value to existing value(s)

@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  */
 public class SecurityMemberAccess extends DefaultMemberAccess {
 
-    private boolean allowStaticMethodAccess;
+    private final boolean allowStaticMethodAccess;
     Set<Pattern> excludeProperties = Collections.emptySet();
     Set<Pattern> acceptProperties = Collections.emptySet();
 
@@ -43,10 +43,6 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     public boolean getAllowStaticMethodAccess() {
         return allowStaticMethodAccess;
-    }
-
-    public void setAllowStaticMethodAccess(boolean allowStaticMethodAccess) {
-        this.allowStaticMethodAccess = allowStaticMethodAccess;
     }
 
     @Override

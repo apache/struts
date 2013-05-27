@@ -21,16 +21,12 @@
 
 package org.apache.struts2.views.jsp;
 
-import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspWriter;
-
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.DefaultActionInvocation;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.inject.Container;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.URL;
 import org.apache.struts2.dispatcher.ApplicationMap;
@@ -40,15 +36,14 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxy;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.inject.Container;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspWriter;
+import java.io.File;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Unit test for {@link URLTag}.
@@ -619,6 +614,69 @@ public class URLTagTest extends AbstractUITagTest {
         
     }
 
+	public void testEmbeddedParamTagExpressionGetsEvaluatedCorrectly() throws Exception {
+		request.setRequestURI("/public/about");
+		request.setQueryString("section=team&company=acme inc");
+
+		tag.setAction("team");
+		tag.setIncludeParams("all");
+
+		tag.doStartTag();
+
+		Foo foo = new Foo("test");
+		stack.push(foo);
+
+		// include nested param tag
+		ParamTag paramTag = new ParamTag();
+		paramTag.setPageContext(pageContext);
+		paramTag.setName("title");
+		paramTag.setValue("%{title}");
+		paramTag.doStartTag();
+		paramTag.doEndTag();
+
+		tag.doEndTag();
+
+		assertEquals("/team.action?section=team&amp;company=acme+inc&amp;title=test", writer.toString());
+	}
+
+	public void testAccessToStackInternalsGetsHandledCorrectly() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("aaa", new String[] {"1${#session[\"foo\"]='true'}"});
+		params.put("aab", new String[] {"1${#session[\"bar\"]}"});
+		params.put("aac", new String[] {"1${#_memberAccess[\"allowStaticMethodAccess\"]='true'}"});
+		params.put("aad", new String[] {"1${#_memberAccess[\"allowStaticMethodAccess\"]}"});
+
+		request.setParameterMap(params);
+		request.setRequestURI("/public/about");
+		request.setQueryString("aae${%23session[\"bar\"]}=1%24%7B%23session%5B%22bar%22%5D%7D");
+		session.put("bar", "rab");
+
+		tag.setAction("team");
+		tag.setIncludeParams("all");
+
+		tag.doStartTag();
+		tag.doEndTag();
+
+		Object allowMethodAccess = stack.findValue("\u0023_memberAccess['allowStaticMethodAccess']");
+		assertNotNull(allowMethodAccess);
+		assertEquals(Boolean.FALSE, allowMethodAccess);
+
+		assertNull(session.get("foo"));
+
+		assertEquals("/team.action?" +
+							 "aab=1%24%7B%23session%5B%22bar%22%5D%7D" +
+							 "&amp;" +
+							 "aac=1%24%7B%23_memberAccess%5B%22allowStaticMethodAccess%22%5D%3D%27true%27%7D" +
+							 "&amp;" +
+							 "aaa=1%24%7B%23session%5B%22foo%22%5D%3D%27true%27%7D" +
+							 "&amp;" +
+							 "aad=1%24%7B%23_memberAccess%5B%22allowStaticMethodAccess%22%5D%7D" +
+							 "&amp;"+
+						     "aae%24%7B%23session%5B%22bar%22%5D%7D=1%24%7B%23session%5B%22bar%22%5D%7D"
+				, writer.toString()
+		);
+	}
+
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -635,7 +693,14 @@ public class URLTagTest extends AbstractUITagTest {
     public static class Foo {
         private String title;
 
-        public void setTitle(String title) {
+		public Foo() {
+		}
+
+		public Foo( String title ) {
+			this.title = title;
+		}
+
+		public void setTitle(String title) {
             this.title = title;
         }
 

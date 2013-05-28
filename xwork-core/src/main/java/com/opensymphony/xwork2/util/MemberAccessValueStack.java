@@ -1,5 +1,7 @@
 package com.opensymphony.xwork2.util;
 
+import com.opensymphony.xwork2.ognl.PropertiesJudge;
+
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -8,7 +10,11 @@ import java.util.regex.Pattern;
  * to properties using regular expressions
  */
 public interface MemberAccessValueStack {
+
     void setExcludeProperties(Set<Pattern> excludeProperties);
 
     void setAcceptProperties(Set<Pattern> acceptedProperties);
+
+    void setPropertiesJudge(PropertiesJudge judge);
+
 }

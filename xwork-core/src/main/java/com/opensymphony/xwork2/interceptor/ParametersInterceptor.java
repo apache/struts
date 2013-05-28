@@ -22,23 +22,13 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ArrayUtils;
-import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.MemberAccessValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.ognl.PropertiesJudge;
+import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -272,7 +262,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected void addParametersToContext(ActionContext ac, Map<String, Object> newParams) {
     }
 
-    protected void setParameters(Object action, ValueStack stack, final Map<String, Object> parameters) {
+    protected void setParameters(final Object action, ValueStack stack, final Map<String, Object> parameters) {
         Map<String, Object> params;
         Map<String, Object> acceptableParameters;
         if (ordered) {
@@ -313,6 +303,12 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             MemberAccessValueStack accessValueStack = (MemberAccessValueStack) newStack;
             accessValueStack.setAcceptProperties(acceptParams);
             accessValueStack.setExcludeProperties(excludeParams);
+            if (action instanceof ParameterNameAware)
+            accessValueStack.setPropertiesJudge(new PropertiesJudge() {
+                public boolean acceptProperty(String propertyName) {
+                    return ((ParameterNameAware) action).acceptableParameterName(propertyName);
+                }
+            });
         }
 
         for (Map.Entry<String, Object> entry : acceptableParameters.entrySet()) {

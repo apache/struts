@@ -33,8 +33,9 @@ import java.util.regex.Pattern;
 public class SecurityMemberAccess extends DefaultMemberAccess {
 
     private final boolean allowStaticMethodAccess;
-    Set<Pattern> excludeProperties = Collections.emptySet();
-    Set<Pattern> acceptProperties = Collections.emptySet();
+    private Set<Pattern> excludeProperties = Collections.emptySet();
+    private Set<Pattern> acceptProperties = Collections.emptySet();
+    private PropertiesJudge propertiesJudge;
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -79,7 +80,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return true;
         }
 
-        if (isAccepted(name) && !isExcluded(name)) {
+        if ((isAccepted(name) && !isExcluded(name)) || (propertiesJudge != null && propertiesJudge.acceptProperty(name))) {
             return true;
         }
         return false;
@@ -120,5 +121,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
         this.acceptProperties = acceptedProperties;
+    }
+
+    public void setPropertiesJudge(PropertiesJudge judge) {
+        this.propertiesJudge = judge;
     }
 }

@@ -31,11 +31,7 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.LoggerUtils;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import ognl.NoSuchPropertyException;
-import ognl.Ognl;
-import ognl.OgnlContext;
-import ognl.OgnlException;
-import ognl.PropertyAccessor;
+import ognl.*;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -461,6 +457,10 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
         securityMemberAccess.setAcceptProperties(acceptedProperties);
+    }
+
+    public void setPropertiesJudge(PropertiesJudge judge) {
+        securityMemberAccess.setPropertiesJudge(judge);
     }
 
     public void setExcludeProperties(Set<Pattern> excludeProperties) {

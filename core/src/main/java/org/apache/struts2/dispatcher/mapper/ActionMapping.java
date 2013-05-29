@@ -21,9 +21,9 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import java.util.Map;
-
 import com.opensymphony.xwork2.Result;
+
+import java.util.Map;
 
 /**
  * Simple class that holds the action mapping information used to invoke a
@@ -157,4 +157,17 @@ public class ActionMapping {
     public void setExtension(String extension) {
         this.extension = extension;
     }
+
+    @Override
+    public String toString() {
+        return "ActionMapping{" +
+                "name='" + name + '\'' +
+                ", namespace='" + namespace + '\'' +
+                ", method='" + method + '\'' +
+                ", extension='" + extension + '\'' +
+                ", params=" + params +
+                ", result=" + (result != null ? result.getClass().getName() : "null") +
+                '}';
+    }
+
 }

@@ -77,7 +77,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
         this.invocation = inv;
         this.cleanupContext = cleanupContext;
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating an DefaultActionProxy for namespace " + namespace + " and action name " + actionName);
+            LOG.debug("Creating an DefaultActionProxy for namespace [#0] and action name [#1]", namespace, actionName);
         }
 
         this.actionName = StringEscapeUtils.escapeHtml4(actionName);

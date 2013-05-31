@@ -30,21 +30,22 @@
     <bean class="org.apache.struts2.config_browser.ConfigurationHelper" />
     
     <package name="config-browser" extends="struts-default" namespace="/config-browser">
+
         <interceptors>
             <interceptor-stack name="configBrowserDefault">
                 <interceptor-ref name="validationWorkflowStack"/>
             </interceptor-stack>
         </interceptors>
+
         <default-interceptor-ref name="configBrowserDefault"/>
+
+        <default-action-ref name="index" />
 
         <global-results>
             <result name="error" type="freemarker">/config-browser/error.ftl</result>
             <result name="input" type="freemarker">/config-browser/error.ftl</result>
         </global-results>
 
-        <action name="">
-            <result type="redirectAction">actionNames</result>
-        </action>
 
         <action name="index" class="org.apache.struts2.config_browser.ActionNamesAction" method="redirect">
             <result type="redirectAction">actionNames</result>
@@ -79,5 +80,7 @@
         <action name="validatorDetails" class="org.apache.struts2.config_browser.ShowValidatorAction">
             <result type="freemarker" name="success">/config-browser/validatorDetails.ftl</result>
         </action>
+
     </package>
+
 </struts>

@@ -14,20 +14,20 @@
 	
 	<!-- Filters -->
 	<filter>
-        <filter-name>action2-cleanup</filter-name>
-        <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
+        <filter-name>struts2-prepare</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter</filter-class>
     </filter>
     <filter>
         <filter-name>sitemesh</filter-name>
         <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
     </filter>
     <filter>
-        <filter-name>action2</filter-name>
-        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+        <filter-name>struts2-execute</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter</filter-class>
     </filter>
 	
 	<filter-mapping>
-        <filter-name>action2-cleanup</filter-name>
+        <filter-name>struts2-prepare</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
@@ -35,7 +35,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>action2</filter-name>
+        <filter-name>struts2-execute</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 	

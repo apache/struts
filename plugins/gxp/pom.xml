@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.3.14.3</version>
+        <version>2.3.14.4-SNAPSHOT</version>
     </parent>
 
     <groupId>org.apache.struts</groupId>
@@ -13,9 +13,9 @@
     <url>http://struts.apache.org</url>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_3_14_X/tags/STRUTS_2_3_14_2/branches/STRUTS_2_3_14_2_X/tags/STRUTS_2_3_14_3/trunk/struts2-gxp-plugin</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_3_14_X/tags/STRUTS_2_3_14_2/branches/STRUTS_2_3_14_2_X/tags/STRUTS_2_3_14_3/trunk/struts2-gxp-plugin</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/branches/STRUTS_2_3_14_X/tags/STRUTS_2_3_14_2/branches/STRUTS_2_3_14_2_X/tags/STRUTS_2_3_14_3/trunk/struts2-gxp-plugin</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_3_14_X/tags/STRUTS_2_3_14_2/branches/STRUTS_2_3_14_2_X/trunk/struts2-gxp-plugin</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/branches/STRUTS_2_3_14_X/tags/STRUTS_2_3_14_2/branches/STRUTS_2_3_14_2_X/trunk/struts2-gxp-plugin</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/branches/STRUTS_2_3_14_X/tags/STRUTS_2_3_14_2/branches/STRUTS_2_3_14_2_X/trunk/struts2-gxp-plugin</url>
     </scm>
 
     <dependencies>

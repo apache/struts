@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.3.14.3</version>
+        <version>2.3.14.4-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-javatemplates-plugin</artifactId>
@@ -33,9 +33,9 @@
     <name>Struts 2 Java Templates Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_14_3/plugins/javatemplates</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_14_3/plugins/javatemplates</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_14_3/plugins/javatemplates</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_14_2_X/plugins/javatemplates</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_14_2_X/plugins/javatemplates</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_14_2_X/plugins/javatemplates</url>
     </scm>
 
     <dependencies>

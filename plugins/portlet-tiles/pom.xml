@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.3.14.3-SNAPSHOT</version>
+        <version>2.3.14.2</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-portlet-tiles-plugin</artifactId>
@@ -34,9 +34,9 @@
     <name>Struts 2 Portlet Tiles Plugin</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_14_2_X/plugins/portlet-tiles</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_14_2_X/plugins/portlet-tiles</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_14_2_X/plugins/portlet-tiles</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_14_2/plugins/portlet-tiles</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_14_2/plugins/portlet-tiles</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_14_2/plugins/portlet-tiles</url>
     </scm>
 
     <dependencies>

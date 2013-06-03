@@ -35,12 +35,7 @@ import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -171,6 +166,7 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
+    protected String allowedActionNames = "[a-z]*[A-Z]*[0-9]*[.\\-_!/]*";
 
     protected List<String> extensions = new ArrayList<String>() {{
         add("action");
@@ -258,6 +254,11 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE)
     public void setAlwaysSelectFullNamespace(String val) {
         this.alwaysSelectFullNamespace = "true".equals(val);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
+    public void setAllowedActionNames(String allowedActionNames) {
+        this.allowedActionNames = allowedActionNames;
     }
 
     @Inject
@@ -417,7 +418,25 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         mapping.setNamespace(namespace);
-        mapping.setName(name);
+        mapping.setName(cleanupActionName(name));
+    }
+
+    /**
+     * Cleans up action name from suspicious characters
+     *
+     * @param rawActionName action name extracted from URI
+     * @return safe action name
+     */
+    protected String cleanupActionName(final String rawActionName) {
+        if (rawActionName.matches(allowedActionNames)) {
+            return rawActionName;
+        } else {
+            String cleanActionName = rawActionName;
+            for(String chunk : rawActionName.split(allowedActionNames)) {
+                cleanActionName = cleanActionName.replace(chunk, "");
+            }
+            return cleanActionName;
+        }
     }
 
     /**

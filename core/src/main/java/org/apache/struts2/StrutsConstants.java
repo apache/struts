@@ -252,4 +252,7 @@ public final class StrutsConstants {
 
     public static final String STRUTS_EXPRESSION_PARSER = "struts.expression.parser";
 
+    /** actions names' whitelist **/
+    public static final String STRUTS_ALLOWED_ACTION_NAMES = "struts.allowed.action.names";
+
 }

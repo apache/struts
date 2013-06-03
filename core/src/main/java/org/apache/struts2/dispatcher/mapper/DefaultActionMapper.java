@@ -435,8 +435,8 @@ public class DefaultActionMapper implements ActionMapper {
         if (rawActionName.matches(allowedActionNames)) {
             return rawActionName;
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Action [#0] do not match allowed action names pattern [#1], cleaning it up!",
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Action [#0] do not match allowed action names pattern [#1], cleaning it up!",
                         rawActionName, allowedActionNames);
             }
             String cleanActionName = rawActionName;

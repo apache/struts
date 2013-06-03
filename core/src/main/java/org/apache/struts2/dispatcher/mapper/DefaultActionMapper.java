@@ -27,6 +27,8 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
@@ -156,6 +158,8 @@ import java.util.*;
  * </pre>
  */
 public class DefaultActionMapper implements ActionMapper {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultActionMapper.class);
 
     protected static final String METHOD_PREFIX = "method:";
     protected static final String ACTION_PREFIX = "action:";
@@ -431,9 +435,16 @@ public class DefaultActionMapper implements ActionMapper {
         if (rawActionName.matches(allowedActionNames)) {
             return rawActionName;
         } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Action [#0] do not match allowed action names pattern [#1], cleaning it up!",
+                        rawActionName, allowedActionNames);
+            }
             String cleanActionName = rawActionName;
             for(String chunk : rawActionName.split(allowedActionNames)) {
                 cleanActionName = cleanActionName.replace(chunk, "");
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cleaned action name [#0]", cleanActionName);
             }
             return cleanActionName;
         }

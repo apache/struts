@@ -11,17 +11,16 @@ public class OgnlTextParser implements TextParser {
         // deal with the "pure" expressions first!
         //expression = expression.trim();
         Object result = expression;
+        int pos = 0;
+
         for (char open : openChars) {
             int loopCount = 1;
-            int pos = 0;
-
             //this creates an implicit StringBuffer and shouldn't be used in the inner loop
             final String lookupChars = open + "{";
 
             while (true) {
                 int start = expression.indexOf(lookupChars, pos);
                 if (start == -1) {
-                    pos = 0;
                     loopCount++;
                     start = expression.indexOf(lookupChars);
                 }

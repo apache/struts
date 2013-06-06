@@ -97,6 +97,24 @@ public class TextParseUtilTest extends XWorkTestCase {
         assertEquals("count must be between 123 and 456, current value is 98765.", s);
     }
 
+    public void testNestedExpression() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(new HashMap<String, Object>() {{ put("foo", "${%{1+1}}"); }});
+        String s = TextParseUtil.translateVariables("${foo}", stack);
+        assertEquals("${%{1+1}}", s);
+        stack.pop();
+    }
+
+    public void testMixedOpenChars() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(new HashMap<String, Object>() {{ put("foo", "bar"); }});
+        String s = TextParseUtil.translateVariables("${foo}-%{foo}", stack);
+        assertEquals("bar-bar", s);
+        s = TextParseUtil.translateVariables("%{foo}-${foo}", stack);
+        assertEquals("%{foo}-bar", s); // this is bad, but it is the only way not to double evaluate passed expression
+        stack.pop();
+    }
+
     public void testCommaDelimitedStringToSet() {
         assertEquals(0, TextParseUtil.commaDelimitedStringToSet("").size());
         assertEquals(new HashSet<String>(Arrays.asList("foo", "bar", "tee")),
@@ -132,10 +150,13 @@ public class TextParseUtilTest extends XWorkTestCase {
 
     public void testTranslateVariablesRecursive() {
         ValueStack stack = ActionContext.getContext().getValueStack();
-        stack.push(new HashMap<String, Object>() {{ put("foo", "${1+1}"); }});
+        stack.push(new HashMap<String, Object>() {{ put("foo", "${1+1}"); put("bar", "${${1+2}}"); }});
 
         Object s = TextParseUtil.translateVariables('$', "foo: ${foo}", stack, String.class, null, 2);
         assertEquals("foo: 2", s);
+
+        s = TextParseUtil.translateVariables('$', "foo: ${bar}", stack, String.class, null, 1);
+        assertEquals("foo: ${${1+2}}", s);
     }
 
     public void testTranslateVariablesWithNull() {

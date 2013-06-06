@@ -27,6 +27,8 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
@@ -35,12 +37,7 @@ import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -162,6 +159,8 @@ import java.util.Set;
  */
 public class DefaultActionMapper implements ActionMapper {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultActionMapper.class);
+
     protected static final String METHOD_PREFIX = "method:";
     protected static final String ACTION_PREFIX = "action:";
     protected static final String REDIRECT_PREFIX = "redirect:";
@@ -171,6 +170,7 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
+    protected String allowedActionNames = "[a-z]*[A-Z]*[0-9]*[.\\-_!/]*";
 
     protected List<String> extensions = new ArrayList<String>() {{
         add("action");
@@ -258,6 +258,11 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE)
     public void setAlwaysSelectFullNamespace(String val) {
         this.alwaysSelectFullNamespace = "true".equals(val);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
+    public void setAllowedActionNames(String allowedActionNames) {
+        this.allowedActionNames = allowedActionNames;
     }
 
     @Inject
@@ -417,7 +422,32 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         mapping.setNamespace(namespace);
-        mapping.setName(name);
+        mapping.setName(cleanupActionName(name));
+    }
+
+    /**
+     * Cleans up action name from suspicious characters
+     *
+     * @param rawActionName action name extracted from URI
+     * @return safe action name
+     */
+    protected String cleanupActionName(final String rawActionName) {
+        if (rawActionName.matches(allowedActionNames)) {
+            return rawActionName;
+        } else {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Action [#0] do not match allowed action names pattern [#1], cleaning it up!",
+                        rawActionName, allowedActionNames);
+            }
+            String cleanActionName = rawActionName;
+            for(String chunk : rawActionName.split(allowedActionNames)) {
+                cleanActionName = cleanActionName.replace(chunk, "");
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cleaned action name [#0]", cleanActionName);
+            }
+            return cleanActionName;
+        }
     }
 
     /**

@@ -747,4 +747,23 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
     }
 
+    public void testAllowedActionNames() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+
+        String actionName = "action";
+        assertEquals(actionName, mapper.cleanupActionName(actionName));
+
+        actionName = "${action}";
+        assertEquals("action", mapper.cleanupActionName(actionName));
+
+        actionName = "${${%{action}}}";
+        assertEquals("action", mapper.cleanupActionName(actionName));
+
+        actionName = "${#foo='action',#foo}";
+        assertEquals("fooactionfoo", mapper.cleanupActionName(actionName));
+
+        actionName = "test-action";
+        assertEquals("test-action", mapper.cleanupActionName(actionName));
+    }
+
 }

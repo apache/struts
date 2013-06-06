@@ -38,6 +38,7 @@ import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -170,7 +171,7 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
-    protected String allowedActionNames = "[a-z]*[A-Z]*[0-9]*[.\\-_!/]*";
+    protected Pattern allowedActionNames = Pattern.compile("[a-zA-Z0-9._!/\\-]*");
 
     protected List<String> extensions = new ArrayList<String>() {{
         add("action");
@@ -262,7 +263,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
     public void setAllowedActionNames(String allowedActionNames) {
-        this.allowedActionNames = allowedActionNames;
+        this.allowedActionNames = Pattern.compile(allowedActionNames);
     }
 
     @Inject
@@ -432,15 +433,15 @@ public class DefaultActionMapper implements ActionMapper {
      * @return safe action name
      */
     protected String cleanupActionName(final String rawActionName) {
-        if (rawActionName.matches(allowedActionNames)) {
+        if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Action [#0] do not match allowed action names pattern [#1], cleaning it up!",
+                LOG.warn("Action [#0] does not match allowed action names pattern [#1], cleaning it up!",
                         rawActionName, allowedActionNames);
             }
             String cleanActionName = rawActionName;
-            for(String chunk : rawActionName.split(allowedActionNames)) {
+            for(String chunk : allowedActionNames.split(rawActionName)) {
                 cleanActionName = cleanActionName.replace(chunk, "");
             }
             if (LOG.isDebugEnabled()) {

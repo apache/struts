@@ -79,7 +79,7 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'>Enum value from ValidatorType. Either FIELD or SIMPLE can be used here.</td>
  * </tr>
  * <tr>
- * <td class='confluenceTd'>expression</td>
+ * <td class='confluenceTd'>regex</td>
  * <td class='confluenceTd'>yes</td>
  * <td class='confluenceTd'>&nbsp;</td>
  * <td class='confluenceTd'>The regex to validate the field value against.</td>
@@ -91,7 +91,7 @@ import java.lang.annotation.Target;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &#64;RegexFieldValidator( key = "regex.field", expression = "yourregexp")
+ * &#64;RegexFieldValidator( key = "regex.field", regex = "yourregexp")
  * <!-- END SNIPPET: example -->
  * </pre>
  *

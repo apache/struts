@@ -21,11 +21,13 @@
 
 package org.apache.struts2.dispatcher;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -41,49 +43,61 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class StrutsRequestWrapper extends HttpServletRequestWrapper {
 
+    private static final String REQUEST_WRAPPER_GET_ATTRIBUTE = "__requestWrapper.getAttribute";
+    private final boolean disableRequestAttributeValueStackLookup;
+
     /**
      * The constructor
      * @param req The request
      */
     public StrutsRequestWrapper(HttpServletRequest req) {
+        this(req, false);
+    }
+
+    /**
+     * The constructor
+     * @param req The request
+     * @param disableRequestAttributeValueStackLookup flag for disabling request attribute value stack lookup (JSTL accessibility)
+     */
+    public StrutsRequestWrapper(HttpServletRequest req, boolean disableRequestAttributeValueStackLookup) {
         super(req);
+        this.disableRequestAttributeValueStackLookup = disableRequestAttributeValueStackLookup;
     }
 
     /**
      * Gets the object, looking in the value stack if not found
      *
-     * @param s The attribute key
+     * @param key The attribute key
      */
-    public Object getAttribute(String s) {
-        if (s != null && s.startsWith("javax.servlet")) {
+    public Object getAttribute(String key) {
+        if (key == null) {
+            throw new NullPointerException("You must specify a key value");
+        }
+
+        if (disableRequestAttributeValueStackLookup || key.startsWith("javax.servlet")) {
             // don't bother with the standard javax.servlet attributes, we can short-circuit this
             // see WW-953 and the forums post linked in that issue for more info
-            return super.getAttribute(s);
+            return super.getAttribute(key);
         }
 
         ActionContext ctx = ActionContext.getContext();
-        Object attribute = super.getAttribute(s);
-        if (ctx != null) {
-            if (attribute == null) {
-                boolean alreadyIn = false;
-                Boolean b = (Boolean) ctx.get("__requestWrapper.getAttribute");
-                if (b != null) {
-                    alreadyIn = b.booleanValue();
-                }
-    
-                // note: we don't let # come through or else a request for
-                // #attr.foo or #request.foo could cause an endless loop
-                if (!alreadyIn && s.indexOf("#") == -1) {
-                    try {
-                        // If not found, then try the ValueStack
-                        ctx.put("__requestWrapper.getAttribute", Boolean.TRUE);
-                        ValueStack stack = ctx.getValueStack();
-                        if (stack != null) {
-                            attribute = stack.findValue(s);
-                        }
-                    } finally {
-                        ctx.put("__requestWrapper.getAttribute", Boolean.FALSE);
+        Object attribute = super.getAttribute(key);
+
+        if (ctx != null && attribute == null) {
+            boolean alreadyIn = isTrue((Boolean) ctx.get(REQUEST_WRAPPER_GET_ATTRIBUTE));
+
+            // note: we don't let # come through or else a request for
+            // #attr.foo or #request.foo could cause an endless loop
+            if (!alreadyIn && !key.contains("#")) {
+                try {
+                    // If not found, then try the ValueStack
+                    ctx.put(REQUEST_WRAPPER_GET_ATTRIBUTE, Boolean.TRUE);
+                    ValueStack stack = ctx.getValueStack();
+                    if (stack != null) {
+                        attribute = stack.findValue(key);
                     }
+                } finally {
+                    ctx.put(REQUEST_WRAPPER_GET_ATTRIBUTE, Boolean.FALSE);
                 }
             }
         }

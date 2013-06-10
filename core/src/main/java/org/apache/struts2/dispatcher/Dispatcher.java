@@ -119,9 +119,14 @@ public class Dispatcher {
     private ConfigurationManager configurationManager;
 
     /**
-     * Store state of  StrutsConstants.STRUTS_DEVMODE setting.
+     * Store state of StrutsConstants.STRUTS_DEVMODE setting.
      */
     private boolean devMode;
+
+    /**
+     * Store state of StrutsConstants.DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP setting.
+     */
+    private boolean disableRequestAttributeValueStackLookup;
 
     /**
      * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
@@ -223,6 +228,15 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         devMode = "true".equals(mode);
+    }
+
+    /**
+     * Modify state of StrutsConstants.DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP setting.
+     * @param disableRequestAttributeValueStackLookup New setting
+     */
+    @Inject(value=StrutsConstants.STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP, required=false)
+    public void setDisableRequestAttributeValueStackLookup(String disableRequestAttributeValueStackLookup) {
+        this.disableRequestAttributeValueStackLookup = "true".equalsIgnoreCase(disableRequestAttributeValueStackLookup);
     }
 
     /**
@@ -781,7 +795,7 @@ public class Dispatcher {
             LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
             request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext), provider);
         } else {
-            request = new StrutsRequestWrapper(request);
+            request = new StrutsRequestWrapper(request, disableRequestAttributeValueStackLookup);
         }
 
         return request;

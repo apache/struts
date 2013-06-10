@@ -231,6 +231,9 @@ public final class StrutsConstants {
     /** Enables evaluation of OGNL expressions **/
     public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = "struts.ognl.enableOGNLEvalExpression";
 
+    /** Disables {@link org.apache.struts2.dispatcher.StrutsRequestWrapper} request attribute value stack lookup (JSTL accessibility) **/
+    public static final String STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP = "struts.disableRequestAttributeValueStackLookup";
+
     /** The{@link org.apache.struts2.views.util.UrlHelper} implementation class **/
     public static final String STRUTS_URL_HELPER = "struts.view.urlHelper";
 

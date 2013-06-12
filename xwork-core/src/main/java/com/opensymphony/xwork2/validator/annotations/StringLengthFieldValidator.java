@@ -92,10 +92,22 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> Integer property.  The minimum length the String must be. </td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'> minLengthExpression </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the minimum length the String must be. </td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'> maxLength </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
  * <td class='confluenceTd'> Integer property.  The maximum length the String can be. </td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> maxLengthExpression </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the maximum length the String can be. </td>
  * </tr>
  * </table>
  *

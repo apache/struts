@@ -83,13 +83,25 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> min </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
- * <td class='confluenceTd'> Integer property. The minimum the number must be. Can be an expression. Don't use ${min} as this can turn into infinitive loop!</td>
+ * <td class='confluenceTd'> Integer property. The minimum the number must be.</td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> minExpression </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the minimum the number must be.</td>
  * </tr>
  * <tr>
  * <td class='confluenceTd'> max </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
- * <td class='confluenceTd'> Integer property. The maximum number can be. Can be an expression. Don't use ${max} as this can turn into infinitive loop!</td>
+ * <td class='confluenceTd'> Integer property. The maximum number can be. Can be an expression.!</td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> maxExpression </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the maximum number can be.</td>
  * </tr>
  * <tr>
  * <td class='confluenceTd'>parse</td>

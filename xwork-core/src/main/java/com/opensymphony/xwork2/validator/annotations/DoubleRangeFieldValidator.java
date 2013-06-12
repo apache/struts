@@ -86,10 +86,22 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> Double property.  The inclusive minimum the number must be. </td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>minInclusiveExpression</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the inclusive minimum the number must be. </td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'> maxInclusive </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
  * <td class='confluenceTd'> Double property.  The inclusive maximum number can be. </td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> maxInclusiveExpression </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the inclusive maximum number can be. </td>
  * </tr>
  * <tr>
  * <td class='confluenceTd'> minExclusive </td>
@@ -98,10 +110,22 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> Double property.  The exclusive minimum the number must be. </td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'> minExclusiveExpression </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the exclusive minimum the number must be. </td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'> maxExclusive </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
  * <td class='confluenceTd'> Double property.  The exclusive maximum number can be. </td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> maxExclusiveExpression </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the exclusive maximum number can be. </td>
  * </tr>
  * </table>
  *

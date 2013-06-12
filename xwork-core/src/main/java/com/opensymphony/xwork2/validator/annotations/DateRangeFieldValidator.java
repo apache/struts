@@ -85,10 +85,34 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> Date property.  The minimum the date must be. </td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'>minExpression</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the minimum the date must be.</td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'> max </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'>&nbsp;</td>
  * <td class='confluenceTd'> Date property.  The maximum date can be. </td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'>maxExpression</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the maximum date can be.</td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'>maxExpression</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>OGNL expression used to obtain the maximum date can be.</td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'>dateFormat</td>
+ * <td class='confluenceTd'>no</td>
+ * <td class='confluenceTd'>&nbsp;</td>
+ * <td class='confluenceTd'>Format used to parse min/max value.</td>
  * </tr>
  * </table>
  *
@@ -131,7 +155,7 @@ public @interface DateRangeFieldValidator {
     String maxExpression() default "";
 
     /**
-     * Date format used to parse min and mac value
+     * Date format used to parse min and max value
      */
     String dateFormat() default "";
 

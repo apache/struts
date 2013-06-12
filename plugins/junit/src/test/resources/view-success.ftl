@@ -20,6 +20,6 @@
   --%>
 <html>
 <body>
-This is the view
+This is the view ${message}
 </body>
 </html>

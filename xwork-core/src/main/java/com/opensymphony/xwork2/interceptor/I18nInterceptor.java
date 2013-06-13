@@ -177,9 +177,6 @@ public class I18nInterceptor extends AbstractInterceptor {
         final String result = invocation.invoke();
         if (LOG.isDebugEnabled()) {
             LOG.debug("after Locale=#0", invocation.getStack().findValue("locale"));
-        }
-
-        if (LOG.isDebugEnabled()) {
             LOG.debug("intercept } ");
         }
 

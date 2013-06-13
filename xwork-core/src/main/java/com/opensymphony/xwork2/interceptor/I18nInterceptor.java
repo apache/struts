@@ -85,6 +85,8 @@ import java.util.Map;
  * @author Aleksei Gopachenko
  */
 public class I18nInterceptor extends AbstractInterceptor {
+    private static final long serialVersionUID = 2496830135246700300L;
+
     protected static final Logger LOG = LoggerFactory.getLogger(I18nInterceptor.class);
 
     public static final String DEFAULT_SESSION_ATTRIBUTE = "WW_TRANS_I18N_LOCALE";
@@ -116,9 +118,8 @@ public class I18nInterceptor extends AbstractInterceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("intercept '"
-                    + invocation.getProxy().getNamespace() + "/"
-                    + invocation.getProxy().getActionName() + "' { ");
+            LOG.debug("intercept '#0/#1' {",
+                invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
         }
         //get requested locale
         Map<String, Object> params = invocation.getInvocationContext().getParameters();
@@ -140,7 +141,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             locale = (requested_locale instanceof Locale) ?
                     (Locale) requested_locale : LocalizedTextUtil.localeFromString(requested_locale.toString(), null);
             if (locale != null && LOG.isDebugEnabled()) {
-                LOG.debug("applied request locale=" + locale);
+                LOG.debug("applied request locale=#0", locale);
             }
         }
         if (session != null) {
@@ -152,13 +153,13 @@ public class I18nInterceptor extends AbstractInterceptor {
                     if (sessionLocale != null && sessionLocale instanceof Locale) {
                         locale = (Locale) sessionLocale;
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("applied session locale=" + locale);
+                            LOG.debug("applied session locale=#0", locale);
                         }
                     } else {
                         // no overriding locale definition found, stay with current invocation (=browser) locale
                         locale = invocation.getInvocationContext().getLocale();
                         if (locale != null && LOG.isDebugEnabled()) {
-                            LOG.debug("applied invocation context locale=" + locale);
+                            LOG.debug("applied invocation context locale=#0", locale);
                         }
                     }
                 }
@@ -170,12 +171,12 @@ public class I18nInterceptor extends AbstractInterceptor {
         saveLocale(invocation, locale);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("before Locale=" + invocation.getStack().findValue("locale"));
+            LOG.debug("before Locale=#0", invocation.getStack().findValue("locale"));
         }
 
         final String result = invocation.invoke();
         if (LOG.isDebugEnabled()) {
-            LOG.debug("after Locale=" + invocation.getStack().findValue("locale"));
+            LOG.debug("after Locale=#0", invocation.getStack().findValue("locale"));
         }
 
         if (LOG.isDebugEnabled()) {
@@ -192,7 +193,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             requested_locale = ((Object[]) requested_locale)[0];
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("requested_locale=" + requested_locale);
+                LOG.debug("requested_locale=#0", requested_locale);
             }
         }
         return requested_locale;

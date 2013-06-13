@@ -125,6 +125,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         Map<String, Object> params = invocation.getInvocationContext().getParameters();
 
         boolean storeInSession = true;
+
         Object requestedLocale = findLocaleParameter(params, parameterName);
         if (requestedLocale == null) {
             requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
@@ -133,41 +134,24 @@ public class I18nInterceptor extends AbstractInterceptor {
             }
         }
 
+        Locale locale = getLocaleFromParam(requestedLocale);
+
         //save it in session
         Map<String, Object> session = invocation.getInvocationContext().getSession();
 
-        Locale locale = null;
-        if (requestedLocale != null) {
-            locale = (requestedLocale instanceof Locale) ?
-                    (Locale) requestedLocale : LocalizedTextUtil.localeFromString(requestedLocale.toString(), null);
-            if (locale != null && LOG.isDebugEnabled()) {
-                LOG.debug("applied request locale=#0", locale);
-            }
-        }
         if (session != null) {
             synchronized (session) {
                 if (locale == null) {
                     storeInSession = false;
-                    // check session for saved locale
-                    Object sessionLocale = session.get(attributeName);
-                    if (sessionLocale != null && sessionLocale instanceof Locale) {
-                        locale = (Locale) sessionLocale;
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("applied session locale=#0", locale);
-                        }
-                    } else {
-                        // no overriding locale definition found, stay with current invocation (=browser) locale
-                        locale = invocation.getInvocationContext().getLocale();
-                        if (locale != null && LOG.isDebugEnabled()) {
-                            LOG.debug("applied invocation context locale=#0", locale);
-                        }
-                    }
+                    locale = readStoredLocale(invocation, session);
                 }
+
                 if (storeInSession) {
                     session.put(attributeName, locale);
                 }
             }
         }
+
         saveLocale(invocation, locale);
 
         if (LOG.isDebugEnabled()) {
@@ -181,6 +165,54 @@ public class I18nInterceptor extends AbstractInterceptor {
         }
 
         return result;
+    }
+
+    /**
+     * Reads the locale from the session, and if not found from the
+     * current invocation (=browser)
+     *
+     * @param invocation the current invocation
+     * @param session the current session
+     * @return the read locale
+     */
+    private Locale readStoredLocale(ActionInvocation invocation, Map<String, Object> session) {
+        // check session for saved locale
+        Object sessionLocale = session.get(attributeName);
+        if (sessionLocale != null && sessionLocale instanceof Locale) {
+            Locale locale = (Locale) sessionLocale;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("applied session locale=#0", locale);
+            }
+            return locale;
+        }
+
+        // no overriding locale definition found, stay with current invocation (=browser) locale
+        Locale locale = invocation.getInvocationContext().getLocale();
+        if (locale != null && LOG.isDebugEnabled()) {
+            LOG.debug("applied invocation context locale=#0", locale);
+        }
+
+        return locale;
+    }
+
+    /**
+     * Creates a Locale object from the request param, which might
+     * be already a Local or a String
+     *
+     * @param requestedLocale the parameter from the request
+     * @return the Locale
+     */
+    private Locale getLocaleFromParam(Object requestedLocale) {
+        Locale locale = null;
+        if (requestedLocale != null) {
+            locale = (requestedLocale instanceof Locale) ?
+                    (Locale) requestedLocale :
+                    LocalizedTextUtil.localeFromString(requestedLocale.toString(), null);
+            if (locale != null && LOG.isDebugEnabled()) {
+                LOG.debug("applied request locale=#0", locale);
+            }
+        }
+        return locale;
     }
 
     private Object findLocaleParameter(Map<String, Object> params, String parameterName) {

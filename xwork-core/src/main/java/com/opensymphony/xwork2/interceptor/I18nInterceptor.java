@@ -175,7 +175,7 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @param session the current session
      * @return the read locale
      */
-    private Locale readStoredLocale(ActionInvocation invocation, Map<String, Object> session) {
+    protected Locale readStoredLocale(ActionInvocation invocation, Map<String, Object> session) {
         // check session for saved locale
         Object sessionLocale = session.get(attributeName);
         if (sessionLocale != null && sessionLocale instanceof Locale) {
@@ -202,7 +202,7 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @param requestedLocale the parameter from the request
      * @return the Locale
      */
-    private Locale getLocaleFromParam(Object requestedLocale) {
+    protected Locale getLocaleFromParam(Object requestedLocale) {
         Locale locale = null;
         if (requestedLocale != null) {
             locale = (requestedLocale instanceof Locale) ?

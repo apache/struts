@@ -125,10 +125,10 @@ public class I18nInterceptor extends AbstractInterceptor {
         Map<String, Object> params = invocation.getInvocationContext().getParameters();
 
         boolean storeInSession = true;
-        Object requested_locale = findLocaleParameter(params, parameterName);
-        if (requested_locale == null) {
-            requested_locale = findLocaleParameter(params, requestOnlyParameterName);
-            if (requested_locale != null) {
+        Object requestedLocale = findLocaleParameter(params, parameterName);
+        if (requestedLocale == null) {
+            requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
+            if (requestedLocale != null) {
                 storeInSession = false;
             }
         }
@@ -137,9 +137,9 @@ public class I18nInterceptor extends AbstractInterceptor {
         Map<String, Object> session = invocation.getInvocationContext().getSession();
 
         Locale locale = null;
-        if (requested_locale != null) {
-            locale = (requested_locale instanceof Locale) ?
-                    (Locale) requested_locale : LocalizedTextUtil.localeFromString(requested_locale.toString(), null);
+        if (requestedLocale != null) {
+            locale = (requestedLocale instanceof Locale) ?
+                    (Locale) requestedLocale : LocalizedTextUtil.localeFromString(requestedLocale.toString(), null);
             if (locale != null && LOG.isDebugEnabled()) {
                 LOG.debug("applied request locale=#0", locale);
             }
@@ -184,16 +184,16 @@ public class I18nInterceptor extends AbstractInterceptor {
     }
 
     private Object findLocaleParameter(Map<String, Object> params, String parameterName) {
-        Object requested_locale = params.remove(parameterName);
-        if (requested_locale != null && requested_locale.getClass().isArray()
-                && ((Object[]) requested_locale).length == 1) {
-            requested_locale = ((Object[]) requested_locale)[0];
+        Object requestedLocale = params.remove(parameterName);
+        if (requestedLocale != null && requestedLocale.getClass().isArray()
+                && ((Object[]) requestedLocale).length == 1) {
+            requestedLocale = ((Object[]) requestedLocale)[0];
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("requested_locale=#0", requested_locale);
+                LOG.debug("requested_locale=#0", requestedLocale);
             }
         }
-        return requested_locale;
+        return requestedLocale;
     }
 
     /**

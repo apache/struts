@@ -52,7 +52,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: example1description -->
  * Pushed user into the stack, and hence property tag could access user's properties
- * (firstName, lastName etc) since user is not at the top of the stack
+ * (firstName, lastName etc) since user is now at the top of the stack
  * <!-- END SNIPPET: example1description -->
  *
  * <pre>

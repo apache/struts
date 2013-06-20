@@ -17,11 +17,10 @@
 
 package org.apache.struts2.jasper.compiler;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
+import org.apache.struts2.el.lang.ELSupport;
+import org.apache.struts2.jasper.JasperException;
+import org.apache.struts2.jasper.el.ELContextImpl;
+import org.xml.sax.Attributes;
 
 import javax.el.ELException;
 import javax.el.ExpressionFactory;
@@ -35,12 +34,11 @@ import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.ValidationMessage;
-
-import org.apache.struts2.el.lang.ELSupport;
-import org.apache.struts2.jasper.Constants;
-import org.apache.struts2.jasper.JasperException;
-import org.apache.struts2.jasper.el.ELContextImpl;
-import org.xml.sax.Attributes;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * Performs validation on the page elements. Attributes are checked for
@@ -1311,6 +1309,7 @@ class Validator {
                         if (node instanceof ELNode.Root) {
                             if (((ELNode.Root) node).getType() == '#') {
                                 deferred = true;
+                                break;
                             }
                         }
                     }

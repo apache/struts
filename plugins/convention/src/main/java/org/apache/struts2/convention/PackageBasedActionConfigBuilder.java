@@ -562,16 +562,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @return true if class package is on the {@link #packageLocators} list
      */
     protected boolean checkPackageLocators(String classPackageName) {
-        if (packageLocators != null && !disablePackageLocatorsScanning) {
-            for (String packageLocator : packageLocators) {
-                if (classPackageName.length() > 0
-                        && (packageLocatorsBasePackage == null || classPackageName
+        if (packageLocators != null && !disablePackageLocatorsScanning && classPackageName.length() > 0
+                && (packageLocatorsBasePackage == null || classPackageName
                         .startsWith(packageLocatorsBasePackage))) {
-                    String[] splitted = classPackageName.split("\\.");
+            for (String packageLocator : packageLocators) {
+                String[] splitted = classPackageName.split("\\.");
 
-                    if (StringTools.contains(splitted, packageLocator, false))
-                        return true;
-                }
+                if (StringTools.contains(splitted, packageLocator, false))
+                    return true;
             }
         }
         return false;

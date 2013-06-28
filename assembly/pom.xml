@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -83,31 +84,29 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2</version>
                 <executions>
                     <execution>
                         <id>cwiki-docs</id>
                         <phase>prepare-package</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>java</goal>
                         </goals>
                         <configuration>
-                            <tasks>
-                                <mkdir dir="${project.build.directory}/cwiki" />
-                                <exec executable="wget">
-                                    <arg value="-erobots=off" />
-                                    <arg value="-nH" />
-                                    <arg value="-nv" />
-                                    <arg value="-E" />
-                                    <arg value="-L" />
-                                    <arg value="-l 0" />
-                                    <arg value="-np" />
-                                    <arg value="--directory-prefix=${project.build.directory}/cwiki" />
-                                    <arg value="--no-check-certificate" />
-                                    <arg value="-r" />
-                                    <arg value="https://cwiki.apache.org/WW/" />
-                                </exec>
-                            </tasks>
+                            <classpathScope>runtime</classpathScope>
+                            <includeProjectDependencies>true</includeProjectDependencies>
+                            <mainClass>org.apache.cxf.cwiki.SiteExporter</mainClass>
+                            <arguments>
+                                <argument>-d</argument>
+                                <argument>${project.build.directory}/cwiki/WW</argument>
+                                <argument>-password</argument>
+                                <argument>${confluence.password}</argument>
+                                <argument>-user</argument>
+                                <argument>${confluence.user}</argument>
+                                <argument>${basedir}/src/main/resources/docs.cfg</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -141,6 +140,13 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.apache.cxf.site-export</groupId>
+            <artifactId>cxf-site-export</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>

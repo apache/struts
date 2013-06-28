@@ -47,8 +47,8 @@
 
         <!-- Include the Confluence docs in the assembly -->
         <fileSet>
-            <directory>target/cwiki/WW</directory>
-            <outputDirectory>docs/docs</outputDirectory>
+            <directory>target/cwiki/WW/docs</directory>
+            <outputDirectory>docs</outputDirectory>
         </fileSet>
 
         <!-- Plugins -->

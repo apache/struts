@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor;
@@ -154,7 +153,6 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         invocation.setProxy(proxy);
     }
 
-    @Validation
     public static class TestAction extends ActionSupport {
         private String text = "x";
         private int value = -10;

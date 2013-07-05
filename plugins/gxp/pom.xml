@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.3.15</version>
+        <version>2.3.15-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-gxp-plugin</artifactId>
@@ -11,9 +11,9 @@
     <name>Struts 2 GXP Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-gxp-plugin</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-gxp-plugin</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-gxp-plugin</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-gxp-plugin</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-gxp-plugin</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-gxp-plugin</url>
     </scm>
 
     <dependencies>

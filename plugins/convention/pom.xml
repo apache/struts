@@ -11,9 +11,9 @@
     <name>Struts 2 Convention Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-convention-plugin</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-convention-plugin</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-convention-plugin</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-convention-plugin</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-convention-plugin</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/sandbox/tags/STRUTS_2_3_15/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/branches/STRUTS_2_3_15_X/trunk/struts2-convention-plugin</url>
     </scm>
 
     <build>

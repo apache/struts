@@ -14,9 +14,9 @@
     <name>Struts 2 Archetypes - Starter</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/archetypes/struts2-archetype-starter</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/archetypes/struts2-archetype-starter</developerConnection>
-        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/archetypes/struts2-archetype-starter</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/archetypes/struts2-archetype-starter</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/archetypes/struts2-archetype-starter</developerConnection>
+        <url>http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/archetypes/struts2-archetype-starter</url>
     </scm>
 
     <properties>

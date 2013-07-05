@@ -34,9 +34,9 @@
     <name>Struts 2 Configuration Browser Plugin</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/config-browser</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/config-browser</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_15/plugins/config-browser</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/config-browser</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/config-browser</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_15_X/plugins/config-browser</url>
     </scm>
 
 </project>

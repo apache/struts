@@ -34,9 +34,9 @@
     <name>Struts 2 Spring Plugin</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/spring</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/spring</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_15/plugins/spring</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/spring</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/spring</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_15_X/plugins/spring</url>
     </scm>
    
     <dependencies>

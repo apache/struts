@@ -34,9 +34,9 @@
     <name>Struts 2 Maven Archetypes</name>
 
    <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/archetypes</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/archetypes</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/archetypes</url>
+     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/archetypes</connection>
+     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/archetypes</developerConnection>
+     <url>http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/archetypes</url>
    </scm>
 
     <modules>

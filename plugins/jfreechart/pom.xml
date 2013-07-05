@@ -34,9 +34,9 @@
     <name>Struts 2 JFreeChart Plugin</name>
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/jfreechart</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/jfreechart</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_15/plugins/jfreechart</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/jfreechart</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/jfreechart</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_15_X/plugins/jfreechart</url>
     </scm>
 
     <dependencies>

@@ -34,9 +34,9 @@
     <name>Struts 2 JUnit Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/junit</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/junit</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_15/plugins/junit</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/junit</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/junit</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_15_X/plugins/junit</url>
     </scm>
 
     <dependencies>

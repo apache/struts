@@ -14,9 +14,9 @@
     <name>XWork: Core</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/xwork-core</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/xwork-core</developerConnection>
-        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/xwork-core</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/xwork-core</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/xwork-core</developerConnection>
+        <url>http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/xwork-core</url>
     </scm>
 
     <properties>

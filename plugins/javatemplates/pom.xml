@@ -33,9 +33,9 @@
     <name>Struts 2 Java Templates Plugin</name>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/javatemplates</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15/plugins/javatemplates</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_15/plugins/javatemplates</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/javatemplates</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_X/plugins/javatemplates</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/branches/STRUTS_2_3_15_X/plugins/javatemplates</url>
     </scm>
 
     <dependencies>

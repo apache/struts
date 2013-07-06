@@ -25,9 +25,7 @@
 <#if parameters.get("size")??>
  size="${parameters.get("size")?html}"<#rt/>
 </#if>
-<#if parameters.nameValue??>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
-</#if>
+ value=""<#rt/>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>

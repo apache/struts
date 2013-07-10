@@ -38,7 +38,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
     }
 
     public synchronized Collection<String> getActionErrors() {
-        return new ArrayList<String>(internalGetActionErrors());
+        return new LinkedList<String>(internalGetActionErrors());
     }
 
     public synchronized void setActionMessages(Collection<String> messages) {
@@ -46,7 +46,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
     }
 
     public synchronized Collection<String> getActionMessages() {
-        return new ArrayList<String>(internalGetActionMessages());
+        return new LinkedList<String>(internalGetActionMessages());
     }
 
     public synchronized void setFieldErrors(Map<String, List<String>> errorMap) {

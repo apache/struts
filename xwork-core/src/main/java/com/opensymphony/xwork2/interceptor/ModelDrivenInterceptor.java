@@ -124,6 +124,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
             for (Object item : root) {
                 if (item.equals(newModel)) {
                     needsRefresh = false;
+                    break;
                 }
             }
 

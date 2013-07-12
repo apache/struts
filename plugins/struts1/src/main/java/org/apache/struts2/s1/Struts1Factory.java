@@ -21,21 +21,22 @@
 
 package org.apache.struts2.s1;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.config.ExceptionConfig;
+import org.apache.struts.config.ModuleConfig;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.*;
-import org.apache.struts.config.*;
-
-import java.util.Iterator;
 import java.util.Arrays;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
+import java.util.Iterator;
 
 
 /**
@@ -120,32 +121,28 @@ public class Struts1Factory {
         if (action instanceof TextProvider) {
             text = (TextProvider)action;
         }
-
-        ActionMessage error = null;
-        String field = null;
-        String msg = null;
-        Object[] values = null;
+        // if there is no ValidationAware, it doesn't make sense to process messages
+        // as there be no place to put message in
+        if (vaction == null) {
+            return;
+        }
         for (Iterator i = errors.properties(); i.hasNext(); ) {
-            field = (String) i.next();
+            String field = (String) i.next();
             for (Iterator it = errors.get(field); it.hasNext(); ) {
-                error = (ActionMessage) it.next();
-                msg = error.getKey();
+                ActionMessage error = (ActionMessage) it.next();
+                String msg = error.getKey();
                 if (error.isResource() && text != null) {
-                    values = error.getValues();
+                    Object[] values = error.getValues();
                     if (values != null) {
                         msg = text.getText(error.getKey(), Arrays.asList(values));
                     } else {
                         msg = text.getText(error.getKey());
                     }
                 }
-                if (vaction != null) {
-                    if (field == errors.GLOBAL_MESSAGE) {
-                        vaction.addActionError(msg);
-                    } else {
-                        vaction.addFieldError(field, msg);
-                    }
+                if (ActionMessages.GLOBAL_MESSAGE.equals(field)) {
+                    vaction.addActionError(msg);
                 } else {
-                    // should do something here
+                    vaction.addFieldError(field, msg);
                 }
             }
         }

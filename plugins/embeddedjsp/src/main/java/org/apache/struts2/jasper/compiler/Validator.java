@@ -1036,6 +1036,9 @@ class Validator {
                     el = ELParser.parse(attrs.getValue(i));
                     Iterator<ELNode> nodes = el.iterator();
                     while (nodes.hasNext()) {
+                        if (elExpression && deferredValueIsLiteral) {
+                            break;
+                        }
                         ELNode node = nodes.next();
                         if (node instanceof ELNode.Root) {
                             if (((ELNode.Root) node).getType() == '$') {

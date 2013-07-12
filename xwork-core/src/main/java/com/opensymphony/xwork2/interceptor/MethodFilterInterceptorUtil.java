@@ -19,7 +19,6 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardHelper;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -51,16 +50,17 @@ public class MethodFilterInterceptorUtil {
         
         // quick check to see if any actual pattern matching is needed
         boolean needsPatternMatch = false;
-        Iterator quickIter = includeMethods.iterator();
-        for (String incMeth : includeMethods) {
-            if (!"*".equals(incMeth) && incMeth.contains("*")) {
+        for (String includeMethod : includeMethods) {
+            if (!"*".equals(includeMethod) && includeMethod.contains("*")) {
                 needsPatternMatch = true;
+                break;
             }
         }
         
-        for (String incMeth : excludeMethods) {
-            if (!"*".equals(incMeth) && incMeth.contains("*")) {
+        for (String excludeMethod : excludeMethods) {
+            if (!"*".equals(excludeMethod) && excludeMethod.contains("*")) {
                 needsPatternMatch = true;
+                break;
             }
         }
 

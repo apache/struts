@@ -60,6 +60,7 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
                     //i.e take param name up to first . (period) and match against that
                     if (field.getName().equals(paramName)) {
                         allowed = true;
+                        break;
                     }
                 }
 

@@ -21,18 +21,16 @@
 
 package org.apache.struts2.interceptor;
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-
-import org.apache.struts2.ServletActionContext;
 
 /**
  * <!-- START SNIPPET: description --> This interceptor ensures that the action
@@ -92,7 +90,7 @@ public class RolesInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        String result = null;
+        String result;
         if (!isAllowed(request, invocation.getAction())) {
             result = handleRejection(invocation, response);
         } else {
@@ -109,7 +107,7 @@ public class RolesInterceptor extends AbstractInterceptor {
             String[] list = val.split("[ ]*,[ ]*");
             return Arrays.asList(list);
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -126,6 +124,7 @@ public class RolesInterceptor extends AbstractInterceptor {
             for (String role : allowedRoles) {
                 if (request.isUserInRole(role)) {
                     result = true;
+                    break;
                 }
             }
             return result;

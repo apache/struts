@@ -276,9 +276,8 @@ public class Form extends ClosingUIBean {
         String formActionValue = findString(action);
         ActionMapping mapping = actionMapper.getMappingFromActionName(formActionValue);
         String actionName = mapping.getName();
-        String methodName = mapping.getMethod();
 
-        List<Validator> actionValidators = actionValidatorManager.getValidators(actionClass, actionName, methodName);
+        List<Validator> actionValidators = actionValidatorManager.getValidators(actionClass, actionName);
         List<Validator> validators = new ArrayList<Validator>();
 
         findFieldValidators(name, actionClass, actionName, actionValidators, validators, "");

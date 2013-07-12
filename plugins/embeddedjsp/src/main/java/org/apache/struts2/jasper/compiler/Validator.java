@@ -1384,9 +1384,11 @@ class Validator {
                     if (node instanceof ELNode.Root) {
                         if (((ELNode.Root) node).getType() == '$') {
                             elExpression = true;
+                            break;
                         } else if (checkDeferred && !pageInfo.isDeferredSyntaxAllowedAsLiteral() 
                                 && ((ELNode.Root) node).getType() == '#') {
                             elExpression = true;
+                            break;
                         }
                     }
                 }

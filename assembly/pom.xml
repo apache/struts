@@ -144,7 +144,7 @@
         <dependency>
             <groupId>org.apache.cxf.site-export</groupId>
             <artifactId>cxf-site-export</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-20130702.031849-7</version>
             <scope>runtime</scope>
         </dependency>
 

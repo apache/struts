@@ -75,7 +75,7 @@
           </div>
         </a>
         </td><td>
-        <a href="http://cwiki.apache.org/S2PLUGINS/home.html" style="margin:10px">
+        <a href="https://cwiki.apache.org/confluence/display/S2PLUGINS/Home" style="margin:10px">
           <div style="background:url(images/plugins.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
             <span style="top:15px;position:absolute;color:white;padding-left:10px">
               <span style="font-weight: bold; font-size:140%">Plugin Registry</span>

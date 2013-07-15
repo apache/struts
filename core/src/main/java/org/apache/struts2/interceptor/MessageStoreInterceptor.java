@@ -39,8 +39,11 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <!-- START SNIPPET: description -->
  *
  * An interceptor to store a {@link ValidationAware} action's messages / errors and field errors into
- * HTTP Session, such that it will be retrieveable at a later stage. This allows the action's message /
+ * HTTP Session, such that it will be retrievable at a later stage. This allows the action's message /
  * errors and field errors to be available longer that just the particular HTTP request.
+ *
+ * If no session exists, nothing will be stored and can be retrieved later. In other terms,
+ * the application is responsible to open the session.
  *
  * <p/>
  *
@@ -56,7 +59,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors 
  * and field errors and put them back into the {@link ValidationAware} action, and after Action execution, 
- * if the {@link Result} is an instance of {@link ServletRedirectResult}, the action's message / errors 
+ * if the {@link com.opensymphony.xwork2.Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
  * and field errors into automatically be stored in the HTTP session..
  *
  * <p/>
@@ -147,7 +150,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class MessageStoreInterceptor extends AbstractInterceptor {
 
-    private static final long serialVersionUID = 4491997514314242420L;
+    private static final long serialVersionUID = 9161650888603380164L;
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageStoreInterceptor.class);
 
@@ -219,6 +222,14 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
             if (action instanceof ValidationAware) {
                 // retrieve error / message from session
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
+
+                if (session == null) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Session is not open, no errors / messages could be retrieve for action ["+action+"]");
+                    }
+                    return;
+                }
+
                 ValidationAware validationAwareAction = (ValidationAware) action;
 
                 if (LOG.isDebugEnabled()) {
@@ -270,6 +281,13 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
             if (action instanceof ValidationAware) {
                 // store error / messages into session
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
+
+                if (session == null) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Could not store action ["+action+"] error/messages into session, because session hasn't been opened yet.");
+                    }
+                    return;
+                }
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("store action ["+action+"] error/messages into session ");

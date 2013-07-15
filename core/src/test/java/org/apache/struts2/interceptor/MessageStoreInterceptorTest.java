@@ -113,6 +113,45 @@ public class MessageStoreInterceptorTest extends StrutsTestCase {
         EasyMock.verify(mockActionInvocation);
     }
 
+    public void testIgnoreMessageWithoutSession() throws Exception {
+        MessageStoreInterceptor interceptor = new MessageStoreInterceptor();
+        interceptor.setAllowRequestParameterSwitch(true);
+        interceptor.setOperationMode(MessageStoreInterceptor.STORE_MODE);
+
+        Map paramMap = new LinkedHashMap();
+
+        ActionSupport action = new ActionSupport();
+        action.addActionError("some action error 1");
+        action.addActionMessage("some action message 1");
+        action.addFieldError("field2", "some field error 2");
+
+        ActionContext actionContext = new ActionContext(new HashMap());
+        actionContext.put(ActionContext.PARAMETERS, paramMap);
+
+        // Mock (ActionInvocation)
+        ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
+        mockActionInvocation.getInvocationContext();
+        EasyMock.expectLastCall().andReturn(actionContext);
+        EasyMock.expectLastCall().anyTimes();
+
+        mockActionInvocation.invoke();
+        EasyMock.expectLastCall().andReturn(Action.SUCCESS);
+
+        mockActionInvocation.getAction();
+        EasyMock.expectLastCall().andReturn(action);
+
+        mockActionInvocation.getResult();
+        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
+
+        EasyMock.replay(mockActionInvocation);
+
+        interceptor.init();
+        interceptor.intercept(mockActionInvocation);
+        interceptor.destroy();
+
+        EasyMock.verify(mockActionInvocation);
+    }
+
     public void testRetrieveMessage() throws Exception {
         MessageStoreInterceptor interceptor = new MessageStoreInterceptor();
         interceptor.setOperationMode(MessageStoreInterceptor.RETRIEVE_MODE);

@@ -21,10 +21,8 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import com.mockobjects.dynamic.Mock;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -32,10 +30,8 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
-import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -447,7 +443,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
     public void testRedirectPrefix() throws Exception {
         Map parameterMap = new HashMap();
-        parameterMap.put(DefaultActionMapper.REDIRECT_PREFIX + "http://www.google.com", "");
+        parameterMap.put("redirect:" + "http://www.google.com", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/someServletPath.action");
@@ -458,25 +454,28 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
         Result result = actionMapping.getResult();
-        assertNotNull(result);
-        assertTrue(result instanceof ServletRedirectResult);
+        assertNull(result);
+    }
 
-        Mock invMock = new Mock(ActionInvocation.class);
-        ActionInvocation inv = (ActionInvocation) invMock.proxy();
-        ActionContext ctx = ActionContext.getContext();
-        ctx.put(ServletActionContext.HTTP_REQUEST, request);
-        StrutsMockHttpServletResponse response = new StrutsMockHttpServletResponse();
-        ctx.put(ServletActionContext.HTTP_RESPONSE, response);
-        invMock.expectAndReturn("getInvocationContext", ctx);
-        invMock.expectAndReturn("getStack", ctx.getValueStack());
-        result.execute(inv);
-        assertEquals("http://www.google.com", response.getRedirectURL());
-        //TODO: need to test location but there's noaccess to the property/method, unless we use reflection
+    public void testUnsafeRedirectPrefix() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put("redirect:" + "http://%{3*4}", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setupGetServletPath("/someServletPath.action");
+        request.setParameterMap(parameterMap);
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setContainer(container);
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        Result result = actionMapping.getResult();
+        assertNull(result);
     }
 
     public void testRedirectActionPrefix() throws Exception {
         Map parameterMap = new HashMap();
-        parameterMap.put(DefaultActionMapper.REDIRECT_ACTION_PREFIX + "myAction", "");
+        parameterMap.put("redirectAction:" + "myAction", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/someServletPath.action");
@@ -488,17 +487,29 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
 
         StrutsResultSupport result = (StrutsResultSupport) actionMapping.getResult();
-        assertNotNull(result);
-        assertTrue(result instanceof ServletRedirectResult);
+        assertNull(result);
+    }
 
-        assertEquals("myAction.action", result.getLocation());
+    public void testUnsafeRedirectActionPrefix() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put("redirectAction:" + "%{3*4}", "");
 
-        // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setupGetServletPath("/someServletPath.action");
+        request.setParameterMap(parameterMap);
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setContainer(container);
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+
+        StrutsResultSupport result = (StrutsResultSupport) actionMapping.getResult();
+        assertNull(result);
     }
 
     public void testRedirectActionPrefixWithEmptyExtension() throws Exception {
         Map parameterMap = new HashMap();
-        parameterMap.put(DefaultActionMapper.REDIRECT_ACTION_PREFIX + "myAction", "");
+        parameterMap.put("redirectAction:" + "myAction", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/someServletPath");
@@ -511,12 +522,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
 
         StrutsResultSupport result = (StrutsResultSupport) actionMapping.getResult();
-        assertNotNull(result);
-        assertTrue(result instanceof ServletRedirectResult);
-
-        assertEquals("myAction", result.getLocation());
-
-        // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
+        assertNull(result);
     }
 
     public void testCustomActionPrefix() throws Exception {

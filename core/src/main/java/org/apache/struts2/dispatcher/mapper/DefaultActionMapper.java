@@ -33,11 +33,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -164,8 +168,6 @@ public class DefaultActionMapper implements ActionMapper {
 
     protected static final String METHOD_PREFIX = "method:";
     protected static final String ACTION_PREFIX = "action:";
-    protected static final String REDIRECT_PREFIX = "redirect:";
-    protected static final String REDIRECT_ACTION_PREFIX = "redirectAction:";
 
     protected boolean allowDynamicMethodCalls = true;
     protected boolean allowSlashesInActionNames = false;
@@ -186,8 +188,7 @@ public class DefaultActionMapper implements ActionMapper {
                 put(METHOD_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         if (allowDynamicMethodCalls) {
-                            mapping.setMethod(key.substring(
-                                    METHOD_PREFIX.length()));
+                            mapping.setMethod(key.substring(METHOD_PREFIX.length()));
                         }
                     }
                 });
@@ -203,34 +204,10 @@ public class DefaultActionMapper implements ActionMapper {
                                 name = name.substring(0, bang);
                             }
                         }
-                        mapping.setName(name);
+                        mapping.setName(cleanupActionName(name));
                     }
                 });
 
-                put(REDIRECT_PREFIX, new ParameterAction() {
-                    public void execute(String key, ActionMapping mapping) {
-                        ServletRedirectResult redirect = new ServletRedirectResult();
-                        container.inject(redirect);
-                        redirect.setLocation(key.substring(REDIRECT_PREFIX
-                                .length()));
-                        mapping.setResult(redirect);
-                    }
-                });
-
-                put(REDIRECT_ACTION_PREFIX, new ParameterAction() {
-                    public void execute(String key, ActionMapping mapping) {
-                        String location = key.substring(REDIRECT_ACTION_PREFIX
-                                .length());
-                        ServletRedirectResult redirect = new ServletRedirectResult();
-                        container.inject(redirect);
-                        String extension = getDefaultExtension();
-                        if (extension != null && extension.length() > 0) {
-                            location += "." + extension;
-                        }
-                        redirect.setLocation(location);
-                        mapping.setResult(redirect);
-                    }
-                });
             }
         };
     }

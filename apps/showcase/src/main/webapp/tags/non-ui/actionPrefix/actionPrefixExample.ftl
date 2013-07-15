@@ -37,17 +37,13 @@
 
 				<@s.textfield label="Enter Some Text" name="text" />
 
-				<@s.submit name="action:actionPrefix" value="%{'action prefix'}" cssClass="btn" />
+				<@s.submit action="actionPrefix" value="%{'action prefix'}" cssClass="btn" />
 
-				<@s.submit name="method:alternateMethod" value="%{'method prefix'}" cssClass="btn" />
-
-				<@s.submit name="redirect:http://www.google.com" value="%{'redirect prefix'}" cssClass="btn" />
-
-				<@s.submit name="redirect-action:redirectActionPrefix" value="%{'redirect-action prefix'}" cssClass="btn" />
+				<@s.submit method="alternateMethod" value="%{'method prefix'}" cssClass="btn" />
 
 				<@s.submit value="Normal Submit" cssClass="btn" />
 
-	            <@s.submit name="action:redirectActionPrefixAction" value="%{'redirect-action without prefix'}" cssClass="btn" />
+	            <@s.submit action="redirectActionPrefixAction" value="%{'redirectAction without prefix'}" cssClass="btn" />
 
 	        </@s.form>
 		</div>

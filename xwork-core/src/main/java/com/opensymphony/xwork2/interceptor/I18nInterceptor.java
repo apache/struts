@@ -39,6 +39,8 @@ import java.util.Map;
  * <p/>For example, using the default parameter name, a request to <b>foo.action?request_locale=en_US</b>, then the
  * locale for US English is saved in the user's session and will be used for all future requests.
  * <p/>
+ if there is no locale set (for example with the first visit), the interceptor uses the browser locale.
+ * <p/>
  * <!-- END SNIPPET: description -->
  * <p/>
  * <p/> <u>Interceptor parameters:</u>

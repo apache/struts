@@ -1,7 +1,7 @@
 package org.apache.struts2.portlet;
 
 /**
- * TODO lukaszlenart: add a comment
+ * Defines phases of portlet processing per the portlet specification.
  */
 public enum PortletPhase {
 
@@ -23,7 +23,7 @@ public enum PortletPhase {
     EVENT_PHASE,
 
     /**
-     *
+     * Constant used for the serve resource phase that was added with the 2.0 portlet specification.
      */
     SERVE_RESOURCE_PHASE;
 

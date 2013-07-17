@@ -382,7 +382,7 @@ public class ELSupport {
      */
     public final static boolean containsNulls(final Object[] obj) {
         for (int i = 0; i < obj.length; i++) {
-            if (obj[0] == null) {
+            if (obj[i] == null) {
                 return true;
             }
         }

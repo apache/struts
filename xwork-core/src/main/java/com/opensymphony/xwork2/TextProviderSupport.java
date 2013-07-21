@@ -117,7 +117,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * class.
      *
      * @param key name of text to be found
-     * @return value of named text
+     * @return value of named text or the provided key if no value is found
      */
     public String getText(String key) {
         return getText(key, key, Collections.emptyList());
@@ -133,7 +133,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      *
      * @param key    name of text to be found
      * @param defaultValue the default value which will be returned if no text is found
-     * @return value of named text
+     * @return value of named text or the provided defaultValue if no value is found
      */
     public String getText(String key, String defaultValue) {
         return getText(key, defaultValue, Collections.emptyList());
@@ -149,7 +149,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      *
      * @param key    name of text to be found
      * @param defaultValue the default value which will be returned if no text is found
-     * @return value of named text
+     * @return value of named text or the provided defaultValue if no value is found
      */
     public String getText(String key, String defaultValue, String arg) {
         List<Object> args = new ArrayList<Object>();
@@ -167,7 +167,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      *
      * @param key name of text to be found
      * @param args      a List of args to be used in a MessageFormat message
-     * @return value of named text
+     * @return value of named text or the provided key if no value is found
      */
     public String getText(String key, List<?> args) {
         return getText(key, key, args);
@@ -183,7 +183,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      *
      * @param key name of text to be found
      * @param args      an array of args to be used in a MessageFormat message
-     * @return value of named text
+     * @return value of named text or the provided key if no value is found
      */
     public String getText(String key, String[] args) {
         return getText(key, key, args);
@@ -200,7 +200,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param key    name of text to be found
      * @param defaultValue the default value which will be returned if no text is found
      * @param args         a List of args to be used in a MessageFormat message
-     * @return value of named text
+     * @return value of named text or the provided defaultValue if no value is found
      */
     public String getText(String key, String defaultValue, List<?> args) {
         Object[] argsArray = ((args != null && !args.equals(Collections.emptyList())) ? args.toArray() : null);
@@ -222,7 +222,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param key          name of text to be found
      * @param defaultValue the default value which will be returned if no text is found
      * @param args         an array of args to be used in a MessageFormat message
-     * @return value of named text
+     * @return value of named text or the provided defaultValue if no value is found
      */
     public String getText(String key, String defaultValue, String[] args) {
         if (clazz != null) {

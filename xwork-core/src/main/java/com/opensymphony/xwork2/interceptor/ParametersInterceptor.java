@@ -303,12 +303,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             MemberAccessValueStack accessValueStack = (MemberAccessValueStack) newStack;
             accessValueStack.setAcceptProperties(acceptParams);
             accessValueStack.setExcludeProperties(excludeParams);
-            if (action instanceof ParameterNameAware)
-            accessValueStack.setPropertiesJudge(new PropertiesJudge() {
-                public boolean acceptProperty(String propertyName) {
-                    return ((ParameterNameAware) action).acceptableParameterName(propertyName);
-                }
-            });
+            if (action instanceof ParameterNameAware) {
+                accessValueStack.setPropertiesJudge(new PropertiesJudge() {
+                    public boolean acceptProperty(String propertyName) {
+                        return ((ParameterNameAware) action).acceptableParameterName(propertyName);
+                    }
+                });
+            }
         }
 
         for (Map.Entry<String, Object> entry : acceptableParameters.entrySet()) {

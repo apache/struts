@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.factory.ResultBuilder;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
@@ -53,6 +54,8 @@ public class ObjectFactory implements Serializable {
     private Container container;
     protected ReflectionProvider reflectionProvider;
 
+    private ResultBuilder resultBuilder;
+
     @Inject(value="objectFactory.classloader", required=false)
     public void setClassLoader(ClassLoader cl) {
         this.ccl = cl;
@@ -73,6 +76,11 @@ public class ObjectFactory implements Serializable {
     @Inject
     public void setContainer(Container container) {
         this.container = container;
+    }
+
+    @Inject(required = false)
+    public void setResultBuilder(ResultBuilder resultBuilder) {
+        this.resultBuilder = resultBuilder;
     }
 
     /**
@@ -221,6 +229,9 @@ public class ObjectFactory implements Serializable {
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception {
+        if (resultBuilder != null) {
+            return resultBuilder.buildResult(resultConfig, extraContext);
+        }
         String resultClassName = resultConfig.getClassName();
         Result result = null;
 

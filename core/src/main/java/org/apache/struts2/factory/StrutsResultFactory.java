@@ -3,7 +3,7 @@ package org.apache.struts2.factory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.factory.ResultBuilder;
+import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Default implementation which uses {@link com.opensymphony.xwork2.result.ParamNameAwareResult} to accept or throwaway parameters
  */
-public class StrutsResultBuilder implements ResultBuilder {
+public class StrutsResultFactory implements ResultFactory {
 
     protected ObjectFactory objectFactory;
     protected ReflectionProvider reflectionProvider;

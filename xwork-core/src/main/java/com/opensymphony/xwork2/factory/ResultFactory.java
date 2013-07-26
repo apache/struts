@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Used by {@link com.opensymphony.xwork2.ObjectFactory} to build {@link com.opensymphony.xwork2.Result}
  */
-public interface ResultBuilder {
+public interface ResultFactory {
 
     Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception;
 

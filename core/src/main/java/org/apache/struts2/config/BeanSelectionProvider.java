@@ -61,7 +61,7 @@ import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import com.opensymphony.xwork2.factory.ResultBuilder;
+import com.opensymphony.xwork2.factory.ResultFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.views.velocity.VelocityManager;
@@ -93,10 +93,10 @@ import java.util.StringTokenizer;
  *     <td>Creates actions, results, and interceptors</td>
  *   </tr>
  *   <tr>
- *     <td>com.opensymphony.xwork2.factory.ResultBuilder</td>
- *     <td>struts.objectFactory.resultBuilder</td>
+ *     <td>com.opensymphony.xwork2.factory.ResultFactory</td>
+ *     <td>struts.objectFactory.resultFactory</td>
  *     <td>singleton</td>
- *     <td>Dedicated builder to create Results, you can implement/extend existing one instead of defining new ObjectFactory</td>
+ *     <td>Dedicated factory used to create Results, you can implement/extend existing one instead of defining new ObjectFactory</td>
  *   </tr>
  *   <tr>
  *     <td>com.opensymphony.xwork2.ActionProxyFactory</td>
@@ -332,7 +332,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
 
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
-        alias(ResultBuilder.class, StrutsConstants.STRUTS_OBJECTFACTORY_RESULTBUILDER, builder, props);
+        alias(ResultFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_RESULTFACTORY, builder, props);
 
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
 

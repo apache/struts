@@ -3,19 +3,19 @@ package org.apache.struts2.factory;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.factory.ResultBuilder;
+import com.opensymphony.xwork2.factory.ResultFactory;
 import org.apache.struts2.StrutsTestCase;
 import com.opensymphony.xwork2.result.ParamNameAwareResult;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class StrutsResultBuilderTest extends StrutsTestCase {
+public class StrutsResultFactoryTest extends StrutsTestCase {
 
     public void testAcceptParams() throws Exception {
         // given
         initDispatcherWithConfigs("struts-default.xml");
-        StrutsResultBuilder builder = (StrutsResultBuilder) container.getInstance(ResultBuilder.class);
+        StrutsResultFactory builder = (StrutsResultFactory) container.getInstance(ResultFactory.class);
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("accept", "ok");
@@ -36,10 +36,10 @@ public class StrutsResultBuilderTest extends StrutsTestCase {
         initDispatcherWithConfigs("struts-default.xml,struts-object-factory-result-builder.xml");
 
         // when
-        ResultBuilder actual = container.getInstance(ResultBuilder.class);
+        ResultFactory actual = container.getInstance(ResultFactory.class);
 
         // then
-        assertTrue(actual instanceof MyResultBuilder);
+        assertTrue(actual instanceof MyResultFactory);
     }
 
     public static class MyResult implements Result, ParamNameAwareResult {

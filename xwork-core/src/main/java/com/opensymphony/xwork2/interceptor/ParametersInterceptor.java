@@ -105,12 +105,12 @@ import java.util.regex.Pattern;
  *
  *
  * <!-- START SNIPPET: extending-warning -->
- * Using {@link ParameterNameAware} could be dangerous as @{link ParameterNameAware#acceptableParameterName(String)} takes precedence
+ * Using {@link ParameterNameAware} could be dangerous as {@link ParameterNameAware#acceptableParameterName(String)} takes precedence
  * over ParametersInterceptor which means if ParametersInterceptor excluded given parameter name you can accept it with
- * @{link ParameterNameAware#acceptableParameterName(String)}.
+ * {@link ParameterNameAware#acceptableParameterName(String)}.
  *
  * The best idea is to define very tight restrictions with ParametersInterceptor and relax them per action with
- * @{link ParameterNameAware#acceptableParameterName(String)}
+ * {@link ParameterNameAware#acceptableParameterName(String)}
  * <!-- END SNIPPET: extending-warning -->
  *
  *

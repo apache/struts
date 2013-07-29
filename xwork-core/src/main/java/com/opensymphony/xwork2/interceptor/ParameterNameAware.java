@@ -22,6 +22,13 @@ package com.opensymphony.xwork2.interceptor;
  * ParametersInterceptor}. For example, actions may want to create a whitelist of parameters they will accept or a
  * blacklist of paramters they will reject to prevent clients from setting other unexpected (and possibly dangerous)
  * parameters.
+ * 
+ * Using {@link ParameterNameAware} could be dangerous as {@link ParameterNameAware#acceptableParameterName(String)} takes precedence
+ * over {@link ParametersInterceptor} which means if ParametersInterceptor excluded given parameter name you can accept it with
+ * {@link ParameterNameAware#acceptableParameterName(String)}.
+ *
+ * The best idea is to define very tight restrictions with ParametersInterceptor and relax them per action with
+ * {@link ParameterNameAware#acceptableParameterName(String)}
  *
  * <!-- END SNIPPET: javadoc -->
  *

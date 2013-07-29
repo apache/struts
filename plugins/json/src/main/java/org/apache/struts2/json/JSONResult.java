@@ -65,6 +65,11 @@ public class JSONResult implements Result {
 
     private static final Logger LOG = LoggerFactory.getLogger(JSONResult.class);
 
+    /**
+     * This result type doesn't have a default param, null is ok to reduce noise in logs
+     */
+    public static final String DEFAULT_PARAM = null;
+
     private String encoding;
     private String defaultEncoding = "ISO-8859-1";
     private List<Pattern> includeProperties;

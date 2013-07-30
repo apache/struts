@@ -10,7 +10,7 @@ public class OgnlTextParser implements TextParser {
     public Object evaluate(char[] openChars, String expression, TextParseUtil.ParsedValueEvaluator evaluator, int maxLoopCount) {
         // deal with the "pure" expressions first!
         //expression = expression.trim();
-        Object result = expression;
+        Object result = expression = (expression == null) ? "" : expression;
         int pos = 0;
 
         for (char open : openChars) {

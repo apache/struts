@@ -57,6 +57,14 @@ import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.factory.ActionFactory;
+import com.opensymphony.xwork2.factory.ConverterFactory;
+import com.opensymphony.xwork2.factory.DefaultActionFactory;
+import com.opensymphony.xwork2.factory.DefaultConverterFactory;
+import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
+import com.opensymphony.xwork2.factory.DefaultResultFactory;
+import com.opensymphony.xwork2.factory.InterceptorFactory;
+import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
@@ -293,6 +301,13 @@ public class DefaultConfiguration implements Configuration {
             }
         }
         builder.factory(ObjectFactory.class, Scope.SINGLETON);
+        builder.factory(ActionFactory.class, DefaultActionFactory.class, Scope.SINGLETON);
+        builder.factory(ResultFactory.class, DefaultResultFactory.class, Scope.SINGLETON);
+        builder.factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.SINGLETON);
+        builder.factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class, Scope.SINGLETON);
+        builder.factory(ConverterFactory.class, DefaultConverterFactory.class, Scope.SINGLETON);
+
+
         builder.factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON);
         if (!fmFactoryRegistered) {
             builder.factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON);

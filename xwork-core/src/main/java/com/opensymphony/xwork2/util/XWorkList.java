@@ -206,12 +206,16 @@ public class XWorkList extends ArrayList {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Converting from " + element.getClass().getName() + " to " + clazz.getName());
             }
-            TypeConverter conv = getObjectFactory().buildConverter(XWorkConverter.class);
+            TypeConverter conv = getTypeConverter();
             Map<String, Object> context = ActionContext.getContext().getContextMap();
             element = conv.convertValue(context, null, null, null, element, clazz);
         }
 
         return element;
+    }
+
+    private TypeConverter getTypeConverter() {
+        return ActionContext.getContext().getContainer().getInstance(XWorkConverter.class);
     }
 
     @Override

@@ -64,7 +64,15 @@ public final class StrutsConstants {
     /** The com.opensymphony.xwork2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
 
+    public static final String STRUTS_OBJECTFACTORY_ACTIONFACTORY = "struts.objectFactory.actionFactory";
+
     public static final String STRUTS_OBJECTFACTORY_RESULTFACTORY = "struts.objectFactory.resultFactory";
+
+    public static final String STRUTS_OBJECTFACTORY_CONVERTERFACTORY = "struts.objectFactory.converterFactory";
+
+    public static final String STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY = "struts.objectFactory.interceptorFactory";
+
+    public static final String STRUTS_OBJECTFACTORY_VALIDATORFACTORY = "struts.objectFactory.validatorFactory";
 
     /** The com.opensymphony.xwork2.util.FileManager implementation class */
     public static final String STRUTS_FILE_MANAGER_FACTORY = "struts.fileManagerFactory";

@@ -21,13 +21,6 @@
 
 package org.apache.struts2.plexus;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.codehaus.plexus.PlexusContainer;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
@@ -39,7 +32,13 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.Validator;
+import org.codehaus.plexus.PlexusContainer;
+
+import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Plexus integartion. You need three optional files: plexus-request.xml, plexus-session.xml, and
@@ -71,13 +70,18 @@ import com.opensymphony.xwork2.validator.Validator;
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
 public class PlexusObjectFactory extends ObjectFactory {
+
     private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
 
     private static final String PLEXUS_COMPONENT_TYPE = "plexus.component.type";
 
     private PlexusContainer base;
-    
-    
+    private ReflectionProvider reflectionProvider;
+
+    @Inject
+    public void setReflectionProvider(ReflectionProvider reflectionProvider) {
+        this.reflectionProvider = reflectionProvider;
+    }
 
     @Inject
     public void setServletConfig(ServletContext servletContext) {

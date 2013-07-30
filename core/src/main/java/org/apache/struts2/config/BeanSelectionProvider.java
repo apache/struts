@@ -44,12 +44,21 @@ import com.opensymphony.xwork2.conversion.impl.DateConverter;
 import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.factory.ActionFactory;
+import com.opensymphony.xwork2.factory.ConverterFactory;
+import com.opensymphony.xwork2.factory.InterceptorFactory;
+import com.opensymphony.xwork2.factory.ResultFactory;
+import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.PatternMatcher;
+import com.opensymphony.xwork2.util.TextParser;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -61,7 +70,6 @@ import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import com.opensymphony.xwork2.factory.ResultFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.views.velocity.VelocityManager;
@@ -93,10 +101,34 @@ import java.util.StringTokenizer;
  *     <td>Creates actions, results, and interceptors</td>
  *   </tr>
  *   <tr>
+ *     <td>com.opensymphony.xwork2.factory.ActionFactory</td>
+ *     <td>struts.objectFactory.actionFactory</td>
+ *     <td>singleton</td>
+ *     <td>Dedicated factory used to create Actions, you can implement/extend existing one instead of defining new ObjectFactory</td>
+ *   </tr>
+ *   <tr>
  *     <td>com.opensymphony.xwork2.factory.ResultFactory</td>
  *     <td>struts.objectFactory.resultFactory</td>
  *     <td>singleton</td>
  *     <td>Dedicated factory used to create Results, you can implement/extend existing one instead of defining new ObjectFactory</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.factory.InterceptorFactory</td>
+ *     <td>struts.objectFactory.interceptorFactory</td>
+ *     <td>singleton</td>
+ *     <td>Dedicated factory used to create Interceptors, you can implement/extend existing one instead of defining new ObjectFactory</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.factory.ConverterFactory</td>
+ *     <td>struts.objectFactory.converterFactory</td>
+ *     <td>singleton</td>
+ *     <td>Dedicated factory used to create TypeConverters, you can implement/extend existing one instead of defining new ObjectFactory</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.factory.ValidatorFactory</td>
+ *     <td>struts.objectFactory.validatorFactory</td>
+ *     <td>singleton</td>
+ *     <td>Dedicated factory used to create Validators, you can implement/extend existing one instead of defining new ObjectFactory</td>
  *   </tr>
  *   <tr>
  *     <td>com.opensymphony.xwork2.ActionProxyFactory</td>
@@ -332,7 +364,11 @@ public class BeanSelectionProvider implements ConfigurationProvider {
 
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
+        alias(ActionFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_ACTIONFACTORY, builder, props);
         alias(ResultFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_RESULTFACTORY, builder, props);
+        alias(ConverterFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_CONVERTERFACTORY, builder, props);
+        alias(InterceptorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);
+        alias(ValidatorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);
 
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
 

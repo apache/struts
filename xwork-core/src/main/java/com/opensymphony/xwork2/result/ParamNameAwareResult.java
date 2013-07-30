@@ -5,6 +5,6 @@ package com.opensymphony.xwork2.result;
  */
 public interface ParamNameAwareResult {
 
-    boolean acceptParamName(String name, String value);
+    boolean acceptableParameterName(String name, String value);
 
 }

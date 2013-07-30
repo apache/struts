@@ -15,10 +15,10 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 
 import java.lang.reflect.Member;
@@ -56,11 +56,11 @@ import java.util.Map;
  */
 public class XWorkBasicConverter extends DefaultTypeConverter {
 
-    private ObjectFactory objectFactory;
+    private Container container;
 
     @Inject
-    public void setObjectFactory(ObjectFactory fac) {
-        this.objectFactory = fac;
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
     @Override
@@ -170,7 +170,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     private Object doConvertToCollection(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
-        TypeConverter converter = objectFactory.buildConverter(CollectionConverter.class);
+        TypeConverter converter = container.getInstance(CollectionConverter.class);
         if (converter == null) {
             throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.COLLECTION_CONVERTER);
         }
@@ -178,7 +178,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     private Object doConvertToArray(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
-        TypeConverter converter = objectFactory.buildConverter(ArrayConverter.class);
+        TypeConverter converter = container.getInstance(ArrayConverter.class);
         if (converter == null) {
             throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.ARRAY_CONVERTER);
         }
@@ -186,7 +186,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     private Object doConvertToDate(Map<String, Object> context, Object value, Class toType) {
-        TypeConverter converter = objectFactory.buildConverter(DateConverter.class);
+        TypeConverter converter = container.getInstance(DateConverter.class);
         if (converter == null) {
             throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.DATE_CONVERTER);
         }
@@ -194,7 +194,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     private Object doConvertToNumber(Map<String, Object> context, Object value, Class toType) {
-        TypeConverter converter = objectFactory.buildConverter(NumberConverter.class);
+        TypeConverter converter = container.getInstance(NumberConverter.class);
         if (converter == null) {
             throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.NUMBER_CONVERTER);
         }
@@ -202,10 +202,11 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     private Object doConvertToString(Map<String, Object> context, Object value) {
-        TypeConverter converter = objectFactory.buildConverter(StringConverter.class);
+        TypeConverter converter = container.getInstance(StringConverter.class);
         if (converter == null) {
             throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.STRING_CONVERTER);
         }
         return converter.convertValue(context, null, null, null, value, null);
     }
+
 }

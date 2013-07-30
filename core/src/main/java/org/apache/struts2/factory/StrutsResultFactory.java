@@ -60,7 +60,7 @@ public class StrutsResultFactory implements ResultFactory {
 
     protected void setParameter(Result result, String name, String value, Map<String, Object> extraContext) {
         if (result instanceof ParamNameAwareResult) {
-            if (((ParamNameAwareResult) result).acceptParamName(name, value)) {
+            if (((ParamNameAwareResult) result).acceptableParameterName(name, value)) {
                 reflectionProvider.setProperty(name, value, result, extraContext, true);
             }
         } else {

@@ -8,6 +8,7 @@ import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.UnknownHandlerManager;
@@ -36,6 +37,14 @@ import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.factory.ActionFactory;
+import com.opensymphony.xwork2.factory.ConverterFactory;
+import com.opensymphony.xwork2.factory.DefaultActionFactory;
+import com.opensymphony.xwork2.factory.DefaultConverterFactory;
+import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
+import com.opensymphony.xwork2.factory.DefaultResultFactory;
+import com.opensymphony.xwork2.factory.InterceptorFactory;
+import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.ognl.ObjectProxy;
@@ -52,7 +61,12 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkIteratorPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.OgnlTextParser;
+import com.opensymphony.xwork2.util.PatternMatcher;
+import com.opensymphony.xwork2.util.TextParser;
+import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.WildcardHelper;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
@@ -96,7 +110,14 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
     public void register(ContainerBuilder builder, LocatableProperties props)
             throws ConfigurationException {
 
-        builder.factory(com.opensymphony.xwork2.ObjectFactory.class)
+        builder
+                .factory(ObjectFactory.class)
+                .factory(ActionFactory.class, DefaultActionFactory.class)
+                .factory(ResultFactory.class, DefaultResultFactory.class)
+                .factory(InterceptorFactory.class, DefaultInterceptorFactory.class)
+                .factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class)
+                .factory(ConverterFactory.class, DefaultConverterFactory.class)
+
                 .factory(ActionProxyFactory.class, DefaultActionProxyFactory.class, Scope.SINGLETON)
                 .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)
 

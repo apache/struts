@@ -20,20 +20,20 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.factory.ActionFactory;
+import com.opensymphony.xwork2.factory.ConverterFactory;
+import com.opensymphony.xwork2.factory.InterceptorFactory;
 import com.opensymphony.xwork2.factory.ResultFactory;
+import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.Validator;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -48,13 +48,17 @@ import java.util.Map;
  * @author Jason Carreira
  */
 public class ObjectFactory implements Serializable {
+
     private static final Logger LOG = LoggerFactory.getLogger(ObjectFactory.class);
 
     private transient ClassLoader ccl;
     private Container container;
-    protected ReflectionProvider reflectionProvider;
 
+    private ActionFactory actionFactory;
     private ResultFactory resultFactory;
+    private InterceptorFactory interceptorFactory;
+    private ValidatorFactory validatorFactory;
+    private ConverterFactory converterFactory;
 
     @Inject(value="objectFactory.classloader", required=false)
     public void setClassLoader(ClassLoader cl) {
@@ -62,25 +66,33 @@ public class ObjectFactory implements Serializable {
     }
     
     @Inject
-    public void setReflectionProvider(ReflectionProvider prov) {
-        this.reflectionProvider = prov;
-    }
-
-    public ObjectFactory() {
-    }
-    
-    public ObjectFactory(ReflectionProvider prov) {
-        this.reflectionProvider = prov;
-    }
-    
-    @Inject
     public void setContainer(Container container) {
         this.container = container;
     }
 
-    @Inject(required = false)
+    @Inject
+    public void setActionFactory(ActionFactory actionFactory) {
+        this.actionFactory = actionFactory;
+    }
+
+    @Inject
     public void setResultFactory(ResultFactory resultFactory) {
         this.resultFactory = resultFactory;
+    }
+
+    @Inject
+    public void setInterceptorFactory(InterceptorFactory interceptorFactory) {
+        this.interceptorFactory = interceptorFactory;
+    }
+
+    @Inject
+    public void setValidatorFactory(ValidatorFactory validatorFactory) {
+        this.validatorFactory = validatorFactory;
+    }
+
+    @Inject
+    public void setConverterFactory(ConverterFactory converterFactory) {
+        this.converterFactory = converterFactory;
     }
 
     /**
@@ -126,7 +138,7 @@ public class ObjectFactory implements Serializable {
      * @throws Exception
      */
     public Object buildAction(String actionName, String namespace, ActionConfig config, Map<String, Object> extraContext) throws Exception {
-        return buildBean(config.getClassName(), extraContext);
+        return actionFactory.buildAction(actionName, namespace, config, extraContext);
     }
 
     /**
@@ -187,39 +199,7 @@ public class ObjectFactory implements Serializable {
      *                             Action mapping or InterceptorStack definition
      */
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map<String, String> interceptorRefParams) throws ConfigurationException {
-        String interceptorClassName = interceptorConfig.getClassName();
-        Map<String, String> thisInterceptorClassParams = interceptorConfig.getParams();
-        Map<String, String> params = (thisInterceptorClassParams == null) ? new HashMap<String, String>() : new HashMap<String, String>(thisInterceptorClassParams);
-        params.putAll(interceptorRefParams);
-
-        String message;
-        Throwable cause;
-
-        try {
-            // interceptor instances are long-lived and used across user sessions, so don't try to pass in any extra context
-            Interceptor interceptor = (Interceptor) buildBean(interceptorClassName, null);
-            reflectionProvider.setProperties(params, interceptor);
-            interceptor.init();
-
-            return interceptor;
-        } catch (InstantiationException e) {
-            cause = e;
-            message = "Unable to instantiate an instance of Interceptor class [" + interceptorClassName + "].";
-        } catch (IllegalAccessException e) {
-            cause = e;
-            message = "IllegalAccessException while attempting to instantiate an instance of Interceptor class [" + interceptorClassName + "].";
-        } catch (ClassCastException e) {
-            cause = e;
-            message = "Class [" + interceptorClassName + "] does not implement com.opensymphony.xwork2.interceptor.Interceptor";
-        } catch (Exception e) {
-            cause = e;
-            message = "Caught Exception while registering Interceptor class " + interceptorClassName;
-        } catch (NoClassDefFoundError e) {
-            cause = e;
-            message = "Could not load class " + interceptorClassName + ". Perhaps it exists but certain dependencies are not available?";
-        }
-
-        throw new ConfigurationException(message, cause, interceptorConfig);
+        return interceptorFactory.buildInterceptor(interceptorConfig, interceptorRefParams);
     }
 
     /**
@@ -229,29 +209,7 @@ public class ObjectFactory implements Serializable {
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception {
-        if (resultFactory != null) {
-            return resultFactory.buildResult(resultConfig, extraContext);
-        }
-        String resultClassName = resultConfig.getClassName();
-        Result result = null;
-
-        if (resultClassName != null) {
-            result = (Result) buildBean(resultClassName, extraContext);
-            Map<String, String> params = resultConfig.getParams();
-            if (params != null) {
-                for (Map.Entry<String, String> paramEntry : params.entrySet()) {
-                    try {
-                        reflectionProvider.setProperty(paramEntry.getKey(), paramEntry.getValue(), result, extraContext, true);
-                    } catch (ReflectionException ex) {
-                        if (result instanceof ReflectionExceptionHandler) {
-                            ((ReflectionExceptionHandler) result).handle(ex);
-                        }
-                    }
-                }
-            }
-        }
-
-        return result;
+        return resultFactory.buildResult(resultConfig, extraContext);
     }
 
     /**
@@ -262,57 +220,18 @@ public class ObjectFactory implements Serializable {
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      */
     public Validator buildValidator(String className, Map<String, Object> params, Map<String, Object> extraContext) throws Exception {
-        Validator validator = (Validator) buildBean(className, extraContext);
-        reflectionProvider.setProperties(params, validator, extraContext);
-
-        return validator;
+        return validatorFactory.buildValidator(className, params, extraContext);
     }
 
     /**
-     * Build converter of given type - it must be registered with {@link Container} first
+     * Build converter of given type
      *
      * @param converterClass to instantiate
+     * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      * @return instance of converterClass with inject dependencies
      */
-    public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating converter of type [#0]", converterClass.getCanonicalName());
-        }
-        return container.getInstance(converterClass);
+    public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception {
+        return converterFactory.buildConverter(converterClass, extraContext);
     }
 
-    /**
-     * Build converter of given type - it must be registered with {@link Container} first
-     *
-     * @param converterClass to instantiate
-     * @param name name of converter to use
-     * @return instance of converterClass with inject dependencies
-     */
-    public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, String name) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating converter of type [#0] with name [#1]", converterClass.getCanonicalName(), name);
-        }
-        return container.getInstance(converterClass, name);
-    }
-
-    /**
-     * Build converter of given type - it must be registered with {@link Container} first
-     *
-     * @param name name of converter to use
-     * @return instance of converterClass with inject dependencies
-     */
-    public TypeConverter buildConverter(String name) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating converter with name [#0]", name);
-        }
-        TypeConverter instance = container.getInstance(TypeConverter.class, name);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Converter of Type [#0] with name [#1], created!", instance.getClass().getCanonicalName(),  name);
-        }
-        return instance;
-    }
-
-    static class ContinuationsClassLoader extends ClassLoader {
-        
-    }
 }

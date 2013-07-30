@@ -24,16 +24,30 @@
 package org.apache.struts2.impl;
 
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Instead of overriding the whole class a new {@link com.opensymphony.xwork2.factory.InterceptorFactory}
+ * should be defined, thus should be solved in Struts 2.5
+ *
+ * @deprecated since version 2.3.16
+ */
+@Deprecated
 public class StrutsObjectFactory extends ObjectFactory {
+
+    private ReflectionProvider reflectionProvider;
+
+    @Inject
+    public void setReflectionProvider(ReflectionProvider reflectionProvider) {
+        this.reflectionProvider = reflectionProvider;
+    }
 
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map refParams)
             throws ConfigurationException {

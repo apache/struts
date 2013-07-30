@@ -47,7 +47,7 @@ public class StrutsResultFactoryTest extends StrutsTestCase {
         private String accept;
         private String reject = "ok";
 
-        public boolean acceptParamName(String name, String value) {
+        public boolean acceptableParameterName(String name, String value) {
             return "accept".equals(name);
         }
 

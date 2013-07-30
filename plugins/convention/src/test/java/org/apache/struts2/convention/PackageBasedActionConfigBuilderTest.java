@@ -36,6 +36,8 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
+import com.opensymphony.xwork2.factory.DefaultResultFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
@@ -754,7 +756,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 }
                 T obj = type.newInstance();
                 if (obj instanceof ObjectFactory) {
-                    ((ObjectFactory)obj).setReflectionProvider(new OgnlReflectionProvider() {
+                    OgnlReflectionProvider rp = new OgnlReflectionProvider() {
 
                         @Override
                         public void setProperties(Map<String, ?> properties, Object o) {
@@ -762,17 +764,27 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
                         public void setProperties(Map<String, ?> properties, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException {
                             if (o instanceof ActionChainResult) {
-                                ((ActionChainResult)o).setActionName(String.valueOf(properties.get("actionName")));
+                                ((ActionChainResult) o).setActionName(String.valueOf(properties.get("actionName")));
                             }
                         }
 
                         @Override
                         public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
                             if (o instanceof ActionChainResult) {
-                                ((ActionChainResult)o).setActionName((String)value);
+                                ((ActionChainResult) o).setActionName((String) value);
                             }
                         }
-                    });
+                    };
+                    DefaultInterceptorFactory dif = new DefaultInterceptorFactory();
+                    dif.setObjectFactory((ObjectFactory) obj);
+                    dif.setReflectionProvider(rp);
+
+                    DefaultResultFactory drf = new DefaultResultFactory();
+                    drf.setObjectFactory((ObjectFactory) obj);
+                    drf.setReflectionProvider(rp);
+
+                    ((ObjectFactory) obj).setInterceptorFactory(dif);
+                    ((ObjectFactory) obj).setResultFactory(drf);
                 }
                 return obj;
             } catch (Exception e) {

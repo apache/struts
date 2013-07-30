@@ -28,8 +28,21 @@
 <struts>
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="xwork" />
     <bean type="com.opensymphony.xwork2.ObjectFactory" name="struts" class="org.apache.struts2.impl.StrutsObjectFactory" />
+
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="xwork" class="org.apache.struts2.factory.StrutsResultFactory" />
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />
+
+    <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="xwork" class="com.opensymphony.xwork2.factory.DefaultActionFactory" />
+    <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultActionFactory" />
+
+    <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="xwork" class="com.opensymphony.xwork2.factory.DefaultConverterFactory" />
+    <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultConverterFactory" />
+
+    <bean type="com.opensymphony.xwork2.factory.InterceptorFactory" name="xwork" class="com.opensymphony.xwork2.factory.DefaultInterceptorFactory" />
+    <bean type="com.opensymphony.xwork2.factory.InterceptorFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultInterceptorFactory" />
+
+    <bean type="com.opensymphony.xwork2.factory.ValidatorFactory" name="xwork" class="com.opensymphony.xwork2.factory.DefaultValidatorFactory" />
+    <bean type="com.opensymphony.xwork2.factory.ValidatorFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultValidatorFactory" />
 
     <bean type="com.opensymphony.xwork2.FileManager" class="com.opensymphony.xwork2.util.fs.DefaultFileManager" name="system" scope="singleton"/>
 

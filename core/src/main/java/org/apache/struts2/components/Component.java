@@ -53,7 +53,7 @@ public class Component {
     public static final String COMPONENT_STACK = "__component_stack";
 
     protected ValueStack stack;
-    protected Map<String, Object> parameters;
+    protected Map parameters;
     protected ActionMapper actionMapper;
     protected boolean throwExceptionOnELFailure;
     private UrlHelper urlHelper;
@@ -449,7 +449,7 @@ public class Component {
      * Gets the parameters.
      * @return the parameters. Is never <tt>null</tt>.
      */
-    public Map<String, Object> getParameters() {
+    public Map getParameters() {
         return parameters;
     }
 
@@ -457,7 +457,7 @@ public class Component {
      * Adds all the given parameters to this component's own parameters.
      * @param params the parameters to add.
      */
-    public void addAllParameters(Map<String, Object> params) {
+    public void addAllParameters(Map params) {
         parameters.putAll(params);
     }
 
@@ -472,7 +472,7 @@ public class Component {
      */
     public void addParameter(String key, Object value) {
         if (key != null) {
-            Map<String, Object> params = getParameters();
+            Map params = getParameters();
 
             if (value == null) {
                 params.remove(key);

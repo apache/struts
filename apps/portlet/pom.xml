@@ -109,6 +109,10 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-dwr-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-portlet-tiles-plugin</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.velocity</groupId>

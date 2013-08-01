@@ -12,6 +12,7 @@ Here you'll find examples of what is possible with the Struts Portlet integratio
 <li><a href="<s:url action="fileUpload" method="input"/>">File upload</li>
 <li><a href="<s:url action="freeMarkerExample"/>">FreeMarker</a></li>
 <li><a href="<s:url action="velocityHelloWorld"/>">Velocity</a></li>
+<li><a href="<s:url action="index" namespace="/tiles"/>">Form Example Validation with Tiles</a></li>
 <li><a href="<s:url action="index" portletMode="edit"/>">Go to edit mode and see what's there</a></li>
 <li><a href="<s:url action="index" portletMode="help"/>">Go to help mode and see what's there</a></li>
 </ul>

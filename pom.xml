@@ -348,6 +348,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-portlet-tiles-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-junit-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>

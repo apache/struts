@@ -8,4 +8,5 @@
     <include file="struts-edit.xml"/>
     <include file="struts-help.xml"/>
     <include file="struts-eventing.xml"/>
+    <include file="struts-tiles.xml"/>
 </struts>

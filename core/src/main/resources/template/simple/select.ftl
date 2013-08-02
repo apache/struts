@@ -118,8 +118,21 @@
 <#include "/${parameters.templateDir}/simple/optgroup.ftl" />
 
 </select>
+
 <#if parameters.multiple?default(false)>
-<input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.name?html}" value=""<#rt/>
+  <#if (parameters.id?? && parameters.name??)>
+    <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.name?html}" value=""<#rt/>
+  </#if>
+  <#if (parameters.id?? && !parameters.name??)>
+    <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.id?html}" value=""<#rt/>
+  </#if>
+  <#if ( !parameters.id?? && parameters.name??)>
+    <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.id?html}" value=""<#rt/>
+  </#if>
+   <#if ( !parameters.id?? && !parameters.name??)>
+     <input type="hidden" id="" name="" value="" <#rt/>
+  </#if>
+  
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>

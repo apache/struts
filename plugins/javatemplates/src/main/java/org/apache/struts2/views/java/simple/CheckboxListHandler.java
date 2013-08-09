@@ -106,10 +106,12 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
         Boolean checked = false;
         if (itemKeyStr != null) {
             String[] nameValues = (String[]) params.get("nameValue");
-            for (String value : nameValues) {
-                if (checked = value.equalsIgnoreCase(itemKeyStr)) {
-                    break;
-                }
+            if (nameValues != null) {
+	            for (String value : nameValues) {
+	                if (checked = value.equalsIgnoreCase(itemKeyStr)) {
+	                    break;
+	                }
+	            }
             }
         }
         return checked;

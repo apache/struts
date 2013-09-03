@@ -59,6 +59,7 @@ public class MockConfiguration implements Configuration {
         new XWorkConfigurationProvider().register(builder, props);
         builder.constant(XWorkConstants.DEV_MODE, "false");
         builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "true");
+        builder.constant(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, "true");
         container = builder.create(true);
     }
 

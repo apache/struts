@@ -335,6 +335,7 @@ public class DefaultConfiguration implements Configuration {
         builder.constant(XWorkConstants.DEV_MODE, "false");
         builder.constant(XWorkConstants.LOG_MISSING_PROPERTIES, "false");
         builder.constant(XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, "false");
+        builder.constant(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, "true");
         builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "false");
         return builder.create(true);
     }

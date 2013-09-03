@@ -52,10 +52,10 @@ public class OgnlUtil {
     private static final Logger LOG = LoggerFactory.getLogger(OgnlUtil.class);
     private ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<String, Object>();
     private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<Class, BeanInfo>();
-
     private TypeConverter defaultConverter;
-    static boolean devMode = false;
-    static boolean enableExpressionCache = true;
+
+    private boolean devMode = false;
+    private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
     @Inject
@@ -64,12 +64,12 @@ public class OgnlUtil {
     }
 
     @Inject(XWorkConstants.DEV_MODE)
-    public static void setDevMode(String mode) {
+    public void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }
 
     @Inject(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE)
-    public static void setEnableExpressionCache(String cache) {
+    public void setEnableExpressionCache(String cache) {
        enableExpressionCache = "true".equals(cache);
     }
 
@@ -464,10 +464,8 @@ public class OgnlUtil {
 
             if (throwPropertyExceptions) {
                 throw new ReflectionException(msg, exception);
-            } else {
-                if (devMode) {
-                    LOG.warn(msg, exception);
-                }
+            } else if (devMode) {
+                LOG.warn(msg, exception);
             }
         }
     }

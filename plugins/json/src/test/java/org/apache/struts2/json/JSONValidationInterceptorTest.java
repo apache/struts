@@ -71,9 +71,9 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
 
         //json
         assertThat(normalizedActual)
-                .contains("\"errors\":[\"Generalerror\"],")
+                .contains("\"errors\":[\"Generalerror\"]")
                 .contains("\"fieldErrors\":{")
-                .contains("\"value\":[\"Minvalueis-1\"],")
+                .contains("\"value\":[\"Minvalueis-1\"]")
                 .contains("\"text\":[\"Tooshort\",\"Thisisnoemail\"]");
 
         //execution

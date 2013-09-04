@@ -41,6 +41,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 public class JSONValidationInterceptorTest extends StrutsTestCase {
 
     private MockActionInvocation invocation;
@@ -66,10 +68,14 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         String json = stringWriter.toString();
 
         String normalizedActual = TestUtils.normalize(json, true);
-        String normalizedExpected = TestUtils
-            .normalize(JSONValidationInterceptorTest.class.getResource("json-validation-1.txt"));
+
         //json
-        assertEquals(normalizedExpected, normalizedActual);
+        assertThat(normalizedActual)
+                .contains("\"errors\":[\"Generalerror\"],")
+                .contains("\"fieldErrors\":{")
+                .contains("\"value\":[\"Minvalueis-1\"],")
+                .contains("\"text\":[\"Tooshort\",\"Thisisnoemail\"]");
+
         //execution
         assertFalse(action.isExecuted());
         //http status

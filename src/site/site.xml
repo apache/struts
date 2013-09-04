@@ -22,6 +22,11 @@
  */
 -->
 <project name="Struts 2">
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.3.0</version>
+    </skin>
     <bannerLeft>
         <name>Apache Software Foundation</name>
         <src>http://www.apache.org/images/asf-logo.gif</src>
@@ -156,9 +161,14 @@
                   href="http://svn.apache.org/viewcvs.cgi/struts/"/>
         </menu>
 
-        <menu ref="modules"/>
-
         <menu ref="reports"/>
+
+        <footer>
+           <div class="row span12">
+               Apache Struts, Struts, Apache, the Apache feather logo, and the Apache Struts
+               project logos are trademarks of The Apache Software Foundation.
+           </div>
+        </footer>
 
     </body>
 </project>

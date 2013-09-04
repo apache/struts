@@ -1,0 +1,66 @@
+/*
+ *  $Id: $
+ *
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License
+ */
+
+a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:active, a.externalLink:hover {
+    background:none;
+    padding-right:0;
+}
+
+img.poweredBy {
+    margin-left:17px;
+}
+
+.hero-unit h1 {
+	font-size: 40px;
+	margin-top: 20px;
+}
+
+.hero-unit {
+	padding: 20px;
+}
+
+.right {
+	text-align: right;
+}
+
+.section img {
+	margin: 20px;
+}
+
+a:visited {
+	color: #00438a;
+}
+
+a.btn-primary:visited, a.btn-info:visited {
+	color: #fff;
+}
+
+.right {
+    float: right;
+}
+
+#bannerRight img { margin-right: 80px; }
+
+.breadcrumb { padding-right: 130px; }
+
+#bodyColumn .row {
+	padding:20px;
+}

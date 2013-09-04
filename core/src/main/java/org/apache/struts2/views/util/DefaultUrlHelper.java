@@ -21,16 +21,11 @@
 
 package org.apache.struts2.views.util;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,13 +47,28 @@ public class DefaultUrlHelper implements UrlHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultUrlHelper.class);
 
+    public static final String HTTP_PROTOCOL = "http";
+    public static final String HTTPS_PROTOCOL = "https";
+
     private String encoding = "UTF-8";
+    private int httpPort = DEFAULT_HTTP_PORT;
+    private int httpsPort = DEFAULT_HTTPS_PORT;
 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {
         if (StringUtils.isNotEmpty(encoding)) {
             this.encoding = encoding;
         }
+    }
+
+    @Inject(StrutsConstants.STRUTS_URL_HTTP_PORT)
+    public void setHttpPort(String httpPort) {
+        this.httpPort = Integer.parseInt(httpPort);
+    }
+
+    @Inject(StrutsConstants.STRUTS_URL_HTTPS_PORT)
+    public void setHttpsPort(String httpsPort) {
+        this.httpsPort = Integer.parseInt(httpsPort);
     }
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
@@ -77,14 +87,9 @@ public class DefaultUrlHelper implements UrlHelper {
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String scheme,
                            boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp) {
+
         StringBuilder link = new StringBuilder();
-
         boolean changedScheme = false;
-
-        // FIXME: temporary hack until class is made a properly injected bean
-        Container cont = ActionContext.getContext().getContainer();
-        int httpPort = Integer.parseInt(cont.getInstance(String.class, StrutsConstants.STRUTS_URL_HTTP_PORT));
-        int httpsPort = Integer.parseInt(cont.getInstance(String.class, StrutsConstants.STRUTS_URL_HTTPS_PORT));
 
         // only append scheme if it is different to the current scheme *OR*
         // if we explicity want it to be appended by having forceAddSchemeHostAndPort = true
@@ -98,31 +103,30 @@ public class DefaultUrlHelper implements UrlHelper {
             if (scheme != null) {
                 // If switching schemes, use the configured port for the particular scheme.
                 if (!scheme.equals(reqScheme)) {
-                    if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT)) {
+                    if ((HTTP_PROTOCOL.equals(scheme) && (httpPort != DEFAULT_HTTP_PORT)) || (HTTPS_PROTOCOL.equals(scheme) && httpsPort != DEFAULT_HTTPS_PORT)) {
                         link.append(":");
-                        link.append(scheme.equals("http") ? httpPort : httpsPort);
+                        link.append(HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
                     }
                 // Else use the port from the current request.
                 } else {
                     int reqPort = request.getServerPort();
 
-                    if ((scheme.equals("http") && (reqPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && reqPort != DEFAULT_HTTPS_PORT)) {
+                    if ((scheme.equals(HTTP_PROTOCOL) && (reqPort != DEFAULT_HTTP_PORT)) || (scheme.equals(HTTPS_PROTOCOL) && reqPort != DEFAULT_HTTPS_PORT)) {
                         link.append(":");
                         link.append(reqPort);
                     }
                 }
             }
-        }
-        else if ((scheme != null) && !scheme.equals(request.getScheme())) {
+        } else if ((scheme != null) && !scheme.equals(request.getScheme())) {
             changedScheme = true;
             link.append(scheme);
             link.append("://");
             link.append(request.getServerName());
 
-            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
+            if ((scheme.equals(HTTP_PROTOCOL) && (httpPort != DEFAULT_HTTP_PORT)) || (HTTPS_PROTOCOL.equals(scheme) && httpsPort != DEFAULT_HTTPS_PORT))
             {
                 link.append(":");
-                link.append(scheme.equals("http") ? httpPort : httpsPort);
+                link.append(HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
             }
         }
 
@@ -208,24 +212,23 @@ public class DefaultUrlHelper implements UrlHelper {
                 Object value = entry.getValue();
 
                 if (value instanceof Iterable) {
-                    for (Iterator iterator = ((Iterable) value).iterator(); iterator
-                        .hasNext();) {
+                    for (Iterator iterator = ((Iterable) value).iterator(); iterator.hasNext();) {
                         Object paramValue = iterator.next();
-                        link.append(buildParameterSubstring(name, paramValue
-                            .toString()));
+                        link.append(buildParameterSubstring(name, paramValue.toString()));
 
-                        if (iterator.hasNext())
+                        if (iterator.hasNext()) {
                             link.append(paramSeparator);
+                        }
                     }
                 } else if (value instanceof Object[]) {
                     Object[] array = (Object[]) value;
                     for (int i = 0; i < array.length; i++) {
                         Object paramValue = array[i];
-                        link.append(buildParameterSubstring(name, paramValue
-                            .toString()));
+                        link.append(buildParameterSubstring(name, paramValue.toString()));
 
-                        if (i < array.length - 1)
+                        if (i < array.length - 1) {
                             link.append(paramSeparator);
+                        }
                     }
                 } else {
                     link.append(buildParameterSubstring(name, value != null ? value.toString() : StringUtils.EMPTY));
@@ -237,7 +240,6 @@ public class DefaultUrlHelper implements UrlHelper {
             }
         }
     }
-
 
     private String buildParameterSubstring(String name, String value) {
         StringBuilder builder = new StringBuilder();

@@ -276,8 +276,8 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
 
         String expectedString = "https://www.mydomain.com:7002/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        setProp(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
-        setProp(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
+        urlHelper.setHttpPort("7001");
+        urlHelper.setHttpsPort("7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");
@@ -305,8 +305,8 @@ public class DefaultUrlHelperTest extends StrutsTestCase {
 
         String expectedString = "http://www.mydomain.com:7001/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        setProp(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
-        setProp(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
+        urlHelper.setHttpPort("7001");
+        urlHelper.setHttpsPort("7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");

@@ -97,5 +97,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <scope>tewst</scope>
+        </dependency>
+
     </dependencies>
 </project>

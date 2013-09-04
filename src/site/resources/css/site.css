@@ -64,3 +64,8 @@ a.btn-primary:visited, a.btn-info:visited {
 #bodyColumn .row {
 	padding:20px;
 }
+
+.huge {
+    font-size: 24px;
+    line-height: 52px;
+}

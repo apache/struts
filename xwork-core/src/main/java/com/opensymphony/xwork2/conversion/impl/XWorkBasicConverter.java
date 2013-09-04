@@ -144,7 +144,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToCharacter(Object value) {
         if (value instanceof String) {
             String cStr = (String) value;
-            return (cStr.length() > 0) ? new Character(cStr.charAt(0)) : null;
+            return (cStr.length() > 0) ? cStr.charAt(0) : null;
         }
         return null;
     }
@@ -159,7 +159,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
 
     private Class doConvertToClass(Object value) {
         Class clazz = null;
-        if (value instanceof String && value != null && ((String) value).length() > 0) {
+        if (value != null && value instanceof String && ((String) value).length() > 0) {
             try {
                 clazz = Class.forName((String) value);
             } catch (ClassNotFoundException e) {

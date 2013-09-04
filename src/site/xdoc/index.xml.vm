@@ -35,24 +35,23 @@
         <section name="About Apache Struts 2">
             <a name="Welcome"/>
 
-        <div style="text-align:left;height:200px">
+        <div class="hero-unit">
             <div style="float:left;margin-left:16px;margin-right:16px">
                 <a href="docs/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger"/></a>
             </div>
+            <p>
+             <strong>Apache Struts 2 is an elegant, extensible framework</strong> for creating enterprise-ready Java web applications.
+             The framework is designed to streamline the full development cycle,
+             from building, to deploying, to maintaining applications over time.
+            </p>
 
-        <p>
-         <strong>Apache Struts 2 is an elegant, extensible framework</strong> for creating enterprise-ready Java web applications.
-         The framework is designed to streamline the full development cycle,
-         from building, to deploying, to maintaining applications over time.
-        </p>
-
-        <p>
-         Apache Struts 2 was originally known as WebWork 2.
-         After working independently for several years,
-         the WebWork and Struts communities joined forces to create Struts<sup>2</sup>.
-         This new version of Struts is simpler to use and
-         closer to how Struts was always meant to be.
-        </p>
+            <p>
+             Apache Struts 2 was originally known as WebWork 2.
+             After working independently for several years,
+             the WebWork and Struts communities joined forces to create Struts<sup>2</sup>.
+             This new version of Struts is simpler to use and
+             closer to how Struts was always meant to be.
+            </p>
         </div>
         <div>
         <table><tr><td>

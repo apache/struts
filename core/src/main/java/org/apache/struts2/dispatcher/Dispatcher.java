@@ -568,18 +568,7 @@ public class Dispatcher {
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             }
         } catch (ConfigurationException e) {
-        	// WW-2874 Only log error if in devMode
-            if (devMode) {
-                String reqStr = request.getRequestURI();
-                if (request.getQueryString() != null) {
-                    reqStr = reqStr + "?" + request.getQueryString();
-                }
-                LOG.error("Could not find action or result\n" + reqStr, e);
-            } else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not find action or result", e);
-                }
-            }
+            logConfigurationException(request, e);
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             if (handleException || devMode) {
@@ -589,6 +578,25 @@ public class Dispatcher {
             }
         } finally {
             UtilTimerStack.pop(timerKey);
+        }
+    }
+
+    /**
+     * Performs logging of missing action/result configuration exception
+     *
+     * @param request current {@link HttpServletRequest}
+     * @param e {@link ConfigurationException} that occurred
+     */
+    protected void logConfigurationException(HttpServletRequest request, ConfigurationException e) {
+        // WW-2874 Only log error if in devMode
+        String uri = request.getRequestURI();
+        if (request.getQueryString() != null) {
+            uri = uri + "?" + request.getQueryString();
+        }
+        if (devMode) {
+            LOG.error("Could not find action or result\n#0", e, uri);
+        } else if (LOG.isWarnEnabled()) {
+            LOG.warn("Could not find action or result: #0", e, uri);
         }
     }
 
@@ -889,11 +897,12 @@ public class Dispatcher {
             }
         } else {
             try {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Exception occurred during processing request: #0", e, e.getMessage());
-                }
                 // WW-1977: Only put errors in the request when code is a 500 error
                 if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+                    // WW-4103: Only logs error when application error occurred, not Struts error
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Exception occurred during processing request: #0", e, e.getMessage());
+                    }
                     // send a http error response to use the servlet defined error handler
                     // make the exception availible to the web.xml defined error page
                     request.setAttribute("javax.servlet.error.exception", e);

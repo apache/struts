@@ -203,10 +203,15 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     private void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
-        String msg = "Error setting expression '" + expr + "' with value '" + value + "'";
-        if (LOG.isWarnEnabled()) {
+    	boolean shouldLog = shouldLogMissingPropertyWarning(e);
+    	String msg = null;
+    	if (throwExceptionOnFailure || shouldLog) {
+    		msg = "Error setting expression '" + expr + "' with value '" + value + "'";    		
+    	}
+    	if (shouldLog) {
             LOG.warn(msg, e);
-        }
+    	}
+    	
         if (throwExceptionOnFailure) {
             throw new XWorkException(msg, e);
         }
@@ -320,7 +325,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
         Object ret = findInContext(expr);
         if (ret == null) {
-            if (shouldLogNoSuchPropertyWarning(e)) {
+            if (shouldLogMissingPropertyWarning(e)) {
                 LOG.warn("Could not find property [" + ((NoSuchPropertyException) e).getName() + "]");
             }
             if (throwExceptionOnFailure) {
@@ -330,8 +335,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return ret;
     }
 
-    private boolean shouldLogNoSuchPropertyWarning(OgnlException e) {
-        return e instanceof NoSuchPropertyException && devMode && logMissingProperties;
+    private boolean shouldLogMissingPropertyWarning(OgnlException e) {
+        return (e instanceof NoSuchPropertyException || e instanceof MethodFailedException)
+        		&& devMode && logMissingProperties;
     }
 
     private Object tryFindValue(String expr, Class asType) throws OgnlException {

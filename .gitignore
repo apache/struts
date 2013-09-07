@@ -1,3 +1,7 @@
+.idea
+*.iml
+*.ipr
+*.iws
 core/target
 xwork-core/target
 archetypes/struts2-archetype-angularjs/target

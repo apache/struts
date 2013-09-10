@@ -108,6 +108,8 @@
                   href="http://struts.apache.org/dev/volunteers.html"/>
             <item name="PMC Charter"
                   href="http://struts.apache.org/dev/bylaws.html"/>
+            <item name="Sonar Analysis"
+                  href="https://analysis.apache.org/dashboard/index/org.apache.struts:struts2-parent"/>
             <item name="Source Repository"
                   href="http://svn.apache.org/viewcvs.cgi/struts/"/>
         </menu>

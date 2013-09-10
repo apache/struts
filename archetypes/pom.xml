@@ -40,6 +40,7 @@
    </scm>
 
     <modules>
+        <module>struts2-archetype-angularjs</module>
         <module>struts2-archetype-blank</module>
         <module>struts2-archetype-convention</module>
         <module>struts2-archetype-dbportlet</module>

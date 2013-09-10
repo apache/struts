@@ -20,7 +20,7 @@ USAGE
 							-DartifactId=myWebApp \
 							-DarchetypeGroupId=org.apache.struts \
 							-DarchetypeArtifactId=struts2-archetype-angularjs \
-							-DarchetypeVersion=2.3.16 \
+							-DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
 							-DremoteRepositories=http://people.apache.org/repo/m2-snapshot-repository
 
 IMPORTANT:

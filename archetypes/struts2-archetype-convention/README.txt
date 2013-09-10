@@ -1,6 +1,6 @@
 INFORMATION
 ===========
-- This is Struts 2's "Blank Convetion" Maven Archetype
+- This is Struts 2's "Blank Convention" Maven Archetype
 
 USAGE
 =====
@@ -20,7 +20,7 @@ USAGE
 							-DartifactId=myWebApp \
 							-DarchetypeGroupId=org.apache.struts \
 							-DarchetypeArtifactId=struts2-archetype-convention \
-							-DarchetypeVersion=2.1.8 \
+							-DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
 							-DremoteRepositories=http://people.apache.org/repo/m2-snapshot-repository
 
 IMPORTANT:

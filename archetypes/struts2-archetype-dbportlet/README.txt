@@ -22,7 +22,7 @@ USAGE
                        -DartifactId=myWebApp \
                        -DarchetypeGroupId=org.apache.struts \
                        -DarchetypeArtifactId=struts2-archetype-dbportlet \
-                       -DarchetypeVersion=2.0.9-SNAPSHOT \
+                       -DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
                        -DremoteRepositories=http://people.apache.org/maven-snapshot-repository
 
 - to compile, execute

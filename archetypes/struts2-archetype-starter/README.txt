@@ -31,7 +31,7 @@ USAGE
                        -DartifactId=myWebApp \
                        -DarchetypeGroupId=org.apache.struts \
                        -DarchetypeArtifactId=struts2-archetype-starter \
-                       -DarchetypeVersion=2.0.11
+                       -DarchetypeVersion=<CURRENT_STRUTS_VERSION>
 
 
 COMMON TASKS

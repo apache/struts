@@ -20,7 +20,7 @@ USAGE
                        -DartifactId=myWebApp \
                        -DarchetypeGroupId=org.apache.struts \
                        -DarchetypeArtifactId=struts2-archetype-blank \
-                       -DarchetypeVersion=2.0.9-SNAPSHOT \
+                       -DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
                        -DremoteRepositories=http://people.apache.org/repo/m2-snapshot-repository
 
 IMPORTANT:

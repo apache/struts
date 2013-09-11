@@ -1,6 +1,6 @@
 INFORMATION
 ===========
-- This is Struts 2's "HTML5 AngularJS" Maven Archetype
+- This is Struts 2's "Blank Convetion" Maven Archetype
 
 USAGE
 =====
@@ -19,8 +19,8 @@ USAGE
   mvn archetype:generate -B -DgroupId=com.mycompany.mysystem \
 							-DartifactId=myWebApp \
 							-DarchetypeGroupId=org.apache.struts \
-							-DarchetypeArtifactId=struts2-archetype-angularjs \
-							-DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
+							-DarchetypeArtifactId=struts2-archetype-convention \
+							-DarchetypeVersion=2.1.8 \
 							-DremoteRepositories=http://people.apache.org/repo/m2-snapshot-repository
 
 IMPORTANT:

@@ -27,11 +27,12 @@ USAGE
     - the webapp war name   ->  myWebApp
 
 
-  mvn archetype:create -DgroupId=com.myCompany.mySystem \
-                       -DartifactId=myWebApp \
-                       -DarchetypeGroupId=org.apache.struts \
-                       -DarchetypeArtifactId=struts2-archetype-starter \
-                       -DarchetypeVersion=<CURRENT_STRUTS_VERSION>
+mvn archetype:generate -B -DgroupId=com.mycompany.mysystem \
+							-DartifactId=myWebApp \
+							-DarchetypeGroupId=org.apache.struts \
+							-DarchetypeArtifactId=struts2-archetype-starter \
+							-DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
+							-DremoteRepositories=http://struts.apache.org
 
 
 COMMON TASKS

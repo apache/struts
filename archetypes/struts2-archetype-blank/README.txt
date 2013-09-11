@@ -16,13 +16,12 @@ USAGE
     - the webapp war name   ->  myWebApp
 
 
-  mvn archetype:create -DgroupId=com.myCompany.mySystem \
-                       -DartifactId=myWebApp \
-                       -DarchetypeGroupId=org.apache.struts \
-                       -DarchetypeArtifactId=struts2-archetype-blank \
-                       -DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
-                       -DremoteRepositories=http://people.apache.org/repo/m2-snapshot-repository
-
+mvn archetype:generate -B -DgroupId=com.mycompany.mysystem \
+							-DartifactId=myWebApp \
+							-DarchetypeGroupId=org.apache.struts \
+							-DarchetypeArtifactId=struts2-archetype-blank \
+							-DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
+							-DremoteRepositories=http://struts.apache.org
 IMPORTANT:
 ==========
 - The generated template uses the 'example' package, regardless of what you

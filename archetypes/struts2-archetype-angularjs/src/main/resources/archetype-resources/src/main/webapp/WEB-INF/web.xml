@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="struts_blank" version="2.4"
-         xmlns="http://java.sun.com/xml/ns/j2ee"
+<web-app id="struts_angularjs" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-    <display-name>Struts Blank Convention</display-name>
-
-    <listener>
-        <listener-class>${package}.InitListener</listener-class>
-    </listener>
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>Struts Blank AngularJS App</display-name>
 
     <filter>
         <filter-name>struts2</filter-name>

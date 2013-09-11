@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archetype-descriptor name="struts2-archetype-convention">
+<archetype-descriptor name="struts2-archetype-angularjs">
 
     <fileSets>
         <fileSet filtered="true" packaged="true">
@@ -53,6 +53,12 @@
 
         <fileSet filtered="false" packaged="false">
             <directory>src/main/webapp/js</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="false" packaged="false">
+            <directory>src/main/webapp/partials</directory>
             <includes>
                 <include>**/*</include>
             </includes>

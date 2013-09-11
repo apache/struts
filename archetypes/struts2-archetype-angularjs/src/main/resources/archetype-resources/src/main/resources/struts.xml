@@ -7,4 +7,7 @@
   <constant name="struts.enable.DynamicMethodInvocation" value="false"/>
   <constant name="struts.devMode" value="true"/>
 
+  <constant name="struts.convention.default.parent.package" value="angularstruts"/>
+  <package name="angularstruts" extends="json-default"></package>
+
 </struts>

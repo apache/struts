@@ -23,6 +23,12 @@ mvn archetype:generate -B -DgroupId=com.mycompany.mysystem \
 							-DarchetypeVersion=<CURRENT_STRUTS_VERSION> \
 							-DremoteRepositories=http://struts.apache.org
 
+
+For more details about the Struts2 archetypes, please take a look at our Wiki page.
+
+-> https://cwiki.apache.org/confluence/display/WW/Struts+2+Maven+Archetypes
+
+
 IMPORTANT:
 ==========
 - The generated template uses the 'example' package, regardless of what you

@@ -39,5 +39,9 @@ mvn archetype:generate -B -DgroupId=com.mycompany.mysystem \
 - Go to your Struts2 page http://localhost:8080/pluto/portal/Struts2 and play with your portlet !!
 
 
+For more details about the Struts2 archetypes, please take a look at our Wiki page.
+
+-> https://cwiki.apache.org/confluence/display/WW/Struts+2+Maven+Archetypes
+
 
 

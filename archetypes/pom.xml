@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.3.15.2</version>
+        <version>2.3.15.3-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-archetypes</artifactId>
@@ -34,9 +34,9 @@
     <name>Struts 2 Maven Archetypes</name>
 
    <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15_2/archetypes</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15_2/archetypes</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_15_2/archetypes</url>
+     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_1_X/archetypes</connection>
+     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_1_X/archetypes</developerConnection>
+     <url>http://svn.apache.org/repos/asf/struts/struts2/branches/STRUTS_2_3_15_1_X/archetypes</url>
    </scm>
 
     <modules>

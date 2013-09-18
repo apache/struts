@@ -92,6 +92,7 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
 
     public void testGetEdit() throws Exception {
         mapper.setIdParameterName("id");
+        mapper.setAllowDynamicMethodCalls("true");
         req.setupGetRequestURI("/my/namespace/foo/3!edit");
         req.setupGetServletPath("/my/namespace/foo/3!edit");
         req.setupGetAttribute(null);

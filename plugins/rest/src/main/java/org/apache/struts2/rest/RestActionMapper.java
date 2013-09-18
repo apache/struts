@@ -108,7 +108,7 @@ public class RestActionMapper extends DefaultActionMapper {
     private String optionsMethodName = "options";
     private String postContinueMethodName = "createContinue";
     private String putContinueMethodName = "updateContinue";
-    private boolean allowDynamicMethodCalls = true;    
+    private boolean allowDynamicMethodCalls = false;
     
     public RestActionMapper() {
     }

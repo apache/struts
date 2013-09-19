@@ -1,6 +1,5 @@
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Inject;
@@ -17,16 +16,10 @@ import java.util.TreeSet;
 public class CollectionConverter extends DefaultTypeConverter {
 
     private ObjectTypeDeterminer objectTypeDeterminer;
-    private ObjectFactory objectFactory;
 
     @Inject
     public void setObjectTypeDeterminer(ObjectTypeDeterminer determiner) {
         this.objectTypeDeterminer = determiner;
-    }
-
-    @Inject
-    public void setObjectFactory(ObjectFactory factory) {
-        this.objectFactory = factory;
     }
 
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
@@ -34,7 +27,6 @@ public class CollectionConverter extends DefaultTypeConverter {
         Class memberType = String.class;
 
         if (target != null) {
-            //memberType = (Class) XWorkConverter.getInstance().getConverter(o.getClass(), XWorkConverter.CONVERSION_COLLECTION_PREFIX + prop);
             memberType = objectTypeDeterminer.getElementClass(target.getClass(), propertyName, null);
 
             if (memberType == null) {

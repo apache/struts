@@ -16,7 +16,6 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 
 import java.util.HashSet;
@@ -165,11 +164,7 @@ public class TextParseUtil {
 
         TextParser parser = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(TextParser.class);
 
-        XWorkConverter conv = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
-
-        Object result = parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
-
-        return conv.convertValue(stack.getContext(), result, asType);
+        return parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
     }
 
     /**

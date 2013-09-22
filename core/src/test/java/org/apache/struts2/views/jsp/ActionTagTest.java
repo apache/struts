@@ -21,24 +21,24 @@
 
 package org.apache.struts2.views.jsp;
 
-import java.util.HashMap;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.TestAction;
-import org.apache.struts2.TestActionTagResult;
-import org.apache.struts2.TestConfigurationProvider;
-import org.apache.struts2.components.ActionComponent;
-
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.TestAction;
+import org.apache.struts2.TestActionTagResult;
+import org.apache.struts2.TestConfigurationProvider;
+import org.apache.struts2.components.ActionComponent;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+import java.util.HashMap;
 
 
 /**
@@ -282,6 +282,7 @@ public class ActionTagTest extends AbstractTagTest {
         tag.setNamespace("");
         tag.setName("testActionTagAction!input");
         tag.setExecuteResult(true);
+        ((DefaultActionMapper)container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
 
         tag.doStartTag();
 

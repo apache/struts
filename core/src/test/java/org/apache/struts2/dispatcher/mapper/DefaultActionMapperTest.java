@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,6 +34,7 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,6 +90,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
 
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/my/namespace", mapping.getNamespace());
@@ -212,6 +215,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
     public void testGetMappingWithActionName_methodAndName() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping mapping = mapper.getMappingFromActionName("actionName!add");
         assertEquals("actionName", mapping.getName());
         assertEquals("add", mapping.getMethod());
@@ -407,7 +411,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
-        assertEquals(actionMapping.getName(), "myAction");
+        assertEquals("myAction", actionMapping.getName());
     }
 
     public void testActionPrefix_fromImageButton() throws Exception {
@@ -423,7 +427,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
-        assertEquals(actionMapping.getName(), "myAction");
+        assertEquals("myAction", actionMapping.getName());
     }
 
     public void testActionPrefix_fromIEImageButton() throws Exception {
@@ -438,7 +442,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
-        assertEquals(actionMapping.getName(), "myAction");
+        assertEquals("myAction", actionMapping.getName());
     }
 
     public void testRedirectPrefix() throws Exception {
@@ -529,13 +533,13 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         Map parameterMap = new HashMap();
         parameterMap.put("foo:myAction", "");
 
-        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        final StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
         request.setupGetServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.addParameterAction("foo", new ParameterAction() {
-            public void execute(String key, ActionMapping mapping) {
+            public void execute(String key, ActionMapping mapping, HttpServletRequest request) {
                 mapping.setName("myAction");
             }
         });

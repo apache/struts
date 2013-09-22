@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
@@ -168,8 +170,9 @@ public class DefaultActionMapper implements ActionMapper {
 
     protected static final String METHOD_PREFIX = "method:";
     protected static final String ACTION_PREFIX = "action:";
+    private static final String STRUTS2_ACTION_PREFIX_PARSED = "_struts2_action_prefix_parsed";
 
-    protected boolean allowDynamicMethodCalls = true;
+    protected boolean allowDynamicMethodCalls = false;
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
@@ -186,7 +189,7 @@ public class DefaultActionMapper implements ActionMapper {
         prefixTrie = new PrefixTrie() {
             {
                 put(METHOD_PREFIX, new ParameterAction() {
-                    public void execute(String key, ActionMapping mapping) {
+                    public void execute(String key, ActionMapping mapping, HttpServletRequest request) {
                         if (allowDynamicMethodCalls) {
                             mapping.setMethod(key.substring(METHOD_PREFIX.length()));
                         }
@@ -194,17 +197,25 @@ public class DefaultActionMapper implements ActionMapper {
                 });
 
                 put(ACTION_PREFIX, new ParameterAction() {
-                    public void execute(String key, ActionMapping mapping) {
-                        String name = key.substring(ACTION_PREFIX.length());
-                        if (allowDynamicMethodCalls) {
-                            int bang = name.indexOf('!');
-                            if (bang != -1) {
-                                String method = name.substring(bang + 1);
-                                mapping.setMethod(method);
-                                name = name.substring(0, bang);
+                    public void execute(final String key, ActionMapping mapping, HttpServletRequest request) {
+                        if (request != null && request.getAttribute(STRUTS2_ACTION_PREFIX_PARSED) == null) {
+                            request.setAttribute(STRUTS2_ACTION_PREFIX_PARSED, true);
+                            String name = key.substring(ACTION_PREFIX.length());
+                            if (allowDynamicMethodCalls) {
+                                int bang = name.indexOf('!');
+                                if (bang != -1) {
+                                    String method = name.substring(bang + 1);
+                                    mapping.setMethod(method);
+                                    name = name.substring(0, bang);
+                                }
                             }
+                            String actionName = cleanupActionName(name);
+                            mapping.setName(actionName);
+                            if (getDefaultExtension() != null) {
+                                actionName = actionName + "." + getDefaultExtension();
+                            }
+                            mapping.setResult(new ServletDispatcherResult(actionName));
                         }
-                        mapping.setName(cleanupActionName(name));
                     }
                 });
 
@@ -225,7 +236,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
     public void setAllowDynamicMethodCalls(String allow) {
-        allowDynamicMethodCalls = "true".equals(allow);
+        allowDynamicMethodCalls = "true".equalsIgnoreCase(allow);
     }
 
     @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
@@ -335,7 +346,7 @@ public class DefaultActionMapper implements ActionMapper {
             if (!uniqueParameters.contains(key)) {
                 ParameterAction parameterAction = (ParameterAction) prefixTrie.get(key);
                 if (parameterAction != null) {
-                    parameterAction.execute(key, mapping);
+                    parameterAction.execute(key, mapping, request);
                     uniqueParameters.add(key);
                     break;
                 }

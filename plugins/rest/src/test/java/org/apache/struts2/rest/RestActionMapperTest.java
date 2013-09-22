@@ -200,6 +200,7 @@ public class RestActionMapperTest extends TestCase {
         req.setServletPath("/animals/dog/fido!edit");
         req.setMethod("GET");
 
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/animals", mapping.getNamespace());
@@ -302,6 +303,8 @@ public class RestActionMapperTest extends TestCase {
         req.setRemoteAddr("/myapp/animals/dog/23!edit");
         req.setServletPath("/animals/dog/23!edit");
         req.setMethod("GET");
+
+        mapper.setAllowDynamicMethodCalls("true");
 
         // when
         ActionMapping actionMapping = mapper.getMapping(req, configManager);

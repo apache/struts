@@ -21,19 +21,18 @@
 
 package example;
 
+import org.apache.struts2.interceptor.validation.SkipValidation;
+
 public class Login extends ExampleSupport {
 
+    @Override
     public String execute() throws Exception {
-
-        if (isInvalid(getUsername())) return INPUT;
-
-        if (isInvalid(getPassword())) return INPUT;
-
         return SUCCESS;
     }
 
-    private boolean isInvalid(String value) {
-        return (value == null || value.length() == 0);
+    @SkipValidation
+    public String form() throws Exception {
+        return INPUT;
     }
 
     private String username;

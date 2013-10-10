@@ -21,13 +21,12 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.StrutsException;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -56,7 +55,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <br/>&lt;param name="color" value="blue"/&gt; &lt;-- (B) --&gt;
  * <br/>In the first situation (A) the value would be evaluated to the stack as a <tt>java.lang.String</tt> object.
  * And in situation (B) the value would be evaluated to the stack as a <tt>java.lang.Object</tt> object.
- * <br/>For more information see <a href="http://jira.opensymphony.com/browse/WW-808">WW-808</a>.
+ * <br/>For more information see <a href="https://issues.apache.org/jira/browse/WW-808">WW-808</a>.
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>

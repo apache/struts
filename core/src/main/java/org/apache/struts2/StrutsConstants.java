@@ -258,4 +258,10 @@ public final class StrutsConstants {
     /** actions names' whitelist **/
     public static final String STRUTS_ALLOWED_ACTION_NAMES = "struts.allowed.action.names";
 
+    /** enables action: prefix **/
+    public static final String STRUTS_MAPPER_ACTION_PREFIX_ENABLED = "struts.mapper.action.prefix.enabled";
+
+    /** enables access to actions in other namespaces than current with action: prefix **/
+    public static final String STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES = "struts.mapper.action.prefix.crossNamespaces";
+
 }

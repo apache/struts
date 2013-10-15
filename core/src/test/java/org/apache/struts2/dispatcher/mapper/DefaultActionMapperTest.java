@@ -34,7 +34,6 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -400,7 +399,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     // === test special prefix ===
     // ===========================
 
-    public void testActionPrefix() throws Exception {
+    public void testActionPrefixWhenDisabled() throws Exception {
         Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");
 
@@ -411,7 +410,87 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
+        assertEquals("someServletPath", actionMapping.getName());
+    }
+
+    public void testActionPrefixWhenEnabled() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setParameterMap(parameterMap);
+        request.setupGetServletPath("/someServletPath.action");
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setAllowActionPrefix("true");
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
         assertEquals("myAction", actionMapping.getName());
+    }
+
+    public void testActionPrefixWhenSlashesAndCrossNamespaceDisabled() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "my/Action", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setParameterMap(parameterMap);
+        request.setupGetServletPath("/someServletPath.action");
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setAllowActionPrefix("true");
+        defaultActionMapper.setSlashesInActionNames("true");
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertEquals("my/Action", actionMapping.getName());
+    }
+
+    public void testActionPrefixWhenSlashesButSlashesDisabledAndCrossNamespaceDisabled() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "my/Action", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setParameterMap(parameterMap);
+        request.setupGetServletPath("/someServletPath.action");
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setAllowActionPrefix("true");
+        defaultActionMapper.setSlashesInActionNames("false");
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertEquals("Action", actionMapping.getName());
+    }
+
+    public void testActionPrefixWhenSlashesButSlashesDisabledAndCrossNamespace() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "my/Action", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setParameterMap(parameterMap);
+        request.setupGetServletPath("/someServletPath.action");
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setAllowActionPrefix("true");
+        defaultActionMapper.setAllowActionCrossNamespaceAccess("true");
+        defaultActionMapper.setSlashesInActionNames("false");
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertEquals("my/Action", actionMapping.getName());
+    }
+
+    public void testActionPrefixWhenCrossNamespace() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "/my/Action", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setParameterMap(parameterMap);
+        request.setupGetServletPath("/someServletPath.action");
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setAllowActionPrefix("true");
+        defaultActionMapper.setAllowActionCrossNamespaceAccess("true");
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertEquals("/my/Action", actionMapping.getName());
     }
 
     public void testActionPrefix_fromImageButton() throws Exception {
@@ -425,6 +504,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         request.setupGetServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setAllowActionPrefix("true");
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
         assertEquals("myAction", actionMapping.getName());
@@ -440,6 +520,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         request.setupGetServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setAllowActionPrefix("true");
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
         assertEquals("myAction", actionMapping.getName());
@@ -539,7 +620,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.addParameterAction("foo", new ParameterAction() {
-            public void execute(String key, ActionMapping mapping, HttpServletRequest request) {
+            public void execute(String key, ActionMapping mapping) {
                 mapping.setName("myAction");
             }
         });

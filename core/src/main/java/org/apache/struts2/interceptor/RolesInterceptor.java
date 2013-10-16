@@ -76,8 +76,8 @@ import java.util.List;
  */
 public class RolesInterceptor extends AbstractInterceptor {
 
-    private List<String> allowedRoles = new ArrayList<String>();
-    private List<String> disallowedRoles = new ArrayList<String>();
+    protected List<String> allowedRoles = new ArrayList<String>();
+    protected List<String> disallowedRoles = new ArrayList<String>();
 
     public void setAllowedRoles(String roles) {
         this.allowedRoles = stringToList(roles);

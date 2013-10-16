@@ -101,10 +101,10 @@ public class ValueStackDataSource implements JRRewindableDataSource {
         Object value = valueStack.findValue(expression);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("field: " + field.getName() + "/" + value);
+            LOG.debug("Field [#0] = [#1]", field.getName(), value);
         }
 
-        if ((!field.getValueClass().isInstance(value) && MakeIterator.isIterable(value))) {
+        if (MakeIterator.isIterable(value)) {
             // wrap value with ValueStackDataSource if not already wrapped
             return new ValueStackDataSource(this.valueStack, expression);
         } else {

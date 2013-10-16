@@ -20,21 +20,6 @@
  */
 package org.apache.struts2.convention;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -49,6 +34,19 @@ import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -103,7 +101,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * </p>
  *
  * <p>
- * All results that are conigured from resources are given a type corresponding
+ * All results that are configured from resources are given a type corresponding
  * to the resources extension. The extensions and types are given in the
  * table below:
  * </p>
@@ -178,7 +176,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             LOG.trace("Using final calculated namespace [#0]", namespace);
         }
 
-        // Add that ending slash for concatentation
+        // Add that ending slash for concatenation
         if (!defaultResultPath.endsWith("/")) {
             defaultResultPath += "/";
         }
@@ -266,7 +264,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                 }
                 else if(fileName.lastIndexOf(".") > 0){
                     String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
-                    
+
                     if(conventionsService.getResultTypesByExtension(packageConfig).get(suffix) == null) {
                         if (LOG.isDebugEnabled())
                             LOG.debug("No result type defined for file suffix : [#0]. Ignoring file #1", suffix, fileName);
@@ -356,6 +354,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
     protected void makeResults(Class<?> actionClass, String path, String resultPrefix,
             Map<String, ResultConfig> results, PackageConfig packageConfig,
             Map<String, ResultTypeConfig> resultsByExtension) {
+
         if (path.startsWith(resultPrefix)) {
             int indexOfDot = path.indexOf('.', resultPrefix.length());
 
@@ -367,24 +366,9 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                         " be overridden by another result file or an annotation.", path);
                 }
 
-                if (!results.containsKey(Action.SUCCESS)) {
-                    ResultConfig success = createResultConfig(actionClass,
-                        new ResultInfo(Action.SUCCESS, path, packageConfig, resultsByExtension),
-                        packageConfig, null);
-                    results.put(Action.SUCCESS, success);
-                }
-                if (!results.containsKey(Action.INPUT)) {
-                    ResultConfig input = createResultConfig(actionClass,
-                        new ResultInfo(Action.INPUT, path, packageConfig, resultsByExtension),
-                        packageConfig, null);
-                    results.put(Action.INPUT, input);
-                }
-                if (!results.containsKey(Action.ERROR)) {
-                    ResultConfig error = createResultConfig(actionClass,
-                        new ResultInfo(Action.ERROR, path, packageConfig, resultsByExtension),
-                        packageConfig, null);
-                    results.put(Action.ERROR, error);
-                }
+                addResult(actionClass, path, results, packageConfig, resultsByExtension, Action.SUCCESS);
+                addResult(actionClass, path, results, packageConfig, resultsByExtension, Action.INPUT);
+                addResult(actionClass, path, results, packageConfig, resultsByExtension, Action.ERROR);
 
             // This case is when the path contains a result code
             } else if (indexOfDot > resultPrefix.length()) {
@@ -398,6 +382,34 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                     new ResultInfo(resultCode, path, packageConfig, resultsByExtension),
                     packageConfig, null);
                 results.put(resultCode, result);
+            }
+        }
+    }
+
+    /**
+     * Checks if result was already assigned, if not checks global results first and if exists, adds reference to it.
+     * If not, creates package specific result.
+     *
+     * @param   actionClass The action class the results are being built for.
+     * @param   path The path to build the result for.
+     * @param   results The Map to place the result(s)
+     * @param   packageConfig The package config the results belong to.
+     * @param   resultsByExtension The map of extensions to result type configuration instances.
+     * @param   resultKey The result name to use
+     */
+    protected void addResult(Class<?> actionClass, String path, Map<String, ResultConfig> results,
+                           PackageConfig packageConfig, Map<String, ResultTypeConfig> resultsByExtension,
+                           String resultKey) {
+
+        if (!results.containsKey(resultKey)) {
+            Map<String, ResultConfig> globalResults = packageConfig.getAllGlobalResults();
+            if (globalResults.containsKey(resultKey)) {
+                results.put(resultKey, globalResults.get(resultKey));
+            } else {
+                ResultConfig resultConfig = createResultConfig(actionClass,
+                        new ResultInfo(resultKey, path, packageConfig, resultsByExtension),
+                        packageConfig, null);
+                results.put(resultKey, resultConfig);
             }
         }
     }

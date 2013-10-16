@@ -160,8 +160,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     public void setReload(String reload) {
         this.reload = "true".equals(reload);
     }
-    
-    
+
+
     @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
     public void setSlashesInActionNames(String slashesInActionNames) {
         this.slashesInActionNames = "true".equals(slashesInActionNames);
@@ -185,7 +185,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * File URLs whose protocol are in these list will be processed as jars containing classes 
+     * File URLs whose protocol are in these list will be processed as jars containing classes
      * @param fileProtocols Comma separated list of file protocols that will be considered as jar files and scanned
      */
     @Inject("struts.convention.action.fileProtocols")
@@ -204,7 +204,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * @param includeJars Comma separated list of regular expressions of jars to be included.                         
+     * @param includeJars Comma separated list of regular expressions of jars to be included.
      */
     @Inject(value = "struts.convention.action.includeJars", required = false)
     public void setIncludeJars(String includeJars) {
@@ -326,7 +326,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     public void buildActionConfigs() {
         //setup reload class loader based on dev settings
         initReloadClassLoader();
-        
+
         if (!disableActionScanning) {
             if (actionPackages == null && packageLocators == null) {
                 throw new ConfigurationException("At least a list of action packages or action package locators " +
@@ -379,7 +379,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         Set<Class> classes = new HashSet<Class>();
         try {
             if (actionPackages != null || (packageLocators != null && !disablePackageLocatorsScanning)) {
-                
+
                 // By default, ClassFinder scans EVERY class in the specified
                 // url set, which can produce spurious warnings for non-action
                 // classes that can't be loaded. We pass a package filter that
@@ -504,7 +504,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * || implements Action) test will have to remain until later. See
      * {@link #getActionClassTest()} for the test performed on the loaded
      * {@link ClassInfo} structure.
-     * 
+     *
      * @param className the name of the class to test
      * @return true if the specified class should be included in the
      *         package-based action scan
@@ -581,7 +581,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * Note that the goal is to avoid loading the class, so the test should only
      * rely on information in the class name itself. The default implementation
      * is to return the result of {@link #includeClassNameInActionScan(String)}.
-     * 
+     *
      * @return a {@link Test} object that returns true if the specified class
      *         name should be included in the package scan
      */
@@ -599,14 +599,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * of the class. At this point, the class has been loaded, so it's ok to
      * perform tests such as checking annotations or looking at interfaces or
      * super-classes of the specified class.
-     * 
+     *
      * @return a {@link Test} object that returns true if the specified class
      *         should be included in the package scan
      */
     protected Test<ClassFinder.ClassInfo> getActionClassTest() {
         return new Test<ClassFinder.ClassInfo>() {
             public boolean test(ClassFinder.ClassInfo classInfo) {
-                
+
                 // Why do we call includeClassNameInActionScan here, when it's
                 // already been called to in the initial call to ClassFinder?
                 // When some action class passes our package filter in that step,
@@ -916,7 +916,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             	className = annotation.className();
             }
         }
-        
+
         ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(), actionName, className);
         actionConfig.methodName(actionMethod);
 
@@ -991,7 +991,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 LOG.trace("Using non-default action namespace from the Action annotation of [#0]", action.value());
             }
             String actionName = action.value();
-            actionNamespace = StringUtils.contains(actionName, "/") ? StringUtils.substringBeforeLast(actionName, "/") : StringUtils.EMPTY; 
+            actionNamespace = StringUtils.contains(actionName, "/") ? StringUtils.substringBeforeLast(actionName, "/") : StringUtils.EMPTY;
         }
 
         // Next grab the parent annotation from the class
@@ -1017,7 +1017,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
         PackageConfig parentPkg = configuration.getPackageConfig(parentName);
         if (parentPkg == null) {
-            throw new ConfigurationException("Unable to locate parent package [" + parentName + "]");
+            throw new ConfigurationException("Unable to locate parent package [" + parentName + "] for [" + actionClass + "]");
         }
 
         // Grab based on package-namespace and if it exists, we need to ensure the existing one has

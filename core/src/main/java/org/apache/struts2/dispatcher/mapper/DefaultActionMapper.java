@@ -1,6 +1,5 @@
 /*
  * $Id$
- * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -59,26 +58,17 @@ import java.util.regex.Pattern;
  * execution behaviour. The four prefixes are:
  * <p/>
  * <ul>
- * <p/>
  * <li>Method prefix - <i>method:default</i></li>
- * <p/>
  * <li>Action prefix - <i>action:dashboard</i></li>
- * <p/>
- * <li>Redirect prefix - <i>redirect:cancel.jsp</i></li>
- * <p/>
- * <li>Redirect-action prefix - <i>redirectAction:cancel</i></li>
- * <p/>
  * </ul>
  * <p/>
- * <p/> In addition to these four prefixes, this mapper also understands the
+ * In addition to these four prefixes, this mapper also understands the
  * action naming pattern of <i>foo!bar</i> in either the extension form (eg:
  * foo!bar.action) or in the prefix form (eg: action:foo!bar). This syntax tells
  * this mapper to map to the action named <i>foo</i> and the method <i>bar</i>.
  * <p/>
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * <p/> <b>Method Prefix</b> <p/>
- * <p/>
+ * <b>Method Prefix</b>
  * <!-- START SNIPPET: method -->
  * <p/>
  * With method-prefix, instead of calling baz action's execute() method (by
@@ -99,9 +89,7 @@ import java.util.regex.Pattern;
  *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: method-example --&gt;
  * </pre>
- * <p/>
- * <p/> <b>Action prefix</b> <p/>
- * <p/>
+ * <b>Action prefix</b>
  * <!-- START SNIPPET: action -->
  * <p/>
  * With action-prefix, instead of executing baz action's execute() method (by
@@ -119,49 +107,6 @@ import java.util.regex.Pattern;
  *      &lt;s:submit name=&quot;action:anotherAction&quot; value=&quot;Cancel&quot;/&gt;
  *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: action-example --&gt;
- * </pre>
- * <p/>
- * <p/> <b>Redirect prefix</b> <p/>
- * <p/>
- * <!-- START SNIPPET: redirect -->
- * <p/>
- * With redirect-prefix, instead of executing baz action's execute() method (by
- * default it isn't overriden in struts.xml to be something else), it will get
- * redirected to, in this case to www.google.com. Internally it uses
- * ServletRedirectResult to do the task.
- * <p/>
- * <!-- END SNIPPET: redirect -->
- * <p/>
- * <pre>
- *  &lt;!-- START SNIPPET: redirect-example --&gt;
- *  &lt;s:form action=&quot;baz&quot;&gt;
- *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;redirect:www.google.com&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/s:form&gt;
- *  &lt;!-- END SNIPPET: redirect-example --&gt;
- * </pre>
- * <p/>
- * <p/> <b>Redirect-action prefix</b> <p/>
- * <p/>
- * <!-- START SNIPPET: redirect-action -->
- * <p/>
- * With redirect-action-prefix, instead of executing baz action's execute()
- * method (by default it isn't overriden in struts.xml to be something else), it
- * will get redirected to, in this case 'dashboard.action'. Internally it uses
- * ServletRedirectResult to do the task and read off the extension from the
- * struts.properties.
- * <p/>
- * <!-- END SNIPPET: redirect-action -->
- * <p/>
- * <pre>
- *  &lt;!-- START SNIPPET: redirect-action-example --&gt;
- *  &lt;s:form action=&quot;baz&quot;&gt;
- *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;redirectAction:dashboard&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/s:form&gt;
- *  &lt;!-- END SNIPPET: redirect-action-example --&gt;
  * </pre>
  */
 public class DefaultActionMapper implements ActionMapper {
@@ -383,8 +328,8 @@ public class DefaultActionMapper implements ActionMapper {
             namespace = "";
             boolean rootAvailable = false;
             // Find the longest matching namespace, defaulting to the default
-            for (Object cfg : config.getPackageConfigs().values()) {
-                String ns = ((PackageConfig) cfg).getNamespace();
+            for (PackageConfig cfg : config.getPackageConfigs().values()) {
+                String ns = cfg.getNamespace();
                 if (ns != null && prefix.startsWith(ns) && (prefix.length() == ns.length() || prefix.charAt(ns.length()) == '/')) {
                     if (ns.length() > namespace.length()) {
                         namespace = ns;
@@ -429,7 +374,7 @@ public class DefaultActionMapper implements ActionMapper {
                         rawActionName, allowedActionNames);
             }
             String cleanActionName = rawActionName;
-            for(String chunk : allowedActionNames.split(rawActionName)) {
+            for (String chunk : allowedActionNames.split(rawActionName)) {
                 cleanActionName = cleanActionName.replace(chunk, "");
             }
             if (LOG.isDebugEnabled()) {

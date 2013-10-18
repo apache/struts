@@ -266,17 +266,21 @@ public class OgnlUtil {
             tree = expressions.get(expression);
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
+                checkEnableEvalExpression(tree, context);
                 expressions.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
-        }
-
-        if (!enableEvalExpression && isEvalExpression(tree, context)) {
-            throw new OgnlException("Eval expressions has been disabled");
+            checkEnableEvalExpression(tree, context);
         }
 
         return tree;
+    }
+    
+    private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
+        if (!enableEvalExpression && isEvalExpression(tree, context)) {
+            throw new OgnlException("Eval expressions has been disabled!");
+        }
     }
 
     /**

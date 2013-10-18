@@ -214,7 +214,7 @@ public class DefaultUrlHelper implements UrlHelper {
                 if (value instanceof Iterable) {
                     for (Iterator iterator = ((Iterable) value).iterator(); iterator.hasNext();) {
                         Object paramValue = iterator.next();
-                        link.append(buildParameterSubstring(name, paramValue.toString()));
+                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY));
 
                         if (iterator.hasNext()) {
                             link.append(paramSeparator);
@@ -224,7 +224,7 @@ public class DefaultUrlHelper implements UrlHelper {
                     Object[] array = (Object[]) value;
                     for (int i = 0; i < array.length; i++) {
                         Object paramValue = array[i];
-                        link.append(buildParameterSubstring(name, paramValue.toString()));
+                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY));
 
                         if (i < array.length - 1) {
                             link.append(paramSeparator);

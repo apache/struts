@@ -65,6 +65,7 @@ import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.security.SecurityGate;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.fs.JBossFileManager;
@@ -209,6 +210,7 @@ public class Dispatcher {
 
     private ValueStackFactory valueStackFactory;
 
+    private SecurityGate securityGate;
 
     /**
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
@@ -279,6 +281,11 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_HANDLE_EXCEPTION)
     public void setHandleException(String handleException) {
         this.handleException = Boolean.parseBoolean(handleException);
+    }
+
+    @Inject
+    public void setSecurityGate(SecurityGate securityGate) {
+        this.securityGate = securityGate;
     }
 
     /**
@@ -927,6 +934,15 @@ public class Dispatcher {
             LOG.debug("Cleaning up resources used to init Dispatcher");
         }
         ContainerHolder.clear();
+    }
+
+    /**
+     * Checks if request doesn't contain suspicious values
+     *
+     * @param request current {@link HttpServletRequest}
+     */
+    public void checkRequest(HttpServletRequest request) {
+        securityGate.check(request);
     }
 
     /**

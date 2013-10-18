@@ -134,6 +134,10 @@
     <bean type="ognl.PropertyAccessor" name="java.util.HashSet" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
     <bean type="ognl.PropertyAccessor" name="java.util.HashMap" class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor" />
 
+    <bean type="org.apache.struts2.security.SecurityGate" name="struts" class="org.apache.struts2.security.DefaultSecurityGate" scope="singleton"/>
+    <bean type="org.apache.struts2.security.SecurityGuard" name="parameterNameGuard" class="org.apache.struts2.security.ParameterNameSecurityGuard" scope="singleton"/>
+    <bean type="org.apache.struts2.security.SecurityGuard" name="parameterValueGuard" class="org.apache.struts2.security.ParameterValueSecurityGuard" scope="singleton"/>
+
     <package name="struts-default" abstract="true">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>

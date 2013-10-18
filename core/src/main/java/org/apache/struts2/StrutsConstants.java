@@ -268,4 +268,7 @@ public final class StrutsConstants {
     /** actions names' whitelist **/
     public static final String STRUTS_ALLOWED_ACTION_NAMES = "struts.allowed.action.names";
 
+    /** Security firewall **/
+    public static final String STRUTS_SECURITY_GATE = "struts.securityGate";
+
 }

@@ -271,4 +271,10 @@ public final class StrutsConstants {
     /** Security firewall **/
     public static final String STRUTS_SECURITY_GATE = "struts.securityGate";
 
+    /** enables action: prefix **/
+    public static final String STRUTS_MAPPER_ACTION_PREFIX_ENABLED = "struts.mapper.action.prefix.enabled";
+
+    /** enables access to actions in other namespaces than current with action: prefix **/
+    public static final String STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES = "struts.mapper.action.prefix.crossNamespaces";
+
 }

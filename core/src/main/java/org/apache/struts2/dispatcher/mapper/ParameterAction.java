@@ -21,8 +21,6 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Defines a parameter action prefix.  This is executed when the configured prefix key is matched in a parameter
  * name, allowing the implementation to manipulate the action mapping accordingly.  For example, if the "action:foo"
@@ -32,5 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2.1.0
  */
 public interface ParameterAction {
-    void execute(String key, ActionMapping mapping, HttpServletRequest request);
+
+    void execute(String key, ActionMapping mapping);
+
 }

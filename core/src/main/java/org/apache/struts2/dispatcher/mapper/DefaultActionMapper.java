@@ -33,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
@@ -115,13 +114,14 @@ public class DefaultActionMapper implements ActionMapper {
 
     protected static final String METHOD_PREFIX = "method:";
     protected static final String ACTION_PREFIX = "action:";
-    private static final String STRUTS2_ACTION_PREFIX_PARSED = "_struts2_action_prefix_parsed";
 
     protected boolean allowDynamicMethodCalls = false;
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
     protected Pattern allowedActionNames = Pattern.compile("[a-zA-Z0-9._!/\\-]*");
+    private boolean allowActionPrefix = false;
+    private boolean allowActionCrossNamespaceAccess = false;
 
     protected List<String> extensions = new ArrayList<String>() {{
         add("action");
@@ -134,7 +134,7 @@ public class DefaultActionMapper implements ActionMapper {
         prefixTrie = new PrefixTrie() {
             {
                 put(METHOD_PREFIX, new ParameterAction() {
-                    public void execute(String key, ActionMapping mapping, HttpServletRequest request) {
+                    public void execute(String key, ActionMapping mapping) {
                         if (allowDynamicMethodCalls) {
                             mapping.setMethod(key.substring(METHOD_PREFIX.length()));
                         }
@@ -142,9 +142,8 @@ public class DefaultActionMapper implements ActionMapper {
                 });
 
                 put(ACTION_PREFIX, new ParameterAction() {
-                    public void execute(final String key, ActionMapping mapping, HttpServletRequest request) {
-                        if (request != null && request.getAttribute(STRUTS2_ACTION_PREFIX_PARSED) == null) {
-                            request.setAttribute(STRUTS2_ACTION_PREFIX_PARSED, true);
+                    public void execute(final String key, ActionMapping mapping) {
+                        if (allowActionPrefix) {
                             String name = key.substring(ACTION_PREFIX.length());
                             if (allowDynamicMethodCalls) {
                                 int bang = name.indexOf('!');
@@ -155,11 +154,17 @@ public class DefaultActionMapper implements ActionMapper {
                                 }
                             }
                             String actionName = cleanupActionName(name);
-                            mapping.setName(actionName);
-                            if (getDefaultExtension() != null) {
-                                actionName = actionName + "." + getDefaultExtension();
+                            if (allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
+                                if (actionName.startsWith("/")) {
+                                    actionName = actionName.substring(1);
+                                }
                             }
-                            mapping.setResult(new ServletDispatcherResult(actionName));
+                            if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
+                                if (actionName.lastIndexOf("/") != -1) {
+                                    actionName = actionName.substring(actionName.lastIndexOf("/") + 1);
+                                }
+                            }
+                            mapping.setName(actionName);
                         }
                     }
                 });
@@ -197,6 +202,16 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
     public void setAllowedActionNames(String allowedActionNames) {
         this.allowedActionNames = Pattern.compile(allowedActionNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_ENABLED)
+    public void setAllowActionPrefix(String allowActionPrefix) {
+        this.allowActionPrefix = "true".equalsIgnoreCase(allowActionPrefix);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES)
+    public void setAllowActionCrossNamespaceAccess(String allowActionCrossNamespaceAccess) {
+        this.allowActionCrossNamespaceAccess = "true".equalsIgnoreCase(allowActionCrossNamespaceAccess);
     }
 
     @Inject
@@ -291,7 +306,7 @@ public class DefaultActionMapper implements ActionMapper {
             if (!uniqueParameters.contains(key)) {
                 ParameterAction parameterAction = (ParameterAction) prefixTrie.get(key);
                 if (parameterAction != null) {
-                    parameterAction.execute(key, mapping, request);
+                    parameterAction.execute(key, mapping);
                     uniqueParameters.add(key);
                     break;
                 }

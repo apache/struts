@@ -44,6 +44,7 @@ import java.io.Writer;
  * <ul>
  *      <li>name (String) - the name of the parameter</li>
  *      <li>value (Object) - the value of the parameter</li>
+ *      <li>suppressEmptyParameters (boolean) - whether to suppress empty parameters</li>
  * </ul>
  * <!-- END SNIPPET: params -->
  * <p/>
@@ -66,6 +67,17 @@ import java.io.Writer;
  *  &lt;ui:param name="value"   value="[1]"/&gt;
  *  &lt;ui:param name="context" value="[2]"/&gt;
  * &lt;/ui:component&gt;
+ * </pre>
+ * <p/>
+ * Whether to suppress empty parameters:
+ * <pre>
+ * &lt;s:a action="eventAdd" accesskey="a"&gt;
+ *   &lt;s:text name="title.heading.eventadd" /&gt;
+ *   &lt;s:param name="bean.searchString" value="%{bean.searchString}" /&gt;
+ *   &lt;s:param name="bean.filter" value="%{bean.filter}" /&gt;
+ *   &lt;s:param name="bean.pageNum" value="%{pager.pageNumber}" /&gt;
+ *   &lt;s:param name="suppressEmptyParameters" value="true"/&gt;
+ * &lt;/s:a&gt;
  * </pre>
  * <!-- END SNIPPET: example -->
  * <p/>
@@ -91,8 +103,10 @@ import java.io.Writer;
  */
 @StrutsTag(name="param", tldTagClass="org.apache.struts2.views.jsp.ParamTag", description="Parametrize other tags")
 public class Param extends Component {
+
     protected String name;
     protected String value;
+    protected boolean suppressEmptyParameters;
 
     public Param(ValueStack stack) {
         super(stack);
@@ -111,7 +125,14 @@ public class Param extends Component {
                 }
 
                 Object value = findValue(this.value);
-                component.addParameter(name, value);
+                if (suppressEmptyParameters) {
+                    String potentialValue = (String) value;
+                    if (potentialValue != null && potentialValue.length() > 0) {
+                        component.addParameter(name, value);
+                    }
+                } else {
+                    component.addParameter(name, value);
+                }
             }
         } else {
             if (component instanceof UnnamedParametric) {
@@ -123,7 +144,7 @@ public class Param extends Component {
 
         return super.end(writer, "");
     }
-
+    
     public boolean usesBody() {
         return true;
     }
@@ -136,6 +157,11 @@ public class Param extends Component {
     @StrutsTagAttribute(description="Value expression for Parameter to set", defaultValue="The value of evaluating provided name against stack")
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    @StrutsTagAttribute(description="Whether to suppress empty parameters", type="Boolean", defaultValue="false")
+    public void setSuppressEmptyParameters(boolean suppressEmptyParameters) {
+        this.suppressEmptyParameters = suppressEmptyParameters;
     }
     
     /**

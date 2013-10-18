@@ -196,7 +196,7 @@ public class PrepareOperations {
      */
     public boolean isUrlExcluded( HttpServletRequest request, List<Pattern> excludedPatterns ) {
         if (excludedPatterns != null) {
-            String uri = getUri(request);
+            String uri = RequestUtils.getUri(request);
             for ( Pattern pattern : excludedPatterns ) {
                 if (pattern.matcher(uri).matches()) {
                     return true;
@@ -204,29 +204,6 @@ public class PrepareOperations {
             }
         }
         return false;
-    }
-
-    /**
-     * Gets the uri from the request
-     *
-     * @param request The request
-     *
-     * @return The uri
-     */
-    private String getUri( HttpServletRequest request ) {
-        // handle http dispatcher includes.
-        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
-        if (uri != null) {
-            return uri;
-        }
-
-        uri = RequestUtils.getServletPath(request);
-        if (uri != null && !"".equals(uri)) {
-            return uri;
-        }
-
-        uri = request.getRequestURI();
-        return uri.substring(request.getContextPath().length());
     }
 
 }

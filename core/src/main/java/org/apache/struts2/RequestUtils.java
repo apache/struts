@@ -62,4 +62,26 @@ public class RequestUtils {
         return requestUri.substring(startIndex, endIndex);
     }
 
+    /**
+     * Gets the uri from the request
+     *
+     * @param request The request
+     * @return The uri
+     */
+    public static String getUri(HttpServletRequest request) {
+        // handle http dispatcher includes.
+        String uri = (String) request
+                .getAttribute("javax.servlet.include.servlet_path");
+        if (uri != null) {
+            return uri;
+        }
+
+        uri = getServletPath(request);
+        if (uri != null && !"".equals(uri)) {
+            return uri;
+        }
+
+        uri = request.getRequestURI();
+        return uri.substring(request.getContextPath().length());
+    }
 }

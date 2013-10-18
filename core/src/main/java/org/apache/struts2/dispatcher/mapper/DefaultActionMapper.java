@@ -236,7 +236,7 @@ public class DefaultActionMapper implements ActionMapper {
      */
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
-        String uri = getUri(request);
+        String uri = RequestUtils.getUri(request);
 
         int indexOfSemicolon = uri.indexOf(";");
         uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
@@ -436,29 +436,6 @@ public class DefaultActionMapper implements ActionMapper {
         } else {
             return extensions.get(0);
         }
-    }
-
-    /**
-     * Gets the uri from the request
-     *
-     * @param request The request
-     * @return The uri
-     */
-    protected String getUri(HttpServletRequest request) {
-        // handle http dispatcher includes.
-        String uri = (String) request
-                .getAttribute("javax.servlet.include.servlet_path");
-        if (uri != null) {
-            return uri;
-        }
-
-        uri = RequestUtils.getServletPath(request);
-        if (uri != null && !"".equals(uri)) {
-            return uri;
-        }
-
-        uri = request.getRequestURI();
-        return uri.substring(request.getContextPath().length());
     }
 
     /*

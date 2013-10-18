@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
@@ -180,7 +181,7 @@ public class RestActionMapper extends DefaultActionMapper {
     public ActionMapping getMapping(HttpServletRequest request,
             ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
-        String uri = getUri(request);
+        String uri = RequestUtils.getUri(request);
 
         uri = dropExtension(uri, mapping);
         if (uri == null) {

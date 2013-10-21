@@ -23,12 +23,23 @@ import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.PropertiesJudge;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.ArrayUtils;
+import com.opensymphony.xwork2.util.ClearableValueStack;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.MemberAccessValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -318,13 +329,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 newStack.setParameter(name, value);
             } catch (RuntimeException e) {
                 if (devMode) {
-                    String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
-                             "Unexpected Exception caught setting '" + name + "' on '" + action.getClass() + ": " + e.getMessage()
-                    });
-                    LOG.error(developerNotification);
-                    if (action instanceof ValidationAware) {
-                        ((ValidationAware) action).addActionMessage(developerNotification);
-                    }
+                    notifyDeveloper(action, name, e.getMessage());
                 }
             }
         }
@@ -333,6 +338,22 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
 
         addParametersToContext(ActionContext.getContext(), acceptableParameters);
+    }
+
+    protected void notifyDeveloper(Object action, String property, String message) {
+        String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification",
+                ActionContext.getContext().getLocale(), "Developer Notification:\n{0}",
+                new Object[]{
+                        "Unexpected Exception caught setting '" + property + "' on '" + action.getClass() + ": " + message
+                }
+        );
+        LOG.error(developerNotification);
+        // see https://issues.apache.org/jira/browse/WW-4066
+        if (action instanceof ValidationAware) {
+            Collection<String> messages = ((ValidationAware) action).getActionMessages();
+            messages.add(message);
+            ((ValidationAware) action).setActionMessages(messages);
+        }
     }
 
     /**

@@ -321,7 +321,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                     String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                              "Unexpected Exception caught setting '" + name + "' on '" + action.getClass() + ": " + e.getMessage()
                     });
-                    LOG.error(developerNotification, e);
+                    LOG.error(developerNotification);
                     if (action instanceof ValidationAware) {
                         ((ValidationAware) action).addActionMessage(developerNotification);
                     }

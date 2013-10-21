@@ -409,16 +409,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
 
         alias(SecurityGate.class, StrutsConstants.STRUTS_SECURITY_GATE, builder, props);
 
-        if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
-            props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
-            props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
-            props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE, "false");
-            props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, "0");
-            // Convert struts properties into ones that xwork expects
-            props.setProperty(XWorkConstants.DEV_MODE, "true");
-        } else {
-            props.setProperty(XWorkConstants.DEV_MODE, "false");
-        }
+        switchDevMode(props);
 
         // Convert Struts properties into XWork properties
         convertIfExist(props, StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, XWorkConstants.LOG_MISSING_PROPERTIES);
@@ -429,6 +420,32 @@ public class BeanSelectionProvider implements ConfigurationProvider {
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         loadCustomResourceBundles(props);
+    }
+
+    /**
+     * Enables/disables devMode and related settings if they aren't explicit set in struts.xml/struts.properties
+     *
+     * @param props configured properties
+     */
+    private void switchDevMode(LocatableProperties props) {
+        if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
+            if (props.getProperty(StrutsConstants.STRUTS_I18N_RELOAD) == null) {
+                props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
+            }
+            if (props.getProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD) == null) {
+                props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
+            }
+            if (props.getProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE) == null) {
+                props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE, "false");
+            }
+            if (props.getProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY) == null) {
+                props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, "0");
+            }
+            // Convert struts properties into ones that xwork expects
+            props.setProperty(XWorkConstants.DEV_MODE, "true");
+        } else {
+            props.setProperty(XWorkConstants.DEV_MODE, "false");
+        }
     }
 
     private void convertIfExist(LocatableProperties props, String fromKey, String toKey) {

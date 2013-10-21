@@ -194,8 +194,6 @@ public class DispatcherTest extends StrutsTestCase {
         
         Mock mockContainer = new Mock(Container.class);
         String reloadConfigs = container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
-                reloadConfigs);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
                 reloadConfigs);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
@@ -230,8 +228,6 @@ public class DispatcherTest extends StrutsTestCase {
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
         String reloadConfigs = container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
-                reloadConfigs);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
                 reloadConfigs);
 

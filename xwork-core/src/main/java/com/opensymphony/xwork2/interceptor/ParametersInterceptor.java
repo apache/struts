@@ -144,8 +144,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private boolean devMode = false;
 
     // Allowed names of parameters
-    private String acceptedParamNames = ACCEPTED_PARAM_NAMES;
-    private Pattern acceptedPattern = Pattern.compile(acceptedParamNames);
+    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PARAM_NAMES);
 
     private ValueStackFactory valueStackFactory;
 
@@ -389,7 +388,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean acceptableName(String name) {
-        boolean accepted = isWithinLengthLimit(name) && isAccepted(name) && !isExcluded(name);
+        boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name);
         if (devMode && accepted) { // notify only when in devMode
             LOG.debug("Parameter [#0] was accepted and will be appended to action!", name);
         }

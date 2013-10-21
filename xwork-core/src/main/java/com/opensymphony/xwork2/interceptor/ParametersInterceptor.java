@@ -344,7 +344,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      */
     protected boolean isAcceptableParameter(String name, Object action) {
         ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware) ? (ParameterNameAware) action : null;
-        return acceptableName(name) || (parameterNameAware != null && parameterNameAware.acceptableParameterName(name));
+        return acceptableName(name) && (parameterNameAware == null || parameterNameAware.acceptableParameterName(name));
     }
 
     /**

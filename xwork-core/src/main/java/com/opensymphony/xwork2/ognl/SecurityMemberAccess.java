@@ -80,7 +80,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return true;
         }
 
-        if ((isAccepted(name) && !isExcluded(name)) || (propertiesJudge != null && propertiesJudge.acceptProperty(name))) {
+        if ((!isExcluded(name)) && isAccepted(name) && (propertiesJudge == null || propertiesJudge.acceptProperty(name))) {
             return true;
         }
         return false;

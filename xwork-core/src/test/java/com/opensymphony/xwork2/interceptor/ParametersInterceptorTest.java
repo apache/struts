@@ -65,7 +65,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             {
                 put("fooKey", "fooValue");
                 put("barKey", "barValue");
-                put("test%test", "test%test");
             }
         };
         Object a = new ParameterNameAware() {

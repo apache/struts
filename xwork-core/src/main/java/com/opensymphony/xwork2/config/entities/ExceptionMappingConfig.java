@@ -112,6 +112,12 @@ public class ExceptionMappingConfig extends Located implements Serializable {
         return hashCode;
     }
 
+    @Override
+    public String toString() {
+        return "ExceptionMappingConfig: [" + name + "] handle ["
+                + exceptionClassName + "] to result [" + result + "] with params " + params;
+    }
+
     /**
      * The builder for this object.  An instance of this object is the only way to construct a new instance.  The
      * purpose is to enforce the immutability of the object.  The methods are structured in a way to support chaining.

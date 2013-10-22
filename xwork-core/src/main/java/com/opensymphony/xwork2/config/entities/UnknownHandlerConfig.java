@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.config.entities;
 
 public class UnknownHandlerConfig {
+
     private String name;
 
     public UnknownHandlerConfig(String name) {
@@ -29,4 +30,10 @@ public class UnknownHandlerConfig {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "UnknownHandlerConfig: [" + name + "]";
+    }
+
 }

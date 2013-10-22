@@ -416,7 +416,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
     @Override
     public String toString() {
-        return "{PackageConfig Name:" + name + " namespace:" + namespace + " parents:" + parents + "}";
+        return "PackageConfig: [" + name + "] for namespace [" + namespace + "] with parents [" + parents + "]";
     }
 
     public int compareTo(Object o) {

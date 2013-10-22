@@ -103,6 +103,12 @@ public class ResultTypeConfig extends Located implements Serializable {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "ResultTypeConfig: [" + name + "] => [" + className + "] " +
+                "with defaultParam [" + defaultResultParam + "] with params " + params;
+    }
+
     /**
      * The builder for this object.  An instance of this object is the only way to construct a new instance.  The
      * purpose is to enforce the immutability of the object.  The methods are structured in a way to support chaining.

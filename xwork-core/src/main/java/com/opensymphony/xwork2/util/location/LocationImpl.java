@@ -27,6 +27,7 @@ import java.util.List;
  * A simple immutable and serializable implementation of {@link Location}.
  */
 public class LocationImpl implements Location, Serializable {
+
     private final String uri;
     private final int line;
     private final int column;

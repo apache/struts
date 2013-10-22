@@ -19,18 +19,18 @@ import java.util.Properties;
 public class LocatableProperties extends Properties implements Locatable {
 
     Location location;
-    Map<String,Location> propLocations;
-    
+    Map<String, Location> propLocations;
+
     public LocatableProperties() {
-        this(null);
+        this(Location.UNKNOWN);
     }
-    
+
     public LocatableProperties(Location loc) {
         super();
         this.location = loc;
-        this.propLocations = new HashMap<String,Location>();
+        this.propLocations = new HashMap<String, Location>();
     }
-    
+
     @Override
     public void load(InputStream in) throws IOException {
         Reader reader = new InputStreamReader(in);
@@ -40,12 +40,12 @@ public class LocatableProperties extends Properties implements Locatable {
             String val = pr.getPropertyValue();
             int line = pr.getLineNumber();
             String desc = convertCommentsToString(pr.getCommentLines());
-            
+
             Location loc = new LocationImpl(desc, location.getURI(), line, 0);
             setProperty(name, val, loc);
         }
     }
-    
+
     String convertCommentsToString(List<String> lines) {
         StringBuilder sb = new StringBuilder();
         if (lines != null && lines.size() > 0) {
@@ -55,7 +55,7 @@ public class LocatableProperties extends Properties implements Locatable {
         }
         return sb.toString();
     }
-    
+
     public Object setProperty(String key, String value, Object locationObj) {
         Object obj = super.setProperty(key, value);
         if (location != null) {
@@ -64,11 +64,16 @@ public class LocatableProperties extends Properties implements Locatable {
         }
         return obj;
     }
-    
+
     public Location getPropertyLocation(String key) {
-        return propLocations.get(key);
+        Location loc = propLocations.get(key);
+        if (loc != null) {
+            return loc;
+        } else {
+            return Location.UNKNOWN;
+        }
     }
-    
+
     public Location getLocation() {
         return location;
     }

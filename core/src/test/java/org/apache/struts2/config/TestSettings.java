@@ -21,6 +21,8 @@
 
 package org.apache.struts2.config;
 
+import com.opensymphony.xwork2.util.location.Location;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,25 +32,29 @@ import java.util.List;
  * TestSettings
  *
  */
-public class TestSettings extends Settings {
+public class TestSettings implements Settings {
 
     /**
      * Get a named setting.
      *
      * @throws IllegalArgumentException if there is no settings parameter with the given name.
      */
-    public String getImpl(String aName) throws IllegalArgumentException {
+    public String get(String aName) throws IllegalArgumentException {
         return aName;
     }
 
     /**
      * List setting names
      */
-    public Iterator listImpl() {
+    public Iterator list() {
         List testList = new ArrayList();
         testList.add("123");
         testList.add("testValue");
 
         return testList.iterator();
+    }
+
+    public Location getLocation(String name) {
+        return null;
     }
 }

@@ -21,24 +21,21 @@
 
 package org.apache.struts2.config;
 
-import java.util.Iterator;
-import java.util.Locale;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
-
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
+import org.apache.struts2.StrutsConstants;
+
+import java.util.Locale;
 
 
 /**
  * Unit test for {@link SettingsTest}.
  *
  */
-public class LegacyPropertiesConfigurationProviderTest extends TestCase {
+public class PropertiesConfigurationProviderTest extends TestCase {
 
     public void testRegister_DifferentLocale() {
 
@@ -46,12 +43,13 @@ public class LegacyPropertiesConfigurationProviderTest extends TestCase {
         builder.constant("foo", "bar");
         builder.constant("struts.locale", "DE_de");
 
-        LegacyPropertiesConfigurationProvider prov = new LegacyPropertiesConfigurationProvider();
+        PropertiesConfigurationProvider prov = new PropertiesConfigurationProvider();
         prov.register(builder, new LocatableProperties());
 
         Container container = builder.create(true);
 
-        Locale locale = container.getInstance(Locale.class);
+        String localeStr = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
+        Locale locale = LocalizedTextUtil.localeFromString(localeStr, Locale.FRANCE);
 
         assertNotNull(locale);
         assertEquals("DE", locale.getCountry());
@@ -64,16 +62,30 @@ public class LegacyPropertiesConfigurationProviderTest extends TestCase {
         ContainerBuilder builder = new ContainerBuilder();
         builder.constant("foo", "bar");
 
-        LegacyPropertiesConfigurationProvider prov = new LegacyPropertiesConfigurationProvider();
+        PropertiesConfigurationProvider prov = new PropertiesConfigurationProvider();
         prov.register(builder, new LocatableProperties());
 
         Container container = builder.create(true);
 
-        Locale locale = container.getInstance(Locale.class);
+        String localeStr = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
+        Locale locale = LocalizedTextUtil.localeFromString(localeStr, Locale.getDefault());
 
         assertNotNull(locale);
         Locale vmLocale = Locale.getDefault();
         assertEquals(locale, vmLocale);
+    }
+
+    public void testDefaultSettings() throws Exception {
+        // given
+        PropertiesConfigurationProvider prov = new PropertiesConfigurationProvider();
+        LocatableProperties props = new LocatableProperties();
+        prov.register(new ContainerBuilder(), props);
+
+        // when
+        Object encoding = props.get(StrutsConstants.STRUTS_I18N_ENCODING);
+
+        // then
+        assertEquals("ISO-8859-1", encoding);
     }
 
 }

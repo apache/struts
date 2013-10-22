@@ -21,8 +21,11 @@
 
 package org.apache.struts2.config;
 
+import com.opensymphony.xwork2.util.location.Location;
+
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 
@@ -36,72 +39,34 @@ import java.util.Set;
  * withholding any exception until all delegates have been called.
  *
  */
-class DelegatingSettings extends Settings {
+class DelegatingSettings implements Settings {
 
     /**
      * The Settings objects.
      */
-    Settings[] delegates;
+    List<Settings> delegates;
 
     /**
      * Creates a new DelegatingSettings object utilizing the list of {@link Settings} objects.
      *
      * @param delegates The Settings objects to use as delegates
      */
-    public DelegatingSettings(Settings[] delegates) {
+    public DelegatingSettings(List<Settings> delegates) {
         this.delegates = delegates;
     }
 
-    // See superclass for Javadoc
-    public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
-        IllegalArgumentException e = null;
-
+    public String get(String name) throws IllegalArgumentException {
         for (Settings delegate : delegates) {
-            try {
-                delegate.getImpl(name); // Throws exception if not found
-                delegate.setImpl(name, value); // Found it
-                return; // Done
-            } catch (IllegalArgumentException ex) {
-                e = ex;
-
-                // Try next delegate
+            String value = delegate.get(name);
+            if (value != null) {
+                return value;
             }
         }
-
-        throw e;
+        return null;
     }
 
-    // See superclass for Javadoc
-    public String getImpl(String name) throws IllegalArgumentException {
 
-        IllegalArgumentException e = null;
-
-        for (Settings delegate : delegates) {
-            try {
-                return delegate.getImpl(name);  // Throws exception if not found
-            } catch (IllegalArgumentException ex) {
-                e = ex;
-
-                // Try next delegate
-            }
-        }
-
-        throw e;
-    }
-
-    // See superclass for Javadoc
-    public boolean isSetImpl(String aName) {
-        for (Settings delegate : delegates) {
-            if (delegate.isSetImpl(aName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    // See superclass for Javadoc
-    public Iterator listImpl() {
+    public Iterator list() {
         boolean workedAtAll = false;
 
         Set<Object> settingList = new HashSet<Object>();
@@ -109,7 +74,7 @@ class DelegatingSettings extends Settings {
 
         for (Settings delegate : delegates) {
             try {
-                Iterator list = delegate.listImpl();
+                Iterator list = delegate.list();
 
                 while (list.hasNext()) {
                     settingList.add(list.next());
@@ -128,5 +93,15 @@ class DelegatingSettings extends Settings {
         } else {
             return settingList.iterator();
         }
+    }
+
+    public Location getLocation(String name) {
+        for (Settings delegate : delegates) {
+            Location loc = delegate.getLocation(name);
+            if (loc != null) {
+                return loc;
+            }
+        }
+        return Location.UNKNOWN;
     }
 }

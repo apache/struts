@@ -38,11 +38,11 @@ import java.util.Iterator;
 /**
  * A class to handle settings via a properties file.
  */
-class PropertiesSettings extends Settings {
+class PropertiesSettings implements Settings {
 
-    LocatableProperties settings;
-    static Logger LOG = LoggerFactory.getLogger(PropertiesSettings.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PropertiesSettings.class);
 
+    private LocatableProperties settings;
 
     /**
      * Creates a new properties config given the name of a properties file. The name is expected to NOT have
@@ -87,27 +87,12 @@ class PropertiesSettings extends Settings {
 
 
     /**
-     * Sets a property in the properties file.
-     *
-     * @see #set(String, String)
-     */
-    public void setImpl(String aName, String aValue) {
-        settings.setProperty(aName, aValue);
-    }
-
-    /**
      * Gets a property from the properties file.
      *
      * @see #get(String)
      */
-    public String getImpl(String aName) throws IllegalArgumentException {
-        String setting = settings.getProperty(aName);
-
-        if (setting == null) {
-            throw new IllegalArgumentException("No such setting:" + aName);
-        }
-
-        return setting;
+    public String get(String aName) throws IllegalArgumentException {
+        return settings.getProperty(aName);
     }
     
     /**
@@ -115,29 +100,8 @@ class PropertiesSettings extends Settings {
      *
      * @see #getLocation(String)
      */
-    public Location getLocationImpl(String aName) throws IllegalArgumentException {
-        Location loc = settings.getPropertyLocation(aName);
-
-        if (loc == null) {
-            if (!settings.containsKey(aName)) {
-                throw new IllegalArgumentException("No such setting:" + aName);
-            } 
-        }
-
-        return loc;
-    }
-
-    /**
-     * Tests to see if a property exists in the properties file.
-     *
-     * @see #isSet(String)
-     */
-    public boolean isSetImpl(String aName) {
-        if (settings.get(aName) != null) {
-            return true;
-        } else {
-            return false;
-        }
+    public Location getLocation(String aName) throws IllegalArgumentException {
+        return settings.getPropertyLocation(aName);
     }
 
     /**
@@ -145,7 +109,8 @@ class PropertiesSettings extends Settings {
      *
      * @see #list()
      */
-    public Iterator listImpl() {
+    public Iterator list() {
         return settings.keySet().iterator();
     }
+
 }

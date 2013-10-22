@@ -21,14 +21,15 @@
 
 package org.apache.struts2.config;
 
+import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.security.DefaultSecurityGate;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-
-import org.apache.struts2.StrutsConstants;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 
@@ -38,17 +39,14 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * This class creates and delegates to other settings by using an internal
  * {@link DelegatingSettings} object.
  */
-public class DefaultSettings extends Settings {
+public class DefaultSettings implements Settings {
 
-    /**
-     * The logging instance for this class.
-     */
-    protected Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultSecurityGate.class);
 
     /**
      * The Settings object that handles API calls.
      */
-    Settings delegate;
+    private Settings delegate;
 
     /**
      * Constructs an instance by loading the standard property files, 
@@ -67,53 +65,39 @@ public class DefaultSettings extends Settings {
         try {
             list.add(new PropertiesSettings("struts"));
         } catch (Exception e) {
-            log.warn("DefaultSettings: Could not find or error in struts.properties", e);
+            LOG.warn("DefaultSettings: Could not find or error in struts.properties", e);
         }
 
-        Settings[] settings = new Settings[list.size()];
-        delegate = new DelegatingSettings(list.toArray(settings));
+        delegate = new DelegatingSettings(list);
 
         // struts.custom.properties
-        try {
-            StringTokenizer customProperties = new StringTokenizer(delegate.getImpl(StrutsConstants.STRUTS_CUSTOM_PROPERTIES), ",");
+        String files = delegate.get(StrutsConstants.STRUTS_CUSTOM_PROPERTIES);
+        if (files != null) {
+            StringTokenizer customProperties = new StringTokenizer(files, ",");
 
             while (customProperties.hasMoreTokens()) {
                 String name = customProperties.nextToken();
-
                 try {
                     list.add(new PropertiesSettings(name));
                 } catch (Exception e) {
-                    log.error("DefaultSettings: Could not find " + name + ".properties. Skipping.");
+                    LOG.error("DefaultSettings: Could not find " + name + ".properties. Skipping.");
                 }
             }
 
-            settings = new Settings[list.size()];
-            delegate = new DelegatingSettings(list.toArray(settings));
-        } catch (IllegalArgumentException e) {
-            // Assume it's OK, since IllegalArgumentException is thrown  
-            // when Settings is unable to find a certain setting,
-            // like the struts.custom.properties, which is commented out
+            delegate = new DelegatingSettings(list);
         }
-
     }
 
-    // See superclass for Javadoc
-    public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
-        delegate.setImpl(name, value);
+    public Location getLocation(String name) {
+        return delegate.getLocation(name);
     }
 
-    // See superclass for Javadoc
-    public String getImpl(String aName) throws IllegalArgumentException {
-        return delegate.getImpl(aName);
+    public String get(String aName) throws IllegalArgumentException {
+        return delegate.get(aName);
     }
 
-    // See superclass for Javadoc
-    public boolean isSetImpl(String aName) {
-        return delegate.isSetImpl(aName);
+    public Iterator list() {
+        return delegate.list();
     }
 
-    // See superclass for Javadoc
-    public Iterator listImpl() {
-        return delegate.listImpl();
-    }
 }

@@ -23,13 +23,13 @@ package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
-/**
- * Loads the default properties, separate from the usual struts.properties loading
- */
-public class DefaultPropertiesProvider extends PropertiesConfigurationProvider {
+import java.util.Iterator;
+
+public class PropertiesConfigurationProvider implements ConfigurationProvider {
 
     public void destroy() {
     }
@@ -37,13 +37,26 @@ public class DefaultPropertiesProvider extends PropertiesConfigurationProvider {
     public void init(Configuration configuration) throws ConfigurationException {
     }
 
-    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-        try {
-            PropertiesSettings defaultSettings = new PropertiesSettings("org/apache/struts2/default");
-            loadSettings(props, defaultSettings);
-        } catch (Exception e) {
-            throw new ConfigurationException("Could not find or error in org/apache/struts2/default.properties", e);
-        }
+    public void loadPackages() throws ConfigurationException {
     }
 
+    public boolean needsReload() {
+        return false;
+    }
+
+    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+        final DefaultSettings settings = new DefaultSettings();
+        loadSettings(props, settings);
+    }
+
+    /**
+     * @param props
+     * @param settings
+     */
+    protected void loadSettings(LocatableProperties props, final Settings settings) {
+        for (Iterator i = settings.list(); i.hasNext(); ) {
+            String name = (String) i.next();
+            props.setProperty(name, settings.get(name), settings.getLocation(name));
+        }
+    }
 }

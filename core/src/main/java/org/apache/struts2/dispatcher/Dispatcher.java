@@ -60,7 +60,7 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.config.BeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
-import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
+import org.apache.struts2.config.PropertiesConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
@@ -374,7 +374,7 @@ public class Dispatcher {
     }
     
     private void init_LegacyStrutsProperties() {
-        configurationManager.addContainerProvider(new LegacyPropertiesConfigurationProvider());
+        configurationManager.addContainerProvider(new PropertiesConfigurationProvider());
     }
 
     private void init_TraditionalXmlConfigurations() {

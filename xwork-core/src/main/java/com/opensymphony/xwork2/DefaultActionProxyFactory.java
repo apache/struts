@@ -71,4 +71,9 @@ public class DefaultActionProxyFactory implements ActionProxyFactory {
         return proxy;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
+
 }

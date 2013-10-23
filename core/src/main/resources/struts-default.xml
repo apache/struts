@@ -48,6 +48,7 @@
     <bean type="com.opensymphony.xwork2.FileManagerFactory" class="com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory" name="struts" scope="singleton"/>
 
     <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="struts" class="org.apache.struts2.impl.StrutsActionProxyFactory"/>
+    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="prefix" class="org.apache.struts2.impl.PrefixBasedActionProxyFactory"/>
 
     <bean type="com.opensymphony.xwork2.conversion.ObjectTypeDeterminer" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer"/>
 

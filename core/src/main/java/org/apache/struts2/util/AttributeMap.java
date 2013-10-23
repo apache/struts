@@ -21,14 +21,13 @@
 
 package org.apache.struts2.util;
 
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.jsp.PageContext;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.jsp.PageContext;
-
-import org.apache.struts2.ServletActionContext;
 
 
 /**
@@ -48,14 +47,11 @@ public class AttributeMap implements Map {
 
     protected static final String UNSUPPORTED = "method makes no sense for a simplified map";
 
-
     Map context;
-
 
     public AttributeMap(Map context) {
         this.context = context;
     }
-
 
     public boolean isEmpty() {
         throw new UnsupportedOperationException(UNSUPPORTED);
@@ -135,4 +131,25 @@ public class AttributeMap implements Map {
     private PageContext getPageContext() {
         return (PageContext) context.get(ServletActionContext.PAGE_CONTEXT);
     }
+
+    @Override
+    public String toString() {
+        return "AttributeMap {" +
+                "request=" + toStringSafe(context.get("request")) +
+                ", session=" +  toStringSafe(context.get("session")) +
+                ", application=" + toStringSafe(context.get("application")) +
+                '}';
+    }
+
+    private String toStringSafe(Object obj) {
+        try {
+            if (obj != null) {
+                return String.valueOf(obj);
+            }
+            return "";
+        } catch (Exception e) {
+            return "Exception thrown: " + e;
+        }
+    }
+
 }

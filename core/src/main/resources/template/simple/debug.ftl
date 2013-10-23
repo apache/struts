@@ -43,7 +43,7 @@
 <p />
 
 <h3>Value Stack Contents</h3>
-<table border="0" cellpadding="2" cellspacing="0" width="400" bgcolor="#DDDDDD">
+<table border="0" cellpadding="2" cellspacing="0" bgcolor="#DDDDDD">
     <tr><th>Object</th><th>Property Name</th><th>Property Value</th></tr>
 
     <#assign index=1>
@@ -65,7 +65,7 @@
 
 <h3>Stack Context</h3>
 <i>These items are available using the #key notation</i>
-<table border="0" cellpadding="2" cellspacing="0" width="400" bgcolor="#DDDDDD">
+<table border="0" cellpadding="2" cellspacing="0" bgcolor="#DDDDDD">
     <tr>
         <th>Key</th><th>Value</th>
     </tr>
@@ -73,7 +73,8 @@
     <#assign index=1>
     <#list stack.context.keySet() as contextKey>
     <tr bgcolor="<#if (index % 2) == 0>#BBBBBB<#else>#CCCCCC</#if>">
-        <td>${contextKey}</td><td><#if stack.context.get(contextKey)??>${stack.context.get(contextKey).toString()?html}<#else>null</#if></td>
+        <td>${contextKey}</td>
+        <td><#if stack.context.get(contextKey)??>${struts.toStringSafe(stack.context.get(contextKey))?html}<#else>null</#if></td>
     </tr>
         <#assign index= index + 1>
     </#list>

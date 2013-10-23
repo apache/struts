@@ -35,6 +35,7 @@
 
     <properties>
         <jackson.version>1.9.2</jackson.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>

@@ -39,4 +39,7 @@
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/config-browser/</url>
     </scm>
 
+    <properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

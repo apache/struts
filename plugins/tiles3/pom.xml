@@ -41,6 +41,7 @@
 
     <properties>
         <tiles3.version>3.0.1</tiles3.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>

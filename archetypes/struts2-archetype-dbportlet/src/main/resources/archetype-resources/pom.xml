@@ -12,6 +12,7 @@
 
     <properties>
         <struts2.version>${project.version}</struts2.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>    
 
 	<dependencies>

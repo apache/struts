@@ -93,6 +93,7 @@
         <siteContent.path>${site.mainDirectory}/staging</siteContent.path>
         <scmCheckout.path>${site.mainDirectory}/scm</scmCheckout.path>
         <siteDeploy.url>file://${siteContent.path}</siteDeploy.url>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <profiles>

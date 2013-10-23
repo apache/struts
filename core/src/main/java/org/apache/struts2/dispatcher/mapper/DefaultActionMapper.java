@@ -84,7 +84,7 @@ import java.util.regex.Pattern;
  *  &lt;s:form action=&quot;baz&quot;&gt;
  *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
  *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;method:anotherMethod&quot; value=&quot;Cancel&quot;/&gt;
+ *      &lt;s:submit method=&quot;anotherMethod&quot; value=&quot;Cancel&quot;/&gt;
  *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: method-example --&gt;
  * </pre>
@@ -103,7 +103,7 @@ import java.util.regex.Pattern;
  *  &lt;s:form action=&quot;baz&quot;&gt;
  *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
  *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;action:anotherAction&quot; value=&quot;Cancel&quot;/&gt;
+ *      &lt;s:submit action=&quot;anotherAction&quot; value=&quot;Cancel&quot;/&gt;
  *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: action-example --&gt;
  * </pre>

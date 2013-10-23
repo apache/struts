@@ -277,4 +277,6 @@ public final class StrutsConstants {
     /** enables access to actions in other namespaces than current with action: prefix **/
     public static final String STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES = "struts.mapper.action.prefix.crossNamespaces";
 
+    public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";
+
 }

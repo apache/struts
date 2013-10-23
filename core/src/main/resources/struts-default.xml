@@ -187,6 +187,7 @@
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
+            <interceptor name="deprecation" class="org.apache.struts2.interceptor.DeprecationInterceptor" />
 
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
@@ -200,6 +201,7 @@
                     <param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
                 </interceptor-ref>
                 <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="deprecation"/>
             </interceptor-stack>
 
             <!-- Sample validation and workflow stack -->
@@ -309,6 +311,7 @@
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>
                 <interceptor-ref name="debugging"/>
+                <interceptor-ref name="deprecation"/>
             </interceptor-stack>
 
             <!-- The completeStack is here for backwards compatibility for

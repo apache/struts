@@ -21,20 +21,20 @@
 
 package org.apache.struts2.components.template;
 
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.StrutsConstants;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-
 /**
  * The TemplateEngineManager will return a template engine for the template
  */
 public class TemplateEngineManager {
-    public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";
 
     /** The default template extenstion is <code>ftl</code>. */
     public static final String DEFAULT_TEMPLATE_TYPE = "ftl";
@@ -44,7 +44,7 @@ public class TemplateEngineManager {
     Container container;
     String defaultTemplateType;
     
-    @Inject(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)
+    @Inject(StrutsConstants.DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)
     public void setDefaultTemplateType(String type) {
         this.defaultTemplateType = type;
     }

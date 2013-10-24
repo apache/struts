@@ -151,6 +151,7 @@
             <result-type name="velocity" class="org.apache.struts2.dispatcher.VelocityResult"/>
             <result-type name="xslt" class="org.apache.struts2.views.xslt.XSLTResult"/>
             <result-type name="plainText" class="org.apache.struts2.dispatcher.PlainTextResult" />
+            <result-type name="postback" class="org.apache.struts2.dispatcher.PostbackResult" />
         </result-types>
 
         <interceptors>

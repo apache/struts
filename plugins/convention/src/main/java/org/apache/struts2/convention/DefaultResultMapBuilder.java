@@ -359,7 +359,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             int indexOfDot = path.indexOf('.', resultPrefix.length());
 
             // This case is when the path doesn't contain a result code
-            if (indexOfDot == resultPrefix.length() || !flatResultLayout) {
+            if (indexOfDot == resultPrefix.length()) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("The result file [#0] has no result code and therefore" +
                         " will be associated with success, input and error by default. This might" +

@@ -36,8 +36,8 @@ under the License.
         }
     </style>
 #if($page.hasCode)
-    <link href='http://struts.apache.org/highlighter/styles/shCoreStruts.css' rel='stylesheet' type='text/css' />
-    <link href='http://struts.apache.org/highlighter/styles/shThemeStruts.css' rel='stylesheet' type='text/css' />
+    <link href='http://struts.apache.org/highlighter/style/shCoreStruts.css' rel='stylesheet' type='text/css' />
+    <link href='http://struts.apache.org/highlighter/style/shThemeStruts.css' rel='stylesheet' type='text/css' />
     <script src='http://struts.apache.org/highlighter/js/shCore.js' type='text/javascript'></script>
     #foreach ($hscript in $page.CodeScripts)
         <script src='http://struts.apache.org/highlighter/js/$hscript' type='text/javascript'></script>

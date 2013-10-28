@@ -20,7 +20,7 @@
  * under the License.
  */
 -->
-<@s.textfield name="test" dynamicAttributes={"placeholder":"input","foo":"bar"}/>
-<@s.textfield name="test" placeholder="input" foo="bar"/>
-<@s.textfield name="test" break=true />
-<@s.textfield name="required" required=true />
+<@s.textfield name="test" theme="simple" dynamicAttributes={"placeholder":"input","foo":"bar"}/>
+<@s.textfield name="test" theme="simple" placeholder="input" foo="bar"/>
+<@s.textfield name="test" theme="simple" break=true />
+<@s.textfield name="required" theme="simple" required=true />

@@ -56,7 +56,7 @@ ${parameters.label?html}<#t/>
 </#if>
 :<#t/>
 <#if parameters.tooltip??>
-    <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
+    <#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
 </#if>
 </label><#t/>
 </#if>
@@ -88,7 +88,7 @@ ${parameters.label?html}<#t/>
 </#if>
 :<#t/>
 <#if parameters.tooltip??>
-    <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
+    <#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
 </#if>
 </label><#t/>
 </#if>
@@ -98,7 +98,7 @@ ${parameters.label?html}<#t/>
         <span class="required">*</span><#t/>
     </#if>
     <#if parameters.tooltip??>
-        <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
+        <#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
     </#if>
 </#if>
     </td>
@@ -121,4 +121,4 @@ ${parameters.label?html}<#t/>
 </#if>
 </#if>
 </#if>
- <#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" /><#nt/>
+ <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" /><#nt/>

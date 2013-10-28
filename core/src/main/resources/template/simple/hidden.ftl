@@ -37,5 +37,5 @@
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 />

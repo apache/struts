@@ -46,9 +46,9 @@
 <#if parameters.tabindex??>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl"/>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >
 <#else>
 <#if parameters.type?? && parameters.type=="image">
@@ -86,8 +86,8 @@
 <#if parameters.tabindex??>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 />
 </#if>

@@ -35,16 +35,16 @@
 <#if parameters.id??>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/css.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
 <#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#if parameters.multiple?default(false)>
  multiple="multiple"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >
 <#if parameters.headerKey?? && parameters.headerValue??>
     <option value="${parameters.headerKey?html}"
@@ -115,7 +115,7 @@
     >${itemValue?html}</option><#lt/>
 </@s.iterator>
 
-<#include "/${parameters.templateDir}/simple/optgroup.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/optgroup.ftl" />
 
 </select>
 

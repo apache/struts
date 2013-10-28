@@ -23,6 +23,7 @@ package org.apache.struts2.components.template;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Locale;
 import java.util.Map;
 import java.util.List;
 

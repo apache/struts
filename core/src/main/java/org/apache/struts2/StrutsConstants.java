@@ -129,6 +129,9 @@ public final class StrutsConstants {
     /** The default UI template theme */
     public static final String STRUTS_UI_THEME = "struts.ui.theme";
 
+    /** Token to use to indicate start of theme to be expanded. */
+    public static final String STRUTS_UI_THEME_EXPANSION_TOKEN = "struts.ui.theme.expansion.token";
+
     /** The maximize size of a multipart request (file upload) */
     public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
 

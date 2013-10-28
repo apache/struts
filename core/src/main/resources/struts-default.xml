@@ -65,6 +65,7 @@
 
     <bean type="org.apache.struts2.views.TagLibrary" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
 
+    <bean class="org.apache.struts2.views.freemarker.FreemarkerThemeTemplateLoader" />
     <bean class="org.apache.struts2.views.freemarker.FreemarkerManager" name="struts" />
     <bean class="org.apache.struts2.views.velocity.VelocityManager" name="struts" optional="true" />
 

@@ -20,6 +20,6 @@
  * under the License.
  */
 -->
-<@s.radio name="client" id="client_" list='{"foo", "bar"}' />
+<@s.radio theme="simple" name="client" id="client_" list='{"foo", "bar"}' />
 
-<@s.radio name="car" list={"ford": "Ford Motor Co", "toyota": "Toyota"} listKey="key" listValue="value" />
+<@s.radio theme="simple" name="car" list={"ford": "Ford Motor Co", "toyota": "Toyota"} listKey="key" listValue="value" />

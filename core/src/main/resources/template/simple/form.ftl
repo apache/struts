@@ -20,7 +20,7 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/simple/form-common.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-common.ftl" />
 <#if parameters.onreset??>
  onreset="${parameters.onreset?html}"<#rt/>
 </#if>

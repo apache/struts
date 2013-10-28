@@ -179,6 +179,7 @@ public class FreemarkerManager {
     protected Map<String,TagLibrary> tagLibraries;
 
     private FileManager fileManager;
+    private FreemarkerThemeTemplateLoader themeTemplateLoader;
 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {
@@ -220,6 +221,11 @@ public class FreemarkerManager {
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
+    @Inject
+    public void setThemeTemplateLoader(FreemarkerThemeTemplateLoader themeTemplateLoader) {
+        this.themeTemplateLoader = themeTemplateLoader;
+    }
+
     public boolean getNoCharsetInContentType() {
         return noCharsetInContentType;
     }
@@ -257,15 +263,9 @@ public class FreemarkerManager {
                     LOG.error("Cannot load freemarker configuration: ",e);
                 }
             }
-//            config = createConfiguration(servletContext);
-
             // store this configuration in the servlet context
             servletContext.setAttribute(CONFIG_SERVLET_CONTEXT_KEY, config);
-
-            config.setWhitespaceStripping(true);
         }
-
-
         return config;
     }
 
@@ -289,11 +289,22 @@ public class FreemarkerManager {
             templatePath = servletContext.getInitParameter("templatePath");
         }
 
-        config.setTemplateLoader(createTemplateLoader(servletContext, templatePath));
+        configureTemplateLoader(createTemplateLoader(servletContext, templatePath));
 
         loadSettings(servletContext);
     }
 
+    /** 
+     * Sets the Freemarker Configuration's template loader with the FreemarkerThemeTemplateLoader 
+     * at the top.
+     * 
+     * @see org.apache.struts2.views.freemarker.FreemarkerThemeTemplateLoader
+     */
+    protected void configureTemplateLoader(TemplateLoader templateLoader) {
+        themeTemplateLoader.init(templateLoader);
+        config.setTemplateLoader(themeTemplateLoader);
+    }
+    
     /**
      * Create the instance of the freemarker Configuration object.
      * <p/>
@@ -321,8 +332,7 @@ public class FreemarkerManager {
         if (encoding != null) {
             configuration.setDefaultEncoding(encoding);
         }
-
-
+        configuration.setLocalizedLookup(false);
         configuration.setWhitespaceStripping(true);
 
         return configuration;

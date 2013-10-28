@@ -20,7 +20,7 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/xhtml/controlheader-core.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl" />
     <td
 <#if parameters.align??>
     align="${parameters.align?html}"<#t/>

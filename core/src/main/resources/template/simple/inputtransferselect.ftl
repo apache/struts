@@ -55,8 +55,8 @@
 <#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 />
 
 

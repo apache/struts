@@ -65,7 +65,7 @@ ${parameters.label?html}<#t/>
  <span class="required">*</span><#t/>
 </#if>
 ${parameters.labelseparator?default(":")?html}<#t/>
-<#include "/${parameters.templateDir}/xhtml/tooltip.ftl" /> 
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
 </label><#t/>
 </#if>
     </td><#lt/>

@@ -91,12 +91,12 @@
  title="${parameters.title?html}"<#rt/>
     </#if>
 </#if>
-<#include "/${parameters.templateDir}/simple/css.ftl" />
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 /><#rt/>
-<label for="${parameters.id?html}${itemKeyStr?html}"<#include "/${parameters.templateDir}/simple/css.ftl"/>><#rt/>
+<label for="${parameters.id?html}${itemKeyStr?html}"<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl"/>><#rt/>
     ${itemValue}<#t/>
 </label>
 </@s.iterator>

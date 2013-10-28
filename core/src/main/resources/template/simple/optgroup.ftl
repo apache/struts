@@ -30,7 +30,7 @@
 	<#if optGroupInternalListUiBean.parameters.disabled?default(false)>
 	disabled="disabled"
 	</#if>
-<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >
 
 <#list optGroupInternalListUiBean.parameters.list as optGroupBean>

@@ -84,6 +84,21 @@ import java.util.concurrent.ConcurrentMap;
  *          <td>String</td>
  *          <td>define the template name</td>
  *       </td>
+ *       <tr>
+ *          <td>themeExpansionToken</td>
+ *          <td>n/a</td>
+ *          <td>String</td>
+ *          <td>special token (defined with struts.ui.theme.expansion.token) used to search for template in parent theme
+ *          (don't use it separately!)</td>
+ *       </td>
+ *       <tr>
+ *          <td>expandTheme</td>
+ *          <td>n/a</td>
+ *          <td>String</td>
+ *          <td>concatenation of themeExpansionToken and theme which tells internal template loader mechanism
+ *          to try load template from current theme and then from parent theme (and parent theme, and so on)
+ *          when used with &lt;#include/&gt; directive</td>
+ *       </td>
  *    </tbody>
  * </table>
  *
@@ -499,6 +514,7 @@ public abstract class UIBean extends Component {
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;
+    protected String uiThemeExpansionToken;
     protected TemplateEngineManager templateEngineManager;
 
     // dynamic attributes support for tags used with FreeMarker templates
@@ -512,6 +528,11 @@ public abstract class UIBean extends Component {
     @Inject(StrutsConstants.STRUTS_UI_THEME)
     public void setDefaultUITheme(String theme) {
         this.defaultUITheme = theme;
+    }
+
+    @Inject(StrutsConstants.STRUTS_UI_THEME_EXPANSION_TOKEN)
+    public void setUIThemeExpansionToken(String uiThemeExpansionToken) {
+        this.uiThemeExpansionToken = uiThemeExpansionToken;
     }
 
     @Inject
@@ -627,9 +648,15 @@ public abstract class UIBean extends Component {
     }
 
     public void evaluateParams() {
-        addParameter("templateDir", getTemplateDir());
-        addParameter("theme", getTheme());
+        String templateDir = getTemplateDir();
+        String theme = getTheme();
+        
+        addParameter("templateDir", templateDir);
+        addParameter("theme", theme);
+        addParameter("template", template != null ? findString(template) : getDefaultTemplate());
         addParameter("dynamicAttributes", dynamicAttributes);
+        addParameter("themeExpansionToken", uiThemeExpansionToken);
+        addParameter("expandTheme", uiThemeExpansionToken + theme);
 
         String name = null;
         String providedLabel = null;

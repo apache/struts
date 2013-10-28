@@ -28,4 +28,4 @@
 ><#t/>
 <#include "/${parameters.templateDir}/simple/reset.ftl" />
 </div><#t/>
-<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />

@@ -64,4 +64,4 @@
 <#if parameters.acceptcharset??>
  accept-charset="${parameters.acceptcharset?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />

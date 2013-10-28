@@ -20,7 +20,7 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/css_xhtml/controlheader-core.ftl">
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl">
 <#if parameters.labelposition?default("top") == 'top'>
 <div <#rt/>
 <#else>

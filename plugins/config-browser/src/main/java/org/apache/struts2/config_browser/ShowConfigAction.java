@@ -64,7 +64,7 @@ public class ShowConfigAction extends ActionNamesAction {
     }
 
     public String getNamespace() {
-        return namespace;
+        return StringEscapeUtils.escapeHtml4(namespace);
     }
     
     @Inject
@@ -82,7 +82,7 @@ public class ShowConfigAction extends ActionNamesAction {
     }
 
     public void setNamespace(String namespace) {
-        this.namespace = StringEscapeUtils.escapeEcmaScript(namespace);
+        this.namespace = namespace;
     }
 
     public String getActionName() {

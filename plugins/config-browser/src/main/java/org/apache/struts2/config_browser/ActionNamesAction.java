@@ -54,11 +54,11 @@ public class ActionNamesAction extends ActionSupport {
     }
 
     public String getNamespace() {
-        return namespace;
+        return StringEscapeUtils.escapeHtml4(namespace);
     }
 
     public void setNamespace(String namespace) {
-        this.namespace = StringEscapeUtils.escapeEcmaScript(namespace);
+        this.namespace = namespace;
     }
 
     @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)

@@ -59,16 +59,23 @@ public class TilesResult extends ServletDispatcherResult {
 
     @Override
     public void doExecute(String location, ActionInvocation invocation) throws Exception {
-        setLocation(location);
         ServletContext context = ServletActionContext.getServletContext();
-        ApplicationContext applicationContext = ServletUtil.getApplicationContext(context);
-        TilesContainer container = TilesAccess.getContainer(applicationContext);
-
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
 
+        ApplicationContext applicationContext = ServletUtil.getApplicationContext(context);
         ServletRequest servletRequest = new ServletRequest(applicationContext, request, response);
+
+        TilesContainer container = initTilesContainer(applicationContext, servletRequest);
+
+        container.startContext(servletRequest);
         container.render(location, servletRequest);
+    }
+
+    protected TilesContainer initTilesContainer(ApplicationContext applicationContext, ServletRequest servletRequest) {
+        TilesContainer container = TilesAccess.getContainer(applicationContext);
+        TilesAccess.setCurrentContainer(servletRequest, container);
+        return container;
     }
 
 }

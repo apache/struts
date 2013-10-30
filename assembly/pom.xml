@@ -84,35 +84,6 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>cwiki-docs</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <classpathScope>runtime</classpathScope>
-                            <includeProjectDependencies>true</includeProjectDependencies>
-                            <mainClass>org.apache.cxf.cwiki.SiteExporter</mainClass>
-                            <arguments>
-                                <argument>-d</argument>
-                                <argument>${project.build.directory}/cwiki/WW</argument>
-                                <argument>-password</argument>
-                                <argument>${confluence.password}</argument>
-                                <argument>-user</argument>
-                                <argument>${confluence.user}</argument>
-                                <argument>${basedir}/src/main/resources/docs.cfg</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
@@ -138,6 +109,49 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>export-cwiki</id>
+            <activation>
+                <property>
+                    <name>!skipWiki</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2</version>
+                        <executions>
+                            <execution>
+                                <id>cwiki-docs</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <classpathScope>runtime</classpathScope>
+                                    <includeProjectDependencies>true</includeProjectDependencies>
+                                    <mainClass>org.apache.cxf.cwiki.SiteExporter</mainClass>
+                                    <arguments>
+                                        <argument>-d</argument>
+                                        <argument>${project.build.directory}/cwiki/WW</argument>
+                                        <argument>-password</argument>
+                                        <argument>${confluence.password}</argument>
+                                        <argument>-user</argument>
+                                        <argument>${confluence.user}</argument>
+                                        <argument>${basedir}/src/main/resources/docs.cfg</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
 

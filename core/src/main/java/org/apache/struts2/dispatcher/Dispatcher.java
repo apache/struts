@@ -145,7 +145,7 @@ public class Dispatcher {
     private String multipartSaveDir;
 
     /**
-     * Stores the value of StrutsConstants.STRUTS_MULTIPART_HANDLER setting
+     * Stores the value of {@link StrutsConstants#STRUTS_MULTIPART_PARSER} setting
      */
     private String multipartHandlerName;
 

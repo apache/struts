@@ -34,7 +34,7 @@ import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpSession;
 
@@ -45,7 +45,7 @@ import java.util.Map;
 /**
  * Test case for ExecuteAndWaitInterceptor.
  */
-public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
+public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
 
     private StrutsMockHttpServletRequest request;
     private HttpSession httpSession;

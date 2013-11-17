@@ -23,13 +23,13 @@ package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import org.apache.commons.io.FileUtils;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
 /**
  * Test case for FreemarkerManager
  */
-public class FreemarkerManagerTest extends StrutsTestCase {
+public class FreemarkerManagerTest extends StrutsInternalTestCase {
 
     public void testIfStrutsEncodingIsSetProperty() throws Exception {
         FreemarkerManager mgr = new FreemarkerManager();

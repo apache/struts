@@ -26,9 +26,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
-public class AnnotationValidationInterceptorTest extends StrutsTestCase {
+public class AnnotationValidationInterceptorTest extends StrutsInternalTestCase {
 
     private AnnotationValidationInterceptor interceptor = new AnnotationValidationInterceptor();
     private Mock mockActionInvocation;

@@ -27,14 +27,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -44,7 +41,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Unit test for {@link StreamResult}.
  *
  */
-public class StreamResultTest extends StrutsTestCase {
+public class StreamResultTest extends StrutsInternalTestCase {
 
     private StreamResult result;
     private MockHttpServletResponse response;

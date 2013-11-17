@@ -21,9 +21,7 @@
 
 package org.apache.struts2.dispatcher;
 
-import junit.framework.TestCase;
-
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
@@ -34,13 +32,12 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
  *
  */
-public class VelocityResultTest extends StrutsTestCase {
+public class VelocityResultTest extends StrutsInternalTestCase {
 
     ActionInvocation actionInvocation;
     Mock mockActionProxy;

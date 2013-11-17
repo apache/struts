@@ -27,20 +27,19 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
  * PropertyTag test case.
  *
  */
-public class PropertyTagTest extends StrutsTestCase {
+public class PropertyTagTest extends StrutsInternalTestCase {
 
     StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
     ValueStack stack;

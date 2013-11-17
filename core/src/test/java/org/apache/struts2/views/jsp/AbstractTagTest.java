@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -42,14 +42,13 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
  * Base class to extend for unit testing UI Tags.
  *
  */
-public abstract class AbstractTagTest extends StrutsTestCase {
+public abstract class AbstractTagTest extends StrutsInternalTestCase {
     protected Action action;
     protected Map context;
     protected Map session;

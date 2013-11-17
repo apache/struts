@@ -21,7 +21,6 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -29,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
@@ -38,16 +37,13 @@ import org.apache.struts2.views.jsp.StrutsMockHttpSession;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
  * TokenInterceptorTest
  */
-public class TokenInterceptorTest extends StrutsTestCase {
+public class TokenInterceptorTest extends StrutsInternalTestCase {
 
     ActionContext oldContext;
     HttpSession httpSession;

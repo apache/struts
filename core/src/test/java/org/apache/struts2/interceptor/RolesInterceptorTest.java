@@ -22,17 +22,14 @@
 package org.apache.struts2.interceptor;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
-import javax.security.auth.login.FailedLoginException;
-
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.mockobjects.servlet.MockHttpServletResponse;
 
-public class RolesInterceptorTest extends StrutsTestCase {
+public class RolesInterceptorTest extends StrutsInternalTestCase {
 
     private RolesInterceptor interceptor = new RolesInterceptor();
 

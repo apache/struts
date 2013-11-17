@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * HttpHeaderResultTest
  */
-public class HttpHeaderResultTest extends StrutsTestCase {
+public class HttpHeaderResultTest extends StrutsInternalTestCase {
 
     ActionInvocation invocation;
     HttpHeaderResult result;

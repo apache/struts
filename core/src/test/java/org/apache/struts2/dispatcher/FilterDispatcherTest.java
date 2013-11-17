@@ -25,7 +25,7 @@ import com.mockobjects.servlet.MockFilterChain;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
@@ -48,7 +48,7 @@ import java.util.HashMap;
  *
  * @version $Date$ $Id$
  */
-public class FilterDispatcherTest extends StrutsTestCase {
+public class FilterDispatcherTest extends StrutsInternalTestCase {
 
     public void testIfActionMapperIsNullDontServiceAction() throws Exception {
         MockServletContext servletContext = new MockServletContext();

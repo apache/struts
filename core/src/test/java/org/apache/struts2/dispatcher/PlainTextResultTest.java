@@ -26,7 +26,7 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
@@ -39,7 +39,7 @@ import java.io.StringWriter;
  * Test case for PlainTextResult.
  *
  */
-public class PlainTextResultTest extends StrutsTestCase {
+public class PlainTextResultTest extends StrutsInternalTestCase {
 
     ValueStack stack;
     MockActionInvocation invocation;

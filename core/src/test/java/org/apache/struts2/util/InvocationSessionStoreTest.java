@@ -26,7 +26,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ import java.util.Map;
  * InvocationSessionStoreTest
  *
  */
-public class InvocationSessionStoreTest extends StrutsTestCase {
+public class InvocationSessionStoreTest extends StrutsInternalTestCase {
 
     private static final String INVOCATION_KEY = "org.apache.struts2.util.InvocationSessionStoreTest.invocation";
     private static final String TOKEN_VALUE = "org.apache.struts2.util.InvocationSessionStoreTest.token";

@@ -23,7 +23,7 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -34,7 +34,7 @@ import java.util.Map;
  *
  * @version $Date$ $Id$
  */
-public class UIBeanTest extends StrutsTestCase {
+public class UIBeanTest extends StrutsInternalTestCase {
 
     public void testPopulateComponentHtmlId1() throws Exception {
         ValueStack stack = ActionContext.getContext().getValueStack();

@@ -21,7 +21,7 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.Configuration;
@@ -30,7 +30,7 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 
 import java.util.HashMap;
 
-public class Restful2ActionMapperTest extends StrutsTestCase {
+public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 
     private Restful2ActionMapper mapper;
     private MockHttpServletRequest req;

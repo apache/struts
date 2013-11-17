@@ -29,7 +29,7 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -48,7 +48,7 @@ import java.util.Map;
 /**
  * Test case for FileUploadInterceptor.
  */
-public class FileUploadInterceptorTest extends StrutsTestCase {
+public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
     private FileUploadInterceptor interceptor;
     private File tempDir;

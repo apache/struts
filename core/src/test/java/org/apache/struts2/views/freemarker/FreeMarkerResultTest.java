@@ -29,8 +29,8 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -50,7 +50,7 @@ import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
  * Test case for FreeMarkerResult.
  *
  */
-public class FreeMarkerResultTest extends StrutsTestCase {
+public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
     ValueStack stack;
     MockActionInvocation invocation;

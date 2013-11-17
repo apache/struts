@@ -32,9 +32,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.springframework.mock.web.MockFilterConfig;
@@ -52,7 +50,7 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * @version $Date$ $Id$
  */
-public class FilterTest extends StrutsTestCase {
+public class FilterTest extends StrutsInternalTestCase {
 
     protected MockFilterConfig filterConfig;
     protected MockHttpServletRequest request;

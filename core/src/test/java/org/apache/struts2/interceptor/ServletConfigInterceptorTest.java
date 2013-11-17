@@ -28,8 +28,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.util.ServletContextAware;
 import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -44,7 +44,7 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
  * Unit test for {@link ServletConfigInterceptor}.
  *
  */
-public class ServletConfigInterceptorTest extends StrutsTestCase {
+public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
     private ServletConfigInterceptor interceptor;
 

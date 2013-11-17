@@ -29,12 +29,12 @@ import java.util.Map;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 /**
  * Unit test for MultiselectInterceptor.
  */
-public class MultiselectInterceptorTest extends StrutsTestCase {
+public class MultiselectInterceptorTest extends StrutsInternalTestCase {
 
     private MultiselectInterceptor interceptor;
     private MockActionInvocation ai;

@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -43,7 +43,7 @@ import java.util.List;
  * Unit test for {@link XSLTResult}.
  *
  */
-public class XSLTResultTest extends StrutsTestCase {
+public class XSLTResultTest extends StrutsInternalTestCase {
 
     private XSLTResult result;
     private MockHttpServletResponse response;

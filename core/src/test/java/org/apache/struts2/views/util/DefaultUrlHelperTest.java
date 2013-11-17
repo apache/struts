@@ -26,7 +26,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ import java.util.TreeMap;
  * Test case for DefaultUrlHelper.
  *
  */
-public class DefaultUrlHelperTest extends StrutsTestCase {
+public class DefaultUrlHelperTest extends StrutsInternalTestCase {
     
     private StubContainer stubContainer;
     private DefaultUrlHelper urlHelper;

@@ -21,8 +21,7 @@
 
 package org.apache.struts2.views.jsp;
 
-import org.apache.struts2.TestAction;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import com.mockobjects.servlet.MockPageContext;
@@ -33,7 +32,7 @@ import com.opensymphony.xwork2.ActionContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-public class I18nTagTest extends StrutsTestCase {
+public class I18nTagTest extends StrutsInternalTestCase {
 
     I18nTag tag;
     MockPageContext pageContext;

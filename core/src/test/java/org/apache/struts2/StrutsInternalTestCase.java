@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 /**
  * Base test case for JUnit testing Struts.
  */
-public abstract class StrutsTestCase extends XWorkTestCase {
+public abstract class StrutsInternalTestCase extends XWorkTestCase {
 
     static {
         ConsoleHandler handler = new ConsoleHandler();

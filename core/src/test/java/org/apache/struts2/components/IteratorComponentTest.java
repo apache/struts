@@ -2,13 +2,13 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 
-public class IteratorComponentTest extends StrutsTestCase {
+public class IteratorComponentTest extends StrutsInternalTestCase {
 
     public void testIterator() throws Exception {
         // given

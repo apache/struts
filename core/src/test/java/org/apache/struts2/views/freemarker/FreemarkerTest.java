@@ -23,15 +23,11 @@ package org.apache.struts2.views.freemarker;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.util.ListEntry;
 import org.apache.struts2.util.StrutsUtil;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 import freemarker.ext.beans.CollectionModel;
 import freemarker.template.ObjectWrapper;
@@ -39,7 +35,7 @@ import freemarker.template.ObjectWrapper;
 
 /**
  */
-public class FreemarkerTest extends StrutsTestCase {
+public class FreemarkerTest extends StrutsInternalTestCase {
 
     TestAction testAction = null;
 

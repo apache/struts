@@ -8,9 +8,9 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
-public class ComponentUtilsTest extends StrutsTestCase {
+public class ComponentUtilsTest extends StrutsInternalTestCase {
 
     public void testStripExpression() throws Exception {
         // given

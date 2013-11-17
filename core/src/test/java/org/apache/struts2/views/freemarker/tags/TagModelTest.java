@@ -28,9 +28,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.Component;
-import org.apache.struts2.views.freemarker.tags.TagModel;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -49,7 +48,7 @@ import freemarker.template.TemplateNumberModel;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 
-public class TagModelTest extends StrutsTestCase {
+public class TagModelTest extends StrutsInternalTestCase {
 
     final Object ADAPTER_TEMPLATE_MODEL_CONTAINED_OBJECT = new Object();
     final Object WRAPPING_TEMPLATE_MODEL_CONTAINED_OBJECT = new Object();

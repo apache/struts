@@ -30,7 +30,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
@@ -42,7 +42,7 @@ import java.util.Map;
  * DefaultActionMapper test case.
  *
  */
-public class DefaultActionMapperTest extends StrutsTestCase {
+public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     private MockHttpServletRequest req;
     private ConfigurationManager configManager;

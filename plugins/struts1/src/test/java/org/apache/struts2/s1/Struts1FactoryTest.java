@@ -23,8 +23,6 @@ package org.apache.struts2.s1;
 
 import java.lang.reflect.InvocationTargetException;
 
-import junit.framework.TestCase;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -37,10 +35,6 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;

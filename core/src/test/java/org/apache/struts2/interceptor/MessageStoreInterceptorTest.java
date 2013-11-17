@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.ServletActionRedirectResult;
 import org.easymock.EasyMock;
 
@@ -42,7 +42,7 @@ import com.opensymphony.xwork2.ActionSupport;
  *
  * @version $Date$ $Id$
  */
-public class MessageStoreInterceptorTest extends StrutsTestCase {
+public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
 
     public void testStoreMessage() throws Exception {
         MessageStoreInterceptor interceptor = new MessageStoreInterceptor();

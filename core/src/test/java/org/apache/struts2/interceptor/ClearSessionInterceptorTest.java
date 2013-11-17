@@ -26,7 +26,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.jmock.Mock;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -35,7 +35,7 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 /**
  * Test case for ClearSessionInterceptor.
  */
-public class ClearSessionInterceptorTest extends StrutsTestCase {
+public class ClearSessionInterceptorTest extends StrutsInternalTestCase {
 
     public void testCreateSession() throws Exception {
         Mock httpServletRequestMock = new Mock(HttpServletRequest.class);

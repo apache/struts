@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ import java.util.Map;
  * StrutsConversionErrorInterceptorTest
  *
  */
-public class StrutsConversionErrorInterceptorTest extends StrutsTestCase {
+public class StrutsConversionErrorInterceptorTest extends StrutsInternalTestCase {
 
     protected ActionContext context;
     protected ActionInvocation invocation;

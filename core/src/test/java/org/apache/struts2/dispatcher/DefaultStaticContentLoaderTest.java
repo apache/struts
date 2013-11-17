@@ -1,10 +1,10 @@
 package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import java.util.List;
 
-public class DefaultStaticContentLoaderTest extends StrutsTestCase {
+public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
 
     public void testParsePackages() throws Exception {
 

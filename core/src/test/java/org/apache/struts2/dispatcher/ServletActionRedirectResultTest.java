@@ -29,7 +29,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.easymock.IMocksControl;
@@ -46,7 +46,7 @@ import static org.easymock.EasyMock.expect;
 /**
  * @version $Date$ $Id$
  */
-public class ServletActionRedirectResultTest extends StrutsTestCase {
+public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
 
     public void testIncludeParameterInResultWithConditionParseOn() throws Exception {
 

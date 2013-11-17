@@ -23,7 +23,7 @@ package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -33,7 +33,7 @@ import java.util.Locale;
  * Unit test for {@link SettingsTest}.
  *
  */
-public class SettingsTest extends StrutsTestCase {
+public class SettingsTest extends StrutsInternalTestCase {
 
     public void testSettings() {
         Settings settings = new DefaultSettings();

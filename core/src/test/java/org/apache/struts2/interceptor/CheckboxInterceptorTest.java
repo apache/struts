@@ -24,7 +24,7 @@ package org.apache.struts2.interceptor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 /**
  * Unit test for ChecboxInterceptor. 
  */
-public class CheckboxInterceptorTest extends StrutsTestCase {
+public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 
     private CheckboxInterceptor interceptor;
     private MockActionInvocation ai;

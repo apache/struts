@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * Test class instantiation with Container
  */
-public class ClassInstantiationTest extends StrutsTestCase {
+public class ClassInstantiationTest extends StrutsInternalTestCase {
 
     public void testCompositeActionMapperInstantiationWithList() throws Exception {
         // given

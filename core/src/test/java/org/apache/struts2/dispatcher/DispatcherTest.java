@@ -34,7 +34,7 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -53,7 +53,7 @@ import java.util.Map;
  * Test case for Dispatcher.
  *
  */
-public class DispatcherTest extends StrutsTestCase {
+public class DispatcherTest extends StrutsInternalTestCase {
 
     public void testDefaultResurceBundlePropertyLoaded() throws Exception {
         Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties

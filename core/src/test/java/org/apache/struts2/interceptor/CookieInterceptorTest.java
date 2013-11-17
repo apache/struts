@@ -30,13 +30,13 @@ import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 
-public class CookieInterceptorTest extends StrutsTestCase {
+public class CookieInterceptorTest extends StrutsInternalTestCase {
 
 
     public void testIntercepDefault() throws Exception {

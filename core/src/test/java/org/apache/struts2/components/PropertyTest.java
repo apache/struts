@@ -24,23 +24,17 @@ package org.apache.struts2.components;
 import java.io.StringWriter;
 import java.util.Map;
 
-import junit.framework.TestCase;
-import ognl.Ognl;
-
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.util.StrutsTypeConverter;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  *
  */
-public class PropertyTest extends StrutsTestCase {
+public class PropertyTest extends StrutsInternalTestCase {
     private XWorkConverter converter;
 
     public void setUp() throws Exception {

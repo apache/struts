@@ -4,13 +4,13 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.factory.ResultFactory;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import com.opensymphony.xwork2.result.ParamNameAwareResult;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class StrutsResultFactoryTest extends StrutsTestCase {
+public class StrutsResultFactoryTest extends StrutsInternalTestCase {
 
     public void testAcceptParams() throws Exception {
         // given

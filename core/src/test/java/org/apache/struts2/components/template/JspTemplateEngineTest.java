@@ -1,8 +1,8 @@
 package org.apache.struts2.components.template;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 
-public class JspTemplateEngineTest extends StrutsTestCase {
+public class JspTemplateEngineTest extends StrutsInternalTestCase {
 
     public void testEncodingGetsInjected() throws Exception {
         JspTemplateEngine jspTemplateEngine = new JspTemplateEngine();

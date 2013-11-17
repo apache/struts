@@ -24,14 +24,14 @@ package org.apache.struts2.components;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.util.ValueStack;
 
-public class ActionComponentTest extends StrutsTestCase {
+public class ActionComponentTest extends StrutsInternalTestCase {
 
     public void testCreateParametersForContext() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();

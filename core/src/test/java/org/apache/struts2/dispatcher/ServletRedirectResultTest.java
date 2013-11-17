@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import ognl.Ognl;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.easymock.IMocksControl;
@@ -56,7 +56,7 @@ import static org.easymock.EasyMock.replay;
 
 /**
  */
-public class ServletRedirectResultTest extends StrutsTestCase implements StrutsStatics {
+public class ServletRedirectResultTest extends StrutsInternalTestCase implements StrutsStatics {
 
     protected ServletRedirectResult view;
     private Mock requestMock;

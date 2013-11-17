@@ -23,7 +23,7 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -39,7 +39,7 @@ import java.util.List;
  * Test case for StrutsUtil.
  *
  */
-public class StrutsUtilTest extends StrutsTestCase {
+public class StrutsUtilTest extends StrutsInternalTestCase {
 
     protected ValueStack stack = null;
     protected InternalMockHttpServletRequest request = null;

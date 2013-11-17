@@ -21,19 +21,18 @@
 
 package org.apache.struts2.components;
 
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  *
  * @version $Date$ $Id$
  */
-public class FormButtonTest extends StrutsTestCase {
+public class FormButtonTest extends StrutsInternalTestCase {
 
     public void testPopulateComponentHtmlId1() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();

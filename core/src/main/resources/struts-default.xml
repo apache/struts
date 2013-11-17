@@ -63,7 +63,8 @@
 
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta" class="org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest" scope="default"/>
 
-    <bean type="org.apache.struts2.views.TagLibrary" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
+    <bean type="org.apache.struts2.views.TagLibraryDirectiveProvider" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
+    <bean type="org.apache.struts2.views.TagLibraryModelProvider" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
 
     <bean class="org.apache.struts2.views.freemarker.FreemarkerThemeTemplateLoader" />
     <bean class="org.apache.struts2.views.freemarker.FreemarkerManager" name="struts" />

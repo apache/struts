@@ -32,7 +32,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.VelocityStrutsUtil;
-import org.apache.struts2.views.TagLibrary;
+import org.apache.struts2.views.TagLibraryDirectiveProvider;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
 import org.apache.velocity.VelocityContext;
@@ -99,7 +99,7 @@ public class VelocityManager {
 
     private String customConfigFile;
 
-    private List<TagLibrary> tagLibraries;
+    private List<TagLibraryDirectiveProvider> tagLibraries;
 
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
@@ -108,10 +108,10 @@ public class VelocityManager {
 
     @Inject
     public void setContainer(Container container) {
-        List<TagLibrary> list = new ArrayList<TagLibrary>();
-        Set<String> prefixes = container.getInstanceNames(TagLibrary.class);
+        List<TagLibraryDirectiveProvider> list = new ArrayList<TagLibraryDirectiveProvider>();
+        Set<String> prefixes = container.getInstanceNames(TagLibraryDirectiveProvider.class);
         for (String prefix : prefixes) {
-            list.add(container.getInstance(TagLibrary.class, prefix));
+            list.add(container.getInstance(TagLibraryDirectiveProvider.class, prefix));
         }
         this.tagLibraries = Collections.unmodifiableList(list);
     }
@@ -524,8 +524,8 @@ public class VelocityManager {
         // components
         StringBuilder sb = new StringBuilder();
 
-        for (TagLibrary tagLibrary : tagLibraries) {
-            List<Class> directives = tagLibrary.getVelocityDirectiveClasses();
+        for (TagLibraryDirectiveProvider tagLibrary : tagLibraries) {
+            List<Class> directives = tagLibrary.getDirectiveClasses();
             for (Class directive : directives) {
                 addDirective(sb, directive);
             }

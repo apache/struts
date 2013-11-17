@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
 /*
  * $Id$
  *
@@ -20,12 +18,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
-	"http://struts.apache.org/dtds/struts-2.3.dtd">
-    
-<struts>
-    <bean type="org.apache.struts2.views.TagLibraryDirectiveProvider" name="sx" class="org.apache.struts2.dojo.views.DojoTagLibrary" />
-    <bean type="org.apache.struts2.views.TagLibraryModelProvider" name="sx" class="org.apache.struts2.dojo.views.DojoTagLibrary" />
-</struts>
+
+package org.apache.struts2.views;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.ValueStack;
+
+/**
+ * Provides Velocity implementation classes for a tag library
+ */
+public interface TagLibraryDirectiveProvider {
+
+    /**
+     * Gets a list of Velocity directive classes for the tag library.  Called once on framework
+     * startup when initializing Velocity.
+     * 
+     * @return A list of Velocity directive classes
+     */
+    public List<Class> getDirectiveClasses();
+
+}

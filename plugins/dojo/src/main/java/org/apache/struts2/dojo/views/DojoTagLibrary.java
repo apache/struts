@@ -39,19 +39,19 @@ import org.apache.struts2.dojo.views.velocity.components.TabbedPanelDirective;
 import org.apache.struts2.dojo.views.velocity.components.TextAreaDirective;
 import org.apache.struts2.dojo.views.velocity.components.TreeDirective;
 import org.apache.struts2.dojo.views.velocity.components.TreeNodeDirective;
-import org.apache.struts2.views.TagLibrary;
+import org.apache.struts2.views.TagLibraryDirectiveProvider;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.views.TagLibraryModelProvider;
 
-public class DojoTagLibrary implements TagLibrary {
+public class DojoTagLibrary implements TagLibraryDirectiveProvider, TagLibraryModelProvider {
 
-    public Object getFreemarkerModels(ValueStack stack, HttpServletRequest req,
-            HttpServletResponse res) {
+    public Object getModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         
         return new DojoModels(stack, req, res);
     }
 
-    public List<Class> getVelocityDirectiveClasses() {
+    public List<Class> getDirectiveClasses() {
         Class[] directives = new Class[] {
             DateTimePickerDirective.class,
             DivDirective.class,

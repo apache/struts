@@ -47,7 +47,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.utility.StringUtil;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.JspSupportServlet;
-import org.apache.struts2.views.TagLibrary;
+import org.apache.struts2.views.TagLibraryModelProvider;
 import org.apache.struts2.views.util.ContextUtil;
 
 import javax.servlet.GenericServlet;
@@ -176,7 +176,7 @@ public class FreemarkerManager {
     protected boolean cacheBeanWrapper;
     protected int mruMaxStrongSize;
     protected String templateUpdateDelay;
-    protected Map<String,TagLibrary> tagLibraries;
+    protected Map<String,TagLibraryModelProvider> tagLibraries;
 
     private FileManager fileManager;
     private FreemarkerThemeTemplateLoader themeTemplateLoader;
@@ -208,10 +208,10 @@ public class FreemarkerManager {
     
     @Inject
     public void setContainer(Container container) {
-        Map<String,TagLibrary> map = new HashMap<String,TagLibrary>();
-        Set<String> prefixes = container.getInstanceNames(TagLibrary.class);
+        Map<String,TagLibraryModelProvider> map = new HashMap<String,TagLibraryModelProvider>();
+        Set<String> prefixes = container.getInstanceNames(TagLibraryModelProvider.class);
         for (String prefix : prefixes) {
-            map.put(prefix, container.getInstance(TagLibrary.class, prefix));
+            map.put(prefix, container.getInstance(TagLibraryModelProvider.class, prefix));
         }
         this.tagLibraries = Collections.unmodifiableMap(map);
     }
@@ -530,7 +530,7 @@ public class FreemarkerManager {
         populateContext(model, stack, action, request, response);
         if (tagLibraries != null) {
             for (String prefix : tagLibraries.keySet()) {
-                model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
+                model.put(prefix, tagLibraries.get(prefix).getModels(stack, request, response));
             }
         }
 

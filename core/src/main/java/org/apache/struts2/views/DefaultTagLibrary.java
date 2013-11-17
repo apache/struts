@@ -70,15 +70,15 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * The default Struts tag library
  */
-public class DefaultTagLibrary implements TagLibrary {
+public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibraryModelProvider {
 
-    public Object getFreemarkerModels(ValueStack stack, HttpServletRequest req,
-            HttpServletResponse res) {
+    public Object getModels(ValueStack stack, HttpServletRequest req,
+                            HttpServletResponse res) {
         
         return new StrutsModels(stack, req, res);
     }
 
-    public List<Class> getVelocityDirectiveClasses() {
+    public List<Class> getDirectiveClasses() {
         Class[] directives = new Class[] {
             ActionDirective.class,
             BeanDirective.class,

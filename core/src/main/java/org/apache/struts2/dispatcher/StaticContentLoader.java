@@ -33,7 +33,7 @@ import java.io.IOException;
  * &lt;bean name="myContentLoader" type="org.apache.struts2.dispatcher" class="com.company.struts.MyContentLoader"/&gt;
  * &lt;constant name="struts.staticContentLoader" value="myContentLoader"/&gt;
  *
- * Check {@link org.apache.struts2.config.BeanSelectionProvider} for more details.
+ * Check {@link org.apache.struts2.config.DefaultBeanSelectionProvider} for more details.
  */
 public interface StaticContentLoader {
 

@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import junit.framework.TestCase;
 
-public class BeanSelectionProviderTest extends TestCase {
+public class DefaultBeanSelectionProviderTest extends TestCase {
 
     public void testRegister() {
         Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties
@@ -43,7 +43,7 @@ public class BeanSelectionProviderTest extends TestCase {
         LocatableProperties props = new LocatableProperties();
         props.setProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, "testmessages,testmessages2");
         
-        new BeanSelectionProvider().register(new ContainerBuilder(), props);
+        new DefaultBeanSelectionProvider().register(new ContainerBuilder(), props);
 
         assertEquals("Replaced message for token tag", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
     }

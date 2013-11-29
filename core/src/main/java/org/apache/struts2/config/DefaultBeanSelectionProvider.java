@@ -63,7 +63,6 @@ import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import org.apache.struts2.security.SecurityGate;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.views.velocity.VelocityManager;
@@ -380,8 +379,6 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);
 
         alias(TextParser.class, StrutsConstants.STRUTS_EXPRESSION_PARSER, builder, props);
-
-        alias(SecurityGate.class, StrutsConstants.STRUTS_SECURITY_GATE, builder, props);
 
         switchDevMode(props);
 

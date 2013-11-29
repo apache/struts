@@ -271,9 +271,6 @@ public final class StrutsConstants {
     /** actions names' whitelist **/
     public static final String STRUTS_ALLOWED_ACTION_NAMES = "struts.allowed.action.names";
 
-    /** Security firewall **/
-    public static final String STRUTS_SECURITY_GATE = "struts.securityGate";
-
     /** enables action: prefix **/
     public static final String STRUTS_MAPPER_ACTION_PREFIX_ENABLED = "struts.mapper.action.prefix.enabled";
 

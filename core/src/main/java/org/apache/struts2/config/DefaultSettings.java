@@ -25,13 +25,10 @@ import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.security.DefaultSecurityGate;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-
-
 
 /**
  * DefaultSettings implements optional methods of Settings.
@@ -41,7 +38,7 @@ import java.util.StringTokenizer;
  */
 public class DefaultSettings implements Settings {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultSecurityGate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultSettings.class);
 
     /**
      * The Settings object that handles API calls.

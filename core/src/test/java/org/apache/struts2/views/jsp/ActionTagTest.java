@@ -300,12 +300,8 @@ public class ActionTagTest extends AbstractTagTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-
-        initDispatcher(new HashMap() {{ put("configProviders", TestConfigurationProvider.class.getName()); }});
-
-        ActionContext actionContext = new ActionContext(context);
-        actionContext.setValueStack(stack);
-        ActionContext.setContext(actionContext);
+        initDispatcher(new HashMap<String, String>() {{ put("configProviders", TestConfigurationProvider.class.getName()); }});
+        createMocks();
     }
 
     protected void tearDown() throws Exception {

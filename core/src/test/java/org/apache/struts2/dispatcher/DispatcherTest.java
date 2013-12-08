@@ -172,7 +172,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
     	assertTrue(state.isInitialized);
     	
     	du.cleanup();
-    	
+
     	assertTrue(state.isDestroyed);
     }
     

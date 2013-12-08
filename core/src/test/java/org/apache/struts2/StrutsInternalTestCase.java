@@ -21,7 +21,10 @@
 
 package org.apache.struts2;
 
+import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -71,7 +74,9 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
         logger.setLevel(Level.WARNING);
         LoggerFactory.setLoggerFactory(new JdkLoggerFactory());
     }
-    
+
+    protected Dispatcher dispatcher;
+
     /**
      * Sets up the configuration settings, XWork configuration, and
      * message resources
@@ -82,11 +87,12 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
     }
     
     protected Dispatcher initDispatcher(Map<String,String> params) {
-        Dispatcher du = StrutsTestCaseHelper.initDispatcher(new MockServletContext(), params);
-        configurationManager = du.getConfigurationManager();
+        dispatcher = StrutsTestCaseHelper.initDispatcher(new MockServletContext(), params);
+        configurationManager = dispatcher.getConfigurationManager();
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
-        return du;
+        container.inject(dispatcher);
+        return dispatcher;
     }
 
     /**
@@ -104,6 +110,11 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        // maybe someone else already destroyed Dispatcher
+        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
+            dispatcher.cleanup();
+            dispatcher = null;
+        }
         StrutsTestCaseHelper.tearDown();
     }
 

@@ -442,13 +442,10 @@ public class Dispatcher {
     }
 
     private Container init_PreloadConfiguration() {
-        Configuration config = configurationManager.getConfiguration();
-        Container container = config.getContainer();
+        Container container = getContainer();
 
         boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD));
         LocalizedTextUtil.setReloadBundles(reloadi18n);
-
-        ContainerHolder.store(container);
 
         return container;
     }
@@ -548,8 +545,7 @@ public class Dispatcher {
             String name = mapping.getName();
             String method = mapping.getMethod();
 
-            Configuration config = configurationManager.getConfiguration();
-            ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
+            ActionProxy proxy = getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
                     namespace, name, method, extraContext, true, false);
 
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
@@ -664,7 +660,6 @@ public class Dispatcher {
         }
 
         extraContext.put(ActionContext.LOCALE, locale);
-        //extraContext.put(ActionContext.DEV_MODE, Boolean.valueOf(devMode));
 
         extraContext.put(StrutsStatics.HTTP_REQUEST, request);
         extraContext.put(StrutsStatics.HTTP_RESPONSE, response);

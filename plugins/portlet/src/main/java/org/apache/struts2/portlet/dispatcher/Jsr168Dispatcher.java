@@ -206,7 +206,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
 
         // For testability
         if (factory == null) {
-            factory = dispatcherUtils.getConfigurationManager().getConfiguration().getContainer().getInstance(ActionProxyFactory.class);
+            factory = dispatcherUtils.getContainer().getInstance(ActionProxyFactory.class);
         }
         portletNamespace = cfg.getInitParameter("portletNamespace");
         if (LOG.isDebugEnabled()) {
@@ -374,7 +374,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
-        String defaultLocale = dispatcherUtils.getContainer().getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
+        String defaultLocale = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
         Locale locale;
         if (defaultLocale != null) {
             locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());

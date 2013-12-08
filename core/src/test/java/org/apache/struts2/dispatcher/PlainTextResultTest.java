@@ -165,7 +165,6 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
 
 
     protected void tearDown() throws Exception {
-        super.tearDown();
         stack = null;
         invocation = null;
         context = null;

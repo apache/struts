@@ -62,11 +62,13 @@ import static org.junit.Assert.assertNotNull;
 
 
 public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
+
     protected MockHttpServletResponse response;
     protected MockHttpServletRequest request;
     protected MockPageContext pageContext;
     protected MockServletContext servletContext;
     protected Map<String, String> dispatcherInitParams;
+    protected Dispatcher dispatcher;
 
     protected DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 
@@ -178,8 +180,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
      * Finds an ActionMapping for a given request
      */
     protected ActionMapping getActionMapping(HttpServletRequest request) {
-        return Dispatcher.getInstance().getContainer().getInstance(ActionMapper.class).getMapping(request,
-                Dispatcher.getInstance().getConfigurationManager());
+        return container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
     }
 
     /**
@@ -195,9 +196,8 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
      * Injects dependencies on an Object using Struts internal IoC container
      */
     protected void injectStrutsDependencies(Object object) {
-        Dispatcher.getInstance().getContainer().inject(object);
+        container.inject(object);
     }
-
 
     protected void setupBeforeInitDispatcher() throws Exception {
     }
@@ -232,7 +232,6 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-
         super.setUp();
         initServletMockObjects();
         setupBeforeInitDispatcher();
@@ -248,11 +247,12 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
     }
 
     protected Dispatcher initDispatcher(Map<String, String> params) {
-        Dispatcher du = StrutsTestCaseHelper.initDispatcher(servletContext, params);
-        configurationManager = du.getConfigurationManager();
+        dispatcher = StrutsTestCaseHelper.initDispatcher(servletContext, params);
+        configurationManager = dispatcher.getConfigurationManager();
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
-        return du;
+        container.inject(dispatcher);
+        return dispatcher;
     }
 
     /**
@@ -267,8 +267,11 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-
         super.tearDown();
+        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
+            dispatcher.cleanup();
+            dispatcher = null;
+        }
         StrutsTestCaseHelper.tearDown();
     }
 

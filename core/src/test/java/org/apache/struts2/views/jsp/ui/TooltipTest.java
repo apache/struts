@@ -379,5 +379,6 @@ public class TooltipTest extends AbstractUITagTest {
         initDispatcher(new HashMap<String,String>(){{ 
             put("configProviders", TestConfigurationProvider.class.getName());
         }});
+        createMocks();
     }
 }

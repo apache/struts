@@ -82,6 +82,8 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 
 	Mock mockActionInvocation = null;
 
+    private Dispatcher dispatcher;
+
     public static void main(String[] args) {
         TestRunner.run(PortletUrlTagTest.class);
     }
@@ -90,12 +92,12 @@ public class PortletUrlTagTest extends MockObjectTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        Dispatcher du = new Dispatcher(null, new HashMap());
-        du.init();
-        Dispatcher.setInstance(du);
+        dispatcher = new Dispatcher(null, new HashMap());
+        dispatcher.init();
+        Dispatcher.setInstance(dispatcher);
 
-        stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
+        stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+        stack.getContext().put(ActionContext.CONTAINER, dispatcher.getContainer());
         ActionContext context = new ActionContext(stack.getContext());
         ActionContext.setContext(context);
         
@@ -164,6 +166,14 @@ public class PortletUrlTagTest extends MockObjectTestCase {
     	stack.getContext().put(ActionContext.ACTION_INVOCATION, ai);
         ActionContext.setContext(ctx);
         
+    }
+
+    public void tearDown() throws Exception {
+        super.tearDown();
+        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
+            dispatcher.cleanup();
+            dispatcher = null;
+        }
     }
 
     public void testEnsureParamsAreStringArrays() {

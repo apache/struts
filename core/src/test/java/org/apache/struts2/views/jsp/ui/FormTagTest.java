@@ -21,12 +21,7 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
@@ -89,7 +84,7 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     public void testFormWithContext() throws Exception {
-        request.setupGetContext("/somecontext");
+        request.setupGetContext("/testNamespace");
 
         FormTag tag = new FormTag();
         tag.setTheme("xhtml");
@@ -205,63 +200,13 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled1() throws Exception {
 
-        final Container cont = container;
-        // used to determined if the form action needs js validation
-        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
-            private DefaultConfiguration self = this;
-            public Container getContainer() {
-                return new Container() {
-                    public <T> T inject(Class<T> implementation) {return null;}
-                    public void removeScopeStrategy() {}
-                    public void setScopeStrategy(Strategy scopeStrategy) {}
-                    public <T> T getInstance(Class<T> type, String name) {return null;}
-                    public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
-                    public Set<String> getInstanceNames(Class<?> type) {return null;}
-
-                    public void inject(Object o) {
-                        cont.inject(o);
-                        if (o instanceof Form) {
-                            ((Form)o).setConfiguration(self);
-                        }
-                    }
-                };
-            }
-            public RuntimeConfiguration getRuntimeConfiguration() {
-                return new RuntimeConfiguration() {
-                    public ActionConfig getActionConfig(String namespace, String name) {
-                        ActionConfig actionConfig = new ActionConfig("", name, "") {
-                            public List getInterceptors() {
-                                List interceptors = new ArrayList();
-
-                                ValidationInterceptor validationInterceptor = new ValidationInterceptor();
-                                validationInterceptor.setIncludeMethods("*");
-
-                                InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
-                                interceptors.add(interceptorMapping);
-
-                                return interceptors;
-                            }
-                            public String getClassName() {
-                                return ActionSupport.class.getName();
-                            }
-                        };
-                        return actionConfig;
-                    }
-
-                    public Map getActionConfigs() {
-                        return null;
-                    }
-                };
-            }
-        });
-
-        Dispatcher.getInstance().setConfigurationManager(configurationManager);
+        prepareMockInvocation();
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
         tag.setMethod("post");
-        tag.setAction("myAction");
+        tag.setAction("doubleValidationAction");
         tag.setAcceptcharset("UTF-8");
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
@@ -289,90 +234,31 @@ public class FormTagTest extends AbstractUITagTest {
      * "excludes" all methods.
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled2() throws Exception {
+        prepareMockInvocation();
 
-        com.opensymphony.xwork2.config.Configuration originalConfiguration = configurationManager.getConfiguration();
-        ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setName("myForm");
+        tag.setMethod("post");
+        tag.setAction("testAction");
+        tag.setAcceptcharset("UTF-8");
+        tag.setEnctype("myEncType");
+        tag.setTitle("mytitle");
+        tag.setOnsubmit("submitMe()");
+        tag.setValidate("true");
+        tag.setNamespace("");
 
-        final Container cont = container;
-        try {
-            // used to determined if the form action needs js validation
-            configurationManager.setConfiguration(new DefaultConfiguration() {
-                private DefaultConfiguration self = this;
-                public Container getContainer() {
-                    return new Container() {
-                        public <T> T inject(Class<T> implementation) {return null;}
-                        public void removeScopeStrategy() {}
-                        public void setScopeStrategy(Strategy scopeStrategy) {}
-                        public <T> T getInstance(Class<T> type, String name) {return null;}
-                        public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
-                        public Set<String> getInstanceNames(Class<?> type) {return null;}
+        UpDownSelectTag t = new UpDownSelectTag();
+        t.setPageContext(pageContext);
+        t.setName("myUpDownSelectTag");
+        t.setList("{}");
 
-                        public void inject(Object o) {
-                            cont.inject(o);
-                            if (o instanceof Form) {
-                                ((Form)o).setConfiguration(self);
-                            }
-                        }
-                    };
-                }
-                public RuntimeConfiguration getRuntimeConfiguration() {
-                    return new RuntimeConfiguration() {
-                        public ActionConfig getActionConfig(String namespace, String name) {
-                            ActionConfig actionConfig = new ActionConfig("", name, "") {
-                                public List getInterceptors() {
-                                    List interceptors = new ArrayList();
+        tag.doStartTag();
+        t.doStartTag();
+        t.doEndTag();
+        tag.doEndTag();
 
-                                    ValidationInterceptor validationInterceptor = new ValidationInterceptor();
-                                    validationInterceptor.setExcludeMethods("*");
-
-                                    InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
-                                    interceptors.add(interceptorMapping);
-
-                                    return interceptors;
-                                }
-                                public String getClassName() {
-                                    return ActionSupport.class.getName();
-                                }
-                            };
-                            return actionConfig;
-                        }
-
-                        public Map getActionConfigs() {
-                            return null;
-                        }
-                    };
-                }
-            });
-
-            Dispatcher.getInstance().setConfigurationManager(configurationManager);
-
-            FormTag tag = new FormTag();
-            tag.setPageContext(pageContext);
-            tag.setName("myForm");
-            tag.setMethod("post");
-            tag.setAction("myAction");
-            tag.setAcceptcharset("UTF-8");
-            tag.setEnctype("myEncType");
-            tag.setTitle("mytitle");
-            tag.setOnsubmit("submitMe()");
-            tag.setValidate("true");
-            tag.setNamespace("");
-
-            UpDownSelectTag t = new UpDownSelectTag();
-            t.setPageContext(pageContext);
-            t.setName("myUpDownSelectTag");
-            t.setList("{}");
-
-            tag.doStartTag();
-            t.doStartTag();
-            t.doEndTag();
-            tag.doEndTag();
-
-            verify(FormTag.class.getResource("Formtag-11.txt"));
-        }
-        finally {
-            configurationManager.setConfiguration(originalConfiguration);
-        }
+        verify(FormTag.class.getResource("Formtag-11.txt"));
     }
 
     /**
@@ -380,63 +266,12 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled3() throws Exception {
 
-        final Container cont = container;
-        // used to determined if the form action needs js validation
-        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
-            private DefaultConfiguration self = this;
-            public Container getContainer() {
-                return new Container() {
-                    public <T> T inject(Class<T> implementation) {return null;}
-                    public void removeScopeStrategy() {}
-                    public void setScopeStrategy(Strategy scopeStrategy) {}
-                    public <T> T getInstance(Class<T> type, String name) {return null;}
-                    public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
-                    public Set<String> getInstanceNames(Class<?> type) {return null;}
-
-                    public void inject(Object o) {
-                        cont.inject(o);
-                        if (o instanceof Form) {
-                            ((Form)o).setConfiguration(self);
-                        }
-                    }
-                };
-            }
-            public RuntimeConfiguration getRuntimeConfiguration() {
-                return new RuntimeConfiguration() {
-                    public ActionConfig getActionConfig(String namespace, String name) {
-                        ActionConfig actionConfig = new ActionConfig("", name, IntValidationAction.class.getName()) {
-                            public List getInterceptors() {
-                                List interceptors = new ArrayList();
-
-                                ValidationInterceptor validationInterceptor = new ValidationInterceptor();
-                                validationInterceptor.setIncludeMethods("*");
-
-                                InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
-                                interceptors.add(interceptorMapping);
-
-                                return interceptors;
-                            }
-                            public String getClassName() {
-                                return IntValidationAction.class.getName();
-                            }
-                        };
-                        return actionConfig;
-                    }
-
-                    public Map getActionConfigs() {
-                        return null;
-                    }
-                };
-            }
-        });
-
-        Dispatcher.getInstance().setConfigurationManager(configurationManager);
-
+        prepareMockInvocation();
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
         tag.setMethod("post");
-        tag.setAction("myAction");
+        tag.setAction("doubleValidationAction");
         tag.setAcceptcharset("UTF-8");
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
@@ -462,64 +297,13 @@ public class FormTagTest extends AbstractUITagTest {
      * Tests the numbers are formatted correctly to not break the javascript, using doubles
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled4() throws Exception {
-
-        final Container cont = container;
-        // used to determined if the form action needs js validation
-        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
-            private DefaultConfiguration self = this;
-            public Container getContainer() {
-                return new Container() {
-                    public <T> T inject(Class<T> implementation) {return null;}
-                    public void removeScopeStrategy() {}
-                    public void setScopeStrategy(Strategy scopeStrategy) {}
-                    public <T> T getInstance(Class<T> type, String name) {return null;}
-                    public <T> T getInstance(Class<T> type) {return cont.getInstance(type);}
-                    public Set<String> getInstanceNames(Class<?> type) {return null;}
-
-                    public void inject(Object o) {
-                        cont.inject(o);
-                        if (o instanceof Form) {
-                            ((Form)o).setConfiguration(self);
-                        }
-                    }
-                };
-            }
-            public RuntimeConfiguration getRuntimeConfiguration() {
-                return new RuntimeConfiguration() {
-                    public ActionConfig getActionConfig(String namespace, String name) {
-                        ActionConfig actionConfig = new ActionConfig("", name, DoubleValidationAction.class.getName()) {
-                            public List getInterceptors() {
-                                List interceptors = new ArrayList();
-
-                                ValidationInterceptor validationInterceptor = new ValidationInterceptor();
-                                validationInterceptor.setIncludeMethods("*");
-
-                                InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
-                                interceptors.add(interceptorMapping);
-
-                                return interceptors;
-                            }
-                            public String getClassName() {
-                                return DoubleValidationAction.class.getName();
-                            }
-                        };
-                        return actionConfig;
-                    }
-
-                    public Map getActionConfigs() {
-                        return null;
-                    }
-                };
-            }
-        });
-
-        Dispatcher.getInstance().setConfigurationManager(configurationManager);
+        prepareMockInvocation();
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
         tag.setMethod("post");
-        tag.setAction("myAction");
+        tag.setAction("doubleValidationAction");
         tag.setAcceptcharset("UTF-8");
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
@@ -541,6 +325,24 @@ public class FormTagTest extends AbstractUITagTest {
         verify(FormTag.class.getResource("Formtag-24.txt"));
     }
 
+    private void prepareMockInvocation() throws Exception {
+        ActionContext.getContext().setValueStack(stack);
+
+        ActionConfig config = new ActionConfig.Builder("", "name", "").build();
+        ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
+        ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
+
+        EasyMock.expect(invocation.getProxy()).andReturn(proxy).anyTimes();
+        EasyMock.expect(invocation.getAction()).andReturn(null).anyTimes();
+        EasyMock.expect(invocation.invoke()).andReturn(Action.SUCCESS).anyTimes();
+        EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
+        EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
+
+        EasyMock.replay(invocation);
+        EasyMock.replay(proxy);
+
+        ActionContext.getContext().setActionInvocation(invocation);
+    }
 
     /**
      * This test with form tag validation disabled.
@@ -582,6 +384,7 @@ public class FormTagTest extends AbstractUITagTest {
             put(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
             put("configProviders", TestConfigurationProvider.class.getName());
         }});
+        createMocks();
         request.setupGetServletPath("/testNamespace/testNamespaceAction");
 
         FormTag tag = new FormTag();
@@ -637,7 +440,7 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     public void testFormTagForStackOverflowException1() throws Exception {
-        request.setRequestURI("/requestUri");
+        request.setRequestURI("/testAction");
 
         FormTag form1 = new FormTag();
         form1.setPageContext(pageContext);
@@ -804,25 +607,9 @@ public class FormTagTest extends AbstractUITagTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        initDispatcher(new HashMap<String,String>(){{ 
+        initDispatcher(new HashMap<String, String>() {{
             put("configProviders", TestConfigurationProvider.class.getName());
         }});
-        ActionContext.getContext().setValueStack(stack);
-
-        ActionConfig config = new ActionConfig.Builder("", "name", "").build();
-        ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
-        ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
-
-        EasyMock.expect(invocation.getProxy()).andReturn(proxy).anyTimes();
-        EasyMock.expect(invocation.getAction()).andReturn(null).anyTimes();
-        EasyMock.expect(invocation.invoke()).andReturn(Action.SUCCESS).anyTimes();
-        EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
-        EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
-
-
-        EasyMock.replay(invocation);
-        EasyMock.replay(proxy);
-
-        ActionContext.getContext().setActionInvocation(invocation);
+        createMocks();
     }
 }

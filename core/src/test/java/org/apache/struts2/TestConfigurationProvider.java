@@ -21,18 +21,7 @@
 
 package org.apache.struts2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
-import org.apache.struts2.interceptor.TokenInterceptor;
-import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
-
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
@@ -47,6 +36,13 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.interceptor.TokenInterceptor;
+import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
+import org.apache.struts2.views.jsp.ui.DoubleValidationAction;
+
+import java.util.HashMap;
 
 
 /**
@@ -89,6 +85,15 @@ public class TestConfigurationProvider implements ConfigurationProvider {
                 .build())
             .build();
 
+        ValidationInterceptor validationInterceptor = new ValidationInterceptor();
+        validationInterceptor.setIncludeMethods("*");
+
+        ActionConfig doubleValidationActionConfig = new ActionConfig.Builder("", "doubleValidationAction", DoubleValidationAction.class.getName())
+            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, ServletDispatcherResult.class.getName())
+                    .addParam("location", "success.jsp")
+                    .build())
+            .addInterceptor(new InterceptorMapping("validation", validationInterceptor))
+            .build();
 
         ActionConfig testActionConfig = new ActionConfig.Builder("", "", TestAction.class.getName())
             .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, ServletDispatcherResult.class.getName())
@@ -96,7 +101,6 @@ public class TestConfigurationProvider implements ConfigurationProvider {
                     .build())
             .addInterceptor(new InterceptorMapping("params", new ParametersInterceptor()))
             .build();
-
 
         ActionConfig tokenActionConfig = new ActionConfig.Builder("", "", TestAction.class.getName())
             .addInterceptor(new InterceptorMapping("token", new TokenInterceptor()))
@@ -115,6 +119,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         PackageConfig defaultPackageConfig = new PackageConfig.Builder("")
             .addActionConfig(EXECUTION_COUNT_ACTION_NAME, executionCountActionConfig)
             .addActionConfig(TEST_ACTION_NAME, testActionConfig)
+            .addActionConfig("doubleValidationAction", doubleValidationActionConfig)
             .addActionConfig(TOKEN_ACTION_NAME, tokenActionConfig)
             .addActionConfig(TOKEN_SESSION_ACTION_NAME, tokenSessionActionConfig)
             .addActionConfig("testActionTagAction", new ActionConfig.Builder("", "", TestAction.class.getName())
@@ -132,6 +137,15 @@ public class TestConfigurationProvider implements ConfigurationProvider {
             .build();
 
         configuration.addPackageConfig("namespacePackage", namespacePackageConfig);
+
+        PackageConfig testActionWithNamespacePackageConfig = new PackageConfig.Builder("testActionNamespacePackages")
+            .namespace(TEST_NAMESPACE)
+            .addParent(defaultPackageConfig)
+            .addActionConfig(TEST_ACTION_NAME, new ActionConfig.Builder("", "", TestAction.class.getName()).build())
+            .build();
+
+        configuration.addPackageConfig("testActionNamespacePackages", testActionWithNamespacePackageConfig);
+
     }
 
     /**

@@ -24,6 +24,7 @@ package org.apache.struts2.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.opensymphony.xwork2.inject.Container;
 import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -53,10 +54,11 @@ public class StrutsTestCaseHelper {
         Dispatcher du = new Dispatcher(ctx, params);
         du.init();
         Dispatcher.setInstance(du);
-        
+
         // Reset the value stack
-        ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
+        Container container = du.getContainer();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.getContext().put(ActionContext.CONTAINER, container);
         ActionContext.setContext(new ActionContext(stack.getContext()));
         
         return du;

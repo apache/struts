@@ -81,9 +81,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
 
         request.setRequestURI("/tutorial/test2.action");
-        Dispatcher dispatcher = Dispatcher.getInstance();
-        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(
-                    request, dispatcher.getConfigurationManager());
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, servletContext, mapping);
         assertEquals("beforenestedafter", stringWriter.toString());
     }
@@ -107,9 +105,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
 
         request.setRequestURI("/tutorial/test5.action");
-        Dispatcher dispatcher = Dispatcher.getInstance();
-        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(
-                    request, dispatcher.getConfigurationManager());
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, servletContext, mapping);
         assertEquals("beforenestedafter", stringWriter.toString());
     }
@@ -218,8 +214,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
 
         request.setRequestURI("/tutorial/test6.action");
-        Dispatcher dispatcher = Dispatcher.getInstance();
-        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, servletContext, mapping);
 
         // TODO lukaszlenart: remove expectedJDK15 and if() after switching to Java 1.6
@@ -279,8 +274,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
 
         request.setRequestURI("/tutorial/test7.action");
-        Dispatcher dispatcher = Dispatcher.getInstance();
-        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, servletContext, mapping);
         String expected = "<input type=\"radio\" name=\"client\" id=\"client_foo\" value=\"foo\"/><label for=\"client_foo\">foo</label>\n"
                 + "<input type=\"radio\" name=\"client\" id=\"client_bar\" value=\"bar\"/><label for=\"client_bar\">bar</label>\n"
@@ -310,8 +304,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         ServletActionContext.setServletContext(servletContext);
 
         request.setRequestURI("/tutorial/test8.action");
-        Dispatcher dispatcher = Dispatcher.getInstance();
-        ActionMapping mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, servletContext, mapping);
         String expected = "<input type=\"text\"autofocus=\"autofocus\"/>";
         assertEquals(expected, stringWriter.toString());
@@ -321,12 +314,15 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         super.setUp();
         mgr = new FreemarkerManager();
         mgr.setEncoding("UTF-8");
+
         DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
         container.inject(factory);
         mgr.setFileManagerFactory(factory);
+
         FreemarkerThemeTemplateLoader themeLoader = new FreemarkerThemeTemplateLoader();
         container.inject(themeLoader);
         mgr.setThemeTemplateLoader(themeLoader);
+
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         response = new StrutsMockHttpServletResponse();
@@ -334,14 +330,17 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         request = new MockHttpServletRequest();
         servletContext = new StrutsMockServletContext();
         stack = ActionContext.getContext().getValueStack();
+
         context = new ActionContext(stack.getContext());
         context.put(StrutsStatics.HTTP_RESPONSE, response);
         context.put(StrutsStatics.HTTP_REQUEST, request);
         context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
+
         ServletActionContext.setServletContext(servletContext);
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
+
         invocation = new MockActionInvocation();
         invocation.setStack(stack);
         invocation.setInvocationContext(context);
@@ -360,4 +359,5 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
         super.tearDown();
     }
+
 }

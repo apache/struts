@@ -13,11 +13,10 @@ public class ClassInstantiationTest extends StrutsInternalTestCase {
 
     public void testCompositeActionMapperInstantiationWithList() throws Exception {
         // given
-        Dispatcher du = initDispatcher(new HashMap<String, String>() {{
+        initDispatcher(new HashMap<String, String>() {{
             put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
             put(StrutsConstants.STRUTS_MAPPER_COMPOSITE, "struts,restful");
         }});
-        Container container = du.getContainer();
 
         // when
         ActionMapper instance = container.getInstance(ActionMapper.class, "composite");
@@ -28,10 +27,9 @@ public class ClassInstantiationTest extends StrutsInternalTestCase {
 
     public void testCompositeActionMapperInstantiationWithoutList() throws Exception {
         // given
-        Dispatcher du = initDispatcher(new HashMap<String, String>() {{
+        initDispatcher(new HashMap<String, String>() {{
             put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
         }});
-        Container container = du.getContainer();
 
         // when
         try {

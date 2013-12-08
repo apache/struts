@@ -62,6 +62,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     protected MockPageContext pageContext;
     protected MockServletContext servletContext;
     protected Map<String, String> dispatcherInitParams;
+    protected Dispatcher dispatcher;
 
     protected DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 
@@ -177,8 +178,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
      * Finds an ActionMapping for a given request
      */
     protected ActionMapping getActionMapping(HttpServletRequest request) {
-        return Dispatcher.getInstance().getContainer().getInstance(ActionMapper.class).getMapping(request,
-                Dispatcher.getInstance().getConfigurationManager());
+        return container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
     }
 
     /**
@@ -194,9 +194,8 @@ public abstract class StrutsTestCase extends XWorkTestCase {
      * Injects dependencies on an Object using Struts internal IoC container
      */
     protected void injectStrutsDependencies(Object object) {
-        Dispatcher.getInstance().getContainer().inject(object);
+        container.inject(object);
     }
-
 
     /**
      * Sets up the configuration settings, XWork configuration, and
@@ -206,7 +205,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         super.setUp();
         initServletMockObjects();
         setupBeforeInitDispatcher();
-        Dispatcher dispatcher = initDispatcher(dispatcherInitParams);
+        dispatcher = initDispatcher(dispatcherInitParams);
         setupAfterInitDispatcher(dispatcher);
     }
 
@@ -235,6 +234,11 @@ public abstract class StrutsTestCase extends XWorkTestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        // maybe someone else already destroyed Dispatcher
+        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
+            dispatcher.cleanup();
+            dispatcher = null;
+        }
         StrutsTestCaseHelper.tearDown();
     }
 

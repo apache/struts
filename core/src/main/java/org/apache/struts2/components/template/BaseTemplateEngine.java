@@ -24,7 +24,9 @@ package org.apache.struts2.components.template;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,6 +35,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base class for template engines.
@@ -46,17 +49,17 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
      */
     public static final String DEFAULT_THEME_PROPERTIES_FILE_NAME = "theme.properties";
 
-    final Map<String, Properties> themeProps = new HashMap<String, Properties>();
+    private final Map<String, Properties> themeProps = new ConcurrentHashMap<String, Properties>();
 
     public Map getThemeProps(Template template) {
-        synchronized (themeProps) {
-            Properties props = themeProps.get(template.getTheme());
-            if (props == null) {
+        Properties props = themeProps.get(template.getTheme());
+        if (props == null) {
+            synchronized (themeProps) {
                 props = readNewProperties(template);
                 themeProps.put(template.getTheme(), props);
             }
-            return props;
         }
+        return props;
     }
 
     private Properties readNewProperties(Template template) {
@@ -78,7 +81,21 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         if (is == null) {
             is = readPropertyFromClasspath(propName);
         }
+        if (is == null) {
+            is = readPropertyUsingServletContext(propName);
+        }
         return is;
+    }
+
+    private InputStream readPropertyUsingServletContext(String propName) {
+        ServletContext servletContext = ServletActionContext.getServletContext();
+        String path = propName.startsWith("/") ? propName : "/" + propName;
+        if (servletContext != null) {
+            return servletContext.getResourceAsStream(path);
+        } else {
+            LOG.warn("ServletContext is null, cannot obtain #0", path);
+            return null;
+        }
     }
 
     /**
@@ -109,11 +126,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
     }
 
     private String buildPropertyFilename(Template template) {
-        return new StringBuilder().append(template.getDir())
-                .append("/")
-                .append(template.getTheme())
-                .append("/")
-                .append(getThemePropertiesFileName()).toString();
+        return template.getDir() + "/" + template.getTheme() + "/" + getThemePropertiesFileName();
     }
 
     /**

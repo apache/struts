@@ -166,7 +166,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
-        devMode = "true".equals(mode);
+        devMode = "true".equalsIgnoreCase(mode);
     }
 
 	/**
@@ -329,7 +329,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 newStack.setParameter(name, value);
             } catch (RuntimeException e) {
                 if (devMode) {
-                    notifyDeveloper(action, name, e.getMessage());
+                    notifyDeveloperParameterException(action, name, e.getMessage());
                 }
             }
         }
@@ -340,7 +340,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         addParametersToContext(ActionContext.getContext(), acceptableParameters);
     }
 
-    protected void notifyDeveloper(Object action, String property, String message) {
+    protected void notifyDeveloperParameterException(Object action, String property, String message) {
         String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification",
                 ActionContext.getContext().getLocale(), "Developer Notification:\n{0}",
                 new Object[]{

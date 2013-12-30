@@ -48,10 +48,14 @@
         <!-- Include the Confluence docs in the assembly -->
         <fileSet>
             <directory>target/cwiki/WW/docs</directory>
-            <outputDirectory>docs</outputDirectory>
+            <outputDirectory>docs/docs</outputDirectory>
         </fileSet>
 
         <!-- Plugins -->
+        <fileSet>
+            <directory>../plugins/cdi/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-cdi-plugin/apidocs</outputDirectory>
+        </fileSet>
         <fileSet>
             <directory>../plugins/codebehind/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin/apidocs</outputDirectory>
@@ -65,12 +69,12 @@
             <outputDirectory>docs/struts2-plugins/struts2-convention-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../plugins/dwr/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-dwr-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../plugins/dojo/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-dojo-plugin/apidocs</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../plugins/dwr/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-dwr-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../plugins/embeddedjsp/target/apidocs</directory>
@@ -83,6 +87,10 @@
         <fileSet>
             <directory>../plugins/jasperreports/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-jasperreports-plugin/apidocs</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../plugins/javatemplates/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-javatemplates-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../plugins/jfreechart/target/apidocs</directory>
@@ -121,6 +129,10 @@
             <outputDirectory>docs/struts2-plugins/struts2-portlet-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
+            <directory>../plugins/portlet-tiles/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-portlet-tiles-plugin/apidocs</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>../plugins/rest/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-rest-plugin/apidocs</outputDirectory>
         </fileSet>
@@ -147,6 +159,10 @@
         <fileSet>
             <directory>../plugins/tiles/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin/apidocs</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../plugins/tiles3/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-tiles3-plugin/apidocs</outputDirectory>
         </fileSet>
 
     </fileSets>

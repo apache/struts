@@ -118,7 +118,7 @@
       <!-- Include the Confluence docs in the assembly -->
       <fileSet>
         <directory>target/cwiki</directory>
-        <outputDirectory>docs</outputDirectory>
+        <outputDirectory>docs/docs</outputDirectory>
       </fileSet>
 
       <!-- Plugins -->
@@ -129,104 +129,116 @@
       </fileSet>
       -->
       <fileSet>
-        <directory>../plugins/codebehind/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin</outputDirectory>
+        <directory>../plugins/cdi/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-cdi-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/codebehind/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-javatemplates-plugin</outputDirectory>
+        <directory>../plugins/codebehind/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/convention/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-convention-plugin</outputDirectory>
+        <directory>../plugins/config-browser/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-config-browser-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/config-browser/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-config-browser-plugin</outputDirectory>
+        <directory>../plugins/convention/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-convention-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/dojo/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-dojo-plugin</outputDirectory>
+        <directory>../plugins/dojo/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-dojo-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/dojo/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-dwr-plugin</outputDirectory>
+        <directory>../plugins/dwr/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-dwr-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/jasperreports/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-jasperreports-plugin</outputDirectory>
+        <directory>../plugins/embeddedjsp/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/jfreechart/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-jfreechart-plugin</outputDirectory>
+        <directory>../plugins/gxp/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-gxp-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/jsf/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-jsf-plugin</outputDirectory>
+        <directory>../plugins/jasperreports/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jasperreports-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/junit/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-junit-plugin</outputDirectory>
+        <directory>../plugins/javatemplates/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-javatemplates-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/pell-multipart/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-pell-multipart-plugin</outputDirectory>
+        <directory>../plugins/jfreechart/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jfreechart-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/plexus/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin</outputDirectory>
+        <directory>../plugins/jsf/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jsf-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/portlet/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-portlet-plugin</outputDirectory>
+        <directory>../plugins/json/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-json-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/rest/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-rest-plugin</outputDirectory>
+        <directory>../plugins/junit/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-junit-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/struts1/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-struts1-plugin</outputDirectory>
+        <directory>../plugins/osgi/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/sitegraph/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-sitegraph-plugin</outputDirectory>
+        <directory>../plugins/oval/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-oval-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/spring/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-spring-plugin</outputDirectory>
+        <directory>../plugins/pell-multipart/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-pell-multipart-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/sitemesh/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin</outputDirectory>
+        <directory>../plugins/plexus/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/testng/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-testng-plugin</outputDirectory>
+        <directory>../plugins/portlet/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-portlet-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/tiles/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin</outputDirectory>
+        <directory>../plugins/portlet-tiles/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-portlet-tiles-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/oval/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-oval-plugin</outputDirectory>
+        <directory>../plugins/rest/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-rest-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/osgi/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin</outputDirectory>
+        <directory>../plugins/sitegraph/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-sitegraph-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/json/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-json-plugin</outputDirectory>
+        <directory>../plugins/sitemesh/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/embeddedjsp/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin</outputDirectory>
+        <directory>../plugins/spring/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-spring-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/gxp/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-gxp-plugin</outputDirectory>
+        <directory>../plugins/struts1/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-struts1-plugin/apidocs</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/testng/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-testng-plugin/apidocs</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/tiles/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin/apidocs</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/tiles3/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-tiles3-plugin/apidocs</outputDirectory>
       </fileSet>
 
     <!-- bundles -->

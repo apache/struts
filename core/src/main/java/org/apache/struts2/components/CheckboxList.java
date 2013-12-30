@@ -44,7 +44,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="checkboxlist", tldTagClass="org.apache.struts2.views.jsp.ui.CheckboxListTag", description="Render a list of checkboxes")
+@StrutsTag(
+        name="checkboxlist",
+        tldTagClass="org.apache.struts2.views.jsp.ui.CheckboxListTag",
+        description="Render a list of checkboxes",
+        allowDynamicAttributes = true)
 public class CheckboxList extends ListUIBean {
     final public static String TEMPLATE = "checkboxlist";
 

@@ -31,7 +31,7 @@
 
     <artifactId>struts2-portlet</artifactId>
     <packaging>war</packaging>
-    <name>Portlet Webapp</name>
+    <name>Struts 2 Portlet Webapp</name>
 
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</connection>

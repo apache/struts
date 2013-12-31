@@ -31,7 +31,7 @@
 
     <artifactId>struts2-showcase</artifactId>
     <packaging>war</packaging>
-    <name>Showcase Webapp</name>
+    <name>Struts 2 Showcase Webapp</name>
 
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/</connection>

@@ -32,7 +32,7 @@
     <artifactId>struts2-rest-showcase</artifactId>
     <packaging>war</packaging>
     <version>2.3.17-SNAPSHOT</version>
-    <name>Struts 2 Rest Showcase Example</name>
+    <name>Struts 2 Rest Showcase Webapp</name>
     <description>Struts 2 Rest Showcase Example</description>
 
     <dependencies>

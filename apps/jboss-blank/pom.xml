@@ -31,7 +31,7 @@
 
     <artifactId>struts2-jboss-blank</artifactId>
     <packaging>war</packaging>
-    <name>JBoss Blank Webapp</name>
+    <name>Struts 2 JBoss Blank Webapp</name>
 
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/jboss-blank/</connection>

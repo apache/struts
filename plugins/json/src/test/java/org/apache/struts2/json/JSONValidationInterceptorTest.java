@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor;
@@ -74,7 +75,8 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
                 .contains("\"errors\":[\"Generalerror\"]")
                 .contains("\"fieldErrors\":{")
                 .contains("\"value\":[\"Minvalueis-1\"]")
-                .contains("\"text\":[\"Tooshort\",\"Thisisnoemail\"]");
+                .contains("\"text\":[\"Tooshort\",\"Thisisnoemail\"]")
+                .contains("\"password\":[\"Passwordisn'tcorrect\"]");
 
         //execution
         assertFalse(action.isExecuted());
@@ -88,6 +90,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         JSONValidationInterceptor interceptor = new JSONValidationInterceptor();
 
         action.setText("abcd@ggg.com");
+        action.setPassword("apassword");
         action.setValue(10);
         
         Map parameters = new HashMap();
@@ -107,6 +110,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         JSONValidationInterceptor interceptor = new JSONValidationInterceptor();
 
         action.setText("abcd@ggg.com");
+        action.setPassword("apassword");
         action.setValue(10);
 
         //just validate
@@ -163,7 +167,8 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         private String text = "x";
         private int value = -10;
         private boolean executed = false;
-        
+        private String password;
+
         public String execute() {
             executed = true;
             return Action.SUCCESS;
@@ -182,6 +187,15 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         @EmailValidator(message = "This is no email")
         public void setText(String text) {
             this.text = text;
+        }
+
+        @RequiredStringValidator(message = "Password isn't correct")
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getPassword() {
+            return password;
         }
 
         public int getValue() {

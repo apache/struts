@@ -210,7 +210,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
         sb.append("[");
         for (String value : values) {
             sb.append("\"");
-            sb.append(StringEscapeUtils.escapeEcmaScript(value));
+            sb.append(StringEscapeUtils.escapeJson(value));
             sb.append("\",");
         }
         if (values.size() > 0)

@@ -21,13 +21,35 @@
 
 package org.apache.struts2;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.time.FastDateFormat;
+
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 /**
  * Request handling utility class.
  */
 public class RequestUtils {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RequestUtils.class);
+
+    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+
+    private static final String FORMAT_PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    private static final String FORMAT_PATTERN_RFC1036 = "EEE, dd-MMM-yy HH:mm:ss zzz";
+    private static final String FORMAT_PATTERN_ASCTIME = "EEE MMM d HH:mm:ss yyyy";
+
+    private static final FastDateFormat[] IF_MODIFIED_SINCE_FORMATS = {
+            FastDateFormat.getInstance(FORMAT_PATTERN_RFC1123, GMT, Locale.US),
+            FastDateFormat.getInstance(FORMAT_PATTERN_RFC1036, GMT, Locale.US),
+            FastDateFormat.getInstance(FORMAT_PATTERN_ASCTIME, GMT, Locale.US)
+    };
 
     /**
      * Retrieves the current request servlet path.
@@ -84,4 +106,30 @@ public class RequestUtils {
         uri = request.getRequestURI();
         return uri.substring(request.getContextPath().length());
     }
+
+    /**
+     * Parse input string as date in formats defined for If-Modified-Since header,
+     * see:
+     * https://issues.apache.org/jira/browse/WW-4263
+     * https://web.archive.org/web/20081014021349/http://rfc.net/rfc2616.html#p20
+     *
+     * @param headerValue value of If-Modified-Since header
+     * @return proper date or null
+     */
+    public static Date parseIfModifiedSince(String headerValue) {
+        for (FastDateFormat fastDateFormat : IF_MODIFIED_SINCE_FORMATS) {
+            try {
+                return fastDateFormat.parse(headerValue);
+            } catch (ParseException ignore) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Error parsing value [#0] as [#1]!", headerValue, fastDateFormat);
+                }
+            }
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Error parsing value [#0] as date!", headerValue);
+        }
+        return null;
+    }
+
 }

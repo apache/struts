@@ -25,11 +25,11 @@ package org.apache.struts2;
  * <code>RequestUtilsTest</code>
  *
  */
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.TestCase;
-
 import org.easymock.MockControl;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 public class RequestUtilsTest extends TestCase {
 
@@ -85,6 +85,22 @@ public class RequestUtilsTest extends TestCase {
         assertEquals("/mycontext/jim;bob", RequestUtils.getServletPath(requestMock));
         control.verify();
     }
+
+    public void testParseRFC1123() {
+        Date date = RequestUtils.parseIfModifiedSince("Thu, 23 Jul 2013 19:42:23 GMT");
+        assertNotNull(date);
+    }
+
+    public void testParseRFC1036() {
+        Date date = RequestUtils.parseIfModifiedSince("Thursday, 23-Jul-13 19:42:23 GMT");
+        assertNotNull(date);
+    }
+
+    public void testParseASC() {
+        Date date = RequestUtils.parseIfModifiedSince("Thu Jul 23 19:42:23 2013");
+        assertNotNull(date);
+    }
+
 
     protected void setUp() {
         control = MockControl.createControl(HttpServletRequest.class);

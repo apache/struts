@@ -21,28 +21,18 @@
 
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.RequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static javax.servlet.http.HttpServletResponse.SC_CREATED;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /**
  * Default implementation of rest info that uses fluent-style construction
  */
 public class DefaultHttpHeaders implements HttpHeaders {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultHttpHeaders.class);
-
-    private static final String IF_MODIFIED_SINCE_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
-    private static final SimpleDateFormat IF_MODIFIED_SINCE_FORMAT = new SimpleDateFormat(IF_MODIFIED_SINCE_DATE_FORMAT);
 
     private String resultCode;
     private int status = SC_OK;
@@ -144,13 +134,13 @@ public class DefaultHttpHeaders implements HttpHeaders {
                 }
             }
 
-            String reqLastModified = request.getHeader("If-Modified-Since");
-            if (lastModified != null && reqLastModified != null) {
-                lastModifiedNotChanged = compareIfModifiedSince(reqLastModified);
+            String headerIfModifiedSince = request.getHeader("If-Modified-Since");
+            if (lastModified != null && headerIfModifiedSince != null) {
+                lastModifiedNotChanged = compareIfModifiedSince(headerIfModifiedSince);
             }
 
             if ((etagNotChanged && lastModifiedNotChanged) ||
-                    (etagNotChanged && reqLastModified == null) ||
+                    (etagNotChanged && headerIfModifiedSince == null) ||
                     (lastModifiedNotChanged && reqETag == null)) {
                 status = SC_NOT_MODIFIED;
             }
@@ -160,18 +150,9 @@ public class DefaultHttpHeaders implements HttpHeaders {
         return resultCode;
     }
 
-    private boolean compareIfModifiedSince(String reqLastModified) {
-        try {
-            if (lastModified.compareTo(IF_MODIFIED_SINCE_FORMAT.parse(reqLastModified)) >= 0) {
-                return true;
-            }
-        } catch (ParseException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Got error parsing If-Modified-Since header value [#0] as [#1]!", e, reqLastModified, IF_MODIFIED_SINCE_DATE_FORMAT);
-            }
-            return false;
-        }
-        return false;
+    private boolean compareIfModifiedSince(String headerIfModifiedSince) {
+        Date requestLastModified = RequestUtils.parseIfModifiedSince(headerIfModifiedSince);
+        return requestLastModified != null && lastModified.compareTo(requestLastModified) >= 0;
     }
 
     public int getStatus() {

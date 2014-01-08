@@ -476,8 +476,8 @@ public class JSONUtil {
 
     private static void addPattern(List<Pattern> results, String pattern, String type) {
         results.add(REGEXP_PATTERN.equals(type) ? Pattern.compile(pattern) : WildcardUtil.compileWildcardPattern(pattern));
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Adding include " + (REGEXP_PATTERN.equals(type) ? "property" : "wildcard") + " expression:  " + pattern);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Adding include " + (REGEXP_PATTERN.equals(type) ? "property" : "wildcard") + " expression:  " + pattern);
         }
     }
 

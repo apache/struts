@@ -84,6 +84,7 @@ public class JSONResult implements Result {
     private boolean enumAsBean = JSONWriter.ENUM_AS_BEAN_DEFAULT;
     private boolean noCache = false;
     private boolean excludeNullProperties = false;
+    private String defaultDateFormat = null;
     private int statusCode;
     private int errorCode;
     private String callbackParameter;
@@ -199,7 +200,8 @@ public class JSONResult implements Result {
     }
 
     protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
-        String json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties);
+        String json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
+                                         enumAsBean, excludeNullProperties, defaultDateFormat);
         json = addCallbackIfApplicable(request, json);
         return json;
     }
@@ -442,5 +444,14 @@ public class JSONResult implements Result {
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    public String getDefaultDateFormat() {
+        return defaultDateFormat;
+    }
+
+    @Inject(required=false,value="struts.json.dateformat")
+    public void setDefaultDateFormat(String defaultDateFormat) {
+        this.defaultDateFormat = defaultDateFormat;
     }
 }

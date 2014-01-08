@@ -32,6 +32,7 @@ import org.springframework.mock.web.MockServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -168,6 +169,23 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(out, true);
         String normalizedExpected = "{\"name\":\"name\"}_suffix_";
         assertEquals(normalizedExpected, normalizedActual);
+    }
+
+    public void testCustomDateFormat() throws Exception {
+        JSONResult result = new JSONResult();
+        result.setDefaultDateFormat("MM-dd-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+
+        SingleDateBean dateBean = new SingleDateBean();
+        dateBean.setDate(sdf.parse("2012-12-23 10:10:10 GMT"));
+
+        stack.push(dateBean);
+
+        this.invocation.setAction(dateBean);
+        result.execute(this.invocation);
+
+        String out = response.getContentAsString();
+        assertEquals("{\"date\":\"12-23-2012\"}", out);
     }
 
     public void testPrefixAndSuffix() throws Exception {

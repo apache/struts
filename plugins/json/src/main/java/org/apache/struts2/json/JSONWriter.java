@@ -608,6 +608,12 @@ public class JSONWriter {
         this.enumAsBean = enumAsBean;
     }
 
+    public void setDateFormatter(String defaultDateFormat) {
+        if (defaultDateFormat != null) {
+            this.formatter = new SimpleDateFormat(defaultDateFormat);
+        }
+    }
+
     protected static class JSONAnnotationFinder {
         private boolean serialize = true;
         private Method accessor;

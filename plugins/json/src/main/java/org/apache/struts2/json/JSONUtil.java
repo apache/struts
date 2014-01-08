@@ -29,21 +29,9 @@ import org.apache.struts2.json.annotations.SMDMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -104,15 +92,18 @@ public class JSONUtil {
      *            root object
      * @param enumAsBean
      *            whether to serialized enums a Bean or name=value pair
+     * @param defaultDateFormat
+     *            date format used to serialize dates
      * @return JSON string
      * @throws JSONException
      */
     public static String serialize(Object object, Collection<Pattern> excludeProperties,
-            Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
-            boolean excludeNullProperties) throws JSONException {
+                                   Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
+                                   boolean excludeNullProperties, String defaultDateFormat) throws JSONException {
         JSONWriter writer = new JSONWriter();
         writer.setIgnoreHierarchy(ignoreHierarchy);
         writer.setEnumAsBean(enumAsBean);
+        writer.setDateFormatter(defaultDateFormat);
         return writer.write(object, excludeProperties, includeProperties, excludeNullProperties);
     }
 

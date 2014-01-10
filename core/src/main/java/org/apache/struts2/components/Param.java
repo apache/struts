@@ -126,8 +126,7 @@ public class Param extends Component {
 
                 Object value = findValue(this.value);
                 if (suppressEmptyParameters) {
-                    String potentialValue = (String) value;
-                    if (potentialValue != null && potentialValue.length() > 0) {
+                    if (value != null && !value.toString().isEmpty()) {
                         component.addParameter(name, value);
                     }
                 } else {

@@ -413,7 +413,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         String methodName = proxy.getMethod();
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing action method = " + actionConfig.getMethodName());
+            LOG.debug("Executing action method = #0", methodName);
         }
 
         String timerKey = "invokeAction: " + proxy.getActionName();

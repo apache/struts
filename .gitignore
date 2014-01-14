@@ -1,7 +1,10 @@
+# IDEA
 .idea
 *.iml
 *.ipr
 *.iws
+
+# Maven
 core/target
 xwork-core/target
 archetypes/struts2-archetype-angularjs/target

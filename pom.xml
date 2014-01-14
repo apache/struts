@@ -29,9 +29,9 @@
     -->
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk</url>
+        <connection>scm:git:http://git.apache.org/repos/asf/struts.git</connection>
+        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/struts.git</developerConnection>
+        <url>https://git-wip-us.apache.org/repos/asf/struts/repo?p=struts.git;a=summary</url>
     </scm>
 
     <issueManagement>

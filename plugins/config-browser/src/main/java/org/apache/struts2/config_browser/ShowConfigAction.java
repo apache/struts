@@ -1,4 +1,5 @@
 /*
+ * $Id: ShowConfigAction.java 1536698 2013-10-29 13:00:58Z lukaszlenart $
  * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -106,8 +107,8 @@ public class ShowConfigAction extends ActionNamesAction {
         config = configHelper.getActionConfig(namespace, actionName);
         actionNames = new TreeSet<String>(configHelper.getActionNames(namespace));
         try {
-            Class clazz = objectFactory.getClassInstance(getConfig().getClassName());
-            properties = reflectionProvider.getPropertyDescriptors(clazz.newInstance());
+            Object action = objectFactory.buildAction(actionName, namespace, config, null);
+            properties = reflectionProvider.getPropertyDescriptors(action);
         } catch (Exception e) {
             LOG.error("Unable to get properties for action " + actionName, e);
             addActionError("Unable to retrieve action properties: " + e.toString());

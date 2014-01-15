@@ -65,17 +65,17 @@
             <ol>
                 <#list msgs as msg>
                     <#if (msg?is_method)>
-                        <li>${msg[0]}</li>
+                        <li>${msg[0]?html}</li>
                     <#else>
-                        <li>${msg}</li>
+                        <li>${msg?html}</li>
                     </#if>
                 </#list>
             </ol>
             <#elseif (msgs?size == 1)>
                 <#if (msgs[0]?is_method)>
-                    <li>${msgs[0][0]}</li>
+                    <li>${msgs[0][0]?html}</li>
                 <#else>
-                    <li>${msgs[0]}</li>
+                    <li>${msgs[0]?html}</li>
                 </#if>
             </#if>
         </td>
@@ -126,11 +126,11 @@
 <h3>Stacktraces</h3>
 <#list chain as ex>
 <div class="stacktrace" style="padding-left: ${ex_index * 2}em">
-    <strong>${ex}</strong>
+    <strong>${ex?html}</strong>
     <div>
     <pre>
     <#list ex.stackTrace as frame>
-    ${frame}
+    ${frame?html}
     </#list>
     </pre>
     </div>

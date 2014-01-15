@@ -346,8 +346,10 @@ public class DomHelper {
         @Override
         public InputSource resolveEntity(String publicId, String systemId) {
             if (dtdMappings != null && dtdMappings.containsKey(publicId)) {
-                String val = dtdMappings.get(publicId).toString();
-                return new InputSource(ClassLoaderUtil.getResourceAsStream(val, DomHelper.class));
+                String dtdFile = dtdMappings.get(publicId);
+                return new InputSource(ClassLoaderUtil.getResourceAsStream(dtdFile, DomHelper.class));
+            } else if (LOG.isWarnEnabled()) {
+                LOG.warn("Local DTD is missing for publicID: #0 - defined mappings: #1", publicId, dtdMappings);
             }
             return null;
         }

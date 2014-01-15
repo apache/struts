@@ -4,6 +4,9 @@
 *.ipr
 *.iws
 
+# Scripts
+*.sh
+
 # Maven
 core/target
 xwork-core/target

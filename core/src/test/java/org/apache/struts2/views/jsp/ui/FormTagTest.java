@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 
 
 /**
@@ -52,6 +53,23 @@ import java.util.Set;
  */
 public class FormTagTest extends AbstractUITagTest {
 
+    
+     public void testFormWithActionAttributeContainingQueryString() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setName("myForm");
+        tag.setMethod("post");
+        tag.setAcceptcharset("UTF-8");
+        tag.setAction("testAction?paramone=one&paramtwo=two");
+        tag.setEnctype("myEncType");
+        tag.setTitle("mytitle");
+        tag.setOnsubmit("submitMe()");
+        tag.doStartTag();
+        tag.doEndTag();
+        
+        verify(FormTag.class.getResource("Formtag-26.txt"));
+    }
+    
     public void testFormWithActionAttributeContainingBothActionAndMethod() throws Exception {
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);

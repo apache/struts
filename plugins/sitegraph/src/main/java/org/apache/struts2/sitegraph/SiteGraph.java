@@ -29,19 +29,19 @@ import org.apache.struts2.sitegraph.renderers.DOTRenderer;
 import java.io.*;
 
 /**
- * // START SNIPPET: javadocs-intro
+ * <!-- START SNIPPET: javadocs-intro -->
  * SiteGraph is a tool that renders out GraphViz-generated images depicting your
  * Struts-powered web application's flow. SiteGraph requires GraphViz be installed
  * and that the "dot" executable be in your command path. You can find GraphViz
  * at http://www.graphviz.org.
- * // END SNIPPET: javadocs-intro
+ * <!-- END SNIPPET: javadocs-intro -->
  * <p/>
- * // START SNIPPET: javadocs-api
+ * <!-- START SNIPPET: javadocs-api -->
  * If you wish to use SiteGraph through its API rather than through the command line,
  * you can do that as well. All you need to do is create a new SiteGraph instance,
  * optionally specify a {@link Writer} to output the dot content to, and then call
  * {@link #prepare()}.
- * // END SNIPPET: javadocs-api
+ * <!-- END SNIPPET: javadocs-api -->
  */
 public class SiteGraph {
 
@@ -86,11 +86,11 @@ public class SiteGraph {
         String output = getArg(args, "output");
         String namespace = getArg(args, "ns");
 
-        // START SNIPPET: example-api
+        /** <!-- START SNIPPET: example-api --> */
         SiteGraph siteGraph = new SiteGraph(configDir, views, output, namespace);
         siteGraph.prepare();
         siteGraph.render();
-        // END SNIPPET: example-api
+        /** <!-- END SNIPPET: example-api --> */
     }
 
     private static String getArg(String[] args, String arg) {

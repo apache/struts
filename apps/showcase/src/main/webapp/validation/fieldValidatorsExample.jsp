@@ -22,6 +22,8 @@
 	<div class="row-fluid">
 		<div class="span12">
 
+            <!-- START SNIPPET: fieldValidatorsExample -->
+
 			<h3>All Field Errors Will Appear Here</h3>
 			<s:fielderror/>
 			<hr/>

@@ -13,7 +13,7 @@
         <default-action-ref name="index" />
 
         <global-results>
-            <result name="error">/error.jsp</result>
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
         </global-results>
 
         <global-exception-mappings>

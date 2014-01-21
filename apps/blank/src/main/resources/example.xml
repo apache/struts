@@ -8,16 +8,16 @@
     <package name="example" namespace="/example" extends="default">
 
         <action name="HelloWorld" class="example.HelloWorld">
-            <result>/example/HelloWorld.jsp</result>
+            <result>/WEB-INF/jsp/example/HelloWorld.jsp</result>
         </action>
 
         <action name="Login_*" method="{1}" class="example.Login">
-            <result name="input">/example/Login.jsp</result>
+            <result name="input">/WEB-INF/jsp/example/Login.jsp</result>
             <result type="redirectAction">Menu</result>
         </action>
 
         <action name="*" class="example.ExampleSupport">
-            <result>/example/{1}.jsp</result>
+            <result>/WEB-INF/jsp/example/{1}.jsp</result>
         </action>
 
         <!-- Add actions here -->

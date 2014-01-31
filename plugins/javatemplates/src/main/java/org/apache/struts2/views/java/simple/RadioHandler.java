@@ -40,8 +40,6 @@ public class RadioHandler extends AbstractTagHandler implements TagGenerator {
         Object listObj = params.get("list");
         String listKey = (String) params.get("listKey");
         String listValue = (String) params.get("listValue");
-        // NameValue is the value that is provided by the name property in the action
-        Object nameValue = params.get("nameValue");
         int cnt = 0;
 
         ValueStack stack = this.context.getStack();
@@ -51,40 +49,28 @@ public class RadioHandler extends AbstractTagHandler implements TagGenerator {
                 Object item = itt.next();
                 stack.push(item);
 
-                //key
+                // key
                 Object itemKey = findValue(listKey != null ? listKey : "top");
                 String itemKeyStr = StringUtils.defaultString(itemKey == null ? null : itemKey.toString());
 
-                //value
+                // value
                 Object itemValue = findValue(listValue != null ? listValue : "top");
                 String itemValueStr = StringUtils.defaultString(itemValue == null ? null : itemValue.toString());
 
-                // nameValue needs to cast to a string from object
-                String itemNameValueStr = (nameValue == null ? null : nameValue.toString());
-
-                //Checked value.  It's set to true if the nameValue (the value associated with the name which is typically set in 
-                //the action is equal to the current key value.
-                Boolean checked = itemKeyStr != null && itemNameValueStr != null && itemNameValueStr.equals(itemKeyStr);
-
-                //Radio button section
+                // Radio button section
                 String id = params.get("id") + Integer.toString(cnt++);
                 Attributes a = new Attributes();
-                a.add("type", "radio")
-                        .addDefaultToEmpty("name", params.get("name"))
-                        .addIfTrue("checked", checked)
-                        .addIfExists("value", itemKeyStr)
-                        .addIfTrue("disabled", params.get("disabled"))
-                        .addIfExists("tabindex", params.get("tabindex"))
+                a.add("type", "radio").addDefaultToEmpty("name", params.get("name"))
+                        .addIfTrue("checked", isChecked(params, itemKeyStr)).addIfExists("value", itemKeyStr)
+                        .addIfTrue("disabled", params.get("disabled")).addIfExists("tabindex", params.get("tabindex"))
                         .addIfExists("id", id);
                 super.start("input", a);
                 super.end("input");
 
-                //Label section
+                // Label section
                 a = new Attributes();
-                a.addIfExists("for", id)
-                        .addIfExists("class", params.get("cssClass"))
-                        .addIfExists("style", params.get("cssStyle"))
-                        .addIfExists("title", params.get("title"));
+                a.addIfExists("for", id).addIfExists("class", params.get("cssClass"))
+                        .addIfExists("style", params.get("cssStyle")).addIfExists("title", params.get("title"));
                 super.start("label", a);
                 if (StringUtils.isNotEmpty(itemValueStr)) {
                     characters(itemValueStr);
@@ -93,6 +79,44 @@ public class RadioHandler extends AbstractTagHandler implements TagGenerator {
                 stack.pop();
             }
         }
+    }
+
+    /**
+     * It's set to true if the nameValue (the value associated with the name
+     * which is typically set in the action is equal to the current key value.
+     * 
+     * @param params
+     *            the params
+     * 
+     * @param itemKeyStr
+     *            the item key str
+     * 
+     * @return the boolean
+     */
+    private Boolean isChecked(Map<String, Object> params, String itemKeyStr) {
+        Boolean checked = false;
+        if (itemKeyStr != null) {
+
+            // NameValue are the values that is provided by the name property
+            // in the action
+            Object nameValue = params.get("nameValue");
+
+            if (nameValue != null) {
+
+                Iterator itt = MakeIterator.convert(nameValue);
+                while (itt.hasNext()) {
+
+                    String value = (String) itt.next();
+                    if (checked = value.equalsIgnoreCase(itemKeyStr)) {
+                        break;
+                    }
+
+                }
+
+            }
+
+        }
+        return checked;
     }
 
 }

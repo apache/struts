@@ -4,6 +4,11 @@
 *.ipr
 *.iws
 
+# Eclipse
+.classpath
+.project
+.settings/
+
 # Scripts
 *.sh
 

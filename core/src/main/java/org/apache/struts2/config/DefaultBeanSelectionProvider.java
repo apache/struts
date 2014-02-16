@@ -60,6 +60,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
+import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
@@ -379,6 +380,8 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);
 
         alias(TextParser.class, StrutsConstants.STRUTS_EXPRESSION_PARSER, builder, props);
+
+        alias(DispatcherErrorHandler.class, StrutsConstants.STRUTS_DISPATCHER_ERROR_HANDLER, builder, props);
 
         switchDevMode(props);
 

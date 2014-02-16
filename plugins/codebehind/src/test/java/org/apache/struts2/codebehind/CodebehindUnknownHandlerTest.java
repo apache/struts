@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
@@ -46,6 +47,7 @@ public class CodebehindUnknownHandlerTest extends StrutsTestCase {
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
         actionProxyFactory = container.getInstance(ActionProxyFactory.class);
+        servletContext = new MockServletContext();
         initDispatcher(Collections.singletonMap("actionPackages", "foo.bar"));
         mockServletContext = new Mock(ServletContext.class);
         handler = new CodebehindUnknownHandler("codebehind-default", configuration);

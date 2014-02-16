@@ -27,6 +27,7 @@ public class TestNGXWorkTestCaseTest extends TestCase {
         TestListenerAdapter tla = new TestListenerAdapter();
         TestNG testng = new TestNG();
         testng.setTestClasses(new Class[] { RunTest.class });
+        testng.setOutputDirectory("target/surefire-reports");
         testng.addListener(tla);
         try {
             testng.run();

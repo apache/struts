@@ -555,10 +555,10 @@ public class Dispatcher {
             }
         } catch (ConfigurationException e) {
             logConfigurationException(request, e);
-            sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
+            sendError(request, response, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             if (handleException || devMode) {
-                sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+                sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
             } else {
                 throw new ServletException(e);
             }

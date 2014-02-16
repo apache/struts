@@ -409,7 +409,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 mapping = actionMapper.getMapping(request, dispatcher.getConfigurationManager());
             } catch (Exception ex) {
                 log.error("error getting ActionMapping", ex);
-                dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+                dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
                 return;
             }
 

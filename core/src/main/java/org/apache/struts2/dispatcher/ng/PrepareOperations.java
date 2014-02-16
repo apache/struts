@@ -163,7 +163,7 @@ public class PrepareOperations {
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
                 }
             } catch (Exception ex) {
-                dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+                dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
             }
         }
 

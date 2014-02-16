@@ -127,7 +127,7 @@ public class FilterDispatcherTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public void sendError(HttpServletRequest request, HttpServletResponse response, ServletContext ctx, int code, Exception e) {
+        public void sendError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
             // NO-OP
         }
     }

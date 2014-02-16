@@ -35,21 +35,14 @@ import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
+import org.springframework.mock.web.MockServletContext;
 
-import javax.portlet.PortletContext;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletURL;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
+import javax.portlet.*;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.struts2.StrutsStatics.STRUTS_PORTLET_CONTEXT;
 
@@ -92,7 +85,8 @@ public class PortletUrlTagTest extends MockObjectTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dispatcher = new Dispatcher(null, new HashMap());
+        ServletContext servletContext = new MockServletContext();
+        dispatcher = new Dispatcher(servletContext, new HashMap());
         dispatcher.init();
         Dispatcher.setInstance(dispatcher);
 
@@ -100,7 +94,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         stack.getContext().put(ActionContext.CONTAINER, dispatcher.getContainer());
         ActionContext context = new ActionContext(stack.getContext());
         ActionContext.setContext(context);
-        
+
     	mockActionInvocation  = mock(ActionInvocation.class);
         mockActionProxy = mock(ActionProxy.class);
         mockHttpReq = mock(HttpServletRequest.class);
@@ -111,7 +105,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         mockPortletUrl = mock(PortletURL.class);
         mockJspWriter = new MockJspWriter();
         mockCtx = mock(PortletContext.class);
-        
+
         mockActionProxy.stubs().method("getNamespace").will(returnValue("/view"));
         mockActionInvocation.stubs().method("getProxy").will(returnValue(
                 mockActionProxy.proxy()));

@@ -21,20 +21,8 @@
 
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.FileManagerFactoryProvider;
-import com.opensymphony.xwork2.config.FileManagerProvider;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
@@ -53,7 +41,6 @@ import com.opensymphony.xwork2.util.location.LocationUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
-import freemarker.template.Template;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -68,7 +55,6 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.fs.JBossFileManager;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -76,16 +62,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -167,6 +144,11 @@ public class Dispatcher {
      * Introduced to allow integration with other frameworks like Spring Security
      */
     private boolean handleException;
+
+    /**
+     * Interface used to handle internal errors or missing resources
+     */
+    private DispatcherErrorHandler errorHandler;
 
     /**
      * Provide the dispatcher instance for the current thread.
@@ -278,6 +260,11 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_HANDLE_EXCEPTION)
     public void setHandleException(String handleException) {
         this.handleException = Boolean.parseBoolean(handleException);
+    }
+
+    @Inject
+    public void setDispatcherErrorHandler(DispatcherErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -492,6 +479,10 @@ public class Dispatcher {
                     l.dispatcherInitialized(this);
                 }
             }
+            //if (servletContext != null) {
+                errorHandler.init(servletContext);
+            //}
+
         } catch (Exception ex) {
             if (LOG.isErrorEnabled())
                 LOG.error("Dispatcher initialization failed", ex);
@@ -847,70 +838,26 @@ public class Dispatcher {
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      * @param ctx      the ServletContext object.
+     *
+     * @deprecated remove in version 3.0 - use version without ServletContext parameter
      */
+    @Deprecated
     public void sendError(HttpServletRequest request, HttpServletResponse response, ServletContext ctx, int code, Exception e) {
-        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
-        if (devModeOverride != null ? devModeOverride : devMode) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Exception occurred during processing request: #0", e, e.getMessage());
-            }
-            try {
-                FreemarkerManager mgr = getContainer().getInstance(FreemarkerManager.class);
+        sendError(request, response, code, e);
+    }
 
-                freemarker.template.Configuration config = mgr.getConfiguration(ctx);
-                Template template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
-
-                List<Throwable> chain = new ArrayList<Throwable>();
-                Throwable cur = e;
-                chain.add(cur);
-                while ((cur = cur.getCause()) != null) {
-                    chain.add(cur);
-                }
-
-                HashMap<String,Object> data = new HashMap<String,Object>();
-                data.put("exception", e);
-                data.put("unknown", Location.UNKNOWN);
-                data.put("chain", chain);
-                data.put("locator", new Locator());
-
-                Writer writer = new StringWriter();
-                template.process(data, writer);
-
-                response.setContentType("text/html");
-                response.getWriter().write(writer.toString());
-                response.getWriter().close();
-            } catch (Exception exp) {
-                try {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Cannot show problem report!", exp);
-                    }
-                    response.sendError(code, "Unable to show problem report:\n" + exp + "\n\n" + LocationUtils.getLocation(exp));
-                } catch (IOException ex) {
-                    // we're already sending an error, not much else we can do if more stuff breaks
-                }
-            }
-        } else {
-            try {
-                // WW-1977: Only put errors in the request when code is a 500 error
-                if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
-                    // WW-4103: Only logs error when application error occurred, not Struts error
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Exception occurred during processing request: #0", e, e.getMessage());
-                    }
-                    // send a http error response to use the servlet defined error handler
-                    // make the exception availible to the web.xml defined error page
-                    request.setAttribute("javax.servlet.error.exception", e);
-
-                    // for compatibility
-                    request.setAttribute("javax.servlet.jsp.jspException", e);
-                }
-
-                // send the error response
-                response.sendError(code, e.getMessage());
-            } catch (IOException e1) {
-                // we're already sending an error, not much else we can do if more stuff breaks
-            }
-        }
+    /**
+     * Send an HTTP error response code.
+     *
+     * @param request  the HttpServletRequest object.
+     * @param response the HttpServletResponse object.
+     * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
+     * @param e        the Exception that is reported.
+     *
+     * @since 2.3.17
+     */
+    public void sendError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
+        errorHandler.handleError(request, response, code, e);
     }
 
     /**

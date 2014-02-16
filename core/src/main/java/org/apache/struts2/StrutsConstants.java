@@ -279,4 +279,6 @@ public final class StrutsConstants {
 
     public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";
 
+    /** Allows override default DispatcherErrorHandler **/
+    public static final String STRUTS_DISPATCHER_ERROR_HANDLER = "struts.dispatcher.errorHandler";
 }

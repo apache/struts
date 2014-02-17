@@ -57,8 +57,8 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
-            prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
-            execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
+            prepare = new PrepareOperations(dispatcher);
+            execute = new ExecuteOperations(dispatcher);
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);

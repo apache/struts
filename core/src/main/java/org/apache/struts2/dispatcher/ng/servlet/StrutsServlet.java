@@ -54,8 +54,8 @@ public class StrutsServlet extends HttpServlet {
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
-            prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
-            execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
+            prepare = new PrepareOperations(dispatcher);
+            execute = new ExecuteOperations(dispatcher);
         } finally {
             if (dispatcher != null) {
                 dispatcher.cleanUpAfterInit();

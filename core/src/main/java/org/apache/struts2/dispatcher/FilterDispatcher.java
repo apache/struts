@@ -361,7 +361,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         try {
             // Wrap request first, just in case it is multipart/form-data
             // parameters might not be accessible through before encoding (ww-1278)
-            request = dispatcher.wrapRequest(request, getServletContext());
+            request = dispatcher.wrapRequest(request);
         } catch (IOException e) {
             String message = "Could not wrap servlet request with MultipartRequestWrapper!";
             log.error(message, e);
@@ -431,7 +431,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 return;
             }
 
-            dispatcher.serviceAction(request, response, servletContext, mapping);
+            dispatcher.serviceAction(request, response, mapping);
 
         } finally {
             dispatcher.cleanUpRequest(request);

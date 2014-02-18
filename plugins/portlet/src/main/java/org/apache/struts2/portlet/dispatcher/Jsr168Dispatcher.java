@@ -184,6 +184,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
     private Dispatcher dispatcherUtils;
     private ActionMapper actionMapper;
     private Container container;
+    private ServletContext servletContext;
 
     /**
      * Initialize the portlet with the init parameters from <tt>portlet.xml</tt>
@@ -201,7 +202,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
             params.put(name, value);
         }
 
-        dispatcherUtils = new Dispatcher(new PortletServletContext(cfg.getPortletContext()), params);
+        servletContext = new PortletServletContext(cfg.getPortletContext());
+        dispatcherUtils = new Dispatcher(servletContext, params);
         dispatcherUtils.init();
 
         // For testability
@@ -428,11 +430,10 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         String actionName = null;
         String namespace;
         try {
-            ServletContext servletContext = new PortletServletContext(getPortletContext());
             HttpServletRequest servletRequest = new PortletServletRequest(request, getPortletContext());
             HttpServletResponse servletResponse = createPortletServletResponse(response);
             if (phase.isAction()) {
-                servletRequest = dispatcherUtils.wrapRequest(servletRequest, servletContext);
+                servletRequest = dispatcherUtils.wrapRequest(servletRequest);
                 if (servletRequest instanceof MultiPartRequestWrapper) {
                     // Multipart request. Request parameters are encoded in the multipart data,
                     // so we need to manually add them to the parameter map.

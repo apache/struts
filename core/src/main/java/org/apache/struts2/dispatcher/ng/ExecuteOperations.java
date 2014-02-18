@@ -35,12 +35,16 @@ import java.io.IOException;
  * Contains execution operations for filters
  */
 public class ExecuteOperations {
-    private ServletContext servletContext;
+
     private Dispatcher dispatcher;
 
+    @Deprecated
     public ExecuteOperations(ServletContext servletContext, Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
-        this.servletContext = servletContext;
+    }
+
+    public ExecuteOperations(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -74,6 +78,6 @@ public class ExecuteOperations {
      * @throws ServletException
      */
     public void executeAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) throws ServletException {
-        dispatcher.serviceAction(request, response, servletContext, mapping);
+        dispatcher.serviceAction(request, response, mapping);
     }
 }

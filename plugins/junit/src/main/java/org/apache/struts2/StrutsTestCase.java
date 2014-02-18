@@ -115,7 +115,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         ActionMapping mapping = getActionMapping(request);
 
         assertNotNull(mapping);
-        Dispatcher.getInstance().serviceAction(request, response, servletContext, mapping);
+        Dispatcher.getInstance().serviceAction(request, response, mapping);
 
         if (response.getStatus() != HttpServletResponse.SC_OK) {
             throw new ServletException("Error code [" + response.getStatus() + "], Error: [" + response.getErrorMessage() + "]");

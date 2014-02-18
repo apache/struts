@@ -479,9 +479,7 @@ public class Dispatcher {
                     l.dispatcherInitialized(this);
                 }
             }
-            //if (servletContext != null) {
-                errorHandler.init(servletContext);
-            //}
+            errorHandler.init(servletContext);
 
         } catch (Exception ex) {
             if (LOG.isErrorEnabled())

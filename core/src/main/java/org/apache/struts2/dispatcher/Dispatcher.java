@@ -186,10 +186,13 @@ public class Dispatcher {
         dispatcherListeners.remove(listener);
     }
 
-    private ServletContext servletContext;
-    private Map<String, String> initParams;
-
     private ValueStackFactory valueStackFactory;
+
+    /**
+     * Keeps current reference to external world and must be protected to support class inheritance
+     */
+    protected ServletContext servletContext;
+    protected Map<String, String> initParams;
 
     /**
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.

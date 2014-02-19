@@ -117,7 +117,7 @@ public class FilterDispatcherTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
+        public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
             wrappedRequest = true;
             return request;
         }
@@ -142,7 +142,7 @@ public class FilterDispatcherTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
+        public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
             wrappedRequest = true;
             // if we set the chracter encoding AFTER we do wrap request, we will get
             // a failing test

@@ -307,7 +307,7 @@ public class FilterTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
+        public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
             wrapRequest = true;
             return request;
         }

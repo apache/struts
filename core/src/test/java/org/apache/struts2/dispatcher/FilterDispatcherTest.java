@@ -122,7 +122,7 @@ public class FilterDispatcherTest extends StrutsInternalTestCase {
             return request;
         }
 
-        public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
+        public void serviceAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) throws ServletException {
             serviceRequest = true;
         }
 
@@ -152,7 +152,7 @@ public class FilterDispatcherTest extends StrutsInternalTestCase {
             return request;
         }
 
-        public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
+        public void serviceAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) throws ServletException {
             serviceRequest = true;
             // if we set the chracter encoding AFTER we do wrap request, we will get
             // a failing test

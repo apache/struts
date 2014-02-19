@@ -55,7 +55,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             init.initLogging(config);
             dispatcher = init.initDispatcher(config);
 
-            prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
+            prepare = new PrepareOperations(dispatcher);
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);

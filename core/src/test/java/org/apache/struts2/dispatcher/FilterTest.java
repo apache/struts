@@ -313,10 +313,10 @@ public class FilterTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
+        public void serviceAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) throws ServletException {
             service = true;
         }
-        
+
         @Override
         public void cleanup() {
         	cleanUp = true;

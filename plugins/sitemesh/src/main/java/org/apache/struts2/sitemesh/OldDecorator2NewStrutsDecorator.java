@@ -97,7 +97,7 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
         if (ctx == null) {
             // ok, one isn't associated with the request, so let's create one using the current Dispatcher
             ValueStack vs = Dispatcher.getInstance().getContainer().getInstance(ValueStackFactory.class).createValueStack();
-            vs.getContext().putAll(Dispatcher.getInstance().createContextMap(request, response, null, servletContext));
+            vs.getContext().putAll(Dispatcher.getInstance().createContextMap(request, response, null));
             ctx = new ActionContext(vs.getContext());
             if (ctx.getActionInvocation() == null) {
                 // put in a dummy ActionSupport so basic functionality still works

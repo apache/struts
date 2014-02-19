@@ -186,10 +186,13 @@ public class Dispatcher {
         dispatcherListeners.remove(listener);
     }
 
-    private ServletContext servletContext;
-    private Map<String, String> initParams;
-
     private ValueStackFactory valueStackFactory;
+
+    /**
+     * Keeps current reference to external world and must be protected to support class inheritance
+     */
+    protected ServletContext servletContext;
+    protected Map<String, String> initParams;
 
     /**
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
@@ -479,9 +482,7 @@ public class Dispatcher {
                     l.dispatcherInitialized(this);
                 }
             }
-            //if (servletContext != null) {
-                errorHandler.init(servletContext);
-            //}
+            errorHandler.init(servletContext);
 
         } catch (Exception ex) {
             if (LOG.isErrorEnabled())
@@ -492,6 +493,16 @@ public class Dispatcher {
 
     protected ConfigurationManager createConfigurationManager(String name) {
         return new ConfigurationManager(name);
+    }
+
+    /**
+     * @deprecated use version without ServletContext param
+     */
+    @Deprecated
+    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context,
+                              ActionMapping mapping) throws ServletException {
+
+        serviceAction(request, response, mapping);
     }
 
     /**
@@ -509,12 +520,13 @@ public class Dispatcher {
      * @param mapping  the action mapping object
      * @throws ServletException when an unknown error occurs (not a 404, but typically something that
      *                          would end up as a 5xx by the servlet container)
-     * @param context Our ServletContext object
+     *
+     * @since 2.3.17
      */
-    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context,
-                              ActionMapping mapping) throws ServletException {
+    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
+            throws ServletException {
 
-        Map<String, Object> extraContext = createContextMap(request, response, mapping, context);
+        Map<String, Object> extraContext = createContextMap(request, response, mapping);
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
         ValueStack stack = (ValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
@@ -587,16 +599,27 @@ public class Dispatcher {
     }
 
     /**
+     * @deprecated use version without servletContext param
+     */
+    @Deprecated
+    public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
+            ActionMapping mapping, ServletContext context) {
+
+        return createContextMap(request, response, mapping);
+    }
+
+    /**
      * Create a context map containing all the wrapped request objects
      *
      * @param request The servlet request
      * @param response The servlet response
      * @param mapping The action mapping
-     * @param context The servlet context
      * @return A map of context objects
+     *
+     * @since 2.3.17
      */
     public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
-            ActionMapping mapping, ServletContext context) {
+            ActionMapping mapping) {
 
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
@@ -608,14 +631,29 @@ public class Dispatcher {
         Map session = new SessionMap(request);
 
         // application map wrapping the ServletContext
-        Map application = new ApplicationMap(context);
+        Map application = new ApplicationMap(servletContext);
 
-        Map<String,Object> extraContext = createContextMap(requestMap, params, session, application, request, response, context);
+        Map<String,Object> extraContext = createContextMap(requestMap, params, session, application, request, response);
 
         if (mapping != null) {
             extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
         }
         return extraContext;
+    }
+
+    /**
+     * @deprecated use version without ServletContext param
+     */
+    @Deprecated
+    public HashMap<String,Object> createContextMap(Map requestMap,
+                                    Map parameterMap,
+                                    Map sessionMap,
+                                    Map applicationMap,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    ServletContext servletContext) {
+
+        return createContextMap(requestMap, parameterMap, sessionMap, applicationMap, request, response);
     }
 
     /**
@@ -628,16 +666,16 @@ public class Dispatcher {
      * @param applicationMap a Map of all servlet context attributes.
      * @param request        the HttpServletRequest object.
      * @param response       the HttpServletResponse object.
-     * @param servletContext the ServletContextmapping object.
      * @return a HashMap representing the <tt>Action</tt> context.
+     *
+     * @since 2.3.17
      */
     public HashMap<String,Object> createContextMap(Map requestMap,
                                     Map parameterMap,
                                     Map sessionMap,
                                     Map applicationMap,
                                     HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    ServletContext servletContext) {
+                                    HttpServletResponse response) {
         HashMap<String,Object> extraContext = new HashMap<String,Object>();
         extraContext.put(ActionContext.PARAMETERS, new HashMap(parameterMap));
         extraContext.put(ActionContext.SESSION, sessionMap);
@@ -672,9 +710,8 @@ public class Dispatcher {
      * Return the path to save uploaded files to (this is configurable).
      *
      * @return the path to save uploaded files to
-     * @param servletContext Our ServletContext
      */
-    private String getSaveDir(ServletContext servletContext) {
+    private String getSaveDir() {
         String saveDir = multipartSaveDir.trim();
 
         if (saveDir.equals("")) {
@@ -763,6 +800,14 @@ public class Dispatcher {
     }
 
     /**
+     * @deprecated use version without ServletContext param
+     */
+    @Deprecated
+    public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
+        return wrapRequest(request);
+    }
+
+    /**
      * Wrap and return the given request or return the original request object.
      * </p>
      * This method transparently handles multipart data as a wrapped class around the given request.
@@ -771,12 +816,13 @@ public class Dispatcher {
      * flexible - look first to that object before overriding this method to handle multipart data.
      *
      * @param request the HttpServletRequest object.
-     * @param servletContext Our ServletContext object
      * @return a wrapped request or original request.
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper
      * @throws java.io.IOException on any error.
+     *
+     * @since 2.3.17
      */
-    public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
+    public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
         // don't wrap more than once
         if (request instanceof StrutsRequestWrapper) {
             return request;
@@ -786,7 +832,7 @@ public class Dispatcher {
         if (content_type != null && content_type.contains("multipart/form-data")) {
             MultiPartRequest mpr = getMultiPartRequest();
             LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
-            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext), provider);
+            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(), provider);
         } else {
             request = new StrutsRequestWrapper(request, disableRequestAttributeValueStackLookup);
         }

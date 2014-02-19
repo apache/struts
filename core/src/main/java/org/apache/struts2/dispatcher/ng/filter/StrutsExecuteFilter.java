@@ -57,8 +57,8 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
             Dispatcher dispatcher = init.findDispatcherOnThread();
             init.initStaticContentLoader(new FilterHostConfig(filterConfig), dispatcher);
 
-            prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
-            execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
+            prepare = new PrepareOperations(dispatcher);
+            execute = new ExecuteOperations(dispatcher);
         }
 
     }

@@ -17,4 +17,24 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
+    <!-- Restricts access to pure JSP files - access available only via Struts action -->
+    <security-constraint>
+        <display-name>No direct JSP access</display-name>
+        <web-resource-collection>
+            <web-resource-name>No-JSP</web-resource-name>
+            <url-pattern>*.jsp</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>no-users</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    
+    <security-role>
+        <description>Don't assign users to this role</description>
+        <role-name>no-users</role-name>
+    </security-role>
+
 </web-app>

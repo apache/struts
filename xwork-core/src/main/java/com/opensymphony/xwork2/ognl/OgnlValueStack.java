@@ -465,10 +465,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         securityMemberAccess.setAcceptProperties(acceptedProperties);
     }
 
-    public void setPropertiesJudge(PropertiesJudge judge) {
-        securityMemberAccess.setPropertiesJudge(judge);
-    }
-
     public void setExcludeProperties(Set<Pattern> excludeProperties) {
         securityMemberAccess.setExcludeProperties(excludeProperties);
     }

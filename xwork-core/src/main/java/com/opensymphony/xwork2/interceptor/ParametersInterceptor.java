@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.ognl.PropertiesJudge;
 import com.opensymphony.xwork2.util.ArrayUtils;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
@@ -313,13 +312,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             MemberAccessValueStack accessValueStack = (MemberAccessValueStack) newStack;
             accessValueStack.setAcceptProperties(acceptParams);
             accessValueStack.setExcludeProperties(excludeParams);
-            if (action instanceof ParameterNameAware) {
-                accessValueStack.setPropertiesJudge(new PropertiesJudge() {
-                    public boolean acceptProperty(String propertyName) {
-                        return ((ParameterNameAware) action).acceptableParameterName(propertyName);
-                    }
-                });
-            }
         }
 
         for (Map.Entry<String, Object> entry : acceptableParameters.entrySet()) {

@@ -35,7 +35,6 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
-    private PropertiesJudge propertiesJudge;
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -76,14 +75,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     protected boolean isAcceptableProperty(String name) {
-        if ( name == null) {
-            return true;
-        }
-
-        if ((!isExcluded(name)) && isAccepted(name) && (propertiesJudge == null || propertiesJudge.acceptProperty(name))) {
-            return true;
-        }
-        return false;
+        return name == null || ((!isExcluded(name)) && isAccepted(name));
     }
 
     protected boolean isAccepted(String paramName) {
@@ -123,7 +115,4 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         this.acceptProperties = acceptedProperties;
     }
 
-    public void setPropertiesJudge(PropertiesJudge judge) {
-        this.propertiesJudge = judge;
-    }
 }

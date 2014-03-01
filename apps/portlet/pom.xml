@@ -33,12 +33,6 @@
     <packaging>war</packaging>
     <name>Portlet Webapp</name>
 
-    <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/apps/portlet</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/apps/portlet</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_16/apps/portlet</url>
-    </scm>
-
     <profiles>
         <profile>
             <id>pluto</id>

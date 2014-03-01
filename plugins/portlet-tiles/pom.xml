@@ -33,12 +33,6 @@
     <packaging>jar</packaging>
     <name>Struts 2 Portlet Tiles Plugin</name>
 
-    <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/plugins/portlet-tiles</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/plugins/portlet-tiles</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_16/plugins/portlet-tiles</url>
-    </scm>
-
     <dependencies>
         <dependency>
              <groupId>org.apache.struts</groupId>

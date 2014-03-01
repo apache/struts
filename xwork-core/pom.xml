@@ -13,12 +13,6 @@
     <packaging>jar</packaging>
     <name>XWork: Core</name>
 
-    <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/xwork-core</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/xwork-core</developerConnection>
-        <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/xwork-core</url>
-    </scm>
-
     <properties>
         <currentVersion>${project.version}</currentVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

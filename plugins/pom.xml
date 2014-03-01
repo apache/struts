@@ -33,12 +33,6 @@
     <packaging>pom</packaging>
     <name>Struts Plugins</name>
 
-   <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/plugins</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/plugins</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/plugins</url>
-   </scm>
-
     <modules>
         <module>codebehind</module>
         <module>convention</module>

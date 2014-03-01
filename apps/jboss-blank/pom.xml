@@ -33,12 +33,6 @@
     <packaging>war</packaging>
     <name>JBoss Blank Webapp</name>
 
-    <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/apps/jboss-blank</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/apps/jboss-blank</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/tags/STRUTS_2_3_16/apps/jboss-blank</url>
-    </scm>
-
     <dependencies>
 
         <dependency>

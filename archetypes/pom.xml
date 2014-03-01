@@ -33,12 +33,6 @@
     <packaging>pom</packaging>
     <name>Struts 2 Maven Archetypes</name>
 
-   <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/archetypes</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/archetypes</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/tags/STRUTS_2_3_16/archetypes</url>
-   </scm>
-
     <modules>
         <module>struts2-archetype-angularjs</module>
         <module>struts2-archetype-blank</module>

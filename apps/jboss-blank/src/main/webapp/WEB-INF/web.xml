@@ -27,9 +27,6 @@
         <auth-constraint>
             <role-name>no-users</role-name>
         </auth-constraint>
-        <user-data-constraint>
-            <transport-guarantee>NONE</transport-guarantee>
-        </user-data-constraint>
     </security-constraint>
     
     <security-role>

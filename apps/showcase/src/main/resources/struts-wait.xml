@@ -9,8 +9,8 @@
         <action name="longProcess1" class="org.apache.struts2.showcase.wait.LongProcessAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="execAndWait"/>
-            <result name="wait">wait.jsp</result>
-            <result name="success">complete.jsp</result>
+            <result name="wait">/WEB-INF/wait/wait.jsp</result>
+            <result name="success">/WEB-INF/wait/complete.jsp</result>
         </action>
 
         <action name="longProcess2" class="org.apache.struts2.showcase.wait.LongProcessAction">
@@ -18,8 +18,8 @@
             <interceptor-ref name="execAndWait">
                 <param name="delay">2000</param>
             </interceptor-ref>
-            <result name="wait">wait.jsp</result>
-            <result name="success">complete.jsp</result>
+            <result name="wait">/WEB-INF/wait/wait.jsp</result>
+            <result name="success">/WEB-INF/wait/complete.jsp</result>
         </action>
 
         <action name="longProcess3" class="org.apache.struts2.showcase.wait.LongProcessAction">
@@ -28,8 +28,8 @@
                 <param name="delay">3000</param>
                 <param name="delaySleepInterval">1000</param>
             </interceptor-ref>
-            <result name="wait">wait.jsp</result>
-            <result name="success">complete.jsp</result>
+            <result name="wait">/WEB-INF/wait/wait.jsp</result>
+            <result name="success">/WEB-INF/wait/complete.jsp</result>
         </action>
 
     </package>

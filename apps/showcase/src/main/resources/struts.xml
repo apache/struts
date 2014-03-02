@@ -75,15 +75,15 @@
         <default-action-ref name="showcase" />
 
         <action name="showcase">
-            <result>showcase.jsp</result>
+            <result>../webapp/WEB-INF/showcase.jsp</result>
         </action>
 
         <action name="viewSource" class="org.apache.struts2.showcase.source.ViewSourceAction">
-            <result>viewSource.jsp</result>
+            <result>../webapp/WEB-INF/viewSource.jsp</result>
         </action>
 
         <action name="date" class="org.apache.struts2.showcase.DateAction" method="browse">
-            <result name="success">/date.jsp</result>
+            <result name="success">/WEB-INF/date.jsp</result>
         </action>
 
     </package>

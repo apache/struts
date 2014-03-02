@@ -9,65 +9,65 @@
 		<!-- Example populating a List inside an Action -->
 		<action name="enterPersonsInfo" method="input"
 				class="org.apache.struts2.showcase.conversion.PersonAction">
-			<result>enterPersonInfo.jsp</result>
+			<result>/WEB-INF/conversion/enterPersonInfo.jsp</result>
 		</action>
 		<action name="submitPersonInfo" method="submit"
 				class="org.apache.struts2.showcase.conversion.PersonAction">
-			<result>showPersonInfo.jsp</result>	
-			<result name="input">enterPersonInfo.jsp</result>
+			<result>/WEB-INF/conversion/showPersonInfo.jsp</result>
+			<result name="input">/WEB-INF/conversion/enterPersonInfo.jsp</result>
 		</action>
 		<action name="showPersonJspCode">
-			<result type="plainText">/conversion/enterPersonInfo.jsp</result>
+			<result type="plainText">/WEB-INF/conversion/enterPersonInfo.jsp</result>
 		</action>
 		<action name="showPersonActionJavaCode">
-			<result type="plainText">/conversion/PersonAction.java.txt</result>
+			<result type="plainText">/WEB-INF/conversion/PersonAction.java.txt</result>
 		</action>
 		<action name="showPersonJavaCode">
-			<result type="plainText">/conversion/Person.java.txt</result>
+			<result type="plainText">/WEB-INF/conversion/Person.java.txt</result>
 		</action>
 		
 		
 		<!-- Example populating a Set inside an Action -->
 		<action name="enterAddressesInfo" class="org.apache.struts2.showcase.conversion.AddressAction" method="input">
-			<result>enterAddressInfo.jsp</result>
+			<result>/WEB-INF/conversion/enterAddressInfo.jsp</result>
 		</action>
 		<action name="submitAddressesInfo" class="org.apache.struts2.showcase.conversion.AddressAction" method="submit">
-			<result>showAddressInfo.jsp</result>
-			<result name="input">enterAddressInfo.jsp</result>
+			<result>/WEB-INF/conversion/showAddressInfo.jsp</result>
+			<result name="input">/WEB-INF/conversion/enterAddressInfo.jsp</result>
 		</action>
 		<action name="showAddressJspCode">
-			<result type="plainText">/conversion/enterAddressInfo.jsp</result>
+			<result type="plainText">/WEB-INF/conversion/enterAddressInfo.jsp</result>
 		</action>
 		<action name="showAddressActionJavaCode">
-			<result type="plainText">/conversion/AddressAction.java.txt</result>
+			<result type="plainText">/WEB-INF/conversion/AddressAction.java.txt</result>
 		</action>
 		<action name="showAddressJavaCode">
-			<result type="plainText">/conversion/Address.java.txt</result>
+			<result type="plainText">/WEB-INF/conversion/Address.java.txt</result>
 		</action>
 		
 		
 		<!-- Example populating a List with Tiger 5 Enum  -->		
 		<action name="enterOperationEnumInfo" class="org.apache.struts2.showcase.conversion.OperationsEnumAction" method="input">
-			<result>enterOperations.jsp</result>
+			<result>/WEB-INF/conversion/enterOperations.jsp</result>
 		</action>
 		<action name="submitOperationEnumInfo" class="org.apache.struts2.showcase.conversion.OperationsEnumAction" method="submit">
-			<result>showOperations.jsp</result>
-			<result name="input">enterOperations.jsp</result>
+			<result>/WEB-INF/conversion/showOperations.jsp</result>
+			<result name="input">/WEB-INF/conversion/enterOperations.jsp</result>
 		</action>
 		<action name="showEnumJspCode">
-			<result type="plainText">/conversion/enterOperations.jsp</result>
+			<result type="plainText">/WEB-INF/conversion/enterOperations.jsp</result>
 		</action>
 		<action name="showOperationsEnumJavaCode">
-			<result type="plainText">/conversion/OperationsEnum.java.txt</result>
+			<result type="plainText">/WEB-INF/conversion/OperationsEnum.java.txt</result>
 		</action>
 		<action name="showOperationEnumActionJavaCode">
-			<result type="plainText">/conversion/OperationsEnumAction.java.txt</result>
+			<result type="plainText">/WEB-INF/conversion/OperationsEnumAction.java.txt</result>
 		</action>
 		<action name="showEnumTypeConverterJavaCode">
-			<result type="plainText">/conversion/EnumTypeConverter.java.txt</result>
+			<result type="plainText">/WEB-INF/conversion/EnumTypeConverter.java.txt</result>
 		</action>
 		<action name="showOperationsEnumActionConversionProperties">
-			<result type="plainText">/conversion/OperationsEnumActionConversion.txt</result>
+			<result type="plainText">/WEB-INF/conversion/OperationsEnumActionConversion.txt</result>
 		</action>
 		
 	</package>

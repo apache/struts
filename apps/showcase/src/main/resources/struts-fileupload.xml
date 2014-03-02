@@ -7,29 +7,29 @@
 	<package name="fileupload" extends="struts-default" namespace="/fileupload">
         
         <action name="upload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="input">
-			<result>upload.jsp</result>
+			<result>/WEB-INF/fileupload/upload.jsp</result>
 		</action>
 
         <action name="doUpload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="upload">
-        	<result name="input">upload.jsp</result>
-			<result>upload-success.jsp</result>
+        	<result name="input">/WEB-INF/fileupload/upload.jsp</result>
+			<result>/WEB-INF/fileupload/upload-success.jsp</result>
 		</action>
 		
 		<action name="multipleUploadUsingList">
-			<result>multipleUploadUsingList.jsp</result>
+			<result>/WEB-INF/fileupload/multipleUploadUsingList.jsp</result>
 		</action>
 		
 		<action name="doMultipleUploadUsingList" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingListAction" method="upload">
-			<result>multiple-success.jsp</result>
+			<result>/WEB-INF/fileupload/multiple-success.jsp</result>
 		</action>
 
 
 		<action name="multipleUploadUsingArray">
-			<result>multipleUploadUsingArray.jsp</result>
+			<result>/WEB-INF/fileupload/multipleUploadUsingArray.jsp</result>
 		</action>
 
 		<action name="doMultipleUploadUsingArray" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingArrayAction" method="upload">
-			<result>multiple-success.jsp</result>
+			<result>/WEB-INF/fileupload/multiple-success.jsp</result>
 		</action>
 
 

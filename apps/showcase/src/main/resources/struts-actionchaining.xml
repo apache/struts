@@ -12,7 +12,7 @@
 			<result type="chain">actionChain3</result>
 		</action>
 		<action name="actionChain3" class="org.apache.struts2.showcase.actionchaining.ActionChain3">
-			<result>/actionchaining/actionChainingResult.jsp</result>
+			<result>/WEB-INF/actionchaining/actionChainingResult.jsp</result>
 		</action>
 	</package>
 </struts>

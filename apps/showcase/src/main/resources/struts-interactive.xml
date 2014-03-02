@@ -9,7 +9,7 @@
             <interceptor-ref name="params"/>
             <interceptor-ref name="debugging"/>
             <interceptor-ref name="annotationWorkflow" />
-            <result>/interactive/demo.jsp</result>
+            <result>/WEB-INF/interactive/demo.jsp</result>
         </action>
         <action name="example" class="org.apache.struts2.showcase.action.ExampleAction" />
     </package>

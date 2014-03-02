@@ -40,12 +40,12 @@
 		<!-- ======================== -->
 		
 		<action name="showFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="input">
-			<result name="input" type="dispatcher">/validation/fieldValidatorsExample.jsp</result>
+			<result name="input" type="dispatcher">/WEB-INF/validation/fieldValidatorsExample.jsp</result>
 		</action>
 		
 		<action name="submitFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="submit">
-			<result name="input" type="dispatcher">/validation/fieldValidatorsExample.jsp</result>
-			<result type="dispatcher">/validation/successFieldValidatorsExample.jsp</result>
+			<result name="input" type="dispatcher">/WEB-INF/validation/fieldValidatorsExample.jsp</result>
+			<result type="dispatcher">/WEB-INF/validation/successFieldValidatorsExample.jsp</result>
 		</action>
 		
 		
@@ -55,12 +55,12 @@
 		<!-- ============================ -->
 		
 		<action name="showNonFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.NonFieldValidatorsExampleAction" method="input">
-			<result name="input">/validation/nonFieldValidatorsExample.jsp</result>		
+			<result name="input">/WEB-INF/validation/nonFieldValidatorsExample.jsp</result>
 		</action>
 		
 		<action name="submitNonFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.NonFieldValidatorsExampleAction" method="submit">
-			<result name="input">/validation/nonFieldValidatorsExample.jsp</result>		
-			<result>/validation/successNonFieldValidatorsExample.jsp</result>
+			<result name="input">/WEB-INF/validation/nonFieldValidatorsExample.jsp</result>
+			<result>/WEB-INF/validation/successNonFieldValidatorsExample.jsp</result>
 		</action>
 		
 		
@@ -70,12 +70,12 @@
 		<!-- ========================== -->
 		
 		<action name="showVisitorValidatorsExamples" class="org.apache.struts2.showcase.validation.VisitorValidatorsExampleAction" method="input">
-			<result name="input">/validation/visitorValidatorsExample.jsp</result>
+			<result name="input">/WEB-INF/validation/visitorValidatorsExample.jsp</result>
 		</action>
 		
 		<action name="submitVisitorValidatorsExamples" class="org.apache.struts2.showcase.validation.VisitorValidatorsExampleAction" method="submit">
-			<result name="input">/validation/visitorValidatorsExample.jsp</result>
-			<result>/validation/successVisitorValidatorsExample.jsp</result>
+			<result name="input">/WEB-INF/validation/visitorValidatorsExample.jsp</result>
+			<result>/WEB-INF/validation/successVisitorValidatorsExample.jsp</result>
 		</action>
 
 
@@ -85,12 +85,12 @@
 		<!-- ========================== -->
 
 		<action name="clientSideValidationExample" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="input">
-			<result name="input">/validation/clientSideValidationExample.jsp</result>
+			<result name="input">/WEB-INF/validation/clientSideValidationExample.jsp</result>
 		</action>
 
 		<action name="submitClientSideValidationExample" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="submit">
-			<result name="input">/validation/clientSideValidationExample.jsp</result>
-			<result>/validation/successClientSideValidationExample.jsp</result>
+			<result name="input">/WEB-INF/validation/clientSideValidationExample.jsp</result>
+			<result>/WEB-INF/validation/successClientSideValidationExample.jsp</result>
 		</action>
 
 		<!-- =========================================== -->
@@ -109,16 +109,16 @@
 			<interceptor-ref name="store">
 				<param name="operationMode">RETRIEVE</param>
 			</interceptor-ref>
-			<result>/validation/storeErrorsAcrossRequestExample.jsp</result>
+			<result>/WEB-INF/validation/storeErrorsAcrossRequestExample.jsp</result>
 		</action>
 		<action name="applicationOk" class="org.apache.struts2.showcase.validation.SubmitApplication" method="applicationOk">
 			<interceptor-ref name="store">
 				<param name="operationMode">RETRIEVE</param>
 			</interceptor-ref>
-			<result>/validation/storeErrorsAcrossRequestOk.jsp</result>
+			<result>/WEB-INF/validation/storeErrorsAcrossRequestOk.jsp</result>
 		</action>
 		<action name="cancelApplication" class="org.apache.struts2.showcase.validation.SubmitApplication" method="cancelApplication">
-			<result>/validation/storeErrorsAcrossRequestCancel.jsp</result>
+			<result>/WEB-INF/validation/storeErrorsAcrossRequestCancel.jsp</result>
 		</action>
 		
     </package>

@@ -33,18 +33,18 @@
     </interceptors>
 
     <global-results>
-      <result name="login" type="freemarker">/chat/chatLogin.ftl</result>
+      <result name="login" type="freemarker">/WEB-INF/chat/chatLogin.ftl</result>
     </global-results>
 
     <action name="main">
       <interceptor-ref name="chatAuthentication" />
-      <result type="freemarker">/chat/roomSelection.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/roomSelection.ftl</result>
     </action>
 
     <action name="login" class="chatLoginAction">
       <interceptor-ref name="defaultStack" />
       <result type="redirect">/chat/showRooms.action</result>
-      <result name="input" type="freemarker">/chat/chatLogin.ftl</result>
+      <result name="input" type="freemarker">/WEB-INF/chat/chatLogin.ftl</result>
     </action>
 
     <action name="logout" class="chatLogoutAction">
@@ -54,12 +54,12 @@
 
     <action name="showRooms">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/roomSelection.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/roomSelection.ftl</result>
     </action>
 
     <action name="enterRoom" class="enterRoomAction">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/showRoom.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/showRoom.ftl</result>
     </action>
 
     <action name="exitRoom" class="exitRoomAction">
@@ -100,35 +100,35 @@
 
     <action name="usersAvailable" class="usersAvailableAction">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/usersAvailable.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/usersAvailable.ftl</result>
     </action>
 
     <action name="roomsAvailable" class="roomsAvailableAction">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/roomsAvailable.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/roomsAvailable.ftl</result>
     </action>
 
     <action name="createRoom" class="crudRoomAction" method="create">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/createRoom.ftl</result>
-      <result name="input" type="freemarker">/chat/createRoom.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/createRoom.ftl</result>
+      <result name="input" type="freemarker">/WEB-INF/chat/createRoom.ftl</result>
     </action>
 
     <action name="messagesAvailableInRoom" class="messagesAvailableInRoomAction">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/messagesAvailableInRoom.ftl</result>
-      <result name="input" type="freemarker">/chat/messagesAvailableInRoom.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/messagesAvailableInRoom.ftl</result>
+      <result name="input" type="freemarker">/WEB-INF/chat/messagesAvailableInRoom.ftl</result>
     </action>
 
     <action name="sendMessageToRoom" class="sendMessageToRoomAction">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/sendMessageToRoomResult.ftl</result>
-      <result name="input" type="freemarker">/chat/sendMessageToRoomResult.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/sendMessageToRoomResult.ftl</result>
+      <result name="input" type="freemarker">/WEB-INF/chat/sendMessageToRoomResult.ftl</result>
     </action>
 
     <action name="usersAvailableInRoom" class="usersAvailableInRoomAction">
       <interceptor-ref name="chatAuthenticationStack" />
-      <result type="freemarker">/chat/usersAvailableInRoom.ftl</result>
+      <result type="freemarker">/WEB-INF/chat/usersAvailableInRoom.ftl</result>
     </action>
   </package>
 </struts>

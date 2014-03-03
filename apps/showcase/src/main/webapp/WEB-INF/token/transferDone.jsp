@@ -40,7 +40,7 @@
 
 			<p/>
 			Click here to
-			<s:url var="back" value="/token/index.jsp"/><s:a href="%{back}">return</s:a>.
+			<s:url var="back" value="/token/index.html"/><s:a href="%{back}">return</s:a>.
 		</div>
 	</div>
 </div>

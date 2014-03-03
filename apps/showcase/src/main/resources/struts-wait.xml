@@ -6,6 +6,18 @@
 <struts>
     <package name="wait" extends="struts-default" namespace="/wait">
 
+        <action name="example1">
+            <result>/WEB-INF/wait/example1.jsp</result>
+        </action>
+
+        <action name="example2">
+            <result>/WEB-INF/wait/example2.jsp</result>
+        </action>
+
+        <action name="example3">
+            <result>/WEB-INF/wait/example3.jsp</result>
+        </action>
+
         <action name="longProcess1" class="org.apache.struts2.showcase.wait.LongProcessAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="execAndWait"/>

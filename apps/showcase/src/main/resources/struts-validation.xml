@@ -5,6 +5,10 @@
 	
 <struts>
 	<package name="validation" extends="json-default" namespace="/validation">
+        <action name="index">
+            <result>/WEB-INF/validation/index.jsp</result>
+        </action>
+
 	    <action name="quizBasic" class="org.apache.struts2.showcase.validation.QuizAction">
             <result name="input">quiz-basic.jsp</result>
             <result>quiz-success.jsp</result>
@@ -109,6 +113,9 @@
 			<interceptor-ref name="store">
 				<param name="operationMode">RETRIEVE</param>
 			</interceptor-ref>
+			<result>/WEB-INF/validation/storeErrorsAcrossRequestExample.jsp</result>
+		</action>
+		<action name="storeErrorsAcrossRequestExample">
 			<result>/WEB-INF/validation/storeErrorsAcrossRequestExample.jsp</result>
 		</action>
 		<action name="applicationOk" class="org.apache.struts2.showcase.validation.SubmitApplication" method="applicationOk">

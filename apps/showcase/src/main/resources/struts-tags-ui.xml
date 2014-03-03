@@ -46,8 +46,16 @@
 
         <!--  END SNIPPET: treeExampleDynamicXWorkXml -->
 
+        <action name="treeExampleStatic">
+            <result>/WEB-INF/tags/ui/treeExampleStatic.jsp</result>
+        </action>
+
         <action name="showDynamicAjaxTreeAction">
             <result>/WEB-INF/tags/ui/treeExampleAjaxDynamic.jsp</result>
+        </action>
+
+        <action name="componentTagExample">
+        	<result>/WEB-INF/tags/ui/componentTagExample.jsp</result>
         </action>
 
         <action name="showComponentTagExampleCode">
@@ -57,6 +65,14 @@
         <action name="actionTagExample">
             <result>/WEB-INF/tags/ui/actionTagExampleCalled.jsp</result>
             <result name="input">/WEB-INF/tags/ui/actionTagExampleCalling.jsp</result>
+        </action>
+
+        <action name="datepicker">
+            <result>/WEB-INF/tags/ui/datepicker/index.jsp</result>
+        </action>
+
+        <action name="timepicker">
+            <result>/WEB-INF/tags/ui/timepicker/index.jsp</result>
         </action>
 	</package>
 

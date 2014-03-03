@@ -27,7 +27,7 @@
 
 			<b>We have processed your request.</b>
 			<p/>
-			Click here to <s:url var="back" value="/wait/index.jsp"/><s:a href="%{back}" cssClass="btn btn-link">return</s:a>.
+			Click here to <s:url var="back" value="/wait/index.html"/><s:a href="%{back}" cssClass="btn btn-link">return</s:a>.
 
 		</div>
 	</div>

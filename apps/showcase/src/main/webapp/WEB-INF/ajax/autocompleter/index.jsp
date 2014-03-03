@@ -6,7 +6,7 @@
     <title>Ajax Examples</title>
 
     <!--// START SNIPPET: common-include-->
-    <jsp:include page="/WEB-INF/ajax/commonInclude.jsplude.jsp"/>
+    <jsp:include page="/WEB-INF/ajax/commonInclude.jsp"/>
     <!--// END SNIPPET: common-include-->
 </head>
 
@@ -49,7 +49,8 @@
 
 Using a JSON list returned from an action (href="/JSONList.action"), without autoComplete (autoComplete="false"), use indicator, search substring (searchType="substring")
 <br/>
-<sx:autocompleter 
+<sx:autocompleter
+    id="auto1"
     indicator="indicator1" 
     href="%{jsonList}" 
     cssStyle="width: 200px;" 
@@ -77,7 +78,8 @@ Reload on type (loadOnTextChange="true"), after 3 characters (loadMinimumCount="
 
 Using a JSON list returned from an action (href="/JSONList.action"), with autoComplete (autoComplete="true")
 <br/>
-<sx:autocompleter  
+<sx:autocompleter
+    id="auto3"
     name="auto3"
     href="%{#jsonList}" 
     cssStyle="width: 200px;" 
@@ -87,13 +89,14 @@ Using a JSON list returned from an action (href="/JSONList.action"), with autoCo
 
 Using a local list (list="%{'apple','banana','grape','pear'}")
 <br/>
-<sx:autocompleter list="{'apple','banana','grape','pear'}" cssStyle="width: 150px;"/>
+<sx:autocompleter id="auto-list" list="{'apple','banana','grape','pear'}" cssStyle="width: 150px;"/>
 
 <br/><br/>
 
 Force valid options (forceValidOption="true")
 <br/>
-<sx:autocompleter  
+<sx:autocompleter
+    id="auto4"
     name="auto4"
     href="%{#jsonList}" 
     cssStyle="width: 200px;" 
@@ -105,8 +108,9 @@ Force valid options (forceValidOption="true")
 Make dropdown's height to 180px  (dropdownHeight="180")
 <br/>
 <sx:autocompleter
+    id="auto5"
     name="auto5"
-    href="%{#jsonList}" 
+    href="%{#jsonList}"
     cssStyle="width: 200px;" 
     dropdownHeight="180"/>
 
@@ -116,8 +120,9 @@ Make dropdown's height to 180px  (dropdownHeight="180")
 Disabled combobox (disabled="true")
 <br/>
 <sx:autocompleter
+    id="auto6"
     name="auto6"
-    href="%{#jsonList}" 
+    href="%{#jsonList}"
     cssStyle="width: 200px;" 
     disabled="true"/>
 
@@ -133,8 +138,9 @@ Link two autocompleter elements. When the selected value in 'Autocompleter 1' ch
   <p>
     Autocompleter 1 
     <sx:autocompleter  
-        name="select" 
-        list="{'fruits','colors'}" 
+        id="auto7"
+        name="select"
+        list="{'fruits','colors'}"
         value="colors"
         valueNotifyTopics="/Changed"
         forceValidOption="true"/>
@@ -142,6 +148,7 @@ Link two autocompleter elements. When the selected value in 'Autocompleter 1' ch
 </form>
 Autocompleter 2 
 <sx:autocompleter
+     id="auto8"
      name="auto8"
      href="%{#autoex}"
      autoComplete="false"
@@ -154,8 +161,9 @@ Autocompleter 2
 Publish before/after/value notify topics
 <br/>
 <sx:autocompleter 
+    id="auto9"
     name="auto9"
-    href="%{#jsonList}" 
+    href="%{#jsonList}"
     listenTopics="/reload"
     beforeNotifyTopics="/before"
     afterNotifyTopics="/after"

@@ -4,6 +4,11 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
+    <package name="interactive" namespace="/interactive" extends="struts-default">
+        <action name="index">
+            <result>/WEB-INF/interactive/index.jsp</result>
+        </action>
+    </package>
     <package name="ognl" namespace="/nodecorate" extends="struts-default">
         <action name="jspEval" class="org.apache.struts2.showcase.action.JSPEvalAction">
             <interceptor-ref name="params"/>

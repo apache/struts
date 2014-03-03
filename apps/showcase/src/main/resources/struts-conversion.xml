@@ -6,6 +6,10 @@
 <struts>
 	<package name="conversion" namespace="/conversion" extends="struts-default">
 	
+        <action name="index">
+            <result>/WEB-INF/conversion/index.jsp</result>
+        </action>
+        
 		<!-- Example populating a List inside an Action -->
 		<action name="enterPersonsInfo" method="input"
 				class="org.apache.struts2.showcase.conversion.PersonAction">

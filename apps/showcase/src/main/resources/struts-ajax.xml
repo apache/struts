@@ -54,6 +54,33 @@
         	<result>/WEB-INF/ajax/tabbedpanel/example5Ok.jsp</result>
         </action>
     </package>
+    
+    <package name="ajax-examples" namespace="/ajax" extends="struts-default">
+        <action name="bind">
+            <result>/WEB-INF/ajax/bind/index.jsp</result>
+        </action>
+        <action name="autocompleter">
+            <result>/WEB-INF/ajax/autocompleter/index.jsp</result>
+        </action>
+        <action name="remotebutton">
+            <result>/WEB-INF/ajax/remotebutton/index.jsp</result>
+        </action>
+        <action name="remotediv">
+            <result>/WEB-INF/ajax/remotediv/index.jsp</result>
+        </action>
+        <action name="remotelink">
+            <result>/WEB-INF/ajax/remotelink/index.jsp</result>
+        </action>
+        <action name="tabbedpanel">
+            <result>/WEB-INF/ajax/tabbedpanel/index.jsp</result>
+        </action>
+        <action name="remoteforms">
+            <result>/WEB-INF/ajax/remoteforms/index.jsp</result>
+        </action>
+        <action name="widgets">
+            <result>/WEB-INF/ajax/widgets/index.jsp</result>
+        </action>
+    </package>
 
     <package name="ajaxNoDecorate" namespace="/nodecorate" extends="json-default">
     	<!--  example 4 -->

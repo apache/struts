@@ -2,7 +2,7 @@
 
 <hr/>
 
-<s:url var="backToAjaxExamples" value="../../index.jsp" />
+<s:url var="backToAjaxExamples" value="/ajax/index.html" />
 
 <s:a href="%{backToAjaxExamples}">Back To AJAX Examples</s:a>&nbsp;
 

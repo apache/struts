@@ -128,6 +128,9 @@
     <!--  === Package for Debug Tag              === -->
     <!--  ========================================== -->
     <package name="debugTagPackage" extends="struts-default" namespace="/tags/non-ui">
+        <action name="date">
+            <result>/WEB-INF/tags/non-ui/date.jsp</result>
+        </action>
         <action name="debugTagDemo">
             <result>/WEB-INF/tags/non-ui/debug.jsp</result>
         </action>

@@ -7,56 +7,56 @@
 
         <action name="tokenPrepare!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
-            <result name="input">example1.jsp</result>
+            <result name="input">/WEB-INF/token/example1.jsp</result>
         </action>
 
         <action name="transfer" class="org.apache.struts2.showcase.token.TokenAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="token"/>
-            <result name="invalid.token">doublePost.jsp</result>
-            <result name="success">transferDone.jsp</result>
+            <result name="invalid.token">/WEB-INF/token/doublePost.jsp</result>
+            <result name="success">/WEB-INF/token/transferDone.jsp</result>
         </action>
 
 
 
         <action name="tokenPrepare2!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
-            <result name="input">example2.jsp</result>
+            <result name="input">/WEB-INF/token/example2.jsp</result>
         </action>
 
         <action name="transfer2" class="org.apache.struts2.showcase.token.TokenAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="token"/>
-            <result name="invalid.token">doublePost.jsp</result>
-            <result name="success" type="redirect">transferDone.jsp</result>
+            <result name="invalid.token">/WEB-INF/token/doublePost.jsp</result>
+            <result name="success" type="redirect">/WEB-INF/token/transferDone.jsp</result>
         </action>
 
 
 
         <action name="tokenPrepare3!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
-            <result name="input">example3.jsp</result>
+            <result name="input">/WEB-INF/token/example3.jsp</result>
         </action>
 
         <action name="transfer3" class="org.apache.struts2.showcase.token.TokenAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="tokenSession"/>
-            <result name="invalid.token">doublePost.jsp</result>
-            <result name="success" type="redirect">transferDone.jsp</result>
+            <result name="invalid.token">/WEB-INF/token/doublePost.jsp</result>
+            <result name="success" type="redirect">/WEB-INF/token/transferDone.jsp</result>
         </action>
 
 
         <action name="tokenPrepare4!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="createSession"/> <!-- we must have a session when using freemarker and the @s.token tag -->
-            <result name="input" type="freemarker">example4.ftl</result>
+            <result name="input" type="freemarker">/WEB-INF/token/example4.ftl</result>
         </action>
 
         <action name="transfer4" class="org.apache.struts2.showcase.token.TokenAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="token"/>
-            <result name="invalid.token">doublePost.jsp</result>
-            <result name="success">transferDone.jsp</result>
+            <result name="invalid.token">/WEB-INF/token/doublePost.jsp</result>
+            <result name="success">/WEB-INF/token/transferDone.jsp</result>
         </action>
 
     </package>

@@ -52,3 +52,9 @@ move resource files into a package structure.
 - to start it with jetty6 execute
   mvn jetty:run
 
+I18N:
+=====
+Please note that this project was created with assumption it will be launched in environment
+where default locale is set to English. Thus means the default messages defined in package.properties
+are in English. If your default locale is different (on server), renames package.properties file
+to package_en.properties and create new package.properties with proper labels for your environment.

@@ -26,18 +26,12 @@
     <parent>
       <groupId>org.apache.struts</groupId>
       <artifactId>struts2-apps</artifactId>
-      <version>2.3.17-SNAPSHOT</version>
+      <version>2.3.16.1</version>
     </parent>
 
     <artifactId>struts2-mailreader</artifactId>
     <packaging>war</packaging>
-    <name>Struts 2 Mail Reader Webapp</name>
-
-    <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/mailreader/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/mailreader/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/mailreader/</url>
-    </scm>
+    <name>Mail Reader Webapp</name>
 
     <dependencies>
 

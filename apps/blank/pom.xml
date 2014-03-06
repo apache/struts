@@ -26,18 +26,12 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-apps</artifactId>
-        <version>2.3.17-SNAPSHOT</version>
+        <version>2.3.16.1</version>
     </parent>
 
     <artifactId>struts2-blank</artifactId>
     <packaging>war</packaging>
     <name>Struts 2 Blank Webapp</name>
-
-    <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/blank/</url>
-    </scm>
 
     <dependencies>
 

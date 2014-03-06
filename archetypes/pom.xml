@@ -26,18 +26,12 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.3.17-SNAPSHOT</version>
+        <version>2.3.16.1</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
+
     <artifactId>struts2-archetypes</artifactId>
     <packaging>pom</packaging>
     <name>Struts 2 Maven Archetypes</name>
-
-   <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/archetypes/</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/archetypes/</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/trunk/archetypes/</url>
-   </scm>
 
     <modules>
         <module>struts2-archetype-angularjs</module>

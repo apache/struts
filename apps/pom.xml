@@ -26,9 +26,8 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.3.17-SNAPSHOT</version>
+        <version>2.3.16.1</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
     <artifactId>struts2-apps</artifactId>
     <packaging>pom</packaging>
     <name>Struts 2 Webapps</name>
@@ -41,13 +40,79 @@
         <module>rest-showcase</module>
     </modules>
 
-    <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/</url>
-    </scm>
-
     <profiles>
+        <profile>
+            <id>hostedqa</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.hostedqa</groupId>
+                    <artifactId>hostedqa-remote-ant</artifactId>
+                    <version>1.7</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <repositories>
+                <repository>
+                    <id>codehaus</id>
+                    <name>codehaus</name>
+                    <url>http://repository.codehaus.org</url>
+                </repository>
+                <repository>
+                    <id>maven-hostedqa</id>
+                    <name>maven-hostedqa</name>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>ignore</checksumPolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <url>http://maven.hostedqa.com</url>
+                </repository>
+            </repositories>
+            <build>
+                <resources>
+                    <!-- Include resources under src/main/java in WEB-INF/classes -->
+                    <resource>
+                        <directory>src/main/java</directory>
+                            <includes>
+                                <include>**/*.properties</include>
+                                <include>**/*.xml</include>
+                             </includes>
+                     </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <taskdef resource="hostedqatasks" classpathref="maven.plugin.classpath" />
+                                        <upload file="${project.build.directory}/${project.build.finalName}.war" account="struts" email="${email}" password="${password}" resourceId="${resourceId}" />
+
+                                        <playsuite suiteId="${suiteId}" clientConfigs="${clientConfigs}" appConfigs="${appConfigs}" account="struts" email="${email}" password="${password}" />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.hostedqa</groupId>
+                                <artifactId>hostedqa-remote-ant</artifactId>
+                                <version>1.7</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>release</id>
             <activation>

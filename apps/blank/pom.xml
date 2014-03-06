@@ -31,7 +31,7 @@
 
     <artifactId>struts2-blank</artifactId>
     <packaging>war</packaging>
-    <name>Blank Webapp</name>
+    <name>Struts 2 Blank Webapp</name>
 
     <dependencies>
 

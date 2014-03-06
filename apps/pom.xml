@@ -28,7 +28,6 @@
         <artifactId>struts2-parent</artifactId>
         <version>2.3.16.1</version>
     </parent>
-    <groupId>org.apache.struts</groupId>
     <artifactId>struts2-apps</artifactId>
     <packaging>pom</packaging>
     <name>Struts 2 Webapps</name>

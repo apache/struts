@@ -26,18 +26,12 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.3.17-SNAPSHOT</version>
+        <version>2.3.16.1</version>
     </parent>
 
     <artifactId>struts2-osgi-bundles</artifactId>
     <packaging>pom</packaging>
     <name>Struts OSGi Bundles</name>
-
-   <scm>
-     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/</connection>
-     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/</developerConnection>
-     <url>http://svn.apache.org/repos/asf/struts/struts2/trunk/bundles/</url>
-   </scm>
 
     <modules>
         <module>admin</module>

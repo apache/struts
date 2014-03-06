@@ -20,6 +20,10 @@
 
     <default-interceptor-ref name="jsfFullStack"/>
 
+    <action name="index">
+        <result>/WEB-INF/jsf/index.jsp</result>
+    </action>
+
   </package>
   
   <package name="jsf.employee" extends="jsf" namespace="/jsf/employee">

@@ -6,11 +6,11 @@
 <struts>
     <package name="freemarker" namespace="/freemarker" extends="struts-default">
         <action name="customFreemarkerManagerDemo">
-            <result type="freemarker">/freemarker/customFreemarkerManagerUsage.ftl</result>
+            <result type="freemarker">/WEB-INF/freemarker/customFreemarkerManagerUsage.ftl</result>
         </action>
         
         <action name="standardTags" class="org.apache.struts2.showcase.freemarker.StandardTagsAction">
-            <result type="freemarker">/freemarker/standardTags.ftl</result>
+            <result type="freemarker">/WEB-INF/freemarker/standardTags.ftl</result>
         </action>
     </package>
 </struts>	

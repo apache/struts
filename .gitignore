@@ -9,6 +9,9 @@
 .project
 .settings/
 
+# OSX
+.DS_Store
+
 # Scripts
 *.sh
 

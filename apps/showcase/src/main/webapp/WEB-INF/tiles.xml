@@ -27,22 +27,22 @@
 
 <tiles-definitions>
 
-    <definition name="showcase.index" template="/tiles/layout.jsp">
+    <definition name="showcase.index" template="/WEB-INF/tiles/layout.jsp">
         <put-attribute name="title" value="Tiles Showcase"/>
-        <put-attribute name="header" value="/tiles/header.jsp"/>
-        <put-attribute name="body" value="/tiles/body.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/body.jsp"/>
     </definition>
 
-    <definition name="showcase.freemarker" template="/tiles/layout.jsp">
+    <definition name="showcase.freemarker" template="/WEB-INF/tiles/layout.jsp">
         <put-attribute name="title" value="Tiles/Freemarker Showcase"/>
-        <put-attribute name="header" value="/tiles/header.jsp"/>
-        <put-attribute name="body" value="/tiles/body.ftl"/>
+        <put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/body.ftl"/>
     </definition>
 
-    <definition name="showcase.freemarkerLayout" template="/tiles/layout.ftl">
+    <definition name="showcase.freemarkerLayout" template="/WEB-INF/tiles/layout.ftl">
         <put-attribute name="title" value="Tiles/Freemarker Showcase"/>
-        <put-attribute name="header" value="/tiles/header.jsp"/>
-        <put-attribute name="body" value="/tiles/body.ftl"/>
+        <put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/tiles/body.ftl"/>
     </definition>
 
 </tiles-definitions>

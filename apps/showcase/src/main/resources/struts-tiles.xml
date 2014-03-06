@@ -21,7 +21,7 @@
         </action>
 
         <action name="sanity">
-            <result type="redirect">/tiles/layout.jsp</result>
+            <result type="redirect">/WEB-INF/tiles/layout.jsp</result>
             <result type="redirect" name="success">/tiles/layout.jsp</result>
         </action>
     </package>

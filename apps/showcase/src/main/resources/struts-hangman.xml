@@ -6,19 +6,19 @@
 <struts>
 	<package name="hangman" extends="struts-default" namespace="/hangman">
 		<action name="hangmanAjax" class="startHangmanAction">
-			<result type="freemarker">/hangman/hangmanAjax.ftl</result>		
+			<result type="freemarker">/WEB-INF/hangman/hangmanAjax.ftl</result>
 		</action>
 		<action name="hangmanNonAjax" class="startHangmanAction">
-			<result type="freemarker">/hangman/hangmanNonAjax.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/hangmanNonAjax.ftl</result>
 		</action>
 		<action name="test">
 			<result type="freemarker">/hangman/test.ftl</result>
 		</action>
 		<action name="guessCharacter" class="guessCharacterAction">
-			<result type="freemarker">/hangman/blank.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/blank.ftl</result>
 		</action>
 		<action name="guessCharacterNonAjax" class="guessCharacterAction">
-			<result type="freemarker">/hangman/hangmanNonAjax.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/hangmanNonAjax.ftl</result>
 		</action>
 	</package>
 	
@@ -26,19 +26,19 @@
 	
 	<package name="hangman-ajax" extends="struts-default" namespace="/hangman/ajax">
 		<action name="blank">
-			<result type="freemarker">/hangman/blank.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/blank.ftl</result>
 		</action>
 		<action name="updateVocabCharacters" class="getUpdatedHangmanAction">
-			<result type="freemarker">/hangman/updateVocabCharacters.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/updateVocabCharacters.ftl</result>
 		</action>
 		<action name="updateCharacterAvailable" class="getUpdatedHangmanAction">
-			<result type="freemarker">/hangman/updateCharacterAvailable.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/updateCharacterAvailable.ftl</result>
 		</action>
 		<action name="updateScaffold" class="getUpdatedHangmanAction">
-			<result type="freemarker">/hangman/updateScaffold.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/updateScaffold.ftl</result>
 		</action>
 		<action name="updateGuessLeft" class="getUpdatedHangmanAction">
-			<result type="freemarker">/hangman/updateGuessLeft.ftl</result>
+			<result type="freemarker">/WEB-INF/hangman/updateGuessLeft.ftl</result>
 		</action>
 	</package>
 </struts>	

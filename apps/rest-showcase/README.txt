@@ -1,7 +1,6 @@
-README.txt - blank
+README.txt - Rest Showcase Webapp
 
-This is an "empty" application that you can deploy as the basis of your own 
-application. 
+Rest Showcase is a simple example of REST app build with the REST plugin.
 
 For more on getting started with Struts, see 
 

@@ -37,6 +37,9 @@ import org.apache.struts2.views.util.UrlHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URLConnection;
 import java.util.*;
 
 import static javax.servlet.http.HttpServletResponse.SC_FOUND;
@@ -262,13 +265,19 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     }
 
-    private boolean isPathUrl(String url) {
-        // filter out "http:", "https:", "mailto:", "file:", "ftp:"
-        return !url.startsWith("http:")
-                && !url.startsWith("https:")
-                && !url.startsWith("mailto:")
-                && !url.startsWith("file:")
-                && !url.startsWith("ftp:");
+    /**
+     * Checks if url is simple path or either full url
+     *
+     * @param url string
+     * @return true if it's just a path not a full url
+     */
+    protected boolean isPathUrl(String url) {
+        try {
+            return URI.create(url).getScheme() == null;
+        } catch (IllegalArgumentException e) {
+            LOG.debug("[#0] isn't a valid URL", e, url);
+            return false;
+        }
     }
 
     /**

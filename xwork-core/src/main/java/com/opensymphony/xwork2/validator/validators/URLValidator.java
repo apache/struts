@@ -20,28 +20,9 @@ import com.opensymphony.xwork2.util.URLUtil;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * <!-- START SNIPPET: javadoc -->
- * 
  * URLValidator checks that a given field is a String and a valid URL
- * 
- * <!-- END SNIPPET: javadoc -->
- * 
- * <p/>
- * 
- * <!-- START SNIPPET: parameters -->
- * 
- * <ul>
- * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- * 		<li>urlRegexExpression - The regex defined as expression used to validate url. If not defined 'urlRegex' will be used instead</li>
- * 		<li>urlRegex - The regex used to validate url. If not defined default regex will be used</li>
- * </ul>
- * 
- * <!-- END SNIPPET: parameters -->
- *
- * <p/>
  *
  * <pre>
- * <!-- START SNIPPET: examples -->
  * &lt;validators&gt;
  *      &lt;!-- Plain Validator Syntax --&gt;
  *      &lt;validator type="url"&gt;
@@ -56,12 +37,7 @@ import org.apache.commons.lang3.StringUtils;
  *          &lt;/field-validator&gt;
  *      &lt;/field&gt;
  * &lt;/validators&gt;
- * <!-- END SNIPPET: examples -->
  * </pre>
- *
- *
- * @author $Author$
- * @version $Date$ $Revision$
  */
 public class URLValidator extends FieldValidatorSupport {
 

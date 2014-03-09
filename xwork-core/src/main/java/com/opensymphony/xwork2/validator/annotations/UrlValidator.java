@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.opensymphony.xwork2.validator.annotations;
 
 import java.lang.annotation.ElementType;
@@ -27,7 +26,6 @@ import java.lang.annotation.Target;
  * <pre>
  * &#64;UrlValidator(message = "Default message", key = "i18n.key", shortCircuit = true)
  * </pre>
- *
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

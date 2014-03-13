@@ -22,6 +22,9 @@
 -->
 <#if parameters.type?? && parameters.type=="button">
 <button type="reset"<#rt/>
+<#if parameters.id??>
+ id="${parameters.id?html}"<#rt/>
+</#if>
 <#if parameters.name??>
  name="${parameters.name?html}"<#rt/>
 </#if>
@@ -51,6 +54,9 @@
 /><#else><#if parameters.label??><@s.property value="parameters.label"/><#rt/></#if></#if></button>
 <#else>
 <input type="reset"<#rt/>
+<#if parameters.id??>
+ id="${parameters.id?html}"<#rt/>
+</#if>
 <#if parameters.name??>
  name="${parameters.name?html}"<#rt/>
 </#if>
@@ -74,3 +80,4 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 />
 </#if>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/action-handler.ftl"/>

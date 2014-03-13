@@ -1,2 +1,10 @@
-<button type="submit" id="myname" name="action:manager" value="Submit">mylabel
+<button type="submit" id="myname" name="action:manager" value="Submit" onclick="submitAction_myname(this);">
+mylabel
 </button>
+
+<script>
+  function submitAction_myname(element) {
+    element.form.action = 'manager';
+    element.form.submit();
+  }
+</script>

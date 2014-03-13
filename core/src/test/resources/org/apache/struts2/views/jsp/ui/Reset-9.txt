@@ -1,1 +1,1 @@
-<button type="reset" name="method:update" value="Reset">mylabel</button>
+<button type="reset" id="myname" name="method:update" value="Reset">mylabel</button>

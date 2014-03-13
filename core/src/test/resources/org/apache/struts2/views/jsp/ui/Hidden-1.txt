@@ -1,7 +1,5 @@
-<tr>
-  <td class="tdLabel">
-  </td>
-  <td>
+<tr style="display:none;">
+  <td colspan="2">
     <input type="hidden" name="myname" value="bar" id="myname"/>
   </td>
 </tr>

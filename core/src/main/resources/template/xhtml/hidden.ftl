@@ -20,6 +20,8 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
-<#include "/${parameters.templateDir}/simple/hidden.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<tr style="display:none;">
+  <td colspan="2">
+    <#include "/${parameters.templateDir}/simple/hidden.ftl" />
+  </td>
+</tr>

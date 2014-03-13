@@ -1,1 +1,7 @@
-<input type="hidden" name="myname" value="bar" id="myname"/>
+<tr>
+  <td class="tdLabel">
+  </td>
+  <td>
+    <input type="hidden" name="myname" value="bar" id="myname"/>
+  </td>
+</tr>

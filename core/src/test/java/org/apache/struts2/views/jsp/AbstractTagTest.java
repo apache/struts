@@ -61,7 +61,6 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
     protected StrutsMockHttpServletRequest request;
     protected StrutsMockPageContext pageContext;
     protected HttpServletResponse response;
-    protected StrutsMockServletContext servletContext;
     
     protected Mock mockContainer;
 
@@ -83,7 +82,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         createMocks();
     }
 
-    protected void createMocks() {
+    protected void createMocks() throws Exception {
         action = this.getAction();
         stack = ActionContext.getContext().getValueStack();
         context = stack.getContext();
@@ -99,7 +98,6 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
 
         JspWriter jspWriter = new StrutsMockJspWriter(writer);
 
-        servletContext = new StrutsMockServletContext();
         servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
         servletContext.setServletInfo("Resin");
 

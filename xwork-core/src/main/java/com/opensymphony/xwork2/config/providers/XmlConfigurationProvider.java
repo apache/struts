@@ -1015,6 +1015,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     in.setSystemId(url.toString());
 
                     docs.add(DomHelper.parse(in, dtdMappings));
+                    loadedFileUrls.add(url.toString());
                 } catch (XWorkException e) {
                     if (includeElement != null) {
                         throw new ConfigurationException("Unable to load " + url, e, includeElement);
@@ -1071,7 +1072,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     }
                 }
                 finalDocs.add(doc);
-                loadedFileUrls.add(url.toString());
             }
 
             if (LOG.isDebugEnabled()) {

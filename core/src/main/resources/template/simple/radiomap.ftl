@@ -27,7 +27,13 @@
         <#assign itemKey = stack.findValue('top')/>
     </#if>
     <#assign itemKeyStr = itemKey.toString() />
-    <#if parameters.listValue??>
+    <#if parameters.listValueKey??>
+        <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale 
+             file for it's localized value.  This is then used as a label -->
+        <#assign itemValue = stack.findString(parameters.listValueKey)/>
+        <#-- FIXME: find a better way to get the value than a call to @s.text -->
+        <#assign itemValue><@s.text name="${itemValue}"/></#assign>
+    <#elseif parameters.listValue??>
         <#assign itemValue = stack.findString(parameters.listValue)/>
     <#else>
         <#assign itemValue = stack.findString('top')/>

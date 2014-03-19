@@ -21,15 +21,12 @@
 
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
-import org.springframework.mock.web.MockServletContext;
+import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -75,6 +72,7 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
         LoggerFactory.setLoggerFactory(new JdkLoggerFactory());
     }
 
+    protected StrutsMockServletContext servletContext;
     protected Dispatcher dispatcher;
 
     /**
@@ -87,7 +85,8 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
     }
     
     protected Dispatcher initDispatcher(Map<String,String> params) {
-        dispatcher = StrutsTestCaseHelper.initDispatcher(new MockServletContext(), params);
+        servletContext = new StrutsMockServletContext();
+        dispatcher = StrutsTestCaseHelper.initDispatcher(servletContext, params);
         configurationManager = dispatcher.getConfigurationManager();
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();

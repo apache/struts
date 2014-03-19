@@ -33,6 +33,7 @@ public class URLUtil {
      * @param url The url string to verify.
      * @return a boolean indicating whether the URL seems to be incorrect.
      */
+    @Deprecated
     public static boolean verifyUrl(String url) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Checking if url [#0] is valid", url);

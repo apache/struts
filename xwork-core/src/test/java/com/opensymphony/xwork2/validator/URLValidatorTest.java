@@ -17,8 +17,11 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.util.URLUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
+
+import java.util.regex.Pattern;
 
 /**
  * Test case for URLValidator
@@ -103,6 +106,46 @@ public class URLValidatorTest extends XWorkTestCase {
 		assertFalse(validator.getValidatorContext().hasFieldErrors());
 	}
 	
+	public void testValidUrlWithRegex() throws Exception {
+		URLValidator validator = new URLValidator();
+
+        validator.setUrlRegex("^myapp:\\/\\/[a-z]*\\.com$");
+
+        Pattern pattern = Pattern.compile(validator.getUrlRegex());
+
+        assertTrue(pattern.matcher("myapp://test.com").matches());
+        assertFalse(pattern.matcher("myap://test.com").matches());
+	}
+
+	public void testValidUrlWithRegexExpression() throws Exception {
+		URLValidator validator = new URLValidator();
+        ActionContext.getContext().getValueStack().push(new MyAction());
+        validator.setValueStack(ActionContext.getContext().getValueStack());
+        validator.setUrlRegexExpression("${urlRegex}");
+
+        Pattern pattern = Pattern.compile(validator.getUrlRegex());
+
+        assertTrue(pattern.matcher("myapp://test.com").matches());
+        assertFalse(pattern.matcher("myap://test.com").matches());
+	}
+
+	public void testValidUrlWithDefaultRegex() throws Exception {
+		URLValidator validator = new URLValidator();
+
+        Pattern pattern = Pattern.compile(validator.getUrlRegex());
+
+        assertFalse(pattern.matcher("myapp://test.com").matches());
+        assertFalse(pattern.matcher("myap://test.com").matches());
+        assertFalse(pattern.matcher("").matches());
+        assertFalse(pattern.matcher("   ").matches());
+        assertFalse(pattern.matcher("no url").matches());
+
+        assertTrue(pattern.matcher("http://www.opensymphony.com").matches());
+        assertTrue(pattern.matcher("https://www.opensymphony.com").matches());
+        assertTrue(pattern.matcher("https://www.opensymphony.com:443/login").matches());
+        assertTrue(pattern.matcher("http://localhost:8080/myapp").matches());
+    }
+
 	@Override
     protected void setUp() throws Exception {
 	    super.setUp();
@@ -140,4 +183,11 @@ public class URLValidatorTest extends XWorkTestCase {
 			return "http://yahoo.com/articles?id=123";
 		}
 	}
+
+    class MyAction {
+
+        public String getUrlRegex() {
+            return "myapp:\\/\\/[a-z]*\\.com";
+        }
+    }
 }

@@ -1,1 +1,5 @@
-<input type="hidden" name="myname" value="bar" id="myname" disabled="disabled"/>
+<tr style="display:none;">
+  <td colspan="2">
+    <input type="hidden" name="myname" value="bar" id="myname" disabled="disabled"/>
+  </td>
+</tr>

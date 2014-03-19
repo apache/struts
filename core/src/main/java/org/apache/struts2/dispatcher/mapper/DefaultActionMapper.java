@@ -113,15 +113,12 @@ public class DefaultActionMapper implements ActionMapper {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultActionMapper.class);
 
     protected static final String METHOD_PREFIX = "method:";
-    protected static final String ACTION_PREFIX = "action:";
 
     protected boolean allowDynamicMethodCalls = false;
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
     protected Pattern allowedActionNames = Pattern.compile("[a-zA-Z0-9._!/\\-]*");
-    private boolean allowActionPrefix = false;
-    private boolean allowActionCrossNamespaceAccess = false;
 
     protected List<String> extensions = new ArrayList<String>() {{
         add("action");
@@ -140,35 +137,6 @@ public class DefaultActionMapper implements ActionMapper {
                         }
                     }
                 });
-
-                put(ACTION_PREFIX, new ParameterAction() {
-                    public void execute(final String key, ActionMapping mapping) {
-                        if (allowActionPrefix) {
-                            String name = key.substring(ACTION_PREFIX.length());
-                            if (allowDynamicMethodCalls) {
-                                int bang = name.indexOf('!');
-                                if (bang != -1) {
-                                    String method = name.substring(bang + 1);
-                                    mapping.setMethod(method);
-                                    name = name.substring(0, bang);
-                                }
-                            }
-                            String actionName = cleanupActionName(name);
-                            if (allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
-                                if (actionName.startsWith("/")) {
-                                    actionName = actionName.substring(1);
-                                }
-                            }
-                            if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
-                                if (actionName.lastIndexOf("/") != -1) {
-                                    actionName = actionName.substring(actionName.lastIndexOf("/") + 1);
-                                }
-                            }
-                            mapping.setName(actionName);
-                        }
-                    }
-                });
-
             }
         };
     }
@@ -202,16 +170,6 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
     public void setAllowedActionNames(String allowedActionNames) {
         this.allowedActionNames = Pattern.compile(allowedActionNames);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_ENABLED)
-    public void setAllowActionPrefix(String allowActionPrefix) {
-        this.allowActionPrefix = "true".equalsIgnoreCase(allowActionPrefix);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES)
-    public void setAllowActionCrossNamespaceAccess(String allowActionCrossNamespaceAccess) {
-        this.allowActionCrossNamespaceAccess = "true".equalsIgnoreCase(allowActionCrossNamespaceAccess);
     }
 
     @Inject

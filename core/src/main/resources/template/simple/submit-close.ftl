@@ -4,3 +4,4 @@
 <#else>
 ${parameters.body}<#rt/>
 </#if>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/action-handler.ftl"/>

@@ -24,6 +24,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -81,6 +82,7 @@ public abstract class FormButton extends ClosingUIBean {
                 }
                 mapping.setExtension("");
                 name = "action:" + actionMapper.getUriFromActionMapping(mapping);
+                applyOnClickHandler();
             } else {
                 name = "method:" + findString(method);
             }
@@ -90,6 +92,21 @@ public abstract class FormButton extends ClosingUIBean {
 
         addParameter("align", findString(align));
 
+    }
+
+    protected void applyOnClickHandler() {
+        String onClick = (String) parameters.get("onclick");
+        String submitId = (String) parameters.get("id");
+        if (submitId == null) {
+            submitId = RandomStringUtils.randomAlphanumeric(12);
+        }
+        String clickHandler = "submitAction_" + submitId + "(this);";
+        if (onClick != null && !onClick.contains(clickHandler)) {
+            onClick = onClick + "; " + clickHandler;
+        } else {
+            onClick = clickHandler;
+        }
+        parameters.put("onclick", onClick);
     }
 
     /**

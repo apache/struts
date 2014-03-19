@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * is a JSP or some type of template (Velocity for example). In order to
  * figure out which results are associated with an action, this class can be
  * used to set the base directory that the Convention plugin looks at when
- * trying to figure out the correct results. For example, if there is an action:
+ * trying to figure out the correct results.
  * </p>
  *
  * <pre>

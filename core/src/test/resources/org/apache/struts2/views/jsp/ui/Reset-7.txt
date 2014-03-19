@@ -1,1 +1,10 @@
-<button type="reset" name="action:manager!update" value="Reset">mylabel</button>
+<button type="reset" id="myname" name="action:manager!update" value="Reset" onclick="submitAction_myname(this);">
+mylabel
+</button>
+
+<script>
+  function submitAction_myname(element) {
+    element.form.action = 'manager!update';
+    element.form.submit();
+  }
+</script>

@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.*;
 
 import static javax.servlet.http.HttpServletResponse.SC_FOUND;
@@ -274,27 +275,27 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
         try {
             URI uri = URI.create(url);
             if (uri.isAbsolute()) {
-                uri.toURL();
+                URL validUrl = uri.toURL();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("[#0] is full url, not a path", url);
                 }
-                return true;
+                return validUrl.getProtocol() == null;
             } else {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("[#0] isn't absolute URI, assuming it's a path", url);
                 }
-                return false;
+                return true;
             }
         } catch (IllegalArgumentException e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("[#0] isn't a valid URL, assuming it's a path", e, url);
             }
-            return false;
+            return true;
         } catch (MalformedURLException e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("[#0] isn't a valid URL, assuming it's a path", e, url);
             }
-            return false;
+            return true;
         }
     }
 

@@ -29,16 +29,14 @@
         <#else>
             <#assign itemKey = stack.findValue('top')/>
     </#if>
-  <#if parameters.listValueKey??>
+    <#if parameters.listLabelKey??>
     <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale 
        file for it's localized value.  This is then used as a label -->
-    <#assign itemValue = stack.findString(parameters.listValueKey)/>
-    <#-- FIXME: find a better way to get the value than a call to @s.text -->
-    <#assign itemValue><@s.text name="${itemValue}"/></#assign>
+        <#assign itemValue = struts.getText(stack.findString(parameters.listLabelKey))/>
     <#elseif parameters.listValue??>
         <#assign itemValue = stack.findString(parameters.listValue)?default("")/>
-        <#else>
-            <#assign itemValue = stack.findString('top')/>
+    <#else>
+         <#assign itemValue = stack.findString('top')/>
     </#if>
     <#if parameters.listCssClass??>
         <#if stack.findString(parameters.listCssClass)??>

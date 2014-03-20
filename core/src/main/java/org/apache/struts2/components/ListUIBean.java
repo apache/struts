@@ -49,6 +49,7 @@ public abstract class ListUIBean extends UIBean {
     protected Object list;
     protected String listKey;
     protected String listValue;
+    protected String listLabelKey;
     protected String listCssClass;
     protected String listCssStyle;
     protected String listTitle;
@@ -115,6 +116,11 @@ public abstract class ListUIBean extends UIBean {
             addParameter("listValue", "value");
         }
 
+        if (listLabelKey != null) {
+            listLabelKey = stripExpressionIfAltSyntax(listLabelKey);
+            addParameter("listLabelKey", listLabelKey);
+        }
+
         if (listCssClass != null && listCssClass.trim().length() > 0) {
             addParameter("listCssClass", listCssClass);
         }
@@ -150,6 +156,11 @@ public abstract class ListUIBean extends UIBean {
     @StrutsTagAttribute(description = "Property of list objects to get field content from")
     public void setListValue(String listValue) {
         this.listValue = listValue;
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to be used to lookup for localised version of field label")
+    public void setListLabelKey(String listLabelKey) {
+        this.listLabelKey = listLabelKey;
     }
 
     @StrutsTagAttribute(description = "Property of list objects to get css class from")

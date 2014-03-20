@@ -65,4 +65,11 @@ public class Hidden extends UIBean {
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
+
+    @Override
+    public void evaluateParams() {
+        super.evaluateParams();
+        label = null;
+        addParameter("label", null);
+    }
 }

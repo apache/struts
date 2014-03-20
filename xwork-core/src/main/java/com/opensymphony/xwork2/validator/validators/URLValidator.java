@@ -17,28 +17,12 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.util.URLUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * <!-- START SNIPPET: javadoc -->
- * 
  * URLValidator checks that a given field is a String and a valid URL
- * 
- * <!-- END SNIPPET: javadoc -->
- * 
- * <p/>
- * 
- * <!-- START SNIPPET: parameters -->
- * 
- * <ul>
- * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- * </ul>
- * 
- * <!-- END SNIPPET: parameters -->
- *
- * <p/>
  *
  * <pre>
- * <!-- START SNIPPET: examples -->
  * &lt;validators&gt;
  *      &lt;!-- Plain Validator Syntax --&gt;
  *      &lt;validator type="url"&gt;
@@ -53,14 +37,12 @@ import com.opensymphony.xwork2.util.URLUtil;
  *          &lt;/field-validator&gt;
  *      &lt;/field&gt;
  * &lt;/validators&gt;
- * <!-- END SNIPPET: examples -->
  * </pre>
- *
- *
- * @author $Author$
- * @version $Date$ $Revision$
  */
 public class URLValidator extends FieldValidatorSupport {
+
+    private String urlRegex;
+    private String urlRegexExpression;
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
@@ -72,8 +54,48 @@ public class URLValidator extends FieldValidatorSupport {
             return;
         }
 
+        // FIXME deprecated! the same regex below should be used instead
+        // replace logic with next major release
         if (!(value.getClass().equals(String.class)) || !URLUtil.verifyUrl((String) value)) {
             addFieldError(fieldName, object);
         }
     }
+
+    /**
+     * This is used to support client-side validation, it's based on
+     * http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url
+     *
+     * @return regex to validate URLs
+     */
+    public String getUrlRegex() {
+        if (StringUtils.isNotEmpty(urlRegexExpression)) {
+            return (String) parse(urlRegexExpression, String.class);
+        } else if (StringUtils.isNotEmpty(urlRegex)) {
+            return urlRegex;
+        } else {
+            return "^(https?|ftp):\\/\\/" +
+                    "(([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+" +
+                    "(:([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+)?" +
+                    "@)?(#?" +
+                    ")((([a-z0-9]\\.|[a-z0-9][a-z0-9-]*[a-z0-9]\\.)*" +
+                    "[a-z][a-z0-9-]*[a-z0-9]" +
+                    "|((\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])\\.){3}" +
+                    "(\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])" +
+                    ")(:\\d+)?" +
+                    ")(((\\/+([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)*" +
+                    "(\\?([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)" +
+                    "?)?)?" +
+                    "(#([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)?" +
+                    "$";
+        }
+    }
+
+    public void setUrlRegex(String urlRegex) {
+        this.urlRegex = urlRegex;
+    }
+
+    public void setUrlRegexExpression(String urlRegexExpression) {
+        this.urlRegexExpression = urlRegexExpression;
+    }
+
 }

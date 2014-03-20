@@ -1024,8 +1024,13 @@ public abstract class UIBean extends Component {
         } else {
             tryId = generatedId;
         }
-        addParameter("id", tryId);
-        addParameter("escapedId", escape(tryId));
+        
+        //fix for https://issues.apache.org/jira/browse/WW-4299
+        //do not assign value to id if tryId is null
+        if (tryId != null) {
+          addParameter("id", tryId);
+          addParameter("escapedId", escape(tryId));
+        }
     }
 
     /**

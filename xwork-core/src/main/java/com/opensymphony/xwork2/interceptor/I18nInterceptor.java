@@ -272,7 +272,7 @@ public class I18nInterceptor extends AbstractInterceptor {
     protected Object findLocaleParameter(Map<String, Object> params, String parameterName) {
         Object requestedLocale = params.remove(parameterName);
         if (requestedLocale != null && requestedLocale.getClass().isArray()
-                && ((Object[]) requestedLocale).length == 1) {
+                && ((Object[]) requestedLocale).length > 0) {
             requestedLocale = ((Object[]) requestedLocale)[0];
 
             if (LOG.isDebugEnabled()) {

@@ -15,10 +15,18 @@
  */
 package com.opensymphony.xwork2.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Assert;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
-
-import java.util.*;
 
 /**
  * Unit test of {@link TextParseUtil}.
@@ -175,6 +183,39 @@ public class TextParseUtilTest extends XWorkTestCase {
 
         // then
         assertEquals("foo: ", s);
+    }
+
+    public void testTranslateVariablesCollection() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        final List<String> list = new ArrayList<String>() {{
+            add("val 1");
+            add("val 2");
+        }};
+        stack.push(new HashMap<String, Object>() {{ put("list", list); }});
+
+        Collection<String> collection = TextParseUtil.translateVariablesCollection("${list}", stack, true, null);
+
+        Assert.assertNotNull(collection);
+        Assert.assertEquals(2, collection.size());
+    }
+
+    public void testTranslateVariablesCollectionWithExpressions() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        final List<String> list = new ArrayList<String>() {{
+            add("${val1}");
+            add("%{val2}");
+        }};
+        stack.push(new HashMap<String, Object>() {{ put("list", list); put("val1", 1); put("val2", "Value 2"); }});
+
+        Collection<String> collection = TextParseUtil.translateVariablesCollection("${list}", stack, true, null);
+
+        Assert.assertNotNull(collection);
+        Assert.assertEquals(2, collection.size());
+
+        // if this starts passing, probably an double evaluation expression vulnerability was introduced
+        // carefully review changes as this can affect users and allows break in intruders
+        Assert.assertEquals("${val1}", collection.toArray()[0]);
+        Assert.assertEquals("%{val2}", collection.toArray()[1]);
     }
 
 }

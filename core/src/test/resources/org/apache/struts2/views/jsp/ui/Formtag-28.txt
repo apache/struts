@@ -1,0 +1,10 @@
+<form id="testAction" name="testAction" action="/testAction.action" method="post">
+<div class="wwgrp">
+    <div class="wwlbl">
+        <label class="label">label:</label>
+    </div><br />
+    <div class="wwctrl">
+        <input type="text" name=""/>
+    </div>
+</div>
+</form>

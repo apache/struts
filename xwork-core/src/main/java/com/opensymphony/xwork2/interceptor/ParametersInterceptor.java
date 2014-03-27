@@ -141,7 +141,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParametersInterceptor.class);
 
-    public static final String ACCEPTED_PARAM_NAMES = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['(\\w|[^x00-xff])+'\\])|(\\('(\\w|[^x00-xff])+'\\)))*";
+    public static final String ACCEPTED_PARAM_NAMES = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'\\])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*";
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 

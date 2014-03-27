@@ -237,6 +237,19 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(0, existingMap.size());
     }
 
+    public void testParametersWithChineseInTheName() throws Exception {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("theProtectedMap['名字']", "test1");
+
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        extraContext.put(ActionContext.PARAMETERS, params);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
+        proxy.execute();
+        Map<String, String> existingMap = ((SimpleAction) proxy.getAction()).getTheProtectedMap();
+        assertEquals(1, existingMap.size());
+    }
+
     public void testLargeParameterNameWithDefaultLimit() throws Exception {
         ParametersInterceptor parametersInterceptor = createParametersInterceptor();
         doTestParameterNameLengthRestriction(parametersInterceptor, ParametersInterceptor.PARAM_NAME_MAX_LENGTH);

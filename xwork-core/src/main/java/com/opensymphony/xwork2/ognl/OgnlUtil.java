@@ -226,12 +226,16 @@ public class OgnlUtil {
         setValue(name, context, root, value, true);
     }
 
-    protected void setValue(String name, Map<String, Object> context, Object root, Object value, boolean evalName) throws OgnlException {
-        Object tree = compile(name, context);
-        if (!evalName && isEvalExpression(tree, context)) {
-            throw new OgnlException("Eval expression cannot be used as parameter name");
-        }
-        Ognl.setValue(tree, context, root, value);
+    protected void setValue(String name, final Map<String, Object> context, final Object root, final Object value, final boolean evalName) throws OgnlException {
+        compileAndExecute(name, context, new OgnlTask<Void>() {
+            public Void execute(Object tree) throws OgnlException {
+                if (!evalName && isEvalExpression(tree, context)) {
+                    throw new OgnlException("Eval expression cannot be used as parameter name");
+                }
+                Ognl.setValue(tree, context, root, value);
+                return null;
+            }
+        });
     }
 
     private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
@@ -247,12 +251,20 @@ public class OgnlUtil {
         return false;
     }
 
-    public Object getValue(String name, Map<String, Object> context, Object root) throws OgnlException {
-        return Ognl.getValue(compile(name, context), context, root);
+    public Object getValue(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
+        return compileAndExecute(name, context, new OgnlTask<Object>() {
+            public Object execute(Object tree) throws OgnlException {
+                return Ognl.getValue(tree, context, root);
+            }
+        });
     }
 
-    public Object getValue(String name, Map<String, Object> context, Object root, Class resultType) throws OgnlException {
-        return Ognl.getValue(compile(name, context), context, root, resultType);
+    public Object getValue(final String name, final Map<String, Object> context, final Object root, final Class resultType) throws OgnlException {
+        return compileAndExecute(name, context, new OgnlTask<Object>() {
+            public Object execute(Object tree) throws OgnlException {
+                return Ognl.getValue(tree, context, root, resultType);
+            }
+        });
     }
 
 
@@ -260,7 +272,7 @@ public class OgnlUtil {
         return compile(expression, null);
     }
 
-    public Object compile(String expression, Map<String, Object> context) throws OgnlException {
+    private <T> Object compileAndExecute(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
         Object tree;
         if (enableExpressionCache) {
             tree = expressions.get(expression);
@@ -274,7 +286,19 @@ public class OgnlUtil {
             checkEnableEvalExpression(tree, context);
         }
 
-        return tree;
+
+        final T exec = task.execute(tree);
+        if(enableExpressionCache)
+            expressions.putIfAbsent(expression, tree);
+        return exec;
+    }
+
+    public Object compile(String expression, Map<String, Object> context) throws OgnlException {
+        return compileAndExecute(expression,context,new OgnlTask<Object>() {
+            public Object execute(Object tree) throws OgnlException {
+                return tree;
+            }
+        });
     }
     
     private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
@@ -295,7 +319,7 @@ public class OgnlUtil {
      * @param inclusions collection of method names to included copying  (can be null)
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      */
-    public void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
+    public void copy(final Object from, final Object to, final Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
         if (from == null || to == null) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
@@ -305,9 +329,9 @@ public class OgnlUtil {
         }
 
         TypeConverter conv = getTypeConverterFromContext(context);
-        Map contextFrom = Ognl.createDefaultContext(from);
+        final Map contextFrom = Ognl.createDefaultContext(from);
         Ognl.setTypeConverter(contextFrom, conv);
-        Map contextTo = Ognl.createDefaultContext(to);
+        final Map contextTo = Ognl.createDefaultContext(to);
         Ognl.setTypeConverter(contextTo, conv);
 
         PropertyDescriptor[] fromPds;
@@ -342,9 +366,14 @@ public class OgnlUtil {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
                     if ((toPd != null) && (toPd.getWriteMethod() != null)) {
                         try {
-                            Object expr = compile(fromPd.getName(), context);
-                            Object value = Ognl.getValue(expr, contextFrom, from);
-                            Ognl.setValue(expr, contextTo, to, value);
+                            compileAndExecute(fromPd.getName(), context, new OgnlTask<Object>() {
+                                public Void execute(Object expr) throws OgnlException {
+                                    Object value = Ognl.getValue(expr, contextFrom, from);
+                                    Ognl.setValue(expr, contextTo, to, value);
+                                    return null;
+                                }
+                            });
+
                         } catch (OgnlException e) {
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Got OGNL exception", e);
@@ -409,16 +438,19 @@ public class OgnlUtil {
      * @throws IntrospectionException is thrown if an exception occurs during introspection.
      * @throws OgnlException          is thrown by OGNL if the property value could not be retrieved
      */
-    public Map getBeanMap(Object source) throws IntrospectionException, OgnlException {
-        Map beanMap = new HashMap();
-        Map sourceMap = Ognl.createDefaultContext(source);
+    public Map<String, Object> getBeanMap(final Object source) throws IntrospectionException, OgnlException {
+        Map<String, Object> beanMap = new HashMap<String, Object>();
+        final Map sourceMap = Ognl.createDefaultContext(source);
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(source);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-            String propertyName = propertyDescriptor.getDisplayName();
+            final String propertyName = propertyDescriptor.getDisplayName();
             Method readMethod = propertyDescriptor.getReadMethod();
             if (readMethod != null) {
-                Object expr = compile(propertyName);
-                Object value = Ognl.getValue(expr, sourceMap, source);
+                final Object value = compileAndExecute(propertyName, null, new OgnlTask<Object>() {
+                    public Object execute(Object expr) throws OgnlException {
+                        return Ognl.getValue(expr, sourceMap, source);
+                    }
+                });
                 beanMap.put(propertyName, value);
             } else {
                 beanMap.put(propertyName, "There is no read method for " + propertyName);
@@ -485,4 +517,9 @@ public class OgnlUtil {
         */
         return defaultConverter;
     }
+
+    private interface OgnlTask<T> {
+        T execute(Object tree) throws OgnlException;
+    }
+
 }

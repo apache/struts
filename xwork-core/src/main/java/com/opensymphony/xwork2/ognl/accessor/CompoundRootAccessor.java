@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -29,6 +29,8 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.*;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang3.BooleanUtils.toBoolean;
 
 /**
  * A stack that is able to call methods on objects in the stack.
@@ -55,7 +57,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
     private final static Logger LOG = LoggerFactory.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
-    private static Map invalidMethods = new HashMap();
+    private static Map<MethodCall, Boolean> invalidMethods = new HashMap<MethodCall, Boolean>();
 
     static boolean devMode = false;
 
@@ -79,7 +81,8 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
                     return;
                 } else if (o instanceof Map) {
-                    Map<Object, Object> map = (Map) o;
+                    @SuppressWarnings("unchecked")
+                    Map<Object, Object> map = (Map<Object, Object>) o;
                     try {
                         map.put(name, value);
                         return;
@@ -98,14 +101,14 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
             }
         }
 
-        Boolean reportError = (Boolean) context.get(ValueStack.REPORT_ERRORS_ON_NO_PROP);
+        boolean reportError = toBoolean((Boolean) context.get(ValueStack.REPORT_ERRORS_ON_NO_PROP));
 
-        final String msg = "No object in the CompoundRoot has a publicly accessible property named '" + name + "' (no setter could be found).";
-
-        if ((reportError != null) && (reportError.booleanValue())) {
-            throw new XWorkException(msg);
-        } else {
-            if (devMode) {
+        if (reportError || devMode) {
+            final String msg = format("No object in the CompoundRoot has a publicly accessible property named '%s' " +
+                    "(no setter could be found).", name);
+            if (reportError) {
+                throw new XWorkException(msg);
+            } else {
                 LOG.warn(msg);
             }
         }
@@ -118,7 +121,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         if (name instanceof Integer) {
             Integer index = (Integer) name;
 
-            return root.cutStack(index.intValue());
+            return root.cutStack(index);
         } else if (name instanceof String) {
             if ("top".equals(name)) {
                 if (root.size() > 0) {
@@ -234,7 +237,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
             if ((argTypes == null) || !invalidMethods.containsKey(mc)) {
                 try {
-                    Object value = OgnlRuntime.callMethod((OgnlContext) context, o, name, name, objects);
+                    Object value = OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
 
                     if (value != null) {
                         return value;

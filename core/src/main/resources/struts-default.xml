@@ -186,6 +186,7 @@
             <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
             <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />
+            <interceptor name="datetime" class="org.apache.struts2.interceptor.DateTextFieldInterceptor" />
             <interceptor name="profiling" class="org.apache.struts2.interceptor.ProfilingActivationInterceptor" />
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
@@ -198,6 +199,7 @@
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="datetime"/>
                 <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params">
@@ -255,6 +257,7 @@
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="datetime"/>
                 <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="params">
                     <param name="excludeParams">^class\..*,^dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,^parameters\..*,^action:.*,^method:.*</param>
@@ -300,6 +303,7 @@
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload"/>
                 <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="datetime"/>
                 <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="actionMappingParams"/>

@@ -178,7 +178,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
             } else {
                 bean = autoWiringFactory.autowire(clazz, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
                 bean = autoWiringFactory.applyBeanPostProcessorsBeforeInitialization(bean, bean.getClass().getName());
-                // We don't need to call the init-method since one won't be registered.
+                bean = autoWiringFactory.initializeBean(bean, bean.getClass().getName());
                 bean = autoWiringFactory.applyBeanPostProcessorsAfterInitialization(bean, bean.getClass().getName());
                 return autoWireBean(bean, autoWiringFactory);
             }

@@ -181,13 +181,32 @@ public class DelegatingValidatorContext implements ValidatorContext {
     public static TextProvider makeTextProvider(Object object, LocaleProvider localeProvider) {
         // the object argument passed through here will most probably be an ActionSupport decendant which does
         // implements TextProvider.
+        if (object != null && object instanceof DelegatingValidatorContext) {
+            return ((DelegatingValidatorContext) object).getTextProvider();
+        } else if (localeProvider != null && localeProvider instanceof DelegatingValidatorContext) {
+            return ((DelegatingValidatorContext) localeProvider).getTextProvider();
+        }
+
         if ((object != null) && (object instanceof TextProvider)) {
+            if (object instanceof CompositeTextProvider) {
+                return (CompositeTextProvider) object;
+            }
             return new CompositeTextProvider(new TextProvider[]{
                     ((TextProvider) object),
                     new TextProviderSupport(object.getClass(), localeProvider)
             });
+        } else if (localeProvider != null && localeProvider instanceof TextProvider) {
+            if (localeProvider instanceof CompositeTextProvider) {
+                return (CompositeTextProvider) localeProvider;
+            }
+            return new CompositeTextProvider(new TextProvider[]{
+                    ((TextProvider) localeProvider),
+                    new TextProviderSupport(localeProvider.getClass(), localeProvider)
+            });
         } else {
-            return new TextProviderFactory().createInstance(object.getClass(), localeProvider);
+            return new TextProviderFactory().createInstance(
+                    object != null ? object.getClass() : DelegatingValidatorContext.class,
+                    localeProvider);
         }
     }
 

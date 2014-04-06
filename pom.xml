@@ -12,7 +12,7 @@
     <version>2.3.17-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
-    <url>http://struts.apache.org/2.x/</url>
+    <url>http://struts.apache.org/<url>
     <description>Apache Struts 2</description>
 
     <inceptionYear>2000</inceptionYear>

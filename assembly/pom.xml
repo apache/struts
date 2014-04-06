@@ -103,7 +103,7 @@
                                     <arg value="http://struts.apache.org/development/2.x/docs/" />
                                 </exec>
                                 <delete>
-                                    <fileset dir="${project.build.directory}/cwiki/" includes="index.*"/>
+                                    <fileset dir="${project.build.directory}/cwiki/" includes="**/index.*"/>
                                 </delete>
                                 <copy file="${project.build.directory}/cwiki/home.html" tofile="${project.build.directory}/cwiki/index.html"/>
                             </tasks>

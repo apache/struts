@@ -87,7 +87,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(expected, actual);
     }
 
-    public void testInsecureParamaters() throws Exception {
+    public void testInsecureParameters() throws Exception {
         // given
         loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
@@ -116,6 +116,90 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertTrue(msg1.contains("Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'"));
         assertTrue(msg2.contains("Error setting expression 'top['name'](0)' with value 'true'"));
         assertNull(action.getName());
+    }
+
+    public void testClassPollutionBlockedByPattern() throws Exception {
+        // given
+        final String pollution1 = "class.classLoader.jarPath";
+        final String pollution2 = "model.class.classLoader.jarPath";
+
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        final Map<String, Object> params = new HashMap<String, Object>() {
+            {
+                put(pollution1, "bad");
+                put(pollution2, "very bad");
+            }
+        };
+
+        final Map<String, Boolean> excluded = new HashMap<String, Boolean>();
+        ParametersInterceptor pi = new ParametersInterceptor() {
+
+            @Override
+            protected boolean isExcluded(String paramName) {
+                boolean result = super.isExcluded(paramName);
+                excluded.put(paramName, result);
+                return result;
+            }
+
+        };
+
+        pi.setExcludeParams("(.*\\.|^)class\\..*");
+        container.inject(pi);
+        ValueStack vs = ActionContext.getContext().getValueStack();
+
+        // when
+        ValidateAction action = new ValidateAction();
+        pi.setParameters(action, vs, params);
+
+        // then
+        assertEquals(0, action.getActionMessages().size());
+        assertTrue(excluded.get(pollution1));
+        assertTrue(excluded.get(pollution2));
+    }
+
+    public void testClassPollutionBlockedByOgnl() throws Exception {
+        // given
+        final String pollution1 = "class.classLoader.jarPath";
+        final String pollution2 = "model.class.classLoader.jarPath";
+
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        final Map<String, Object> params = new HashMap<String, Object>() {
+            {
+                put(pollution1, "bad");
+                put(pollution2, "very bad");
+            }
+        };
+
+        final Map<String, Boolean> excluded = new HashMap<String, Boolean>();
+        ParametersInterceptor pi = new ParametersInterceptor() {
+
+            @Override
+            protected boolean isExcluded(String paramName) {
+                boolean result = super.isExcluded(paramName);
+                excluded.put(paramName, result);
+                return result;
+            }
+
+        };
+
+        container.inject(pi);
+        ValueStack vs = ActionContext.getContext().getValueStack();
+
+        // when
+        ValidateAction action = new ValidateAction();
+        pi.setParameters(action, vs, params);
+
+        // then
+        assertEquals(2, action.getActionMessages().size());
+
+        String msg1 = action.getActionMessage(0);
+        String msg2 = action.getActionMessage(1);
+
+        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg1);
+        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg2);
+
+        assertFalse(excluded.get(pollution1));
+        assertFalse(excluded.get(pollution2));
     }
 
     public void testDoesNotAllowMethodInvocations() throws Exception {
@@ -235,6 +319,19 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         proxy.execute();
         Map<String, String> existingMap = ((SimpleAction) proxy.getAction()).getTheProtectedMap();
         assertEquals(0, existingMap.size());
+    }
+
+    public void testParametersWithChineseInTheName() throws Exception {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("theProtectedMap['名字']", "test1");
+
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        extraContext.put(ActionContext.PARAMETERS, params);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
+        proxy.execute();
+        Map<String, String> existingMap = ((SimpleAction) proxy.getAction()).getTheProtectedMap();
+        assertEquals(1, existingMap.size());
     }
 
     public void testLargeParameterNameWithDefaultLimit() throws Exception {

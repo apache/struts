@@ -21,16 +21,24 @@
 
 package org.apache.struts2.dispatcher;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
+import static org.easymock.EasyMock.createControl;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import ognl.Ognl;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
@@ -40,18 +48,16 @@ import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
-import static org.easymock.EasyMock.createControl;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -222,6 +228,67 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
+        control.verify();
+    }
+
+    public void testIncludeCollectionParameterInResult() throws Exception {
+        List<String> paramValues = new ArrayList<String>();
+        paramValues.add("value 1");
+        paramValues.add("");
+        paramValues.add("value 2");
+        paramValues.add(null);
+
+        ResultConfig resultConfig = new ResultConfig.Builder("", "")
+            .addParam("namespace", "someNamespace")
+            .addParam("param", "${list}")
+            .build();
+
+        ActionContext context = ActionContext.getContext();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+
+        Map<String, ResultConfig> results=  new HashMap<String, ResultConfig>();
+        results.put("myResult", resultConfig);
+
+        ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
+                .addResultConfigs(results).build();
+
+        ServletRedirectResult result = new ServletRedirectResult();
+        result.setLocation("/myNamespace/myAction.action");
+        result.setParse(true);
+        result.setEncode(false);
+        result.setPrependServletContext(false);
+        result.setUrlHelper(new DefaultUrlHelper());
+        result.setSuppressEmptyParameters(true);
+
+        IMocksControl control = createControl();
+        ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
+        ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
+
+        ValueStack mockValueStack = control.createMock(ValueStack.class);
+        Map<String, Object> mockContext = new HashMap<String, Object>();
+        mockContext.put(ActionContext.CONTAINER, container);
+
+        expect(mockInvocation.getStack()).andReturn(mockValueStack);
+        expect(mockValueStack.getContext()).andReturn(mockContext);
+
+        expect(mockInvocation.getStack()).andReturn(mockValueStack);
+
+        expect(mockValueStack.findValue("list")).andReturn(paramValues); // no asType !!!
+
+        expect(mockInvocation.getProxy()).andReturn(mockActionProxy);
+        expect(mockInvocation.getResultCode()).andReturn("myResult");
+        expect(mockActionProxy.getConfig()).andReturn(actionConfig);
+        expect(mockInvocation.getInvocationContext()).andReturn(context);
+
+        expect(mockValueStack.getContext()).andReturn(mockContext);
+
+        control.replay();
+        result.setActionMapper(container.getInstance(ActionMapper.class));
+        result.execute(mockInvocation);
+        assertEquals("/myNamespace/myAction.action?param=value+1&param=value+2", res.getRedirectedUrl());
         control.verify();
     }
 

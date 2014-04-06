@@ -95,7 +95,7 @@
 							<li><s:a action="index" namespace="/config-browser"
 							         includeParams="none">Config Browser</s:a></li>
 							<li><s:a value="/conversion/index.jsp">Conversion</s:a></li>
-							<li><s:a value="/person/index.jsp">Person Manager ( by Conventions )</s:a></li>
+							<li><s:a value="/person/index.html">Person Manager ( by Conventions )</s:a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -106,7 +106,7 @@
 								<ul class="dropdown-menu">
 									<li><s:url var="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/><s:a
 											href="%{url}">Action Tag</s:a></li>
-									<li><s:url var="url" value="/tags/non-ui/date.jsp"/><s:a
+									<li><s:url var="url" namespace="/tags/non-ui" action="date"/><s:a
 											href="%{url}">Date Tag</s:a></li>
 									<li><s:url var="url" action="debugTagDemo" namespace="/tags/non-ui"/><s:a
 											href="%{url}">Debug Tag</s:a></li>
@@ -149,7 +149,7 @@
 									<li><s:url var="url" namespace="/tags/ui" action="moreSelects" method="input"/><s:a
 											href="%{url}">More Select Box UI Examples</s:a></li>
 									<li>
-										<s:url var="url" namespace="/tags/ui" value="/tags/ui/treeExampleStatic.jsp"/>
+										<s:url var="url" namespace="/tags/ui" action="treeExampleStatic"/>
 										<s:a href="%{url}">Tree Example (static)</s:a>
 									<li>
 										<s:url var="url" namespace="/tags/ui" action="showDynamicTreeAction"/>
@@ -158,13 +158,13 @@
 										<s:url var="url" namespace="/tags/ui" action="showDynamicAjaxTreeAction"/>
 										<s:a href="%{url}">Tree Example (dynamic ajax loading)</s:a>
 									<li>
-										<s:url var="url" value="/tags/ui/componentTagExample.jsp"/>
+										<s:url var="url" namespace="/tags/ui" action="componentTagExample"/>
 										<s:a href="%{#url}">Component Tag Example</s:a>
 									<li><s:url var="url" namespace="/tags/ui" action="actionTagExample" method="input"/><s:a
 											href="%{url}">Action Tag Example</s:a></li>
-									<li><s:url var="url" value="/tags/ui/datepicker/index.jsp"/><s:a
+									<li><s:url var="url" namespace="/tags/ui" action="datepicker"/><s:a
 											href="%{#url}">DateTime picker tag - Pick a date</s:a></li>
-									<li><s:url var="url" value="/tags/ui/timepicker/index.jsp"/><s:a
+									<li><s:url var="url" namespace="/tags/ui" action="timepicker"/><s:a
 											href="%{#url}">DateTime picker tag - Pick a time</s:a></li>
 									<%--li><s:url var="url" namespace="/tags/ui" action="populateUsingIterator" method="input" /><s:a href="%{url}">UI population using iterator tag</s:a></li--%>
 								</ul>
@@ -174,7 +174,7 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">File<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><s:a value="/filedownload/index.jsp">File Download</s:a></li>
+							<li><s:a namespace="/filedownload" action="index">File Download</s:a></li>
 							<li class="dropdown-submenu">
 								<a href="#">File Upload</a>
 								<ul class="dropdown-menu">
@@ -207,11 +207,11 @@
 											href="%{url}">Hangman (Ajax - Experimental)</s:a></li>
 								</ul>
 							</li>
-							<li><s:a value="/person/index.jsp">Person Manager</s:a></li>
-							<li><s:a value="/empmanager/index.jsp">CRUD</s:a></li>
-							<li><s:a value="/wait/index.jsp">Execute &amp; Wait</s:a></li>
-							<li><s:a value="/token/index.jsp">Token</s:a></li>
-							<li><s:a value="/validation/index.jsp">Validation</s:a></li>
+							<li><s:a value="/person/index.html">Person Manager</s:a></li>
+							<li><s:a value="/skill/index.html">CRUD</s:a></li>
+							<li><s:a value="/wait/index.html">Execute &amp; Wait</s:a></li>
+							<li><s:a value="/token/index.html">Token</s:a></li>
+							<li><s:a value="/validation/index.action">Validation</s:a></li>
 							<li><s:url var="url" namespace="/modelDriven" action="modelDriven"/><s:a
 									href="%{url}">Model Driven</s:a></li>
 						</ul>
@@ -232,19 +232,19 @@
 									</li>
 								</ul>
 							</li>
-							<li><s:a value="/jsf/index.jsp">JavaServer Faces</s:a></li>
-							<li><s:a value="/integration/editGangster">Struts 1 Integration</s:a></li>
+							<li><s:a namespace="/jsf" action="index">JavaServer Faces</s:a></li>
+							<li><s:a namespace="/integration" action="editGangster">Struts 1 Integration</s:a></li>
 							<li><s:a value="/tiles/index.action">Tiles</s:a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">AJAX<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><s:a value="/ajax/index.jsp">Ajax plugin</s:a></li>
-							<li><s:a value="/chat/index.jsp">Ajax Chat</s:a></li>
+							<li><s:a value="/ajax/index.html">Ajax plugin</s:a></li>
+							<li><s:a value="/chat/index.html">Ajax Chat</s:a></li>
 						</ul>
 					</li>
-					<li><s:a value="/interactive/index.jsp">Interactive Demo</s:a></li>
+					<li><s:a value="/interactive/index.action">Interactive Demo</s:a></li>
 				</ul>
 
 				<ul class="nav pull-right">

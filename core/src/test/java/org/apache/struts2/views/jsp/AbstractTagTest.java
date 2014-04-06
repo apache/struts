@@ -61,7 +61,6 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
     protected StrutsMockHttpServletRequest request;
     protected StrutsMockPageContext pageContext;
     protected HttpServletResponse response;
-    protected StrutsMockServletContext servletContext;
     
     protected Mock mockContainer;
 
@@ -83,7 +82,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         createMocks();
     }
 
-    protected void createMocks() {
+    protected void createMocks() throws Exception {
         action = this.getAction();
         stack = ActionContext.getContext().getValueStack();
         context = stack.getContext();
@@ -99,7 +98,6 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
 
         JspWriter jspWriter = new StrutsMockJspWriter(writer);
 
-        servletContext = new StrutsMockServletContext();
         servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
         servletContext.setServletInfo("Resin");
 
@@ -120,8 +118,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
                 session,
                 new ApplicationMap(pageContext.getServletContext()),
                 request,
-                response,
-                pageContext.getServletContext());
+                response);
         // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
         extraContext.remove(ActionContext.LOCALE);

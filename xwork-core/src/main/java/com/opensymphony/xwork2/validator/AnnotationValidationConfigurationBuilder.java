@@ -528,6 +528,12 @@ public class AnnotationValidationConfigurationBuilder {
         } else if (v.fieldName() != null && v.fieldName().length() > 0) {
             params.put("fieldName", v.fieldName());
         }
+        if (StringUtils.isNotEmpty(v.urlRegex())) {
+            params.put("urlRegex", v.urlRegex());
+        }
+        if (StringUtils.isNotEmpty(v.urlRegexExpression())) {
+            params.put("urlRegexExpression", v.urlRegexExpression());
+        }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);
         return new ValidatorConfig.Builder(validatorType)

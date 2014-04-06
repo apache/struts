@@ -119,8 +119,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
                 session,
                 new ApplicationMap(pageContext.getServletContext()),
                 request,
-                response,
-                pageContext.getServletContext());
+                response);
         // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
         extraContext.remove(ActionContext.LOCALE);

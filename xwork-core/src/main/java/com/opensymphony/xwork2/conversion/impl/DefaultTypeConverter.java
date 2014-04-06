@@ -56,9 +56,9 @@ public class DefaultTypeConverter implements TypeConverter {
 
     private static final String NULL_STRING = "null";
 
-    private final Map<Class, Object> primitiveDefaults;
+    private static final Map<Class, Object> primitiveDefaults;
 
-    public DefaultTypeConverter() {
+    static {
         Map<Class, Object> map = new HashMap<Class, Object>();
         map.put(Boolean.TYPE, Boolean.FALSE);
         map.put(Byte.TYPE, Byte.valueOf((byte) 0));

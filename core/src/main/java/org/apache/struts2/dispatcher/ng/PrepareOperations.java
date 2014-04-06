@@ -47,15 +47,18 @@ public class PrepareOperations {
 
     private static final Logger LOG = LoggerFactory.getLogger(PrepareOperations.class);
 
-    private ServletContext servletContext;
     private Dispatcher dispatcher;
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
     public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
     private Logger log = LoggerFactory.getLogger(PrepareOperations.class);
 
+    @Deprecated
     public PrepareOperations(ServletContext servletContext, Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
-        this.servletContext = servletContext;
+    }
+
+    public PrepareOperations(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -75,7 +78,7 @@ public class PrepareOperations {
             ctx = new ActionContext(new HashMap<String, Object>(oldContext.getContextMap()));
         } else {
             ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-            stack.getContext().putAll(dispatcher.createContextMap(request, response, null, servletContext));
+            stack.getContext().putAll(dispatcher.createContextMap(request, response, null));
             ctx = new ActionContext(stack.getContext());
         }
         request.setAttribute(CLEANUP_RECURSION_COUNTER, counter);
@@ -131,7 +134,7 @@ public class PrepareOperations {
         try {
             // Wrap request first, just in case it is multipart/form-data
             // parameters might not be accessible through before encoding (ww-1278)
-            request = dispatcher.wrapRequest(request, servletContext);
+            request = dispatcher.wrapRequest(request);
         } catch (IOException e) {
             throw new ServletException("Could not wrap servlet request with MultipartRequestWrapper!", e);
         }
@@ -163,7 +166,7 @@ public class PrepareOperations {
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
                 }
             } catch (Exception ex) {
-                dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+                dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
             }
         }
 

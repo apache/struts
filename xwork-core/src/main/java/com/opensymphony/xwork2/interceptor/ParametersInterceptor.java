@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.ognl.PropertiesJudge;
 import com.opensymphony.xwork2.util.ArrayUtils;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
@@ -142,7 +141,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParametersInterceptor.class);
 
-    public static final String ACCEPTED_PARAM_NAMES = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*";
+    public static final String ACCEPTED_PARAM_NAMES = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'\\])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*";
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
@@ -313,13 +312,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             MemberAccessValueStack accessValueStack = (MemberAccessValueStack) newStack;
             accessValueStack.setAcceptProperties(acceptParams);
             accessValueStack.setExcludeProperties(excludeParams);
-            if (action instanceof ParameterNameAware) {
-                accessValueStack.setPropertiesJudge(new PropertiesJudge() {
-                    public boolean acceptProperty(String propertyName) {
-                        return ((ParameterNameAware) action).acceptableParameterName(propertyName);
-                    }
-                });
-            }
         }
 
         for (Map.Entry<String, Object> entry : acceptableParameters.entrySet()) {

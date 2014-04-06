@@ -21,6 +21,9 @@
 
 package org.apache.struts2.dispatcher;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.easymock.EasyMock;
 
@@ -109,6 +112,34 @@ public class StrutsResultSupportTest extends StrutsInternalTestCase {
         EasyMock.verify(mockActionInvocation);
     }
 
+    public void testConditionalParseCollection() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(new ActionSupport() {
+            public List<String> getList() {
+                return new ArrayList<String>(){{
+                    add("val 1");
+                    add("val 2");
+                }};
+            }
+        });
+
+        ActionInvocation mockActionInvocation = EasyMock.createNiceMock(ActionInvocation.class);
+        mockActionInvocation.getStack();
+        EasyMock.expectLastCall().andReturn(stack);
+        EasyMock.replay(mockActionInvocation);
+
+        InternalStrutsResultSupport result = new InternalStrutsResultSupport();
+        result.setParse(true);
+        result.setEncode(true);
+
+        Collection<String> collection = result.conditionalParseCollection("${list}", mockActionInvocation, true);
+
+        assertNotNull(collection);
+        assertEquals(2, collection.size());
+        assertTrue(collection.contains("val+1"));
+        assertTrue(collection.contains("val+2"));
+        EasyMock.verify(mockActionInvocation);
+    }
 
     public static class InternalStrutsResultSupport extends StrutsResultSupport {
         private String _internalLocation = null;

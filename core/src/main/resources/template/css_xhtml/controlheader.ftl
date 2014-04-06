@@ -21,7 +21,12 @@
  */
 -->
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl">
-<#if parameters.labelposition?default("top") == 'top'>
+<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
+<#assign labelpos = parameters.form.labelposition/>
+<#elseif parameters.labelposition??>
+<#assign labelpos = parameters.labelposition/>
+</#if>
+<#if labelpos?default("top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>

@@ -791,7 +791,14 @@ public class LocalizedTextUtil {
                 }
                 if (!reloaded) {
                     bundlesMap.clear();
-                    clearMap(ResourceBundle.class, null, "cacheList");
+                    try {
+                        clearMap(ResourceBundle.class, null, "cacheList");
+                    } catch (NoSuchFieldException e) {
+                        // happens in IBM JVM, that has a different ResourceBundle impl
+                        // it has a 'cache' member
+                        clearMap(ResourceBundle.class, null, "cache");
+                    }
+
                     // now, for the true and utter hack, if we're running in tomcat, clear
                     // it's class loader resource cache as well.
                     clearTomcatCache();

@@ -56,9 +56,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * engine will be found based on file extension.<p/>
  *
  * <b>Remember:</b> the value params will always be resolved against the ValueStack so if you mean to pass a
- * string literal to your component, make sure to wrap it in quotes i.e. value="'value1'" otherwise, the the value
- * stack will search for an Object on the stack with a method of getValue1(). (now that i've written this, i'm not
- * entirely sure this is the case. i should verify this manana)<p/>
+ * string literal to your component, make sure to wrap it in single quotes i.e. value="'value1'" (note the opening "' and closing '" otherwise, the the value
+ * stack will search for an Object on the stack with a method of getValue1().<p/>
  *
  * <!-- END SNIPPET: javadoc -->
  *

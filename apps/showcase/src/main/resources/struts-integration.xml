@@ -32,15 +32,15 @@
     <!-- Display entry page that uses Model-Driven technique -->
     <action name="editGangster" class="org.apache.struts2.s1.Struts1Action">
       <param name="className">org.apache.struts2.showcase.integration.EditGangsterAction</param>
-      <result>modelDriven.jsp</result>
+      <result>/WEB-INF/integration/modelDriven.jsp</result>
     </action>
 
     <!-- Display the result page whose content is populated using the Model-Driven technique -->
     <action name="saveGangster" class="org.apache.struts2.s1.Struts1Action">
       <param name="className">org.apache.struts2.showcase.integration.SaveGangsterAction</param>
       <param name="validate">true</param>
-      <result name="input">modelDriven.jsp</result>
-      <result>modelDrivenResult.jsp</result>
+      <result name="input">/WEB-INF/integration/modelDriven.jsp</result>
+      <result>/WEB-INF/integration/modelDrivenResult.jsp</result>
     </action>
 
   </package>

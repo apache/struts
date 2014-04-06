@@ -21,20 +21,8 @@
 
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.FileManagerFactoryProvider;
-import com.opensymphony.xwork2.config.FileManagerProvider;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
@@ -53,7 +41,6 @@ import com.opensymphony.xwork2.util.location.LocationUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
-import freemarker.template.Template;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -68,7 +55,6 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.fs.JBossFileManager;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -76,16 +62,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -93,7 +70,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * of the primary dispatcher holds an instance of this dispatcher to be shared for
  * all requests.
  *
- * @see org.apache.struts2.dispatcher.FilterDispatcher
+ * @see org.apache.struts2.dispatcher.ng.InitOperations
  */
 public class Dispatcher {
 
@@ -169,6 +146,11 @@ public class Dispatcher {
     private boolean handleException;
 
     /**
+     * Interface used to handle internal errors or missing resources
+     */
+    private DispatcherErrorHandler errorHandler;
+
+    /**
      * Provide the dispatcher instance for the current thread.
      *
      * @return The dispatcher instance
@@ -204,10 +186,13 @@ public class Dispatcher {
         dispatcherListeners.remove(listener);
     }
 
-    private ServletContext servletContext;
-    private Map<String, String> initParams;
-
     private ValueStackFactory valueStackFactory;
+
+    /**
+     * Keeps current reference to external world and must be protected to support class inheritance
+     */
+    protected ServletContext servletContext;
+    protected Map<String, String> initParams;
 
     /**
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
@@ -278,6 +263,11 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_HANDLE_EXCEPTION)
     public void setHandleException(String handleException) {
         this.handleException = Boolean.parseBoolean(handleException);
+    }
+
+    @Inject
+    public void setDispatcherErrorHandler(DispatcherErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -492,6 +482,8 @@ public class Dispatcher {
                     l.dispatcherInitialized(this);
                 }
             }
+            errorHandler.init(servletContext);
+
         } catch (Exception ex) {
             if (LOG.isErrorEnabled())
                 LOG.error("Dispatcher initialization failed", ex);
@@ -501,6 +493,16 @@ public class Dispatcher {
 
     protected ConfigurationManager createConfigurationManager(String name) {
         return new ConfigurationManager(name);
+    }
+
+    /**
+     * @deprecated use version without ServletContext param
+     */
+    @Deprecated
+    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context,
+                              ActionMapping mapping) throws ServletException {
+
+        serviceAction(request, response, mapping);
     }
 
     /**
@@ -518,12 +520,13 @@ public class Dispatcher {
      * @param mapping  the action mapping object
      * @throws ServletException when an unknown error occurs (not a 404, but typically something that
      *                          would end up as a 5xx by the servlet container)
-     * @param context Our ServletContext object
+     *
+     * @since 2.3.17
      */
-    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context,
-                              ActionMapping mapping) throws ServletException {
+    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
+            throws ServletException {
 
-        Map<String, Object> extraContext = createContextMap(request, response, mapping, context);
+        Map<String, Object> extraContext = createContextMap(request, response, mapping);
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
         ValueStack stack = (ValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
@@ -564,10 +567,10 @@ public class Dispatcher {
             }
         } catch (ConfigurationException e) {
             logConfigurationException(request, e);
-            sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
+            sendError(request, response, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             if (handleException || devMode) {
-                sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+                sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
             } else {
                 throw new ServletException(e);
             }
@@ -596,16 +599,27 @@ public class Dispatcher {
     }
 
     /**
+     * @deprecated use version without servletContext param
+     */
+    @Deprecated
+    public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
+            ActionMapping mapping, ServletContext context) {
+
+        return createContextMap(request, response, mapping);
+    }
+
+    /**
      * Create a context map containing all the wrapped request objects
      *
      * @param request The servlet request
      * @param response The servlet response
      * @param mapping The action mapping
-     * @param context The servlet context
      * @return A map of context objects
+     *
+     * @since 2.3.17
      */
     public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
-            ActionMapping mapping, ServletContext context) {
+            ActionMapping mapping) {
 
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
@@ -617,14 +631,29 @@ public class Dispatcher {
         Map session = new SessionMap(request);
 
         // application map wrapping the ServletContext
-        Map application = new ApplicationMap(context);
+        Map application = new ApplicationMap(servletContext);
 
-        Map<String,Object> extraContext = createContextMap(requestMap, params, session, application, request, response, context);
+        Map<String,Object> extraContext = createContextMap(requestMap, params, session, application, request, response);
 
         if (mapping != null) {
             extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
         }
         return extraContext;
+    }
+
+    /**
+     * @deprecated use version without ServletContext param
+     */
+    @Deprecated
+    public HashMap<String,Object> createContextMap(Map requestMap,
+                                    Map parameterMap,
+                                    Map sessionMap,
+                                    Map applicationMap,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    ServletContext servletContext) {
+
+        return createContextMap(requestMap, parameterMap, sessionMap, applicationMap, request, response);
     }
 
     /**
@@ -637,16 +666,16 @@ public class Dispatcher {
      * @param applicationMap a Map of all servlet context attributes.
      * @param request        the HttpServletRequest object.
      * @param response       the HttpServletResponse object.
-     * @param servletContext the ServletContextmapping object.
      * @return a HashMap representing the <tt>Action</tt> context.
+     *
+     * @since 2.3.17
      */
     public HashMap<String,Object> createContextMap(Map requestMap,
                                     Map parameterMap,
                                     Map sessionMap,
                                     Map applicationMap,
                                     HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    ServletContext servletContext) {
+                                    HttpServletResponse response) {
         HashMap<String,Object> extraContext = new HashMap<String,Object>();
         extraContext.put(ActionContext.PARAMETERS, new HashMap(parameterMap));
         extraContext.put(ActionContext.SESSION, sessionMap);
@@ -681,9 +710,8 @@ public class Dispatcher {
      * Return the path to save uploaded files to (this is configurable).
      *
      * @return the path to save uploaded files to
-     * @param servletContext Our ServletContext
      */
-    private String getSaveDir(ServletContext servletContext) {
+    private String getSaveDir() {
         String saveDir = multipartSaveDir.trim();
 
         if (saveDir.equals("")) {
@@ -772,6 +800,14 @@ public class Dispatcher {
     }
 
     /**
+     * @deprecated use version without ServletContext param
+     */
+    @Deprecated
+    public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
+        return wrapRequest(request);
+    }
+
+    /**
      * Wrap and return the given request or return the original request object.
      * </p>
      * This method transparently handles multipart data as a wrapped class around the given request.
@@ -780,12 +816,13 @@ public class Dispatcher {
      * flexible - look first to that object before overriding this method to handle multipart data.
      *
      * @param request the HttpServletRequest object.
-     * @param servletContext Our ServletContext object
      * @return a wrapped request or original request.
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper
      * @throws java.io.IOException on any error.
+     *
+     * @since 2.3.17
      */
-    public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
+    public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
         // don't wrap more than once
         if (request instanceof StrutsRequestWrapper) {
             return request;
@@ -795,7 +832,7 @@ public class Dispatcher {
         if (content_type != null && content_type.contains("multipart/form-data")) {
             MultiPartRequest mpr = getMultiPartRequest();
             LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
-            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(servletContext), provider);
+            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(), provider);
         } else {
             request = new StrutsRequestWrapper(request, disableRequestAttributeValueStackLookup);
         }
@@ -847,70 +884,26 @@ public class Dispatcher {
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      * @param ctx      the ServletContext object.
+     *
+     * @deprecated remove in version 3.0 - use version without ServletContext parameter
      */
+    @Deprecated
     public void sendError(HttpServletRequest request, HttpServletResponse response, ServletContext ctx, int code, Exception e) {
-        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
-        if (devModeOverride != null ? devModeOverride : devMode) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Exception occurred during processing request: #0", e, e.getMessage());
-            }
-            try {
-                FreemarkerManager mgr = getContainer().getInstance(FreemarkerManager.class);
+        sendError(request, response, code, e);
+    }
 
-                freemarker.template.Configuration config = mgr.getConfiguration(ctx);
-                Template template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
-
-                List<Throwable> chain = new ArrayList<Throwable>();
-                Throwable cur = e;
-                chain.add(cur);
-                while ((cur = cur.getCause()) != null) {
-                    chain.add(cur);
-                }
-
-                HashMap<String,Object> data = new HashMap<String,Object>();
-                data.put("exception", e);
-                data.put("unknown", Location.UNKNOWN);
-                data.put("chain", chain);
-                data.put("locator", new Locator());
-
-                Writer writer = new StringWriter();
-                template.process(data, writer);
-
-                response.setContentType("text/html");
-                response.getWriter().write(writer.toString());
-                response.getWriter().close();
-            } catch (Exception exp) {
-                try {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Cannot show problem report!", exp);
-                    }
-                    response.sendError(code, "Unable to show problem report:\n" + exp + "\n\n" + LocationUtils.getLocation(exp));
-                } catch (IOException ex) {
-                    // we're already sending an error, not much else we can do if more stuff breaks
-                }
-            }
-        } else {
-            try {
-                // WW-1977: Only put errors in the request when code is a 500 error
-                if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
-                    // WW-4103: Only logs error when application error occurred, not Struts error
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Exception occurred during processing request: #0", e, e.getMessage());
-                    }
-                    // send a http error response to use the servlet defined error handler
-                    // make the exception availible to the web.xml defined error page
-                    request.setAttribute("javax.servlet.error.exception", e);
-
-                    // for compatibility
-                    request.setAttribute("javax.servlet.jsp.jspException", e);
-                }
-
-                // send the error response
-                response.sendError(code, e.getMessage());
-            } catch (IOException e1) {
-                // we're already sending an error, not much else we can do if more stuff breaks
-            }
-        }
+    /**
+     * Send an HTTP error response code.
+     *
+     * @param request  the HttpServletRequest object.
+     * @param response the HttpServletResponse object.
+     * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
+     * @param e        the Exception that is reported.
+     *
+     * @since 2.3.17
+     */
+    public void sendError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
+        errorHandler.handleError(request, response, code, e);
     }
 
     /**

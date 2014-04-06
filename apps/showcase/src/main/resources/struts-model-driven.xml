@@ -7,12 +7,12 @@
 	<package name="modelDriven" extends="struts-default" namespace="/modelDriven">
 	    <!-- Diplay entry page that uses Model-Driven technique -->
 		<action name="modelDriven" class="org.apache.struts2.showcase.modelDriven.ModelDrivenAction" method="input">
-			<result>modelDriven.jsp</result>
+			<result>/WEB-INF/modelDriven/modelDriven.jsp</result>
 		</action>
 		
 		<!-- Display the result page whose content is populated using the Model-Driven technique -->
 		<action name="modelDrivenResult" class="org.apache.struts2.showcase.modelDriven.ModelDrivenAction">
-			<result>modelDrivenResult.jsp</result>
+			<result>/WEB-INF/modelDriven/modelDrivenResult.jsp</result>
 		</action>
 	</package>
 </struts>	

@@ -8,6 +8,10 @@
 
         <default-action-ref name="download"/>
 
+        <action name="index">
+            <result>/WEB-INF/filedownload/index.jsp</result>
+        </action>
+
         <action name="download" class="org.apache.struts2.showcase.filedownload.FileDownloadAction">
             <param name="inputPath">/images/struts.gif</param>
 			<result name="success" type="stream">

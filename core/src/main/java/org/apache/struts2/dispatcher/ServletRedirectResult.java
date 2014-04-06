@@ -204,9 +204,9 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                 List<String> prohibitedResultParams = getProhibitedResultParams();
                 for (Map.Entry<String, String> e : resultConfigParams.entrySet()) {
                     if (!prohibitedResultParams.contains(e.getKey())) {
-                        String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue(), invocation);
-                        if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
-                            requestParameters.put(e.getKey(), potentialValue);
+                        Collection<String> values = conditionalParseCollection(e.getValue(), invocation, suppressEmptyParameters);
+                        if (!suppressEmptyParameters || !values.isEmpty()) {
+                            requestParameters.put(e.getKey(), values);
                         }
                     }
                 }

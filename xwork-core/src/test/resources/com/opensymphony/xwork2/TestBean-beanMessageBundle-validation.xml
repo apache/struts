@@ -4,7 +4,7 @@
         <field-validator type="int" short-circuit="true">
             <param name="min">1</param>
             <param name="max">100</param>
-            <message key="invalid.count">Invalid Count!</message>
+            <message key="invalid.count">Invalid count value, must be between ${min} and ${max}, current value ${count}!</message>
         </field-validator>
         <field-validator type="int">
             <param name="min">20</param>

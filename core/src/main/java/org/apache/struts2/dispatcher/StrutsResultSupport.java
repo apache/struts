@@ -23,6 +23,8 @@ package org.apache.struts2.dispatcher;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.struts2.StrutsStatics;
 
@@ -195,28 +197,61 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      */
     protected String conditionalParse(String param, ActionInvocation invocation) {
         if (parse && param != null && invocation != null) {
-            return TextParseUtil.translateVariables(param, invocation.getStack(),
-                    new TextParseUtil.ParsedValueEvaluator() {
-                        public Object evaluate(String parsedValue) {
-                            if (encode) {
-                                if (parsedValue != null) {
-                                    try {
-                                        // use UTF-8 as this is the recommended encoding by W3C to
-                                        // avoid incompatibilities.
-                                        return URLEncoder.encode(parsedValue, "UTF-8");
-                                    }
-                                    catch(UnsupportedEncodingException e) {
-                                        if (LOG.isWarnEnabled()) {
-                                            LOG.warn("error while trying to encode ["+parsedValue+"]", e);
-                                        }
-                                    }
-                                }
-                            }
-                            return parsedValue;
-                        }
-            });
+            return TextParseUtil.translateVariables(
+                param, 
+                invocation.getStack(),
+                new EncodingParsedValueEvaluator());
         } else {
             return param;
+        }
+    }
+
+    /**
+     * As {@link #conditionalParse(String, ActionInvocation)} but does not
+     * convert found object into String. If found object is a collection it is
+     * returned if found object is not a collection it is wrapped in one.
+     * 
+     * @param param
+     * @param invocation
+     * @param excludeEmptyElements
+     * @return
+     */
+    protected Collection<String> conditionalParseCollection(String param, ActionInvocation invocation, boolean excludeEmptyElements) {
+        if (parse && param != null && invocation != null) {
+            return TextParseUtil.translateVariablesCollection(
+                param, 
+                invocation.getStack(),
+                excludeEmptyElements,
+                new EncodingParsedValueEvaluator());
+        } else {
+            Collection<String> collection = new ArrayList<String>(1);
+            collection.add(param);
+            return collection;
+        }
+    }
+
+    /**
+     * {@link com.opensymphony.xwork2.util.TextParseUtil.ParsedValueEvaluator} to do URL encoding for found values. To be
+     * used for single strings or collections.
+     * 
+     */
+    private final class EncodingParsedValueEvaluator implements TextParseUtil.ParsedValueEvaluator {
+        public Object evaluate(String parsedValue) {
+            if (encode) {
+                if (parsedValue != null) {
+                    try {
+                        // use UTF-8 as this is the recommended encoding by W3C to
+                        // avoid incompatibilities.
+                        return URLEncoder.encode(parsedValue, "UTF-8");
+                    }
+                    catch(UnsupportedEncodingException e) {
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("error while trying to encode ["+parsedValue+"]", e);
+                        }
+                    }
+                }
+            }
+            return parsedValue;
         }
     }
 

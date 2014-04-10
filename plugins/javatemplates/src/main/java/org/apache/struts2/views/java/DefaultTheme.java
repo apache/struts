@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.views.java;
 
+import com.opensymphony.xwork2.config.impl.LocatableFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 
@@ -115,11 +116,12 @@ public class DefaultTheme implements Theme {
 
         TagGenerator gen = (TagGenerator) handlers.get(0);
         try {
-            if (LOG.isTraceEnabled())
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("Rendering tag [#0]", tagName);
+            }
             gen.generate();
         } catch (IOException ex) {
-            throw new StrutsException("Unable to write tag: " + tagName);
+            throw new StrutsException("Unable to write tag: " + tagName, ex);
         }
     }
 

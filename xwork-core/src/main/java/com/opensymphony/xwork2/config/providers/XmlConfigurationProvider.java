@@ -260,7 +260,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
                         for (int k = 0; k < unknownHandlersSize; k++) {
                             Element unknownHandler = (Element) unknownHandlers.item(k);
-                            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name")));
+                            Location location = LocationUtils.getLocation(unknownHandler);
+                            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name"), location));
                         }
 
                         if (!unknownHandlerStack.isEmpty())

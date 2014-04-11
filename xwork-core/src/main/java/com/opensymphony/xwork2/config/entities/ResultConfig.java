@@ -47,6 +47,7 @@ public class ResultConfig extends Located implements Serializable {
         this.params = orig.params;
         this.name = orig.name;
         this.className = orig.className;
+        this.location = orig.location;
     }
 
     public String getClassName() {

@@ -20,6 +20,7 @@
  * under the License.
  */
 -->
+<!DOCTYPE html>
 <html>
     <style>
         .debugTable {
@@ -52,22 +53,9 @@
             background-color: #EEEEEE;
         }
     </style>
-    <script language="JavaScript" type="text/javascript">
-        // Dojo configuration
-        djConfig = {
-            isDebug: false,
-            bindEncoding: "UTF-8"
-            ,baseRelativePath: "${base}/struts/dojo/"
-            ,baseScriptUri: "${base}/struts/dojo/"
-        };
-    </script>
 
-
-
-    <script language="JavaScript" type="text/javascript"  src="${base}/struts/dojo/dojo.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script>
-        dojo.require("dojo.io.*");
-        
         function expand(src, path) {
           var baseUrl = location.href;
           var i = baseUrl.indexOf("&object=");
@@ -75,9 +63,7 @@
           if (baseUrl.indexOf("decorate") < 0) {
              baseUrl += "&decorate=false";
           } 
-          dojo.io.bind({
-            url: baseUrl,
-            load : function(type, data, evt) {
+          jQuery.get(baseUrl, function(data) {
               var div = document.createElement("div");
               div.innerHTML = data;
               src.parentNode.appendChild(div);
@@ -89,7 +75,6 @@
                 src.parentNode.removeChild(div);
                 src.onclick = oldonclick;
               };
-            }
           });
         }
     </script>

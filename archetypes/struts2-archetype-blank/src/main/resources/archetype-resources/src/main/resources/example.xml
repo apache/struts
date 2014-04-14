@@ -12,16 +12,16 @@
         <default-action-ref name="HelloWorld" />
 
         <action name="HelloWorld" class="${package}.example.HelloWorld">
-            <result>/example/HelloWorld.jsp</result>
+            <result>/WEB-INF/example/HelloWorld.jsp</result>
         </action>
 
         <action name="Login_*" method="{1}" class="${package}.example.Login">
-            <result name="input">/example/Login.jsp</result>
+            <result name="input">/WEB-INF/example/Login.jsp</result>
             <result type="redirectAction">Menu</result>
         </action>
 
         <action name="*" class="${package}.example.ExampleSupport">
-            <result>/example/{1}.jsp</result>
+            <result>/WEB-INF/example/{1}.jsp</result>
         </action>
 
         <!-- Add additional "example" package actions here. -->

@@ -95,6 +95,10 @@ public class JdkLogger implements Logger {
         log.log(Level.FINEST, LoggerUtils.format(msg, args));
     }
 
+    public void trace(String msg, Object... args) {
+        log.log(Level.FINEST, LoggerUtils.format(msg, args));
+    }
+
     public void trace(String msg, Throwable ex, String... args) {
         log.log(Level.FINEST, LoggerUtils.format(msg, args), ex);
     }

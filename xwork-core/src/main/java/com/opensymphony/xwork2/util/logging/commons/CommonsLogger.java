@@ -88,6 +88,10 @@ public class CommonsLogger implements Logger {
         log.trace(LoggerUtils.format(msg, args));
     }
 
+    public void trace(String msg, Object... args) {
+        log.trace(LoggerUtils.format(msg, args));
+    }
+
     public void trace(String msg, Throwable ex, String... args) {
         log.trace(LoggerUtils.format(msg, args), ex);
     }

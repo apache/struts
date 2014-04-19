@@ -12,6 +12,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Interceptor is used to control with what http methods action can be called,
+ * if request with not allowed method was performed, {@link #badRequestResultName}
+ * will be returned or if action implements {@link HttpMethodAware}
+ * and {@link HttpMethodAware#getBadRequestResultName()} returns non-null result name,
+ * thus value will be used instead.
+ *
+ * To limit allowed http methods, annotate action class with {@link AllowedMethod} and specify
+ * which methods are allowed. You can also use shorter versions {@link GetOnly}, {@link PostOnly}
+ * and {@link GetPostOnly}
+ *
+ * @see HttpMethodAware
+ * @see HttpMethod
+ * @see AllowedMethod
+ * @see GetOnly
+ * @see PostOnly
+ * @see GetPostOnly
+ *
+ * @since 2.3.18
+ */
 public class HttpMethodInterceptor extends AbstractInterceptor {
 
     public static final Class[] HTTP_METHOD_ANNOTATIONS = { AllowedMethod.class, PostOnly.class, GetOnly.class, GetPostOnly.class };

@@ -8,6 +8,8 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.List;
  * will be returned or if action implements {@link HttpMethodAware}
  * and {@link HttpMethodAware#getBadRequestResultName()} returns non-null result name,
  * thus value will be used instead.
- *
+ * <p/>
  * To limit allowed http methods, annotate action class with {@link AllowedMethod} and specify
  * which methods are allowed. You can also use shorter versions {@link GetOnly}, {@link PostOnly}
  * and {@link GetPostOnly}
@@ -29,12 +31,11 @@ import java.util.List;
  * @see GetOnly
  * @see PostOnly
  * @see GetPostOnly
- *
  * @since 2.3.18
  */
 public class HttpMethodInterceptor extends AbstractInterceptor {
 
-    public static final Class[] HTTP_METHOD_ANNOTATIONS = { AllowedMethod.class, PostOnly.class, GetOnly.class, GetPostOnly.class };
+    public static final Class[] HTTP_METHOD_ANNOTATIONS = {AllowedMethod.class, PostOnly.class, GetOnly.class, GetPostOnly.class};
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpMethodInterceptor.class);
 
@@ -49,48 +50,57 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
                 LOG.debug("Action #0 implements #1, setting request method #3",
                         action, HttpMethodAware.class.getSimpleName(), request.getMethod());
             }
-            ((HttpMethodAware) (action)).setMethod(HttpMethod.valueOf(request.getMethod()));
+            ((HttpMethodAware) (action)).setMethod(HttpMethod.parse(request.getMethod()));
         }
-        if (AnnotationUtils.isAnnotatedBy(action.getClass(), HTTP_METHOD_ANNOTATIONS)) {
+        if (invocation.getProxy().isMethodSpecified()) {
+            Method method = action.getClass().getMethod(invocation.getProxy().getMethod(), new Class[0]);
+            if (AnnotationUtils.isAnnotatedBy(method, HTTP_METHOD_ANNOTATIONS)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Action's method #0 annotated with #1, checking if request #2 meets allowed methods!",
+                            invocation.getProxy().getMethod(), AllowedMethod.class.getSimpleName(), request.getMethod());
+                }
+                return doIntercept(invocation, method);
+            }
+        } else if (AnnotationUtils.isAnnotatedBy(action.getClass(), HTTP_METHOD_ANNOTATIONS)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Action #0 annotated with #1, checking if request #2 meets allowed methods!",
                         action, AllowedMethod.class.getSimpleName(), request.getMethod());
             }
-            return doIntercept(invocation);
+            return doIntercept(invocation, action.getClass());
         }
         return invocation.invoke();
     }
 
-    protected String doIntercept(ActionInvocation invocation) throws Exception {
-        List<HttpMethod> allowedMethods = readAllowedMethods(invocation.getAction().getClass());
+    protected String doIntercept(ActionInvocation invocation, AnnotatedElement element) throws Exception {
+        List<HttpMethod> allowedMethods = readAllowedMethods(element);
         HttpServletRequest request = ServletActionContext.getRequest();
-        HttpMethod requestedMethod = HttpMethod.valueOf(request.getMethod());
+        HttpMethod requestedMethod = HttpMethod.parse(request.getMethod());
         if (allowedMethods.contains(requestedMethod)) {
-            if(LOG.isTraceEnabled()) {
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("Request method #0 matches allowed methods #1, continuing invocation!", requestedMethod, allowedMethods);
             }
             return invocation.invoke();
         } else {
-            if(LOG.isTraceEnabled()) {
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("Request method #0 doesn't match allowed methods #1, continuing invocation!", requestedMethod, allowedMethods);
             }
             return getBadRequestResultName(invocation);
         }
     }
 
-    protected List<HttpMethod> readAllowedMethods(Class<? extends Object> klass) {
+    protected List<HttpMethod> readAllowedMethods(AnnotatedElement element) {
         List<HttpMethod> allowedMethods = Collections.emptyList();
-        if (AnnotationUtils.isAnnotatedBy(klass, AllowedMethod.class)) {
-            allowedMethods = Arrays.asList(klass.getAnnotation(AllowedMethod.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, AllowedMethod.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(AllowedMethod.class).value());
         }
-        if (AnnotationUtils.isAnnotatedBy(klass, GetOnly.class)) {
-            allowedMethods = Arrays.asList(klass.getAnnotation(GetOnly.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, GetOnly.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(GetOnly.class).value());
         }
-        if (AnnotationUtils.isAnnotatedBy(klass, PostOnly.class)) {
-            allowedMethods = Arrays.asList(klass.getAnnotation(PostOnly.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, PostOnly.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(PostOnly.class).value());
         }
-        if (AnnotationUtils.isAnnotatedBy(klass, GetPostOnly.class)) {
-            allowedMethods = Arrays.asList(klass.getAnnotation(GetPostOnly.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, GetPostOnly.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(GetPostOnly.class).value());
         }
         return Collections.unmodifiableList(allowedMethods);
     }

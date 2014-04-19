@@ -18,9 +18,11 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class AnnotationUtils {
      * @param clazz           The {@link Class} to inspect
      * @param allFields       list of all fields
      */
-    public static void addAllFields(Class<? extends Annotation> annotationClass, Class clazz, List<Field> allFields) {
+    public static void addAllFields(Class<? extends Annotation> annotationClass, Class<?> clazz, List<Field> allFields) {
 
         if (clazz == null) {
             return;
@@ -76,7 +78,7 @@ public class AnnotationUtils {
      * @param clazz           The {@link Class} to inspect
      * @param allMethods      list of all methods
      */
-    public static void addAllMethods(Class<? extends Annotation> annotationClass, Class clazz, List<Method> allMethods) {
+    public static void addAllMethods(Class<? extends Annotation> annotationClass, Class<?> clazz, List<Method> allMethods) {
 
         if (clazz == null) {
             return;
@@ -97,12 +99,12 @@ public class AnnotationUtils {
      * @param clazz         The {@link Class} to inspect
      * @param allInterfaces list of all interfaces
      */
-    public static void addAllInterfaces(Class clazz, List<Class> allInterfaces) {
+    public static void addAllInterfaces(Class<?> clazz, List<Class<?>> allInterfaces) {
         if (clazz == null) {
             return;
         }
 
-        Class[] interfaces = clazz.getInterfaces();
+        Class<?>[] interfaces = clazz.getInterfaces();
         allInterfaces.addAll(Arrays.asList(interfaces));
         addAllInterfaces(clazz.getSuperclass(), allInterfaces);
     }
@@ -189,4 +191,21 @@ public class AnnotationUtils {
 
         return anns;
     }
+
+    /**
+     * Varargs version of <code>AnnotatedElement.isAnnotationPresent()</code>
+     *
+     * @see AnnotatedElement
+     */
+    @SafeVarargs
+    public static boolean isAnnotatedBy(AnnotatedElement annotatedElement, Class<? extends Annotation>... annotation) {
+        if (ArrayUtils.isEmpty(annotation)) return false;
+
+        for (Class<? extends Annotation> c : annotation) {
+            if (annotatedElement.isAnnotationPresent(c)) return true;
+        }
+
+        return false;
+    }
+
 }

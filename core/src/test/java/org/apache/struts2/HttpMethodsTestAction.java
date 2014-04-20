@@ -1,7 +1,7 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.httpmethod.AllowedMethod;
+import org.apache.struts2.interceptor.httpmethod.AllowedHttpMethod;
 import org.apache.struts2.interceptor.httpmethod.GetOnly;
 import org.apache.struts2.interceptor.httpmethod.GetPostOnly;
 import org.apache.struts2.interceptor.httpmethod.HttpMethod;
@@ -10,7 +10,7 @@ import org.apache.struts2.interceptor.httpmethod.PostOnly;
 
 import static org.apache.struts2.interceptor.httpmethod.HttpMethod.POST;
 
-@AllowedMethod(POST)
+@AllowedHttpMethod(POST)
 public class HttpMethodsTestAction extends ActionSupport implements HttpMethodAware {
 
     private String resultName = null;

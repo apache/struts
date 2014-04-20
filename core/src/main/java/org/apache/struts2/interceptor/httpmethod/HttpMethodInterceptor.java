@@ -21,13 +21,13 @@ import java.util.List;
  * and {@link HttpMethodAware#getBadRequestResultName()} returns non-null result name,
  * thus value will be used instead.
  * <p/>
- * To limit allowed http methods, annotate action class with {@link AllowedMethod} and specify
+ * To limit allowed http methods, annotate action class with {@link AllowedHttpMethod} and specify
  * which methods are allowed. You can also use shorter versions {@link GetOnly}, {@link PostOnly}
  * and {@link GetPostOnly}
  *
  * @see HttpMethodAware
  * @see HttpMethod
- * @see AllowedMethod
+ * @see AllowedHttpMethod
  * @see GetOnly
  * @see PostOnly
  * @see GetPostOnly
@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class HttpMethodInterceptor extends AbstractInterceptor {
 
-    public static final Class[] HTTP_METHOD_ANNOTATIONS = {AllowedMethod.class, PostOnly.class, GetOnly.class, GetPostOnly.class};
+    public static final Class[] HTTP_METHOD_ANNOTATIONS = {AllowedHttpMethod.class, PostOnly.class, GetOnly.class, GetPostOnly.class};
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpMethodInterceptor.class);
 
@@ -57,14 +57,14 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
             if (AnnotationUtils.isAnnotatedBy(method, HTTP_METHOD_ANNOTATIONS)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Action's method #0 annotated with #1, checking if request #2 meets allowed methods!",
-                            invocation.getProxy().getMethod(), AllowedMethod.class.getSimpleName(), request.getMethod());
+                            invocation.getProxy().getMethod(), AllowedHttpMethod.class.getSimpleName(), request.getMethod());
                 }
                 return doIntercept(invocation, method);
             }
         } else if (AnnotationUtils.isAnnotatedBy(action.getClass(), HTTP_METHOD_ANNOTATIONS)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Action #0 annotated with #1, checking if request #2 meets allowed methods!",
-                        action, AllowedMethod.class.getSimpleName(), request.getMethod());
+                        action, AllowedHttpMethod.class.getSimpleName(), request.getMethod());
             }
             return doIntercept(invocation, action.getClass());
         }
@@ -90,8 +90,8 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
 
     protected List<HttpMethod> readAllowedMethods(AnnotatedElement element) {
         List<HttpMethod> allowedMethods = Collections.emptyList();
-        if (AnnotationUtils.isAnnotatedBy(element, AllowedMethod.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(AllowedMethod.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, AllowedHttpMethod.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(AllowedHttpMethod.class).value());
         }
         if (AnnotationUtils.isAnnotatedBy(element, GetOnly.class)) {
             allowedMethods = Arrays.asList(element.getAnnotation(GetOnly.class).value());

@@ -7,6 +7,7 @@ package org.apache.struts2.interceptor.httpmethod;
  * Another function of this interface is to return result which should be returned when action
  * was called with wrong http method
  *
+ * @see HttpMethodInterceptor
  * @since 2.3.18
  */
 public interface HttpMethodAware {

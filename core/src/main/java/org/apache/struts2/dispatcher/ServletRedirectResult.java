@@ -196,32 +196,31 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             if (prependServletContext && (request.getContextPath() != null) && (request.getContextPath().length() > 0)) {
                 finalLocation = request.getContextPath() + finalLocation;
             }
+        }
+        ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(invocation.getResultCode());
+        if (resultConfig != null) {
+            Map<String, String> resultConfigParams = resultConfig.getParams();
 
-            ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(invocation.getResultCode());
-            if (resultConfig != null) {
-                Map<String, String> resultConfigParams = resultConfig.getParams();
-
-                List<String> prohibitedResultParams = getProhibitedResultParams();
-                for (Map.Entry<String, String> e : resultConfigParams.entrySet()) {
-                    if (!prohibitedResultParams.contains(e.getKey())) {
-                        Collection<String> values = conditionalParseCollection(e.getValue(), invocation, suppressEmptyParameters);
-                        if (!suppressEmptyParameters || !values.isEmpty()) {
-                            requestParameters.put(e.getKey(), values);
-                        }
+            List<String> prohibitedResultParams = getProhibitedResultParams();
+            for (Map.Entry<String, String> e : resultConfigParams.entrySet()) {
+                if (!prohibitedResultParams.contains(e.getKey())) {
+                    Collection<String> values = conditionalParseCollection(e.getValue(), invocation, suppressEmptyParameters);
+                    if (!suppressEmptyParameters || !values.isEmpty()) {
+                        requestParameters.put(e.getKey(), values);
                     }
                 }
             }
-
-            StringBuilder tmpLocation = new StringBuilder(finalLocation);
-            urlHelper.buildParametersString(requestParameters, tmpLocation, "&");
-
-            // add the anchor
-            if (anchor != null) {
-                tmpLocation.append('#').append(anchor);
-            }
-
-            finalLocation = response.encodeRedirectURL(tmpLocation.toString());
         }
+
+        StringBuilder tmpLocation = new StringBuilder(finalLocation);
+        urlHelper.buildParametersString(requestParameters, tmpLocation, "&");
+
+        // add the anchor
+        if (anchor != null) {
+            tmpLocation.append('#').append(anchor);
+        }
+
+        finalLocation = response.encodeRedirectURL(tmpLocation.toString());
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Redirecting to finalLocation " + finalLocation);

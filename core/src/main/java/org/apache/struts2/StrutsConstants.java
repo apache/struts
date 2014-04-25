@@ -281,4 +281,8 @@ public final class StrutsConstants {
 
     /** Allows override default DispatcherErrorHandler **/
     public static final String STRUTS_DISPATCHER_ERROR_HANDLER = "struts.dispatcher.errorHandler";
+
+    /** Comma delimited set of excluded properties which cannot be accessed via expressions **/
+    public static final String STRUTS_EXCLUDED_PROPERTIES = "struts.excludedProperties";
+
 }

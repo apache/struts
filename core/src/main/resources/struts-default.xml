@@ -37,6 +37,9 @@
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
+
+    <constant name="struts.excludedProperties" value="getClass,class,hashCode,toString,clone,equals,finalize,notify,notifyAll,wait" />
+
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />
     <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultActionFactory" />

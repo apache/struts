@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
@@ -36,7 +37,9 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -57,6 +60,8 @@ public class OgnlUtil {
     private boolean devMode = false;
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
+
+    private Set<String> excludedProperties = new HashSet<String>();
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -80,6 +85,11 @@ public class OgnlUtil {
             LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
                     "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
         }
+    }
+
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PROPERTIES, required = false)
+    public void setExcludedProperties(String commaDelimitedProperties) {
+        excludedProperties = TextParseUtil.commaDelimitedStringToSet(commaDelimitedProperties);
     }
 
     /**
@@ -279,11 +289,13 @@ public class OgnlUtil {
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkEnableEvalExpression(tree, context);
+                checkExcludedPropertiesAccess(tree, null);
                 expressions.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
             checkEnableEvalExpression(tree, context);
+            checkExcludedPropertiesAccess(tree, null);
         }
 
 
@@ -291,6 +303,20 @@ public class OgnlUtil {
         if(enableExpressionCache)
             expressions.putIfAbsent(expression, tree);
         return exec;
+    }
+
+    private void checkExcludedPropertiesAccess(Object tree, SimpleNode parent) throws OgnlException {
+        if (tree instanceof SimpleNode) {
+            SimpleNode node = (SimpleNode) tree;
+            for (String excludedPattern : excludedProperties) {
+                if (excludedPattern.equalsIgnoreCase(node.toString())) {
+                    throw new OgnlException("Tree [" + (parent != null ? parent : tree) + "] trying access excluded pattern [" + excludedPattern + "]");
+                }
+               for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+                   checkExcludedPropertiesAccess(node.jjtGetChild(i), node);
+               }
+            }
+        }
     }
 
     public Object compile(String expression, Map<String, Object> context) throws OgnlException {

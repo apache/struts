@@ -161,12 +161,14 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         // given
         final String pollution1 = "class.classLoader.jarPath";
         final String pollution2 = "model.class.classLoader.jarPath";
+        final String pollution3 = "class.classLoader.defaultAssertionStatus";
 
         loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
                 put(pollution2, "very bad");
+                put(pollution3, true);
             }
         };
 
@@ -190,16 +192,19 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, params);
 
         // then
-        assertEquals(2, action.getActionMessages().size());
+        assertEquals(3, action.getActionMessages().size());
 
         String msg1 = action.getActionMessage(0);
         String msg2 = action.getActionMessage(1);
+        String msg3 = action.getActionMessage(2);
 
-        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg1);
-        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg2);
+        assertEquals("Error setting expression 'class.classLoader.defaultAssertionStatus' with value 'true'", msg1);
+        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg2);
+        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg3);
 
         assertFalse(excluded.get(pollution1));
         assertFalse(excluded.get(pollution2));
+        assertFalse(excluded.get(pollution3));
     }
 
     public void testDoesNotAllowMethodInvocations() throws Exception {

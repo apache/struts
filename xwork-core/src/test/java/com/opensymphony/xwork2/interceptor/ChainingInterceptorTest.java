@@ -138,6 +138,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
 
     public void testNullCompoundRootElementAllowsProcessToContinue() throws Exception {
         // we should not get NPE, but instead get a warning logged.
+        mockInvocation.expectAndReturn("getAction", new TestBeanAction());
         stack.push(null);
         stack.push(null);
         stack.push(null);

@@ -22,14 +22,14 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import ognl.OgnlException;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,17 +46,7 @@ import java.util.Map;
  */
 public class DefaultActionInvocation implements ActionInvocation {
 
-    private static final long serialVersionUID = -585293628862447329L;
-
-    //static {
-    //    if (ObjectFactory.getContinuationPackage() != null) {
-    //        continuationHandler = new ContinuationHandler();
-    //    }
-    //}
     private static final Logger LOG = LoggerFactory.getLogger(DefaultActionInvocation.class);
-
-    private static final Class[] EMPTY_CLASS_ARRAY   = new Class[0];
-    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     protected Object action;
     protected ActionProxy proxy;
@@ -75,6 +65,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected ValueStackFactory valueStackFactory;
     protected Container container;
     protected UnknownHandlerManager unknownHandlerManager;
+    protected OgnlUtil ognlUtil;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
         this.extraContext = extraContext;
@@ -104,6 +95,11 @@ public class DefaultActionInvocation implements ActionInvocation {
     @Inject(required=false)
     public void setActionEventListener(ActionEventListener listener) {
         this.actionEventListener = listener;
+    }
+
+    @Inject
+    public void setOgnlUtil(OgnlUtil ognlUtil) {
+        this.ognlUtil = ognlUtil;
     }
 
     public Object getAction() {
@@ -420,22 +416,19 @@ public class DefaultActionInvocation implements ActionInvocation {
         try {
             UtilTimerStack.push(timerKey);
 
-            boolean methodCalled = false;
-            Object methodResult = null;
-            Method method = null;
+            Object methodResult;
             try {
-                method = getAction().getClass().getMethod(methodName, EMPTY_CLASS_ARRAY);
-            } catch (NoSuchMethodException e) {
+                methodResult = ognlUtil.getValue(methodName + "()", getStack().getContext(), action);
+            } catch (OgnlException e) {
                 // hmm -- OK, try doXxx instead
                 try {
-                    String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
-                    method = getAction().getClass().getMethod(altMethodName, EMPTY_CLASS_ARRAY);
-                } catch (NoSuchMethodException e1) {
+                    String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1)  + "()";
+                    methodResult = ognlUtil.getValue(altMethodName, ActionContext.getContext().getContextMap(), action);
+                } catch (OgnlException e1) {
                     // well, give the unknown handler a shot
                     if (unknownHandlerManager.hasUnknownHandlers()) {
                         try {
                             methodResult = unknownHandlerManager.handleUnknownMethod(action, methodName);
-                            methodCalled = true;
                         } catch (NoSuchMethodException e2) {
                             // throw the original one
                             throw e;
@@ -445,29 +438,18 @@ public class DefaultActionInvocation implements ActionInvocation {
                     }
                 }
             }
-
-            if (!methodCalled) {
-                methodResult = method.invoke(action, EMPTY_OBJECT_ARRAY);
-            }
-
             return saveResult(actionConfig, methodResult);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("The " + methodName + "() is not defined in action " + getAction().getClass() + "");
-        } catch (InvocationTargetException e) {
+        } catch (OgnlException e) {
             // We try to return the source exception.
-            Throwable t = e.getTargetException();
+            //Throwable t = e.getTargetException();
 
             if (actionEventListener != null) {
-                String result = actionEventListener.handleException(t, getStack());
+                String result = actionEventListener.handleException(e, getStack());
                 if (result != null) {
                     return result;
                 }
             }
-            if (t instanceof Exception) {
-                throw (Exception) t;
-            } else {
-                throw e;
-            }
+            throw e;
         } finally {
             UtilTimerStack.pop(timerKey);
         }

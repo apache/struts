@@ -1,9 +1,14 @@
 package com.opensymphony.xwork2;
 
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
+import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +44,9 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         mockInterceptor3.setExpectedFoo("test3");
 
         DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocationTester(interceptorMappings);
+        container.inject(defaultActionInvocation);
+        defaultActionInvocation.stack = container.getInstance(ValueStackFactory.class).createValueStack();
+
         defaultActionInvocation.invoke();
         assertTrue(mockInterceptor1.isExecuted());
         assertTrue(mockInterceptor2.isExecuted());

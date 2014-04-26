@@ -309,7 +309,8 @@ public class OgnlUtil {
         if (tree instanceof SimpleNode) {
             SimpleNode node = (SimpleNode) tree;
             for (String excludedPattern : excludedProperties) {
-                if (excludedPattern.equalsIgnoreCase(node.toString())) {
+                // TODO lukaszlenart: need a better way to check 'toString' and 'toString()' call
+                if (excludedPattern.equalsIgnoreCase(node.toString()) || (excludedPattern + "()").equalsIgnoreCase(node.toString())) {
                     throw new OgnlException("Tree [" + (parent != null ? parent : tree) + "] trying access excluded pattern [" + excludedPattern + "]");
                 }
                for (int i = 0; i < node.jjtGetNumChildren(); i++) {

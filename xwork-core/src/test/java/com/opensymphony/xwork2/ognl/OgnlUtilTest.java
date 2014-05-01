@@ -685,6 +685,24 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(expected.getMessage(), "Tree [class[\"classLoader\"][\"defaultAssertionStatus\"]] trying access excluded pattern [class]");
     }
 
+    public void testAvoidCallingMethodsOnObjectClassAsMap2() throws Exception {
+        Foo foo = new Foo();
+        OgnlUtil util = new OgnlUtil();
+        util.setEnableExpressionCache("false");
+        util.setExcludedProperties("class");
+
+        Exception expected = null;
+        try {
+            util.setValue("model['class']['classLoader']['defaultAssertionStatus']", ActionContext.getContext().getContextMap(), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(expected.getClass(), OgnlException.class);
+        assertEquals(expected.getMessage(), "Tree [class[\"classLoader\"][\"defaultAssertionStatus\"]] trying access excluded pattern [class]");
+    }
+
     public void testAvoidCallingMethodsOnObjectClassAsMapWithQuotes() throws Exception {
         Foo foo = new Foo();
         OgnlUtil util = new OgnlUtil();
@@ -719,6 +737,42 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertNotNull(expected);
         assertSame(expected.getClass(), OgnlException.class);
         assertEquals(expected.getMessage(), "Tree [toString] trying access excluded pattern [toString]");
+    }
+
+    public void testAvoidCallingMethodsWithBraces() throws Exception {
+        Foo foo = new Foo();
+        OgnlUtil util = new OgnlUtil();
+        util.setEnableExpressionCache("false");
+        util.setExcludedProperties("toString");
+
+        Exception expected = null;
+        try {
+            util.setValue("toString()", ActionContext.getContext().getContextMap(), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(expected.getClass(), OgnlException.class);
+        assertEquals(expected.getMessage(), "Tree [toString()] trying access excluded pattern [toString()]");
+    }
+
+    public void testAvoidCallingSomeClasses() throws Exception {
+        Foo foo = new Foo();
+        OgnlUtil util = new OgnlUtil();
+        util.setEnableExpressionCache("false");
+        util.setExcludedProperties("Runtime");
+
+        Exception expected = null;
+        try {
+            util.setValue("@java.lang.Runtime@getRuntime().exec('mate')", ActionContext.getContext().getContextMap(), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(expected.getClass(), OgnlException.class);
+        assertEquals(expected.getMessage(), "Tree [toString()] trying access excluded pattern [toString()]");
     }
 
     public static class Email {

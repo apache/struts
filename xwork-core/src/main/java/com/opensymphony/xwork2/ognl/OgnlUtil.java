@@ -89,7 +89,11 @@ public class OgnlUtil {
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PROPERTIES, required = false)
     public void setExcludedProperties(String commaDelimitedProperties) {
-        excludedProperties = TextParseUtil.commaDelimitedStringToSet(commaDelimitedProperties);
+        Set<String> props = TextParseUtil.commaDelimitedStringToSet(commaDelimitedProperties);
+        for (String prop : props) {
+            excludedProperties.add(prop);
+            excludedProperties.add(prop + "()");
+        }
     }
 
     /**
@@ -309,8 +313,7 @@ public class OgnlUtil {
         if (tree instanceof SimpleNode) {
             SimpleNode node = (SimpleNode) tree;
             for (String excludedPattern : excludedProperties) {
-                // TODO lukaszlenart: need a better way to check 'toString' and 'toString()' call
-                if (excludedPattern.equalsIgnoreCase(node.toString()) || (excludedPattern + "()").equalsIgnoreCase(node.toString())) {
+                if (excludedPattern.equalsIgnoreCase(node.toString())) {
                     throw new OgnlException("Tree [" + (parent != null ? parent : tree) + "] trying access excluded pattern [" + excludedPattern + "]");
                 }
                for (int i = 0; i < node.jjtGetNumChildren(); i++) {

@@ -183,6 +183,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 return result;
             }
 
+            @Override
+            protected void initializeHardCodedExcludePatterns() {
+                excludeParams = new HashSet<Pattern>();
+            }
         };
 
         container.inject(pi);

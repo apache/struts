@@ -35,6 +35,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
+    private Set<Class<?>> excludedClasses = Collections.emptySet();
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -49,6 +50,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     public boolean isAccessible(Map context, Object target, Member member,
                                 String propertyName) {
 
+        if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
+            return false;
+        }
         boolean allow = true;
         int modifiers = member.getModifiers();
         if (Modifier.isStatic(modifiers)) {
@@ -72,6 +76,15 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
 
         return isAcceptableProperty(propertyName);
+    }
+
+    protected boolean isClassExcluded(Class<?> targetClass, Class<?> declaringClass) {
+        for (Class excludedClass : excludedClasses) {
+            if (targetClass.isAssignableFrom(excludedClass) || declaringClass.isAssignableFrom(excludedClass)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean isAcceptableProperty(String name) {
@@ -113,6 +126,10 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
         this.acceptProperties = acceptedProperties;
+    }
+
+    public void setExcludedClasses(Set<Class<?>> excludedClasses) {
+        this.excludedClasses = excludedClasses;
     }
 
 }

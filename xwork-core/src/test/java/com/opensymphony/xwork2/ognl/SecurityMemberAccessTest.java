@@ -84,7 +84,7 @@ public class SecurityMemberAccessTest extends TestCase {
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
 
         String propertyName = "barLogic";
-        Member member = FooBar.class.getMethod("barLogic");
+        Member member = BarInterface.class.getMethod(propertyName);
 
         Set<Class<?>> excluded = new HashSet<Class<?>>();
         excluded.add(BarInterface.class);
@@ -97,9 +97,83 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
     }
 
+    public void testMiddleOfInheritanceExclusion1() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        String propertyName = "fooLogic";
+        Member member = FooBar.class.getMethod(propertyName);
+
+        Set<Class<?>> excluded = new HashSet<Class<?>>();
+        excluded.add(BarInterface.class);
+        sma.setExcludedClasses(excluded);
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue("fooLogic() from FooInterface isn't accessible!!!", accessible);
+    }
+
+    public void testMiddleOfInheritanceExclusion2() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        String propertyName = "barLogic";
+        Member member = BarInterface.class.getMethod(propertyName);
+
+        Set<Class<?>> excluded = new HashSet<Class<?>>();
+        excluded.add(BarInterface.class);
+        sma.setExcludedClasses(excluded);
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
+    }
+
+    public void testMiddleOfInheritanceExclusion3() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        String propertyName = "barLogic";
+        Member member = BarInterface.class.getMethod(propertyName);
+
+/*
+        Set<Class<?>> excluded = new HashSet<Class<?>>();
+        excluded.add(BarInterface.class);
+        sma.setExcludedClasses(excluded);
+*/
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue("barLogic() from BarInterface isn't accessible!!!", accessible);
+    }
+
+    public void testMiddleOfInheritanceExclusion4() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        String propertyName = "barLogic";
+        Member member = BarInterface.class.getMethod(propertyName);
+
+        Set<Class<?>> excluded = new HashSet<Class<?>>();
+        excluded.add(FooBarInterface.class);
+        sma.setExcludedClasses(excluded);
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
+    }
+
 }
 
-class FooBar implements FooInterface {
+class FooBar implements FooBarInterface {
 
     private String stringField;
 
@@ -126,7 +200,7 @@ class FooBar implements FooInterface {
 
 }
 
-interface FooInterface extends BarInterface {
+interface FooInterface {
 
     String fooLogic();
 
@@ -135,5 +209,9 @@ interface FooInterface extends BarInterface {
 interface BarInterface {
 
     String barLogic();
+
+}
+
+interface FooBarInterface extends FooInterface, BarInterface {
 
 }

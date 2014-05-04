@@ -49,10 +49,10 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
-
         if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
             return false;
         }
+
         boolean allow = true;
         int modifiers = member.getModifiers();
         if (Modifier.isStatic(modifiers)) {
@@ -83,7 +83,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return true;
         }
         for (Class<?> excludedClass : excludedClasses) {
-            if (excludedClass.isAssignableFrom(targetClass) || declaringClass.isAssignableFrom(excludedClass)) {
+            if (targetClass.isAssignableFrom(excludedClass) || declaringClass.isAssignableFrom(excludedClass)) {
                 return true;
             }
         }

@@ -32,11 +32,13 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import junit.framework.Assert;
+import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 
 import java.io.File;
@@ -293,9 +295,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         //then
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
-        Object allowMethodAccess = stack.findValue("\u0023_memberAccess['allowStaticMethodAccess']");
-        assertNotNull(allowMethodAccess);
-        assertEquals(Boolean.FALSE, allowMethodAccess);
+        boolean allowMethodAccess = ((SecurityMemberAccess) ((OgnlContext) stack.getContext()).getMemberAccess()).getAllowStaticMethodAccess();
+        assertFalse(allowMethodAccess);
     }
 
     public void testParameters() throws Exception {
@@ -323,7 +324,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
         Map<String, String> existingMap = ((SimpleAction) proxy.getAction()).getTheProtectedMap();
-        assertEquals(0, existingMap.size());
+        assertEquals(4, existingMap.size());
     }
 
     public void testParametersWithChineseInTheName() throws Exception {
@@ -650,6 +651,13 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final Map<String, Object> expected = new HashMap<String, Object>() {
             {
                 put("ordinary.bean", "value");
+                put("#some.internal.object", "true");
+                put("(bla)#some.internal.object", "true");
+                put("#some.internal.object(bla)#some.internal.object", "true");
+                put("#_some.internal.object", "true");
+                put("\u0023_some.internal.object", "true");
+                put("\u0023_some.internal.object,[dfd],bla(\u0023_some.internal.object)", "true");
+                put("\\u0023_some.internal.object", "true");
             }
         };
 

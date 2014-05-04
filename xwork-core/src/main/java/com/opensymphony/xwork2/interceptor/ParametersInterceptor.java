@@ -141,20 +141,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParametersInterceptor.class);
 
-    public static final String ACCEPTED_PARAM_NAMES = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'\\])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*";
-
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
-
-    protected boolean ordered = false;
-    protected Set<Pattern> excludeParams = Collections.emptySet();
-    protected Set<Pattern> acceptParams = Collections.emptySet();
-
     private boolean devMode = false;
 
-    // Allowed names of parameters
-    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PARAM_NAMES);
+    protected boolean ordered = false;
+
+    protected Set<Pattern> excludeParams = Collections.emptySet();
+    protected Set<Pattern> acceptParams = Collections.emptySet();
 
     private ValueStackFactory valueStackFactory;
 
@@ -426,13 +421,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             }
             notifyDeveloper("Parameter [#0] didn't match acceptParams list of patterns!", paramName);
             return false;
-        } else {
-            boolean matches = acceptedPattern.matcher(paramName).matches();
-            if (!matches) {
-                notifyDeveloper("Parameter [#0] didn't match acceptedPattern pattern!", paramName);
-            }
-            return matches;
         }
+        return true;
     }
 
     protected boolean isExcluded(String paramName) {

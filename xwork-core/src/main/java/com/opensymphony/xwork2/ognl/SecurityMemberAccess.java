@@ -21,6 +21,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -47,8 +48,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     @Override
-    public boolean isAccessible(Map context, Object target, Member member,
-                                String propertyName) {
+    public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
 
         if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
             return false;
@@ -79,8 +79,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     protected boolean isClassExcluded(Class<?> targetClass, Class<?> declaringClass) {
-        for (Class excludedClass : excludedClasses) {
-            if (targetClass.isAssignableFrom(excludedClass) || declaringClass.isAssignableFrom(excludedClass)) {
+        if (targetClass == Object.class || declaringClass == Object.class) {
+            return true;
+        }
+        for (Class<?> excludedClass : excludedClasses) {
+            if (excludedClass.isAssignableFrom(targetClass) || declaringClass.isAssignableFrom(excludedClass)) {
                 return true;
             }
         }

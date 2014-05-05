@@ -15,13 +15,14 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import ognl.DefaultMemberAccess;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -32,6 +33,8 @@ import java.util.regex.Pattern;
  * Also blocks or allows access to properties.
  */
 public class SecurityMemberAccess extends DefaultMemberAccess {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityMemberAccess.class);
 
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
@@ -50,6 +53,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Target class [#0] and member type [#1] are excluded!", target, member);
+            }
             return false;
         }
 

@@ -187,10 +187,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 return result;
             }
 
-            @Override
-            protected void initializeHardCodedExcludePatterns() {
-                excludeParams = new HashSet<Pattern>();
-            }
         };
 
         container.inject(pi);
@@ -305,11 +301,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         final Map<String, Boolean> excluded = new HashMap<String, Boolean>();
         ParametersInterceptor pi = new ParametersInterceptor() {
-
-            @Override
-            protected void initializeHardCodedExcludePatterns() {
-                this.excludeParams = new HashSet<Pattern>();
-            }
 
             @Override
             protected boolean isExcluded(String paramName) {
@@ -742,11 +733,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // then
         assertEquals(expected, actual);
-    }
-
-    public void testExcludedPatternsGetInitialized() throws Exception {
-        ParametersInterceptor parametersInterceptor = new ParametersInterceptor();
-        assertEquals(ExcludedPatterns.EXCLUDED_PATTERNS.length, parametersInterceptor.excludeParams.size());
     }
 
     private ValueStack injectValueStack(Map<String, Object> actual) {

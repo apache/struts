@@ -30,8 +30,8 @@
     </parent>
 
     <artifactId>struts2-rest-plugin</artifactId>
-    <version>2.3.18-SNAPSHOT</version>
     <name>Struts 2 REST Plugin</name>
+    <packaging>jar</packaging>
 
     <properties>
         <jackson.version>1.9.2</jackson.version>

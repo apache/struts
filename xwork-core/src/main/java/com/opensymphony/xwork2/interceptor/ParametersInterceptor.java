@@ -487,7 +487,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (excludePatterns != null) {
             excludeParams = new HashSet<Pattern>();
             for (String pattern : excludePatterns) {
-                excludeParams.add(Pattern.compile(pattern));
+                excludeParams.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
             }
         }
     }

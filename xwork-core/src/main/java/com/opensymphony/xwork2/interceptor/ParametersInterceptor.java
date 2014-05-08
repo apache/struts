@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ExcludedPatterns;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
@@ -148,15 +149,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
 
     protected boolean ordered = false;
-    protected Set<Pattern> excludeParams = Collections.emptySet();
+    protected Set<Pattern> excludeParams;
     protected Set<Pattern> acceptParams = Collections.emptySet();
 
     private boolean devMode = false;
 
     // Allowed names of parameters
-    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PARAM_NAMES);
+    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PARAM_NAMES, Pattern.CASE_INSENSITIVE);
 
     private ValueStackFactory valueStackFactory;
+
+    public ParametersInterceptor() {
+        initializeHardCodedExcludePatterns();
+    }
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -486,6 +491,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return excludeParams;
     }
 
+    protected void initializeHardCodedExcludePatterns() {
+        excludeParams = new HashSet<Pattern>();
+        for (String pattern : ExcludedPatterns.EXCLUDED_PATTERNS) {
+            excludeParams.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+        }
+    }
+
     /**
      * Sets a comma-delimited list of regular expressions to match
      * parameters that should be removed from the parameter map.
@@ -495,9 +507,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     public void setExcludeParams(String commaDelim) {
         Collection<String> excludePatterns = ArrayUtils.asCollection(commaDelim);
         if (excludePatterns != null) {
-            excludeParams = new HashSet<Pattern>();
             for (String pattern : excludePatterns) {
-                excludeParams.add(Pattern.compile(pattern));
+                excludeParams.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
             }
         }
     }

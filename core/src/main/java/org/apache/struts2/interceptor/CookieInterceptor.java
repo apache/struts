@@ -24,6 +24,7 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.ExcludedPatterns;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -32,6 +33,7 @@ import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.Cookie;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -173,7 +175,14 @@ public class CookieInterceptor extends AbstractInterceptor {
     private Set<String> cookiesValueSet = Collections.emptySet();
 
     // Allowed names of cookies
-    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PATTERN);
+    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PATTERN, Pattern.CASE_INSENSITIVE);
+    private Set<Pattern> excludedPatterns = new HashSet<Pattern>();
+
+    public CookieInterceptor() {
+        for (String pattern : ExcludedPatterns.EXCLUDED_PATTERNS) {
+            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+        }
+    }
 
     /**
      * Set the <code>cookiesName</code> which if matched will allow the cookie
@@ -223,7 +232,7 @@ public class CookieInterceptor extends AbstractInterceptor {
                 String name = cookie.getName();
                 String value = cookie.getValue();
 
-                if (acceptedPattern.matcher(name).matches()) {
+                if (isAcceptableName(name) && isAcceptableValue(value)) {
                     if (cookiesNameSet.contains("*")) {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name [" + name + "] with value [" + value + "] will be injected");
@@ -233,7 +242,7 @@ public class CookieInterceptor extends AbstractInterceptor {
                         populateCookieValueIntoStack(name, value, cookiesMap, stack);
                     }
                 } else {
-                    LOG.warn("Cookie name [" + name + "] does not match accepted cookie names pattern [" + acceptedPattern + "]");
+                    LOG.warn("Cookie name [#0] with value [#1] was rejected!", name, value);
                 }
             }
         }
@@ -242,6 +251,78 @@ public class CookieInterceptor extends AbstractInterceptor {
         injectIntoCookiesAwareAction(invocation.getAction(), cookiesMap);
 
         return invocation.invoke();
+    }
+
+    /**
+     * Checks if value of Cookie doesn't contain vulnerable code
+     *
+     * @param value of Cookie
+     * @return true|false
+     */
+    protected boolean isAcceptableValue(String value) {
+        for (Pattern excludedPattern : excludedPatterns) {
+            boolean matches = !excludedPattern.matcher(value).matches();
+            if (!matches) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Cookie value [#0] matches excludedPattern [#1]", value, excludedPattern.toString());
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if name of Cookie doesn't contain vulnerable code
+     *
+     * @param name of Cookie
+     * @return true|false
+     */
+    protected boolean isAcceptableName(String name) {
+        return !isExcluded(name) && isAccepted(name);
+    }
+
+    /**
+     * Checks if name of Cookie match {@link #acceptedPattern}
+     *
+     * @param name of Cookie
+     * @return true|false
+     */
+    protected boolean isAccepted(String name) {
+        boolean matches = acceptedPattern.matcher(name).matches();
+        if (matches) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Cookie [#0] matches acceptedPattern [#1]", name, ACCEPTED_PATTERN);
+            }
+        } else {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Cookie [#0] doesn't match acceptedPattern [#1]", name, ACCEPTED_PATTERN);
+            }
+        }
+        return matches;
+    }
+
+    /**
+     * Checks if name of Cookie match {@link #excludedPatterns}
+     *
+     * @param name of Cookie
+     * @return true|false
+     */
+    protected boolean isExcluded(String name) {
+        for (Pattern excludedPattern : excludedPatterns) {
+            boolean matches = excludedPattern.matcher(name).matches();
+            if (matches) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Cookie [#0] matches excludedPattern [#1]", name, excludedPattern.toString());
+                }
+                return true;
+            } else {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Cookie [#0] doesn't match excludedPattern [#1]", name, excludedPattern.toString());
+                }
+            }
+        }
+        return false;
     }
 
     /**

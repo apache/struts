@@ -383,6 +383,59 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedValue.get(pollution6));
     }
 
+    public void testCookiesWithStrutsInternalsAccess() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        String sessionCookieName = "session.userId";
+        String sessionCookieValue = "session.userId=1";
+        String appCookieName = "application.userId";
+        String appCookieValue = "application.userId=1";
+        String reqCookieName = "request.userId";
+        String reqCookieValue = "request.userId=1";
+
+        request.setCookies(
+                new Cookie(sessionCookieName, "1"),
+                new Cookie("1", sessionCookieValue),
+                new Cookie(appCookieName, "1"),
+                new Cookie("1", appCookieValue),
+                new Cookie(reqCookieName, "1"),
+                new Cookie("1", reqCookieValue)
+            );
+        ServletActionContext.setRequest(request);
+
+        final Map<String, Boolean> excludedName = new HashMap<String, Boolean>();
+        final Map<String, Boolean> excludedValue = new HashMap<String, Boolean>();
+
+        CookieInterceptor interceptor = new CookieInterceptor() {
+            @Override
+            protected boolean isAcceptableName(String name) {
+                boolean accepted = super.isAcceptableName(name);
+                excludedName.put(name, accepted);
+                return accepted;
+            }
+
+            @Override
+            protected boolean isAcceptableValue(String value) {
+                boolean accepted = super.isAcceptableValue(value);
+                excludedValue.put(value, accepted);
+                return accepted;
+            }
+        };
+        interceptor.setCookiesName("*");
+
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setAction(new MockActionWithCookieAware());
+
+        interceptor.intercept(invocation);
+
+        assertFalse(excludedName.get(sessionCookieName));
+        assertFalse(excludedName.get(appCookieName));
+        assertFalse(excludedName.get(reqCookieName));
+
+        assertFalse(excludedValue.get(sessionCookieValue));
+        assertFalse(excludedValue.get(appCookieValue));
+        assertFalse(excludedValue.get(reqCookieValue));
+    }
+
     public static class MockActionWithCookieAware extends ActionSupport implements CookiesAware {
 
         private static final long serialVersionUID = -6202290616812813386L;

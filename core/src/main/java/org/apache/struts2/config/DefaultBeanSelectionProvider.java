@@ -22,6 +22,7 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.LocaleProvider;
@@ -343,7 +344,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(ResultFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_RESULTFACTORY, builder, props);
         alias(ConverterFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_CONVERTERFACTORY, builder, props);
         alias(InterceptorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);
-        alias(ValidatorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);
+        alias(ValidatorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_VALIDATORFACTORY, builder, props);
 
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
 
@@ -383,6 +384,9 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
 
         alias(DispatcherErrorHandler.class, StrutsConstants.STRUTS_DISPATCHER_ERROR_HANDLER, builder, props);
 
+        /** Checker is used mostly in interceptors, so there be one instance of checker per interceptor with Scope.REQUEST **/
+        alias(ExcludedPatternsChecker.class, StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, builder, props, Scope.REQUEST);
+
         switchDevMode(props);
 
         // Convert Struts properties into XWork properties
@@ -392,6 +396,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         convertIfExist(props, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS);
         convertIfExist(props, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, XWorkConstants.RELOAD_XML_CONFIGURATION);
         convertIfExist(props, StrutsConstants.STRUTS_EXCLUDED_CLASSES, XWorkConstants.OGNL_EXCLUDED_CLASSES);
+        convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS);
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         loadCustomResourceBundles(props);

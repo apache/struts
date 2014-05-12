@@ -23,17 +23,18 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.ExcludedPatterns;
+import com.opensymphony.xwork2.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.Cookie;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -176,12 +177,12 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     // Allowed names of cookies
     private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PATTERN, Pattern.CASE_INSENSITIVE);
-    private Set<Pattern> excludedPatterns = new HashSet<Pattern>();
 
-    public CookieInterceptor() {
-        for (String pattern : ExcludedPatterns.EXCLUDED_PATTERNS) {
-            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-        }
+    private ExcludedPatternsChecker excludedPatternsChecker;
+
+    @Inject(StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER)
+    public void setExcludedPatternsChecker(ExcludedPatternsChecker excludedPatternsChecker) {
+        this.excludedPatternsChecker = excludedPatternsChecker;
     }
 
     /**
@@ -260,16 +261,7 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @return true|false
      */
     protected boolean isAcceptableValue(String value) {
-        for (Pattern excludedPattern : excludedPatterns) {
-            boolean matches = !excludedPattern.matcher(value).matches();
-            if (!matches) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Cookie value [#0] matches excludedPattern [#1]", value, excludedPattern.toString());
-                }
-                return false;
-            }
-        }
-        return true;
+        return !isExcluded(value) && isAccepted(value);
     }
 
     /**
@@ -283,7 +275,7 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Checks if name of Cookie match {@link #acceptedPattern}
+     * Checks if name/value of Cookie is acceptable
      *
      * @param name of Cookie
      * @return true|false
@@ -303,24 +295,21 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Checks if name of Cookie match {@link #excludedPatterns}
+     * Checks if name/value of Cookie is excluded
      *
      * @param name of Cookie
      * @return true|false
      */
     protected boolean isExcluded(String name) {
-        for (Pattern excludedPattern : excludedPatterns) {
-            boolean matches = excludedPattern.matcher(name).matches();
-            if (matches) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Cookie [#0] matches excludedPattern [#1]", name, excludedPattern.toString());
-                }
-                return true;
-            } else {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Cookie [#0] doesn't match excludedPattern [#1]", name, excludedPattern.toString());
-                }
+        ExcludedPatternsChecker.IsExcluded excluded = excludedPatternsChecker.isExcluded(name);
+        if (excluded.isExcluded()) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Cookie [#0] matches excludedPattern [#1]", name, excluded.getExcludedPattern());
             }
+            return true;
+        }
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Cookie [#0] doesn't match excludedPattern [#1]", name, excluded.getExcludedPattern());
         }
         return false;
     }

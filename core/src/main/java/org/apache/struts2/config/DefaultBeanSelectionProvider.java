@@ -313,6 +313,12 @@ import java.util.StringTokenizer;
  *     <td>Used to parse expressions like ${foo.bar} or %{bar.foo} but it is up tp the TextParser's
  *         implementation what kind of opening char to use (#, $, %, etc)</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.ExcludedPatternsChecker</td>
+ *     <td>struts.excludedPatterns.checker</td>
+ *     <td>request</td>
+ *     <td>Used across different interceptors to check if given string matches one of the excluded patterns</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->

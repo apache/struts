@@ -144,7 +144,7 @@
     <bean type="ognl.PropertyAccessor" name="java.util.HashSet" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
     <bean type="ognl.PropertyAccessor" name="java.util.HashMap" class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor" />
 
-    <bean type="com.opensymphony.xwork2.ExcludedPatternsChecker" name="struts" class="com.opensymphony.xwork2.ExcludedPatternsChecker" scope="request"/>
+    <bean type="com.opensymphony.xwork2.ExcludedPatternsChecker" name="struts" class="com.opensymphony.xwork2.DefaultExcludedPatternsChecker" scope="request"/>
 
     <constant name="struts.excludedPatterns.checker" value="struts"/>
 

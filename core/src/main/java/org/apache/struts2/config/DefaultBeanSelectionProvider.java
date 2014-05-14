@@ -390,8 +390,8 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
 
         alias(DispatcherErrorHandler.class, StrutsConstants.STRUTS_DISPATCHER_ERROR_HANDLER, builder, props);
 
-        /** Checker is used mostly in interceptors, so there be one instance of checker per interceptor with Scope.REQUEST **/
-        alias(ExcludedPatternsChecker.class, StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, builder, props, Scope.REQUEST);
+        /** Checker is used mostly in interceptors, so there be one instance of checker per interceptor with Scope.DEFAULT **/
+        alias(ExcludedPatternsChecker.class, StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, builder, props, Scope.DEFAULT);
 
         switchDevMode(props);
 

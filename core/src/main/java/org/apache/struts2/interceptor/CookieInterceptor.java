@@ -180,7 +180,7 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private ExcludedPatternsChecker excludedPatternsChecker;
 
-    @Inject(StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER)
+    @Inject
     public void setExcludedPatternsChecker(ExcludedPatternsChecker excludedPatternsChecker) {
         this.excludedPatternsChecker = excludedPatternsChecker;
     }

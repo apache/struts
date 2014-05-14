@@ -198,7 +198,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
             throw new XWorkException(message, re);
         } else {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Error setting value", re);
+                LOG.warn("Error setting value [#0] with expression [#1]", re, value.toString(), expr);
             }
         }
     }

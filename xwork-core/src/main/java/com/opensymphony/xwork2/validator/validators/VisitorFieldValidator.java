@@ -192,25 +192,28 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
          * Translates a simple field name into a full field name in Ognl syntax
          *
          * @param fieldName field name in OGNL syntax
-         * @return field name in OGNL syntax
+         * @return full field name in OGNL syntax
          */
         @Override
         public String getFullFieldName(String fieldName) {
+            if (parent instanceof VisitorFieldValidator.AppendingValidatorContext) {
+                return parent.getFullFieldName(field + "." + fieldName);
+            }
             return field + "." + fieldName;
         }
 
-        public String getFullFieldNameFromParent(String fieldName) {
-            return parent.getFullFieldName(field + "." + fieldName);
+        public String getFieldNameWithField(String fieldName) {
+            return field + "." + fieldName;
         }
 
         @Override
         public void addActionError(String anErrorMessage) {
-            super.addFieldError(getFullFieldName(field), message + anErrorMessage);
+            super.addFieldError(getFieldNameWithField(field), message + anErrorMessage);
         }
 
         @Override
         public void addFieldError(String fieldName, String errorMessage) {
-            super.addFieldError(getFullFieldName(fieldName), message + errorMessage);
+            super.addFieldError(getFieldNameWithField(fieldName), message + errorMessage);
         }
     }
 }

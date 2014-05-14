@@ -1,5 +1,6 @@
 package com.opensymphony.xwork2;
 
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -7,7 +8,41 @@ import java.util.regex.Pattern;
  */
 public interface ExcludedPatternsChecker {
 
+    /**
+     * Checks if value matches any of patterns on exclude list
+     *
+     * @param value to check
+     * @return object containing result of matched pattern and pattern itself
+     */
     public IsExcluded isExcluded(String value);
+
+    /**
+     * Allows add additional excluded patterns during runtime
+     *
+     * @param commaDelimitedPatterns comma delimited string with patterns
+     */
+    public void addExcludedPatterns(String commaDelimitedPatterns);
+
+    /**
+     * Allows add additional excluded patterns during runtime
+     *
+     * @param additionalPatterns array of additional excluded patterns
+     */
+    public void addExcludedPatterns(String[] additionalPatterns);
+
+    /**
+     * Allows add additional excluded patterns during runtime
+     *
+     * @param additionalPatterns set of additional patterns
+     */
+    public void addExcludedPatterns(Set<String> additionalPatterns);
+
+    /**
+     * Allow access list of all defined excluded patterns
+     *
+     * @return set of excluded patterns
+     */
+    public Set<Pattern> getExcludedPatterns();
 
     public final static class IsExcluded {
 

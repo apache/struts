@@ -46,29 +46,14 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
         }
     }
 
-    /**
-     * Allows add additional excluded patterns during runtime
-     *
-     * @param commaDelimitedPatterns comma delimited string with patterns
-     */
     public void addExcludedPatterns(String commaDelimitedPatterns) {
         addExcludedPatterns(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns));
     }
 
-    /**
-     * Allows add additional excluded patterns during runtime
-     *
-     * @param additionalPatterns array of additional excluded patterns
-     */
     public void addExcludedPatterns(String[] additionalPatterns) {
         addExcludedPatterns(new HashSet<String>(Arrays.asList(additionalPatterns)));
     }
 
-    /**
-     * Allows add additional excluded patterns during runtime
-     *
-     * @param additionalPatterns set of additional patterns
-     */
     public void addExcludedPatterns(Set<String> additionalPatterns) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Adding additional excluded patterns [#0]", additionalPatterns);
@@ -88,6 +73,10 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
             }
         }
         return IsExcluded.no();
+    }
+
+    public Set<Pattern> getExcludedPatterns() {
+        return excludedPatterns;
     }
 
 }

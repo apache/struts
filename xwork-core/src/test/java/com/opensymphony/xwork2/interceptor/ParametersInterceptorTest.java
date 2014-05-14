@@ -145,7 +145,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         };
 
-        pi.setExcludeParams("(.*\\.|^)class\\..*");
         container.inject(pi);
         ValueStack vs = ActionContext.getContext().getValueStack();
 
@@ -165,7 +164,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution2 = "model.class.classLoader.jarPath";
         final String pollution3 = "class.classLoader.defaultAssertionStatus";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-class-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -308,7 +307,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         };
 
-        pi.setExcludeParams("(.*\\.|^|.*|\\[('|\"))class(\\.|('|\")]|\\[).*");
         container.inject(pi);
         ValueStack vs = ActionContext.getContext().getValueStack();
 

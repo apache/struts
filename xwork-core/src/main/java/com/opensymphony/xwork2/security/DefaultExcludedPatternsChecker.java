@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class DefaultExcludedPatternsChecker implements com.opensymphony.xwork2.ExcludedPatternsChecker {
+public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultExcludedPatternsChecker.class);
 

@@ -27,7 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
-import com.opensymphony.xwork2.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;

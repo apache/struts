@@ -1,5 +1,6 @@
-package com.opensymphony.xwork2;
+package com.opensymphony.xwork2.security;
 
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
+public class DefaultExcludedPatternsChecker implements com.opensymphony.xwork2.ExcludedPatternsChecker {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultExcludedPatternsChecker.class);
 

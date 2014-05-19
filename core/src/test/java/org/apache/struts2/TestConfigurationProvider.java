@@ -24,7 +24,7 @@ package org.apache.struts2;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;

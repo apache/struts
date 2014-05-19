@@ -2,7 +2,7 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.DefaultTextProvider;
 import com.opensymphony.xwork2.DefaultUnknownHandlerManager;

@@ -373,7 +373,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
         Map<String, String> existingMap = ((SimpleAction) proxy.getAction()).getTheProtectedMap();
-        assertEquals(4, existingMap.size());
+        assertEquals(0, existingMap.size());
     }
 
     public void testParametersWithChineseInTheName() throws Exception {
@@ -479,7 +479,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         proxy.execute();
 
         SimpleAction action = (SimpleAction) proxy.getAction();
-        assertNull(action.getName());
+        assertEquals("try_1", action.getName());
         assertEquals("This is blah", (action).getBlah());
         assertEquals(123, action.getBaz());
     }
@@ -700,13 +700,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final Map<String, Object> expected = new HashMap<String, Object>() {
             {
                 put("ordinary.bean", "value");
-                put("#some.internal.object", "true");
-                put("(bla)#some.internal.object", "true");
-                put("#some.internal.object(bla)#some.internal.object", "true");
-                put("#_some.internal.object", "true");
-                put("\u0023_some.internal.object", "true");
-                put("\u0023_some.internal.object,[dfd],bla(\u0023_some.internal.object)", "true");
-                put("\\u0023_some.internal.object", "true");
             }
         };
 

@@ -285,10 +285,12 @@ public final class StrutsConstants {
     /** Comma delimited set of excluded classes which cannot be accessed via expressions **/
     public static final String STRUTS_EXCLUDED_CLASSES = "struts.excludedClasses";
 
-    /** Dedicated service to check if passed string is excluded or not **/
+    /** Dedicated services to check if passed string is excluded/accepted **/
     public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";
+    public static final String STRUTS_ACCEPTED_PATTERNS_CHECKER = "struts.acceptedPatterns.checker";
 
     /** Constant is used to override framework's default excluded patterns **/
     public static final String STRUTS_OVERRIDE_EXCLUDED_PATTERNS = "struts.override.excludedPatterns";
+    public static final String STRUTS_OVERRIDE_ACCEPTED_PATTERNS = "struts.override.acceptedPatterns";
 
 }

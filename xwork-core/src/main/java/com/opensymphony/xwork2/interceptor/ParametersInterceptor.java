@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkConstants;
@@ -151,9 +152,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected boolean ordered = false;
 
-    protected Set<Pattern> acceptParams = Collections.emptySet();
-
     private ValueStackFactory valueStackFactory;
+    private AcceptedPatternsChecker acceptedPatterns;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -170,23 +170,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         this.excludedPatterns = excludedPatterns;
     }
 
-    /**
-	 * Sets a comma-delimited list of regular expressions to match
-	 * parameters that are allowed in the parameter map (aka whitelist).
-	 * <p/>
-	 * Don't change the default unless you know what you are doing in terms
-	 * of security implications.
-	 *
-	 * @param commaDelim A comma-delimited list of regular expressions
-	 */
-	public void setAcceptParamNames(String commaDelim) {
-        Collection<String> acceptPatterns = ArrayUtils.asCollection(commaDelim);
-        if (acceptPatterns != null) {
-            acceptParams = new HashSet<Pattern>();
-            for (String pattern : acceptPatterns) {
-                acceptParams.add(Pattern.compile(pattern));
-            }
-        }
+    @Inject
+    public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
+        this.acceptedPatterns = acceptedPatterns;
     }
 
     /**
@@ -312,7 +298,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             //block or allow access to properties
             //see WW-2761 for more details
             MemberAccessValueStack accessValueStack = (MemberAccessValueStack) newStack;
-            accessValueStack.setAcceptProperties(acceptParams);
+            accessValueStack.setAcceptProperties(acceptedPatterns.getAcceptedPatterns());
             accessValueStack.setExcludeProperties(excludedPatterns.getExcludedPatterns());
         }
 
@@ -419,23 +405,18 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 	}
 
     protected boolean isAccepted(String paramName) {
-        if (!this.acceptParams.isEmpty()) {
-            for (Pattern pattern : acceptParams) {
-                Matcher matcher = pattern.matcher(paramName);
-                if (matcher.matches()) {
-                    return true;
-                }
-            }
-            notifyDeveloper("Parameter [#0] didn't match acceptParams list of patterns!", paramName);
-            return false;
+        AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
+        if (result.isAccepted()) {
+            return true;
         }
-        return true;
+        notifyDeveloper("Parameter [#0] didn't match accepted pattern [#1]!", paramName, String.valueOf(result.getAcceptedPattern()));
+        return false;
     }
 
     protected boolean isExcluded(String paramName) {
         ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
         if (result.isExcluded()) {
-            notifyDeveloper("Parameter [#0] is on the excludeParams list of patterns!", paramName);
+            notifyDeveloper("Parameter [#0] matches excluded pattern [#1]!", paramName, String.valueOf(result.getExcludedPattern()));
             return true;
         }
         return false;
@@ -467,6 +448,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      */
     public void setOrdered(boolean ordered) {
         this.ordered = ordered;
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions to match
+     * parameters that are allowed in the parameter map (aka whitelist).
+     * <p/>
+     * Don't change the default unless you know what you are doing in terms
+     * of security implications.
+     *
+     * @param commaDelim A comma-delimited list of regular expressions
+     */
+    public void setAcceptParamNames(String commaDelim) {
+        acceptedPatterns.addAcceptedPatterns(commaDelim);
     }
 
     /**

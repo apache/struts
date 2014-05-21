@@ -22,6 +22,7 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
@@ -392,6 +393,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
 
         /** Checker is used mostly in interceptors, so there be one instance of checker per interceptor with Scope.DEFAULT **/
         alias(ExcludedPatternsChecker.class, StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, builder, props, Scope.DEFAULT);
+        alias(AcceptedPatternsChecker.class, StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, builder, props, Scope.DEFAULT);
 
         switchDevMode(props);
 
@@ -403,6 +405,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         convertIfExist(props, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, XWorkConstants.RELOAD_XML_CONFIGURATION);
         convertIfExist(props, StrutsConstants.STRUTS_EXCLUDED_CLASSES, XWorkConstants.OGNL_EXCLUDED_CLASSES);
         convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS);
+        convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS);
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         loadCustomResourceBundles(props);

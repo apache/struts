@@ -2,6 +2,8 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.DefaultTextProvider;
@@ -173,6 +175,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(StringConverter.class, Scope.SINGLETON)
 
                 .factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class, Scope.DEFAULT)
+                .factory(AcceptedPatternsChecker.class, DefaultAcceptedPatternsChecker.class, Scope.DEFAULT)
         ;
 
         props.setProperty(XWorkConstants.DEV_MODE, Boolean.FALSE.toString());

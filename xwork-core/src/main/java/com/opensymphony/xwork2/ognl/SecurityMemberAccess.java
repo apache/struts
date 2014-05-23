@@ -54,15 +54,15 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         if (isPackageExcluded(target.getClass().getPackage(), member.getDeclaringClass().getPackage())) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Target package [#0] and member package [#1] are excluded!", target, member);
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Package of target [#0] or package of member [#1] are excluded!", target, member);
             }
             return false;
         }
 
         if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Target class [#0] and member type [#1] are excluded!", target, member);
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Target class [#0] or declaring class of member type [#1] are excluded!", target, member);
             }
             return false;
         }

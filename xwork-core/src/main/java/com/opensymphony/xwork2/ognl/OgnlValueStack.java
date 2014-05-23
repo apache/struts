@@ -80,6 +80,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     public void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
         securityMemberAccess.setExcludedClasses(ognlUtil.getExcludedClasses());
+        securityMemberAccess.setExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
     }
 
     protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot,

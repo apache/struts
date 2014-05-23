@@ -17,7 +17,9 @@ public final class XWorkConstants {
     public static final String RELOAD_XML_CONFIGURATION = "reloadXmlConfiguration";
     public static final String ALLOW_STATIC_METHOD_ACCESS = "allowStaticMethodAccess";
     public static final String XWORK_LOGGER_FACTORY = "xwork.loggerFactory";
+
     public static final String OGNL_EXCLUDED_CLASSES = "ognlExcludedClasses";
+    public static final String OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS = "ognlExcludedPackageNamePatterns";
 
     public static final String OVERRIDE_EXCLUDED_PATTERNS = "overrideExcludedPatterns";
     public static final String OVERRIDE_ACCEPTED_PATTERNS = "overrideAcceptedPatterns";

@@ -16,7 +16,6 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
@@ -47,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Pattern;
 
 
 /**
@@ -67,6 +67,8 @@ public class OgnlUtil {
     private boolean enableEvalExpression;
 
     private Set<Class<?>> excludedClasses = new HashSet<Class<?>>();
+    private Set<Pattern> excludedPackageNamePatterns = new HashSet<Pattern>();
+
     private Container container;
     private boolean allowStaticMethodAccess;
 
@@ -106,8 +108,20 @@ public class OgnlUtil {
         }
     }
 
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    public void setExcludedPackageName(String commaDelimitedPackagePatterns) {
+        Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
+        for (String pattern : packagePatterns) {
+                excludedPackageNamePatterns.add(Pattern.compile(pattern));
+        }
+    }
+
     public Set<Class<?>> getExcludedClasses() {
         return excludedClasses;
+    }
+
+    public Set<Pattern> getExcludedPackageNamePatterns() {
+        return excludedPackageNamePatterns;
     }
 
     @Inject
@@ -568,6 +582,7 @@ public class OgnlUtil {
 
         SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
         memberAccess.setExcludedClasses(excludedClasses);
+        memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
 
         return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
     }

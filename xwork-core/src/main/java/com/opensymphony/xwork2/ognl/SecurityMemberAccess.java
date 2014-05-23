@@ -40,6 +40,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
     private Set<Class<?>> excludedClasses = Collections.emptySet();
+    private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -52,6 +53,13 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+        if (isPackageExcluded(target.getClass().getPackage(), member.getDeclaringClass().getPackage())) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Target package [#0] and member package [#1] are excluded!", target, member);
+            }
+            return false;
+        }
+
         if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Target class [#0] and member type [#1] are excluded!", target, member);
@@ -82,6 +90,15 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
 
         return isAcceptableProperty(propertyName);
+    }
+
+    protected boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
+        for (Pattern pattern : excludedPackageNamePatterns) {
+            if (pattern.matcher(targetPackage.getName()).matches() || pattern.matcher(memberPackage.getName()).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean isClassExcluded(Class<?> targetClass, Class<?> declaringClass) {
@@ -141,4 +158,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         this.excludedClasses = excludedClasses;
     }
 
+    public void setExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
+        this.excludedPackageNamePatterns = excludedPackageNamePatterns;
+    }
 }

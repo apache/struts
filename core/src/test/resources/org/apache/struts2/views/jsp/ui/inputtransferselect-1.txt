@@ -4,7 +4,7 @@
   <script type="text/javascript" src="/struts/inputtransferselect.js"></script>
   <tableborder="0">
   <tr><td><input type="text" name="collection_input" id="collection_input"/></td>
-      <td valign="middle"align="center"><inputtype="button"value="-&gt;"onclick="addOption(document.getElementById('collection_input'),document.getElementById('collection'))"/>
+      <td style="text-align: center; vertical-align: middle;"><inputtype="button"value="-&gt;"onclick="addOption(document.getElementById('collection_input'),document.getElementById('collection'))"/>
       <br/><br/>
       <input type="button"value="&lt;-"onclick="removeOptions(document.getElementById('collection'))"/>
       <br/><br/>

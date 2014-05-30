@@ -1,5 +1,5 @@
 <tr errorFor="myId">
-    <td align="center" valign="top" colspan="2">
+    <td style="text-align: center; vertical-align: top;" colspan="2">
         <span class="errorMessage">barerrormessage</span>
     </td>
 </tr>

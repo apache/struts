@@ -31,7 +31,7 @@
 <span <#rt/>
 </#if>
 <#if parameters.align??>
-    align="${parameters.align?html}"<#t/>
+    style="text-align: ${parameters.align?html};"<#t/>
 </#if>
 <#if parameters.id??>
     id="wwctrl_${parameters.id}"<#rt/>

@@ -1,7 +1,7 @@
 <tr>
-	<td valign="top" align="right">
+	<td style="text-align: right; vertical-align: top;">
 	</td>
-    <td valign="top" align="left">
+    <td style="text-align: left; vertical-align: top;">
 		<input type="checkbox" name="foo" value="baz" checked="checked" disabled="disabled" id="foo" title="mytitle" />
 		<input type="hidden" id="__checkbox_foo" name="__checkbox_foo" value="baz" disabled="disabled"/>
 		<label for="foo" class="checkboxLabel">mylabel</label>

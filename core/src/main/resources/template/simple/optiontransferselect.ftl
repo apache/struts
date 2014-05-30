@@ -47,7 +47,7 @@
 </#if>
 
 </td>
-<td valign="middle" align="center">
+<td style="text-align: center; vertical-align: middle;">
 	<#if parameters.allowAddToLeft?default(true)><#t/>
 		<#assign addToLeftLabel = parameters.addToLeftLabel?default("<-")?html/><#t/>
 		<#if parameters.doubleHeaderKey??><#t/>

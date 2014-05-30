@@ -61,7 +61,7 @@
 
 
 </td>
-<td valign="middle" align="center">
+<td style="text-align: center; vertical-align: middle;">
 	<#assign addLabel=parameters.addLabel?default("->")?html /><#t/>
 	<input type="button"
 		<#if parameters.buttonCssClass??><#t/>

@@ -28,7 +28,7 @@
  errorFor="${parameters.id}"<#rt/>
 </#if>
 >
-    <td align="left" valign="top" colspan="2"><#rt/>
+    <td style="text-align: left; vertical-align: top;" colspan="2"><#rt/>
         <span class="errorMessage">${error?html}</span><#t/>
     </td><#lt/>
 </tr>
@@ -72,7 +72,7 @@ ${parameters.label?html}<#t/>
         <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
 <#else>
 <tr>
-	<td valign="top" align="right">
+	<td style="text-align: right; vertical-align: top;">
 <#if labelpos?default("") == 'left'>
 <#if parameters.label??> <label<#t/>
 <#if parameters.id??>
@@ -107,7 +107,7 @@ ${parameters.label?html}<#t/>
     </#if>
 </#if>
     </td>
-    <td valign="top" align="left">
+    <td style="text-align: left; vertical-align: top;">
 
 <#if labelpos?default("") != 'top'>
                 	<#include "/${parameters.templateDir}/simple/checkbox.ftl" />

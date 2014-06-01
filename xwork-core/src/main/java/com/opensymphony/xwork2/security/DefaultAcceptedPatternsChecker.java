@@ -24,7 +24,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     public DefaultAcceptedPatternsChecker() {
         acceptedPatterns = new HashSet<Pattern>();
         for (String pattern : ACCEPTED_PATTERNS) {
-            acceptedPatterns.add(Pattern.compile(pattern));
+            acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 
@@ -36,19 +36,17 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
         }
         acceptedPatterns = new HashSet<Pattern>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
-            acceptedPatterns.add(Pattern.compile(pattern));
+            acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 
-    @Inject(value = XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS, required = false)
-    public void setOverrideExcludePatterns(String acceptPatterns) {
-        if (LOG.isWarnEnabled()) {
-            LOG.warn("Overriding [#0] with [#1], be aware that this can affect safety of your application!",
-                    XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS, acceptedPatterns);
+    @Inject(value = XWorkConstants.ADDITIONAL_ACCEPTED_PATTERNS, required = false)
+    public void setAdditionalAcceptedPatterns(String acceptablePatterns) {
+        if (LOG.isDebugEnabled()) {
+            LOG.warn("Adding additional patterns [#0] to accepted patterns!", acceptablePatterns);
         }
-        acceptedPatterns = new HashSet<Pattern>();
-        for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptPatterns)) {
-            acceptedPatterns.add(Pattern.compile(pattern));
+        for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
+            acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 

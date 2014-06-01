@@ -17,13 +17,13 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     public static final String[] EXCLUDED_PATTERNS = {
             "(.*\\.|^|.*|\\[('|\"))class(\\.|('|\")]|\\[).*",
-            "^dojo\\..*",
-            "^struts\\..*",
-            "^session\\..*",
-            "^request\\..*",
-            "^application\\..*",
-            "^servlet(Request|Response)\\..*",
-            "^parameters\\..*"
+            "(^|.*#)dojo(\\.|\\[).*",
+            "(^|.*#)struts(\\.|\\[).*",
+            "(^|.*#)session(\\.|\\[).*",
+            "(^|.*#)request(\\.|\\[).*",
+            "(^|.*#)application(\\.|\\[).*",
+            "(^|.*#)servlet(Request|Response)(\\.|\\[).*",
+            "(^|.*#)parameters(\\.|\\[).*"
     };
 
     private Set<Pattern> excludedPatterns;
@@ -31,7 +31,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     public DefaultExcludedPatternsChecker() {
         excludedPatterns = new HashSet<Pattern>();
         for (String pattern : EXCLUDED_PATTERNS) {
-            excludedPatterns.add(Pattern.compile(pattern));
+            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 
@@ -43,7 +43,17 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
         }
         excludedPatterns = new HashSet<Pattern>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
-            excludedPatterns.add(Pattern.compile(pattern));
+            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+        }
+    }
+
+    @Inject(value = XWorkConstants.ADDITIONAL_EXCLUDED_PATTERNS, required = false)
+    public void setAdditionalExcludePatterns(String excludePatterns) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding additional patterns [#0] to excluded patterns!", excludePatterns);
+        }
+        for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
+            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 

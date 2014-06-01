@@ -294,4 +294,7 @@ public final class StrutsConstants {
     public static final String STRUTS_OVERRIDE_EXCLUDED_PATTERNS = "struts.override.excludedPatterns";
     public static final String STRUTS_OVERRIDE_ACCEPTED_PATTERNS = "struts.override.acceptedPatterns";
 
+    public static final String STRUTS_ADDITIONAL_EXCLUDED_PATTERNS = "struts.additional.excludedPatterns";
+    public static final String STRUTS_ADDITIONAL_ACCEPTED_PATTERNS = "struts.additional.acceptedPatterns";
+
 }

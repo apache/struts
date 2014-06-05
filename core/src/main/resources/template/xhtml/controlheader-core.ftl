@@ -29,7 +29,7 @@
 <#if hasFieldErrors>
 <#list fieldErrors[parameters.name] as error>
 <tr errorFor="${parameters.id}">
-    <td style="text-align: center; vertical-align: top;" colspan="2"><#rt/>
+    <td class="tdErrorMessage" colspan="2"><#rt/>
         <span class="errorMessage">${error?html}</span><#t/>
     </td><#lt/>
 </tr>
@@ -47,7 +47,7 @@
 -->
 <tr>
 <#if labelpos?default("") == 'top'>
-    <td style="text-align: left; vertical-align: top;" colspan="2"><#rt/>
+    <td class="tdLabelTop" colspan="2"><#rt/>
 <#else>
     <td class="tdLabel"><#rt/>
 </#if>

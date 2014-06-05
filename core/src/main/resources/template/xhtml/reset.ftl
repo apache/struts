@@ -23,7 +23,7 @@
 <tr>
     <td colspan="2"><div <#rt/>
 <#if parameters.align??>
-    style="text-align: ${parameters.align?html};"<#t/>
+    align="${parameters.align?html}"<#t/>
 </#if>
 ><#t/>
 <#include "/${parameters.templateDir}/simple/reset.ftl" />

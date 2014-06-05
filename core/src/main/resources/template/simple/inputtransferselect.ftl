@@ -61,7 +61,7 @@
 
 
 </td>
-<td style="text-align: center; vertical-align: middle;">
+<td class="tdTransferSelect">
 	<#assign addLabel=parameters.addLabel?default("->")?html /><#t/>
 	<input type="button"
 		<#if parameters.buttonCssClass??><#t/>

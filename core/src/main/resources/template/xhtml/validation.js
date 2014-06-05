@@ -109,7 +109,7 @@ function addErrorXHTML(e, errorText) {
         var tr = document.createElement("tr");
         var td = document.createElement("td");
         var span = document.createElement("span");
-        td.style = "text-align: center; vertical-align: top;";
+        td.className = "tdErrorMessage";
         td.colSpan = 2;
         span.setAttribute("class", "errorMessage");
         span.setAttribute("className", "errorMessage"); //ie hack cause ie does not support setAttribute

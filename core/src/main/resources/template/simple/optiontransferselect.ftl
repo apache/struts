@@ -47,7 +47,7 @@
 </#if>
 
 </td>
-<td style="text-align: center; vertical-align: middle;">
+<td class="tdTransferSelect">
 	<#if parameters.allowAddToLeft?default(true)><#t/>
 		<#assign addToLeftLabel = parameters.addToLeftLabel?default("<-")?html/><#t/>
 		<#if parameters.doubleHeaderKey??><#t/>

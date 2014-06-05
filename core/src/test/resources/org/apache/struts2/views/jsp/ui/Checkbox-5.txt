@@ -1,8 +1,8 @@
 <tr>
-	<td style="text-align: right; vertical-align: top;">
+	<td class="tdCheckboxLabel">
 	    <label for="someId" class="checkboxLabel">mylabel:</label>
 	</td>
-    <td style="text-align: left; vertical-align: top;">
+    <td class="tdCheckboxInput">
 		<input type="checkbox" name="foo" value="baz" checked="checked" id="someId" title="mytitle" onfocus="test();"/>
 		<input type="hidden" id="__checkbox_someId" name="__checkbox_foo" value="baz"/>
     </td>

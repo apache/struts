@@ -17,7 +17,7 @@
 	<input type="button" onclick="moveOptionDown(document.getElementById('id'), 'key', 'Header Key');" value="v" />
 	<input type="button" onclick="moveOptionUp(document.getElementById('id'), 'key', 'Header Key');" value="^" />
 </td>
-<td style="text-align: center; vertical-align: middle;">
+<td class="tdTransferSelect">
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
 			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '');" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"

@@ -24,7 +24,7 @@
 <#assign tableModel = webTable.model/>
 
 <#if tableModel??>
-<p style="text-align: center;">
+<p align="center">
 <table bgcolor="white" border="0" cellpadding="1" cellspacing="0" >
     <tr>
         <td>
@@ -40,16 +40,16 @@
                                 <td>
                                     <table border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td style="vertical-align: bottom;">
+                                            <td align="bottom">
 <#if false>
-                                                 <img src="images/sorted_asc.gif" border="0" style="vertical-align: bottom;" />
+                                                 <img src="images/sorted_asc.gif" border="0" align="bottom" />
 <#else>
-                                                <a href="<@s.url><@s.param name="${webTable.sortColumnLinkName}" value="${curColumn.offset}"/><@s.param name="${webTable.sortOrderLinkName}" value="ASC"/></@s.url>"><img src="images/unsorted_asc.gif" border="0" style="vertical-align: bottom;"/></a>
+                                                <a href="<@s.url><@s.param name="${webTable.sortColumnLinkName}" value="${curColumn.offset}"/><@s.param name="${webTable.sortOrderLinkName}" value="ASC"/></@s.url>"><img src="images/unsorted_asc.gif" border="0" align="bottom"/></a>
 </#if>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="vertical-align: top;"></td>
+                                            <td align="top"></td>
                                         </tr>
                                     </table>
                                 </td>

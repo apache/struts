@@ -23,7 +23,9 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
             "(^|.*#)request(\\.|\\[).*",
             "(^|.*#)application(\\.|\\[).*",
             "(^|.*#)servlet(Request|Response)(\\.|\\[).*",
-            "(^|.*#)parameters(\\.|\\[).*"
+            "(^|.*#)parameters(\\.|\\[).*",
+            "(^|.*#)context(\\.|\\[).*",
+            "(^|.*#)_memberAccess(\\.|\\[).*"
     };
 
     private Set<Pattern> excludedPatterns;

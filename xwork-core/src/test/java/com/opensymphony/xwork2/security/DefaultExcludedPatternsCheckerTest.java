@@ -39,6 +39,10 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
                 add("%{#parameters.test}");
                 add("%{#Parameters['test']}");
                 add("%{#Parameters.test}");
+                add("#context.get('com.opensymphony.xwork2.dispatcher.HttpServletResponse')");
+                add("%{#context.get('com.opensymphony.xwork2.dispatcher.HttpServletResponse')}");
+                add("#_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true)");
+                add("%{#_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true)}");
             }
         };
 

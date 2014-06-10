@@ -1000,9 +1000,8 @@ public class ResourceFinder {
     private Properties loadProperties(URL resource) throws IOException {
         InputStream in = resource.openStream();
 
-        BufferedInputStream reader = null;
+        BufferedInputStream reader = new BufferedInputStream(in);
         try {
-            reader = new BufferedInputStream(in);
             Properties properties = new Properties();
             properties.load(reader);
 
@@ -1018,12 +1017,10 @@ public class ResourceFinder {
 
     private String readContents(URL resource) throws IOException {
         InputStream in = resource.openStream();
-        BufferedInputStream reader = null;
         StringBuilder sb = new StringBuilder();
 
+        BufferedInputStream reader = new BufferedInputStream(in);
         try {
-            reader = new BufferedInputStream(in);
-
             int b = reader.read();
             while (b != -1) {
                 sb.append((char) b);

@@ -80,7 +80,10 @@ public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariable
                 char c = data.charAt(x);
                 switch (c) {
                     case '{' :  varName = new StringBuilder(); break;
-                    case '}' :  varNames.add(varName.toString());
+                    case '}' :  if (varName == null) {
+                                    throw new IllegalArgumentException("Mismatched braces in pattern");
+                                }
+                                varNames.add(varName.toString());
                                 regex.append("([^/]+)");
                                 varName = null;
                                 break;

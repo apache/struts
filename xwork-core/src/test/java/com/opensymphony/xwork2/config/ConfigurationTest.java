@@ -224,14 +224,8 @@ public class ConfigurationTest extends XWorkTestCase {
         container.inject(provider);
         configurationManager.addContainerProvider(provider);
 
-        Configuration config = null;
-        try {
-            config = configurationManager.getConfiguration();
-        } catch (ConfigurationException e) {
-            e.printStackTrace();
-            fail();
-        }
-        
+        Configuration config = configurationManager.getConfiguration();
+
         RuntimeConfiguration configuration = config.getRuntimeConfiguration();
 
         // check that it has configuration from xml

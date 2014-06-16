@@ -30,9 +30,7 @@
 <#else>
 <span <#rt/>
 </#if>
-<#if parameters.align??>
-    align="${parameters.align?html}"<#t/>
-</#if>
+    class="formButton"<#t/>
 <#if parameters.id??>
     id="wwctrl_${parameters.id}"<#rt/>
 </#if>

@@ -24,7 +24,7 @@
 	<script type="text/javascript" src="<@s.url value="/struts/optiontransferselect.js" encode='false' includeParams='none'/>"></script>
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
-<table border="0">
+<table>
 <tr>
 <td>
 <#if parameters.leftTitle??><#t/>

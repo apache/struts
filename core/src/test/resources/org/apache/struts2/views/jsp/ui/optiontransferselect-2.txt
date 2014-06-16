@@ -2,7 +2,7 @@
 <td class="tdLabel"></td>
 <td>
 <script type="text/javascript" src="/struts/optiontransferselect.js"></script>
-<table border="0">
+<table>
 <tr>
 <td>
 	<label for="leftTitle">Title Left</label><br/>

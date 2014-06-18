@@ -281,4 +281,20 @@ public final class StrutsConstants {
 
     /** Allows override default DispatcherErrorHandler **/
     public static final String STRUTS_DISPATCHER_ERROR_HANDLER = "struts.dispatcher.errorHandler";
+
+    /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions **/
+    public static final String STRUTS_EXCLUDED_CLASSES = "struts.excludedClasses";
+    public static final String STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS = "struts.excludedPackageNamePatterns";
+
+    /** Dedicated services to check if passed string is excluded/accepted **/
+    public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";
+    public static final String STRUTS_ACCEPTED_PATTERNS_CHECKER = "struts.acceptedPatterns.checker";
+
+    /** Constant is used to override framework's default excluded patterns **/
+    public static final String STRUTS_OVERRIDE_EXCLUDED_PATTERNS = "struts.override.excludedPatterns";
+    public static final String STRUTS_OVERRIDE_ACCEPTED_PATTERNS = "struts.override.acceptedPatterns";
+
+    public static final String STRUTS_ADDITIONAL_EXCLUDED_PATTERNS = "struts.additional.excludedPatterns";
+    public static final String STRUTS_ADDITIONAL_ACCEPTED_PATTERNS = "struts.additional.acceptedPatterns";
+
 }

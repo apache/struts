@@ -37,6 +37,23 @@
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
+
+    <constant name="struts.excludedClasses"
+              value="
+                java.lang.Object,
+                java.lang.Runtime,
+                java.lang.System,
+                java.lang.Class,
+                java.lang.ClassLoader,
+                java.lang.Shutdown,
+                ognl.OgnlContext,
+                ognl.MemberAccess,
+                ognl.ClassResolver,
+                ognl.TypeConverter,
+                com.opensymphony.xwork2.ActionContext" />
+    <!-- this must be valid regex, each '.' in package name must be escaped! -->
+    <constant name="struts.excludedPackageNamePatterns" value="^java\.lang\..*,^ognl.*,^javax.*" />
+
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />
     <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultActionFactory" />
@@ -140,6 +157,9 @@
     <bean type="ognl.PropertyAccessor" name="java.util.ArrayList" class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor" />
     <bean type="ognl.PropertyAccessor" name="java.util.HashSet" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
     <bean type="ognl.PropertyAccessor" name="java.util.HashMap" class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor" />
+
+    <bean type="com.opensymphony.xwork2.security.ExcludedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker" />
+    <bean type="com.opensymphony.xwork2.security.AcceptedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker" />
 
     <package name="struts-default" abstract="true">
         <result-types>

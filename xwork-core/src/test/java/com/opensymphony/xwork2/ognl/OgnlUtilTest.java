@@ -82,7 +82,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         });
 
         Owner owner = new Owner();
-        Map context = Ognl.createDefaultContext(owner);
+        Map context = ognlUtil.createDefaultContext(owner);
         Map props = new HashMap();
         props.put("dog.name", dogName);
 
@@ -107,7 +107,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testCanSetDependentObjectArray() {
         EmailAction action = new EmailAction();
-        Map<String, Object> context = Ognl.createDefaultContext(action);
+        Map<String, Object> context = ognlUtil.createDefaultContext(action);
 
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("email[0].address", "addr1");
@@ -125,7 +125,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo1 = new Foo();
         Foo foo2 = new Foo();
 
-        Map context = Ognl.createDefaultContext(foo1);
+        Map context = ognlUtil.createDefaultContext(foo1);
 
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -171,7 +171,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         foo2.setTitle("foo2 title");
         foo2.setNumber(2);
 
-        Map<String, Object> context = Ognl.createDefaultContext(foo1);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo1);
 
         List<String> excludes = new ArrayList<String>();
         excludes.add("title");
@@ -200,7 +200,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         b2.setTitle("");
         b2.setId(new Long(2));
 
-        context = Ognl.createDefaultContext(b1);
+        context = ognlUtil.createDefaultContext(b1);
         List<String> includes = new ArrayList<String>();
         includes.add("title");
         includes.add("somethingElse");
@@ -220,7 +220,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         Bar bar = new Bar();
 
-        Map<String, Object> context = Ognl.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -244,7 +244,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         foo.setBar(new Bar());
 
-        Map<String, Object> context = Ognl.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap();
         props.put("bar.title", "i am barbaz");
@@ -280,7 +280,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testOgnlHandlesCrapAtTheEndOfANumber() {
         Foo foo = new Foo();
-        Map<String, Object> context = Ognl.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("aLong", "123a");
@@ -317,7 +317,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesBoolean() {
         Foo foo = new Foo();
 
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         Map props = new HashMap();
         props.put("useful", "true");
@@ -338,7 +338,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Foo foo = new Foo();
 
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         Map props = new HashMap();
         props.put("birthday", "02/12/1982");
@@ -408,7 +408,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesInt() {
         Foo foo = new Foo();
 
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         Map props = new HashMap();
         props.put("number", "2");
@@ -420,7 +420,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesLongArray() {
         Foo foo = new Foo();
 
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         Map props = new HashMap();
         props.put("points", new String[]{"1", "2"});
@@ -435,7 +435,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesString() {
         Foo foo = new Foo();
 
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         Map props = new HashMap();
         props.put("title", "this is a title");
@@ -446,7 +446,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testSetProperty() {
         Foo foo = new Foo();
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
         assertFalse(123456 == foo.getNumber());
         ognlUtil.setProperty("number", "123456", foo, context);
         assertEquals(123456, foo.getNumber());
@@ -457,7 +457,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ChainingInterceptor foo = new ChainingInterceptor();
         ChainingInterceptor foo2 = new ChainingInterceptor();
 
-        OgnlContext context = (OgnlContext) Ognl.createDefaultContext(null);
+        OgnlContext context = (OgnlContext) ognlUtil.createDefaultContext(null);
         SimpleNode expression = (SimpleNode) Ognl.parseExpression("{'a','ruby','b','tom'}");
 
 
@@ -499,7 +499,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testStringToLong() {
         Foo foo = new Foo();
 
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         Map props = new HashMap();
         props.put("aLong", "123");
@@ -518,7 +518,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         foo.setALong(88);
 
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         ognlUtil.setProperties(null, foo, context);
         assertEquals(88, foo.getALong());
@@ -531,7 +531,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     
     public void testCopyNull() {
         Foo foo = new Foo();
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
    		ognlUtil.copy(null, null, context);
 
    		ognlUtil.copy(foo, null, context);
@@ -540,7 +540,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     
     public void testGetTopTarget() throws Exception {
         Foo foo = new Foo();
-        Map context = Ognl.createDefaultContext(foo);
+        Map context = ognlUtil.createDefaultContext(foo);
 
         CompoundRoot root = new CompoundRoot();
         Object top = ognlUtil.getRealTarget("top", context, root);
@@ -630,7 +630,131 @@ public class OgnlUtilTest extends XWorkTestCase {
         stack.setValue("1114778947765", foo);
         stack.setValue("1234", foo);
     }
-    
+
+    public void testAvoidCallingMethodsOnObjectClass() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setExcludedClasses(Object.class.getName());
+            ognlUtil.setValue("class.classLoader.defaultAssertionStatus", ognlUtil.createDefaultContext(foo), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(NoSuchPropertyException.class, expected.getClass());
+        assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
+    }
+
+    public void testAvoidCallingMethodsOnObjectClassUpperCased() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setExcludedClasses(Object.class.getName());
+            ognlUtil.setValue("Class.ClassLoader.DefaultAssertionStatus", ognlUtil.createDefaultContext(foo), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(NoSuchPropertyException.class, expected.getClass());
+        assertEquals("com.opensymphony.xwork2.util.Foo.Class", expected.getMessage());
+    }
+
+    public void testAvoidCallingMethodsOnObjectClassAsMap() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setExcludedClasses(Object.class.getName());
+            ognlUtil.setValue("class['classLoader']['defaultAssertionStatus']", ognlUtil.createDefaultContext(foo), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(NoSuchPropertyException.class, expected.getClass());
+        assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
+    }
+
+    public void testAvoidCallingMethodsOnObjectClassAsMap2() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setValue("foo['class']['classLoader']['defaultAssertionStatus']", ognlUtil.createDefaultContext(foo), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(NoSuchPropertyException.class, expected.getClass());
+        assertEquals("com.opensymphony.xwork2.util.Foo.foo", expected.getMessage());
+    }
+
+    public void testAvoidCallingMethodsOnObjectClassAsMapWithQuotes() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setExcludedClasses(Object.class.getName());
+            ognlUtil.setValue("class[\"classLoader\"]['defaultAssertionStatus']", ognlUtil.createDefaultContext(foo), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(NoSuchPropertyException.class, expected.getClass());
+        assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
+    }
+
+    public void testAvoidCallingToString() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setValue("toString", ognlUtil.createDefaultContext(foo), foo, null);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(OgnlException.class, expected.getClass());
+        assertEquals("toString", expected.getMessage());
+    }
+
+    public void testAvoidCallingMethodsWithBraces() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setValue("toString()", ognlUtil.createDefaultContext(foo), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(InappropriateExpressionException.class, expected.getClass());
+        assertEquals(expected.getMessage(), "Inappropriate OGNL expression: toString()");
+    }
+
+    public void testAvoidCallingSomeClasses() throws Exception {
+        Foo foo = new Foo();
+
+        Exception expected = null;
+        try {
+            ognlUtil.setExcludedClasses(Runtime.class.getName());
+            ognlUtil.setValue("@java.lang.Runtime@getRuntime().exec('mate')", ognlUtil.createDefaultContext(foo), foo, true);
+            fail();
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(MethodFailedException.class, expected.getClass());
+        assertEquals(expected.getMessage(), "Method \"getRuntime\" failed for object class java.lang.Runtime");
+    }
 
     public static class Email {
         String address;

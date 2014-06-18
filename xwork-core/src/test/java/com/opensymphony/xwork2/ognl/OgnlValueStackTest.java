@@ -58,6 +58,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
                 (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
                 container.getInstance(TextProvider.class, "system"), allowStaticMethodAccess);
         container.inject(stack);
+        ognlUtil.setAllowStaticMethodAccess(Boolean.toString(allowStaticMethodAccess));
         return stack;
     }
 

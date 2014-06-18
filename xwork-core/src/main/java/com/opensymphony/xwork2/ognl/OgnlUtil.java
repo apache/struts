@@ -331,17 +331,17 @@ public class OgnlUtil {
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkEnableEvalExpression(tree, context);
-                expressions.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
             checkEnableEvalExpression(tree, context);
         }
 
-
         final T exec = task.execute(tree);
-        if(enableExpressionCache)
+        // if cache is enabled and it's a valid expression, puts it in
+        if(enableExpressionCache) {
             expressions.putIfAbsent(expression, tree);
+        }
         return exec;
     }
 

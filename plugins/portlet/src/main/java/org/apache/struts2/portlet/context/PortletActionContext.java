@@ -35,6 +35,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceResponse;
 import java.util.Map;
 
 import static org.apache.struts2.portlet.PortletConstants.DEFAULT_ACTION_FOR_MODE;
@@ -112,6 +113,19 @@ public class PortletActionContext {
             throw new IllegalStateException("ActionResponse cannot be obtained in render phase");
         }
         return (ActionResponse) getContext().get(RESPONSE);
+    }
+    
+    /**
+     * Get the ResourceResponse. Can only be invoked in the resource phase.
+     *
+     * @return The current ResourceResponse.
+     * @throws IllegalStateException If the method is invoked in the wrong phase.
+     */
+    public static ResourceResponse getResourceResponse() {
+       if (!getPhase().isResource()) {
+           throw new IllegalStateException("ResourceResponse cannot be obtained in event phase");
+       }
+       return (ResourceResponse) getContext().get(RESPONSE);
     }
 
     /**

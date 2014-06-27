@@ -113,8 +113,6 @@ public abstract class ListUIBean extends UIBean {
         if (listValueKey != null) {
             listValueKey = stripExpressionIfAltSyntax(listValueKey);
             addParameter("listValueKey", listValueKey);
-        } else if (value instanceof Map) {
-            addParameter("listValueKey", "valueKey");
         }
 
         if (listValue != null) {

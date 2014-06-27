@@ -154,7 +154,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
 
                 if (validator instanceof FieldValidator) {
                     fValidator = (FieldValidator) validator;
-                    fullFieldName = new InternalValidatorContextWrapper(fValidator.getValidatorContext()).getFullFieldName(fValidator.getFieldName());
+                    fullFieldName = fValidator.getValidatorContext().getFullFieldName(fValidator.getFieldName());
 
                     if ((shortcircuitedFields != null) && shortcircuitedFields.contains(fullFieldName)) {
                         if (LOG.isDebugEnabled()) {
@@ -411,45 +411,5 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         }
 
         return retList;
-    }
-
-
-    /**
-     * An {@link com.opensymphony.xwork2.validator.ValidatorContext} wrapper that
-     * returns the full field name
-     * {@link AnnotationActionValidatorManager.InternalValidatorContextWrapper#getFullFieldName(String)}
-     * by consulting it's parent if its an {@link com.opensymphony.xwork2.validator.validators.VisitorFieldValidator.AppendingValidatorContext}.
-     * <p/>
-     * Eg. if we have nested Visitor
-     * AddressVisitor nested inside PersonVisitor, when using the normal #getFullFieldName, we will get
-     * "address.somefield", we lost the parent, with this wrapper, we will get "person.address.somefield".
-     * This is so that the key is used to register errors, so that we don't screw up short-curcuit feature
-     * when using nested visitor. See XW-571 (nested visitor validators break short-circuit functionality)
-     * at http://jira.opensymphony.com/browse/XW-571
-     */
-    protected class InternalValidatorContextWrapper {
-        private ValidatorContext validatorContext = null;
-
-        InternalValidatorContextWrapper(ValidatorContext validatorContext) {
-            this.validatorContext = validatorContext;
-        }
-
-        /**
-         * Get the full field name by consulting the parent, so that when we are using nested visitors (
-         * visitor nested inside visitor etc.) we still get the full field name including its parents.
-         * See XW-571 for more details.
-         *
-         * @param field
-         * @return String
-         */
-        public String getFullFieldName(String field) {
-            if (validatorContext instanceof VisitorFieldValidator.AppendingValidatorContext) {
-                VisitorFieldValidator.AppendingValidatorContext appendingValidatorContext =
-                        (VisitorFieldValidator.AppendingValidatorContext) validatorContext;
-                return appendingValidatorContext.getFullFieldNameFromParent(field);
-            }
-            return validatorContext.getFullFieldName(field);
-        }
-
     }
 }

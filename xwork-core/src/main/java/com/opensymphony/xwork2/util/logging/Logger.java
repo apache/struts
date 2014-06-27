@@ -19,7 +19,10 @@ package com.opensymphony.xwork2.util.logging;
  * Main logger interface for logging things
  */
 public interface Logger {
+
     void trace(String msg, String... args);
+
+    void trace(String msg, Object... args);
 
     void trace(String msg, Throwable ex, String... args);
 
@@ -58,4 +61,5 @@ public interface Logger {
     void fatal(String msg, Throwable ex, String... args);
 
     boolean isFatalEnabled();
+
 }

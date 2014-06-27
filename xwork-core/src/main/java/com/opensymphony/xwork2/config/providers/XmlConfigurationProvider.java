@@ -260,7 +260,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
                         for (int k = 0; k < unknownHandlersSize; k++) {
                             Element unknownHandler = (Element) unknownHandlers.item(k);
-                            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name")));
+                            Location location = LocationUtils.getLocation(unknownHandler);
+                            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name"), location));
                         }
 
                         if (!unknownHandlerStack.isEmpty())
@@ -1015,6 +1016,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     in.setSystemId(url.toString());
 
                     docs.add(DomHelper.parse(in, dtdMappings));
+                    loadedFileUrls.add(url.toString());
                 } catch (XWorkException e) {
                     if (includeElement != null) {
                         throw new ConfigurationException("Unable to load " + url, e, includeElement);
@@ -1071,7 +1073,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     }
                 }
                 finalDocs.add(doc);
-                loadedFileUrls.add(url.toString());
             }
 
             if (LOG.isDebugEnabled()) {

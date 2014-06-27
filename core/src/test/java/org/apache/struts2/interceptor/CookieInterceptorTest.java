@@ -22,10 +22,13 @@
 package org.apache.struts2.interceptor;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -63,6 +66,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         // by default the interceptor doesn't accept any cookies
         CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+
         interceptor.intercept(invocation);
 
         assertTrue(action.getCookiesMap().isEmpty());
@@ -97,6 +102,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         actionInvocationControl.replay();
 
         CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setCookiesName("*");
         interceptor.setCookiesValue("*");
         interceptor.intercept(invocation);
@@ -138,6 +144,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         actionInvocationControl.replay();
 
         CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie2, cookie3");
         interceptor.setCookiesValue("cookie1value, cookie2value, cookie3value");
         interceptor.intercept(invocation);
@@ -178,6 +185,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         actionInvocationControl.replay();
 
         CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("cookie1value, cookie2value, cookie3value");
         interceptor.intercept(invocation);
@@ -218,6 +226,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         actionInvocationControl.replay();
 
         CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("*");
         interceptor.intercept(invocation);
@@ -258,6 +267,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         actionInvocationControl.replay();
 
         CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("");
         interceptor.intercept(invocation);
@@ -299,6 +309,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         actionInvocationControl.replay();
 
         CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("cookie1value");
         interceptor.intercept(invocation);
@@ -316,6 +327,125 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie3"), null);
     }
 
+    public void testCookiesWithClassPollution() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        String pollution1 = "model['class']['classLoader']['jarPath']";
+        String pollution2 = "model.class.classLoader.jarPath";
+        String pollution3 = "class.classLoader.jarPath";
+        String pollution4 = "class['classLoader']['jarPath']";
+        String pollution5 = "model[\"class\"]['classLoader']['jarPath']";
+        String pollution6 = "class[\"classLoader\"]['jarPath']";
+
+        request.setCookies(
+                new Cookie(pollution1, "pollution1"),
+                new Cookie("pollution1", pollution1),
+                new Cookie(pollution2, "pollution2"),
+                new Cookie("pollution2", pollution2),
+                new Cookie(pollution3, "pollution3"),
+                new Cookie("pollution3", pollution3),
+                new Cookie(pollution4, "pollution4"),
+                new Cookie("pollution4", pollution4),
+                new Cookie(pollution5, "pollution5"),
+                new Cookie("pollution5", pollution5),
+                new Cookie(pollution6, "pollution6"),
+                new Cookie("pollution6", pollution6)
+            );
+        ServletActionContext.setRequest(request);
+
+        final Map<String, Boolean> excludedName = new HashMap<String, Boolean>();
+        final Map<String, Boolean> excludedValue = new HashMap<String, Boolean>();
+
+        CookieInterceptor interceptor = new CookieInterceptor() {
+            @Override
+            protected boolean isAcceptableName(String name) {
+                boolean accepted = super.isAcceptableName(name);
+                excludedName.put(name, accepted);
+                return accepted;
+            }
+
+            @Override
+            protected boolean isAcceptableValue(String value) {
+                boolean accepted = super.isAcceptableValue(value);
+                excludedValue.put(value, accepted);
+                return accepted;
+            }
+        };
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setCookiesName("*");
+
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setAction(new MockActionWithCookieAware());
+
+        interceptor.intercept(invocation);
+
+        assertFalse(excludedName.get(pollution1));
+        assertFalse(excludedName.get(pollution2));
+        assertFalse(excludedName.get(pollution3));
+        assertFalse(excludedName.get(pollution4));
+        assertFalse(excludedName.get(pollution5));
+        assertFalse(excludedName.get(pollution6));
+
+        assertFalse(excludedValue.get(pollution1));
+        assertFalse(excludedValue.get(pollution2));
+        assertFalse(excludedValue.get(pollution3));
+        assertFalse(excludedValue.get(pollution4));
+        assertFalse(excludedValue.get(pollution5));
+        assertFalse(excludedValue.get(pollution6));
+    }
+
+    public void testCookiesWithStrutsInternalsAccess() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        String sessionCookieName = "session.userId";
+        String sessionCookieValue = "session.userId=1";
+        String appCookieName = "application.userId";
+        String appCookieValue = "application.userId=1";
+        String reqCookieName = "request.userId";
+        String reqCookieValue = "request.userId=1";
+
+        request.setCookies(
+                new Cookie(sessionCookieName, "1"),
+                new Cookie("1", sessionCookieValue),
+                new Cookie(appCookieName, "1"),
+                new Cookie("1", appCookieValue),
+                new Cookie(reqCookieName, "1"),
+                new Cookie("1", reqCookieValue)
+            );
+        ServletActionContext.setRequest(request);
+
+        final Map<String, Boolean> excludedName = new HashMap<String, Boolean>();
+        final Map<String, Boolean> excludedValue = new HashMap<String, Boolean>();
+
+        CookieInterceptor interceptor = new CookieInterceptor() {
+            @Override
+            protected boolean isAcceptableName(String name) {
+                boolean accepted = super.isAcceptableName(name);
+                excludedName.put(name, accepted);
+                return accepted;
+            }
+
+            @Override
+            protected boolean isAcceptableValue(String value) {
+                boolean accepted = super.isAcceptableValue(value);
+                excludedValue.put(value, accepted);
+                return accepted;
+            }
+        };
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setCookiesName("*");
+
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setAction(new MockActionWithCookieAware());
+
+        interceptor.intercept(invocation);
+
+        assertFalse(excludedName.get(sessionCookieName));
+        assertFalse(excludedName.get(appCookieName));
+        assertFalse(excludedName.get(reqCookieName));
+
+        assertFalse(excludedValue.get(sessionCookieValue));
+        assertFalse(excludedValue.get(appCookieValue));
+        assertFalse(excludedValue.get(reqCookieValue));
+    }
 
     public static class MockActionWithCookieAware extends ActionSupport implements CookiesAware {
 

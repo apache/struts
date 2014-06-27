@@ -37,6 +37,9 @@ import org.apache.struts2.views.util.UrlHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
 
 import static javax.servlet.http.HttpServletResponse.SC_FOUND;
@@ -201,9 +204,9 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                 List<String> prohibitedResultParams = getProhibitedResultParams();
                 for (Map.Entry<String, String> e : resultConfigParams.entrySet()) {
                     if (!prohibitedResultParams.contains(e.getKey())) {
-                        String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue(), invocation);
-                        if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
-                            requestParameters.put(e.getKey(), potentialValue);
+                        Collection<String> values = conditionalParseCollection(e.getValue(), invocation, suppressEmptyParameters);
+                        if (!suppressEmptyParameters || !values.isEmpty()) {
+                            requestParameters.put(e.getKey(), values);
                         }
                     }
                 }
@@ -262,13 +265,38 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     }
 
-    private boolean isPathUrl(String url) {
-        // filter out "http:", "https:", "mailto:", "file:", "ftp:"
-        return !url.startsWith("http:")
-                && !url.startsWith("https:")
-                && !url.startsWith("mailto:")
-                && !url.startsWith("file:")
-                && !url.startsWith("ftp:");
+    /**
+     * Checks if url is simple path or either full url
+     *
+     * @param url string
+     * @return true if it's just a path not a full url
+     */
+    protected boolean isPathUrl(String url) {
+        try {
+            URI uri = URI.create(url);
+            if (uri.isAbsolute()) {
+                URL validUrl = uri.toURL();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("[#0] is full url, not a path", url);
+                }
+                return validUrl.getProtocol() == null;
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("[#0] isn't absolute URI, assuming it's a path", url);
+                }
+                return true;
+            }
+        } catch (IllegalArgumentException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("[#0] isn't a valid URL, assuming it's a path", e, url);
+            }
+            return true;
+        } catch (MalformedURLException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("[#0] isn't a valid URL, assuming it's a path", e, url);
+            }
+            return true;
+        }
     }
 
     /**

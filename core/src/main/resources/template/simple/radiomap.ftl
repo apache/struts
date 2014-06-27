@@ -78,17 +78,9 @@
 </#if>
 <#if itemCssClass?if_exists != "">
  class="${itemCssClass?html}"<#rt/>
-<#else>
-    <#if parameters.cssClass??>
- class="${parameters.cssClass?html}"<#rt/>
-    </#if>
 </#if>
 <#if itemCssStyle?if_exists != "">
  style="${itemCssStyle?html}"<#rt/>
-<#else>
-    <#if parameters.cssStyle??>
- style="${parameters.cssStyle?html}"<#rt/>
-    </#if>
 </#if>
 <#if itemTitle?if_exists != "">
  title="${itemTitle?html}"<#rt/>

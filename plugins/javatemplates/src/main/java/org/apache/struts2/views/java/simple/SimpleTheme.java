@@ -36,6 +36,7 @@ public class SimpleTheme extends DefaultTheme {
             {
                 put("text", new FactoryList(TextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("textfield", new FactoryList(TextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
+                put("datetextfield", new FactoryList(DateTextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
                 put("select", new FactoryList(SelectHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("form", new FactoryList(FormHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("form-close", new FactoryList(FormHandler.CloseHandler.class));

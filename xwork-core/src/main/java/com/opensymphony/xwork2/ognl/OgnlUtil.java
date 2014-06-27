@@ -16,12 +16,17 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.XWorkConstants;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import ognl.ClassResolver;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
@@ -36,9 +41,12 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Pattern;
 
 
 /**
@@ -57,6 +65,12 @@ public class OgnlUtil {
     private boolean devMode = false;
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
+
+    private Set<Class<?>> excludedClasses = new HashSet<Class<?>>();
+    private Set<Pattern> excludedPackageNamePatterns = new HashSet<Pattern>();
+
+    private Container container;
+    private boolean allowStaticMethodAccess;
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -80,6 +94,44 @@ public class OgnlUtil {
             LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
                     "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
         }
+    }
+
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
+    public void setExcludedClasses(String commaDelimitedClasses) {
+        Set<String> classes = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
+        for (String className : classes) {
+            try {
+                excludedClasses.add(Class.forName(className));
+            } catch (ClassNotFoundException e) {
+                throw new ConfigurationException("Cannot load excluded class: " + className, e);
+            }
+        }
+    }
+
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    public void setExcludedPackageName(String commaDelimitedPackagePatterns) {
+        Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
+        for (String pattern : packagePatterns) {
+                excludedPackageNamePatterns.add(Pattern.compile(pattern));
+        }
+    }
+
+    public Set<Class<?>> getExcludedClasses() {
+        return excludedClasses;
+    }
+
+    public Set<Pattern> getExcludedPackageNamePatterns() {
+        return excludedPackageNamePatterns;
+    }
+
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
+    public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
+        this.allowStaticMethodAccess = Boolean.parseBoolean(allowStaticMethodAccess);
     }
 
     /**
@@ -141,7 +193,7 @@ public class OgnlUtil {
      *                                problems setting the properties
      */
     public void setProperties(Map<String, ?> properties, Object o, boolean throwPropertyExceptions) {
-        Map context = Ognl.createDefaultContext(o);
+        Map context = createDefaultContext(o, null);
         setProperties(properties, o, context, throwPropertyExceptions);
     }
 
@@ -226,12 +278,16 @@ public class OgnlUtil {
         setValue(name, context, root, value, true);
     }
 
-    protected void setValue(String name, Map<String, Object> context, Object root, Object value, boolean evalName) throws OgnlException {
-        Object tree = compile(name, context);
-        if (!evalName && isEvalExpression(tree, context)) {
-            throw new OgnlException("Eval expression cannot be used as parameter name");
-        }
-        Ognl.setValue(tree, context, root, value);
+    protected void setValue(String name, final Map<String, Object> context, final Object root, final Object value, final boolean evalName) throws OgnlException {
+        compileAndExecute(name, context, new OgnlTask<Void>() {
+            public Void execute(Object tree) throws OgnlException {
+                if (!evalName && isEvalExpression(tree, context)) {
+                    throw new OgnlException("Eval expression cannot be used as parameter name");
+                }
+                Ognl.setValue(tree, context, root, value);
+                return null;
+            }
+        });
     }
 
     private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
@@ -247,12 +303,20 @@ public class OgnlUtil {
         return false;
     }
 
-    public Object getValue(String name, Map<String, Object> context, Object root) throws OgnlException {
-        return Ognl.getValue(compile(name, context), context, root);
+    public Object getValue(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
+        return compileAndExecute(name, context, new OgnlTask<Object>() {
+            public Object execute(Object tree) throws OgnlException {
+                return Ognl.getValue(tree, context, root);
+            }
+        });
     }
 
-    public Object getValue(String name, Map<String, Object> context, Object root, Class resultType) throws OgnlException {
-        return Ognl.getValue(compile(name, context), context, root, resultType);
+    public Object getValue(final String name, final Map<String, Object> context, final Object root, final Class resultType) throws OgnlException {
+        return compileAndExecute(name, context, new OgnlTask<Object>() {
+            public Object execute(Object tree) throws OgnlException {
+                return Ognl.getValue(tree, context, root, resultType);
+            }
+        });
     }
 
 
@@ -260,21 +324,33 @@ public class OgnlUtil {
         return compile(expression, null);
     }
 
-    public Object compile(String expression, Map<String, Object> context) throws OgnlException {
+    private <T> Object compileAndExecute(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
         Object tree;
         if (enableExpressionCache) {
             tree = expressions.get(expression);
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkEnableEvalExpression(tree, context);
-                expressions.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
             checkEnableEvalExpression(tree, context);
         }
 
-        return tree;
+        final T exec = task.execute(tree);
+        // if cache is enabled and it's a valid expression, puts it in
+        if(enableExpressionCache) {
+            expressions.putIfAbsent(expression, tree);
+        }
+        return exec;
+    }
+
+    public Object compile(String expression, Map<String, Object> context) throws OgnlException {
+        return compileAndExecute(expression,context,new OgnlTask<Object>() {
+            public Object execute(Object tree) throws OgnlException {
+                return tree;
+            }
+        });
     }
     
     private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
@@ -295,7 +371,7 @@ public class OgnlUtil {
      * @param inclusions collection of method names to included copying  (can be null)
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      */
-    public void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
+    public void copy(final Object from, final Object to, final Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
         if (from == null || to == null) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
@@ -305,9 +381,9 @@ public class OgnlUtil {
         }
 
         TypeConverter conv = getTypeConverterFromContext(context);
-        Map contextFrom = Ognl.createDefaultContext(from);
+        final Map contextFrom = createDefaultContext(from, null);
         Ognl.setTypeConverter(contextFrom, conv);
-        Map contextTo = Ognl.createDefaultContext(to);
+        final Map contextTo = createDefaultContext(to, null);
         Ognl.setTypeConverter(contextTo, conv);
 
         PropertyDescriptor[] fromPds;
@@ -342,9 +418,14 @@ public class OgnlUtil {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
                     if ((toPd != null) && (toPd.getWriteMethod() != null)) {
                         try {
-                            Object expr = compile(fromPd.getName(), context);
-                            Object value = Ognl.getValue(expr, contextFrom, from);
-                            Ognl.setValue(expr, contextTo, to, value);
+                            compileAndExecute(fromPd.getName(), context, new OgnlTask<Object>() {
+                                public Void execute(Object expr) throws OgnlException {
+                                    Object value = Ognl.getValue(expr, contextFrom, from);
+                                    Ognl.setValue(expr, contextTo, to, value);
+                                    return null;
+                                }
+                            });
+
                         } catch (OgnlException e) {
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Got OGNL exception", e);
@@ -409,16 +490,19 @@ public class OgnlUtil {
      * @throws IntrospectionException is thrown if an exception occurs during introspection.
      * @throws OgnlException          is thrown by OGNL if the property value could not be retrieved
      */
-    public Map getBeanMap(Object source) throws IntrospectionException, OgnlException {
-        Map beanMap = new HashMap();
-        Map sourceMap = Ognl.createDefaultContext(source);
+    public Map<String, Object> getBeanMap(final Object source) throws IntrospectionException, OgnlException {
+        Map<String, Object> beanMap = new HashMap<String, Object>();
+        final Map sourceMap = createDefaultContext(source, null);
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(source);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-            String propertyName = propertyDescriptor.getDisplayName();
+            final String propertyName = propertyDescriptor.getDisplayName();
             Method readMethod = propertyDescriptor.getReadMethod();
             if (readMethod != null) {
-                Object expr = compile(propertyName);
-                Object value = Ognl.getValue(expr, sourceMap, source);
+                final Object value = compileAndExecute(propertyName, null, new OgnlTask<Object>() {
+                    public Object execute(Object expr) throws OgnlException {
+                        return Ognl.getValue(expr, sourceMap, source);
+                    }
+                });
                 beanMap.put(propertyName, value);
             } else {
                 beanMap.put(propertyName, "There is no read method for " + propertyName);
@@ -485,4 +569,26 @@ public class OgnlUtil {
         */
         return defaultConverter;
     }
+
+    protected Map createDefaultContext(Object root) {
+        return createDefaultContext(root, null);
+    }
+
+    protected Map createDefaultContext(Object root, ClassResolver classResolver) {
+        ClassResolver resolver = classResolver;
+        if (resolver == null) {
+            resolver = container.getInstance(CompoundRootAccessor.class);
+        }
+
+        SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
+        memberAccess.setExcludedClasses(excludedClasses);
+        memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
+
+        return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
+    }
+
+    private interface OgnlTask<T> {
+        T execute(Object tree) throws OgnlException;
+    }
+
 }

@@ -9,10 +9,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>2.3.17-SNAPSHOT</version>
+    <version>2.3.18-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
-    <url>http://struts.apache.org/2.x/</url>
+    <url>http://struts.apache.org/</url>
     <description>Apache Struts 2</description>
 
     <inceptionYear>2000</inceptionYear>
@@ -122,6 +122,11 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.2</version>
                 </plugin>
@@ -169,6 +174,11 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>

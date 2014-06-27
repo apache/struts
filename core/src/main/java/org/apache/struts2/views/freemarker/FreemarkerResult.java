@@ -39,7 +39,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
-import org.apache.struts2.views.util.ResourceUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -165,12 +164,21 @@ public class FreemarkerResult extends StrutsResultSupport {
         ActionContext ctx = invocation.getInvocationContext();
         HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
 
-        if (!locationArg.startsWith("/")) {
-            String base = ResourceUtil.getResourceBase(req);
-            locationArg = base + "/" + locationArg;
+        String absoluteLocation;
+        if (location.startsWith("/")) {
+            absoluteLocation = location; 
+        } else { 
+            String namespace = invocation.getProxy().getNamespace();
+            if (namespace == null || namespace.length() == 0 || namespace.equals("/")) {
+                absoluteLocation = "/" + location;
+            } else if (namespace.startsWith("/")) {
+                absoluteLocation = namespace + "/" + location;
+            } else {
+                absoluteLocation = "/" + namespace + "/" + location;
+            }
         }
 
-        Template template = configuration.getTemplate(locationArg, deduceLocale());
+        Template template = configuration.getTemplate(absoluteLocation, deduceLocale());
         TemplateModel model = createModel();
 
         // Give subclasses a chance to hook into preprocessing

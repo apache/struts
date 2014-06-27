@@ -60,8 +60,12 @@
         </#if>
     </#if>
     <#assign itemKeyStr=itemKey.toString() />
-<input type="checkbox" name="${parameters.name?html}" value="${itemKeyStr?html}"
+<input type="checkbox" name="${parameters.name?html}" value="${itemKeyStr?html}"<#rt/>
+    <#if parameters.id??>
+       id="${parameters.id?html}-${itemCount}"<#rt/>
+    <#else>
        id="${parameters.name?html}-${itemCount}"<#rt/>
+    </#if>
     <#if tag.contains(parameters.nameValue, itemKey)>
        checked="checked"<#rt/>
     </#if>
@@ -94,7 +98,13 @@
     <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
     <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
         />
-<label for="${parameters.name?html}-${itemCount}" class="checkboxLabel">${itemValue?html}</label>
+<label<#rt/> 
+    <#if parameters.id??>
+        for="${parameters.id?html}-${itemCount}"<#rt/>
+    <#else>
+        for="${parameters.name?html}-${itemCount}"<#rt/>
+    </#if>
+        class="checkboxLabel">${itemValue?html}</label>
 </@s.iterator>
     <#else>
     &nbsp;

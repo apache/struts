@@ -1,0 +1,10 @@
+<form id="testAction" name="testAction" action="/testAction.action" method="post">
+<table class="wwFormTable">
+    <tr>
+        <td align="left" valign="top" colspan="2"><label class="label">label:</label></td>
+    </tr>
+    <tr>
+        <td><input type="text" name=""/></td>
+    </tr>
+</table>
+</form>

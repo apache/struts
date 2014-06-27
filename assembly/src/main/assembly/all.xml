@@ -101,18 +101,18 @@
 
     <!-- Include the XWork Javadoc in the assembly -->
     <fileSet>
-      <directory>../xwork-core/target/site/apidocs</directory>
+      <directory>../xwork-core/target/apidocs</directory>
       <outputDirectory>docs/xwork-apidocs</outputDirectory>
     </fileSet>
 
-      <!-- Include the website in the assembly -->
-      <fileSet>
-        <directory>../target/site</directory>
-        <outputDirectory>docs</outputDirectory>
-      </fileSet>
+      <!-- Include the Struts 2 core Javadoc in the assembly -->
       <fileSet>
         <directory>../core/target/site</directory>
         <outputDirectory>docs/struts2-core</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../core/target/apidocs</directory>
+        <outputDirectory>docs/struts2-core-apidocs</outputDirectory>
       </fileSet>
 
       <!-- Include the Confluence docs in the assembly -->

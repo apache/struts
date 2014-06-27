@@ -16,9 +16,13 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -165,6 +169,89 @@ public class TextParseUtil {
         TextParser parser = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(TextParser.class);
 
         return parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
+    }
+
+    /**
+     * @see #translateVariablesCollection(char[], String, ValueStack, boolean, ParsedValueEvaluator, int)
+     *
+     * @param expression
+     * @param stack
+     * @param excludeEmptyElements
+     * @param evaluator
+     * @return
+     */
+    public static Collection<String>  translateVariablesCollection(String expression, ValueStack stack, boolean excludeEmptyElements, ParsedValueEvaluator evaluator) {
+        return translateVariablesCollection(new char[]{'$', '%'}, expression, stack, excludeEmptyElements, evaluator, MAX_RECURSION);
+    }
+
+    /**
+     * Resolves given expression on given ValueStack. If found element is a
+     * collection each element will be converted to String. If just a single
+     * object is found it is converted to String and wrapped in a collection.
+     * 
+     * @param openChars
+     * @param expression
+     * @param stack
+     * @param excludeEmptyElements
+     * @param evaluator
+     * @param maxLoopCount
+     * @return
+     */
+    public static Collection<String> translateVariablesCollection(
+            char[] openChars, String expression, final ValueStack stack, boolean excludeEmptyElements,
+            final ParsedValueEvaluator evaluator, int maxLoopCount) {
+
+        ParsedValueEvaluator ognlEval = new ParsedValueEvaluator() {
+            public Object evaluate(String parsedValue) {
+                return stack.findValue(parsedValue); // no asType !!!
+            }
+        };
+
+        Map<String, Object> context = stack.getContext();
+        TextParser parser = ((Container)context.get(ActionContext.CONTAINER)).getInstance(TextParser.class);
+
+        Object result = parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
+
+        XWorkConverter conv = ((Container)context.get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
+
+        Collection<String> resultCol;
+        if (result instanceof Collection) {
+            @SuppressWarnings("unchecked")
+            Collection<Object> casted = (Collection<Object>)result;
+            resultCol = new ArrayList<String>(casted.size());
+            for (Object element : casted) {
+                String stringElement = (String)conv.convertValue(context, element, String.class);
+                if (shallBeIncluded(stringElement, excludeEmptyElements)) {
+                    if (evaluator != null) {
+                        stringElement = evaluator.evaluate(stringElement).toString();
+                    }
+                    resultCol.add(stringElement);
+                }
+            }
+        } else {
+            resultCol = new ArrayList<String>(1);
+            String stringResult = (String)conv.convertValue(context, result, String.class);
+            if (shallBeIncluded(stringResult, excludeEmptyElements)) {
+                if (evaluator != null) {
+                    stringResult = evaluator.evaluate(stringResult).toString();
+                }
+                resultCol.add(stringResult);
+            }
+        }
+
+        return resultCol;
+    }
+
+    /**
+     * Tests if given string is not null and not empty when excluding of empty
+     * elements is requested.
+     * 
+     * @param str String to check.
+     * @param excludeEmptyElements Whether empty elements shall be excluded.
+     * @return True if given string can be included in collection.
+     */
+    private static boolean shallBeIncluded(String str, boolean excludeEmptyElements) {
+        return !excludeEmptyElements || ((str != null) && (str.length() > 0));
     }
 
     /**

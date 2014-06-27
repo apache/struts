@@ -80,6 +80,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         this.resultTypeConfigs = new LinkedHashMap<String, ResultTypeConfig>(orig.resultTypeConfigs);
         this.globalExceptionMappingConfigs = new ArrayList<ExceptionMappingConfig>(orig.globalExceptionMappingConfigs);
         this.parents = new ArrayList<PackageConfig>(orig.parents);
+        this.location = orig.location;
     }
 
     public boolean isAbstract() {

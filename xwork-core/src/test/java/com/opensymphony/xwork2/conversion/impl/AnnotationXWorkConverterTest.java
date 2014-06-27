@@ -374,8 +374,8 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.setValue("genericMap[456.12]", "42");
 
         assertEquals(2, gb.getGenericMap().size());
-        assertEquals(Integer.class, stack.findValue("genericMap.get(123.12).class"));
-        assertEquals(Integer.class, stack.findValue("genericMap.get(456.12).class"));
+        assertEquals("66", stack.findValue("genericMap.get(123.12).toString()"));
+        assertEquals("42", stack.findValue("genericMap.get(456.12).toString()"));
         assertEquals(66, stack.findValue("genericMap.get(123.12)"));
         assertEquals(42, stack.findValue("genericMap.get(456.12)"));
         assertEquals(true, stack.findValue("genericMap.containsValue(66)"));
@@ -393,8 +393,8 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.setValue("genericMap[456.12]", "42");
 
         assertEquals(2, gb.getGenericMap().size());
-        assertEquals(Integer.class, stack.findValue("genericMap.get(123.12).class"));
-        assertEquals(Integer.class, stack.findValue("genericMap.get(456.12).class"));
+        assertEquals("66", stack.findValue("genericMap.get(123.12).toString()"));
+        assertEquals("42", stack.findValue("genericMap.get(456.12).toString()"));
         assertEquals(66, stack.findValue("genericMap.get(123.12)"));
         assertEquals(42, stack.findValue("genericMap.get(456.12)"));
         assertEquals(true, stack.findValue("genericMap.containsValue(66)"));
@@ -409,7 +409,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.push(gb);
 
         assertEquals(1, gb.getGetterList().size());
-        assertEquals(Double.class, stack.findValue("getterList.get(0).class"));
+        assertEquals("42.42", stack.findValue("getterList.get(0).toString()"));
         assertEquals(new Double(42.42), stack.findValue("getterList.get(0)"));
         assertEquals(new Double(42.42), gb.getGetterList().get(0));
 

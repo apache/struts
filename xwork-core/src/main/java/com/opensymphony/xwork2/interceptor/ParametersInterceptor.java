@@ -17,6 +17,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
@@ -141,22 +143,17 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParametersInterceptor.class);
 
-    public static final String ACCEPTED_PARAM_NAMES = "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*";
-
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
+    private ExcludedPatternsChecker excludedPatterns;
+
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
-
-    protected boolean ordered = false;
-    protected Set<Pattern> excludeParams = Collections.emptySet();
-    protected Set<Pattern> acceptParams = Collections.emptySet();
-
     private boolean devMode = false;
 
-    // Allowed names of parameters
-    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PARAM_NAMES);
+    protected boolean ordered = false;
 
     private ValueStackFactory valueStackFactory;
+    private AcceptedPatternsChecker acceptedPatterns;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -168,23 +165,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         devMode = "true".equalsIgnoreCase(mode);
     }
 
-	/**
-	 * Sets a comma-delimited list of regular expressions to match
-	 * parameters that are allowed in the parameter map (aka whitelist).
-	 * <p/>
-	 * Don't change the default unless you know what you are doing in terms
-	 * of security implications.
-	 *
-	 * @param commaDelim A comma-delimited list of regular expressions
-	 */
-	public void setAcceptParamNames(String commaDelim) {
-        Collection<String> acceptPatterns = ArrayUtils.asCollection(commaDelim);
-        if (acceptPatterns != null) {
-            acceptParams = new HashSet<Pattern>();
-            for (String pattern : acceptPatterns) {
-                acceptParams.add(Pattern.compile(pattern));
-            }
-        }
+    @Inject
+    public void setExcludedPatterns(ExcludedPatternsChecker excludedPatterns) {
+        this.excludedPatterns = excludedPatterns;
+    }
+
+    @Inject
+    public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
+        this.acceptedPatterns = acceptedPatterns;
     }
 
     /**
@@ -285,7 +273,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String name = entry.getKey();
-            if (isAcceptableParameter(name, action)) {
+            Object value = entry.getValue();
+            if (isAcceptableParameter(name, action) && isAcceptableValue(value)) {
                 acceptableParameters.put(name, entry.getValue());
             }
         }
@@ -310,8 +299,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             //block or allow access to properties
             //see WW-2761 for more details
             MemberAccessValueStack accessValueStack = (MemberAccessValueStack) newStack;
-            accessValueStack.setAcceptProperties(acceptParams);
-            accessValueStack.setExcludeProperties(excludeParams);
+            accessValueStack.setAcceptProperties(acceptedPatterns.getAcceptedPatterns());
+            accessValueStack.setExcludeProperties(excludedPatterns.getExcludedPatterns());
         }
 
         for (Map.Entry<String, Object> entry : acceptableParameters.entrySet()) {
@@ -358,6 +347,33 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean isAcceptableParameter(String name, Object action) {
         ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware) ? (ParameterNameAware) action : null;
         return acceptableName(name) && (parameterNameAware == null || parameterNameAware.acceptableParameterName(name));
+    }
+
+    /**
+     * Checks if given value doesn't match global excluded patterns to avoid passing malicious code
+     *
+     * @param value incoming parameter's value
+     * @return true if value is safe
+     *
+     * FIXME: can be removed when parameters won't be represented as simple Strings
+     */
+    protected boolean isAcceptableValue(Object value) {
+        if (value == null) {
+            return true;
+        }
+        Object[] values;
+        if (value.getClass().isArray()) {
+            values = (Object[]) value;
+        } else {
+            values = new Object[] { value };
+        }
+        boolean result = true;
+        for (Object obj : values) {
+            if (isExcluded(obj.toString())) {
+                result = false;
+            }
+        }
+        return result;
     }
 
     /**
@@ -417,33 +433,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 	}
 
     protected boolean isAccepted(String paramName) {
-        if (!this.acceptParams.isEmpty()) {
-            for (Pattern pattern : acceptParams) {
-                Matcher matcher = pattern.matcher(paramName);
-                if (matcher.matches()) {
-                    return true;
-                }
-            }
-            notifyDeveloper("Parameter [#0] didn't match acceptParams list of patterns!", paramName);
-            return false;
-        } else {
-            boolean matches = acceptedPattern.matcher(paramName).matches();
-            if (!matches) {
-                notifyDeveloper("Parameter [#0] didn't match acceptedPattern pattern!", paramName);
-            }
-            return matches;
+        AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
+        if (result.isAccepted()) {
+            return true;
         }
+        notifyDeveloper("Parameter [#0] didn't match accepted pattern [#1]!", paramName, String.valueOf(result.getAcceptedPattern()));
+        return false;
     }
 
     protected boolean isExcluded(String paramName) {
-        if (!this.excludeParams.isEmpty()) {
-            for (Pattern pattern : excludeParams) {
-                Matcher matcher = pattern.matcher(paramName);
-                if (matcher.matches()) {
-                    notifyDeveloper("Parameter [#0] is on the excludeParams list of patterns!", paramName);
-                    return true;
-                }
-            }
+        ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
+        if (result.isExcluded()) {
+            notifyDeveloper("Parameter [#0] matches excluded pattern [#1]!", paramName, String.valueOf(result.getExcludedPattern()));
+            return true;
         }
         return false;
     }
@@ -477,13 +479,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Gets a set of regular expressions of parameters to remove
-     * from the parameter map
+     * Sets a comma-delimited list of regular expressions to match
+     * parameters that are allowed in the parameter map (aka whitelist).
+     * <p/>
+     * Don't change the default unless you know what you are doing in terms
+     * of security implications.
      *
-     * @return A set of compiled regular expression patterns
+     * @param commaDelim A comma-delimited list of regular expressions
      */
-    protected Set getExcludeParamsSet() {
-        return excludeParams;
+    public void setAcceptParamNames(String commaDelim) {
+        acceptedPatterns.addAcceptedPatterns(commaDelim);
     }
 
     /**
@@ -493,13 +498,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setExcludeParams(String commaDelim) {
-        Collection<String> excludePatterns = ArrayUtils.asCollection(commaDelim);
-        if (excludePatterns != null) {
-            excludeParams = new HashSet<Pattern>();
-            for (String pattern : excludePatterns) {
-                excludeParams.add(Pattern.compile(pattern));
-            }
-        }
+        excludedPatterns.addExcludedPatterns(commaDelim);
     }
 
 }

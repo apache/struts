@@ -2,9 +2,13 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.DefaultTextProvider;
 import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.LocaleProvider;
@@ -168,7 +172,12 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ArrayConverter.class, Scope.SINGLETON)
                 .factory(DateConverter.class, Scope.SINGLETON)
                 .factory(NumberConverter.class, Scope.SINGLETON)
-                .factory(StringConverter.class, Scope.SINGLETON);
+                .factory(StringConverter.class, Scope.SINGLETON)
+
+                .factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class, Scope.DEFAULT)
+                .factory(AcceptedPatternsChecker.class, DefaultAcceptedPatternsChecker.class, Scope.DEFAULT)
+        ;
+
         props.setProperty(XWorkConstants.DEV_MODE, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());

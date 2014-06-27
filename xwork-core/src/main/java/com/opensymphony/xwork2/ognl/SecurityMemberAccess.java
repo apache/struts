@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import ognl.DefaultMemberAccess;
 
 import java.lang.reflect.Member;
@@ -32,9 +34,13 @@ import java.util.regex.Pattern;
  */
 public class SecurityMemberAccess extends DefaultMemberAccess {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityMemberAccess.class);
+
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
+    private Set<Class<?>> excludedClasses = Collections.emptySet();
+    private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -46,8 +52,20 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     @Override
-    public boolean isAccessible(Map context, Object target, Member member,
-                                String propertyName) {
+    public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+        if (isPackageExcluded(target.getClass().getPackage(), member.getDeclaringClass().getPackage())) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Package of target [#0] or package of member [#1] are excluded!", target, member);
+            }
+            return false;
+        }
+
+        if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Target class [#0] or declaring class of member type [#1] are excluded!", target, member);
+            }
+            return false;
+        }
 
         boolean allow = true;
         int modifiers = member.getModifiers();
@@ -72,6 +90,27 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
 
         return isAcceptableProperty(propertyName);
+    }
+
+    protected boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
+        for (Pattern pattern : excludedPackageNamePatterns) {
+            if (pattern.matcher(targetPackage.getName()).matches() || pattern.matcher(memberPackage.getName()).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isClassExcluded(Class<?> targetClass, Class<?> declaringClass) {
+        if (targetClass == Object.class || declaringClass == Object.class) {
+            return true;
+        }
+        for (Class<?> excludedClass : excludedClasses) {
+            if (targetClass.isAssignableFrom(excludedClass) || declaringClass.isAssignableFrom(excludedClass)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean isAcceptableProperty(String name) {
@@ -115,4 +154,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         this.acceptProperties = acceptedProperties;
     }
 
+    public void setExcludedClasses(Set<Class<?>> excludedClasses) {
+        this.excludedClasses = excludedClasses;
+    }
+
+    public void setExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
+        this.excludedPackageNamePatterns = excludedPackageNamePatterns;
+    }
 }

@@ -49,6 +49,7 @@ public class ExceptionMappingConfig extends Located implements Serializable {
         this.exceptionClassName = target.exceptionClassName;
         this.result = target.result;
         this.params = new LinkedHashMap<String,String>(target.params);
+        this.location = target.location;
     }
 
     public String getName() {

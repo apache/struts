@@ -43,8 +43,13 @@
 </#if>
 </#if>
 
+<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
+<#assign labelpos = parameters.form.labelposition/>
+<#elseif parameters.labelposition??>
+<#assign labelpos = parameters.labelposition/>
+</#if>
 <#if parameters.label??>
-<#if parameters.labelposition?default("top") == 'top'>
+<#if labelpos?default("top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -66,7 +71,7 @@
         ${parameters.label?html}${parameters.labelseparator!":"?html}
 <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
 	</label><#t/>
-<#if parameters.labelposition?default("top") == 'top'>
+<#if labelpos?default("top") == 'top'>
 </div> <br /><#rt/>
 <#else>
 </span> <#rt/>

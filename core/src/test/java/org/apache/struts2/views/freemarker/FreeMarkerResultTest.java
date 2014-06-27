@@ -22,7 +22,9 @@
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
@@ -164,6 +166,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         invocation = new MockActionInvocation();
         invocation.setStack(stack);
         invocation.setInvocationContext(context);
+        invocation.setProxy(new MockActionProxy());
         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
                 "someFreeMarkerFile.ftl").toURI()).toURL().getFile());
     }

@@ -48,6 +48,7 @@ import java.util.Map;
 public abstract class ListUIBean extends UIBean {
     protected Object list;
     protected String listKey;
+    protected String listValueKey;
     protected String listValue;
     protected String listLabelKey;
     protected String listCssClass;
@@ -109,6 +110,13 @@ public abstract class ListUIBean extends UIBean {
             addParameter("listKey", "key");
         }
 
+        if (listValueKey != null) {
+            listValueKey = stripExpressionIfAltSyntax(listValueKey);
+            addParameter("listValueKey", listValueKey);
+        } else if (value instanceof Map) {
+            addParameter("listValueKey", "valueKey");
+        }
+
         if (listValue != null) {
             listValue = stripExpressionIfAltSyntax(listValue);
             addParameter("listValue", listValue);
@@ -151,6 +159,11 @@ public abstract class ListUIBean extends UIBean {
     @StrutsTagAttribute(description = " Property of list objects to get field value from")
     public void setListKey(String listKey) {
         this.listKey = listKey;
+    }
+
+    @StrutsTagAttribute(description = " Property of list objects to get field value label from")
+    public void setListValueKey(String listValueKey) {
+        this.listValueKey = listValueKey;
     }
 
     @StrutsTagAttribute(description = "Property of list objects to get field content from")

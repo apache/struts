@@ -23,6 +23,7 @@ package org.apache.struts2.views.jsp.ui;
 
 import java.util.LinkedHashMap;
 
+import com.opensymphony.xwork2.Action;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
@@ -190,4 +191,44 @@ public class OptGroupTest extends AbstractUITagTest {
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-5.txt"));
     }
+
+    public void testOptGroupWithValueKey() throws Exception {
+        SelectTag selectTag = new SelectTag();
+        selectTag.setName("mySelection");
+        selectTag.setLabel("My Selection");
+        selectTag.setList("%{#{'ONE':'one','TWO':'two','THREE':'three'}}");
+        selectTag.setListValueKey("valueKey");
+
+        stack.push(new Action() {
+            public String execute() throws Exception {
+                return SUCCESS;
+            }
+
+            public String getValueKey() { return "MyValue"; }
+        });
+
+        OptGroupTag optGroupTag1 = new OptGroupTag();
+        optGroupTag1.setLabel("My Label 1");
+        optGroupTag1.setList("%{#{'AAA':'aaa','BBB':'bbb','CCC':'ccc'}}");
+
+        OptGroupTag optGroupTag2 = new OptGroupTag();
+        optGroupTag2.setLabel("My Label 2");
+        optGroupTag2.setList("%{#{'DDD':'ddd','EEE':'eee','FFF':'fff'}}");
+
+        selectTag.setPageContext(pageContext);
+        selectTag.doStartTag();
+        optGroupTag1.setPageContext(pageContext);
+        optGroupTag1.doStartTag();
+        optGroupTag1.doEndTag();
+        optGroupTag2.setPageContext(pageContext);
+        optGroupTag2.doStartTag();
+        optGroupTag2.doEndTag();
+        selectTag.doEndTag();
+
+
+        //System.out.println(writer.toString());
+        verify(SelectTag.class.getResource("OptGroup-6.txt"));
+    }
+
+
 }

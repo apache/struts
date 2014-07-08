@@ -286,6 +286,14 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         if (conn == null)
             stackDataSource = new ValueStackDataSource(stack, dataSource);
 
+        if ("https".equalsIgnoreCase(request.getScheme())) {
+            // set the the HTTP Header to work around IE SSL weirdness
+            response.setHeader("CACHE-CONTROL", "PRIVATE");
+            response.setHeader("Cache-Control", "maxage=3600");
+            response.setHeader("Pragma", "public");
+            response.setHeader("Accept-Ranges", "none");
+        }
+
         // Determine the directory that the report file is in and set the reportDirectory parameter
         // For WW 2.1.7:
         //  ServletContext servletContext = ((ServletConfig) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONFIG)).getServletContext();

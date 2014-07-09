@@ -241,6 +241,8 @@ public class XSLTResult implements Result {
     /** Indicates the status to return in the response */
     private int status = 200;
 
+    private String encoding = "UTF-8";
+
     private boolean parse;
     private AdapterFactory adapterFactory;
 
@@ -322,6 +324,14 @@ public class XSLTResult implements Result {
         }
     }
 
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
     /**
      * If true, parse the stylesheet location for OGNL expressions.
      *
@@ -344,6 +354,7 @@ public class XSLTResult implements Result {
         try {
             HttpServletResponse response = ServletActionContext.getResponse();
             response.setStatus(status);
+            response.setCharacterEncoding(encoding);
             PrintWriter writer = response.getWriter();
 
             // Create a transformer for the stylesheet.

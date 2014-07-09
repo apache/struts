@@ -205,6 +205,17 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
     }
 
+    public void testEncoding() throws Exception {
+        result.setParse(false);
+        result.setLocation("XSLTResultTest.xsl");
+        result.setEncoding("ISO-8859-1");
+        result.execute(mai);
+
+        String actual = response.getCharacterEncoding();
+
+        assertEquals(actual, "ISO-8859-1");
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         request = new MockHttpServletRequest();

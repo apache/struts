@@ -171,6 +171,7 @@ import java.util.Map;
  * <ul>
  *
  * <li><b>location (default)</b> - the location to go to after execution.</li>
+ * <li><b>encoding</b> - character encoding used in XML, default UTF-8.</li>
  *
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>

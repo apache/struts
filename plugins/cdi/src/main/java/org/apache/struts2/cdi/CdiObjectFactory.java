@@ -198,4 +198,13 @@ public class CdiObjectFactory extends ObjectFactory {
     protected CreationalContext buildNonContextualCreationalContext(BeanManager beanManager) {
         return beanManager != null ? beanManager.createCreationalContext(null) : null;
     }
+
+    /**
+     * Allow constructor injection
+     */
+    @Override
+    public boolean isNoArgConstructorRequired() {
+        return false;
+    }
+
 }

@@ -59,6 +59,7 @@
     </distributionManagement>
 
     <modules>
+        <module>bom</module>
         <module>xwork-core</module>
         <module>core</module>
         <module>apps</module>

@@ -20,16 +20,12 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
-
 /**
- * Base class for range based validators.
- *
- * @author Jason Carreira
- * @author Cameron Braid
+ * Base class for range based validators. Use this class to develop any other custom range validators.
  */
-public abstract class AbstractRangeValidator<T extends Comparable> extends FieldValidatorSupport {
+public abstract class RangeValidatorSupport<T extends Comparable> extends FieldValidatorSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractRangeValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RangeValidatorSupport.class);
 
     private final Class<T> type;
 
@@ -38,7 +34,7 @@ public abstract class AbstractRangeValidator<T extends Comparable> extends Field
     private T max;
     private String maxExpression;
 
-    protected AbstractRangeValidator(Class<T> type) {
+    protected RangeValidatorSupport(Class<T> type) {
         this.type = type;
     }
 

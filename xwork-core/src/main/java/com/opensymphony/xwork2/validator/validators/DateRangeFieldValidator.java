@@ -86,7 +86,7 @@ import java.util.Date;
  * @author Jason Carreira
  * @version $Date$ $Id$
  */
-public class DateRangeFieldValidator extends AbstractRangeValidator<Date> {
+public final class DateRangeFieldValidator extends RangeValidatorSupport<Date> {
 
     public DateRangeFieldValidator() {
         super(Date.class);

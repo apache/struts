@@ -30,7 +30,7 @@
             <#assign itemKey = stack.findValue('top')/>
     </#if>
     <#if parameters.listValue??>
-        <#assign itemValue = stack.findString(parameters.listValue)?default("")/>
+        <#assign itemValue = stack.findString(parameters.listValue)!""/>
         <#else>
             <#assign itemValue = stack.findString('top')/>
     </#if>
@@ -57,7 +57,7 @@
     </#if>
     <#assign itemKeyStr=itemKey.toString() />
 <input type="checkbox" name="${parameters.name?html}" value="${itemKeyStr?html}"<#rt/>
-    <#if parameters.id??>
+    <#if parameters.id?has_content>
        id="${parameters.id?html}-${itemCount}"<#rt/>
     <#else>
        id="${parameters.name?html}-${itemCount}"<#rt/>
@@ -65,27 +65,27 @@
     <#if tag.contains(parameters.nameValue, itemKey)>
        checked="checked"<#rt/>
     </#if>
-    <#if parameters.disabled?default(false)>
+    <#if parameters.disabled!false>
        disabled="disabled"<#rt/>
     </#if>
-    <#if itemCssClass?if_exists != "">
+    <#if itemCssClass! != "">
      class="${itemCssClass?html}"<#rt/>
     <#else>
-        <#if parameters.cssClass??>
+        <#if parameters.cssClass?has_content>
      class="${parameters.cssClass?html}"<#rt/>
         </#if>
     </#if>
-    <#if itemCssStyle?if_exists != "">
+    <#if itemCssStyle! != "">
      style="${itemCssStyle?html}"<#rt/>
     <#else>
-        <#if parameters.cssStyle??>
+        <#if parameters.cssStyle?has_content>
      style="${parameters.cssStyle?html}"<#rt/>
         </#if>
     </#if>
-    <#if itemTitle?if_exists != "">
+    <#if itemTitle! != "">
      title="${itemTitle?html}"<#rt/>
     <#else>
-        <#if parameters.title??>
+        <#if parameters.title?has_content>
      title="${parameters.title?html}"<#rt/>
         </#if>
     </#if>
@@ -95,7 +95,7 @@
     <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
         />
 <label<#rt/> 
-    <#if parameters.id??>
+    <#if parameters.id?has_content>
         for="${parameters.id?html}-${itemCount}"<#rt/>
     <#else>
         for="${parameters.name?html}-${itemCount}"<#rt/>
@@ -107,7 +107,7 @@
 </#if>
 <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.name?html}"
        value=""<#rt/>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
        disabled="disabled"<#rt/>
 </#if>
-        />
+ />

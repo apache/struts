@@ -54,32 +54,35 @@
         </#if>
     </#if>
 <input type="radio"<#rt/>
-<#if parameters.name??>
+<#if parameters.name?has_content>
  name="${parameters.name?html}"<#rt/>
 </#if>
  id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
-<#if tag.contains(parameters.nameValue?default(''), itemKeyStr)>
+<#if tag.contains(parameters.nameValue!'', itemKeyStr)>
  checked="checked"<#rt/>
 </#if>
 <#if itemKey??>
  value="${itemKeyStr?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.tabindex??>
+<#if parameters.readonly!false>
+ readonly="readonly"<#rt/>
+</#if>
+<#if parameters.tabindex?has_content>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if itemCssClass?if_exists != "">
+<#if itemCssClass?has_content>
  class="${itemCssClass?html}"<#rt/>
 </#if>
-<#if itemCssStyle?if_exists != "">
+<#if itemCssStyle?has_content>
  style="${itemCssStyle?html}"<#rt/>
 </#if>
-<#if itemTitle?if_exists != "">
+<#if itemTitle?has_content>
  title="${itemTitle?html}"<#rt/>
 <#else>
-    <#if parameters.title??>
+    <#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
     </#if>
 </#if>

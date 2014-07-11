@@ -21,26 +21,26 @@
  */
 -->
 <textarea<#rt/>
- name="${parameters.name?default("")?html}"<#rt/>
- cols="${parameters.cols?default("")?html}"<#rt/>
- rows="${parameters.rows?default("")?html}"<#rt/>
-<#if parameters.wrap??>
+ name="${(parameters.name!"")?html}"<#rt/>
+ cols="${(parameters.cols!"")?html}"<#rt/>
+ rows="${(parameters.rows!"")?html}"<#rt/>
+<#if parameters.wrap?has_content>
  wrap="${parameters.wrap?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly?default(false)>
+<#if parameters.readonly!false>
  readonly="readonly"<#rt/>
 </#if>
-<#if parameters.tabindex??>
+<#if parameters.tabindex?has_content>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.id??>
+<#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#if parameters.title??>
+<#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />

@@ -134,6 +134,9 @@ public final class StrutsConstants {
     /** The directory to use for storing uploaded files */
     public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
 
+    /** Declares the buffer size to be used during streaming multipart content to disk. Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest} */
+    public static final String STRUTS_MULTIPART_BUFFERSIZE = "struts.multipart.bufferSize";
+
     /**
      * The org.apache.struts2.dispatcher.multipart.MultiPartRequest parser implementation
      * for a multipart request (file upload)

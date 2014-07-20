@@ -2,6 +2,8 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
+import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
@@ -121,6 +123,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(InterceptorFactory.class, DefaultInterceptorFactory.class)
                 .factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class)
                 .factory(ConverterFactory.class, DefaultConverterFactory.class)
+                .factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class)
 
                 .factory(ActionProxyFactory.class, DefaultActionProxyFactory.class, Scope.SINGLETON)
                 .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)

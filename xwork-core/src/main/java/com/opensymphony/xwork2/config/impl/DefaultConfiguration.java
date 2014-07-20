@@ -63,8 +63,10 @@ import com.opensymphony.xwork2.factory.DefaultActionFactory;
 import com.opensymphony.xwork2.factory.DefaultConverterFactory;
 import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
 import com.opensymphony.xwork2.factory.DefaultResultFactory;
+import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.InterceptorFactory;
 import com.opensymphony.xwork2.factory.ResultFactory;
+import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
@@ -308,7 +310,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.SINGLETON);
         builder.factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class, Scope.SINGLETON);
         builder.factory(ConverterFactory.class, DefaultConverterFactory.class, Scope.SINGLETON);
-
+        builder.factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class, Scope.SINGLETON);
 
         builder.factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON);
         if (!fmFactoryRegistered) {

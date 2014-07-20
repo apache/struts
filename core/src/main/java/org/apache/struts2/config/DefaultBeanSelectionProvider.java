@@ -22,6 +22,7 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
@@ -352,6 +353,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(ConverterFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_CONVERTERFACTORY, builder, props);
         alias(InterceptorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);
         alias(ValidatorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_VALIDATORFACTORY, builder, props);
+        alias(UnknownHandlerFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_UNKNOWNHANDLERFACTORY, builder, props);
 
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
 

@@ -60,6 +60,7 @@
     <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultConverterFactory" />
     <bean type="com.opensymphony.xwork2.factory.InterceptorFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultInterceptorFactory" />
     <bean type="com.opensymphony.xwork2.factory.ValidatorFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultValidatorFactory" />
+    <bean type="com.opensymphony.xwork2.factory.UnknownHandlerFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory" />
 
     <bean type="com.opensymphony.xwork2.FileManager" class="com.opensymphony.xwork2.util.fs.DefaultFileManager" name="system" scope="singleton"/>
     <bean type="com.opensymphony.xwork2.FileManagerFactory" class="com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory" name="struts" scope="singleton"/>

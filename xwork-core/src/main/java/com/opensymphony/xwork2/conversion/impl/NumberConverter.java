@@ -95,6 +95,8 @@ public class NumberConverter extends DefaultTypeConverter {
                 bigValue = new BigInteger(stringValue);
                 lowerBound = BigInteger.valueOf(Long.MIN_VALUE);
                 upperBound = BigInteger.valueOf(Long.MAX_VALUE);
+            } else {
+                throw new IllegalArgumentException("Unexpected numeric type: " + toType.getName());
             }
         } catch (NumberFormatException e) {
             //shoult it fail here? BigInteger doesnt seem to be so nice parsing numbers as NumberFormat

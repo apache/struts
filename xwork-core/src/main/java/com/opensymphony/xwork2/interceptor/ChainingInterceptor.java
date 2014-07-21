@@ -148,9 +148,10 @@ public class ChainingInterceptor extends AbstractInterceptor {
     private void copyStack(ActionInvocation invocation, CompoundRoot root) {
         List list = prepareList(root);
         Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
+        Object action = invocation.getAction();
         for (Object object : list) {
-            if (shouldCopy(object)) {
-                reflectionProvider.copy(object, invocation.getAction(), ctxMap, prepareExcludes(), includes);
+            if (shouldCopy(action, object)) {
+                reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes);
             }
         }
     }
@@ -174,8 +175,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
         return localExcludes;
     }
 
-    private boolean shouldCopy(Object o) {
-        return o != null && !(o instanceof Unchainable);
+    private boolean shouldCopy(Object action, Object o) {
+        return o != null && action != o && !(o instanceof Unchainable);
     }
 
     @SuppressWarnings("unchecked")

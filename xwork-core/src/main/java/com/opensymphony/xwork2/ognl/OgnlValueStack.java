@@ -208,7 +208,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     	boolean shouldLog = shouldLogMissingPropertyWarning(e);
     	String msg = null;
     	if (throwExceptionOnFailure || shouldLog) {
-    		msg = "Error setting expression '" + expr + "' with value '" + value + "'";    		
+    		msg = ErrorMessageBuilder.create()
+                    .errorSettingExpressionWithValue(expr, value)
+                    .build();
     	}
     	if (shouldLog) {
             LOG.warn(msg, e);

@@ -427,8 +427,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         } else {
             if (!verifyAction(className, name, location)) {
-                if (LOG.isErrorEnabled())
+                if (LOG.isErrorEnabled()) {
                     LOG.error("Unable to verify action [#0] with class [#1], from [#2]", name, className, location);
+                }
                 return;
             }
         }

@@ -52,6 +52,8 @@ public interface Logger {
 
     void error(String msg, String... args);
 
+    void error(String msg, Object... args);
+
     void error(String msg, Throwable ex, String... args);
 
     boolean isErrorEnabled();

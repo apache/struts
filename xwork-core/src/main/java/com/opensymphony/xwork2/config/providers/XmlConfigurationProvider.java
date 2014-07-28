@@ -37,11 +37,13 @@ import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -426,7 +428,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         } else {
             if (!verifyAction(className, name, location)) {
                 if (LOG.isErrorEnabled())
-                    LOG.error("Unable to verify action [#0] with class [#1], from [#2]", name, className, location.toString());
+                    LOG.error("Unable to verify action [#0] with class [#1], from [#2]", name, className, location);
                 return;
             }
         }

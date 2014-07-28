@@ -141,7 +141,14 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.cssClass = cssClass;
     }
 
+    public void setClass(String cssClass) {
+        this.cssClass = cssClass;
+    }
+
     public void setCssStyle(String cssStyle) {
+        this.cssStyle = cssStyle;
+    }
+    public void setStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
 

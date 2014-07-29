@@ -38,7 +38,6 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -87,7 +86,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class LocalizedTextUtil {
 
-    private static final List<String> DEFAULT_RESOURCE_BUNDLES = new CopyOnWriteArrayList<String>();
+    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<Integer, List<String>>();
+//    private static final List<String> DEFAULT_RESOURCE_BUNDLES = new CopyOnWriteArrayList<String>();
     private static final Logger LOG = LoggerFactory.getLogger(LocalizedTextUtil.class);
     private static boolean reloadBundles = false;
     private static final ResourceBundle EMPTY_BUNDLE = new EmptyResourceBundle();
@@ -96,6 +96,7 @@ public class LocalizedTextUtil {
 
     private static ClassLoader delegatedClassLoader;
     private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
+    private static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
 
     static {
         clearDefaultResourceBundles();
@@ -106,16 +107,12 @@ public class LocalizedTextUtil {
      * Clears the internal list of resource bundles.
      */
     public static void clearDefaultResourceBundles() {
-        if (DEFAULT_RESOURCE_BUNDLES != null) {
-            synchronized (DEFAULT_RESOURCE_BUNDLES) {
-                DEFAULT_RESOURCE_BUNDLES.clear();
-                DEFAULT_RESOURCE_BUNDLES.add("com/opensymphony/xwork2/xwork-messages");
-            }
-        } else {
-            synchronized (DEFAULT_RESOURCE_BUNDLES) {
-                DEFAULT_RESOURCE_BUNDLES.add("com/opensymphony/xwork2/xwork-messages");
-            }
-        }
+//        DEFAULT_RESOURCE_BUNDLES.clear();
+//        DEFAULT_RESOURCE_BUNDLES.add(XWORK_MESSAGES_BUNDLE);
+        ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+        List<String> bundles = new ArrayList<String>();
+        classLoaderMap.put(ccl.hashCode(), bundles);
+        bundles.add(0, XWORK_MESSAGES_BUNDLE);
     }
 
     /**
@@ -136,13 +133,20 @@ public class LocalizedTextUtil {
      */
     public static void addDefaultResourceBundle(String resourceBundleName) {
         //make sure this doesn't get added more than once
-        synchronized (DEFAULT_RESOURCE_BUNDLES) {
-            DEFAULT_RESOURCE_BUNDLES.remove(resourceBundleName);
-            DEFAULT_RESOURCE_BUNDLES.add(0, resourceBundleName);
+        synchronized (classLoaderMap) {
+            ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+            List<String> bundles = classLoaderMap.get(ccl.hashCode());
+            if (bundles == null) {
+                bundles = new ArrayList<String>();
+                classLoaderMap.put(ccl.hashCode(), bundles);
+                bundles.add(XWORK_MESSAGES_BUNDLE);
+            }
+            bundles.remove(resourceBundleName);
+            bundles.add(0, resourceBundleName);
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Added default resource bundle '" + resourceBundleName + "' to default resource bundles = " + DEFAULT_RESOURCE_BUNDLES);
+            //LOG.debug("Added default resource bundle '" + resourceBundleName + "' to default resource bundles = " + DEFAULT_RESOURCE_BUNDLES);
         }
     }
 
@@ -197,7 +201,7 @@ public class LocalizedTextUtil {
      * @return a localized message based on the specified key, or null if no localized message can be found for it
      */
     public static String findDefaultText(String aTextName, Locale locale) {
-        List<String> localList = DEFAULT_RESOURCE_BUNDLES;
+        List<String> localList = classLoaderMap.get(Thread.currentThread().getContextClassLoader().hashCode());
 
         for (String bundleName : localList) {
             ResourceBundle bundle = findResourceBundle(bundleName, locale);
@@ -252,26 +256,25 @@ public class LocalizedTextUtil {
             if (!bundlesMap.containsKey(key)) {
                 bundle = ResourceBundle.getBundle(aBundleName, locale, Thread.currentThread().getContextClassLoader());
                 bundlesMap.putIfAbsent(key, bundle);
+            } else {
+                bundle = bundlesMap.get(key);
             }
-
-            bundle = bundlesMap.get(key);
         } catch (MissingResourceException ex) {
             if (delegatedClassLoader != null) {
                 try {
                     if (!bundlesMap.containsKey(key)) {
                         bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoader);
                         bundlesMap.putIfAbsent(key, bundle);
+                    } else {
+                        bundle = bundlesMap.get(key);
                     }
-
-                    bundle = bundlesMap.get(key);
-
                 } catch (MissingResourceException e) {
                     bundle = EMPTY_BUNDLE;
-                    bundlesMap.putIfAbsent(key, bundle);
+//                    bundlesMap.putIfAbsent(key, bundle);
                 }
             } else {
                 bundle = EMPTY_BUNDLE;
-                bundlesMap.putIfAbsent(key, bundle);
+//                bundlesMap.putIfAbsent(key, bundle);
             }
         }
         return (bundle == EMPTY_BUNDLE) ? null : bundle;

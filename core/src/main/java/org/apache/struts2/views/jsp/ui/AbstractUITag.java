@@ -305,6 +305,10 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     }
 
     public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
+        if (component.isValidTagAttribute(localName)) {
+            return;
+        }
+
         if (ComponentUtils.altSyntax(getStack()) && ComponentUtils.isExpression(value)) {
             dynamicAttributes.put(localName, String.valueOf(ObjectUtils.defaultIfNull(findValue(value.toString()), value)));
         } else {

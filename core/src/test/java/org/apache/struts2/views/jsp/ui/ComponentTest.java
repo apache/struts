@@ -22,6 +22,7 @@
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.TestAction;
+import org.apache.struts2.components.Component;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 
@@ -114,4 +115,16 @@ public class ComponentTest extends AbstractUITagTest {
         //        System.out.println(writer);
         verify(ComponentTag.class.getResource("Component-param.txt"));
     }
+
+    public void testTagAttributeExclusion() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+
+        tag.doStartTag();
+        tag.setDynamicAttribute("uri://some.uri", "includeContext", false);
+
+        assertTrue(tag.includeContext);
+    }
+
 }
+

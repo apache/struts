@@ -22,14 +22,17 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.FastByteArrayOutputStream;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.UrlHelper;
 
@@ -38,6 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -487,6 +492,22 @@ public class Component {
      * @return always false for this component.
      */
     public boolean usesBody() {
+        return false;
+    }
+
+    /**
+     * Checks if provided name is a valid tag's attribute
+     *
+     * @param attrName String name of attribute
+     * @return true if attribute with the same name was already defined
+     */
+    public boolean isValidTagAttribute(String attrName) {
+        Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(getClass(), StrutsTagAttribute.class);
+        for (Method annotatedMethod : annotatedMethods) {
+            if (annotatedMethod.getName().contains(StringUtils.capitalize(attrName))) {
+                return true;
+            }
+        }
         return false;
     }
 

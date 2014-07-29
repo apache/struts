@@ -41,12 +41,12 @@ public class ValueStackDataSource implements JRRewindableDataSource {
      */
     private static Logger LOG = LoggerFactory.getLogger(ValueStackDataSource.class);
 
+    private Iterator iterator;
+    private ValueStack valueStack;
+    private String dataSource;
+    private boolean wrapField;
 
-    Iterator iterator;
-    ValueStack valueStack;
-    String dataSource;
-    boolean firstTimeThrough = true;
-
+    private boolean firstTimeThrough = true;
 
     /**
      * Create a value stack data source on the given iterable property
@@ -54,10 +54,11 @@ public class ValueStackDataSource implements JRRewindableDataSource {
      * @param valueStack      The value stack to base the data source on
      * @param dataSourceParam The property to iterate over for the report
      */
-    public ValueStackDataSource(ValueStack valueStack, String dataSourceParam) {
+    public ValueStackDataSource(ValueStack valueStack, String dataSourceParam, boolean wrapField) {
         this.valueStack = valueStack;
+        this.dataSource = dataSourceParam;
+        this.wrapField = wrapField;
 
-        dataSource = dataSourceParam;
         Object dataSourceValue = valueStack.findValue(dataSource);
 
         if (dataSourceValue != null) {
@@ -104,9 +105,11 @@ public class ValueStackDataSource implements JRRewindableDataSource {
             LOG.debug("Field [#0] = [#1]", field.getName(), value);
         }
 
-        if (MakeIterator.isIterable(value)) {
+        if (!wrapField && MakeIterator.isIterable(value) && !field.getValueClass().isInstance(value)) {
+            return value;
+        } else if (MakeIterator.isIterable(value)) {
             // wrap value with ValueStackDataSource if not already wrapped
-            return new ValueStackDataSource(this.valueStack, expression);
+            return new ValueStackDataSource(this.valueStack, expression, wrapField);
         } else {
             return value;
         }

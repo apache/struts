@@ -155,6 +155,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     protected String delimiter;
     protected String imageServletUrl = "/images/";
     protected String timeZone;
+    protected boolean wrapField = true;
 
     /**
      * Connection which can be passed to the report
@@ -227,6 +228,10 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         this.timeZone = timeZone;
     }
 
+    public void setWrapField(boolean wrapField) {
+        this.wrapField = wrapField;
+    }
+
     public String getReportParameters() {
         return reportParameters;
     }
@@ -284,7 +289,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         Connection conn = (Connection) stack.findValue(connection);
         if (conn == null)
-            stackDataSource = new ValueStackDataSource(stack, dataSource);
+            stackDataSource = new ValueStackDataSource(stack, dataSource, wrapField);
 
         if ("https".equalsIgnoreCase(request.getScheme())) {
             // set the the HTTP Header to work around IE SSL weirdness

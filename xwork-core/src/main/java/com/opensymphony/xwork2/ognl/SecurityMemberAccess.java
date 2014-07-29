@@ -53,6 +53,13 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+        if (checkEnumAccess(target, member)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Allowing access to enum #0", target);
+            }
+            return true;
+        }
+
         if (isPackageExcluded(target.getClass().getPackage(), member.getDeclaringClass().getPackage())) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Package of target [#0] or package of member [#1] are excluded!", target, member);
@@ -68,17 +75,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         }
 
         boolean allow = true;
-        int modifiers = member.getModifiers();
-        if (Modifier.isStatic(modifiers)) {
-            if (member instanceof Method && !getAllowStaticMethodAccess()) {
-                allow = false;
-                if (target instanceof Class) {
-                    Class clazz = (Class) target;
-                    Method method = (Method) member;
-                    if (Enum.class.isAssignableFrom(clazz) && method.getName().equals("values"))
-                        allow = true;
-                }
+        if (!checkStaticMethodAccess(member)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.warn("Access to static [#0] is blocked!", member);
             }
+            allow = false;
         }
 
         //failed static test
@@ -86,10 +87,26 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
 
         // Now check for standard scope rules
-        if (!super.isAccessible(context, target, member, propertyName))
-            return false;
+        return super.isAccessible(context, target, member, propertyName)
+                && isAcceptableProperty(propertyName);
+    }
 
-        return isAcceptableProperty(propertyName);
+    protected boolean checkStaticMethodAccess(Member member) {
+        int modifiers = member.getModifiers();
+        if (Modifier.isStatic(modifiers)) {
+            return allowStaticMethodAccess;
+        } else {
+            return true;
+        }
+    }
+
+    protected boolean checkEnumAccess(Object target, Member member) {
+        if (target instanceof Class) {
+            Class clazz = (Class) target;
+            if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values"))
+                return true;
+        }
+        return false;
     }
 
     protected boolean isPackageExcluded(Package targetPackage, Package memberPackage) {

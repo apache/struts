@@ -235,6 +235,17 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("fido", vs.findValue("@com.opensymphony.xwork2.util.Dog@getDeity()", String.class));
     }
 
+    /**
+     * Allow access Enums without enabling access to static methods
+     */
+    public void testEnum() throws Exception {
+        OgnlValueStack vs = createValueStack();
+
+        assertEquals("ONE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[0]", String.class));
+        assertEquals("TWO", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[1]", String.class));
+        assertEquals("THREE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[2]", String.class));
+    }
+
     public void testStaticMethodDisallow() {
         OgnlValueStack vs = createValueStack(false);
 
@@ -1025,4 +1036,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
             this.displayName = displayName;
         }
     }
+}
+
+enum MyNumbers {
+    ONE, TWO, THREE
 }

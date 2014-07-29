@@ -190,6 +190,18 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("stringField is accessible!", actual);
     }
 
+    public void testAccessEnum() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        // when
+        Member values = MyValues.class.getMethod("values");
+        boolean actual = sma.isAccessible(context, MyValues.class, values, null);
+
+        // then
+        assertTrue("Access to enums is blocked!", actual);
+    }
+
 }
 
 class FooBar implements FooBarInterface {
@@ -233,4 +245,8 @@ interface BarInterface {
 
 interface FooBarInterface extends FooInterface, BarInterface {
 
+}
+
+enum MyValues {
+    ONE, TWO, THREE
 }

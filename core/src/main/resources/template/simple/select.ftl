@@ -69,7 +69,16 @@
             <#assign itemKey = stack.findValue('top')/>
             <#assign itemKeyStr = stack.findString('top')>
         </#if>
-        <#if parameters.listValue??>
+        <#if parameters.listValueKey??>
+          <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale file for it's 
+             localized value.  This is then used as a label -->
+          <#assign valueKey = stack.findString(parameters.listValueKey) />
+          <#if valueKey??>
+              <#assign itemValue = struts.getText(valueKey) />
+          <#else>
+              <#assign itemValue = parameters.listValueKey />
+          </#if>
+        <#elseif parameters.listValue??>
             <#if stack.findString(parameters.listValue)??>
               <#assign itemValue = stack.findString(parameters.listValue)/>
             <#else>

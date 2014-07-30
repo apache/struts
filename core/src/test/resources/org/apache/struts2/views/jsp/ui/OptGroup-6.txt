@@ -2,9 +2,9 @@
     <td class="tdLabel"><label for="mySelection" class="label">My Selection:</label></td>
     <td>
 <select name="mySelection" id="mySelection">
-    <option value="ONE">MyValue</option>
-    <option value="TWO">MyValue</option>
-    <option value="THREE">MyValue</option>
+    <option value="ONE">Edno</option>
+    <option value="TWO">Dve</option>
+    <option value="THREE">LocaleKeyValueTest.THREE</option>
 
 <optgroup 
 	label="My Label 1"

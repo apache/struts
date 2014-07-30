@@ -23,13 +23,9 @@ package org.apache.struts2.views.jsp.ui;
 
 import java.util.LinkedHashMap;
 
-import com.opensymphony.xwork2.Action;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-/**
- *
- */
 public class OptGroupTest extends AbstractUITagTest {
 
     public void testOptGroupSimple() throws Exception {
@@ -129,7 +125,7 @@ public class OptGroupTest extends AbstractUITagTest {
     	
     	((TestAction)action).setMap(new LinkedHashMap() {{
     		put("AAA", "aaa");
-    		put(new Long(111111), "bbb");
+    		put(111111L, "bbb");
     		put("CCC", "ccc");
     	}});
     	
@@ -192,20 +188,19 @@ public class OptGroupTest extends AbstractUITagTest {
         verify(SelectTag.class.getResource("OptGroup-5.txt"));
     }
 
+
     public void testOptGroupWithValueKey() throws Exception {
         SelectTag selectTag = new SelectTag();
         selectTag.setName("mySelection");
         selectTag.setLabel("My Selection");
-        selectTag.setList("%{#{'ONE':'one','TWO':'two','THREE':'three'}}");
+        selectTag.setList("selectValues");
         selectTag.setListValueKey("valueKey");
 
-        stack.push(new Action() {
-            public String execute() throws Exception {
-                return SUCCESS;
-            }
-
-            public String getValueKey() { return "MyValue"; }
-        });
+        LocaleTestAction localeTestAction = new LocaleTestAction();
+        
+        localeTestAction.setText("LocaleKeyValueTest.ONE","Edno");
+        localeTestAction.setText("LocaleKeyValueTest.TWO","Dve");
+        stack.push(localeTestAction);
 
         OptGroupTag optGroupTag1 = new OptGroupTag();
         optGroupTag1.setLabel("My Label 1");

@@ -105,7 +105,7 @@ public class LocalizedTextUtil {
      * Clears the internal list of resource bundles.
      */
     public static void clearDefaultResourceBundles() {
-        ClassLoader ccl = getThreadCurrentThreadGetContextClassLoader();
+        ClassLoader ccl = getCurrentThreadContextClassLoader();
         List<String> bundles = new ArrayList<String>();
         classLoaderMap.put(ccl.hashCode(), bundles);
         bundles.add(0, XWORK_MESSAGES_BUNDLE);
@@ -131,7 +131,7 @@ public class LocalizedTextUtil {
         //make sure this doesn't get added more than once
         ClassLoader ccl = null;
         synchronized (classLoaderMap) {
-            ccl = getThreadCurrentThreadGetContextClassLoader();
+            ccl = getCurrentThreadContextClassLoader();
             List<String> bundles = classLoaderMap.get(ccl.hashCode());
             if (bundles == null) {
                 bundles = new ArrayList<String>();
@@ -143,7 +143,7 @@ public class LocalizedTextUtil {
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Added default resource bundle '" + resourceBundleName + "' to default resource bundles for the following classloader " + ccl.toString());
+            LOG.debug("Added default resource bundle '{}' to default resource bundles for the following classloader '{}'", resourceBundleName, ccl.toString());
         }
     }
 
@@ -198,7 +198,7 @@ public class LocalizedTextUtil {
      * @return a localized message based on the specified key, or null if no localized message can be found for it
      */
     public static String findDefaultText(String aTextName, Locale locale) {
-        List<String> localList = classLoaderMap.get(getThreadCurrentThreadGetContextClassLoader().hashCode());
+        List<String> localList = classLoaderMap.get(getCurrentThreadContextClassLoader().hashCode());
 
         for (String bundleName : localList) {
             ResourceBundle bundle = findResourceBundle(bundleName, locale);
@@ -243,14 +243,12 @@ public class LocalizedTextUtil {
      * @return the bundle, <tt>null</tt> if not found.
      */
     public static ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
-        String key = createMissesKey(aBundleName, locale);
 
         ResourceBundle bundle = null;
 
-        ClassLoader classLoader = getThreadCurrentThreadGetContextClassLoader();
+        ClassLoader classLoader = getCurrentThreadContextClassLoader();
+        String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
         try {
-            key = classLoader.hashCode()+key;
-
             if (!bundlesMap.containsKey(key)) {
                 bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
@@ -280,7 +278,7 @@ public class LocalizedTextUtil {
      */
     public static void setDelegatedClassLoader(final ClassLoader classLoader) {
         synchronized (bundlesMap) {
-            delegatedClassLoaderMap.put(getThreadCurrentThreadGetContextClassLoader().hashCode(), classLoader);
+            delegatedClassLoaderMap.put(getCurrentThreadContextClassLoader().hashCode(), classLoader);
         }
     }
 
@@ -290,19 +288,20 @@ public class LocalizedTextUtil {
      * @param bundleName
      */
     public static void clearBundle(final String bundleName) {
-        bundlesMap.remove(getThreadCurrentThreadGetContextClassLoader().hashCode() + bundleName);
+        bundlesMap.remove(getCurrentThreadContextClassLoader().hashCode() + bundleName);
     }
 
 
     /**
      * Creates a key to used for lookup/storing in the bundle misses cache.
      *
+     * @param prefix      the prefix for the returning String - it is supposed to be the ClassLoader hash code.
      * @param aBundleName the name of the bundle (usually it's FQN classname).
      * @param locale      the locale.
      * @return the key to use for lookup/storing in the bundle misses cache.
      */
-    private static String createMissesKey(String aBundleName, Locale locale) {
-        return aBundleName + "_" + locale.toString();
+    private static String createMissesKey(String prefix, String aBundleName, Locale locale) {
+        return prefix + aBundleName + "_" + locale.toString();
     }
 
     /**
@@ -812,7 +811,7 @@ public class LocalizedTextUtil {
 
 
     private static void clearTomcatCache() {
-        ClassLoader loader = getThreadCurrentThreadGetContextClassLoader();
+        ClassLoader loader = getCurrentThreadContextClassLoader();
         // no need for compilation here.
         Class cl = loader.getClass();
 
@@ -889,7 +888,7 @@ public class LocalizedTextUtil {
         }
     }
 
-    private static ClassLoader getThreadCurrentThreadGetContextClassLoader() {
+    private static ClassLoader getCurrentThreadContextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 

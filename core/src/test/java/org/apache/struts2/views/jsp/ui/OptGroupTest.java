@@ -188,7 +188,6 @@ public class OptGroupTest extends AbstractUITagTest {
         verify(SelectTag.class.getResource("OptGroup-5.txt"));
     }
 
-
     public void testOptGroupWithValueKey() throws Exception {
         SelectTag selectTag = new SelectTag();
         selectTag.setName("mySelection");
@@ -224,6 +223,5 @@ public class OptGroupTest extends AbstractUITagTest {
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-6.txt"));
     }
-
 
 }

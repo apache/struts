@@ -130,7 +130,7 @@ public class LocalizedTextUtil {
     public static void addDefaultResourceBundle(String resourceBundleName) {
         //make sure this doesn't get added more than once
         ClassLoader ccl = null;
-        synchronized (classLoaderMap) {
+        synchronized (XWORK_MESSAGES_BUNDLE) {
             ccl = getCurrentThreadContextClassLoader();
             Set<String> bundles = classLoaderMap.get(ccl.hashCode());
             if (bundles == null) {

@@ -79,6 +79,8 @@ public class Dispatcher {
      */
     private static final Logger LOG = LoggerFactory.getLogger(Dispatcher.class);
 
+    public static final String MULTIPART_FORM_DATA = "multipart/form-data";
+
     /**
      * Provide a thread local instance.
      */
@@ -625,7 +627,7 @@ public class Dispatcher {
         Map requestMap = new RequestMap(request);
 
         // parameters map wrapping the http parameters.  ActionMapping parameters are now handled and applied separately
-        Map params = new HashMap(request.getParameterMap());
+        Map params = prepareParametersMap(request);
 
         // session map wrapping the http session
         Map session = new SessionMap(request);
@@ -639,6 +641,21 @@ public class Dispatcher {
             extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
         }
         return extraContext;
+    }
+
+    /**
+     * Copies or creates new map to hold request parameters,
+     * there is a special treatment when uploading a file see WW-4345
+     */
+    protected Map prepareParametersMap(HttpServletRequest request) {
+        Map params;
+        String contentType = request.getContentType();
+        if (contentType != null && contentType.contains(MULTIPART_FORM_DATA)) {
+			params = new HashMap();
+		} else {
+			params = new HashMap(request.getParameterMap());
+		}
+        return params;
     }
 
     /**
@@ -829,7 +846,7 @@ public class Dispatcher {
         }
 
         String content_type = request.getContentType();
-        if (content_type != null && content_type.contains("multipart/form-data")) {
+        if (content_type != null && content_type.contains(MULTIPART_FORM_DATA)) {
             MultiPartRequest mpr = getMultiPartRequest();
             LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
             request = new MultiPartRequestWrapper(mpr, request, getSaveDir(), provider);

@@ -123,7 +123,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }
 
-    private void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
+    protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
         for (FileItem item : parseRequest(request, saveDir)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Found item " + item.getFieldName());
@@ -136,7 +136,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         }
     }
 
-    private void processFileField(FileItem item) {
+    protected void processFileField(FileItem item) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Item is a file upload");
         }
@@ -158,7 +158,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         files.put(item.getFieldName(), values);
     }
 
-    private void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
+    protected void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Item is a normal form field");
         }
@@ -182,14 +182,19 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         item.delete();
     }
 
-    private List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
+    protected List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
         DiskFileItemFactory fac = createDiskFileItemFactory(saveDir);
-        ServletFileUpload upload = new ServletFileUpload(fac);
-        upload.setSizeMax(maxSize);
+        ServletFileUpload upload = createServletFileUpload(fac);
         return upload.parseRequest(createRequestContext(servletRequest));
     }
 
-    private DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
+    protected ServletFileUpload createServletFileUpload(DiskFileItemFactory fac) {
+        ServletFileUpload upload = new ServletFileUpload(fac);
+        upload.setSizeMax(maxSize);
+        return upload;
+    }
+
+    protected DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
         DiskFileItemFactory fac = new DiskFileItemFactory();
         // Make sure that the data is written to file
         fac.setSizeThreshold(0);
@@ -350,7 +355,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
      * @param req the request.
      * @return a new request context.
      */
-    private RequestContext createRequestContext(final HttpServletRequest req) {
+    protected RequestContext createRequestContext(final HttpServletRequest req) {
         return new RequestContext() {
             public String getCharacterEncoding() {
                 return req.getCharacterEncoding();

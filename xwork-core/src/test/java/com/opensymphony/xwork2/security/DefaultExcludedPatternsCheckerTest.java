@@ -57,4 +57,21 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
         }
     }
 
+    public void testParamWithClassInName() throws Exception {
+        // given
+        List<String> properParams = new ArrayList<String>();
+        properParams.add("eventClass");
+        properParams.add("form.eventClass");
+
+        ExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();
+
+        for (String properParam : properParams) {
+            // when
+            ExcludedPatternsChecker.IsExcluded actual = checker.isExcluded(properParam);
+
+            // then
+            assertFalse("Param 'eventClass' is excluded!", actual.isExcluded());
+        }
+    }
+
 }

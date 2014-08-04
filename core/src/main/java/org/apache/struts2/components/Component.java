@@ -25,6 +25,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -43,9 +45,12 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Base class to extend for UI components.
@@ -55,7 +60,14 @@ import java.util.Stack;
  */
 public class Component {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Component.class);
+
     public static final String COMPONENT_STACK = "__component_stack";
+
+    /**
+     * Caches information about common tag's attributes to reduce scanning for annotation @StrutsTagAttribute
+     */
+    protected static ConcurrentMap<Class<?>, Collection<String>> standardAttributesMap = new ConcurrentHashMap<Class<?>, Collection<String>>();
 
     protected ValueStack stack;
     protected Map parameters;
@@ -502,13 +514,24 @@ public class Component {
      * @return true if attribute with the same name was already defined
      */
     public boolean isValidTagAttribute(String attrName) {
-        Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(getClass(), StrutsTagAttribute.class);
-        for (Method annotatedMethod : annotatedMethods) {
-            if (annotatedMethod.getName().contains(StringUtils.capitalize(attrName))) {
-                return true;
+        return getStandardAttributes().contains(attrName);
+    }
+
+    /**
+     * If needed caches all methods annotated by given annotation to avoid further scans
+     */
+    protected Collection<String> getStandardAttributes() {
+        Class clz = getClass();
+        Collection<String> standardAttributes = standardAttributesMap.get(clz);
+        if (standardAttributes == null) {
+            Collection<Method> methods = AnnotationUtils.getAnnotatedMethods(clz, StrutsTagAttribute.class);
+            standardAttributes = new HashSet<String>(methods.size());
+            for(Method m : methods) {
+                standardAttributes.add(StringUtils.uncapitalize(m.getName().substring(3)));
             }
+            standardAttributesMap.putIfAbsent(clz, standardAttributes);
         }
-        return false;
+        return standardAttributes;
     }
 
 }

@@ -133,7 +133,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         assertEquals("Error during Action invocation", message);
     }
 
-    /*
+    /* FIXME
     Stated that property's management does not care about ordering,
     in fact it's held by a Set instead of List,
     you cannot override a previous bundle, thus the test is wrong.

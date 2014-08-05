@@ -801,6 +801,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>jmock</groupId>
                 <artifactId>jmock-cglib</artifactId>
                 <version>1.2.0</version>

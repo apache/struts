@@ -286,6 +286,18 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- These jars have to be in the compile scope in order to work with apt plugin
              (struts-annotations) and javadoc (the rest to process xwork sources). Marking 
              them optional to exclude them from transitive dependency resolution -->

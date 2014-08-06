@@ -47,12 +47,22 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     private final Map<String, Object> classes = new HashMap<String, Object>();
     private boolean useClassCache = true;
     private boolean alwaysRespectAutowireStrategy = false;
+    /**
+     * This is temporary solution, after validating can be removed
+     * @since 2.3.18
+     */
+    private boolean enableAopSupport = false;
 
     @Inject(value="applicationContextPath",required=false)
     public void setApplicationContextPath(String ctx) {
         if (ctx != null) {
             setApplicationContext(new ClassPathXmlApplicationContext(ctx));
         }
+    }
+
+    @Inject(value = "enableAopSupport", required = false)
+    public void setEnableAopSupport(String enableAopSupport) {
+        this.enableAopSupport = Boolean.parseBoolean(enableAopSupport);
     }
 
     /**
@@ -175,6 +185,11 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
                 bean = autoWiringFactory.createBean(clazz, autowireStrategy, false);
                 injectApplicationContext(bean);
                 return injectInternalBeans(bean);
+            } else if (enableAopSupport) {
+                bean = autoWiringFactory.createBean(clazz, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
+                bean = autoWireBean(bean, autoWiringFactory);
+                bean = autoWiringFactory.initializeBean(bean, bean.getClass().getName());
+                return bean;
             } else {
                 bean = autoWiringFactory.autowire(clazz, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
                 bean = autoWiringFactory.applyBeanPostProcessorsBeforeInitialization(bean, bean.getClass().getName());

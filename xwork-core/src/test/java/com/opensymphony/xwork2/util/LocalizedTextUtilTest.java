@@ -223,16 +223,9 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         // Before this fix loading the bundle for Germany failed since Italy have previously failed and thus the misses cache
         // contained a false entry
 
-        // Set default Locale to Locale.US
-        Locale defaultLocale = Locale.getDefault();
-        Locale.setDefault(Locale.US);
-
         ResourceBundle rbFrance = LocalizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.FRANCE);
         ResourceBundle rbItaly = LocalizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.ITALY);
         ResourceBundle rbGermany = LocalizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.GERMANY);
-
-        // Reset to previous default Locale 
-        Locale.setDefault(defaultLocale);
 
         assertNotNull(rbFrance);
         assertEquals("Bonjour", rbFrance.getString("hello"));

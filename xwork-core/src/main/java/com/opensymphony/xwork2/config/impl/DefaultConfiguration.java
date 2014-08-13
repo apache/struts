@@ -16,9 +16,11 @@
 package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.DefaultTextProvider;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.XWorkConstants;
@@ -335,6 +337,7 @@ public class DefaultConfiguration implements Configuration {
 
         builder.factory(TextParser.class, OgnlTextParser.class, Scope.SINGLETON);
         builder.factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON);
+        builder.factory(LocaleProvider.class, DefaultLocaleProvider.class, Scope.SINGLETON);
 
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);

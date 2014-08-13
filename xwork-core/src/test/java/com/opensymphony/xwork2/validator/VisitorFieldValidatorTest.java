@@ -34,14 +34,10 @@ import org.easymock.IAnswer;
 public class VisitorFieldValidatorTest extends XWorkTestCase {
 
     protected VisitorValidatorTestAction action;
-    private Locale origLocale;
-
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        origLocale = Locale.getDefault();
-        Locale.setDefault(Locale.US);
 
         action = new VisitorValidatorTestAction();
 
@@ -209,7 +205,6 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         ActionContext.setContext(null);
-        Locale.setDefault(origLocale);
     }
 
     private void validate(String context) throws ValidationException {

@@ -333,9 +333,6 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testSetPropertiesDate() {
-        Locale orig = Locale.getDefault();
-        Locale.setDefault(Locale.US);
-
         Foo foo = new Foo();
 
         Map context = ognlUtil.createDefaultContext(foo);
@@ -353,10 +350,11 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         assertEquals(cal.getTime(), foo.getBirthday());
         
-        Locale.setDefault(Locale.UK);
         //UK style test
         props.put("event", "18/10/2006 14:23:45");
         props.put("meeting", "09/09/2006 14:30");
+        context.put(ActionContext.LOCALE, Locale.UK);
+
         ognlUtil.setProperties(props, foo, context);
         
         cal = Calendar.getInstance();
@@ -379,10 +377,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         cal.set(Calendar.MINUTE, 30);
         
         assertEquals(cal.getTime(), foo.getMeeting());
-        
-        Locale.setDefault(orig);
-         
-        Locale.setDefault(orig);
         
         //test RFC 3339 date format for JSON
         props.put("event", "1996-12-19T16:39:57Z");

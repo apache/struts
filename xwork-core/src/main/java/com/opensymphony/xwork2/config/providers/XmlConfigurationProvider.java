@@ -727,7 +727,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             + "  Did you mean '" + guessResultType(resultType) + "'?", resultElement);
                 }
 
-                String resultClass = config.getClazz();
+                String resultClass = config.getClassName();
 
                 // invalid result type specified in result definition
                 if (resultClass == null) {
@@ -759,7 +759,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             }
                         } else {
                             if (LOG.isWarnEnabled()) {
-                            LOG.warn("no default parameter defined for result of type " + config.getName());
+                                LOG.warn("No default parameter defined for result [#0] of type [#1] ", config.getName(), config.getClassName());
                             }
                         }
                     }

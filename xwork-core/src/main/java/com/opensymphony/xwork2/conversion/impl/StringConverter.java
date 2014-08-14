@@ -1,5 +1,10 @@
 package com.opensymphony.xwork2.conversion.impl;
 
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.conversion.InternalConverter;
+import com.opensymphony.xwork2.conversion.InternalConverters;
+import com.opensymphony.xwork2.conversion.string.StringDoubleConverter;
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Member;
@@ -12,9 +17,18 @@ import java.util.Map;
 
 public class StringConverter extends DefaultTypeConverter {
 
+
+    private InternalConverters<String> converters = new InternalConverters<String>();
+
     @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
-        String result = null;
+        String result;
+
+        InternalConverter<String> converter = converters.lookup(value);
+        result = converter.convert(value);
+        if (result != null) {
+            return result;
+        }
 
         if (value instanceof int[]) {
             int[] x = (int[]) value;
@@ -70,4 +84,13 @@ public class StringConverter extends DefaultTypeConverter {
         }
         return result;
     }
+
+    @Inject
+    public void setLocaleProvider(LocaleProvider provider) {
+        super.setLocaleProvider(provider);
+
+        converters = new InternalConverters<String>();
+        converters.register(new StringDoubleConverter(provider));
+    }
+
 }

@@ -86,7 +86,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class LocalizedTextUtil {
 
-    private static final ConcurrentMap<Integer, Set<String>> classLoaderMap = new ConcurrentHashMap<Integer, Set<String>>();
+    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<Integer, List<String>>();
     private static final Logger LOG = LoggerFactory.getLogger(LocalizedTextUtil.class);
     private static boolean reloadBundles = false;
     private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<String, ResourceBundle>();
@@ -106,9 +106,9 @@ public class LocalizedTextUtil {
      */
     public static void clearDefaultResourceBundles() {
         ClassLoader ccl = getCurrentThreadContextClassLoader();
-        Set<String> bundles = new HashSet<String>();
+        List<String> bundles = new ArrayList<String>();
         classLoaderMap.put(ccl.hashCode(), bundles);
-        bundles.add(XWORK_MESSAGES_BUNDLE);
+        bundles.add(0, XWORK_MESSAGES_BUNDLE);
     }
 
     /**
@@ -132,13 +132,14 @@ public class LocalizedTextUtil {
         ClassLoader ccl = null;
         synchronized (XWORK_MESSAGES_BUNDLE) {
             ccl = getCurrentThreadContextClassLoader();
-            Set<String> bundles = classLoaderMap.get(ccl.hashCode());
+            List<String> bundles = classLoaderMap.get(ccl.hashCode());
             if (bundles == null) {
-                bundles = new HashSet<String>();
+                bundles = new ArrayList<String>();
                 classLoaderMap.put(ccl.hashCode(), bundles);
                 bundles.add(XWORK_MESSAGES_BUNDLE);
             }
-            bundles.add(resourceBundleName);
+            bundles.remove(resourceBundleName);
+            bundles.add(0, resourceBundleName);
         }
 
         if (LOG.isDebugEnabled()) {
@@ -197,7 +198,7 @@ public class LocalizedTextUtil {
      * @return a localized message based on the specified key, or null if no localized message can be found for it
      */
     public static String findDefaultText(String aTextName, Locale locale) {
-        Set<String> localList = classLoaderMap.get(getCurrentThreadContextClassLoader().hashCode());
+        List<String> localList = classLoaderMap.get(Thread.currentThread().getContextClassLoader().hashCode());
 
         for (String bundleName : localList) {
             ResourceBundle bundle = findResourceBundle(bundleName, locale);

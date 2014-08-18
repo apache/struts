@@ -1,0 +1,43 @@
+<tr>
+    <td class="tdLabel"><label for="mySelection" class="label">My Selection:</label></td>
+    <td>
+<select name="mySelection" id="mySelection" multiple="multiple">
+    <option value="1">one</option>
+    <option value="2" selected="selected">two</option>
+    <option value="3">three</option>
+
+<optgroup 
+	label="My Label 1"
+>
+
+	<option value="11"
+	>aaa
+	</option>
+	<option value="12"
+	selected="selected"
+	>bbb
+	</option>
+	<option value="13"
+	>ccc
+	</option>
+</optgroup>
+<optgroup 
+	label="My Label 2"
+>
+
+	<option value="21"
+	>ddd
+	</option>
+	<option value="22"
+	selected="selected"
+	>eee
+	</option>
+	<option value="23"
+	>fff
+	</option>
+</optgroup>
+
+</select>
+<input type="hidden" id="__multiselect_mySelection" name="__multiselect_mySelection" value=""/>
+</td>
+</tr>

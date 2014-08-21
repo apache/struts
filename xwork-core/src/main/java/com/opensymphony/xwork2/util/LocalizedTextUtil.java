@@ -38,7 +38,6 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -87,15 +86,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class LocalizedTextUtil {
 
-    private static final List<String> DEFAULT_RESOURCE_BUNDLES = new CopyOnWriteArrayList<String>();
+    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<Integer, List<String>>();
     private static final Logger LOG = LoggerFactory.getLogger(LocalizedTextUtil.class);
     private static boolean reloadBundles = false;
-    private static final ResourceBundle EMPTY_BUNDLE = new EmptyResourceBundle();
     private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<String, ResourceBundle>();
     private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<MessageFormatKey, MessageFormat>();
+    private static final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<Integer, ClassLoader>();
 
-    private static ClassLoader delegatedClassLoader;
     private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
+    private static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
 
     static {
         clearDefaultResourceBundles();
@@ -106,16 +105,10 @@ public class LocalizedTextUtil {
      * Clears the internal list of resource bundles.
      */
     public static void clearDefaultResourceBundles() {
-        if (DEFAULT_RESOURCE_BUNDLES != null) {
-            synchronized (DEFAULT_RESOURCE_BUNDLES) {
-                DEFAULT_RESOURCE_BUNDLES.clear();
-                DEFAULT_RESOURCE_BUNDLES.add("com/opensymphony/xwork2/xwork-messages");
-            }
-        } else {
-            synchronized (DEFAULT_RESOURCE_BUNDLES) {
-                DEFAULT_RESOURCE_BUNDLES.add("com/opensymphony/xwork2/xwork-messages");
-            }
-        }
+        ClassLoader ccl = getCurrentThreadContextClassLoader();
+        List<String> bundles = new ArrayList<String>();
+        classLoaderMap.put(ccl.hashCode(), bundles);
+        bundles.add(0, XWORK_MESSAGES_BUNDLE);
     }
 
     /**
@@ -136,13 +129,21 @@ public class LocalizedTextUtil {
      */
     public static void addDefaultResourceBundle(String resourceBundleName) {
         //make sure this doesn't get added more than once
-        synchronized (DEFAULT_RESOURCE_BUNDLES) {
-            DEFAULT_RESOURCE_BUNDLES.remove(resourceBundleName);
-            DEFAULT_RESOURCE_BUNDLES.add(0, resourceBundleName);
+        ClassLoader ccl = null;
+        synchronized (XWORK_MESSAGES_BUNDLE) {
+            ccl = getCurrentThreadContextClassLoader();
+            List<String> bundles = classLoaderMap.get(ccl.hashCode());
+            if (bundles == null) {
+                bundles = new ArrayList<String>();
+                classLoaderMap.put(ccl.hashCode(), bundles);
+                bundles.add(XWORK_MESSAGES_BUNDLE);
+            }
+            bundles.remove(resourceBundleName);
+            bundles.add(0, resourceBundleName);
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Added default resource bundle '" + resourceBundleName + "' to default resource bundles = " + DEFAULT_RESOURCE_BUNDLES);
+            LOG.debug("Added default resource bundle '{}' to default resource bundles for the following classloader '{}'", resourceBundleName, ccl.toString());
         }
     }
 
@@ -197,7 +198,7 @@ public class LocalizedTextUtil {
      * @return a localized message based on the specified key, or null if no localized message can be found for it
      */
     public static String findDefaultText(String aTextName, Locale locale) {
-        List<String> localList = DEFAULT_RESOURCE_BUNDLES;
+        List<String> localList = classLoaderMap.get(Thread.currentThread().getContextClassLoader().hashCode());
 
         for (String bundleName : localList) {
             ResourceBundle bundle = findResourceBundle(bundleName, locale);
@@ -236,45 +237,38 @@ public class LocalizedTextUtil {
      * Finds the given resorce bundle by it's name.
      * <p/>
      * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
-     * If {@link #delegatedClassLoader} is defined and the bundle cannot be found the current
-     * classloader it will delegate to that.
      *
      * @param aBundleName the name of the bundle (usually it's FQN classname).
      * @param locale      the locale.
      * @return the bundle, <tt>null</tt> if not found.
      */
     public static ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
-        String key = createMissesKey(aBundleName, locale);
 
-        ResourceBundle bundle;
+        ResourceBundle bundle = null;
 
+        ClassLoader classLoader = getCurrentThreadContextClassLoader();
+        String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
         try {
             if (!bundlesMap.containsKey(key)) {
-                bundle = ResourceBundle.getBundle(aBundleName, locale, Thread.currentThread().getContextClassLoader());
+                bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
+            } else {
+                bundle = bundlesMap.get(key);
             }
-
-            bundle = bundlesMap.get(key);
         } catch (MissingResourceException ex) {
-            if (delegatedClassLoader != null) {
+            if (delegatedClassLoaderMap.containsKey(classLoader.hashCode())) {
                 try {
                     if (!bundlesMap.containsKey(key)) {
-                        bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoader);
+                        bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
                         bundlesMap.putIfAbsent(key, bundle);
+                    } else {
+                        bundle = bundlesMap.get(key);
                     }
-
-                    bundle = bundlesMap.get(key);
-
                 } catch (MissingResourceException e) {
-                    bundle = EMPTY_BUNDLE;
-                    bundlesMap.putIfAbsent(key, bundle);
                 }
-            } else {
-                bundle = EMPTY_BUNDLE;
-                bundlesMap.putIfAbsent(key, bundle);
             }
         }
-        return (bundle == EMPTY_BUNDLE) ? null : bundle;
+        return bundle;
     }
 
     /**
@@ -284,7 +278,7 @@ public class LocalizedTextUtil {
      */
     public static void setDelegatedClassLoader(final ClassLoader classLoader) {
         synchronized (bundlesMap) {
-            delegatedClassLoader = classLoader;
+            delegatedClassLoaderMap.put(getCurrentThreadContextClassLoader().hashCode(), classLoader);
         }
     }
 
@@ -294,19 +288,20 @@ public class LocalizedTextUtil {
      * @param bundleName
      */
     public static void clearBundle(final String bundleName) {
-        bundlesMap.remove(bundleName);
+        bundlesMap.remove(getCurrentThreadContextClassLoader().hashCode() + bundleName);
     }
 
 
     /**
      * Creates a key to used for lookup/storing in the bundle misses cache.
      *
+     * @param prefix      the prefix for the returning String - it is supposed to be the ClassLoader hash code.
      * @param aBundleName the name of the bundle (usually it's FQN classname).
      * @param locale      the locale.
      * @return the key to use for lookup/storing in the bundle misses cache.
      */
-    private static String createMissesKey(String aBundleName, Locale locale) {
-        return aBundleName + "_" + locale.toString();
+    private static String createMissesKey(String prefix, String aBundleName, Locale locale) {
+        return prefix + aBundleName + "_" + locale.toString();
     }
 
     /**
@@ -816,7 +811,7 @@ public class LocalizedTextUtil {
 
 
     private static void clearTomcatCache() {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        ClassLoader loader = getCurrentThreadContextClassLoader();
         // no need for compilation here.
         Class cl = loader.getClass();
 
@@ -891,6 +886,10 @@ public class LocalizedTextUtil {
             result = 29 * result + (locale != null ? locale.hashCode() : 0);
             return result;
         }
+    }
+
+    private static ClassLoader getCurrentThreadContextClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
     }
 
     static class GetDefaultMessageReturnArg {

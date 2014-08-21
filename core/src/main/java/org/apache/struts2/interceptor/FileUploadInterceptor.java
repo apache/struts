@@ -40,6 +40,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -350,7 +351,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                 LOG.warn(errMsg);
             }
         } else if (maximumSize != null && maximumSize < file.length()) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new String[]{inputName, filename, file.getName(), "" + file.length()});
+            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new String[]{inputName, filename, file.getName(), "" + file.length(), getMaximumSizeStr(action)});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
@@ -381,6 +382,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         }
 
         return fileIsAcceptable;
+    }
+
+    private String getMaximumSizeStr(Object action) {
+        return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
     }
 
     /**

@@ -39,7 +39,7 @@
 	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.parameters.listValue) />
 	<#assign tmpKeyStr = tmpKey.toString() />
 	<option value="${tmpKeyStr?html}"
-	<#if tag.contains(parameters.nameValue, tmpKeyStr) == true>
+	<#if tag.contains(parameters.nameValue, tmpKey) == true>
 	selected="selected"
 	</#if>
 	>${tmpValue?html}

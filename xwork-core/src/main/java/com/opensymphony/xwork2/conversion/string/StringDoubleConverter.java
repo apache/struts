@@ -18,9 +18,8 @@ public class StringDoubleConverter implements InternalConverter<String> {
     }
 
     public String convert(Object value) {
-        Double doubleValue = (Double) value;
-        NumberFormat format = NumberFormat.getInstance(provider.getLocale());
-        return format.format(doubleValue);
+        NumberFormat format = NumberFormat.getNumberInstance(provider.getLocale());
+        return format.format(value);
     }
 
 }

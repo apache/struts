@@ -207,6 +207,7 @@ public class SessionMapTest extends TestCase {
 
     protected void setUp() throws Exception {
         sessionMock = new Mock(HttpSession.class);
+        sessionMock.matchAndReturn("getId", "1");
         requestMock = new Mock(HttpServletRequest.class);
         requestMock.matchAndReturn("getSession", new Constraint[]{new IsEqual(Boolean.FALSE)}, sessionMock.proxy());
     }

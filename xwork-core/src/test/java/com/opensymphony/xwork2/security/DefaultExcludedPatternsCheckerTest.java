@@ -43,6 +43,13 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
                 add("%{#context.get('com.opensymphony.xwork2.dispatcher.HttpServletResponse')}");
                 add("#_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true)");
                 add("%{#_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true)}");
+                add("form.class.classLoader");
+                add("form[\"class\"][\"classLoader\"]");
+                add("form['class']['classLoader']");
+                add("class['classLoader']");
+                add("class[\"classLoader\"]");
+                add("class.classLoader.resources.dirContext.docBase=tttt");
+                add("Class.classLoader.resources.dirContext.docBase=tttt");
             }
         };
 
@@ -62,6 +69,8 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
         List<String> properParams = new ArrayList<String>();
         properParams.add("eventClass");
         properParams.add("form.eventClass");
+        properParams.add("form[\"eventClass\"]");
+        properParams.add("form['eventClass']");
 
         ExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();
 
@@ -70,7 +79,7 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
             ExcludedPatternsChecker.IsExcluded actual = checker.isExcluded(properParam);
 
             // then
-            assertFalse("Param 'eventClass' is excluded!", actual.isExcluded());
+            assertFalse("Param '" + properParam + "' is excluded!", actual.isExcluded());
         }
     }
 

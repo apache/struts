@@ -16,7 +16,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultExcludedPatternsChecker.class);
 
     public static final String[] EXCLUDED_PATTERNS = {
-            "(.*\\.|^|.*|\\[('|\"))class(\\.|('|\")]|\\[).*",
+            "(.*\\.|^|.*|\\[('|\"))\\bclass(\\.|('|\")]|\\[).*",
             "(^|.*#)dojo(\\.|\\[).*",
             "(^|.*#)struts(\\.|\\[).*",
             "(^|.*#)session(\\.|\\[).*",

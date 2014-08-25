@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +69,11 @@ public class ServletUrlRenderer implements UrlRenderer {
         String scheme = urlComponent.getHttpServletRequest().getScheme();
 
         if (urlComponent.getScheme() != null) {
-            scheme = urlComponent.getScheme();
+            ValueStack vs = ActionContext.getContext().getValueStack();
+            scheme = vs.findString(urlComponent.getScheme());
+            if (scheme == null) {
+                scheme = urlComponent.getScheme();
+            }
         }
 
         String result;
@@ -127,6 +132,9 @@ public class ServletUrlRenderer implements UrlRenderer {
         String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(), formComponent.request);
         String action;
 
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        String scheme = vs.findString("scheme");
+
         if (formComponent.action != null) {
             action = formComponent.findString(formComponent.action);
         } else {
@@ -161,7 +169,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
             ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
             String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
-                    formComponent.request, formComponent.response, actionParams, null, formComponent.includeContext, true, false, false);
+                    formComponent.request, formComponent.response, actionParams, scheme, formComponent.includeContext, true, false, false);
             formComponent.addParameter("action", result);
 
             // let's try to get the actual action class and name
@@ -196,7 +204,7 @@ public class ServletUrlRenderer implements UrlRenderer {
                 LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
             }
 
-            String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
+            String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, null, scheme, formComponent.includeContext, true);
             formComponent.addParameter("action", result);
 
             // namespace: cut out anything between the start and the last /

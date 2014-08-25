@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
  *     &lt;!-- Plain Validator Syntax --&gt;
  *     &lt;validator type="regex"&gt;
  *         &lt;param name="fieldName"&gt;myStrangePostcode&lt;/param&gt;
- *         &lt;param name="regex"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&lt;&gt;/param&gt;
+ *         &lt;param name="regex"&gt;&lt;![CDATA[([aAbBcCdD][123][eEfFgG][456])]]&gt;&lt;/param&gt;
  *     &lt;/validator&gt;
  *
  *     &lt;!-- Field Validator Syntax --&gt;

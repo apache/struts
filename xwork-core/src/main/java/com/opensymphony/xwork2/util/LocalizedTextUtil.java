@@ -86,9 +86,13 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class LocalizedTextUtil {
 
-    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<Integer, List<String>>();
     private static final Logger LOG = LoggerFactory.getLogger(LocalizedTextUtil.class);
+
+    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<Integer, List<String>>();
+
     private static boolean reloadBundles = false;
+    private static boolean devMode;
+
     private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<String, ResourceBundle>();
     private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<MessageFormatKey, MessageFormat>();
     private static final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<Integer, ClassLoader>();
@@ -120,6 +124,10 @@ public class LocalizedTextUtil {
         LocalizedTextUtil.reloadBundles = reloadBundles;
     }
 
+    public static void setDevMode(boolean devMode) {
+        LocalizedTextUtil.devMode = devMode;
+    }
+
     /**
      * Add's the bundle to the internal list of default bundles.
      * <p/>
@@ -129,7 +137,7 @@ public class LocalizedTextUtil {
      */
     public static void addDefaultResourceBundle(String resourceBundleName) {
         //make sure this doesn't get added more than once
-        ClassLoader ccl = null;
+        ClassLoader ccl;
         synchronized (XWORK_MESSAGES_BUNDLE) {
             ccl = getCurrentThreadContextClassLoader();
             List<String> bundles = classLoaderMap.get(ccl.hashCode());
@@ -207,7 +215,11 @@ public class LocalizedTextUtil {
                 try {
                     return bundle.getString(aTextName);
                 } catch (MissingResourceException e) {
-                    // ignore and try others
+                    if (devMode) {
+                        LOG.warn("Missing key [#0] in bundle [#1]!", aTextName, bundleName);
+                    } else if (LOG.isDebugEnabled()) {
+                        LOG.debug("Missing key [#0] in bundle [#1]!", aTextName, bundleName);
+                    }
                 }
             }
         }
@@ -265,6 +277,9 @@ public class LocalizedTextUtil {
                         bundle = bundlesMap.get(key);
                     }
                 } catch (MissingResourceException e) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Missing resource bundle [#0]!", aBundleName);
+                    }
                 }
             }
         }
@@ -273,8 +288,6 @@ public class LocalizedTextUtil {
 
     /**
      * Sets a {@link ClassLoader} to look up the bundle from if none can be found on the current thread's classloader
-     *
-     * @param classLoader
      */
     public static void setDelegatedClassLoader(final ClassLoader classLoader) {
         synchronized (bundlesMap) {
@@ -284,8 +297,6 @@ public class LocalizedTextUtil {
 
     /**
      * Removes the bundle from any cached "misses"
-     *
-     * @param bundleName
      */
     public static void clearBundle(final String bundleName) {
         bundlesMap.remove(getCurrentThreadContextClassLoader().hashCode() + bundleName);
@@ -524,7 +535,7 @@ public class LocalizedTextUtil {
         }
 
         // get default
-        GetDefaultMessageReturnArg result = null;
+        GetDefaultMessageReturnArg result;
         if (indexedTextName == null) {
             result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
         } else {
@@ -627,7 +638,11 @@ public class LocalizedTextUtil {
 
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException ex) {
-            // ignore
+            if (devMode) {
+                LOG.warn("Missing key [#0] in bundle [#1]!", aTextName, bundle);
+            } else if (LOG.isDebugEnabled()) {
+                LOG.debug("Missing key [#0] in bundle [#1]!", aTextName, bundle);
+            }
         }
 
         GetDefaultMessageReturnArg result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
@@ -679,6 +694,11 @@ public class LocalizedTextUtil {
             MessageFormat mf = buildMessageFormat(message, locale);
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException e) {
+            if (devMode) {
+                LOG.warn("Missing key [#0] in bundle [#1]!", key, bundleName);
+            } else if (LOG.isDebugEnabled()) {
+                LOG.debug("Missing key [#0] in bundle [#1]!", key, bundleName);
+            }
             return null;
         }
     }

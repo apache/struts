@@ -439,6 +439,9 @@ public class Dispatcher {
         boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD));
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
+        boolean devMode = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_DEVMODE));
+        LocalizedTextUtil.setDevMode(devMode);
+
         return container;
     }
 

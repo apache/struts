@@ -28,7 +28,7 @@ HomeController.$inject = ['$scope'];
 
 function ApacheProjectsController($scope, $http) {
     this.init = function() {
-        $http({method: 'GET', url: '/projects'}).
+        $http({method: 'GET', url: 'projects'}).
           success(function(data) {
             $scope.projects = data.projectNames;
           }).

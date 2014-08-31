@@ -24,10 +24,10 @@ var angularStrutsApp = angular.module('angularStrutsApp', ['ngRoute']);
 angularStrutsApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.when('/projects', {
-            templateUrl: '/partials/projects.html',
+            templateUrl: 'partials/projects.html',
             controller: 'ApacheProjectsController'
         }).when('/home', {
-            templateUrl: '/partials/home.html',
+            templateUrl: 'partials/home.html',
             controller: 'HomeController'
         }).otherwise({ redirectTo: '/home' });
     }

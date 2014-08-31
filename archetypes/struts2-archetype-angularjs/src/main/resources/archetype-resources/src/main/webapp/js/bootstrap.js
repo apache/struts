@@ -18,16 +18,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-angular.module('angularstruts', [], function ($routeProvider) {
-    $routeProvider.when('/projects', {
-        templateUrl: '/partials/projects.html',
-        controller: ApacheProjectsController
-    }).when('/home', {
-        templateUrl: '/partials/home.html',
-        controller: HomeController
-    }).otherwise({ redirectTo: '/home' });
-});
 
-angular.element(document).ready(function () {
-    angular.bootstrap(document, ['angularstruts']);
-});
+var angularStrutsApp = angular.module('angularStrutsApp', ['ngRoute']);
+
+angularStrutsApp.config(['$routeProvider',
+    function($routeProvider) {
+        $routeProvider.when('/projects', {
+            templateUrl: '/partials/projects.html',
+            controller: 'ApacheProjectsController'
+        }).when('/home', {
+            templateUrl: '/partials/home.html',
+            controller: 'HomeController'
+        }).otherwise({ redirectTo: '/home' });
+    }
+]);

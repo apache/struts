@@ -26,7 +26,8 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.EmptyVisitor;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 import java.io.File;
 import java.io.IOException;
@@ -714,7 +715,7 @@ public class ClassFinder {
                 InputStream in = resource.openStream();
                 try {
                     ClassReader classReader = new ClassReader(in);
-                    classReader.accept(new InfoBuildingVisitor(), ClassReader.SKIP_DEBUG);
+                    classReader.accept(new InfoBuildingClassVisitor(), ClassReader.SKIP_DEBUG);
                 } finally {
                     in.close();
                 }
@@ -727,13 +728,15 @@ public class ClassFinder {
 
     }
 
-    public class InfoBuildingVisitor extends EmptyVisitor {
+    public class InfoBuildingClassVisitor extends ClassVisitor {
         private Info info;
 
-        public InfoBuildingVisitor() {
+        public InfoBuildingClassVisitor() {
+            super(Opcodes.ASM5);
         }
 
-        public InfoBuildingVisitor(Info info) {
+        public InfoBuildingClassVisitor(Info info) {
+            this();
             this.info = info;
         }
 
@@ -785,7 +788,7 @@ public class ClassFinder {
             AnnotationInfo annotationInfo = new AnnotationInfo(desc);
             info.getAnnotations().add(annotationInfo);
             getAnnotationInfos(annotationInfo.getName()).add(info);
-            return new InfoBuildingVisitor(annotationInfo);
+            return null;
         }
 
         @Override
@@ -793,7 +796,7 @@ public class ClassFinder {
             ClassInfo classInfo = ((ClassInfo) info);
             FieldInfo fieldInfo = new FieldInfo(classInfo, name, desc);
             classInfo.getFields().add(fieldInfo);
-            return new InfoBuildingVisitor(fieldInfo);
+            return null;
         }
 
         @Override
@@ -801,7 +804,28 @@ public class ClassFinder {
             ClassInfo classInfo = ((ClassInfo) info);
             MethodInfo methodInfo = new MethodInfo(classInfo, name, desc);
             classInfo.getMethods().add(methodInfo);
-            return new InfoBuildingVisitor(methodInfo);
+            return new InfoBuildingMethodVisitor(methodInfo);
+        }
+    }
+
+    public class InfoBuildingMethodVisitor extends MethodVisitor {
+        private Info info;
+
+        public InfoBuildingMethodVisitor() {
+            super(Opcodes.ASM5);
+        }
+
+        public InfoBuildingMethodVisitor(Info info) {
+            this();
+            this.info = info;
+        }
+
+        @Override
+        public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+            AnnotationInfo annotationInfo = new AnnotationInfo(desc);
+            info.getAnnotations().add(annotationInfo);
+            getAnnotationInfos(annotationInfo.getName()).add(info);
+            return null;
         }
 
         @Override
@@ -810,7 +834,7 @@ public class ClassFinder {
             List<AnnotationInfo> annotationInfos = methodInfo.getParameterAnnotations(param);
             AnnotationInfo annotationInfo = new AnnotationInfo(desc);
             annotationInfos.add(annotationInfo);
-            return new InfoBuildingVisitor(annotationInfo);
+            return null;
         }
     }
 

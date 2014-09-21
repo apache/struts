@@ -20,9 +20,11 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+
 import ognl.ObjectPropertyAccessor;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
@@ -31,6 +33,7 @@ import ognl.SetPropertyAccessor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,6 +54,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;
+    private OgnlUtil ognlUtil;
     
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -65,6 +69,11 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     @Inject
     public void setObjectTypeDeterminer(ObjectTypeDeterminer ot) {
         this.objectTypeDeterminer = ot;
+    }
+    
+    @Inject
+    public void setOgnlUtil(OgnlUtil util) {
+        this.ognlUtil = util;
     }
 
     /**
@@ -229,11 +238,46 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map arg0, Object arg1, Object arg2, Object arg3)
+    public void setProperty(Map context, Object target, Object name, Object value)
             throws OgnlException {
-        
-        super.setProperty(arg0, arg1, arg2, arg3);
+
+        Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
+        String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
+        Class convertToClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, name);
+
+        if (name instanceof String && value.getClass().isArray()) {
+            // looks like the input game in the form of "someCollection.foo" and
+            // we are expected to define the index values ourselves.
+            // So let's do it:
+
+            Collection c = (Collection) target;
+            Object[] values = (Object[]) value;
+            for (Object v : values) {
+                try {
+                    Object o = objectFactory.buildBean(convertToClass, context);
+                    ognlUtil.setValue((String) name, context, o, v);
+                    c.add(o);
+                } catch (Exception e) {
+                    throw new OgnlException("Error converting given String values for Collection.", e);
+                }
+            }
+
+            // we don't want to do the normal collection property setting now, since we've already done the work
+            // just return instead
+            return;
+        }
+
+        Object realValue = getRealValue(context, value, convertToClass);
+
+        super.setProperty(context, target, name, realValue);
     }
+
+    private Object getRealValue(Map context, Object value, Class convertToClass) {
+        if (value == null || convertToClass == null) {
+            return value;
+        }
+        return xworkConverter.convertValue(context, value, convertToClass);
+    }  
 }
 
 /**

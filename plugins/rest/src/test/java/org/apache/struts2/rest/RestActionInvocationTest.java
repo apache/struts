@@ -10,6 +10,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockInterceptor;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
@@ -228,6 +229,7 @@ public class RestActionInvocationTest extends TestCase {
 
 		request.setMethod("GET");
 		
+        restActionInvocation.setOgnlUtil(new OgnlUtil());
         restActionInvocation.invoke();
 
         assertEquals(123, response.getStatus());

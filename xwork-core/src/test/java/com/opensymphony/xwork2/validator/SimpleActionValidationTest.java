@@ -33,9 +33,6 @@ import java.util.*;
  */
 public class SimpleActionValidationTest extends XWorkTestCase {
 
-    private Locale origLocale;
-
-
     public void testAliasValidation() {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("baz", "10");
@@ -225,16 +222,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        origLocale = Locale.getDefault();
-        Locale.setDefault(Locale.US);
 
         XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        Locale.setDefault(origLocale);
-    }
 }

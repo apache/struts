@@ -31,7 +31,9 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
 
 import java.lang.reflect.Array;
@@ -50,13 +52,15 @@ import java.util.Map;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class DefaultTypeConverter implements TypeConverter {
+public abstract class DefaultTypeConverter implements TypeConverter {
 
     protected static String MILLISECOND_FORMAT = ".SSS";
 
     private static final String NULL_STRING = "null";
 
     private static final Map<Class, Object> primitiveDefaults;
+
+    private LocaleProvider localeProvider;
 
     static {
         Map<Class, Object> map = new HashMap<Class, Object>();
@@ -71,6 +75,11 @@ public class DefaultTypeConverter implements TypeConverter {
         map.put(BigInteger.class, new BigInteger("0"));
         map.put(BigDecimal.class, new BigDecimal(0.0));
         primitiveDefaults = Collections.unmodifiableMap(map);
+    }
+
+    @Inject
+    public void setLocaleProvider(LocaleProvider localeProvider) {
+        this.localeProvider = localeProvider;
     }
 
     public Object convertValue(Map<String, Object> context, Object value, Class toType) {
@@ -332,12 +341,12 @@ public class DefaultTypeConverter implements TypeConverter {
     }
 
     protected Locale getLocale(Map<String, Object> context) {
-        if (context == null) {
-            return Locale.getDefault();
+        Locale locale = null;
+        if (context != null) {
+            locale = (Locale) context.get(ActionContext.LOCALE);
         }
-        Locale locale = (Locale) context.get(ActionContext.LOCALE);
         if (locale == null) {
-            locale = Locale.getDefault();
+            locale = localeProvider.getLocale();
         }
         return locale;
     }

@@ -56,8 +56,6 @@ import java.util.Map;
 public class DispatcherTest extends StrutsInternalTestCase {
 
     public void testDefaultResurceBundlePropertyLoaded() throws Exception {
-        Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties
-
         // some i18n messages from xwork-messages.properties
         assertEquals(
                 LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.US),

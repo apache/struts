@@ -1,5 +1,6 @@
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -11,8 +12,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateRangeFieldValidatorTest extends XWorkTestCase {
-
-    private Locale copy;
 
     public void testPassValidation() throws Exception {
         // given
@@ -88,14 +87,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        copy = Locale.getDefault();
-        Locale.setDefault(new Locale("DE"));
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        Locale.setDefault(copy);
+        ActionContext.getContext().setLocale(new Locale("DE"));
     }
 
 }

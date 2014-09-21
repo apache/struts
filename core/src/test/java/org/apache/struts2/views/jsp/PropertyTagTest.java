@@ -180,11 +180,13 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.setRequest(request);
 
         // test
-        {PropertyTag tag = new PropertyTag();
-        tag.setPageContext(pageContext);
-        tag.setValue("%{toString()}");
-        tag.doStartTag();
-        tag.doEndTag();}
+        {
+            PropertyTag tag = new PropertyTag();
+            tag.setPageContext(pageContext);
+            tag.setValue("%{formatTitle()}");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
         // verify test
         request.verify();
@@ -212,7 +214,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setEscape(false);
         tag.setEscapeJavaScript(true);    
         tag.setPageContext(pageContext);
-        tag.setValue("%{toString()}");
+        tag.setValue("%{formatTitle()}");
         tag.doStartTag();
         tag.doEndTag();}
 
@@ -242,7 +244,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setEscape(false);
         tag.setEscapeXml(true);
         tag.setPageContext(pageContext);
-        tag.setValue("%{toString()}");
+        tag.setValue("%{formatTitle()}");
         tag.doStartTag();
         tag.doEndTag();}
 
@@ -272,7 +274,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setEscape(false);
         tag.setEscapeCsv(true);
         tag.setPageContext(pageContext);
-        tag.setValue("%{toString()}");
+        tag.setValue("%{formatTitle()}");
         tag.doStartTag();
         tag.doEndTag();}
 
@@ -300,7 +302,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         // test
         {PropertyTag tag = new PropertyTag();
         tag.setPageContext(pageContext);
-        tag.setValue("toString()");
+        tag.setValue("formatTitle()");
         tag.doStartTag();
         tag.doEndTag();}
 
@@ -328,7 +330,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         // test
         {PropertyTag tag = new PropertyTag();
         tag.setPageContext(pageContext);
-        tag.setValue("toString()");
+        tag.setValue("formatTitle()");
         tag.doStartTag();
         tag.doEndTag();}
 
@@ -356,7 +358,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         // test
         {PropertyTag tag = new PropertyTag();
         tag.setPageContext(pageContext);
-        tag.setValue("%{toString()}");
+        tag.setValue("%{formatTitle()}");
         tag.doStartTag();
         tag.doEndTag();}
 
@@ -385,8 +387,12 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             return title;
         }
 
-        public String toString() {
+        public String formatTitle() {
             return "Foo is: " + title;
+        }
+
+        public String toString() {
+            return formatTitle();
         }
     }
 }

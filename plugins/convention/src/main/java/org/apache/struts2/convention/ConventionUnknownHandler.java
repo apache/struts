@@ -420,7 +420,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
      * Not used
      */
     public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException {
-        throw null;
+        return null;
     }
 
     public static class Resource {

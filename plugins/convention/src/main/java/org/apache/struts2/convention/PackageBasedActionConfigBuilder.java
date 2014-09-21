@@ -93,7 +93,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private String[] actionPackages;
     private String[] excludePackages;
     private String[] packageLocators;
-    private String[] includeJars;
+    private String[] includeJars = new String[] { ".*?\\.jar(!/|/)?" };
     private String packageLocatorsBasePackage;
     private boolean disableActionScanning = false;
     private boolean disablePackageLocatorsScanning = false;
@@ -458,42 +458,35 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         urlSet = urlSet.excludePaths(System.getProperty("sun.boot.class.path", ""));
         urlSet = urlSet.exclude(".*/JavaVM.framework/.*");
 
-        if (includeJars == null) {
-            urlSet = urlSet.exclude(".*?\\.jar(!/|/)?");
-        } else {
-            //jar urls regexes were specified
-            List<URL> rawIncludedUrls = urlSet.getUrls();
-            Set<URL> includeUrls = new HashSet<URL>();
-            boolean[] patternUsed = new boolean[includeJars.length];
+        List<URL> rawIncludedUrls = urlSet.getUrls();
+        Set<URL> includeUrls = new HashSet<URL>();
+        boolean[] patternUsed = new boolean[includeJars.length];
 
-            for (URL url : rawIncludedUrls) {
-                if (fileProtocols.contains(url.getProtocol())) {
-                    //it is a jar file, make sure it macthes at least a url regex
-                    for (int i = 0; i < includeJars.length; i++) {
-                        String includeJar = includeJars[i];
-                        if (Pattern.matches(includeJar, url.toExternalForm())) {
-                            includeUrls.add(url);
-                            patternUsed[i] = true;
-                            break;
-                        }
-                    }
-                } else {
-                    //it is not a jar
-                    includeUrls.add(url);
-                }
-            }
-
-            if (LOG.isWarnEnabled()) {
-                for (int i = 0; i < patternUsed.length; i++) {
-                    if (!patternUsed[i]) {
-                        LOG.warn("The includeJars pattern [#0] did not match any jars in the classpath", includeJars[i]);
+        for (URL url : rawIncludedUrls) {
+            if (fileProtocols.contains(url.getProtocol())) {
+                //it is a jar file, make sure it macthes at least a url regex
+                for (int i = 0; i < includeJars.length; i++) {
+                    String includeJar = includeJars[i];
+                    if (Pattern.matches(includeJar, url.toExternalForm())) {
+                        includeUrls.add(url);
+                        patternUsed[i] = true;
+                        break;
                     }
                 }
+            } else {
+                //it is not a jar
+                includeUrls.add(url);
             }
-            return new UrlSet(includeUrls);
         }
 
-        return urlSet;
+        if (LOG.isWarnEnabled()) {
+            for (int i = 0; i < patternUsed.length; i++) {
+                if (!patternUsed[i]) {
+                    LOG.warn("The includeJars pattern [#0] did not match any jars in the classpath", includeJars[i]);
+                }
+            }
+        }
+        return new UrlSet(includeUrls);
     }
 
     /**

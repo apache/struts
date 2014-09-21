@@ -343,7 +343,10 @@ public class FreemarkerResult extends StrutsResultSupport {
                     contentType = "text/html";
                 }
 
-                String encoding = template.getEncoding();
+                String encoding = response.getCharacterEncoding();
+                if(encoding == null) {
+                    encoding = template.getEncoding();
+                }
 
                 if (encoding != null) {
                     contentType = contentType + "; charset=" + encoding;

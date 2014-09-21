@@ -58,6 +58,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
                 (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
                 container.getInstance(TextProvider.class, "system"), allowStaticMethodAccess);
         container.inject(stack);
+        ognlUtil.setAllowStaticMethodAccess(Boolean.toString(allowStaticMethodAccess));
         return stack;
     }
 
@@ -232,6 +233,17 @@ public class OgnlValueStackTest extends XWorkTestCase {
         dog.setDeity("fido");
         vs.push(dog);
         assertEquals("fido", vs.findValue("@com.opensymphony.xwork2.util.Dog@getDeity()", String.class));
+    }
+
+    /**
+     * Allow access Enums without enabling access to static methods
+     */
+    public void testEnum() throws Exception {
+        OgnlValueStack vs = createValueStack();
+
+        assertEquals("ONE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[0]", String.class));
+        assertEquals("TWO", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[1]", String.class));
+        assertEquals("THREE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[2]", String.class));
     }
 
     public void testStaticMethodDisallow() {
@@ -1024,4 +1036,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
             this.displayName = displayName;
         }
     }
+}
+
+enum MyNumbers {
+    ONE, TWO, THREE
 }

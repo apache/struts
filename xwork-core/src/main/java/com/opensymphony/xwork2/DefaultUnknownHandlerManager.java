@@ -16,12 +16,14 @@
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -31,27 +33,29 @@ import java.util.Set;
  * @see com.opensymphony.xwork2.UnknownHandlerManager
  */
 public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
-    protected ArrayList<UnknownHandler> unknownHandlers;
-    private Configuration configuration;
+
     private Container container;
 
-    @Inject
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-        build();
-    }
+    protected ArrayList<UnknownHandler> unknownHandlers;
 
     @Inject
     public void setContainer(Container container) {
         this.container = container;
-        build();
+        try {
+            build();
+        } catch (Exception e) {
+            throw new ConfigurationException(e);
+        }
     }
 
     /**
-     * Builds a list of UnknowHandlers in the order specified by the configured "unknown-handler-stack".
-     * If "unknown-handler-stack" was not configured, all UnknowHandlers will be returned, in no specific order
+     * Builds a list of UnknownHandlers in the order specified by the configured "unknown-handler-stack".
+     * If "unknown-handler-stack" was not configured, all UnknownHandlers will be returned, in no specific order
      */
-    protected void build() {
+    protected void build() throws Exception {
+        Configuration configuration = container.getInstance(Configuration.class);
+        ObjectFactory factory = container.getInstance(ObjectFactory.class);
+
         if (configuration != null && container != null) {
             List<UnknownHandlerConfig> unkownHandlerStack = configuration.getUnknownHandlerStack();
             unknownHandlers = new ArrayList<UnknownHandler>();
@@ -59,7 +63,7 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
             if (unkownHandlerStack != null && !unkownHandlerStack.isEmpty()) {
                 //get UnknownHandlers in the specified order
                 for (UnknownHandlerConfig unknownHandlerConfig : unkownHandlerStack) {
-                    UnknownHandler uh = container.getInstance(UnknownHandler.class, unknownHandlerConfig.getName());
+                    UnknownHandler uh = factory.buildUnknownHandler(unknownHandlerConfig.getName(), new HashMap<String, Object>());
                     unknownHandlers.add(uh);
                 }
             } else {
@@ -103,8 +107,6 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
 
     /**
      * Iterate over UnknownHandlers and return the result of the first one that can handle it
-     *
-     * @throws NoSuchMethodException
      */
     public ActionConfig handleUnknownAction(String namespace, String actionName) {
         for (UnknownHandler unknownHandler : unknownHandlers) {

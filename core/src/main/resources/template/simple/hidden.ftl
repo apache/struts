@@ -21,20 +21,20 @@
  */
 -->
 <input type="hidden"<#rt/>
- name="${parameters.name?default("")?html}"<#rt/>
+ name="${(parameters.name!"")?html}"<#rt/>
 <#if parameters.nameValue??>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
-<#if parameters.id??>
+<#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if parameters.cssClass?has_content>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
+<#if parameters.cssStyle?has_content>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />

@@ -44,7 +44,7 @@ function compile(ptn) {
     	if (ptn == '' || !window.RegExp) {
             return function(val) { return val == ptn; }
         } else {
-            var reg = new RegExp(ptn);
+            var reg = new RegExp("\\b" + ptn);
             return function (val) { 
                 if (val == '') { // ignore empty option added by template 
                 	return true;
@@ -56,8 +56,8 @@ function compile(ptn) {
 }    
 
 function moveOptions(objSourceElement, objTargetElement, toSort, chooseFunc) {
-    var aryTempSourceOptions = new Array();
-    var aryTempTargetOptions = new Array();
+    var aryTempSourceOptions = [];
+    var aryTempTargetOptions = [];
     var x = 0;
 
     //looping through source element to find selected options
@@ -70,7 +70,7 @@ function moveOptions(objSourceElement, objTargetElement, toSort, chooseFunc) {
         }
         else {
             //storing options that stay to recreate select element
-            var objTempValues = new Object();
+            var objTempValues = {};
             objTempValues.text = objSourceElement.options[i].text;
             objTempValues.value = objSourceElement.options[i].value;
             aryTempSourceOptions[x] = objTempValues;
@@ -80,7 +80,7 @@ function moveOptions(objSourceElement, objTargetElement, toSort, chooseFunc) {
 
     //sorting and refilling target list
     for (var i = 0; i < objTargetElement.length; i++) {
-        var objTempValues = new Object();
+        var objTempValues = {};
         objTempValues.text = objTargetElement.options[i].text;
         objTempValues.value = objTargetElement.options[i].value;
         aryTempTargetOptions[i] = objTempValues;
@@ -178,7 +178,7 @@ function moveOptionDown(objTargetElement, type, ptn) {
 function swapOptions(objTargetElement, first, second) {
 	var opt = objTargetElement.options;
 	var temp = new Option(opt[first].text, opt[first].value, opt[first].defaultSelected, opt[first].selected);
-	var temp2= new Option(opt[second].text, opt[second].value, opt[second].defaultSelected, opt[second].selected);
+	var temp2 = new Option(opt[second].text, opt[second].value, opt[second].defaultSelected, opt[second].selected);
 	opt[first] = temp2;
 	opt[second] = temp;
 }

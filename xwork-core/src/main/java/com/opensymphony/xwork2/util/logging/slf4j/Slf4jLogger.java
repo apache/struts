@@ -33,6 +33,10 @@ public class Slf4jLogger implements Logger {
         log.error(LoggerUtils.format(msg, args));
     }
 
+    public void error(String msg, Object... args) {
+        log.error(LoggerUtils.format(msg, args));
+    }
+
     public void error(String msg, Throwable ex, String... args) {
         log.error(LoggerUtils.format(msg, args), ex);
     }

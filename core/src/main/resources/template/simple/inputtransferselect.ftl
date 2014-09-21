@@ -33,26 +33,26 @@
 
 
 <input type="text"<#rt/>
- name="${parameters.name?default("")?html}_input"<#rt/>
-<#if parameters.disabled?default(false)>
+ name="${parameters.name!""?html}_input"<#rt/>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly?default(false)>
+<#if parameters.readonly!false>
  readonly="readonly"<#rt/>
 </#if>
-<#if parameters.tabindex??>
+<#if parameters.tabindex?has_content>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.id??>
+<#if parameters.id?has_content>
  id="${parameters.id?html}_input"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if parameters.cssClass?has_content>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
+<#if parameters.cssStyle?has_content>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.title??>
+<#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
@@ -62,59 +62,59 @@
 
 </td>
 <td valign="middle" align="center">
-	<#assign addLabel=parameters.addLabel?default("->")?html /><#t/>
+	<#assign addLabel=(parameters.addLabel!"->")?html /><#t/>
 	<input type="button"
-		<#if parameters.buttonCssClass??><#t/>
+		<#if parameters.buttonCssClass?has_content><#t/>
 		 class="${parameters.buttonCssClass?html}"
 		</#if><#t/>
-		<#if parameters.buttonCssStyle??>
+		<#if parameters.buttonCssStyle?has_content>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
 		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id?html}_input'), document.getElementById('${parameters.id?html}'))" /><br /><br />
 	<#t/>
-	<#assign removeLabel=parameters.removeLabel?default("<-")?html /><#t/>
+	<#assign removeLabel=(parameters.removeLabel!"<-")?html /><#t/>
 	<input type="button"
-  		<#if parameters.buttonCssClass??><#t/>
+  		<#if parameters.buttonCssClass?has_content><#t/>
 		 class="${parameters.buttonCssClass?html}"
 		</#if><#t/>
-		<#if parameters.buttonCssStyle??>
+		<#if parameters.buttonCssStyle?has_content>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
 		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
 	<#t/>
-	<#assign removeAllLabel=parameters.removeAllLabel?default("<<--")?html /><#t/>
+	<#assign removeAllLabel=(parameters.removeAllLabel!"<<--")?html /><#t/>
 	<input type="button"
-	    		<#if parameters.buttonCssClass??><#t/>
+	    		<#if parameters.buttonCssClass?has_content><#t/>
 		 class="${parameters.buttonCssClass?html}"
 		</#if><#t/>
-		<#if parameters.buttonCssStyle??>
+		<#if parameters.buttonCssStyle?has_content>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
 		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
 </td>
 <td>
-<#if parameters.rightTitle??><#t/>
+<#if parameters.rightTitle?has_content><#t/>
 	<label for="rightTitle">${parameters.rightTitle}</label><br />
 </#if><#t/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
-<#if parameters.allowUpDown?default(true)>
+<#if parameters.allowUpDown!true>
 <input type="button" 
-<#if parameters.headerKey??>
+<#if parameters.headerKey?has_content>
 	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
 <#else>
 	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '');"
 </#if>
-<#if parameters.downLabel??>
+<#if parameters.downLabel?has_content>
 	value="${parameters.downLabel?html}"
 </#if>
 />
 <input type="button" 
-<#if parameters.headerKey??>
+<#if parameters.headerKey?has_content>
 	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
 <#else>
 	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '');"
 </#if>
-<#if parameters.upLabel??>
+<#if parameters.upLabel?has_content>
 	value="${parameters.upLabel?html}"
 </#if>
 />

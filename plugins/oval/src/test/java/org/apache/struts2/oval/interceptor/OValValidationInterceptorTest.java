@@ -319,7 +319,6 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        Locale.setDefault(Locale.US);
         super.setUp();
         loadConfigurationProviders(new XmlConfigurationProvider("oval-test.xml"));
     }

@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -222,6 +223,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
             builder.factory(ObjectFactory.class);
             builder.factory(ActionProxyFactory.class, DefaultActionProxyFactory.class);
+            builder.factory(OgnlUtil.class, OgnlUtil.class);
         }
 
     }

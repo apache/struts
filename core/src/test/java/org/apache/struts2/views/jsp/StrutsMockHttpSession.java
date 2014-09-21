@@ -23,6 +23,7 @@ package org.apache.struts2.views.jsp;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.UUID;
 
 import com.mockobjects.servlet.MockHttpSession;
 
@@ -67,4 +68,10 @@ public class StrutsMockHttpSession extends MockHttpSession {
     public void setupGetAttributeNames(Enumeration enumeration) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public String getId() {
+        return UUID.randomUUID().toString();
+    }
+
 }

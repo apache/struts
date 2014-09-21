@@ -45,7 +45,7 @@ public class StrutsSpringObjectFactoryTest extends TestCase {
         Container container = EasyMock.createNiceMock(Container.class);
         EasyMock.replay(container);
         
-        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory(null, null, null, new MockServletContext(), null, container);
+        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory(null, null, null, null, new MockServletContext(), null, container);
 
         assertEquals(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, fac.getAutowireStrategy());
     }
@@ -60,7 +60,7 @@ public class StrutsSpringObjectFactoryTest extends TestCase {
         ac.setServletContext(msc);
         ac.setConfigLocations(new String[] {"org/apache/struts2/spring/StrutsSpringObjectFactoryTest-applicationContext.xml"});
         ac.refresh();
-        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory("constructor", null, null, msc, null, container);
+        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory("constructor", null, null, null, msc, null, container);
 
         assertEquals(AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, fac.getAutowireStrategy());
     }

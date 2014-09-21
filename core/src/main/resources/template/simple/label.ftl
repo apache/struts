@@ -21,19 +21,19 @@
  */
 -->
 <label<#rt/>
-<#if parameters.id??>
+<#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if parameters.cssClass?has_content>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
+<#if parameters.cssStyle?has_content>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.title??>
+<#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#if parameters.for??>
+<#if parameters.for?has_content>
  for="${parameters.for?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />

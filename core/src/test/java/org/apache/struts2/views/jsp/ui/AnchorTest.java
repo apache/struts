@@ -24,6 +24,8 @@ package org.apache.struts2.views.jsp.ui;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
+import javax.servlet.jsp.JspException;
+
 
 /**
  */
@@ -84,9 +86,10 @@ public class AnchorTest extends AbstractUITagTest {
         testAction.setFoo("bar");
     }
 
-    private AnchorTag createTag() {
+    private AnchorTag createTag() throws JspException {
         AnchorTag tag = new AnchorTag();
         tag.setPageContext(pageContext);
+        tag.doStartTag();
 
         tag.setId("mylink");
         return tag;

@@ -24,6 +24,8 @@ package org.apache.struts2;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -163,6 +165,9 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         }
         if (!builder.contains(ActionProxyFactory.class)) {
             builder.factory(ActionProxyFactory.class, DefaultActionProxyFactory.class);
+        }
+        if (!builder.contains(ExcludedPatternsChecker.class)) {
+            builder.factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class);
         }
     }
 }

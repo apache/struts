@@ -48,7 +48,9 @@ import java.util.Map;
 public abstract class ListUIBean extends UIBean {
     protected Object list;
     protected String listKey;
+    protected String listValueKey;
     protected String listValue;
+    protected String listLabelKey;
     protected String listCssClass;
     protected String listCssStyle;
     protected String listTitle;
@@ -108,11 +110,21 @@ public abstract class ListUIBean extends UIBean {
             addParameter("listKey", "key");
         }
 
+        if (listValueKey != null) {
+            listValueKey = stripExpressionIfAltSyntax(listValueKey);
+            addParameter("listValueKey", listValueKey);
+        }
+
         if (listValue != null) {
             listValue = stripExpressionIfAltSyntax(listValue);
             addParameter("listValue", listValue);
         } else if (value instanceof Map) {
             addParameter("listValue", "value");
+        }
+
+        if (listLabelKey != null) {
+            listLabelKey = stripExpressionIfAltSyntax(listLabelKey);
+            addParameter("listLabelKey", listLabelKey);
         }
 
         if (listCssClass != null && listCssClass.trim().length() > 0) {
@@ -147,9 +159,19 @@ public abstract class ListUIBean extends UIBean {
         this.listKey = listKey;
     }
 
+    @StrutsTagAttribute(description = " Property of list objects to get field value label from")
+    public void setListValueKey(String listValueKey) {
+        this.listValueKey = listValueKey;
+    }
+
     @StrutsTagAttribute(description = "Property of list objects to get field content from")
     public void setListValue(String listValue) {
         this.listValue = listValue;
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to be used to lookup for localised version of field label")
+    public void setListLabelKey(String listLabelKey) {
+        this.listLabelKey = listLabelKey;
     }
 
     @StrutsTagAttribute(description = "Property of list objects to get css class from")

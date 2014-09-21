@@ -60,6 +60,7 @@ public class Checkbox extends UIBean {
     final public static String TEMPLATE = "checkbox";
 
     protected String fieldValue;
+    protected String readonly;
 
     public Checkbox(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -75,6 +76,10 @@ public class Checkbox extends UIBean {
         } else {
             addParameter("fieldValue", "true");
         }
+        
+        if (readonly != null) {
+            addParameter("readonly", findValue(readonly, Boolean.class));
+        }
     }
 
     protected Class getValueClassType() {
@@ -84,6 +89,11 @@ public class Checkbox extends UIBean {
     @StrutsTagAttribute(description="The actual HTML value attribute of the checkbox.", defaultValue="true")
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;
+    }
+    
+    @StrutsTagAttribute(description="Whether the input is readonly", type="Boolean", defaultValue="false")
+    public void setReadonly(String readonly) {
+        this.readonly = readonly;
     }
 
 }

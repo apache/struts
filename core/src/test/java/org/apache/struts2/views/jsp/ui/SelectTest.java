@@ -494,7 +494,7 @@ public class SelectTest extends AbstractUITagTest {
         tag.setList("list2");
         tag.setListKey("id");
         tag.setListValue("name");
-        tag.setValue("fooInt.toString()");
+        tag.setValue("fooInt");
 
         // header stuff
         tag.setHeaderKey("headerKey");

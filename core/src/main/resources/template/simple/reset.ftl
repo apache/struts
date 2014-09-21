@@ -22,51 +22,51 @@
 -->
 <#if parameters.type?? && parameters.type=="button">
 <button type="reset"<#rt/>
-<#if parameters.name??>
+<#if parameters.name?has_content>
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue??>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if parameters.cssClass?has_content>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
+<#if parameters.cssStyle?has_content>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-><#if parameters.src??>
+><#if parameters.src?has_content>
 <img<#rt/>
-<#if parameters.label??>
+<#if parameters.label?has_content>
  alt="${parameters.label?html}"<#rt/>
 </#if>
-<#if parameters.src??>
+<#if parameters.src?has_content>
  src="${parameters.src?html}"<#rt/>
 </#if>
-/><#else><#if parameters.label??><@s.property value="parameters.label"/><#rt/></#if></#if></button>
+/><#else><#if parameters.label?has_content><@s.property value="parameters.label"/><#rt/></#if></#if></button>
 <#else>
 <input type="reset"<#rt/>
-<#if parameters.name??>
+<#if parameters.name?has_content>
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue??>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if parameters.cssClass?has_content>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
+<#if parameters.cssStyle?has_content>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.title??>
+<#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />

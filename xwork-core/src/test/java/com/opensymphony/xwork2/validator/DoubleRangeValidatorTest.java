@@ -29,10 +29,6 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         params.put("percentage", 100.0123d);
         context.put(ActionContext.PARAMETERS, params);
 
-        // must set a locale to US as error message contains a locale dependent number (see XW-490)
-        Locale defLocale = Locale.getDefault();
-        Locale.setDefault(Locale.US);
-        
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
@@ -46,8 +42,6 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         String errorMessage = errorMessages.get(0);
         assertNotNull("Expecting: percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
         assertEquals("percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
-
-        Locale.setDefault(defLocale);
     }
 
     public void testRangeValidationNoError() throws Exception {
@@ -193,10 +187,6 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         params.put("percentage", 100.0123d);
         context.put(ActionContext.PARAMETERS, params);
 
-        // must set a locale to US as error message contains a locale dependent number (see XW-490)
-        Locale defLocale = Locale.getDefault();
-        Locale.setDefault(Locale.US);
-
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
@@ -209,8 +199,6 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         String errorMessage = errorMessages.get(0);
         assertNotNull("Expecting: percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
         assertEquals("percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
-
-        Locale.setDefault(defLocale);
     }
 
     public void testExpressionParams() throws Exception {

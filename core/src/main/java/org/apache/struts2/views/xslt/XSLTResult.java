@@ -171,6 +171,7 @@ import java.util.Map;
  * <ul>
  *
  * <li><b>location (default)</b> - the location to go to after execution.</li>
+ * <li><b>encoding</b> - character encoding used in XML, default UTF-8.</li>
  *
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
@@ -240,6 +241,8 @@ public class XSLTResult implements Result {
 
     /** Indicates the status to return in the response */
     private int status = 200;
+
+    private String encoding = "UTF-8";
 
     private boolean parse;
     private AdapterFactory adapterFactory;
@@ -322,6 +325,14 @@ public class XSLTResult implements Result {
         }
     }
 
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
     /**
      * If true, parse the stylesheet location for OGNL expressions.
      *
@@ -344,6 +355,7 @@ public class XSLTResult implements Result {
         try {
             HttpServletResponse response = ServletActionContext.getResponse();
             response.setStatus(status);
+            response.setCharacterEncoding(encoding);
             PrintWriter writer = response.getWriter();
 
             // Create a transformer for the stylesheet.

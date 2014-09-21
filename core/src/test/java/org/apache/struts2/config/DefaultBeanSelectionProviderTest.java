@@ -34,14 +34,13 @@ import junit.framework.TestCase;
 public class DefaultBeanSelectionProviderTest extends TestCase {
 
     public void testRegister() {
-        Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties
-
         LocalizedTextUtil.clearDefaultResourceBundles();
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         assertEquals("The form has already been processed or no token was supplied, please try again.", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
         
         LocatableProperties props = new LocatableProperties();
         props.setProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, "testmessages,testmessages2");
+        props.setProperty(StrutsConstants.STRUTS_LOCALE, "US");
         
         new DefaultBeanSelectionProvider().register(new ContainerBuilder(), props);
 

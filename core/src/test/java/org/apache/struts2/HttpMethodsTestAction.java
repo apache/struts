@@ -2,11 +2,11 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.interceptor.httpmethod.AllowedHttpMethod;
-import org.apache.struts2.interceptor.httpmethod.GetOnly;
-import org.apache.struts2.interceptor.httpmethod.GetPostOnly;
+import org.apache.struts2.interceptor.httpmethod.HttpGet;
+import org.apache.struts2.interceptor.httpmethod.HttpGetOrPost;
 import org.apache.struts2.interceptor.httpmethod.HttpMethod;
 import org.apache.struts2.interceptor.httpmethod.HttpMethodAware;
-import org.apache.struts2.interceptor.httpmethod.PostOnly;
+import org.apache.struts2.interceptor.httpmethod.HttpPost;
 
 import static org.apache.struts2.interceptor.httpmethod.HttpMethod.POST;
 
@@ -22,17 +22,17 @@ public class HttpMethodsTestAction extends ActionSupport implements HttpMethodAw
         this.resultName = resultName;
     }
 
-    @GetOnly
+    @HttpGet
     public String onGetOnly() {
         return "onGetOnly";
     }
 
-    @PostOnly
+    @HttpPost
     public String onPostOnly() {
         return "onPostOnly";
     }
 
-    @GetPostOnly
+    @HttpGetOrPost
     public String onGetPostOnly() {
         return "onGetPostOnly";
     }

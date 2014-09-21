@@ -22,20 +22,20 @@ import java.util.List;
  * thus value will be used instead.
  * <p/>
  * To limit allowed http methods, annotate action class with {@link AllowedHttpMethod} and specify
- * which methods are allowed. You can also use shorter versions {@link GetOnly}, {@link PostOnly}
- * and {@link GetPostOnly}
+ * which methods are allowed. You can also use shorter versions {@link HttpGet}, {@link HttpPost}
+ * and {@link HttpGetOrPost}
  *
  * @see HttpMethodAware
  * @see HttpMethod
  * @see AllowedHttpMethod
- * @see GetOnly
- * @see PostOnly
- * @see GetPostOnly
+ * @see HttpGet
+ * @see HttpPost
+ * @see HttpGetOrPost
  * @since 2.3.18
  */
 public class HttpMethodInterceptor extends AbstractInterceptor {
 
-    public static final Class[] HTTP_METHOD_ANNOTATIONS = {AllowedHttpMethod.class, PostOnly.class, GetOnly.class, GetPostOnly.class};
+    public static final Class[] HTTP_METHOD_ANNOTATIONS = {AllowedHttpMethod.class, HttpPost.class, HttpGet.class, HttpGetOrPost.class};
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpMethodInterceptor.class);
 
@@ -93,14 +93,14 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
         if (AnnotationUtils.isAnnotatedBy(element, AllowedHttpMethod.class)) {
             allowedMethods = Arrays.asList(element.getAnnotation(AllowedHttpMethod.class).value());
         }
-        if (AnnotationUtils.isAnnotatedBy(element, GetOnly.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(GetOnly.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, HttpGet.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(HttpGet.class).value());
         }
-        if (AnnotationUtils.isAnnotatedBy(element, PostOnly.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(PostOnly.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, HttpPost.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(HttpPost.class).value());
         }
-        if (AnnotationUtils.isAnnotatedBy(element, GetPostOnly.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(GetPostOnly.class).value());
+        if (AnnotationUtils.isAnnotatedBy(element, HttpGetOrPost.class)) {
+            allowedMethods = Arrays.asList(element.getAnnotation(HttpGetOrPost.class).value());
         }
         return Collections.unmodifiableList(allowedMethods);
     }

@@ -10,6 +10,7 @@ import org.apache.struts2.ServletActionContext;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -94,18 +95,24 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
     }
 
     protected List<HttpMethod> readAllowedMethods(AnnotatedElement element) {
-        List<HttpMethod> allowedMethods = Collections.emptyList();
+        List<HttpMethod> allowedMethods = new ArrayList<HttpMethod>();
         if (AnnotationUtils.isAnnotatedBy(element, AllowedHttpMethod.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(AllowedHttpMethod.class).value());
+            allowedMethods.addAll(Arrays.asList(element.getAnnotation(AllowedHttpMethod.class).value()));
         }
         if (AnnotationUtils.isAnnotatedBy(element, HttpGet.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(HttpGet.class).value());
+            allowedMethods.addAll(Arrays.asList(element.getAnnotation(HttpGet.class).value()));
         }
         if (AnnotationUtils.isAnnotatedBy(element, HttpPost.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(HttpPost.class).value());
+            allowedMethods.addAll(Arrays.asList(element.getAnnotation(HttpPost.class).value()));
+        }
+        if (AnnotationUtils.isAnnotatedBy(element, HttpPut.class)) {
+            allowedMethods.addAll(Arrays.asList(element.getAnnotation(HttpPut.class).value()));
+        }
+        if (AnnotationUtils.isAnnotatedBy(element, HttpDelete.class)) {
+            allowedMethods.addAll(Arrays.asList(element.getAnnotation(HttpDelete.class).value()));
         }
         if (AnnotationUtils.isAnnotatedBy(element, HttpGetOrPost.class)) {
-            allowedMethods = Arrays.asList(element.getAnnotation(HttpGetOrPost.class).value());
+            allowedMethods.addAll(Arrays.asList(element.getAnnotation(HttpGetOrPost.class).value()));
         }
         return Collections.unmodifiableList(allowedMethods);
     }

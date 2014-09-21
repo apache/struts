@@ -183,4 +183,73 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals("onGetPostOnly", resultName);
     }
 
+    public void testDeleteOnMethod() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        HttpMethodInterceptor interceptor = new HttpMethodInterceptor();
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setAction(action);
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("onDelete");
+        proxy.setMethodSpecified(true);
+        invocation.setProxy(proxy);
+
+        invocation.setResultCode("onDelete");
+
+        MockHttpServletRequest request = new MockHttpServletRequest("DELETE", "/action");
+        ServletActionContext.setRequest(request);
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then
+        assertEquals("onDelete", resultName);
+    }
+
+    public void testPutOnPutOrPostMethod() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        HttpMethodInterceptor interceptor = new HttpMethodInterceptor();
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setAction(action);
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("onPutOrPost");
+        proxy.setMethodSpecified(true);
+        invocation.setProxy(proxy);
+
+        invocation.setResultCode("onPutOrPost");
+
+        MockHttpServletRequest request = new MockHttpServletRequest("PUT", "/action");
+        ServletActionContext.setRequest(request);
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then
+        assertEquals("onPutOrPost", resultName);
+    }
+
+    public void testPostOnPutOrPostMethod() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        HttpMethodInterceptor interceptor = new HttpMethodInterceptor();
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setAction(action);
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("onPutOrPost");
+        proxy.setMethodSpecified(true);
+        invocation.setProxy(proxy);
+
+        invocation.setResultCode("onPutOrPost");
+
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/action");
+        ServletActionContext.setRequest(request);
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then
+        assertEquals("onPutOrPost", resultName);
+    }
+
 }

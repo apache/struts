@@ -4,7 +4,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.apache.struts</groupId>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts-master</artifactId>
+        <version>9</version>
+    </parent>
+
     <artifactId>struts2-bom</artifactId>
     <version>${struts-version.version}</version>
     <packaging>pom</packaging>

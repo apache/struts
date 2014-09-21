@@ -35,7 +35,12 @@ import java.util.List;
  */
 public class HttpMethodInterceptor extends AbstractInterceptor {
 
-    public static final Class[] HTTP_METHOD_ANNOTATIONS = {AllowedHttpMethod.class, HttpPost.class, HttpGet.class, HttpGetOrPost.class};
+    public static final Class[] HTTP_METHOD_ANNOTATIONS = {
+            AllowedHttpMethod.class,
+            HttpPost.class,
+            HttpGet.class,
+            HttpGetOrPost.class
+    };
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpMethodInterceptor.class);
 

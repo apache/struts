@@ -35,6 +35,10 @@ public class JdkLogger implements Logger {
         log.log(Level.SEVERE, LoggerUtils.format(msg, args));
     }
 
+    public void error(String msg, Object... args) {
+        log.log(Level.SEVERE, LoggerUtils.format(msg, args));
+    }
+
     public void error(String msg, Throwable ex, String... args) {
         log.log(Level.SEVERE, LoggerUtils.format(msg, args), ex);
     }
@@ -92,6 +96,10 @@ public class JdkLogger implements Logger {
     }
     
     public void trace(String msg, String... args) {
+        log.log(Level.FINEST, LoggerUtils.format(msg, args));
+    }
+
+    public void trace(String msg, Object... args) {
         log.log(Level.FINEST, LoggerUtils.format(msg, args));
     }
 

@@ -32,11 +32,13 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import junit.framework.Assert;
+import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 
 import java.io.File;
@@ -108,13 +110,11 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, params);
 
         // then
-        assertEquals(2, action.getActionMessages().size());
+        assertEquals(1, action.getActionMessages().size());
 
         String msg1 = action.getActionMessage(0);
-        String msg2 = action.getActionMessage(1);
 
-        assertTrue(msg1.contains("Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'"));
-        assertTrue(msg2.contains("Error setting expression 'top['name'](0)' with value 'true'"));
+        assertTrue(msg1.contains("Error setting expression 'top['name'](0)' with value 'true'"));
         assertNull(action.getName());
     }
 
@@ -143,7 +143,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         };
 
-        pi.setExcludeParams("(.*\\.|^)class\\..*");
         container.inject(pi);
         ValueStack vs = ActionContext.getContext().getValueStack();
 
@@ -161,12 +160,14 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         // given
         final String pollution1 = "class.classLoader.jarPath";
         final String pollution2 = "model.class.classLoader.jarPath";
+        final String pollution3 = "class.classLoader.defaultAssertionStatus";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-class-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
                 put(pollution2, "very bad");
+                put(pollution3, true);
             }
         };
 
@@ -190,16 +191,19 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, params);
 
         // then
-        assertEquals(2, action.getActionMessages().size());
+        assertEquals(3, action.getActionMessages().size());
 
         String msg1 = action.getActionMessage(0);
         String msg2 = action.getActionMessage(1);
+        String msg3 = action.getActionMessage(2);
 
-        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg1);
-        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg2);
+        assertEquals("Error setting expression 'class.classLoader.defaultAssertionStatus' with value 'true'", msg1);
+        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg2);
+        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg3);
 
         assertFalse(excluded.get(pollution1));
         assertFalse(excluded.get(pollution2));
+        assertFalse(excluded.get(pollution3));
     }
 
     public void testDoesNotAllowMethodInvocations() throws Exception {
@@ -268,6 +272,56 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertNull(session.get("user5"));
     }
 
+    public void testArrayClassPollutionBlockedByPattern() throws Exception {
+        // given
+        final String pollution1 = "model.class.classLoader.jarPath";
+        final String pollution2 = "model['class']['classLoader']['jarPath']";
+        final String pollution3 = "model[\"class\"]['classLoader']['jarPath']";
+        final String pollution4 = "class.classLoader.jarPath";
+        final String pollution5 = "class['classLoader']['jarPath']";
+        final String pollution6 = "class[\"classLoader\"]['jarPath']";
+
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        final Map<String, Object> params = new HashMap<String, Object>() {
+            {
+                put(pollution1, "bad");
+                put(pollution2, "bad");
+                put(pollution3, "bad");
+                put(pollution4, "bad");
+                put(pollution5, "bad");
+                put(pollution6, "bad");
+            }
+        };
+
+        final Map<String, Boolean> excluded = new HashMap<String, Boolean>();
+        ParametersInterceptor pi = new ParametersInterceptor() {
+
+            @Override
+            protected boolean isExcluded(String paramName) {
+                boolean result = super.isExcluded(paramName);
+                excluded.put(paramName, result);
+                return result;
+            }
+
+        };
+
+        container.inject(pi);
+        ValueStack vs = ActionContext.getContext().getValueStack();
+
+        // when
+        ValidateAction action = new ValidateAction();
+        pi.setParameters(action, vs, params);
+
+        // then
+        assertEquals(0, action.getActionMessages().size());
+        assertTrue(excluded.get(pollution1));
+        assertTrue(excluded.get(pollution2));
+        assertTrue(excluded.get(pollution3));
+        assertTrue(excluded.get(pollution4));
+        assertTrue(excluded.get(pollution5));
+        assertTrue(excluded.get(pollution6));
+    }
+
     public void testAccessToOgnlInternals() throws Exception {
         // given
         Map<String, Object> params = new HashMap<String, Object>();
@@ -288,9 +342,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         //then
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
-        Object allowMethodAccess = stack.findValue("\u0023_memberAccess['allowStaticMethodAccess']");
-        assertNotNull(allowMethodAccess);
-        assertEquals(Boolean.FALSE, allowMethodAccess);
+        boolean allowMethodAccess = ((SecurityMemberAccess) ((OgnlContext) stack.getContext()).getMemberAccess()).getAllowStaticMethodAccess();
+        assertFalse(allowMethodAccess);
     }
 
     public void testParameters() throws Exception {
@@ -424,7 +477,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         proxy.execute();
 
         SimpleAction action = (SimpleAction) proxy.getAction();
-        assertNull(action.getName());
+        assertEquals("try_1", action.getName());
         assertEquals("This is blah", (action).getBlah());
         assertEquals(123, action.getBaz());
     }

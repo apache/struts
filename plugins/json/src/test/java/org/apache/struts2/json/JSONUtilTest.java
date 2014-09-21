@@ -20,7 +20,10 @@
  */
 package org.apache.struts2.json;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -63,4 +66,15 @@ public class JSONUtilTest extends TestCase {
                                                                                             // is a
                                                                                             // String
     }
+
+    public void testSerializeListOfList() throws Exception {
+        ListBean bean = new ListBean();
+        // This additional 'listOfLists' pattern should be omitted, but not with current version of JSONUtil
+        List<Pattern> includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet("listOfLists,listOfLists\\[\\d+\\]\\[\\d+\\]"), JSONUtil.REGEXP_PATTERN);
+
+        String actual = JSONUtil.serialize(bean, null, new ArrayList<Pattern>(includeProperties), false, false);
+
+        assertEquals("{\"listOfLists\":[[\"1\",\"2\"],[\"3\",\"4\"],[\"5\",\"6\"],[\"7\",\"8\"],[\"9\",\"0\"]]}", actual);
+    }
+
 }

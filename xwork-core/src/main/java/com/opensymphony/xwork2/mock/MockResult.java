@@ -26,6 +26,8 @@ import com.opensymphony.xwork2.Result;
  */
 public class MockResult implements Result {
 
+    public static final String DEFAULT_PARAM = "foo";
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -47,4 +49,9 @@ public class MockResult implements Result {
     public int hashCode() {
         return 10;
     }
+
+    public void setFoo(String foo) {
+        // no op
+    }
+
 }

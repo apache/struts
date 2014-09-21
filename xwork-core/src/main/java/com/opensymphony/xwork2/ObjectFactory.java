@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.factory.ActionFactory;
 import com.opensymphony.xwork2.factory.ConverterFactory;
 import com.opensymphony.xwork2.factory.InterceptorFactory;
 import com.opensymphony.xwork2.factory.ResultFactory;
+import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
@@ -59,6 +60,7 @@ public class ObjectFactory implements Serializable {
     private InterceptorFactory interceptorFactory;
     private ValidatorFactory validatorFactory;
     private ConverterFactory converterFactory;
+    private UnknownHandlerFactory unknownHandlerFactory;
 
     @Inject(value="objectFactory.classloader", required=false)
     public void setClassLoader(ClassLoader cl) {
@@ -93,6 +95,11 @@ public class ObjectFactory implements Serializable {
     @Inject
     public void setConverterFactory(ConverterFactory converterFactory) {
         this.converterFactory = converterFactory;
+    }
+
+    @Inject
+    public void setUnknownHandlerFactory(UnknownHandlerFactory unknownHandlerFactory) {
+        this.unknownHandlerFactory = unknownHandlerFactory;
     }
 
     /**
@@ -234,4 +241,16 @@ public class ObjectFactory implements Serializable {
         return converterFactory.buildConverter(converterClass, extraContext);
     }
 
+    /**
+     * Builds unknown handler
+     *
+     * @param unknownHandlerName
+     * @param extraContext
+     * @return
+     * @throws Exception
+     */
+    public UnknownHandler buildUnknownHandler(String unknownHandlerName, Map<String, Object> extraContext) throws Exception {
+        return unknownHandlerFactory.buildUnknownHandler(unknownHandlerName, extraContext);
+    }
+    
 }

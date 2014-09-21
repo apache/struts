@@ -33,15 +33,10 @@ import org.easymock.EasyMock;
 public class VisitorFieldValidatorModelTest extends XWorkTestCase {
 
     protected VisitorValidatorModelAction action;
-    private Locale origLocale;
-
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        origLocale = Locale.getDefault();
-        Locale.setDefault(Locale.US);
-
         action = new VisitorValidatorModelAction();
 
         TestBean bean = action.getBean();
@@ -125,6 +120,5 @@ public class VisitorFieldValidatorModelTest extends XWorkTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         ActionContext.setContext(null);
-        Locale.setDefault(origLocale);
     }
 }

@@ -4,4 +4,5 @@
 
 <xwork>
 	<constant name="devMode" value="true" />
+    <constant name="ognlExcludedClasses" value="java.lang.Object,java.lang.Runtime" />
 </xwork>

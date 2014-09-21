@@ -263,14 +263,14 @@ public class LocationUtils {
                     newFinders.remove(ref);
                     finders = newFinders;
                 }
-            }
-            
-            Location result = finder.getLocation(obj, description);
-            if (result != null) {
-                return result;
+            } else {
+                Location result = finder.getLocation(obj, description);
+                if (result != null) {
+                    return result;
+                }
             }
         }
-        
+
         if (obj instanceof Throwable) {
         		Throwable t = (Throwable) obj;
         		StackTraceElement[] stack = t.getStackTrace();

@@ -67,6 +67,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE_ALWAYS_RESPECT,required=false) String alwaysAutoWire,
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_ENABLE_AOP_SUPPORT,required=false) String enableAopSupport,
             @Inject ServletContext servletContext,
             @Inject(StrutsConstants.STRUTS_DEVMODE) String devMode,
             @Inject Container container) {
@@ -140,6 +141,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
         this.setUseClassCache(useClassCache);
 
         this.setAlwaysRespectAutowireStrategy("true".equalsIgnoreCase(alwaysAutoWire));
+
+        this.setEnableAopSupport(enableAopSupport);
 
         if (LOG.isInfoEnabled()) {
             LOG.info("... initialized Struts-Spring integration successfully");

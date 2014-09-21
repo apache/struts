@@ -21,6 +21,9 @@
 
 package example;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * <code>Set welcome message.</code>
  */
@@ -57,5 +60,9 @@ public class HelloWorld extends ExampleSupport {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<YesNo> getValues() {
+        return Arrays.asList(YesNo.values());
     }
 }

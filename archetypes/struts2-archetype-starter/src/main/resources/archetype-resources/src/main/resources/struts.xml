@@ -12,12 +12,12 @@
         <default-action-ref name="index" />
 
         <action name="index" class="${package}.IndexAction">
-            <result>/jsp/index.jsp</result>
+            <result>/WEB-INF/jsp/index.jsp</result>
         </action>
 
         <action name="helloWorld" class="helloWorldAction">
             <result name="input">/jsp/index.jsp</result>
-            <result>/jsp/helloWorld.jsp</result>
+            <result>/WEB-INF/jsp/helloWorld.jsp</result>
         </action>
 
     </package>

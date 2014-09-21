@@ -47,6 +47,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.utility.StringUtil;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.JspSupportServlet;
+import org.apache.struts2.views.TagLibrary;
 import org.apache.struts2.views.TagLibraryModelProvider;
 import org.apache.struts2.views.util.ContextUtil;
 
@@ -177,6 +178,7 @@ public class FreemarkerManager {
     protected int mruMaxStrongSize;
     protected String templateUpdateDelay;
     protected Map<String,TagLibraryModelProvider> tagLibraries;
+    protected Map<String, TagLibrary> oldTagLibraries;
 
     private FileManager fileManager;
     private FreemarkerThemeTemplateLoader themeTemplateLoader;
@@ -214,6 +216,13 @@ public class FreemarkerManager {
             map.put(prefix, container.getInstance(TagLibraryModelProvider.class, prefix));
         }
         this.tagLibraries = Collections.unmodifiableMap(map);
+
+        Map<String, TagLibrary> oldMap = new HashMap<String, TagLibrary>();
+        Set<String> oldPrefixes = container.getInstanceNames(TagLibrary.class);
+        for (String prefix : oldPrefixes) {
+            oldMap.put(prefix, container.getInstance(TagLibrary.class, prefix));
+        }
+        this.oldTagLibraries = Collections.unmodifiableMap(oldMap);
     }
 
     @Inject
@@ -531,6 +540,12 @@ public class FreemarkerManager {
         if (tagLibraries != null) {
             for (String prefix : tagLibraries.keySet()) {
                 model.put(prefix, tagLibraries.get(prefix).getModels(stack, request, response));
+            }
+        }
+
+        if (oldTagLibraries != null) {
+            for (String prefix : oldTagLibraries.keySet()) {
+                model.put(prefix, oldTagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
             }
         }
 

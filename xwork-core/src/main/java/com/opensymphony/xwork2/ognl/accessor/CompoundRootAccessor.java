@@ -28,6 +28,7 @@ import ognl.*;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.BooleanUtils.toBoolean;
@@ -57,7 +58,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
     private final static Logger LOG = LoggerFactory.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
-    private static Map<MethodCall, Boolean> invalidMethods = new HashMap<MethodCall, Boolean>();
+    private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<MethodCall, Boolean>();
 
     static boolean devMode = false;
 

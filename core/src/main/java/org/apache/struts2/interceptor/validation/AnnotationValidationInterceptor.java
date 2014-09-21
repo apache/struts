@@ -25,11 +25,12 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
+
+import org.apache.struts2.StrutsConstants;
 
 /**
  * Extends the xwork validation interceptor to also check for a @SkipValidation
@@ -39,6 +40,13 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
 
     /** Auto-generated serialization id */
     private static final long serialVersionUID = 1813272797367431184L;
+
+    private boolean devMode;
+
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public void setDevMode(String devMode) {
+        this.devMode = "true".equalsIgnoreCase(devMode);
+    }
 
     protected String doIntercept(ActionInvocation invocation) throws Exception {
 
@@ -70,7 +78,7 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
 
     // FIXME: This is copied from DefaultActionInvocation but should be exposed through the interface
     protected Method getActionMethod(Class actionClass, String methodName) throws NoSuchMethodException {
-        Method method;
+        Method method = null;
         try {
             method = actionClass.getMethod(methodName, new Class[0]);
         } catch (NoSuchMethodException e) {
@@ -80,9 +88,12 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
                 method = actionClass.getMethod(altMethodName, new Class[0]);
             } catch (NoSuchMethodException e1) {
                 // throw the original one
-                throw e;
+                if (devMode) {
+                    throw e;
+                }
             }
         }
         return method;
     }
+
 }

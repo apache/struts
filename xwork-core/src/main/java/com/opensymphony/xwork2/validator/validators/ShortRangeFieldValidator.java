@@ -73,7 +73,7 @@ package com.opensymphony.xwork2.validator.validators;
  *
  * @version $Date$
  */
-public class ShortRangeFieldValidator extends AbstractRangeValidator<Short> {
+public final class ShortRangeFieldValidator extends RangeValidatorSupport<Short> {
 
     public ShortRangeFieldValidator() {
         super(Short.class);

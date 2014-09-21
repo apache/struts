@@ -24,5 +24,7 @@
     </li>
 </ul>
 
+<s:checkboxlist name="test" list="values" listLabelKey="'test-' + name().toLowerCase()" />
+
 </body>
 </html>

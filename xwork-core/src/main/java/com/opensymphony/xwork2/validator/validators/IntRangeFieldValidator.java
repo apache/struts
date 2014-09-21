@@ -74,7 +74,7 @@ package com.opensymphony.xwork2.validator.validators;
  * @author Jason Carreira
  * @version $Date$ $Id$
  */
-public class IntRangeFieldValidator extends AbstractRangeValidator<Integer> {
+public final class IntRangeFieldValidator extends RangeValidatorSupport<Integer> {
 
     public IntRangeFieldValidator() {
         super(Integer.class);

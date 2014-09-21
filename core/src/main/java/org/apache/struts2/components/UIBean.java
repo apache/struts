@@ -517,9 +517,6 @@ public abstract class UIBean extends Component {
     protected String uiThemeExpansionToken;
     protected TemplateEngineManager templateEngineManager;
 
-    // dynamic attributes support for tags used with FreeMarker templates
-    protected static ConcurrentMap<Class, Set<String>> standardAttributesMap = new ConcurrentHashMap<Class, Set<String>>();
-
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
     public void setDefaultTemplateDir(String dir) {
         this.defaultTemplateDir = dir;
@@ -1072,8 +1069,18 @@ public abstract class UIBean extends Component {
         this.cssClass = cssClass;
     }
 
+    @StrutsTagAttribute(description="The css class to use for element - it's an alias of cssClass attribute.")
+    public void setClass(String cssClass) {
+        this.cssClass = cssClass;
+    }
+
     @StrutsTagAttribute(description="The css style definitions for element to use")
     public void setCssStyle(String cssStyle) {
+        this.cssStyle = cssStyle;
+    }
+
+    @StrutsTagAttribute(description="The css style definitions for element to use - it's an alias of cssStyle attribute.")
+    public void setStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
 
@@ -1261,40 +1268,16 @@ public abstract class UIBean extends Component {
 	/**
 	 * supports dynamic attributes for freemarker ui tags
 	 * @see https://issues.apache.org/jira/browse/WW-3174
+     * @see https://issues.apache.org/jira/browse/WW-4166
 	 */
-	public void copyParams(Map params) {
-		super.copyParams(params);
-		Set<String> standardAttributes = getStandardAttributes();
+    public void copyParams(Map params) {
+        super.copyParams(params);
         for (Object o : params.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             String key = (String) entry.getKey();
-            if (!key.equals("dynamicAttributes") && !standardAttributes.contains(key)){
+            if(!isValidTagAttribute(key) && !key.equals("dynamicAttributes"))
                 dynamicAttributes.put(key, entry.getValue());
-            }
         }
-	}
-
-	protected Set<String> getStandardAttributes() {
-        Class clz = getClass();
-        Set<String> standardAttributes = standardAttributesMap.get(clz);
-        if (standardAttributes == null) {
-            standardAttributes = new HashSet<String>();
-            while (clz != null) {
-                for (Field f : clz.getDeclaredFields()) {
-                    if (Modifier.isProtected(f.getModifiers())
-                            && (f.getType().equals(String.class) || clz.equals(ListUIBean.class)
-                            && f.getName().equals("list")))
-                        standardAttributes.add(f.getName());
-                }
-                if (clz.equals(UIBean.class)) {
-                    break;
-                } else {
-                    clz = clz.getSuperclass();
-                }
-            }
-            standardAttributesMap.putIfAbsent(clz, standardAttributes);
-        }
-		return standardAttributes;
-	}
+    }
 
 }

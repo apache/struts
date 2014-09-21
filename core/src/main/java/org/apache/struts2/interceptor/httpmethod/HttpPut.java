@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Use this annotation to allow call action or action's method via PUT request only
  *
  * @see org.apache.struts2.interceptor.httpmethod.HttpMethodInterceptor
- * @since 2.3.18
+ * @since 2.5
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

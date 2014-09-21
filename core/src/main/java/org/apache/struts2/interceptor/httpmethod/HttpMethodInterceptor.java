@@ -23,16 +23,20 @@ import java.util.List;
  * thus value will be used instead.
  * <p/>
  * To limit allowed http methods, annotate action class with {@link AllowedHttpMethod} and specify
- * which methods are allowed. You can also use shorter versions {@link HttpGet}, {@link HttpPost}
- * and {@link HttpGetOrPost}
+ * which methods are allowed. You can also use shorter versions {@link HttpGet}, {@link HttpPost},
+ * {@link HttpPut}, {@link HttpDelete} and {@link HttpGetOrPost}
+ *
+ * You can combine any of these annotations to achieve required allowed methods' filtering.
  *
  * @see HttpMethodAware
  * @see HttpMethod
  * @see AllowedHttpMethod
  * @see HttpGet
  * @see HttpPost
+ * @see HttpPut
+ * @see HttpDelete
  * @see HttpGetOrPost
- * @since 2.3.18
+ * @since 2.5
  */
 public class HttpMethodInterceptor extends AbstractInterceptor {
 

@@ -214,11 +214,13 @@
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
             <interceptor name="deprecation" class="org.apache.struts2.interceptor.DeprecationInterceptor" />
+            <interceptor name="httpMethod" class="org.apache.struts2.interceptor.httpmethod.HttpMethodInterceptor" />
 
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="httpMethod"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="datetime"/>
@@ -285,6 +287,7 @@
                     <param name="excludeParams">^action:.*,^method:.*</param>
                 </interceptor-ref>
                 <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="httpMethod"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="modelDriven"/>
@@ -318,6 +321,7 @@
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="httpMethod"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>

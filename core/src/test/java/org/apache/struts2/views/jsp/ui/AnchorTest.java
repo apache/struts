@@ -89,9 +89,9 @@ public class AnchorTest extends AbstractUITagTest {
     private AnchorTag createTag() throws JspException {
         AnchorTag tag = new AnchorTag();
         tag.setPageContext(pageContext);
-        tag.doStartTag();
 
         tag.setId("mylink");
         return tag;
     }
+
 }

@@ -39,16 +39,10 @@ import org.apache.struts2.views.util.ContextUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * UIBean is the standard superclass of all Struts UI components.
@@ -1260,8 +1254,12 @@ public abstract class UIBean extends Component {
         this.tooltipIconPath = tooltipIconPath;
     }
 
-	public void setDynamicAttributes(Map<String, Object> dynamicAttributes) {
-		this.dynamicAttributes.putAll(dynamicAttributes);
+	public void setDynamicAttributes(Map<String, Object> tagDynamicAttributes) {
+        for (String key : tagDynamicAttributes.keySet()) {
+            if (!isValidTagAttribute(key)) {
+                dynamicAttributes.put(key, tagDynamicAttributes.get(key));
+            }
+        }
     }
 
 	@Override

@@ -185,7 +185,6 @@ public class RadioTest extends AbstractUITagTest {
 
         RadioTag tag = new RadioTag();
         tag.setPageContext(pageContext);
-        tag.doStartTag();
         tag.setLabel("mylabel");
         tag.setName("myname");
         tag.setValue("");

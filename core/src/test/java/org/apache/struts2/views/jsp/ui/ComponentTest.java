@@ -120,8 +120,9 @@ public class ComponentTest extends AbstractUITagTest {
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
 
-        tag.doStartTag();
         tag.setDynamicAttribute("uri://some.uri", "includeContext", false);
+
+        tag.doStartTag();
 
         assertTrue(tag.includeContext);
     }

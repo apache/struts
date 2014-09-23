@@ -109,7 +109,7 @@ public class ComponentTest extends AbstractUITagTest {
         tag.getComponent().addParameter("argle", "bargle");
         tag.getComponent().addParameter("glip", "glop");
         tag.getComponent().addParameter("array", new String[]{"a", "b", "c"});
-        tag.getComponent().addParameter("obj", tag);
+        tag.getComponent().addParameter("objClass", tag.getClass().getName());
         tag.doEndTag();
 
         //        System.out.println(writer);

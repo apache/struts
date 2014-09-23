@@ -25,11 +25,21 @@ import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import javax.servlet.jsp.JspException;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 
 
 /**
  */
 public class AnchorTest extends AbstractUITagTest {
+
+    public void testBeanInfo() throws Exception {
+        BeanInfo beanInfo = Introspector.getBeanInfo(AbstractUITag.class);
+        for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
+            System.out.println(pd.getName() + ": write = " + pd.getWriteMethod() + ", read = " + pd.getReadMethod());
+        }
+    }
 
     public void testSimple() throws Exception {
         createAction();

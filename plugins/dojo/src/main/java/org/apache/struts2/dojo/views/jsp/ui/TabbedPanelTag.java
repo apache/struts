@@ -56,7 +56,7 @@ public class TabbedPanelTag extends AbstractClosingTag {
         tabbedPanel.setSelectedTab(selectedTab);
         tabbedPanel.setCloseButton(closeButton);
         tabbedPanel.setDoLayout(doLayout);
-        tabbedPanel.setLabelposition(labelPosition);
+        tabbedPanel.setLabelposition(labelposition);
         tabbedPanel.setTemplateCssPath(templateCssPath);
         tabbedPanel.setBeforeSelectTabNotifyTopics(beforeSelectTabNotifyTopics);
         tabbedPanel.setAfterSelectTabNotifyTopics(afterSelectTabNotifyTopics);

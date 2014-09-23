@@ -28,6 +28,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import ognl.MethodFailedException;
+import ognl.NoSuchPropertyException;
 import ognl.OgnlException;
 
 import java.util.ArrayList;
@@ -439,17 +441,23 @@ public class DefaultActionInvocation implements ActionInvocation {
                 }
             }
             return saveResult(actionConfig, methodResult);
-        } catch (OgnlException e) {
+        } catch (NoSuchPropertyException e) {
+            throw new IllegalArgumentException("The " + methodName + "() is not defined in action " + getAction().getClass() + "");
+        } catch (MethodFailedException e) {
             // We try to return the source exception.
-            //Throwable t = e.getTargetException();
+            Throwable t = e.getCause();
 
             if (actionEventListener != null) {
-                String result = actionEventListener.handleException(e, getStack());
+                String result = actionEventListener.handleException(t, getStack());
                 if (result != null) {
                     return result;
                 }
             }
-            throw e;
+            if (t instanceof Exception) {
+                throw (Exception) t;
+            } else {
+                throw e;
+            }
         } finally {
             UtilTimerStack.pop(timerKey);
         }

@@ -321,6 +321,12 @@ import java.util.StringTokenizer;
  *     <td>request</td>
  *     <td>Used across different interceptors to check if given string matches one of the excluded patterns</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.AcceptedPatternsChecker</td>
+ *     <td>struts.acceptedPatterns.checker</td>
+ *     <td>request</td>
+ *     <td>Used across different interceptors to check if given string matches one of the accepted patterns</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->

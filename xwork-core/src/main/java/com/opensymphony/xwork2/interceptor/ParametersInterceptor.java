@@ -145,14 +145,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
-    private ExcludedPatternsChecker excludedPatterns;
-
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
     private boolean devMode = false;
 
     protected boolean ordered = false;
 
     private ValueStackFactory valueStackFactory;
+    private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
 
     @Inject

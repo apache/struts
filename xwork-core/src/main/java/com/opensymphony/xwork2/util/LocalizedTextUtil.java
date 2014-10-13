@@ -215,13 +215,15 @@ public class LocalizedTextUtil {
                 try {
                     return bundle.getString(aTextName);
                 } catch (MissingResourceException e) {
-                    if (devMode) {
-                        LOG.warn("Missing key [#0] in bundle [#1]!", aTextName, bundleName);
-                    } else if (LOG.isDebugEnabled()) {
-                        LOG.debug("Missing key [#0] in bundle [#1]!", aTextName, bundleName);
-                    }
+                	// will be logged when not found in any bundle
                 }
             }
+        }
+
+        if (devMode) {
+            LOG.warn("Missing key [#0] in bundles [#1]!", aTextName, localList);
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Missing key [#0] in bundles [#1]!", aTextName, localList);
         }
 
         return null;

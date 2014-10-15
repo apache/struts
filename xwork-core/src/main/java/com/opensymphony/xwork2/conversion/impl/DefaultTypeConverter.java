@@ -33,6 +33,7 @@ package com.opensymphony.xwork2.conversion.impl;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
 
@@ -60,7 +61,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     private static final Map<Class, Object> primitiveDefaults;
 
-    private LocaleProvider localeProvider;
+    private Container container;
 
     static {
         Map<Class, Object> map = new HashMap<Class, Object>();
@@ -78,8 +79,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     }
 
     @Inject
-    public void setLocaleProvider(LocaleProvider localeProvider) {
-        this.localeProvider = localeProvider;
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
     public Object convertValue(Map<String, Object> context, Object value, Class toType) {
@@ -346,7 +347,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
             locale = (Locale) context.get(ActionContext.LOCALE);
         }
         if (locale == null) {
-            locale = localeProvider.getLocale();
+            locale = container.getInstance(LocaleProvider.class).getLocale();
         }
         return locale;
     }

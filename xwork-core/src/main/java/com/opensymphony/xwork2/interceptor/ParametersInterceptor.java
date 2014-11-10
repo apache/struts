@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ArrayUtils;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
@@ -35,14 +34,9 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -487,7 +481,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setAcceptParamNames(String commaDelim) {
-        acceptedPatterns.addAcceptedPatterns(commaDelim);
+        acceptedPatterns.setAcceptedPatterns(commaDelim);
     }
 
     /**
@@ -497,7 +491,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param commaDelim A comma-delimited list of regular expressions
      */
     public void setExcludeParams(String commaDelim) {
-        excludedPatterns.addExcludedPatterns(commaDelim);
+        excludedPatterns.setExcludedPatterns(commaDelim);
     }
 
 }

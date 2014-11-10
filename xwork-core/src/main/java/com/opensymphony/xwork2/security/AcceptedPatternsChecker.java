@@ -17,25 +17,25 @@ public interface AcceptedPatternsChecker {
     public IsAccepted isAccepted(String value);
 
     /**
-     * Allows add additional excluded patterns during runtime
+     * Sets excluded patterns during runtime
      *
      * @param commaDelimitedPatterns comma delimited string with patterns
      */
-    public void addAcceptedPatterns(String commaDelimitedPatterns);
+    public void setAcceptedPatterns(String commaDelimitedPatterns);
 
     /**
-     * Allows add additional excluded patterns during runtime
+     * Set excluded patterns during runtime
      *
-     * @param additionalPatterns array of additional excluded patterns
+     * @param patterns array of additional excluded patterns
      */
-    public void addAcceptedPatterns(String[] additionalPatterns);
+    public void setAcceptedPatterns(String[] patterns);
 
     /**
-     * Allows add additional excluded patterns during runtime
+     * Sets excluded patterns during runtime
      *
-     * @param additionalPatterns set of additional patterns
+     * @param patterns set of additional patterns
      */
-    public void addAcceptedPatterns(Set<String> additionalPatterns);
+    public void setAcceptedPatterns(Set<String> patterns);
 
     /**
      * Allow access list of all defined excluded patterns

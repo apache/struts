@@ -17,25 +17,25 @@ public interface ExcludedPatternsChecker {
     public IsExcluded isExcluded(String value);
 
     /**
-     * Allows add additional excluded patterns during runtime
+     * Sets excluded patterns during runtime
      *
      * @param commaDelimitedPatterns comma delimited string with patterns
      */
-    public void addExcludedPatterns(String commaDelimitedPatterns);
+    public void setExcludedPatterns(String commaDelimitedPatterns);
 
     /**
-     * Allows add additional excluded patterns during runtime
+     * Sets excluded patterns during runtime
      *
-     * @param additionalPatterns array of additional excluded patterns
+     * @param patterns array of additional excluded patterns
      */
-    public void addExcludedPatterns(String[] additionalPatterns);
+    public void setExcludedPatterns(String[] patterns);
 
     /**
-     * Allows add additional excluded patterns during runtime
+     * Sets excluded patterns during runtime
      *
-     * @param additionalPatterns set of additional patterns
+     * @param patterns set of additional patterns
      */
-    public void addExcludedPatterns(Set<String> additionalPatterns);
+    public void setExcludedPatterns(Set<String> patterns);
 
     /**
      * Allow access list of all defined excluded patterns

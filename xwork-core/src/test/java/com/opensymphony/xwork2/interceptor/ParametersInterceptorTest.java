@@ -477,7 +477,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         proxy.execute();
 
         SimpleAction action = (SimpleAction) proxy.getAction();
-        assertEquals("try_1", action.getName());
+        assertNull("try_1", action.getName());
         assertEquals("This is blah", (action).getBlah());
         assertEquals(123, action.getBaz());
     }

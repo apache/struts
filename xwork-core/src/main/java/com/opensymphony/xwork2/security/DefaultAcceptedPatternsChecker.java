@@ -22,16 +22,13 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     private Set<Pattern> acceptedPatterns;
 
     public DefaultAcceptedPatternsChecker() {
-        acceptedPatterns = new HashSet<Pattern>();
-        for (String pattern : ACCEPTED_PATTERNS) {
-            acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-        }
+        setAcceptedPatterns(ACCEPTED_PATTERNS);
     }
 
     @Inject(value = XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS, required = false)
     public void setOverrideAcceptedPatterns(String acceptablePatterns) {
         if (LOG.isWarnEnabled()) {
-            LOG.warn("Overriding [#0] with [#1], be aware that this can affect safety of your application!",
+            LOG.warn("Overriding accepted patterns [#0] with [#1], be aware that this affects all instances and safety of your application!",
                     XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS, acceptablePatterns);
         }
         acceptedPatterns = new HashSet<Pattern>();
@@ -43,27 +40,28 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     @Inject(value = XWorkConstants.ADDITIONAL_ACCEPTED_PATTERNS, required = false)
     public void setAdditionalAcceptedPatterns(String acceptablePatterns) {
         if (LOG.isDebugEnabled()) {
-            LOG.warn("Adding additional patterns [#0] to accepted patterns!", acceptablePatterns);
+            LOG.warn("Adding additional global patterns [#0] to accepted patterns!", acceptablePatterns);
         }
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
             acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 
-    public void addAcceptedPatterns(String commaDelimitedPatterns) {
-        addAcceptedPatterns(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns));
+    public void setAcceptedPatterns(String commaDelimitedPatterns) {
+        setAcceptedPatterns(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns));
     }
 
-    public void addAcceptedPatterns(String[] additionalPatterns) {
-        addAcceptedPatterns(new HashSet<String>(Arrays.asList(additionalPatterns)));
+    public void setAcceptedPatterns(String[] additionalPatterns) {
+        setAcceptedPatterns(new HashSet<String>(Arrays.asList(additionalPatterns)));
     }
 
-    public void addAcceptedPatterns(Set<String> additionalPatterns) {
+    public void setAcceptedPatterns(Set<String> patterns) {
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Adding additional excluded patterns [#0]", additionalPatterns);
+            LOG.trace("Sets accepted patterns [#0]", patterns);
         }
-        for (String pattern : additionalPatterns) {
-            acceptedPatterns.add(Pattern.compile(pattern));
+        acceptedPatterns = new HashSet<Pattern>(patterns.size());
+        for (String pattern : patterns) {
+            acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 

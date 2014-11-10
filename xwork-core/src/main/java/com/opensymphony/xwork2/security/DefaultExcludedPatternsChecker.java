@@ -31,16 +31,13 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     private Set<Pattern> excludedPatterns;
 
     public DefaultExcludedPatternsChecker() {
-        excludedPatterns = new HashSet<Pattern>();
-        for (String pattern : EXCLUDED_PATTERNS) {
-            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-        }
+        setExcludedPatterns(EXCLUDED_PATTERNS);
     }
 
     @Inject(value = XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS, required = false)
     public void setOverrideExcludePatterns(String excludePatterns) {
         if (LOG.isWarnEnabled()) {
-            LOG.warn("Overriding [#0] with [#1], be aware that this can affect safety of your application!",
+            LOG.warn("Overriding excluded patterns [#0] with [#1], be aware that this affects all instances and safety of your application!",
                     XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS, excludePatterns);
         }
         excludedPatterns = new HashSet<Pattern>();
@@ -52,27 +49,28 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     @Inject(value = XWorkConstants.ADDITIONAL_EXCLUDED_PATTERNS, required = false)
     public void setAdditionalExcludePatterns(String excludePatterns) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Adding additional patterns [#0] to excluded patterns!", excludePatterns);
+            LOG.debug("Adding additional global patterns [#0] to excluded patterns!", excludePatterns);
         }
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 
-    public void addExcludedPatterns(String commaDelimitedPatterns) {
-        addExcludedPatterns(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns));
+    public void setExcludedPatterns(String commaDelimitedPatterns) {
+        setExcludedPatterns(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns));
     }
 
-    public void addExcludedPatterns(String[] additionalPatterns) {
-        addExcludedPatterns(new HashSet<String>(Arrays.asList(additionalPatterns)));
+    public void setExcludedPatterns(String[] patterns) {
+        setExcludedPatterns(new HashSet<String>(Arrays.asList(patterns)));
     }
 
-    public void addExcludedPatterns(Set<String> additionalPatterns) {
+    public void setExcludedPatterns(Set<String> patterns) {
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Adding additional excluded patterns [#0]", additionalPatterns);
+            LOG.trace("Sets excluded patterns [#0]", patterns);
         }
-        for (String pattern : additionalPatterns) {
-            excludedPatterns.add(Pattern.compile(pattern));
+        excludedPatterns = new HashSet<Pattern>(patterns.size());
+        for (String pattern : patterns) {
+            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 

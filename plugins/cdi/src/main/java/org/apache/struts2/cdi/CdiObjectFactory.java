@@ -70,7 +70,6 @@ public class CdiObjectFactory extends ObjectFactory {
 	}
 
 	protected BeanManager beanManager;
-    protected CreationalContext ctx;
 
     Map<Class<?>, InjectionTarget<?>> injectionTargetCache = new ConcurrentHashMap<Class<?>, InjectionTarget<?>>();
 
@@ -79,7 +78,6 @@ public class CdiObjectFactory extends ObjectFactory {
         LOG.info("Initializing Struts2 CDI integration...");
         this.beanManager = findBeanManager();
         if (beanManager != null) {
-            this.ctx = buildNonContextualCreationalContext(beanManager);
             LOG.info("Struts2 CDI integration initialized.");
         } else {
             LOG.error("Struts2 CDI integration could not be initialized.");
@@ -152,12 +150,15 @@ public class CdiObjectFactory extends ObjectFactory {
 	}
 
 	@Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal)
             throws Exception {
 
         Class<?> clazz = getClassInstance(className);
         InjectionTarget injectionTarget = getInjectionTarget(clazz);
+
+        // a separate CreationalContext is required for every bean
+        final CreationalContext ctx = buildNonContextualCreationalContext(beanManager);
 
         Object o = injectionTarget.produce(ctx);
         injectionTarget.inject(o, ctx);

@@ -83,7 +83,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
                 return IsExcluded.yes(excludedPattern);
             }
         }
-        return IsExcluded.no();
+        return IsExcluded.no(excludedPatterns);
     }
 
     public Set<Pattern> getExcludedPatterns() {

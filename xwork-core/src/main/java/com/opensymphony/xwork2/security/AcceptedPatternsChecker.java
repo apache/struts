@@ -47,17 +47,17 @@ public interface AcceptedPatternsChecker {
     public final static class IsAccepted {
 
         private final boolean accepted;
-        private final Pattern acceptedPattern;
+        private final String acceptedPattern;
 
-        public static IsAccepted yes(Pattern acceptedPattern) {
+        public static IsAccepted yes(String acceptedPattern) {
             return new IsAccepted(true, acceptedPattern);
         }
 
-        public static IsAccepted no() {
-            return new IsAccepted(false, null);
+        public static IsAccepted no(String acceptedPatterns) {
+            return new IsAccepted(false, acceptedPatterns);
         }
 
-        private IsAccepted(boolean accepted, Pattern acceptedPattern) {
+        private IsAccepted(boolean accepted, String acceptedPattern) {
             this.accepted = accepted;
             this.acceptedPattern = acceptedPattern;
         }
@@ -66,7 +66,7 @@ public interface AcceptedPatternsChecker {
             return accepted;
         }
 
-        public Pattern getAcceptedPattern() {
+        public String getAcceptedPattern() {
             return acceptedPattern;
         }
 

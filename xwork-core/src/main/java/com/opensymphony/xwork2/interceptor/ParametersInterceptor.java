@@ -430,14 +430,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (result.isAccepted()) {
             return true;
         }
-        notifyDeveloper("Parameter [#0] didn't match accepted pattern [#1]!", paramName, String.valueOf(result.getAcceptedPattern()));
+        notifyDeveloper("Parameter [#0] didn't match accepted pattern [#1]!", paramName, result.getAcceptedPattern());
         return false;
     }
 
     protected boolean isExcluded(String paramName) {
         ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
         if (result.isExcluded()) {
-            notifyDeveloper("Parameter [#0] matches excluded pattern [#1]!", paramName, String.valueOf(result.getExcludedPattern()));
+            notifyDeveloper("Parameter [#0] matches excluded pattern [#1]!", paramName, result.getExcludedPattern());
             return true;
         }
         return false;

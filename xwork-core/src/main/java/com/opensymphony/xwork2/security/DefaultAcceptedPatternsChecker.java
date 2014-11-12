@@ -71,10 +71,10 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("[#0] matches accepted pattern [#1]", value, acceptedPattern);
                 }
-                return IsAccepted.yes(acceptedPattern);
+                return IsAccepted.yes(acceptedPattern.toString());
             }
         }
-        return IsAccepted.no();
+        return IsAccepted.no(acceptedPatterns.toString());
     }
 
     public Set<Pattern> getAcceptedPatterns() {

@@ -47,17 +47,17 @@ public interface ExcludedPatternsChecker {
     public final static class IsExcluded {
 
         private final boolean excluded;
-        private final Pattern excludedPattern;
+        private final String excludedPattern;
 
         public static IsExcluded yes(Pattern excludedPattern) {
-            return new IsExcluded(true, excludedPattern);
+            return new IsExcluded(true, excludedPattern.pattern());
         }
 
-        public static IsExcluded no() {
-            return new IsExcluded(false, null);
+        public static IsExcluded no(Set<Pattern> excludedPatterns) {
+            return new IsExcluded(false, excludedPatterns.toString());
         }
 
-        private IsExcluded(boolean excluded, Pattern excludedPattern) {
+        private IsExcluded(boolean excluded, String excludedPattern) {
             this.excluded = excluded;
             this.excludedPattern = excludedPattern;
         }
@@ -66,7 +66,7 @@ public interface ExcludedPatternsChecker {
             return excluded;
         }
 
-        public Pattern getExcludedPattern() {
+        public String getExcludedPattern() {
             return excludedPattern;
         }
 

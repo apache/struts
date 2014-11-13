@@ -2,6 +2,7 @@ package org.apache.struts2.sitemesh;
 
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.factory.DefaultFactory;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
@@ -22,6 +23,8 @@ public class StrutsSiteMeshFactory extends DefaultFactory {
     }
 
     private boolean isInsideActionTag() {
+        if(ActionContext.getContext() == null)
+    		return false;
         Object attribute = ServletActionContext.getRequest().getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION);
         return (Boolean) ObjectUtils.defaultIfNull(attribute, Boolean.FALSE);
     }

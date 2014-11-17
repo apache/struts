@@ -16,12 +16,17 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.XWorkConstants;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import ognl.ClassResolver;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
@@ -36,9 +41,12 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Pattern;
 
 
 /**
@@ -57,6 +65,12 @@ public class OgnlUtil {
     private boolean devMode = false;
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
+
+    private Set<Class<?>> excludedClasses = new HashSet<Class<?>>();
+    private Set<Pattern> excludedPackageNamePatterns = new HashSet<Pattern>();
+
+    private Container container;
+    private boolean allowStaticMethodAccess;
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -80,6 +94,44 @@ public class OgnlUtil {
             LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
                     "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
         }
+    }
+
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
+    public void setExcludedClasses(String commaDelimitedClasses) {
+        Set<String> classes = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
+        for (String className : classes) {
+            try {
+                excludedClasses.add(Class.forName(className));
+            } catch (ClassNotFoundException e) {
+                throw new ConfigurationException("Cannot load excluded class: " + className, e);
+            }
+        }
+    }
+
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    public void setExcludedPackageName(String commaDelimitedPackagePatterns) {
+        Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
+        for (String pattern : packagePatterns) {
+                excludedPackageNamePatterns.add(Pattern.compile(pattern));
+        }
+    }
+
+    public Set<Class<?>> getExcludedClasses() {
+        return excludedClasses;
+    }
+
+    public Set<Pattern> getExcludedPackageNamePatterns() {
+        return excludedPackageNamePatterns;
+    }
+
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
+    public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
+        this.allowStaticMethodAccess = Boolean.parseBoolean(allowStaticMethodAccess);
     }
 
     /**
@@ -141,7 +193,7 @@ public class OgnlUtil {
      *                                problems setting the properties
      */
     public void setProperties(Map<String, ?> properties, Object o, boolean throwPropertyExceptions) {
-        Map context = Ognl.createDefaultContext(o);
+        Map context = createDefaultContext(o, null);
         setProperties(properties, o, context, throwPropertyExceptions);
     }
 
@@ -279,17 +331,17 @@ public class OgnlUtil {
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkEnableEvalExpression(tree, context);
-                expressions.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
             checkEnableEvalExpression(tree, context);
         }
 
-
         final T exec = task.execute(tree);
-        if(enableExpressionCache)
+        // if cache is enabled and it's a valid expression, puts it in
+        if(enableExpressionCache) {
             expressions.putIfAbsent(expression, tree);
+        }
         return exec;
     }
 
@@ -329,9 +381,9 @@ public class OgnlUtil {
         }
 
         TypeConverter conv = getTypeConverterFromContext(context);
-        final Map contextFrom = Ognl.createDefaultContext(from);
+        final Map contextFrom = createDefaultContext(from, null);
         Ognl.setTypeConverter(contextFrom, conv);
-        final Map contextTo = Ognl.createDefaultContext(to);
+        final Map contextTo = createDefaultContext(to, null);
         Ognl.setTypeConverter(contextTo, conv);
 
         PropertyDescriptor[] fromPds;
@@ -440,7 +492,7 @@ public class OgnlUtil {
      */
     public Map<String, Object> getBeanMap(final Object source) throws IntrospectionException, OgnlException {
         Map<String, Object> beanMap = new HashMap<String, Object>();
-        final Map sourceMap = Ognl.createDefaultContext(source);
+        final Map sourceMap = createDefaultContext(source, null);
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(source);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             final String propertyName = propertyDescriptor.getDisplayName();
@@ -516,6 +568,23 @@ public class OgnlUtil {
         }
         */
         return defaultConverter;
+    }
+
+    protected Map createDefaultContext(Object root) {
+        return createDefaultContext(root, null);
+    }
+
+    protected Map createDefaultContext(Object root, ClassResolver classResolver) {
+        ClassResolver resolver = classResolver;
+        if (resolver == null) {
+            resolver = container.getInstance(CompoundRootAccessor.class);
+        }
+
+        SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
+        memberAccess.setExcludedClasses(excludedClasses);
+        memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
+
+        return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
     }
 
     private interface OgnlTask<T> {

@@ -38,6 +38,7 @@ import org.apache.struts2.views.util.ResourceUtil;
 
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
+import javax.portlet.ResourceResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -103,9 +104,11 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
             throws IOException, TemplateException, PortletException {
         PortletPhase phase = PortletActionContext.getPhase();
         if (phase.isAction()) {
-            executeActionResult(location, invocation);
+           executeActionResult(location, invocation);
         } else if (phase.isRender()) {
-            executeRenderResult(location, invocation);
+           executeRenderResult(location, invocation);
+        } else if (phase.isResource()){
+           executeResourceResult(location, invocation);
         }
     }
 
@@ -147,6 +150,36 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
             }
         }
     }
+    
+    private void executeResourceResult(String location, ActionInvocation invocation)
+             throws TemplateException, IOException, PortletException {
+         this.location = location;
+         this.invocation = invocation;
+         this.configuration = getConfiguration();
+         this.wrapper = getObjectWrapper();
+
+         HttpServletRequest req = ServletActionContext.getRequest();
+
+         if (!location.startsWith("/")) {
+             String base = ResourceUtil.getResourceBase(req);
+             location = base + "/" + location;
+         }
+
+         Template template = configuration.getTemplate(location, deduceLocale());
+         TemplateModel model = createModel();
+         // Give subclasses a chance to hook into preprocessing
+         if (preTemplateProcess(template, model)) {
+             try {
+                 // Process the template
+                 ResourceResponse response = PortletActionContext.getResourceResponse();
+                 response.setContentType(pContentType);
+                 template.process(model, response.getWriter());
+             } finally {
+                 // Give subclasses a chance to hook into postprocessing
+                 postTemplateProcess(template, model);
+             }
+         }
+     }
 
     /**
      * This method is called from {@link #doExecute(String, ActionInvocation)}

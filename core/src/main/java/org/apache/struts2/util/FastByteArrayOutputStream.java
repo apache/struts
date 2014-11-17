@@ -191,6 +191,8 @@ public class FastByteArrayOutputStream extends OutputStream {
         out.flip();
         // Output
         writer.write(out.toString());
+        // clear output to avoid infinitive loops, see WW-4383
+        out.clear();
         return result;
     }
 

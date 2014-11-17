@@ -15,16 +15,23 @@
  */
 package com.opensymphony.xwork2.util;
 
-import com.opensymphony.xwork2.util.NamedVariablePatternMatcher.CompiledPattern;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class NamedVariablePatternMatcherTest extends TestCase {
+import org.junit.Test;
 
+import com.opensymphony.xwork2.util.NamedVariablePatternMatcher.CompiledPattern;
+
+public class NamedVariablePatternMatcherTest {
+
+    @Test
     public void testCompile() {
         NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
 
@@ -46,6 +53,14 @@ public class NamedVariablePatternMatcherTest extends TestCase {
         assertFalse(pattern.getPattern().matcher("foo/star/jie").matches());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testCompileWithMismatchedBracketsParses() {
+        NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
+
+        matcher.compilePattern("}");
+    }
+
+    @Test
     public void testMatch() {
         NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
 
@@ -56,6 +71,7 @@ public class NamedVariablePatternMatcherTest extends TestCase {
         assertEquals("baz", vars.get("bar"));
     }
 
+    @Test
     public void testIsLiteral() {
         NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
 

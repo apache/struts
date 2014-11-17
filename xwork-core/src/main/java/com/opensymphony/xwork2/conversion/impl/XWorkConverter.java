@@ -354,7 +354,7 @@ public class XWorkConverter extends DefaultTypeConverter {
      * @param className name of the class the TypeConverter must handle
      * @return a TypeConverter to handle the specified class or null if none can be found
      */
-    public TypeConverter lookup(String className) {
+    public TypeConverter lookup(String className, boolean isPrimitive) {
         if (converterHolder.containsUnknownMapping(className) && !converterHolder.containsDefaultMapping(className)) {
             return null;
         }
@@ -362,7 +362,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         TypeConverter result = converterHolder.getDefaultMapping(className);
 
         //Looks for super classes
-        if (result == null) {
+        if (result == null && !isPrimitive) {
             Class clazz = null;
 
             try {
@@ -394,14 +394,17 @@ public class XWorkConverter extends DefaultTypeConverter {
      * @return a TypeConverter to handle the specified class or null if none can be found
      */
     public TypeConverter lookup(Class clazz) {
-        if (clazz.isPrimitive()) {
+        TypeConverter result = lookup(clazz.getName(), clazz.isPrimitive());
+
+        if (result == null && clazz.isPrimitive()) {
             /**
              * if it is primitive use default converter which allows to define different converters per type
              * @see XWorkBasicConverter
              */
             return defaultTypeConverter;
         }
-        return lookup(clazz.getName());
+
+        return result;
     }
 
     protected Object getConverter(Class clazz, String property) {

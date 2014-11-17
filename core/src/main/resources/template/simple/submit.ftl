@@ -22,28 +22,28 @@
 -->
 <#if parameters.type?? && parameters.type=="button">
 <button type="submit"<#rt/>
-<#if parameters.id??>
+<#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.name??>
+<#if parameters.name?has_content>
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue??>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if parameters.cssClass?has_content>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
+<#if parameters.cssStyle?has_content>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.title??>
+<#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#if parameters.tabindex??>
+<#if parameters.tabindex?has_content>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl"/>
@@ -53,37 +53,37 @@
 <#else>
 <#if parameters.type?? && parameters.type=="image">
 <input type="image"<#rt/>
-<#if parameters.label??>
+<#if parameters.label?has_content>
  alt="${parameters.label?html}"<#rt/>
 </#if>
-<#if parameters.src??>
+<#if parameters.src?has_content>
  src="${parameters.src?html}"<#rt/>
 </#if>
 <#else>
 <input type="submit"<#rt/>
 </#if>
-<#if parameters.id??>
+<#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.name??>
+<#if parameters.name?has_content>
  name="${parameters.name?html}"<#rt/>
 </#if>
-<#if parameters.nameValue??>
+<#if parameters.nameValue?has_content>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if parameters.cssClass?has_content>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
+<#if parameters.cssStyle?has_content>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
-<#if parameters.title??>
+<#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#if parameters.tabindex??>
+<#if parameters.tabindex?has_content>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />

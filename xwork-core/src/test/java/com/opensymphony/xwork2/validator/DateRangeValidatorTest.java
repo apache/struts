@@ -38,9 +38,6 @@ import java.util.Map;
  */
 public class DateRangeValidatorTest extends XWorkTestCase {
 
-    private Locale origLocale;
-
-
     /**
      * Tests whether the date range validation is working. Should produce an validation error,
      * because the action config sets date to 12/20/2002 while expected range is Dec 22-25.
@@ -81,14 +78,11 @@ public class DateRangeValidatorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        origLocale = Locale.getDefault();
-        Locale.setDefault(Locale.US);
         loadConfigurationProviders(new MockConfigurationProvider());
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        Locale.setDefault(origLocale);
     }
 }

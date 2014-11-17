@@ -22,24 +22,24 @@
 -->
 <#setting number_format="#.#####">
 <select<#rt/>
- name="${parameters.name?default("")?html}"<#rt/>
-<#if parameters.get("size")??>
+ name="${(parameters.name!"")?html}"<#rt/>
+<#if parameters.get("size")?has_content>
  size="${parameters.get("size")?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.tabindex??>
+<#if parameters.tabindex?has_content>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.id??>
+<#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#if parameters.title??>
+<#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#if parameters.multiple?default(false)>
+<#if parameters.multiple!false>
  multiple="multiple"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
@@ -53,7 +53,7 @@
     </#if>
     >${parameters.headerValue?html}</option>
 </#if>
-<#if parameters.emptyOption?default(false)>
+<#if parameters.emptyOption!false>
     <option value=""></option>
 </#if>
 <@s.iterator value="parameters.list">
@@ -69,7 +69,16 @@
             <#assign itemKey = stack.findValue('top')/>
             <#assign itemKeyStr = stack.findString('top')>
         </#if>
-        <#if parameters.listValue??>
+        <#if parameters.listValueKey??>
+          <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale file for it's 
+             localized value.  This is then used as a label -->
+          <#assign valueKey = stack.findString(parameters.listValueKey) />
+          <#if valueKey??>
+              <#assign itemValue = struts.getText(valueKey) />
+          <#else>
+              <#assign itemValue = parameters.listValueKey />
+          </#if>
+        <#elseif parameters.listValue??>
             <#if stack.findString(parameters.listValue)??>
               <#assign itemValue = stack.findString(parameters.listValue)/>
             <#else>
@@ -103,13 +112,13 @@
         <#if tag.contains(parameters.nameValue, itemKey) == true>
  selected="selected"<#rt/>
         </#if>
-        <#if itemCssClass?if_exists != "">
+        <#if itemCssClass?has_content>
  class="${itemCssClass?html}"<#rt/>
         </#if>
-        <#if itemCssStyle?if_exists != "">
+        <#if itemCssStyle?has_content>
  style="${itemCssStyle?html}"<#rt/>
         </#if>
-        <#if itemTitle?if_exists != "">
+        <#if itemTitle?has_content>
  title="${itemTitle?html}"<#rt/>
         </#if>
     >${itemValue?html}</option><#lt/>
@@ -119,7 +128,7 @@
 
 </select>
 
-<#if parameters.multiple?default(false)>
+<#if parameters.multiple!false>
   <#if (parameters.id?? && parameters.name??)>
     <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.name?html}" value=""<#rt/>
   </#if>
@@ -133,7 +142,7 @@
      <input type="hidden" id="" name="" value="" <#rt/>
   </#if>
   
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
  />

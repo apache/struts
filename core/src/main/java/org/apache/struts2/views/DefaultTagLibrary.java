@@ -70,7 +70,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * The default Struts tag library
  */
-public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibraryModelProvider {
+public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibraryModelProvider, TagLibrary {
 
     public Object getModels(ValueStack stack, HttpServletRequest req,
                             HttpServletResponse res) {
@@ -118,6 +118,14 @@ public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibrar
             UpDownSelectDirective.class
         };
         return Arrays.asList(directives);
+    }
+
+    public Object getFreemarkerModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        return getModels(stack, req, res);
+    }
+
+    public List<Class> getVelocityDirectiveClasses() {
+        return getDirectiveClasses();
     }
 
 }

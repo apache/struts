@@ -33,7 +33,7 @@ dojo.global=function(){
 return dj_currentContext;
 };
 dojo.locale=djConfig.locale;
-dojo.version={major:0,minor:4,patch:3,flag:"",revision:Number("$Rev$".match(/[0-9]+/)[0]),toString:function(){
+dojo.version={major:0,minor:4,patch:3,flag:"",revision:Number("$Rev: 670371 $".match(/[0-9]+/)[0]),toString:function(){
 with(dojo.version){
 return major+"."+minor+"."+patch+flag+" ("+revision+")";
 }

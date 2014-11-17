@@ -22,6 +22,9 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.LocaleProvider;
@@ -312,6 +315,18 @@ import java.util.StringTokenizer;
  *     <td>Used to parse expressions like ${foo.bar} or %{bar.foo} but it is up tp the TextParser's
  *         implementation what kind of opening char to use (#, $, %, etc)</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.ExcludedPatternsChecker</td>
+ *     <td>struts.excludedPatterns.checker</td>
+ *     <td>request</td>
+ *     <td>Used across different interceptors to check if given string matches one of the excluded patterns</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.AcceptedPatternsChecker</td>
+ *     <td>struts.acceptedPatterns.checker</td>
+ *     <td>request</td>
+ *     <td>Used across different interceptors to check if given string matches one of the accepted patterns</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
@@ -343,7 +358,8 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(ResultFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_RESULTFACTORY, builder, props);
         alias(ConverterFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_CONVERTERFACTORY, builder, props);
         alias(InterceptorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);
-        alias(ValidatorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);
+        alias(ValidatorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_VALIDATORFACTORY, builder, props);
+        alias(UnknownHandlerFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_UNKNOWNHANDLERFACTORY, builder, props);
 
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
 
@@ -383,6 +399,10 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
 
         alias(DispatcherErrorHandler.class, StrutsConstants.STRUTS_DISPATCHER_ERROR_HANDLER, builder, props);
 
+        /** Checker is used mostly in interceptors, so there be one instance of checker per interceptor with Scope.DEFAULT **/
+        alias(ExcludedPatternsChecker.class, StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, builder, props, Scope.DEFAULT);
+        alias(AcceptedPatternsChecker.class, StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, builder, props, Scope.DEFAULT);
+
         switchDevMode(props);
 
         // Convert Struts properties into XWork properties
@@ -391,6 +411,14 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         convertIfExist(props, StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION);
         convertIfExist(props, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS);
         convertIfExist(props, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, XWorkConstants.RELOAD_XML_CONFIGURATION);
+
+        convertIfExist(props, StrutsConstants.STRUTS_EXCLUDED_CLASSES, XWorkConstants.OGNL_EXCLUDED_CLASSES);
+        convertIfExist(props, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS);
+
+        convertIfExist(props, StrutsConstants.STRUTS_ADDITIONAL_EXCLUDED_PATTERNS, XWorkConstants.ADDITIONAL_EXCLUDED_PATTERNS);
+        convertIfExist(props, StrutsConstants.STRUTS_ADDITIONAL_ACCEPTED_PATTERNS, XWorkConstants.ADDITIONAL_ACCEPTED_PATTERNS);
+        convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS);
+        convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS);
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         loadCustomResourceBundles(props);

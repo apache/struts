@@ -23,7 +23,7 @@
 <#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
 <#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
 <#list aKeys as aKey><#rt/>
-  <#assign keyValue = parameters.dynamicAttributes[aKey]/>
+  <#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
   <#if keyValue?is_string>
       <#assign value = struts.translateVariables(keyValue)!keyValue/>
   <#else>

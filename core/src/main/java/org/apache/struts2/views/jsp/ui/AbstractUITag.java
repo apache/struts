@@ -44,7 +44,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String disabled;
     protected String label;
     protected String labelSeparator;
-    protected String labelPosition;
+    protected String labelposition;
     protected String requiredPosition;
     protected String errorPosition;
     protected String name;
@@ -96,7 +96,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
         uiBean.setLabelSeparator(labelSeparator);
-        uiBean.setLabelposition(labelPosition);
+        uiBean.setLabelposition(labelposition);
         uiBean.setRequiredPosition(requiredPosition);
         uiBean.setErrorPosition(errorPosition);
         uiBean.setName(name);
@@ -141,7 +141,15 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.cssClass = cssClass;
     }
 
+    public void setClass(String cssClass) {
+        this.cssClass = cssClass;
+    }
+
     public void setCssStyle(String cssStyle) {
+        this.cssStyle = cssStyle;
+    }
+
+    public void setStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
 
@@ -166,7 +174,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     }
 
     public void setLabelposition(String labelPosition) {
-        this.labelPosition = labelPosition;
+        this.labelposition = labelPosition;
     }
 
     public void setRequiredPosition(String requiredPosition) {

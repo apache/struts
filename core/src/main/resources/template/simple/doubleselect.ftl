@@ -31,43 +31,43 @@
 
 <br/>
 <select<#rt/>
-        name="${parameters.doubleName?default("")?html}"<#rt/>
-<#if parameters.disabled?default(false)>
+        name="${(parameters.doubleName!"")?html}"<#rt/>
+<#if parameters.disabled!false>
         disabled="disabled"<#rt/>
 </#if>
-<#if parameters.doubleTabindex??>
+<#if parameters.doubleTabindex?has_content>
         tabindex="${parameters.doubleTabindex?html}"<#rt/>
 </#if>
-<#if parameters.doubleId??>
+<#if parameters.doubleId?has_content>
         id="${parameters.doubleId?html}"<#rt/>
 </#if>
-<#if parameters.doubleCss??>
+<#if parameters.doubleCss?has_content>
         class="${parameters.doubleCss?html}"<#rt/>
 </#if>
-<#if parameters.doubleStyle??>
+<#if parameters.doubleStyle?has_content>
         style="${parameters.doubleStyle?html}"<#rt/>
 </#if>
-<#if parameters.title??>
+<#if parameters.title?has_content>
         title="${parameters.title?html}"<#rt/>
 </#if>
-<#if parameters.multiple?default(false)>
+<#if parameters.multiple!false>
         multiple="multiple"<#rt/>
 </#if>
-<#if parameters.get("doubleSize")??>
+<#if parameters.get("doubleSize")?has_content>
         size="${parameters.get("doubleSize")?html}"<#rt/>
 </#if>
-<#if parameters.doubleMultiple?default(false)>
+<#if parameters.doubleMultiple!false>
         multiple="multiple"<#rt/>
 </#if>
-<#if parameters.doubleDisabled?default(false)>
+<#if parameters.doubleDisabled!false>
         disabled="disabled"<#rt/>
 </#if>
         >
 </select>
-<#if parameters.doubleMultiple?default(false)>
+<#if parameters.doubleMultiple!false>
 <input type="hidden" id="__multiselect_${parameters.doubleId?html}"
-       name="__multiselect_${parameters.doubleName?default("")?html}" value=""<#rt/>
-    <#if parameters.doubleDisabled?default(false)>
+       name="__multiselect_${(parameters.doubleName!"")?html}" value=""<#rt/>
+    <#if parameters.doubleDisabled!false>
        disabled="disabled"<#rt/>
     </#if>
         />
@@ -132,13 +132,13 @@
             </#if>
         </#if>
     ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue?js_string}", "${doubleItemKeyStr?js_string}");
-        <#if itemDoubleCssClass?if_exists != "">
+        <#if itemDoubleCssClass! != "">
     ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("class","${itemDoubleCssClass?html}");
         </#if>
-        <#if itemDoubleCssStyle?if_exists != "">
+        <#if itemDoubleCssStyle! != "">
         ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("style","${itemDoubleCssStyle?html}");
         </#if>
-        <#if itemDoubleTitle?if_exists != "">
+        <#if itemDoubleTitle! != "">
         ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("title","${itemDoubleTitle?html}");
         </#if>
 
@@ -170,8 +170,8 @@
 
         for (i = 0; i < ${parameters.id}Group[x].length; i++) {
             ${parameters.id}Temp.options[i] = new Option(${parameters.id}Group[x][i].text, ${parameters.id}Group[x][i].value);
-        <#if parameters.doubleNameValue?exists>
-            <#if parameters.doubleMultiple?exists>
+        <#if parameters.doubleNameValue??>
+            <#if parameters.doubleMultiple??>
                 for (j = 0; j < ${parameters.doubleNameValue}.
                 length;
                 j++

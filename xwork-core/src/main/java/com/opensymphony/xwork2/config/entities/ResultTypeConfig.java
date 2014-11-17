@@ -51,6 +51,7 @@ public class ResultTypeConfig extends Located implements Serializable {
         this.className = orig.className;
         this.defaultResultParam = orig.defaultResultParam;
         this.params = orig.params;
+        this.location = orig.location;
     }
 
     public void setDefaultResultParam(String defaultResultParam) {

@@ -4,19 +4,26 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Orders</title>
-    <link href="${pageContext.request.contextPath}/css/bootstrap.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span12">
+    <div class="row">
+        <div class="col-md-12">
 
 	        <div class="page-header">
 	            <h1>Orders</h1>
 		    </div>
-            <s:actionmessage  cssClass="alert alert-error"/>
+            <s:actionmessage cssClass="alert alert-danger"/>
             <table class="table table-striped">
                 <tr>
                     <th>ID</th>
@@ -31,18 +38,18 @@
                     <td><s:property value="amount"/></td>
                     <td>
                         <div class="btn-group">
-                            <a href="orders/${id}" class="btn"><i class="icon icon-eye-open"></i> View</a>
-                            <a href="orders/${id}/edit" class="btn"><i class="icon icon-edit"></i> Edit</a>
-                            <a href="orders/${id}/deleteConfirm" class="btn btn-danger"><i class="icon icon-trash"></i> Delete</a>
+                            <a href="orders/${id}" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span> View</a>
+                            <a href="orders/${id}/edit" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+                            <a href="orders/${id}/deleteConfirm" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
                         </div>
                    </td>
                 </tr>
                 </s:iterator>
             </table>
-            <a href="orders/new" class="btn btn-primary"><i class="icon icon-file"></i> Create a new order</a>
-        </div><!--/row-->
-    </div><!--/span-->
-</div><!--/row-->
+            <a href="orders/new" class="btn btn-primary"><span class="glyphicon glyphicon-file"></span> Create a new order</a>
+        </div><!--/col-md-12--->
+    </div><!--/row-->
+</div><!--/container-->
 </body>
 </html>
 	

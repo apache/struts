@@ -18,7 +18,6 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ExcludedPatterns;
 import com.opensymphony.xwork2.ModelDrivenAction;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.TestBean;
@@ -33,11 +32,13 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import junit.framework.Assert;
+import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 
 import java.io.File;
@@ -45,12 +46,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 
 /**
@@ -111,13 +110,11 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, params);
 
         // then
-        assertEquals(2, action.getActionMessages().size());
+        assertEquals(1, action.getActionMessages().size());
 
         String msg1 = action.getActionMessage(0);
-        String msg2 = action.getActionMessage(1);
 
-        assertTrue(msg1.contains("Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'"));
-        assertTrue(msg2.contains("Error setting expression 'top['name'](0)' with value 'true'"));
+        assertTrue(msg1.contains("Error setting expression 'top['name'](0)' with value 'true'"));
         assertNull(action.getName());
     }
 
@@ -146,7 +143,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         };
 
-        pi.setExcludeParams("(.*\\.|^)class\\..*");
         container.inject(pi);
         ValueStack vs = ActionContext.getContext().getValueStack();
 
@@ -164,12 +160,14 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         // given
         final String pollution1 = "class.classLoader.jarPath";
         final String pollution2 = "model.class.classLoader.jarPath";
+        final String pollution3 = "class.classLoader.defaultAssertionStatus";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-class-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
                 put(pollution2, "very bad");
+                put(pollution3, true);
             }
         };
 
@@ -183,10 +181,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 return result;
             }
 
-            @Override
-            protected void initializeHardCodedExcludePatterns() {
-                excludeParams = new HashSet<Pattern>();
-            }
         };
 
         container.inject(pi);
@@ -197,16 +191,19 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, params);
 
         // then
-        assertEquals(2, action.getActionMessages().size());
+        assertEquals(3, action.getActionMessages().size());
 
         String msg1 = action.getActionMessage(0);
         String msg2 = action.getActionMessage(1);
+        String msg3 = action.getActionMessage(2);
 
-        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg1);
-        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg2);
+        assertEquals("Error setting expression 'class.classLoader.defaultAssertionStatus' with value 'true'", msg1);
+        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg2);
+        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg3);
 
         assertFalse(excluded.get(pollution1));
         assertFalse(excluded.get(pollution2));
+        assertFalse(excluded.get(pollution3));
     }
 
     public void testDoesNotAllowMethodInvocations() throws Exception {
@@ -300,11 +297,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ParametersInterceptor pi = new ParametersInterceptor() {
 
             @Override
-            protected void initializeHardCodedExcludePatterns() {
-                this.excludeParams = new HashSet<Pattern>();
-            }
-
-            @Override
             protected boolean isExcluded(String paramName) {
                 boolean result = super.isExcluded(paramName);
                 excluded.put(paramName, result);
@@ -313,7 +305,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         };
 
-        pi.setExcludeParams("(.*\\.|^|.*|\\[('|\"))class(\\.|('|\")]|\\[).*");
         container.inject(pi);
         ValueStack vs = ActionContext.getContext().getValueStack();
 
@@ -351,9 +342,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         //then
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
-        Object allowMethodAccess = stack.findValue("\u0023_memberAccess['allowStaticMethodAccess']");
-        assertNotNull(allowMethodAccess);
-        assertEquals(Boolean.FALSE, allowMethodAccess);
+        boolean allowMethodAccess = ((SecurityMemberAccess) ((OgnlContext) stack.getContext()).getMemberAccess()).getAllowStaticMethodAccess();
+        assertFalse(allowMethodAccess);
     }
 
     public void testParameters() throws Exception {
@@ -487,7 +477,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         proxy.execute();
 
         SimpleAction action = (SimpleAction) proxy.getAction();
-        assertNull(action.getName());
+        assertNull("try_1", action.getName());
         assertEquals("This is blah", (action).getBlah());
         assertEquals(123, action.getBaz());
     }
@@ -729,11 +719,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // then
         assertEquals(expected, actual);
-    }
-
-    public void testExcludedPatternsGetInitialized() throws Exception {
-        ParametersInterceptor parametersInterceptor = new ParametersInterceptor();
-        assertEquals(ExcludedPatterns.EXCLUDED_PATTERNS.length, parametersInterceptor.excludeParams.size());
     }
 
     private ValueStack injectValueStack(Map<String, Object> actual) {

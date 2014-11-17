@@ -24,10 +24,10 @@
 <#assign optGroupInternalListUiBeans=parameters.optGroupInternalListUiBeanList />
 <#list optGroupInternalListUiBeans as optGroupInternalListUiBean>
 <optgroup 
-	<#if optGroupInternalListUiBean.parameters.label??>
+	<#if optGroupInternalListUiBean.parameters.label?has_content>
 	label="${optGroupInternalListUiBean.parameters.label}"
 	</#if>
-	<#if optGroupInternalListUiBean.parameters.disabled?default(false)>
+	<#if optGroupInternalListUiBean.parameters.disabled!false>
 	disabled="disabled"
 	</#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
@@ -39,7 +39,7 @@
 	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.parameters.listValue) />
 	<#assign tmpKeyStr = tmpKey.toString() />
 	<option value="${tmpKeyStr?html}"
-	<#if tag.contains(parameters.nameValue, tmpKeyStr) == true>
+	<#if tag.contains(parameters.nameValue, tmpKey) == true>
 	selected="selected"
 	</#if>
 	>${tmpValue?html}

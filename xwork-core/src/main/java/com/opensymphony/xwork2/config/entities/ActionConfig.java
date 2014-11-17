@@ -87,6 +87,7 @@ public class ActionConfig extends Located implements Serializable {
         this.results = new LinkedHashMap<String,ResultConfig>(orig.results);
         this.exceptionMappings = new ArrayList<ExceptionMappingConfig>(orig.exceptionMappings);
         this.allowedMethods = new HashSet<String>(orig.allowedMethods);
+        this.location = orig.location;
     }
 
     public String getName() {

@@ -37,11 +37,13 @@ import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -260,7 +262,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
                         for (int k = 0; k < unknownHandlersSize; k++) {
                             Element unknownHandler = (Element) unknownHandlers.item(k);
-                            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name")));
+                            Location location = LocationUtils.getLocation(unknownHandler);
+                            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name"), location));
                         }
 
                         if (!unknownHandlerStack.isEmpty())
@@ -424,8 +427,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         } else {
             if (!verifyAction(className, name, location)) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Unable to verify action [#0] with class [#1], from [#2]", name, className, location.toString());
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Unable to verify action [#0] with class [#1], from [#2]", name, className, location);
+                }
                 return;
             }
         }
@@ -723,7 +727,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             + "  Did you mean '" + guessResultType(resultType) + "'?", resultElement);
                 }
 
-                String resultClass = config.getClazz();
+                String resultClass = config.getClassName();
 
                 // invalid result type specified in result definition
                 if (resultClass == null) {
@@ -755,7 +759,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             }
                         } else {
                             if (LOG.isWarnEnabled()) {
-                            LOG.warn("no default parameter defined for result of type " + config.getName());
+                                LOG.warn("No default parameter defined for result [#0] of type [#1] ", config.getName(), config.getClassName());
                             }
                         }
                     }

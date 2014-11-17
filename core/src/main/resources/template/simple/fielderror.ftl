@@ -34,15 +34,15 @@
                     <#assign eValue = fieldErrors[fieldErrorFieldName]><#t/>
                     <#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
                     <ul<#rt/>
-                        <#if parameters.id?if_exists != "">
+                        <#if parameters.id?has_content>
                                 id="${parameters.id?html}"<#rt/>
                         </#if>
-                        <#if parameters.cssClass??>
+                        <#if parameters.cssClass?has_content>
                                 class="${parameters.cssClass?html}"<#rt/>
                             <#else>
                                 class="errorMessage"<#rt/>
                         </#if>
-                        <#if parameters.cssStyle??>
+                        <#if parameters.cssStyle?has_content>
                                 style="${parameters.cssStyle?html}"<#rt/>
                         </#if>
                             >
@@ -61,12 +61,12 @@
         <#else><#t/>
         <#if (eKeysSize > 0)><#t/>
         <ul<#rt/>
-            <#if parameters.cssClass??>
+            <#if parameters.cssClass?has_content>
                     class="${parameters.cssClass?html}"<#rt/>
                 <#else>
                     class="errorMessage"<#rt/>
             </#if>
-            <#if parameters.cssStyle??>
+            <#if parameters.cssStyle?has_content>
                     style="${parameters.cssStyle?html}"<#rt/>
             </#if>
                 >

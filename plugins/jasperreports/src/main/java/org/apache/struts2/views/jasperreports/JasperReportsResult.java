@@ -74,59 +74,48 @@ import java.util.TimeZone;
  * <p/>
  * <li><b>location (default)</b> - the location where the compiled jasper report
  * definition is (foo.jasper), relative from current URL.</li>
- * <p/>
  * <li><b>dataSource (required)</b> - the EL expression used to retrieve the
  * datasource from the value stack (usually a List).</li>
- * <p/>
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for EL expressions.</li>
- * <p/>
  * <li><b>format</b> - the format in which the report should be generated. Valid
  * values can be found in {@link JasperReportConstants}. If no format is
  * specified, PDF will be used.</li>
- * <p/>
  * <li><b>contentDisposition</b> - disposition (defaults to "inline", values are
  * typically <i>filename="document.pdf"</i>).</li>
- * <p/>
  * <li><b>documentName</b> - name of the document (will generate the http header
  * <code>Content-disposition = X; filename=X.[format]</code>).</li>
- * <p/>
  * <li><b>delimiter</b> - the delimiter used when generating CSV reports. By
  * default, the character used is ",".</li>
- * <p/>
  * <li><b>imageServletUrl</b> - name of the url that, when prefixed with the
  * context page, can return report images.</li>
- * <p/>
  * <li>
  * <b>reportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
  * report parameters from the value stack. The parameters may be accessed
  * in the report via the usual JR mechanism and might include data not
  * part of the dataSource, such as the user name of the report creator, etc.
  * </li>
- * <p/>
  * <li>
  * <b>exportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
  * JR exporter parameters from the value stack. The export parameters are
  * used to customize the JR export. For example, a PDF export might enable
  * encryption and set the user password to a string known to the report creator.
  * </li>
- * <p/>
  * <li>
  * <b>connection</b> - (2.1.7+) JDBC Connection which can be passed to the
  * report instead of dataSource
  * </li>
- * <p/>
+ * <li><b>wrapField</b> - (2.3.18+) defines if fields should warp with ValueStackDataSource
+ * see https://issues.apache.org/jira/browse/WW-3698 for more details
+ * </li>
  * </ul>
- * <p/>
  * <p>
  * This result follows the same rules from {@link StrutsResultSupport}.
  * Specifically, all parameters will be parsed if the "parse" parameter
  * is not set to false.
  * </p>
  * <!-- END SNIPPET: params -->
- * <p/>
  * <b>Example:</b>
- * <p/>
  * <pre><!-- START SNIPPET: example1 -->
  * &lt;result name="success" type="jasper"&gt;
  *   &lt;param name="location"&gt;foo.jasper&lt;/param&gt;
@@ -155,6 +144,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     protected String delimiter;
     protected String imageServletUrl = "/images/";
     protected String timeZone;
+    protected boolean wrapField = true;
 
     /**
      * Connection which can be passed to the report
@@ -227,6 +217,10 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         this.timeZone = timeZone;
     }
 
+    public void setWrapField(boolean wrapField) {
+        this.wrapField = wrapField;
+    }
+
     public String getReportParameters() {
         return reportParameters;
     }
@@ -284,7 +278,15 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         Connection conn = (Connection) stack.findValue(connection);
         if (conn == null)
-            stackDataSource = new ValueStackDataSource(stack, dataSource);
+            stackDataSource = new ValueStackDataSource(stack, dataSource, wrapField);
+
+        if ("https".equalsIgnoreCase(request.getScheme())) {
+            // set the the HTTP Header to work around IE SSL weirdness
+            response.setHeader("CACHE-CONTROL", "PRIVATE");
+            response.setHeader("Cache-Control", "maxage=3600");
+            response.setHeader("Pragma", "public");
+            response.setHeader("Accept-Ranges", "none");
+        }
 
         // Determine the directory that the report file is in and set the reportDirectory parameter
         // For WW 2.1.7:

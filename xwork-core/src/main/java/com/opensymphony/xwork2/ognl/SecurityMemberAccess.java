@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import ognl.DefaultMemberAccess;
 
 import java.lang.reflect.Member;
@@ -32,9 +34,13 @@ import java.util.regex.Pattern;
  */
 public class SecurityMemberAccess extends DefaultMemberAccess {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityMemberAccess.class);
+
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
+    private Set<Class<?>> excludedClasses = Collections.emptySet();
+    private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -46,21 +52,34 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     @Override
-    public boolean isAccessible(Map context, Object target, Member member,
-                                String propertyName) {
+    public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+        if (checkEnumAccess(target, member)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Allowing access to enum #0", target);
+            }
+            return true;
+        }
+
+        if (isPackageExcluded(target.getClass().getPackage(), member.getDeclaringClass().getPackage())) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Package of target [#0] or package of member [#1] are excluded!", target, member);
+            }
+            return false;
+        }
+
+        if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Target class [#0] or declaring class of member type [#1] are excluded!", target, member);
+            }
+            return false;
+        }
 
         boolean allow = true;
-        int modifiers = member.getModifiers();
-        if (Modifier.isStatic(modifiers)) {
-            if (member instanceof Method && !getAllowStaticMethodAccess()) {
-                allow = false;
-                if (target instanceof Class) {
-                    Class clazz = (Class) target;
-                    Method method = (Method) member;
-                    if (Enum.class.isAssignableFrom(clazz) && method.getName().equals("values"))
-                        allow = true;
-                }
+        if (!checkStaticMethodAccess(member)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.warn("Access to static [#0] is blocked!", member);
             }
+            allow = false;
         }
 
         //failed static test
@@ -68,10 +87,47 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
 
         // Now check for standard scope rules
-        if (!super.isAccessible(context, target, member, propertyName))
-            return false;
+        return super.isAccessible(context, target, member, propertyName)
+                && isAcceptableProperty(propertyName);
+    }
 
-        return isAcceptableProperty(propertyName);
+    protected boolean checkStaticMethodAccess(Member member) {
+        int modifiers = member.getModifiers();
+        if (Modifier.isStatic(modifiers)) {
+            return allowStaticMethodAccess;
+        } else {
+            return true;
+        }
+    }
+
+    protected boolean checkEnumAccess(Object target, Member member) {
+        if (target instanceof Class) {
+            Class clazz = (Class) target;
+            if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values"))
+                return true;
+        }
+        return false;
+    }
+
+    protected boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
+        for (Pattern pattern : excludedPackageNamePatterns) {
+            if (pattern.matcher(targetPackage.getName()).matches() || pattern.matcher(memberPackage.getName()).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isClassExcluded(Class<?> targetClass, Class<?> declaringClass) {
+        if (targetClass == Object.class || declaringClass == Object.class) {
+            return true;
+        }
+        for (Class<?> excludedClass : excludedClasses) {
+            if (targetClass.isAssignableFrom(excludedClass) || declaringClass.isAssignableFrom(excludedClass)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean isAcceptableProperty(String name) {
@@ -115,4 +171,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         this.acceptProperties = acceptedProperties;
     }
 
+    public void setExcludedClasses(Set<Class<?>> excludedClasses) {
+        this.excludedClasses = excludedClasses;
+    }
+
+    public void setExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
+        this.excludedPackageNamePatterns = excludedPackageNamePatterns;
+    }
 }

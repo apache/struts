@@ -46,6 +46,7 @@ public class InterceptorConfig extends Located implements Serializable {
         this.name = orig.name;
         this.className = orig.className;
         this.params = new LinkedHashMap<String,String>(orig.params);
+        this.location = orig.location;
     }
 
     public String getClassName() {

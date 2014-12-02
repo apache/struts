@@ -131,12 +131,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.2</version>
+                    <version>3.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>2.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -287,7 +287,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.3</version>
                 <configuration>
                     <stagingSiteURL>${siteDeploy.url}</stagingSiteURL>
                     <relativizeDecorationLinks>false</relativizeDecorationLinks>
@@ -311,20 +311,37 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
             </plugin>
-            <!--
             <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                  <configLocation>http://svn.apache.org/repos/asf/struts/maven/trunk/build/struts_checks.xml</configLocation>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jxr-maven-plugin</artifactId>
-                <version>2.0-beta-1</version>
+                <artifactId>rat-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>pom.xml</include>
+                        <include>src/**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
+                        <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
+                        <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
+                        <exclude>src/site/resources/tags/**</exclude>
+                        <exclude>src/main/resources/*LICENSE.txt</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
-            -->
         </plugins>
     </reporting>
 

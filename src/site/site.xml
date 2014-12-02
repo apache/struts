@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -25,7 +23,7 @@
     <skin>
         <groupId>org.apache.maven.skins</groupId>
         <artifactId>maven-fluido-skin</artifactId>
-        <version>1.3.0</version>
+        <version>1.3.1</version>
     </skin>
     <bannerLeft>
         <name>Apache Software Foundation</name>
@@ -34,87 +32,38 @@
     </bannerLeft>
     <bannerRight>
         <name>Apache Struts</name>
-        <src>http://struts.apache.org/images/struts.gif</src>
+        <src>http://struts.apache.org/img/struts-logo.svg</src>
         <href>http://struts.apache.org/</href>
     </bannerRight>
+    <publishDate position="none"/>
+    <version position="none"/>
     <body>
         <links>
-            <item name="Apache"
-                  href="http://www.apache.org/"/>
-            <item name="Struts"
-                  href="http://struts.apache.org/"/>
+            <item name="Apache" href="http://www.apache.org/"/>
+            <item name="Struts" href="http://struts.apache.org/"/>
         </links>
-        <menu name="Struts 2">
-            <item name="Welcome"
-                  href="index.html"/>
-            <item name="Releases"
-                  href="http://struts.apache.org/downloads.html"/>
-            <item name="Thanks!"
-                  href="http://apache.org/foundation/thanks.html"/>
-            <item name="Sponsorship"
-                  href="http://apache.org/foundation/sponsorship.html"/>
-        </menu>
 
-        <menu name="Parent project">
-            <item name="Apache Struts"
-                  href="http://struts.apache.org/"/>
+        <menu name="Top Site">
+            <item name="Apache Struts" href="http://struts.apache.org/"/>
         </menu>
 
         <menu name="Documentation">
-            <item name="Getting Started"
-                  href="docs/home.html"/>
-            <item name="Tutorials"
-                  href="docs/tutorials.html"/>
-            <item name="FAQs"
-                  href="docs/faqs.html"/>
-            <item name="Guides"
-                  href="docs/guides.html"/>
-        </menu>
-
-        <menu name="Support">
-            <item name="User Mailing List"
-                  href="http://struts.apache.org/mail.html"/>
-            <item name="Issue Tracker (JIRA)"
-                  href="https://issues.apache.org/jira/browse/WW"/>
-            <item name="Wiki Pages"
-                  href="https://cwiki.apache.org/confluence/display/S2WIKI/Welcome+to+Apache+Struts2"/>
+            <item name="Getting Started" href="docs/home.html"/>
+            <item name="Tutorials" href="docs/tutorials.html"/>
+            <item name="FAQs" href="docs/faqs.html"/>
+            <item name="Guides" href="docs/guides.html"/>
         </menu>
 
         <menu name="Reference">
-            <item name="XWork API"
-                  href="xwork-core/apidocs/index.html"/>
-            <item name="Struts Core API"
-                  href="struts2-core/apidocs/index.html"/>
-            <item name="Plugin APIs"
-                  href="plugins.html"/>
-            <item name="Tag Reference"
-                  href="docs/tag-reference.html"/>
-            <item name="Plugin Registry"
-                  href="http://cwiki.apache.org/S2PLUGINS/home.html"/>
-        </menu>
-
-        <menu name="Development">
-            <item name="Struts 2.x Draft Docs"
-                  href="index.html"/>
-            <item name="How to Help FAQ"
-                  href="http://struts.apache.org/helping.html"/>
-            <item name="Development Lists"
-                  href="http://struts.apache.org/dev/dev-mail.html"/>
-            <item name="Source Code"
-                  href="http://struts.apache.org/dev/builds.html"/>
-            <item name="Release Guidelines"
-                  href="http://struts.apache.org/dev/releases.html"/>
-            <item name="Volunteers"
-                  href="http://struts.apache.org/dev/volunteers.html"/>
-            <item name="PMC Charter"
-                  href="http://struts.apache.org/dev/bylaws.html"/>
-            <item name="Sonar Analysis"
-                  href="https://analysis.apache.org/dashboard/index/org.apache.struts:struts2-parent"/>
-            <item name="Source Repository"
-                  href="http://svn.apache.org/viewcvs.cgi/struts/"/>
+            <item name="XWork API" href="xwork-core/apidocs/index.html"/>
+            <item name="Struts Core API" href="struts2-core/apidocs/index.html"/>
+            <item name="Plugin APIs" href="plugins.html"/>
+            <item name="Tag Reference" href="docs/tag-reference.html"/>
+            <item name="Plugin Registry" href="http://cwiki.apache.org/S2PLUGINS/home.html"/>
         </menu>
 
         <menu ref="reports"/>
+        <menu ref="modules"/>
 
         <footer>
            <div class="row span12">

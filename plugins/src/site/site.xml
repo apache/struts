@@ -45,6 +45,7 @@
 
         <menu ref="parent"/>
         <menu ref="reports"/>
+        <menu ref="modules"/>
 
         <footer>
             <div class="row span12">

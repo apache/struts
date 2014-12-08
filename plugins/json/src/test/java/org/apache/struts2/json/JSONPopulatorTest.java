@@ -25,9 +25,18 @@ import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import junit.framework.TestCase;
 
 public class JSONPopulatorTest extends TestCase {
@@ -73,6 +82,16 @@ public class JSONPopulatorTest extends TestCase {
         assertEquals(3, bean.getByteField());
         assertEquals(new BigDecimal(111111.5d), bean.getBigDecimal());
         assertEquals(new BigInteger("111111"), bean.getBigInteger());
+        assertEquals(date(2012, 9, 27, 8, 49), bean.getDateField());
+        assertEquals(LocalDate.of(2012, 9, 27), bean.getLocalDateField());
+        assertEquals(LocalDateTime.of(2012, 9, 27, 8, 49), bean.getLocalDateTimeField());
+    }
+    
+    private static Date date(int year, int month, int dayOfMonth, int hour, int minute) {
+      return Date.from(
+          LocalDateTime.of(year, month, dayOfMonth, hour, minute).
+          atZone(ZoneId.systemDefault()).
+          toInstant());
     }
 
     public void testObjectBean() throws Exception {
@@ -159,5 +178,10 @@ public class JSONPopulatorTest extends TestCase {
             // I can't get JUnit to ignore the exception
             // @Test(expected = JSONException.class)
         }
+    }
+    
+    public static void main(String[] args) {
+      TemporalAccessor accessor = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm").parse("27-09-2012 08:49");
+      System.out.println(accessor.isSupported(ChronoField.SECOND_OF_MINUTE));
     }
 }

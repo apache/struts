@@ -35,6 +35,12 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -45,9 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.struts2.json.annotations.JSON;
-
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -148,6 +152,7 @@ public class JSONPopulator {
 
     private static boolean isJSONPrimitive(Class clazz) {
         return clazz.isPrimitive() || clazz.equals(String.class) || clazz.equals(Date.class)
+                || clazz.equals(LocalDate.class) || clazz.equals(LocalDateTime.class)
                 || clazz.equals(Boolean.class) || clazz.equals(Byte.class) || clazz.equals(Character.class)
                 || clazz.equals(Double.class) || clazz.equals(Float.class) || clazz.equals(Integer.class)
                 || clazz.equals(Long.class) || clazz.equals(Short.class) || clazz.equals(Locale.class)
@@ -375,15 +380,25 @@ public class JSONPopulator {
                 return value.toString();
         } else if (clazz.equals(Date.class)) {
             try {
-                JSON json = method.getAnnotation(JSON.class);
-
-                DateFormat formatter = new SimpleDateFormat(
-                        (json != null) && (json.format().length() > 0) ? json.format() : this.dateFormat);
-                return formatter.parse((String) value);
+                return dateFrom(value, method);
             } catch (ParseException e) {
                 LOG.error(e.getMessage(), e);
                 throw new JSONException("Unable to parse date from: " + value);
             }
+        } else if (clazz.equals(LocalDate.class)) {
+            try {
+                return toLocalDateTime(dateFrom(value, method)).toLocalDate();
+            } catch (ParseException  e) {
+                LOG.error(e.getMessage(), e);
+                throw new JSONException("Unable to parse date from: " + value);
+            }          
+        } else if (clazz.equals(LocalDateTime.class)) {
+          try {
+              return toLocalDateTime(dateFrom(value, method));
+          } catch (ParseException  e) {
+              LOG.error(e.getMessage(), e);
+              throw new JSONException("Unable to parse date from: " + value);
+          }          
         } else if (clazz.isEnum()) {
             String sValue = (String) value;
             return Enum.valueOf(clazz, sValue);
@@ -441,4 +456,13 @@ public class JSONPopulator {
         return value;
     }
 
+    private Date dateFrom(Object value, Method method) throws ParseException {
+      JSON json = method.getAnnotation(JSON.class);
+      String pattern = (json != null) && (!json.format().isEmpty()) ? json.format() : this.dateFormat;
+      return new SimpleDateFormat(pattern).parse((String) value);
+    }
+    
+    private LocalDateTime toLocalDateTime(Date date) {
+      return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
 }

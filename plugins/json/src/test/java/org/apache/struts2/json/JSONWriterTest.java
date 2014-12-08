@@ -1,12 +1,18 @@
 package org.apache.struts2.json;
 
+import static java.time.Month.DECEMBER;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.bridge.StringBridge;
 import org.junit.Test;
-
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -117,6 +123,35 @@ public class JSONWriterTest extends StrutsTestCase{
         String json = jsonWriter.write(dateBean);
         assertEquals("{\"date\":\"2012-12-23T10:10:10\"}", json);
     }
+    
+    @Test
+    public void testCanSerializeALocalDate() throws Exception {
+        SingleLocalDateBean dateBean = new SingleLocalDateBean();
+        dateBean.setLocalDate(LocalDate.of(2012, DECEMBER, 23));
+
+        JSONWriter jsonWriter = new JSONWriter();
+        jsonWriter.setEnumAsBean(false);
+
+        String json = jsonWriter.write(dateBean);
+        assertEquals("{\"localDate\":\"2012-12-23T00:00:00\"}", json);
+    }
+    
+    @Test
+    public void testCanSerializeALocalDateTime() throws Exception {
+        SingleLocalDateTimeBean dateBean = new SingleLocalDateTimeBean();
+        dateBean.setLocalDate(
+            LocalDateTime.of(2012, DECEMBER, 23, 10, 10, 10).
+            atOffset(ZoneOffset.UTC).
+            toLocalDateTime());
+
+        JSONWriter jsonWriter = new JSONWriter();
+        jsonWriter.setEnumAsBean(false);
+
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+        String json = jsonWriter.write(dateBean);
+        assertEquals("{\"localDateTime\":\"2012-12-23T10:10:10\"}", json);
+    }
+    
 
     @Test
     public void testCanSetDefaultDateFormat() throws Exception {

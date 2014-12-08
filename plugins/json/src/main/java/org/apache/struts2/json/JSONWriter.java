@@ -20,14 +20,6 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.json.annotations.JSON;
-import org.apache.struts2.json.annotations.JSONFieldBridge;
-import org.apache.struts2.json.annotations.JSONParameter;
-import org.apache.struts2.json.bridge.FieldBridge;
-import org.apache.struts2.json.bridge.ParameterizedBridge;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -38,10 +30,29 @@ import java.text.CharacterIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
-import java.util.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
+import org.apache.struts2.json.annotations.JSON;
+import org.apache.struts2.json.annotations.JSONFieldBridge;
+import org.apache.struts2.json.annotations.JSONParameter;
+import org.apache.struts2.json.bridge.FieldBridge;
+import org.apache.struts2.json.bridge.ParameterizedBridge;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p>
@@ -160,6 +171,10 @@ public class JSONWriter {
             this.date((Date) object, method);
         } else if (object instanceof Calendar) {
             this.date(((Calendar) object).getTime(), method);
+        } else if (object instanceof LocalDate) {
+            this.date(toDate((LocalDate)object), method);
+        } else if (object instanceof LocalDateTime) {
+            this.date(toDate((LocalDateTime)object), method);
         } else if (object instanceof Locale) {
             this.string(object);
         } else if (object instanceof Enum) {
@@ -169,6 +184,14 @@ public class JSONWriter {
         }
 
         this.stack.pop();
+    }
+    
+    private Date toDate(LocalDate localDate) {
+      return toDate(localDate.atStartOfDay());
+    }
+    
+    private Date toDate(LocalDateTime localDateTime) {
+      return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     /**

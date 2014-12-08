@@ -4,6 +4,7 @@
 	"booleanField": true,
 	"byteField": 0,
 	"charField": "s",
+	"dateField": null,
 	"doubleField": 10.1,
 	"enumBean": {
 	    "propA":"A",
@@ -15,6 +16,8 @@
    },
 	"floatField": 1.5,
 	"intField": 10,
+  "localDateField":null,
+  "localDateTimeField":null,
 	"longField": 100,
 	"objectField": null,
 	"stringField": "str"

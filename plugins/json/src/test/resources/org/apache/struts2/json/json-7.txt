@@ -16,5 +16,8 @@
         "listField": [{"value":"1"},{"value":"2"}],
         "listMapField": [{"id1":2073501,"id2":3}],
         "mapListField": {"id1":[1,2,3],"id2":[4,3,2,1]},
-        "arrayMapField": [{"id1":2073501,"id2":3}]
+        "arrayMapField": [{"id1":2073501,"id2":3}],
+        "dateField": "2012-09-27T08:49:00",
+        "localDateField": "27\/09\/2012",
+        "localDateTimeField": "27-09-2012 08:49"
 }

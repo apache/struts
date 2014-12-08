@@ -22,6 +22,10 @@ package org.apache.struts2.json;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import org.apache.struts2.json.annotations.JSON;
 
 public class Bean {
     private String stringField;
@@ -37,6 +41,9 @@ public class Bean {
     private AnEnumBean enumBean;
     private BigDecimal bigDecimal;
     private BigInteger bigInteger;
+    private Date dateField;
+    private LocalDate localDateField;
+    private LocalDateTime localDateTimeField;
 
     /**
      * @return the byteField
@@ -147,5 +154,31 @@ public class Bean {
 
     public void setBigDecimal(BigDecimal bigDecimal) {
         this.bigDecimal = bigDecimal;
+    }
+    
+    public Date getDateField() {
+      return dateField;
+    }
+    
+    public void setDateField(Date dateField) {
+      this.dateField = dateField;
+    }
+    
+    public LocalDate getLocalDateField() {
+      return localDateField;
+    }
+    
+    @JSON(format="dd/MM/yyyy")
+    public void setLocalDateField(LocalDate localDateField) {
+      this.localDateField = localDateField;
+    }
+    
+    public LocalDateTime getLocalDateTimeField() {
+      return localDateTimeField;
+    }
+    
+    @JSON(format="dd-MM-yyyy hh:mm")
+    public void setLocalDateTimeField(LocalDateTime localDateTimeField) {
+      this.localDateTimeField = localDateTimeField;
     }
 }

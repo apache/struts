@@ -351,6 +351,8 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
             value = getValue(expr, asType);
             if (value == null) {
                 value = findInContext(expr);
+                final XWorkConverter conv = ((Container)getContext().get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
+                return conv.convertValue(getContext(), value, asType);
             }
         } finally {
             context.remove(THROW_EXCEPTION_ON_FAILURE);

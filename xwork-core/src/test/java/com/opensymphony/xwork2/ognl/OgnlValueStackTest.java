@@ -93,6 +93,17 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("1, 2", vs.findValue("childAges", String.class));
     }
 
+    public void testValuesFromContextAreConverted() {
+        final OgnlValueStack vs = createValueStack();
+        vs.getContext().put(ActionContext.CONTAINER, container);
+
+        final String propertyName = "dogName";
+        final String propertyValue = "Rover";
+        vs.getContext().put(propertyName, new String[]{propertyValue});
+
+        assertEquals(propertyValue, vs.findValue(propertyName, String.class));
+    }
+
     public void testFailOnException() {
         OgnlValueStack vs = createValueStack();
 

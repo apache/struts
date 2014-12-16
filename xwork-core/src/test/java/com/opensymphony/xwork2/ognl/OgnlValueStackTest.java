@@ -95,7 +95,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testValuesFromContextAreConverted() {
         final OgnlValueStack vs = createValueStack();
-        vs.getContext().put(ActionContext.CONTAINER, container);
 
         final String propertyName = "dogName";
         final String propertyValue = "Rover";

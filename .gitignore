@@ -15,6 +15,9 @@
 # Scripts
 *.sh
 
+# jenv
+.java-version
+
 # Maven
 core/target
 xwork-core/target

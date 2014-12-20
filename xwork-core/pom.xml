@@ -126,11 +126,11 @@
             <artifactId>ognl</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.ow2.asm</groupId>
+            <groupId>asm</groupId>
             <artifactId>asm</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.ow2.asm</groupId>
+            <groupId>asm</groupId>
             <artifactId>asm-commons</artifactId>
         </dependency>
         <dependency>

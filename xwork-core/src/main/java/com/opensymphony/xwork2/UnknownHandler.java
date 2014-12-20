@@ -54,7 +54,10 @@ public interface UnknownHandler {
      * @param action The action object
      * @param methodName The method name to call
      * @return The result returned from invoking the action method, can return <tt>null</tt>
-     * @throws NoSuchMethodException If the method cannot be found (deprecated) - should return nunll instead
+     * @deprecated @throws NoSuchMethodException If the method cannot be found should return null instead,
+     *                                           don't throw exception as other UnknownHandles won't be invoked
+     *                                           'throws NoSuchMethodException' signature will be removed with next
+     *                                           major release
      */
 	public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException;
 }

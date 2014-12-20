@@ -51,21 +51,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-/**
- * ClassFinder searches the classpath of the specified ClassLoaderInterface for
- * packages, classes, constructors, methods, or fields with specific annotations.
- *
- * For security reasons ASM is used to find the annotations.  Classes are not
- * loaded unless they match the requirements of a called findAnnotated* method.
- * Once loaded, these classes are cached.
- *
- * The getClassesNotLoaded() method can be used immediately after any find*
- * method to get a list of classes which matched the find requirements (i.e.
- * contained the annotation), but were unable to be loaded.
- *
- * @author David Blevins
- * @version $Rev$ $Date$
- */
 public class DefaultClassFinder implements ClassFinder {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultClassFinder.class);
 
@@ -165,18 +150,6 @@ public class DefaultClassFinder implements ClassFinder {
         return infos != null && !infos.isEmpty();
     }
 
-    /**
-     * Returns a list of classes that could not be loaded in last invoked findAnnotated* method.
-     * <p/>
-     * The list will only contain entries of classes whose byte code matched the requirements
-     * of last invoked find* method, but were unable to be loaded and included in the results.
-     * <p/>
-     * The list returned is unmodifiable.  Once obtained, the returned list will be a live view of the
-     * results from the last findAnnotated* method call.
-     * <p/>
-     * This method is not thread safe.
-     * @return an unmodifiable live view of classes that could not be loaded in previous findAnnotated* call.
-     */
     public List<String> getClassesNotLoaded() {
         return Collections.unmodifiableList(classesNotLoaded);
     }

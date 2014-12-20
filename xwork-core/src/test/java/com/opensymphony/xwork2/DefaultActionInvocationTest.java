@@ -1,14 +1,12 @@
 package com.opensymphony.xwork2;
 
-import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +77,108 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertNotNull(actionInvocation.container);
         assertNotNull(deserializable.container);
         assertEquals(mockContainer, deserializable.container);
+    }
+
+    public void testInvokingExistingExecuteMethod() throws Exception {
+        // given
+        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
+            public ValueStack getStack() {
+                return new StubValueStack();
+            }
+        };
+
+        SimpleAction action = new SimpleAction() {
+            @Override
+            public String execute() throws Exception {
+                return SUCCESS;
+            }
+        };
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("execute");
+
+        dai.proxy = proxy;
+        dai.ognlUtil = new OgnlUtil();
+
+        // when
+        String result = dai.invokeAction(action, null);
+
+        // then
+        assertEquals("success", result);
+    }
+
+    public void testInvokingMissingMethod() throws Exception {
+        // given
+        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
+            public ValueStack getStack() {
+                return new StubValueStack();
+            }
+        };
+
+        SimpleAction action = new SimpleAction() {
+            @Override
+            public String execute() throws Exception {
+                return ERROR;
+            }
+        };
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("notExists");
+
+        UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
+            @Override
+            public boolean hasUnknownHandlers() {
+                return false;
+            }
+        };
+
+        dai.proxy = proxy;
+        dai.ognlUtil = new OgnlUtil();
+        dai.unknownHandlerManager = uhm;
+
+        // when
+        Throwable expected = null;
+        try {
+            dai.invokeAction(action, null);
+        } catch (Exception e) {
+            expected = e;
+        }
+
+        // then
+        assertNotNull(expected);
+        assertTrue(expected instanceof NoSuchMethodException);
+    }
+
+    public void testInvokingExistingMethodThatThrowsException() throws Exception {
+        // given
+        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
+            public ValueStack getStack() {
+                return new StubValueStack();
+            }
+        };
+
+        SimpleAction action = new SimpleAction() {
+            @Override
+            public String execute() throws Exception {
+                throw new IllegalArgumentException();
+            }
+        };
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("execute");
+
+        dai.proxy = proxy;
+        dai.ognlUtil = new OgnlUtil();
+
+        // when
+        // when
+        Throwable expected = null;
+        try {
+            dai.invokeAction(action, null);
+        } catch (Exception e) {
+            expected = e;
+        }
+
+        // then
+        assertNotNull(expected);
+        assertTrue(expected instanceof IllegalArgumentException);
     }
 
 }

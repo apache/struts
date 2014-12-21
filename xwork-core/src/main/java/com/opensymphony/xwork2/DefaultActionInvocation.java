@@ -426,10 +426,10 @@ public class DefaultActionInvocation implements ActionInvocation {
                 if (e.getReason() instanceof NoSuchMethodException) {
                     try {
                         String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1) + "()";
-                        methodResult = ognlUtil.getValue(altMethodName, ActionContext.getContext().getContextMap(), action);
+                        methodResult = ognlUtil.getValue(altMethodName, getStack().getContext(), action);
                     } catch (MethodFailedException e1) {
                         // if still method doesn't exist, try checking UnknownHandlers
-                        if (e.getReason() instanceof NoSuchMethodException) {
+                        if (e1.getReason() instanceof NoSuchMethodException) {
                             if (unknownHandlerManager.hasUnknownHandlers()) {
                                 try {
                                     methodResult = unknownHandlerManager.handleUnknownMethod(action, methodName);
@@ -438,6 +438,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                                     throw e;
                                 }
                             } else {
+                                // throw the original one
                                 throw e;
                             }
                             // throw the original exception as UnknownHandlers weren't able to handle invocation as well
@@ -445,12 +446,12 @@ public class DefaultActionInvocation implements ActionInvocation {
                                 throw e;
                             }
                         } else {
-                            // exception isn't related to missing action method
-                            throw e;
+                            // exception isn't related to missing action method, throw it
+                            throw e1;
                         }
                     }
                 } else {
-                    // exception isn't related to missing action method
+                    // exception isn't related to missing action method, throw it
                     throw e;
                 }
             }

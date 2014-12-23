@@ -3,6 +3,7 @@ package com.opensymphony.xwork2.ognl;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Member;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -202,6 +203,32 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("Access to enums is blocked!", actual);
     }
 
+    public void testAccessStatic() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(Class.class)));
+
+        // when
+        Member method = StaticTester.class.getMethod("sayHello");
+        boolean actual = sma.isAccessible(context, Class.class, method, null);
+
+        // then
+        assertTrue("Access to static is blocked!", actual);
+    }
+
+    public void testBlockStaticAccess() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(Class.class)));
+
+        // when
+        Member method = StaticTester.class.getMethod("sayHello");
+        boolean actual = sma.isAccessible(context, Class.class, method, null);
+
+        // then
+        assertFalse("Access to static isn't blocked!", actual);
+    }
+
 }
 
 class FooBar implements FooBarInterface {
@@ -249,4 +276,12 @@ interface FooBarInterface extends FooInterface, BarInterface {
 
 enum MyValues {
     ONE, TWO, THREE
+}
+
+class StaticTester {
+
+    public static String sayHello() {
+        return "Hello";
+    }
+
 }

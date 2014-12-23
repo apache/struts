@@ -60,14 +60,24 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return true;
         }
 
-        if (isPackageExcluded(target.getClass().getPackage(), member.getDeclaringClass().getPackage())) {
+        Class targetClass = target.getClass();
+        Class memberClass = member.getDeclaringClass();
+
+        if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Support for accessing static methods is deprecated! Please refactor your application!");
+            }
+            targetClass = member.getDeclaringClass();
+        }
+
+        if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Package of target [#0] or package of member [#1] are excluded!", target, member);
             }
             return false;
         }
 
-        if (isClassExcluded(target.getClass(), member.getDeclaringClass())) {
+        if (isClassExcluded(targetClass, memberClass)) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Target class [#0] or declaring class of member type [#1] are excluded!", target, member);
             }

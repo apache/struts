@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.easymock.MockControl;
@@ -44,11 +45,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
     public void testIntercepDefault() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie[] {
+        request.setCookies(
                 new Cookie("cookie1", "cookie1value"),
                 new Cookie("cookie2", "cookie2value"),
                 new Cookie("cookie3", "cookie3value")
-            });
+        );
         ServletActionContext.setRequest(request);
 
         MockActionWithCookieAware action = new MockActionWithCookieAware();
@@ -67,6 +68,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         // by default the interceptor doesn't accept any cookies
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
 
         interceptor.intercept(invocation);
 
@@ -81,11 +83,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
     public void testInterceptAll1() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie[] {
+        request.setCookies(
                 new Cookie("cookie1", "cookie1value"),
                 new Cookie("cookie2", "cookie2value"),
                 new Cookie("cookie3", "cookie3value")
-            });
+        );
         ServletActionContext.setRequest(request);
 
         MockActionWithCookieAware action = new MockActionWithCookieAware();
@@ -103,6 +105,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("*");
         interceptor.setCookiesValue("*");
         interceptor.intercept(invocation);
@@ -123,11 +126,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
     public void testInterceptAll2() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie[] {
+        request.setCookies(
                 new Cookie("cookie1", "cookie1value"),
                 new Cookie("cookie2", "cookie2value"),
                 new Cookie("cookie3", "cookie3value")
-            });
+        );
         ServletActionContext.setRequest(request);
 
         MockActionWithCookieAware action = new MockActionWithCookieAware();
@@ -145,6 +148,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie2, cookie3");
         interceptor.setCookiesValue("cookie1value, cookie2value, cookie3value");
         interceptor.intercept(invocation);
@@ -164,11 +168,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
     public void testInterceptSelectedCookiesNameOnly1() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie[] {
+        request.setCookies(
                 new Cookie("cookie1", "cookie1value"),
                 new Cookie("cookie2", "cookie2value"),
                 new Cookie("cookie3", "cookie3value")
-            });
+        );
         ServletActionContext.setRequest(request);
 
         MockActionWithCookieAware action = new MockActionWithCookieAware();
@@ -186,6 +190,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("cookie1value, cookie2value, cookie3value");
         interceptor.intercept(invocation);
@@ -205,11 +210,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
     public void testInterceptSelectedCookiesNameOnly2() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie[] {
+        request.setCookies(
                 new Cookie("cookie1", "cookie1value"),
                 new Cookie("cookie2", "cookie2value"),
                 new Cookie("cookie3", "cookie3value")
-            });
+        );
         ServletActionContext.setRequest(request);
 
         MockActionWithCookieAware action = new MockActionWithCookieAware();
@@ -227,6 +232,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("*");
         interceptor.intercept(invocation);
@@ -246,11 +252,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
     public void testInterceptSelectedCookiesNameOnly3() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie[] {
+        request.setCookies(
                 new Cookie("cookie1", "cookie1value"),
                 new Cookie("cookie2", "cookie2value"),
                 new Cookie("cookie3", "cookie3value")
-            });
+        );
         ServletActionContext.setRequest(request);
 
         MockActionWithCookieAware action = new MockActionWithCookieAware();
@@ -268,6 +274,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("");
         interceptor.intercept(invocation);
@@ -288,11 +295,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
     public void testInterceptSelectedCookiesNameAndValue() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie[] {
+        request.setCookies(
                 new Cookie("cookie1", "cookie1value"),
                 new Cookie("cookie2", "cookie2value"),
                 new Cookie("cookie3", "cookie3value")
-            });
+        );
         ServletActionContext.setRequest(request);
 
         MockActionWithCookieAware action = new MockActionWithCookieAware();
@@ -310,6 +317,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("cookie1value");
         interceptor.intercept(invocation);
@@ -371,6 +379,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             }
         };
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("*");
 
         MockActionInvocation invocation = new MockActionInvocation();
@@ -431,6 +440,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             }
         };
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("*");
 
         MockActionInvocation invocation = new MockActionInvocation();

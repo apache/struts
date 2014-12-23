@@ -88,6 +88,8 @@ public class LocalizedTextUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(LocalizedTextUtil.class);
 
+    private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
+
     private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<Integer, List<String>>();
 
     private static boolean reloadBundles = false;
@@ -839,15 +841,28 @@ public class LocalizedTextUtil {
 
         try {
             if ("org.apache.catalina.loader.WebappClassLoader".equals(cl.getName())) {
-                clearMap(cl, loader, "resourceEntries");
+                clearMap(cl, loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
             } else {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("class loader " + cl.getName() + " is not tomcat loader.");
                 }
             }
+        } catch (NoSuchFieldException nsfe) {
+            if ("org.apache.catalina.loader.WebappClassLoaderBase".equals(cl.getSuperclass().getName())) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Base class #0 doesn't contain '#1' field, trying with parent!", nsfe, cl.getName(), TOMCAT_RESOURCE_ENTRIES_FIELD);
+                }
+                try {
+                    clearMap(cl.getSuperclass(), loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
+                } catch (Exception e) {
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("Couldn't clear tomcat cache using #0", e, cl.getSuperclass().getName());
+                    }
+                }
+            }
         } catch (Exception e) {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("couldn't clear tomcat cache", e);
+        	    LOG.warn("Couldn't clear tomcat cache", e, cl.getName());
             }
         }
     }

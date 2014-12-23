@@ -38,7 +38,8 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardHelper;
 import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
 import com.opensymphony.xwork2.util.finder.ClassFinder;
-import com.opensymphony.xwork2.util.finder.ClassFinder.ClassInfo;
+import com.opensymphony.xwork2.util.finder.ClassFinderFactory;
+import com.opensymphony.xwork2.util.finder.DefaultClassFinder;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.Test;
@@ -113,6 +114,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private boolean eagerLoading = false;
 
     private FileManager fileManager;
+    private ClassFinderFactory classFinderFactory;
 
     /**
      * Constructs actions based on a list of packages.
@@ -303,6 +305,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
+    @Inject(required = false)
+    public void setClassFinderFactory(ClassFinderFactory classFinderFactory) {
+        this.classFinderFactory = classFinderFactory;
+    }
+
     protected void initReloadClassLoader() {
         //when the configuration is reloaded, a new classloader will be setup
         if (isReloadEnabled() && reloadingClassLoader == null)
@@ -387,7 +394,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 // specified by the user
                 Test<String> classPackageTest = getClassPackageTest();
                 List<URL> urls = readUrls();
-                ClassFinder finder = new ClassFinder(getClassLoaderInterface(), urls, EXTRACT_BASE_INTERFACES, fileProtocols, classPackageTest);
+                ClassFinder finder = buildClassFinder(classPackageTest, urls);
 
                 Test<ClassFinder.ClassInfo> test = getActionClassTest();
                 classes.addAll(finder.findClasses(test));
@@ -398,6 +405,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
 
         return classes;
+    }
+
+    protected ClassFinder buildClassFinder(Test<String> classPackageTest, List<URL> urls) {
+        if (classFinderFactory != null) {
+            LOG.trace("Using ClassFinderFactory to create instance of ClassFinder!");
+            return classFinderFactory.buildClassFinder(getClassLoaderInterface(), urls, EXTRACT_BASE_INTERFACES, fileProtocols, classPackageTest);
+        } else {
+            LOG.trace("ClassFinderFactory not defined, fallback to default ClassFinder implementation");
+            return new DefaultClassFinder(getClassLoaderInterface(), urls, EXTRACT_BASE_INTERFACES, fileProtocols, classPackageTest);
+        }
     }
 
     private List<URL> readUrls() throws IOException {
@@ -496,7 +513,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * goal is to avoid loading the class if we don't have to, the (actionSuffix
      * || implements Action) test will have to remain until later. See
      * {@link #getActionClassTest()} for the test performed on the loaded
-     * {@link ClassInfo} structure.
+     * {@link ClassFinder.ClassInfo} structure.
      *
      * @param className the name of the class to test
      * @return true if the specified class should be included in the
@@ -588,7 +605,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     /**
      * Construct a {@link Test} Object that determines if a specified class
-     * should be included in the package scan based on the full {@link ClassInfo}
+     * should be included in the package scan based on the full {@link ClassFinder.ClassInfo}
      * of the class. At this point, the class has been loaded, so it's ok to
      * perform tests such as checking annotations or looking at interfaces or
      * super-classes of the specified class.
@@ -1121,4 +1138,5 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         } else
             return false;
     }
+
 }

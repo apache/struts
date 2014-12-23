@@ -331,7 +331,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         Object ret = findInContext(expr);
         if (ret == null) {
             if (shouldLogMissingPropertyWarning(e)) {
-                LOG.warn("Could not find property [" + ((NoSuchPropertyException) e).getName() + "]");
+                LOG.warn("Could not find property [#0]!", e, expr);
             }
             if (throwExceptionOnFailure) {
                 throw new XWorkException(e);

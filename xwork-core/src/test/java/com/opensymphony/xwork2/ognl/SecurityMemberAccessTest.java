@@ -229,6 +229,32 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("Access to static isn't blocked!", actual);
     }
 
+    public void testBlockStaticAccessIfClassIsExcluded() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(Class.class)));
+
+        // when
+        Member method = Class.class.getMethod("getClassLoader");
+        boolean actual = sma.isAccessible(context, Class.class, method, null);
+
+        // then
+        assertFalse("Access to static method of excluded class isn't blocked!", actual);
+    }
+
+    public void testAllowStaticAccessIfClassIsNotExcluded() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(ClassLoader.class)));
+
+        // when
+        Member method = Class.class.getMethod("getClassLoader");
+        boolean actual = sma.isAccessible(context, Class.class, method, null);
+
+        // then
+        assertTrue("Invalid test! Access to static method of excluded class is blocked!", actual);
+    }
+
 }
 
 class FooBar implements FooBarInterface {

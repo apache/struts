@@ -20,7 +20,6 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import ognl.DefaultMemberAccess;
 
 import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Map;
@@ -67,7 +66,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Support for accessing static methods is deprecated! Please refactor your application!");
             }
-            targetClass = member.getDeclaringClass();
+            if (!isClassExcluded(member.getDeclaringClass())) {
+                targetClass = member.getDeclaringClass();
+            }
         }
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
@@ -77,9 +78,16 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
         }
 
-        if (isClassExcluded(targetClass, memberClass)) {
+        if (isClassExcluded(targetClass)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Target class [#0] or declaring class of member type [#1] are excluded!", target, member);
+                LOG.warn("Target class [#0] is excluded!", target);
+            }
+            return false;
+        }
+
+        if (isClassExcluded(memberClass)) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Declaring class of member type [#0] is excluded!", member);
             }
             return false;
         }
@@ -128,12 +136,12 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         return false;
     }
 
-    protected boolean isClassExcluded(Class<?> targetClass, Class<?> declaringClass) {
-        if (targetClass == Object.class || declaringClass == Object.class) {
+    protected boolean isClassExcluded(Class<?> clazz) {
+        if (clazz == Object.class) {
             return true;
         }
         for (Class<?> excludedClass : excludedClasses) {
-            if (targetClass.isAssignableFrom(excludedClass) || declaringClass.isAssignableFrom(excludedClass)) {
+            if (clazz.isAssignableFrom(excludedClass)) {
                 return true;
             }
         }

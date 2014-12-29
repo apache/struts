@@ -87,8 +87,8 @@ public class JSONInterceptor extends AbstractInterceptor {
         }
 
         Object rootObject = null;
+        final ValueStack stack = invocation.getStack();
         if (this.root != null) {
-            ValueStack stack = invocation.getStack();
             rootObject = stack.findValue(this.root);
 
             if (rootObject == null) {
@@ -99,6 +99,26 @@ public class JSONInterceptor extends AbstractInterceptor {
         if ((contentType != null) && contentType.equalsIgnoreCase("application/json")) {
             // load JSON object
             Object obj = JSONUtil.deserialize(request.getReader());
+
+            // JSON array (this.root cannot be null in this case)
+            if(obj instanceof List && this.root != null) {
+                String mapKey = this.root;
+                rootObject = null;
+
+                if(this.root.indexOf('.') != -1) {
+                    mapKey = this.root.substring(this.root.lastIndexOf('.') + 1);
+
+                    rootObject = stack.findValue(this.root.substring(0, this.root.lastIndexOf('.')));
+                    if (rootObject == null) {
+                        throw new RuntimeException("JSON array: Invalid root expression: '" + this.root + "'.");
+                    }
+                }
+
+                // create a map with a list inside
+                Map m = new HashMap();
+                m.put(mapKey, new ArrayList((List) obj));
+                obj = m;
+            }
 
             if (obj instanceof Map) {
                 Map json = (Map) obj;

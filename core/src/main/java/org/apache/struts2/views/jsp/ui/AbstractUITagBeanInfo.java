@@ -45,15 +45,20 @@ public class AbstractUITagBeanInfo extends SimpleBeanInfo {
             List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
 
             // Add the tricky one first
-            Method setter = AbstractUITag.class.getMethod("setCssClass", String.class);
-            descriptors.add(new PropertyDescriptor("class", null, setter));
-            descriptors.add(new PropertyDescriptor("cssClass", null, setter));
+            Method classSetter = AbstractUITag.class.getMethod("setCssClass", String.class);
+            Method styleSetter = AbstractUITag.class.getMethod("setCssStyle", String.class);
+
+            descriptors.add(new PropertyDescriptor("class", null, classSetter));
+            descriptors.add(new PropertyDescriptor("cssClass", null, classSetter));
+
+            descriptors.add(new PropertyDescriptor("style", null, styleSetter));
+            descriptors.add(new PropertyDescriptor("cssStyle", null, styleSetter));
 
             for (Field field : AbstractUITag.class.getDeclaredFields()) {
                 String fieldName = field.getName();
                 if (!"dynamicAttributes".equals(fieldName)) {
                     String setterName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-                    setter = AbstractUITag.class.getMethod(setterName, String.class);
+                    Method setter = AbstractUITag.class.getMethod(setterName, String.class);
                     descriptors.add(new PropertyDescriptor(fieldName, null, setter));
                 }
             }

@@ -362,7 +362,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
         boolean result = true;
         for (Object obj : values) {
-            if (isExcluded(obj.toString())) {
+            if (isExcluded(String.valueOf(obj))) {
                 result = false;
             }
         }

@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.3.21-SNAPSHOT</version>
+        <version>2.3.22-SNAPSHOT</version>
     </parent>
     <artifactId>struts2-core</artifactId>
     <packaging>jar</packaging>
@@ -75,28 +75,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>rat-maven-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>pom.xml</include>
-                        <include>src/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
-                        <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
-                        <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
-                        <exclude>src/site/resources/tags/**</exclude>
-                        <exclude>src/main/resources/*LICENSE.txt</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <profiles>
         <profile>

@@ -63,6 +63,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     Map<Object, Object> overrides;
     transient OgnlUtil ognlUtil;
     transient SecurityMemberAccess securityMemberAccess;
+    private transient XWorkConverter converter;
 
     private boolean devMode;
     private boolean logMissingProperties;
@@ -330,7 +331,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         Object ret = findInContext(expr);
         if (ret == null) {
             if (shouldLogMissingPropertyWarning(e)) {
-                LOG.warn("Could not find property [" + ((NoSuchPropertyException) e).getName() + "]");
+                LOG.warn("Could not find property [#0]!", e, expr);
             }
             if (throwExceptionOnFailure) {
                 throw new XWorkException(e);
@@ -351,6 +352,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
             value = getValue(expr, asType);
             if (value == null) {
                 value = findInContext(expr);
+                return converter.convertValue(getContext(), value, asType);
             }
         } finally {
             context.remove(THROW_EXCEPTION_ON_FAILURE);
@@ -473,4 +475,8 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         securityMemberAccess.setExcludeProperties(excludeProperties);
     }
 
+    @Inject
+    public void setXWorkConverter(final XWorkConverter converter) {
+        this.converter = converter;
+    }
 }

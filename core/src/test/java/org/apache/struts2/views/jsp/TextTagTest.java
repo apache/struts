@@ -115,7 +115,9 @@ public class TextTagTest extends AbstractTagTest {
         params.add(param2);
         params.add(param3);
 
-        String expected = MessageFormat.format(pattern, params.toArray());
+        MessageFormat format = new MessageFormat(pattern, ActionContext.getContext().getLocale());
+        String expected = format.format(params.toArray());
+
         tag.setName(key);
         tag.doStartTag();
         ((Text) tag.component).addParameter(param1);

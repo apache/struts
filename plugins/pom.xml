@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.3.21-SNAPSHOT</version>
+        <version>2.3.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-plugins</artifactId>
@@ -34,33 +34,34 @@
     <name>Struts Plugins</name>
 
     <modules>
+        <module>cdi</module>
         <module>codebehind</module>
-        <module>convention</module>
         <module>config-browser</module>
-        <module>javatemplates</module>
+        <module>convention</module>
+        <module>dojo</module>
+        <module>dwr</module>
+        <module>embeddedjsp</module>
+        <module>gxp</module>
         <module>jasperreports</module>
+        <module>java8-support</module>
+        <module>javatemplates</module>
         <module>jfreechart</module>
         <module>jsf</module>
+        <module>json</module>
+        <module>junit</module>
+        <module>osgi</module>
+        <module>oval</module>
         <module>pell-multipart</module>
         <module>plexus</module>
+        <module>portlet</module>
+        <module>portlet-tiles</module>
+        <module>rest</module>
         <module>sitegraph</module>
         <module>sitemesh</module>
         <module>spring</module>
         <module>struts1</module>
-        <module>tiles</module>
-        <module>dojo</module>
-        <module>rest</module>
-        <module>portlet</module>
-        <module>portlet-tiles</module>
-        <module>junit</module>
         <module>testng</module>
-        <module>dwr</module>
-        <module>oval</module>
-        <module>osgi</module>
-        <module>json</module>
-        <module>embeddedjsp</module>
-        <module>gxp</module>
-        <module>cdi</module>
+        <module>tiles</module>
         <module>tiles3</module>
     </modules>
 

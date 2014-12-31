@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -37,7 +38,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -174,14 +174,18 @@ public class CookieInterceptor extends AbstractInterceptor {
     private Set<String> cookiesNameSet = Collections.emptySet();
     private Set<String> cookiesValueSet = Collections.emptySet();
 
-    // Allowed names of cookies
-    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PATTERN, Pattern.CASE_INSENSITIVE);
-
     private ExcludedPatternsChecker excludedPatternsChecker;
+    private AcceptedPatternsChecker acceptedPatternsChecker;
 
     @Inject
     public void setExcludedPatternsChecker(ExcludedPatternsChecker excludedPatternsChecker) {
         this.excludedPatternsChecker = excludedPatternsChecker;
+    }
+
+    @Inject
+    public void setAcceptedPatternsChecker(AcceptedPatternsChecker acceptedPatternsChecker) {
+        this.acceptedPatternsChecker = acceptedPatternsChecker;
+        this.acceptedPatternsChecker.setAcceptedPatterns(ACCEPTED_PATTERN);
     }
 
     /**
@@ -208,12 +212,13 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Set the <code>acceptCookieNames</code> pattern of allowed names of cookies to protect against remote command execution vulnerability
+     * Set the <code>acceptCookieNames</code> pattern of allowed names of cookies
+     * to protect against remote command execution vulnerability.
      *
-     * @param pattern used to check cookie name against
+     * @param commaDelimitedPattern is used to check cookie name against, can set of comma delimited patterns
      */
-    public void setAcceptCookieNames(String pattern) {
-        acceptedPattern = Pattern.compile(pattern);
+    public void setAcceptCookieNames(String commaDelimitedPattern) {
+        acceptedPatternsChecker.setAcceptedPatterns(commaDelimitedPattern);
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -280,17 +285,17 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @return true|false
      */
     protected boolean isAccepted(String name) {
-        boolean matches = acceptedPattern.matcher(name).matches();
-        if (matches) {
+        AcceptedPatternsChecker.IsAccepted accepted = acceptedPatternsChecker.isAccepted(name);
+        if (accepted.isAccepted()) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Cookie [#0] matches acceptedPattern [#1]", name, ACCEPTED_PATTERN);
+                LOG.trace("Cookie [#0] matches acceptedPattern [#1]", name, accepted.getAcceptedPattern());
             }
-        } else {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Cookie [#0] doesn't match acceptedPattern [#1]", name, ACCEPTED_PATTERN);
-            }
+            return true;
         }
-        return matches;
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Cookie [#0] doesn't match acceptedPattern [#1]", name, accepted.getAcceptedPattern());
+        }
+        return false;
     }
 
     /**

@@ -44,7 +44,7 @@ function compile(ptn) {
     	if (ptn == '' || !window.RegExp) {
             return function(val) { return val == ptn; }
         } else {
-            var reg = new RegExp("\\b" + ptn);
+            var reg = new RegExp("^" + ptn + "$");
             return function (val) { 
                 if (val == '') { // ignore empty option added by template 
                 	return true;

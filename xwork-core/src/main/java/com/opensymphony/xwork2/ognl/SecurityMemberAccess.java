@@ -128,8 +128,14 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     protected boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
+        if (LOG.isWarnEnabled() && (targetPackage == null || memberPackage == null)) {
+            LOG.warn("The use of the default (unnamed) package is discouraged!");
+        }
+        
+        final String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
+        final String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
         for (Pattern pattern : excludedPackageNamePatterns) {
-            if (pattern.matcher(targetPackage.getName()).matches() || pattern.matcher(memberPackage.getName()).matches()) {
+            if (pattern.matcher(targetPackageName).matches() || pattern.matcher(memberPackageName).matches()) {
                 return true;
             }
         }

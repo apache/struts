@@ -190,6 +190,36 @@ public class SecurityMemberAccessTest extends TestCase {
         // then
         assertFalse("stringField is accessible!", actual);
     }
+    
+    public void testDefaultPackageExclusion() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        Set<Pattern> excluded = new HashSet<Pattern>();
+        excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
+        sma.setExcludedPackageNamePatterns(excluded);
+        
+        // when
+        boolean actual = sma.isPackageExcluded(null, null);
+
+        // then
+        assertFalse("default package is excluded!", actual);
+    }
+    
+    public void testDefaultPackageExclusion2() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        Set<Pattern> excluded = new HashSet<Pattern>();
+        excluded.add(Pattern.compile("^$"));
+        sma.setExcludedPackageNamePatterns(excluded);
+        
+        // when
+        boolean actual = sma.isPackageExcluded(null, null);
+
+        // then
+        assertTrue("default package isn't excluded!", actual);
+    }
 
     public void testAccessEnum() throws Exception {
         // given

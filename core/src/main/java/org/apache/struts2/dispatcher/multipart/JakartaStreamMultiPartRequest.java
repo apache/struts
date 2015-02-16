@@ -97,7 +97,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      *
      * @param bufferSize
      */
-    @Inject(StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE)
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, required = false)
     public void setBufferSize(String bufferSize) {
         this.bufferSize = Integer.parseInt(bufferSize);
     }

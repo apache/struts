@@ -31,12 +31,12 @@ import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.util.ContentTypeMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -195,11 +195,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     protected Set<String> allowedTypesSet = Collections.emptySet();
     protected Set<String> allowedExtensionsSet = Collections.emptySet();
 
-    private PatternMatcher matcher;
+    private ContentTypeMatcher matcher;
     private Container container;
 
     @Inject
-    public void setMatcher(PatternMatcher matcher) {
+    public void setMatcher(ContentTypeMatcher matcher) {
         this.matcher = matcher;
     }
 

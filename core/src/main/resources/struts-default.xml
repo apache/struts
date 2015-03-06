@@ -74,6 +74,8 @@
     <bean type="com.opensymphony.xwork2.util.PatternMatcher" name="namedVariable" class="com.opensymphony.xwork2.util.NamedVariablePatternMatcher"/>
     <bean type="com.opensymphony.xwork2.util.PatternMatcher" name="regex" class="org.apache.struts2.util.RegexPatternMatcher"/>
 
+    <bean type="org.apache.struts2.util.ContentTypeMatcher" name="struts" class="org.apache.struts2.util.DefaultContentTypeMatcher"/>
+
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" class="org.apache.struts2.dispatcher.mapper.DefaultActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="composite" class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful" class="org.apache.struts2.dispatcher.mapper.RestfulActionMapper" />

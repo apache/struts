@@ -285,11 +285,27 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("Invalid test! Access to static method of excluded class is blocked!", actual);
     }
 
+    public void testAccessPrimitiveInt() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        String propertyName = "intField";
+        Member member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue(accessible);
+    }
+
 }
 
 class FooBar implements FooBarInterface {
 
     private String stringField;
+
+    private int intField;
 
     public String getStringField() {
         return stringField;
@@ -312,6 +328,13 @@ class FooBar implements FooBarInterface {
         return 1;
     }
 
+    public int getIntField() {
+        return intField;
+    }
+
+    public void setIntField(int intField) {
+        this.intField = intField;
+    }
 }
 
 interface FooInterface {

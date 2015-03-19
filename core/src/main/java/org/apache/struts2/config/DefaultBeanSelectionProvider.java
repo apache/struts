@@ -67,6 +67,7 @@ import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts2.util.ContentTypeMatcher;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.views.velocity.VelocityManager;
@@ -327,6 +328,12 @@ import java.util.StringTokenizer;
  *     <td>request</td>
  *     <td>Used across different interceptors to check if given string matches one of the accepted patterns</td>
  *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.util.ContentTypeMatcher</td>
+ *     <td>struts.contentTypeMatcher</td>
+ *     <td>singleton</td>
+ *     <td>Matches content type of uploaded files (since 2.3.22)</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
@@ -391,6 +398,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(ReflectionProvider.class, StrutsConstants.STRUTS_REFLECTIONPROVIDER, builder, props);
         alias(ReflectionContextFactory.class, StrutsConstants.STRUTS_REFLECTIONCONTEXTFACTORY, builder, props);
         alias(PatternMatcher.class, StrutsConstants.STRUTS_PATTERNMATCHER, builder, props);
+        alias(ContentTypeMatcher.class, StrutsConstants.STRUTS_CONTENT_TYPE_MATCHER, builder, props);
         alias(StaticContentLoader.class, StrutsConstants.STRUTS_STATIC_CONTENT_LOADER, builder, props);
         alias(UnknownHandlerManager.class, StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, builder, props);
         alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);

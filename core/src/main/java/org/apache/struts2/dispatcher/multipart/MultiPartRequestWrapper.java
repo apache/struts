@@ -21,6 +21,7 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -71,8 +72,10 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param saveDir Target directory for any files that we save
      * @param provider
      */
-    public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir, LocaleProvider provider) {
-        super(request);
+    public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request,
+                                   String saveDir, LocaleProvider provider,
+                                   boolean disableRequestAttributeValueStackLookup) {
+        super(request, disableRequestAttributeValueStackLookup);
         errors = new ArrayList<String>();
         multi = multiPartRequest;
         defaultLocale = provider.getLocale();
@@ -88,6 +91,10 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
             }
             addError(buildErrorMessage(e, new Object[] {e.getMessage()}));
         } 
+    }
+
+    public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir, LocaleProvider provider) {
+        this(multiPartRequest, request, saveDir, provider, false);
     }
 
     protected void setLocale(HttpServletRequest request) {

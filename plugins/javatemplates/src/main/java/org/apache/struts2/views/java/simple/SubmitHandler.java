@@ -53,7 +53,9 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
                     .addIfExists("alt", params.get("label"))
                     .addIfExists("id", params.get("id"))
                     .addIfExists("class", params.get("cssClass"))
-                    .addIfExists("style", params.get("cssStyle"));
+                    .addIfExists("style", params.get("cssStyle"))
+                    .addIfExists("title", params.get("title"));
+
             start("input", attrs);
         } else {
             attrs.addIfExists("name", params.get("name"))

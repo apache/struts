@@ -31,8 +31,11 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Generic test setup methods to be used with any unit testing framework. 
@@ -51,7 +54,7 @@ public class StrutsTestCaseHelper {
         if (params == null) {
             params = new HashMap<String,String>();
         }
-        Dispatcher du = new Dispatcher(ctx, params);
+        Dispatcher du = new DispatcherWrapper(ctx, params);
         du.init();
         Dispatcher.setInstance(du);
 
@@ -68,4 +71,29 @@ public class StrutsTestCaseHelper {
         Dispatcher.setInstance(null);
         ActionContext.setContext(null);
     }
+
+    private static class DispatcherWrapper extends Dispatcher {
+
+        public DispatcherWrapper(ServletContext ctx, Map<String, String> params) {
+            super(ctx, params);
+            super.setDispatcherErrorHandler(new MockErrorHandler());
+        }
+
+        @Override
+        public void setDispatcherErrorHandler(DispatcherErrorHandler errorHandler) {
+            // ignore
+        }
+    }
+
+    private static class MockErrorHandler implements DispatcherErrorHandler {
+        public void init(ServletContext ctx) {
+            // ignore
+        }
+
+        public void handleError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
+            System.out.println("Dispatcher#sendError: " + code);
+            e.printStackTrace(System.out);
+        }
+    }
+
 }

@@ -305,7 +305,18 @@ public class JSONWriter {
             } catch (Exception ex) {
                 LOG.debug(ex.getMessage(), ex);
             }
-        } else {
+            
+        //in hibernate4.3.7,because javassist3.18.1's class name generate rule is '_$$_jvst'+...
+        } else if(clazz.getName().contains("$$_jvst")){
+            try {
+                baseAccessor = Class.forName(
+                        clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
+                        .getMethod(accessor.getName(), accessor.getParameterTypes());
+            } catch (Exception ex) {
+                LOG.debug(ex.getMessage(), ex);
+            }
+        }
+        else {
             return accessor;
         }
         return baseAccessor;

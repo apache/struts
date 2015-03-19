@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<#--
 /*
  * $Id$
  *
@@ -21,19 +20,4 @@
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.apache.struts</groupId>
-        <artifactId>struts2-plugins</artifactId>
-        <version>2.3.23-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>struts2-config-browser-plugin</artifactId>
-    <packaging>jar</packaging>
-    <name>Struts 2 Configuration Browser Plugin</name>
-
-    <properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-</project>
+<#include "/${parameters.templateDir}/simple/hidden.ftl" />

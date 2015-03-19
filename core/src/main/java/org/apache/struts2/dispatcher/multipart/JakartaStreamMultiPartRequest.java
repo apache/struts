@@ -97,7 +97,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      *
      * @param bufferSize
      */
-    @Inject(StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE)
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, required = false)
     public void setBufferSize(String bufferSize) {
         this.bufferSize = Integer.parseInt(bufferSize);
     }
@@ -357,7 +357,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     private void addFileSkippedError(String fileName, HttpServletRequest request) {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
         FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), maxSize);
-        String message = buildMessage(exception, new Object[]{fileName, getRequestSize(request), maxSize});
+        String message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), maxSize});
         if (!errors.contains(message))
             errors.add(message);
     }

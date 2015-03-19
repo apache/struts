@@ -110,6 +110,9 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     /** The default parameter */
     public static final String DEFAULT_PARAM = "location";
 
+    /** use UTF-8 as this is the recommended encoding by W3C to avoid incompatibilities. */
+    public static final String DEFAULT_URL_ENCODING = "UTF-8";
+
     private boolean parse;
     private boolean encode;
     private String location;
@@ -240,9 +243,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
             if (encode) {
                 if (parsedValue != null) {
                     try {
-                        // use UTF-8 as this is the recommended encoding by W3C to
-                        // avoid incompatibilities.
-                        return URLEncoder.encode(parsedValue, "UTF-8");
+                        return URLEncoder.encode(parsedValue, DEFAULT_URL_ENCODING);
                     }
                     catch(UnsupportedEncodingException e) {
                         if (LOG.isWarnEnabled()) {

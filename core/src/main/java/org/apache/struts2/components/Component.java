@@ -69,6 +69,7 @@ public class Component {
      */
     protected static ConcurrentMap<Class<?>, Collection<String>> standardAttributesMap = new ConcurrentHashMap<Class<?>, Collection<String>>();
 
+    protected boolean devMode = false;
     protected ValueStack stack;
     protected Map parameters;
     protected ActionMapper actionMapper;
@@ -97,7 +98,12 @@ public class Component {
 
         return name.substring(dot + 1).toLowerCase();
     }
-    
+
+    @Inject(value = StrutsConstants.STRUTS_DEVMODE, required = false)
+    public void setDevMode(String devMode) {
+        this.devMode = Boolean.parseBoolean(devMode);
+    }
+
     @Inject
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;

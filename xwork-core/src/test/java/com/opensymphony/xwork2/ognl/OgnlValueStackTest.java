@@ -94,9 +94,12 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testValuesFromContextAreConverted() {
-        final OgnlValueStack vs = createValueStack();
+        testValuesFromContextAreConverted("dogName");
+        testValuesFromContextAreConverted("dog.name");
+    }
 
-        final String propertyName = "dogName";
+    private void testValuesFromContextAreConverted(String propertyName) {
+        final OgnlValueStack vs = createValueStack();
         final String propertyValue = "Rover";
         vs.getContext().put(propertyName, new String[]{propertyValue});
 
@@ -104,9 +107,12 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testNullValueFromContextGetsConverted() {
-        final OgnlValueStack vs = createValueStack();
+        testNullValueFromContextGetsConverted("dogName");
+        testNullValueFromContextGetsConverted("dog.name");
+    }
 
-        final String propertyName = "dogName";
+    private void testNullValueFromContextGetsConverted(String propertyName) {
+        final OgnlValueStack vs = createValueStack();
         final String propertyValue = null;
         vs.getContext().put(propertyName, propertyValue);
 

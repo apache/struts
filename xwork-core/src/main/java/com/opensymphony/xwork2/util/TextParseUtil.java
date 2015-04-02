@@ -212,13 +212,14 @@ public class TextParseUtil {
 
         Object result = parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
 
-        XWorkConverter conv = ((Container)context.get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
-
         Collection<String> resultCol;
         if (result instanceof Collection) {
             @SuppressWarnings("unchecked")
             Collection<Object> casted = (Collection<Object>)result;
-            resultCol = new ArrayList<String>(casted.size());
+            resultCol = new ArrayList<String>();
+
+            XWorkConverter conv = ((Container)context.get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
+
             for (Object element : casted) {
                 String stringElement = (String)conv.convertValue(context, element, String.class);
                 if (shallBeIncluded(stringElement, excludeEmptyElements)) {
@@ -229,13 +230,10 @@ public class TextParseUtil {
                 }
             }
         } else {
-            resultCol = new ArrayList<String>(1);
-            String stringResult = (String)conv.convertValue(context, result, String.class);
-            if (shallBeIncluded(stringResult, excludeEmptyElements)) {
-                if (evaluator != null) {
-                    stringResult = evaluator.evaluate(stringResult).toString();
-                }
-                resultCol.add(stringResult);
+            resultCol = new ArrayList<String>();
+            String resultStr = translateVariables(expression, stack, evaluator);
+            if (shallBeIncluded(resultStr, excludeEmptyElements)) {
+                resultCol.add(resultStr);
             }
         }
 

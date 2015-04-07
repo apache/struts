@@ -63,8 +63,8 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         Class memberClass = member.getDeclaringClass();
 
         if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Support for accessing static methods is deprecated! Please refactor your application!");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Support for accessing static methods [target: #0, member: #1, property: #2] is deprecated!", target, member, propertyName);
             }
             if (!isClassExcluded(member.getDeclaringClass())) {
                 targetClass = member.getDeclaringClass();

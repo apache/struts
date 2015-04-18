@@ -2,6 +2,8 @@ package org.demo.rest.example;
 
 import java.util.Collection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.rest.DefaultHttpHeaders;
 import org.apache.struts2.rest.HttpHeaders;
 import org.apache.struts2.convention.annotation.Results;
@@ -15,7 +17,9 @@ import com.opensymphony.xwork2.ValidationAwareSupport;
     @Result(name="success", type="redirectAction", params = {"actionName" , "orders"})
 })
 public class OrdersController extends ValidationAwareSupport implements ModelDriven<Object>, Validateable{
-    
+
+    private static final Logger log = LogManager.getLogger(OrdersController.class);
+
     private Order model = new Order();
     private String id;
     private Collection<Order> list;
@@ -51,6 +55,7 @@ public class OrdersController extends ValidationAwareSupport implements ModelDri
 
     // DELETE /orders/1
     public String destroy() {
+        log.debug("Delete order with id: {}", id);
         ordersService.remove(id);
         addActionMessage("Order removed successfully");
         return "success";
@@ -58,6 +63,7 @@ public class OrdersController extends ValidationAwareSupport implements ModelDri
 
     // POST /orders
     public HttpHeaders create() {
+        log.debug("Create new order {}", model);
         ordersService.save(model);
         addActionMessage("New order created successfully");
         return new DefaultHttpHeaders("success")

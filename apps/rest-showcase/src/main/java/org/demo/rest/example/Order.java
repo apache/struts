@@ -1,5 +1,9 @@
 package org.demo.rest.example;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class Order {
     String id;
     String clientName;
@@ -33,41 +37,39 @@ public class Order {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + amount;
-        result = prime * result
-                + ((clientName == null) ? 0 : clientName.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Order rhs = (Order) obj;
+        return new EqualsBuilder()
+                .append(this.id, rhs.id)
+                .append(this.clientName, rhs.clientName)
+                .append(this.amount, rhs.amount)
+                .isEquals();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final Order other = (Order) obj;
-        if (amount != other.amount)
-            return false;
-        if (clientName == null) {
-            if (other.clientName != null)
-                return false;
-        } else if (!clientName.equals(other.clientName))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(clientName)
+                .append(amount)
+                .toHashCode();
     }
-    
-    
-    
-    
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("clientName", clientName)
+                .append("amount", amount)
+                .toString();
+    }
 }

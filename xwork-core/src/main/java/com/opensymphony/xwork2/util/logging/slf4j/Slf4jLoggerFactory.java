@@ -20,6 +20,11 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Creates slf4j-logging-backed loggers
+ *
+ * You can use the same to explicit tell the framework which implementation to use and don't depend on class discovery:
+ * <pre>
+ *   -Dxwork.loggerFactory=com.opensymphony.xwork2.util.logging.slf4j.Slf4jLoggerFactory
+ * </pre>
  */
 public class Slf4jLoggerFactory extends LoggerFactory {
 

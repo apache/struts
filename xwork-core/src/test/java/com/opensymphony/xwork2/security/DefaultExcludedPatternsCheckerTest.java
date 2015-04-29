@@ -53,7 +53,8 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
             }
         };
 
-        ExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();
+        DefaultExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();
+        checker.setAdditionalExcludePatterns(".*(^|\\.|\\[|'|\")class(\\.|\\[|'|\").*");
 
         for (String param : params) {
             // when
@@ -71,6 +72,8 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
         properParams.add("form.eventClass");
         properParams.add("form[\"eventClass\"]");
         properParams.add("form['eventClass']");
+        properParams.add("class.super@demo.com");
+        properParams.add("super.class@demo.com");
 
         ExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();
 

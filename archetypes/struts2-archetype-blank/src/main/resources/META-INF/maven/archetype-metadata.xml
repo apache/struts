@@ -22,13 +22,6 @@
             </includes>
         </fileSet>
 
-        <fileSet filtered="false" packaged="false">
-            <directory>src/main/resources</directory>
-            <includes>
-                <include>log4j.properties</include>
-            </includes>
-        </fileSet>
-
         <fileSet filtered="false" packaged="true">
             <directory>src/main/resources</directory>
             <includes>
@@ -40,6 +33,7 @@
             <directory>src/main/resources</directory>
             <includes>
                 <include>**/struts.xml</include>
+                <include>**/log4j2.xml</include>
                 <include>**/example.xml</include>
             </includes>
         </fileSet>

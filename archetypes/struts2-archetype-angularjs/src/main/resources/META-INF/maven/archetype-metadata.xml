@@ -30,7 +30,7 @@
             </includes>
         </fileSet>
 
-        <fileSet filtered="false" packaged="false">
+        <fileSet filtered="true" packaged="false">
             <directory>src/main/resources</directory>
             <includes>
                 <include>**/*.xml</include>

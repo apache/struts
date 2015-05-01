@@ -24,15 +24,13 @@ angularStrutsApp.controller('HomeController', function ($scope) {
     $scope.name = "Sunshine";
 });
 
-angularStrutsApp.controller('ApacheProjectsController', function ($scope, $http) {
+angularStrutsApp.controller('ApacheProjectsController', function ($scope, $http, DataService) {
     this.init = function() {
-        $http({method: 'GET', url: 'projects'}).
-            success(function(data) {
-                $scope.projects = data.projectNames;
-            }).
-            error(function(data, status, headers, config) {
-                alert("Could not receive project names");
-            });
+        DataService.getProjects().then(function(data) {
+            $scope.projects = data.data.projectNames;
+        }, function(data) {
+            console.log('Could not receive project names.')
+        });
     };
 
     this.init();

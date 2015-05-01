@@ -22,6 +22,7 @@
 <script src="<s:url value="js/lib/angular/angular-route.min.js" />"></script>
 <script src="<s:url value="js/bootstrap.js" />"></script>
 <script src="<s:url value="js/directives.js" />"></script>
+<script src="<s:url value="js/services.js" />"></script>
 <script src="<s:url value="js/controllers.js" />"></script>
 </body>
 </html>

@@ -90,6 +90,7 @@
         <asm.version>3.3</asm.version>
         <asm5.version>5.0.2</asm5.version>
         <tiles.version>2.0.6</tiles.version>
+        <log4j2.version>2.2</log4j2.version>
 
         <!-- SCM Site Configuration -->
         <site.mainDirectory>${project.build.directory}/site</site.mainDirectory>
@@ -868,7 +869,7 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
-                <version>2.2</version>
+                <version>${log4j2.version}</version>
             </dependency>
 
             <dependency>

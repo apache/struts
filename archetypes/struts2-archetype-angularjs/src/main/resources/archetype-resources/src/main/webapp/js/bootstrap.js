@@ -21,8 +21,11 @@
 
 var angularStrutsApp = angular.module('angularStrutsApp', ['ngRoute']);
 
-angularStrutsApp.config(['$routeProvider',
-    function($routeProvider) {
+angularStrutsApp.config(['$routeProvider', '$locationProvider',
+    function($routeProvider, $locationProvider) {
+
+        $locationProvider.html5Mode(true).hashPrefix('!');
+
         $routeProvider.when('/projects', {
             templateUrl: 'partials/projects.html',
             controller: 'ApacheProjectsController'

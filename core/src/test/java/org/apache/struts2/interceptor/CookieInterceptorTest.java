@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.easymock.MockControl;
@@ -370,7 +371,9 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
                 return accepted;
             }
         };
-        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        DefaultExcludedPatternsChecker excludedPatternsChecker = new DefaultExcludedPatternsChecker();
+        excludedPatternsChecker.setAdditionalExcludePatterns(".*(^|\\.|\\[|'|\")class(\\.|\\[|'|\").*");
+        interceptor.setExcludedPatternsChecker(excludedPatternsChecker);
         interceptor.setCookiesName("*");
 
         MockActionInvocation invocation = new MockActionInvocation();

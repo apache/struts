@@ -4,8 +4,8 @@ var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "
 $provide.value("$locale", {
   "DATETIME_FORMATS": {
     "AMPMS": [
-      "AM",
-      "PM"
+      "a.m.",
+      "p.m."
     ],
     "DAY": [
       "s\u00f8ndag",
@@ -15,6 +15,14 @@ $provide.value("$locale", {
       "torsdag",
       "fredag",
       "l\u00f8rdag"
+    ],
+    "ERANAMES": [
+      "f.Kr.",
+      "e.Kr."
+    ],
+    "ERAS": [
+      "f.Kr.",
+      "e.Kr."
     ],
     "MONTH": [
       "januar",
@@ -42,11 +50,11 @@ $provide.value("$locale", {
     "SHORTMONTH": [
       "jan.",
       "feb.",
-      "mars",
+      "mar.",
       "apr.",
       "mai",
-      "juni",
-      "juli",
+      "jun.",
+      "jul.",
       "aug.",
       "sep.",
       "okt.",
@@ -55,12 +63,12 @@ $provide.value("$locale", {
     ],
     "fullDate": "EEEE d. MMMM y",
     "longDate": "d. MMMM y",
-    "medium": "d. MMM y HH:mm:ss",
+    "medium": "d. MMM y HH.mm.ss",
     "mediumDate": "d. MMM y",
-    "mediumTime": "HH:mm:ss",
-    "short": "dd.MM.yy HH:mm",
-    "shortDate": "dd.MM.yy",
-    "shortTime": "HH:mm"
+    "mediumTime": "HH.mm.ss",
+    "short": "dd.MM.y HH.mm",
+    "shortDate": "dd.MM.y",
+    "shortTime": "HH.mm"
   },
   "NUMBER_FORMATS": {
     "CURRENCY_SYM": "kr",
@@ -70,7 +78,6 @@ $provide.value("$locale", {
       {
         "gSize": 3,
         "lgSize": 3,
-        "macFrac": 0,
         "maxFrac": 3,
         "minFrac": 0,
         "minInt": 1,
@@ -82,7 +89,6 @@ $provide.value("$locale", {
       {
         "gSize": 3,
         "lgSize": 3,
-        "macFrac": 0,
         "maxFrac": 2,
         "minFrac": 2,
         "minInt": 1,
@@ -94,6 +100,6 @@ $provide.value("$locale", {
     ]
   },
   "id": "no",
-  "pluralCat": function (n) {  if (n == 1) {   return PLURAL_CATEGORY.ONE;  }  return PLURAL_CATEGORY.OTHER;}
+  "pluralCat": function(n, opt_precision) {  if (n == 1) {    return PLURAL_CATEGORY.ONE;  }  return PLURAL_CATEGORY.OTHER;}
 });
 }]);

@@ -378,7 +378,9 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
                 return accepted;
             }
         };
-        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        DefaultExcludedPatternsChecker excludedPatternsChecker = new DefaultExcludedPatternsChecker();
+        excludedPatternsChecker.setAdditionalExcludePatterns(".*(^|\\.|\\[|'|\")class(\\.|\\[|'|\").*");
+        interceptor.setExcludedPatternsChecker(excludedPatternsChecker);
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
         interceptor.setCookiesName("*");
 

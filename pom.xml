@@ -9,7 +9,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>2.3.23</version>
+    <version>2.3.25-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/</url>
@@ -90,6 +90,7 @@
         <asm.version>3.3</asm.version>
         <asm5.version>5.0.2</asm5.version>
         <tiles.version>2.0.6</tiles.version>
+        <log4j2.version>2.2</log4j2.version>
 
         <!-- SCM Site Configuration -->
         <site.mainDirectory>${project.build.directory}/site</site.mainDirectory>
@@ -857,12 +858,18 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.2</version>
+                <version>1.7.12</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>1.7.2</version>
+                <version>1.7.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j2.version}</version>
             </dependency>
 
             <dependency>

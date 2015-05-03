@@ -9,5 +9,6 @@
 
   <constant name="struts.convention.default.parent.package" value="angularstruts"/>
   <package name="angularstruts" extends="json-default"></package>
+  <package name="data" extends="angularstruts" namespace="/data"></package>
 
 </struts>

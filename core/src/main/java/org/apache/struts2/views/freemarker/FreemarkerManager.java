@@ -328,7 +328,7 @@ public class FreemarkerManager {
      * @param servletContext
      */
     protected Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
-        Configuration configuration = new Configuration();
+        Configuration configuration = new Configuration(Configuration.VERSION_2_3_0);
 
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 

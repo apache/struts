@@ -434,7 +434,7 @@ public class Component {
     /**
      * Pushes this component's parameter Map as well as the component itself on to the stack
      * and then copies the supplied parameters over. Because the component's parameter Map is
-     * pushed before the component itself, any key-value pair that can't be assigned to componet
+     * pushed before the component itself, any key-value pair that can't be assigned to component
      * will be set in the parameters Map.
      *
      * @param params  the parameters to copy.
@@ -446,7 +446,15 @@ public class Component {
             for (Object o : params.entrySet()) {
                 Map.Entry entry = (Map.Entry) o;
                 String key = (String) entry.getKey();
-                stack.setValue(key, entry.getValue());
+
+                if (key.indexOf('-') >= 0) {
+                    // UI component attributes may contain hypens (e.g. data-ajax), but ognl
+                    // can't handle that, and there can't be a component property with a hypen
+                    // so into the parameters map it goes. See WW-4493
+                    parameters.put(key, entry.getValue());
+                } else {
+                    stack.setValue(key, entry.getValue());
+                }
             }
         } finally {
             stack.pop();

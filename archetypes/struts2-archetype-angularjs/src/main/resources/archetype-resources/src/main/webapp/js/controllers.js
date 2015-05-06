@@ -24,7 +24,7 @@ angularStrutsApp.controller('HomeController', function ($scope) {
     $scope.name = "Sunshine";
 });
 
-angularStrutsApp.controller('ApacheProjectsController', function ($scope, $http, DataService) {
+angularStrutsApp.controller('ApacheProjectsController', function ($scope, DataService) {
     this.init = function() {
         DataService.getProjects().then(function(data) {
             $scope.projects = data.data.projectNames;

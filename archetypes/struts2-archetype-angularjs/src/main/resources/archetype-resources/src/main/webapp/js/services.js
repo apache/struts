@@ -18,7 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-angularStrutsApp.factory('DataService', ['$http', '$q', function($http, $q) {
+angularStrutsApp.factory('DataService', ['$http', '$log', '$q', function($http, $log, $q) {
 
     var DataService = {
         urls : {
@@ -32,18 +32,19 @@ angularStrutsApp.factory('DataService', ['$http', '$q', function($http, $q) {
         }
         var def = $q.defer();
         if(method === 'GET') {
-            return $http.get(url).success(function(data) {
-                DataService.data = data;
+            $http.get(url).success(function(data) {
                 def.resolve(data);
-            }).error(function() {
-                def.reject("Failed to get data");
+            }).error(function(data, code) {
+                def.reject(data);
+                $log.error(data, code);
             });
         } else if(method === 'POST'){
             $http.post(url, model).success(function(data) {
                 DataService.data = data;
                 def.resolve(data);
-            }).error(function() {
-                def.reject("Failed to post data");
+            }).error(function(data, code) {
+                def.reject(data);
+                $log.error(data, code);
             });
         }
         return def.promise;

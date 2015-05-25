@@ -1,5 +1,4 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 <html>
 <head>
 	<s:if test="currentEmployee!=null">
@@ -35,7 +34,7 @@
 				<s:textfield label="Employee Id" name="currentEmployee.empId"/>
 				<s:textfield label="%{getText('employee.firstName')}" name="currentEmployee.firstName"/>
 				<s:textfield label="%{getText('employee.lastName')}" name="currentEmployee.lastName"/>
-				<sx:datetimepicker label="Birthdate" name="currentEmployee.birthDate"/>
+				<s:textfield type="date" label="Birthdate" name="currentEmployee.birthDate"/>
 				<s:textfield label="Salary" name="currentEmployee.salary" value="%{getText('format.number',{currentEmployee.salary})}" />
 				<s:checkbox fieldValue="true" label="Married" name="currentEmployee.married"/>
 				<s:combobox list="availablePositions" label="Position" name="currentEmployee.position"/>

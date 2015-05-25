@@ -8,7 +8,8 @@
     <Loggers>
         <Logger name="com.opensymphony.xwork2" level="info"/>
         <Logger name="org.apache.struts2" level="info"/>
-        <Root level="warn">
+        <Logger name="org.springframework" level="info"/>
+        <Root level="info">
             <AppenderRef ref="STDOUT"/>
         </Root>
     </Loggers>

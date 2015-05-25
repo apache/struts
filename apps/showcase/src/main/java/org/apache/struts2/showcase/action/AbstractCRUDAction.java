@@ -21,7 +21,8 @@
 package org.apache.struts2.showcase.action;
 
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.model.IdEntity;
 
@@ -34,7 +35,7 @@ import java.util.Collection;
 
 public abstract class AbstractCRUDAction extends ActionSupport {
 
-	private static final Logger log = Logger.getLogger(AbstractCRUDAction.class);
+	private static final Logger log = LogManager.getLogger(AbstractCRUDAction.class);
 
 	private Collection availableItems;
 	private String[] toDelete;

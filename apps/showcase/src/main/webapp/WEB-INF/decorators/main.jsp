@@ -82,10 +82,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <s:a value="/showcase.jsp" cssClass="brand">Struts2 Showcase</s:a>
+            <s:url var="home" action="showcase" namespace="/" includeContext="false" />
+            <s:a value="%{home}" cssClass="brand">Struts2 Showcase</s:a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li><s:a value="/showcase.jsp"><i class="icon-home"></i> Home</s:a></li>
+                    <li><s:a value="%{home}"><i class="icon-home"></i> Home</s:a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b
                                 class="caret"></b></a>
@@ -94,7 +95,8 @@
                                      includeParams="none">Action Chaining</s:a></li>
                             <li><s:a action="index" namespace="/config-browser"
                                      includeParams="none">Config Browser</s:a></li>
-                            <li><s:a value="/conversion/index.jsp">Conversion</s:a></li>
+                            <s:url var="conversion" action="index" namespace="/conversion" includeContext="false" />
+                            <li><s:a value="%{conversion}">Conversion</s:a></li>
                             <li><s:a value="/person/index.html">Person Manager ( by Conventions )</s:a></li>
                         </ul>
                     </li>

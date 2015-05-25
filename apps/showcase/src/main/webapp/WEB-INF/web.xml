@@ -40,12 +40,6 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-	
-    <listener>
-        <listener-class>
-          org.apache.myfaces.webapp.StartupServletContextListener
-        </listener-class>
-    </listener>
 
     <listener>
         <listener-class>
@@ -74,14 +68,7 @@
             <param-value>true</param-value>
         </init-param>
     </servlet>
-	
-	<!-- JavaServer Faces Servlet Configuration, not used directly -->
-  	<servlet>
-    	<servlet-name>faces</servlet-name>
-	    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-    	<load-on-startup>1</load-on-startup>
-  	</servlet>
-  		<servlet>
+	<servlet>
     	<servlet-name>JspSupportServlet</servlet-name>
     	<servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
     	<load-on-startup>1</load-on-startup>
@@ -107,13 +94,6 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
-
-  	<!-- JavaServer Faces Servlet Mapping, not called directly -->
-    <servlet-mapping>
-        <servlet-name>faces</servlet-name>
-        <url-pattern>*.action</url-pattern>
-  	</servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>dwr</servlet-name>

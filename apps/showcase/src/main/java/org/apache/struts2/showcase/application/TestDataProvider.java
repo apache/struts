@@ -20,7 +20,8 @@
  */
 package org.apache.struts2.showcase.application;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.showcase.dao.EmployeeDao;
 import org.apache.struts2.showcase.dao.SkillDao;
 import org.apache.struts2.showcase.exception.StorageException;
@@ -41,7 +42,7 @@ import java.util.Date;
 public class TestDataProvider implements Serializable, InitializingBean {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = Logger.getLogger(TestDataProvider.class);
+	private static final Logger log = LogManager.getLogger(TestDataProvider.class);
 
 	public static final String[] POSITIONS = {
 			"Developer",

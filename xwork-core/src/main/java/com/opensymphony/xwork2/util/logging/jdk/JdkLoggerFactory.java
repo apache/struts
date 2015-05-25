@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 /**
  * Creates jdk loggers
  */
+@Deprecated
 public class JdkLoggerFactory extends LoggerFactory {
 
     @Override

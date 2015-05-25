@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 /**
  * Simple logger that delegates to commons logging
  */
+@Deprecated
 public class CommonsLogger implements Logger {
     
     private Log log;

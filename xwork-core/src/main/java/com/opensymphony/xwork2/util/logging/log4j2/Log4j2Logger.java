@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.util.logging.LoggerUtils;
 /**
  * Simple logger that delegates to log4j2 logging
  */
+@Deprecated
 public class Log4j2Logger implements Logger {
 
     private org.apache.logging.log4j.Logger log;

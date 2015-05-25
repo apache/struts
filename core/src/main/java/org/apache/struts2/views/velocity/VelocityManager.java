@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
@@ -66,7 +66,7 @@ import java.util.StringTokenizer;
  *
  */
 public class VelocityManager {
-    private static final Logger LOG = LoggerFactory.getLogger(VelocityManager.class);
+    private static final Logger LOG = LogManager.getLogger(VelocityManager.class);
     public static final String STRUTS = "struts";
     private ObjectFactory objectFactory;
 

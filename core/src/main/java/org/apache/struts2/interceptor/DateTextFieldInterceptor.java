@@ -11,12 +11,12 @@ import java.util.Map.Entry;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class DateTextFieldInterceptor implements Interceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DateTextFieldInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(DateTextFieldInterceptor.class);
 
     public static enum DateWord {
 

@@ -21,9 +21,9 @@
 
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -37,7 +37,7 @@ import java.util.TimeZone;
  */
 public class RequestUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RequestUtils.class);
+    private static final Logger LOG = LogManager.getLogger(RequestUtils.class);
 
     private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 

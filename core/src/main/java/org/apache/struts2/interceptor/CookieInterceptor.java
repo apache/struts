@@ -29,8 +29,8 @@ import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.Cookie;
@@ -167,7 +167,7 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 4153142432948747305L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(CookieInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CookieInterceptor.class);
 
     private static final String ACCEPTED_PATTERN = "[a-zA-Z0-9\\.\\]\\[_'\\s]+";
 

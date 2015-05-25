@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -86,7 +86,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class LocalizedTextUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LocalizedTextUtil.class);
+    private static final Logger LOG = LogManager.getLogger(LocalizedTextUtil.class);
 
     private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
 

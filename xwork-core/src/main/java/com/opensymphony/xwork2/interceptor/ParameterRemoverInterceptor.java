@@ -18,8 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
 import java.util.Map;
@@ -79,7 +79,7 @@ import java.util.Set;
  */
 public class ParameterRemoverInterceptor extends AbstractInterceptor {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ParameterRemoverInterceptor.class);
+	private static final Logger LOG = LogManager.getLogger(ParameterRemoverInterceptor.class);
 
 	private static final long serialVersionUID = 1;
 

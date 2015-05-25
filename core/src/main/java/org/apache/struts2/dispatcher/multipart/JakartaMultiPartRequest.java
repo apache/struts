@@ -24,8 +24,8 @@ package org.apache.struts2.dispatcher.multipart;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
@@ -54,7 +54,7 @@ import java.util.Set;
  */
 public class JakartaMultiPartRequest implements MultiPartRequest {
 
-    static final Logger LOG = LoggerFactory.getLogger(JakartaMultiPartRequest.class);
+    static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);
 
     // maps parameter name -> List of FileItem objects
     protected Map<String, List<FileItem>> files = new HashMap<String, List<FileItem>>();

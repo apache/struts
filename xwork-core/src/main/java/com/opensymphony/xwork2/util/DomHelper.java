@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationAttributes;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class DomHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DomHelper.class);
+    private static final Logger LOG = LogManager.getLogger(DomHelper.class);
     
     public static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";
 

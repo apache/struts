@@ -1,7 +1,5 @@
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.inject.Container;
-import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 
 import java.util.HashMap;

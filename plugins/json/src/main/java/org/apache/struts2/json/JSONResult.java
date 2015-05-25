@@ -26,8 +26,8 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.json.smd.SMDGenerator;
@@ -63,7 +63,7 @@ public class JSONResult implements Result {
 
     private static final long serialVersionUID = 8624350183189931165L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONResult.class);
+    private static final Logger LOG = LogManager.getLogger(JSONResult.class);
 
     /**
      * This result type doesn't have a default param, null is ok to reduce noise in logs

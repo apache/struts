@@ -1,7 +1,5 @@
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
-
 import java.util.ArrayList;
 
 /*

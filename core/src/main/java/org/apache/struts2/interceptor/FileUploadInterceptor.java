@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.ContentTypeMatcher;
@@ -189,7 +189,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -4764627478894962478L;
 
-    protected static final Logger LOG = LoggerFactory.getLogger(FileUploadInterceptor.class);
+    protected static final Logger LOG = LogManager.getLogger(FileUploadInterceptor.class);
 
     protected Long maximumSize;
     protected Set<String> allowedTypesSet = Collections.emptySet();

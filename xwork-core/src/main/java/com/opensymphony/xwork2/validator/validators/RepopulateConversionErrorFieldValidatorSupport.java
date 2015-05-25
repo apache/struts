@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -134,7 +134,7 @@ import java.util.Map;
  */
 public abstract class RepopulateConversionErrorFieldValidatorSupport extends FieldValidatorSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RepopulateConversionErrorFieldValidatorSupport.class);
+    private static final Logger LOG = LogManager.getLogger(RepopulateConversionErrorFieldValidatorSupport.class);
 
     private boolean repopulateField = false;
 

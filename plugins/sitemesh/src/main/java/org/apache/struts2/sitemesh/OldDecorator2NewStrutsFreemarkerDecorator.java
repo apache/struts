@@ -26,8 +26,8 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
@@ -45,7 +45,7 @@ import java.io.IOException;
  * Extends OldDecorator2NewStrutsDecorator to add Struts functionality  for Freemarker
  */
 public class OldDecorator2NewStrutsFreemarkerDecorator extends OldDecorator2NewStrutsDecorator {
-    private static final Logger LOG = LoggerFactory.getLogger(OldDecorator2NewStrutsFreemarkerDecorator.class);
+    private static final Logger LOG = LogManager.getLogger(OldDecorator2NewStrutsFreemarkerDecorator.class);
 
     private static FreemarkerManager freemarkerManager;
 

@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
@@ -72,7 +72,7 @@ public class InstantiatingNullHandler implements NullHandler {
      * @deprecated Use {@link ReflectionContextState#CREATE_NULL_OBJECTS} instead
      */
     @Deprecated public static final String CREATE_NULL_OBJECTS = ReflectionContextState.CREATE_NULL_OBJECTS;
-    private static final Logger LOG = LoggerFactory.getLogger(InstantiatingNullHandler.class);
+    private static final Logger LOG = LogManager.getLogger(InstantiatingNullHandler.class);
     private ReflectionProvider reflectionProvider;
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;

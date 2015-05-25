@@ -3,8 +3,8 @@ package com.opensymphony.xwork2.security;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultExcludedPatternsChecker.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultExcludedPatternsChecker.class);
 
     public static final String[] EXCLUDED_PATTERNS = {
         "(^|.*#)(dojo|struts|session|request|application|servlet(Request|Response)|parameters|context|_memberAccess)(\\.|\\[).*",

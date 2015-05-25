@@ -7,8 +7,8 @@ import javax.portlet.BaseURL;
 import javax.portlet.PortletSecurityException;
 import java.util.Map;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * PortletUrlJSR286Helper.
@@ -17,7 +17,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class PortletUrlHelperJSR286 extends PortletUrlHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PortletUrlHelperJSR286.class);
+    private static final Logger LOG = LogManager.getLogger(PortletUrlHelperJSR286.class);
 
     protected String encodeUrl( StringBuffer sb, PortletRequest req ) {
         MimeResponse resp = (MimeResponse) PortletActionContext.getResponse();

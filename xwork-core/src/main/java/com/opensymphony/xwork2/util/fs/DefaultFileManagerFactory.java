@@ -5,8 +5,8 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class DefaultFileManagerFactory implements FileManagerFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultFileManagerFactory.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultFileManagerFactory.class);
 
     private boolean reloadingConfigs;
     private FileManager systemFileManager;

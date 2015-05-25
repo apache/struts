@@ -22,8 +22,8 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 import java.util.Map;
@@ -55,7 +55,7 @@ public class CheckboxInterceptor extends AbstractInterceptor {
 
     private String uncheckedValue = Boolean.FALSE.toString();
 
-    private static final Logger LOG = LoggerFactory.getLogger(CheckboxInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CheckboxInterceptor.class);
 
     public String intercept(ActionInvocation ai) throws Exception {
         Map<String, Object> parameters = ai.getInvocationContext().getParameters();

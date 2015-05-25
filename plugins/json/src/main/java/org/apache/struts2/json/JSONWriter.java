@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.json.annotations.JSON;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.annotations.JSONParameter;
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  */
 public class JSONWriter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONWriter.class);
+    private static final Logger LOG = LogManager.getLogger(JSONWriter.class);
 
     /**
      * By default, enums are serialised as name=value pairs

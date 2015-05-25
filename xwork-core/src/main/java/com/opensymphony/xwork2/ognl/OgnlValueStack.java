@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.logging.LoggerUtils;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.*;
@@ -55,7 +55,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private static final long serialVersionUID = 370737852934925530L;
 
     private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
-    private static final Logger LOG = LoggerFactory.getLogger(OgnlValueStack.class);
+    private static final Logger LOG = LogManager.getLogger(OgnlValueStack.class);
 
     CompoundRoot root;
     transient Map<String, Object> context;

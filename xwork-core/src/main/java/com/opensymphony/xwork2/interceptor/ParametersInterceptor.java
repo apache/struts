@@ -29,8 +29,8 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 import java.util.Collection;
@@ -135,7 +135,7 @@ import java.util.TreeMap;
  */
 public class ParametersInterceptor extends MethodFilterInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParametersInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ParametersInterceptor.class);
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 

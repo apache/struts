@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -51,7 +51,7 @@ import java.util.Set;
  */
 public class UrlSet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UrlSet.class);
+    private static final Logger LOG = LogManager.getLogger(UrlSet.class);
 
     private final Map<String,URL> urls;
     private Set<String> protocols;

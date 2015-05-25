@@ -24,8 +24,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.PortletPhase;
@@ -39,7 +39,7 @@ import static org.apache.struts2.portlet.PortletConstants.*;
 
 public class PortletStateInterceptor extends AbstractInterceptor {
 
-	private final static Logger LOG = LoggerFactory.getLogger(PortletStateInterceptor.class);
+	private final static Logger LOG = LogManager.getLogger(PortletStateInterceptor.class);
 
 	private static final long serialVersionUID = 6138452063353911784L;
 

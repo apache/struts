@@ -18,8 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Locale;
 import java.util.Map;
@@ -89,7 +89,7 @@ import java.util.Map;
 public class I18nInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = 2496830135246700300L;
 
-    protected static final Logger LOG = LoggerFactory.getLogger(I18nInterceptor.class);
+    protected static final Logger LOG = LogManager.getLogger(I18nInterceptor.class);
 
     public static final String DEFAULT_SESSION_ATTRIBUTE = "WW_TRANS_I18N_LOCALE";
     public static final String DEFAULT_PARAMETER = "request_locale";

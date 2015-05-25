@@ -23,8 +23,8 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class InterceptorBuilder {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InterceptorBuilder.class);
+    private static final Logger LOG = LogManager.getLogger(InterceptorBuilder.class);
 
 
     /**

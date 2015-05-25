@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public abstract class RangeValidatorSupport<T extends Comparable> extends FieldValidatorSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RangeValidatorSupport.class);
+    private static final Logger LOG = LogManager.getLogger(RangeValidatorSupport.class);
 
     private final Class<T> type;
 

@@ -23,8 +23,8 @@ package org.apache.struts2.osgi.host;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.felix.main.AutoProcessor;
 import org.apache.felix.shell.ShellService;
@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
  */
 public abstract class BaseOsgiHost implements OsgiHost {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BaseOsgiHost.class);
+    private static final Logger LOG = LogManager.getLogger(BaseOsgiHost.class);
 
     protected static final Pattern versionPattern = Pattern.compile("([\\d])+[\\.-]");
 

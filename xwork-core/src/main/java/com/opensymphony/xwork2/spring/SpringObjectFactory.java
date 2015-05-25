@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.spring;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -39,7 +39,7 @@ import java.util.Map;
  * @author Simon Stewart (sms@lateral.net)
  */
 public class SpringObjectFactory extends ObjectFactory implements ApplicationContextAware {
-    private static final Logger LOG = LoggerFactory.getLogger(SpringObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(SpringObjectFactory.class);
 
     protected ApplicationContext appContext;
     protected AutowireCapableBeanFactory autoWiringFactory;

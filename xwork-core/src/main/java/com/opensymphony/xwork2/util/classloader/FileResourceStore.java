@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.util.classloader;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ import java.io.InputStream;
  *  class taken from Apache JCI
  */
 public final class FileResourceStore implements ResourceStore {
-    private static final Logger LOG = LoggerFactory.getLogger(FileResourceStore.class);
+    private static final Logger LOG = LogManager.getLogger(FileResourceStore.class);
     private final File root;
 
     public FileResourceStore(final File pFile) {

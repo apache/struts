@@ -3,8 +3,8 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import freemarker.template.Template;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultDispatcherErrorHandler.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultDispatcherErrorHandler.class);
 
     private FreemarkerManager freemarkerManager;
     private boolean devMode;

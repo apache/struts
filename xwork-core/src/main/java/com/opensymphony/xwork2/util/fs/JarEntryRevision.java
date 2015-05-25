@@ -1,8 +1,8 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.zip.ZipEntry;
  */
 public class JarEntryRevision extends Revision {
 
-    private static Logger LOG = LoggerFactory.getLogger(JarEntryRevision.class);
+    private static Logger LOG = LogManager.getLogger(JarEntryRevision.class);
 
     private static final String JAR_FILE_NAME_SEPARATOR = "!/";
     private static final String JAR_FILE_EXTENSION_END = ".jar/";

@@ -49,8 +49,8 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -101,7 +101,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
                 "(result of servlet or a JSP page)")
 public class Include extends Component {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Include.class);
+    private static final Logger LOG = LogManager.getLogger(Include.class);
 
     private static String systemEncoding = System.getProperty("file.encoding");
 

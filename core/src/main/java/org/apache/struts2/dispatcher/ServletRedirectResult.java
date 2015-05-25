@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.ServletActionContext;
@@ -100,7 +100,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     private static final long serialVersionUID = 6316947346435301270L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServletRedirectResult.class);
+    private static final Logger LOG = LogManager.getLogger(ServletRedirectResult.class);
 
     protected boolean prependServletContext = true;
     protected ActionMapper actionMapper;

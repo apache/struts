@@ -22,8 +22,8 @@ package org.apache.struts2.json;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.json.annotations.SMDMethod;
 
@@ -42,7 +42,7 @@ public class JSONUtil {
 
     public final static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONUtil.class);
+    private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
 
     /**
      * Serializes an object into JSON.

@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsStatics;
 
 import javax.servlet.http.Cookie;
@@ -68,7 +68,7 @@ import java.util.Set;
  */
 public class CookieProviderInterceptor extends AbstractInterceptor implements PreResultListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CookieProviderInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CookieProviderInterceptor.class);
 
     public String intercept(ActionInvocation invocation) throws Exception {
         invocation.addPreResultListener(this);

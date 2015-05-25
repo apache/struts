@@ -23,8 +23,8 @@ package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  */
 public class Restful2ActionMapper extends DefaultActionMapper {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(Restful2ActionMapper.class);
+    protected static final Logger LOG = LogManager.getLogger(Restful2ActionMapper.class);
     public static final String HTTP_METHOD_PARAM = "__http_method";
     private String idParameterName = null;
     

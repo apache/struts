@@ -31,8 +31,8 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpHeaderResult;
@@ -54,7 +54,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
 
     private static final long serialVersionUID = 3485701178946428716L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(RestActionInvocation.class);
+    private static final Logger LOG = LogManager.getLogger(RestActionInvocation.class);
 
     private ContentTypeHandlerManager handlerSelector;
     private boolean logger;

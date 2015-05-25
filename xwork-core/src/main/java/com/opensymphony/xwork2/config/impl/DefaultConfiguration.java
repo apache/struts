@@ -87,8 +87,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import ognl.PropertyAccessor;
 
@@ -110,7 +110,7 @@ import java.util.TreeSet;
  */
 public class DefaultConfiguration implements Configuration {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(DefaultConfiguration.class);
+    protected static final Logger LOG = LogManager.getLogger(DefaultConfiguration.class);
 
 
     // Programmatic Action Configurations

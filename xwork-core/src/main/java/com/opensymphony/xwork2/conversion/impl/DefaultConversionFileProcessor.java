@@ -7,8 +7,8 @@ import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.Properties;
  */
 public class DefaultConversionFileProcessor implements ConversionFileProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultConversionFileProcessor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultConversionFileProcessor.class);
 
     private FileManager fileManager;
     private TypeConverterCreator converterCreator;

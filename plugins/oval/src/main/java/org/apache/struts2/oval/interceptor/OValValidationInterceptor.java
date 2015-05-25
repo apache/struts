@@ -28,8 +28,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 import net.sf.oval.ConstraintViolation;
@@ -49,7 +49,7 @@ import java.util.List;
  This interceptor provides validation using the OVal validation framework
  */
 public class OValValidationInterceptor extends MethodFilterInterceptor {
-    private static final Logger LOG = LoggerFactory.getLogger(OValValidationInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(OValValidationInterceptor.class);
 
     protected final static String VALIDATE_PREFIX = "validate";
     protected final static String ALT_VALIDATE_PREFIX = "validateDo";

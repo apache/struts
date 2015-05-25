@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.Method;
 
@@ -121,7 +121,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
     private static final long serialVersionUID = 7563014655616490865L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultWorkflowInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultWorkflowInterceptor.class);
 
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
 

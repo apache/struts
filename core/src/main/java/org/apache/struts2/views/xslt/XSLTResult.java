@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -210,7 +210,7 @@ public class XSLTResult implements Result {
     private static final long serialVersionUID = 6424691441777176763L;
 
     /** Log instance for this result. */
-    private static final Logger LOG = LoggerFactory.getLogger(XSLTResult.class);
+    private static final Logger LOG = LogManager.getLogger(XSLTResult.class);
 
     /** 'stylesheetLocation' parameter.  Points to the xsl. */
     public static final String DEFAULT_PARAM = "stylesheetLocation";

@@ -29,14 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Default implementation of the theme
  */
 public class DefaultTheme implements Theme {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultTheme.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultTheme.class);
 
     private String name;
     protected Map<String, List<TagHandlerFactory>> handlerFactories;

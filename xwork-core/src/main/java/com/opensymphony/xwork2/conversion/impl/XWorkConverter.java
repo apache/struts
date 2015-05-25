@@ -33,8 +33,8 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.StringUtils;
 
@@ -131,7 +131,7 @@ import java.util.regex.Pattern;
  */
 public class XWorkConverter extends DefaultTypeConverter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XWorkConverter.class);
+    private static final Logger LOG = LogManager.getLogger(XWorkConverter.class);
 
     public static final String REPORT_CONVERSION_ERRORS = "report.conversion.errors";
     public static final String CONVERSION_PROPERTY_FULLNAME = "conversion.property.fullName";

@@ -24,8 +24,8 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.Template;
@@ -434,7 +434,7 @@ import java.util.Map;
  *
  */
 public abstract class UIBean extends Component {
-    private static final Logger LOG = LoggerFactory.getLogger(UIBean.class);
+    private static final Logger LOG = LogManager.getLogger(UIBean.class);
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;

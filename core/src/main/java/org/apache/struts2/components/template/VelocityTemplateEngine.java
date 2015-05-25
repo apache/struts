@@ -36,14 +36,14 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Velocity based template engine.
  */
 public class VelocityTemplateEngine extends BaseTemplateEngine {
-    private static final Logger LOG = LoggerFactory.getLogger(VelocityTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(VelocityTemplateEngine.class);
     
     private VelocityManager velocityManager;
     

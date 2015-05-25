@@ -35,8 +35,8 @@ import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -64,7 +64,7 @@ import java.util.*;
  */
 public class XmlConfigurationProvider implements ConfigurationProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigurationProvider.class);
+    private static final Logger LOG = LogManager.getLogger(XmlConfigurationProvider.class);
 
     private List<Document> documents;
     private Set<String> includedFileNames;

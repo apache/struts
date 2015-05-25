@@ -5,8 +5,8 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PrefixBasedActionProxyFactory.class);
+    private static final Logger LOG = LogManager.getLogger(PrefixBasedActionProxyFactory.class);
 
     private Map<String, ActionProxyFactory> actionProxyFactories = new HashMap<String, ActionProxyFactory>();
     private ActionProxyFactory defaultFactory;

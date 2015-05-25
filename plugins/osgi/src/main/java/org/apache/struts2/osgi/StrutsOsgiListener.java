@@ -1,7 +1,7 @@
 package org.apache.struts2.osgi;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.osgi.host.OsgiHost;
 
@@ -17,7 +17,7 @@ public class StrutsOsgiListener implements ServletContextListener {
     public static final String OSGI_HOST = "__struts_osgi_host";
     public static final String PLATFORM_KEY = "struts.osgi.host";
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsOsgiListener.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsOsgiListener.class);
 
     private OsgiHost osgiHost;
 

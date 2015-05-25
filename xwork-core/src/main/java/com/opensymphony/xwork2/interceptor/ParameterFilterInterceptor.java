@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -95,7 +95,7 @@ import java.util.TreeMap;
  */
 public class ParameterFilterInterceptor extends AbstractInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParameterFilterInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ParameterFilterInterceptor.class);
 
     private Collection<String> allowed;
     private Collection<String> blocked;

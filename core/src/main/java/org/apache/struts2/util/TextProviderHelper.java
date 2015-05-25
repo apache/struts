@@ -23,8 +23,8 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class TextProviderHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TextProviderHelper.class);
+    private static final Logger LOG = LogManager.getLogger(TextProviderHelper.class);
 
      /**
      * <p>Get a message from the first TextProvider encountered in the stack.

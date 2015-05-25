@@ -22,8 +22,8 @@
 package org.apache.struts2.osgi.host;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
@@ -51,7 +51,7 @@ import java.util.Properties;
  */
 public class FelixOsgiHost extends BaseOsgiHost {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FelixOsgiHost.class);
+    private static final Logger LOG = LogManager.getLogger(FelixOsgiHost.class);
 
     protected Felix felix;
 

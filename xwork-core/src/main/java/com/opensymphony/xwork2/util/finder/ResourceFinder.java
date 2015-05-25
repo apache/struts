@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedInputStream;
@@ -47,7 +47,7 @@ import java.util.jar.JarFile;
  * @version $Rev$ $Date$
  */
 public class ResourceFinder {
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceFinder.class);
+    private static final Logger LOG = LogManager.getLogger(ResourceFinder.class);
 
     private final URL[] urls;
     private final String path;

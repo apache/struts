@@ -3,8 +3,8 @@ package com.opensymphony.xwork2.security;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultAcceptedPatternsChecker.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultAcceptedPatternsChecker.class);
 
     public static final String[] ACCEPTED_PATTERNS = {
             "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'\\])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*"

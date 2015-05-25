@@ -16,8 +16,8 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  */
 public class DefaultFileManager implements FileManager {
 
-    private static Logger LOG = LoggerFactory.getLogger(DefaultFileManager.class);
+    private static Logger LOG = LogManager.getLogger(DefaultFileManager.class);
 
     private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|\\.jar/)(.*)");
     private static final int JAR_FILE_PATH = 3;

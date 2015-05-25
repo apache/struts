@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.File;
@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
  * class taken from Apache JCI
  */
 public class ReloadingClassLoader extends ClassLoader {
-    private static final Logger LOG = LoggerFactory.getLogger(ReloadingClassLoader.class);
+    private static final Logger LOG = LogManager.getLogger(ReloadingClassLoader.class);
     private final ClassLoader parent;
     private ResourceStore[] stores;
     private ClassLoader delegate;

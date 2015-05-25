@@ -22,8 +22,8 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import javax.servlet.Filter;
@@ -70,7 +70,7 @@ import java.io.IOException;
  */
 public class ActionContextCleanUp implements Filter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ActionContextCleanUp.class);
+    private static final Logger LOG = LogManager.getLogger(ActionContextCleanUp.class);
 
     private static final String COUNTER = "__cleanup_recursion_counter";
 

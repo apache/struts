@@ -26,11 +26,11 @@ import java.util.List;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class SimpleNodeList implements NodeList {
-    private Logger log = LoggerFactory.getLogger(SimpleNodeList.class);
+    private Logger log = LogManager.getLogger(SimpleNodeList.class);
 
     private List<Node> nodes;
 

@@ -22,8 +22,8 @@
 package org.apache.struts2.components.template;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.ServletContext;
@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class BaseTemplateEngine implements TemplateEngine {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BaseTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(BaseTemplateEngine.class);
 
     /**
      * The default theme properties file name. Default is 'theme.properties'

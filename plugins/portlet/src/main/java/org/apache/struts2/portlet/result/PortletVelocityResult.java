@@ -24,8 +24,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
@@ -90,7 +90,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -8241086555872212274L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(PortletVelocityResult.class);
+    private static final Logger LOG = LogManager.getLogger(PortletVelocityResult.class);
     
     private String defaultEncoding;
     private VelocityManager velocityManager;

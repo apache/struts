@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.util;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,7 +26,7 @@ import java.net.URL;
  */
 public class URLUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(URLUtil.class);
+    private static final Logger LOG = LogManager.getLogger(URLUtil.class);
 
     /**
      * Verify That the given String is in valid URL format.

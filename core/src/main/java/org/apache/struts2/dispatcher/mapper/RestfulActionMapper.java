@@ -22,8 +22,8 @@
 package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.RequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  * http://struts.apache.org/2.x/docs/restfulactionmapper.html
  */
 public class RestfulActionMapper implements ActionMapper {
-    protected static final Logger LOG = LoggerFactory.getLogger(RestfulActionMapper.class);
+    protected static final Logger LOG = LogManager.getLogger(RestfulActionMapper.class);
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)

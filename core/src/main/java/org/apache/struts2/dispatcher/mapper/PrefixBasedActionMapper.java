@@ -3,8 +3,8 @@ package org.apache.struts2.dispatcher.mapper;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 
@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class PrefixBasedActionMapper extends DefaultActionMapper implements ActionMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PrefixBasedActionMapper.class);
+    private static final Logger LOG = LogManager.getLogger(PrefixBasedActionMapper.class);
 
     protected Container container;
     protected Map<String, ActionMapper> actionMappers = new HashMap<String, ActionMapper>();

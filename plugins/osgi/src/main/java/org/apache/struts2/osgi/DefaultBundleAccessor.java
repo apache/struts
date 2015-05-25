@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -50,7 +50,7 @@ import java.util.Set;
 public class DefaultBundleAccessor implements BundleAccessor {
 
     private static DefaultBundleAccessor self;
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultBundleAccessor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultBundleAccessor.class);
 
     private BundleContext bundleContext;
     private Map<String, String> packageToBundle = new HashMap<String, String>();

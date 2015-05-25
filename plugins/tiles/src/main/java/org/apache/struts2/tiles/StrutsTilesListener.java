@@ -31,8 +31,8 @@ import org.apache.tiles.TilesException;
 import org.apache.tiles.factory.TilesContainerFactory;
 import org.apache.tiles.web.startup.TilesListener;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Listener used to automatically inject ServletContext
@@ -47,7 +47,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class StrutsTilesListener extends TilesListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsTilesListener.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsTilesListener.class);
 
     private static final Map<String, String> INIT;
 

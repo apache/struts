@@ -25,8 +25,8 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * ProxyNodeAdapter is a read-only delegating adapter for objects which already
@@ -36,7 +36,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public abstract class ProxyNodeAdapter extends AbstractAdapterNode {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     public ProxyNodeAdapter(AdapterFactory factory, AdapterNode parent, Node value) {
         setContext(factory, parent, "document"/*propname unused*/, value);

@@ -38,8 +38,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
@@ -77,7 +77,7 @@ public class Dispatcher {
     /**
      * Provide a logging instance.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(Dispatcher.class);
+    private static final Logger LOG = LogManager.getLogger(Dispatcher.class);
 
     /**
      * Provide a thread local instance.

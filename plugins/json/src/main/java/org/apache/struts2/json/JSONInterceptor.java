@@ -48,15 +48,15 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Populates an action from a JSON string
  */
 public class JSONInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = 4950170304212158803L;
-    private static final Logger LOG = LoggerFactory.getLogger(JSONInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(JSONInterceptor.class);
     private boolean enableSMD = false;
     private boolean enableGZIP = false;
     private boolean wrapWithComments;

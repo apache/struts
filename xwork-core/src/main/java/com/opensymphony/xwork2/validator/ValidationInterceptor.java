@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -130,7 +130,7 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
     
     private ActionValidatorManager actionValidatorManager;
     
-    private static final Logger LOG = LoggerFactory.getLogger(ValidationInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ValidationInterceptor.class);
     
     private final static String VALIDATE_PREFIX = "validate";
     private final static String ALT_VALIDATE_PREFIX = "validateDo";

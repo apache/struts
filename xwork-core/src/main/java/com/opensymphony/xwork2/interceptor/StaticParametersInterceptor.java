@@ -24,8 +24,8 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
 import java.util.Map;
@@ -87,7 +87,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
 
     static boolean devMode = false;
 
-    private static final Logger LOG = LoggerFactory.getLogger(StaticParametersInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(StaticParametersInterceptor.class);
 
     private ValueStackFactory valueStackFactory;
 

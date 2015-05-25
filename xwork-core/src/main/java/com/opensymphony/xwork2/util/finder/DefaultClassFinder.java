@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
@@ -52,7 +52,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 public class DefaultClassFinder implements ClassFinder {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultClassFinder.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultClassFinder.class);
 
     private final Map<String, List<Info>> annotated = new HashMap<String, List<Info>>();
     private final Map<String, ClassInfo> classInfos = new LinkedHashMap<String, ClassInfo>();

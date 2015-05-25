@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.UrlSet;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,7 +70,7 @@ import java.util.regex.Pattern;
  * directories.
  */
 public class JSPLoader {
-    private static final Logger LOG = LoggerFactory.getLogger(JSPLoader.class);
+    private static final Logger LOG = LogManager.getLogger(JSPLoader.class);
 
     private static MemoryClassLoader classLoader = new MemoryClassLoader();
     private static final String DEFAULT_PACKAGE = "org.apache.struts2.jsp";

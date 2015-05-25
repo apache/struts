@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.providers.XmlHelper;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.DomHelper;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
@@ -45,7 +45,7 @@ import java.util.*;
  */
 public class DefaultValidatorFileParser implements ValidatorFileParser {
 
-    private static Logger LOG = LoggerFactory.getLogger(DefaultValidatorFileParser.class);
+    private static Logger LOG = LogManager.getLogger(DefaultValidatorFileParser.class);
 
     static final String DEFAULT_MULTI_TEXTVALUE_SEPARATOR = " ";
     static final String MULTI_TEXTVALUE_SEPARATOR_CONFIG_KEY = "xwork.validatorfileparser.multi_textvalue_separator";

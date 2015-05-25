@@ -33,8 +33,8 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -133,7 +133,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
                 "of a list of iterators into one iterator")
 public class MergeIterator extends ContextBean implements UnnamedParametric {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MergeIterator.class);
+    private static final Logger LOG = LogManager.getLogger(MergeIterator.class);
 
     private MergeIteratorFilter mergeIteratorFilter = null;
     private List _parameters;

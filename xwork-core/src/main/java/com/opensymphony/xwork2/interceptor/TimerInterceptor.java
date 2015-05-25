@@ -16,8 +16,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -92,7 +92,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * @author Claus Ibsen
  */
 public class TimerInterceptor extends AbstractInterceptor {
-    protected static final Logger LOG = LoggerFactory.getLogger(TimerInterceptor.class);
+    protected static final Logger LOG = LogManager.getLogger(TimerInterceptor.class);
 
     protected Logger categoryLogger;
     protected String logCategory;
@@ -175,7 +175,7 @@ public class TimerInterceptor extends AbstractInterceptor {
         if (logCategory != null) {
             if (categoryLogger == null) {
                 // init category logger
-                categoryLogger = LoggerFactory.getLogger(logCategory);
+                categoryLogger = LogManager.getLogger(logCategory);
                 if (logLevel == null) {
                     logLevel = "info"; // use info as default if not provided
                 }

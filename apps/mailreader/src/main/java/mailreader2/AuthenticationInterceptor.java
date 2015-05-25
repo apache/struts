@@ -20,11 +20,12 @@
  */
 package mailreader2;
 
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Action;
-import java.util.Map;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.struts.apps.mailreader.dao.User;
+
+import java.util.Map;
 
 public class AuthenticationInterceptor implements Interceptor  {
 

@@ -23,8 +23,8 @@ package org.apache.struts2.spring;
 import com.opensymphony.xwork2.util.classloader.FileResourceStore;
 import com.opensymphony.xwork2.util.classloader.JarResourceStore;
 import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 import org.apache.commons.jci.monitor.FilesystemAlterationObserver;
@@ -71,7 +71,7 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationContext implements FilesystemAlterationListener {
-    private static final Logger LOG = LoggerFactory.getLogger(ClassReloadingXMLWebApplicationContext.class);
+    private static final Logger LOG = LogManager.getLogger(ClassReloadingXMLWebApplicationContext.class);
 
     protected ReloadingClassLoader classLoader;
     protected FilesystemAlterationMonitor fam;

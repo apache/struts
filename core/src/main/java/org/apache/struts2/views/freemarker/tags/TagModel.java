@@ -24,8 +24,8 @@ package org.apache.struts2.views.freemarker.tags;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleSequence;
@@ -43,7 +43,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public abstract class TagModel implements TemplateTransformModel {
-    private static final Logger LOG = LoggerFactory.getLogger(TagModel.class);
+    private static final Logger LOG = LogManager.getLogger(TagModel.class);
 
     protected ValueStack stack;
     protected HttpServletRequest req;

@@ -22,8 +22,8 @@ package org.apache.struts2.portlet.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
@@ -61,7 +61,7 @@ public class PortletResult extends StrutsResultSupport {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = LoggerFactory.getLogger(PortletResult.class);
+	private static final Logger LOG = LogManager.getLogger(PortletResult.class);
 
 	private String contentType = "text/html";
 

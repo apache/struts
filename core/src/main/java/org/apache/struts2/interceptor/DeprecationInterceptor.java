@@ -5,8 +5,8 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Field;
@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public class DeprecationInterceptor extends AbstractInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DeprecationInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(DeprecationInterceptor.class);
 
     private Container container;
     private boolean devMode;

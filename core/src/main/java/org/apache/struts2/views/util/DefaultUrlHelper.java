@@ -22,8 +22,8 @@
 package org.apache.struts2.views.util;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class DefaultUrlHelper implements UrlHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultUrlHelper.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultUrlHelper.class);
 
     public static final String HTTP_PROTOCOL = "http";
     public static final String HTTPS_PROTOCOL = "https";

@@ -21,8 +21,8 @@
 
 package org.apache.struts2.views.xslt;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,7 +65,7 @@ public class BeanAdapter extends AbstractAdapterElement {
 
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     //~ Constructors ///////////////////////////////////////////////////////////
 

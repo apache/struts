@@ -21,8 +21,8 @@
 
 package org.apache.struts2.sitegraph.entities;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.sitegraph.model.Link;
 
 import java.io.*;
@@ -37,7 +37,7 @@ public abstract class FileBasedView implements View {
     private String name;
     private String contents;
 
-    private static final Logger LOG = LoggerFactory.getLogger(FileBasedView.class);
+    private static final Logger LOG = LogManager.getLogger(FileBasedView.class);
 
     public FileBasedView(File file) {
         this.name = file.getName();

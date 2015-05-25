@@ -35,8 +35,8 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -144,7 +144,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     private static final long serialVersionUID = 9120762699600054395L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ScopeInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ScopeInterceptor.class);
 
     private String[] application = null;
     private String[] session = null;

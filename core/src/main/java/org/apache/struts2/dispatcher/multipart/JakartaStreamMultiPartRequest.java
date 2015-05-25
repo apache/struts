@@ -3,8 +3,8 @@ package org.apache.struts2.dispatcher.multipart;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class JakartaStreamMultiPartRequest implements MultiPartRequest {
 
-    static final Logger LOG = LoggerFactory.getLogger(JakartaStreamMultiPartRequest.class);
+    static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
 
     /**
      * Defines the internal buffer size used during streaming operations.

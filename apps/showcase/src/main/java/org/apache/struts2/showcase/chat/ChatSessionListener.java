@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.showcase.chat;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -31,7 +31,7 @@ import javax.servlet.http.HttpSessionListener;
 
 public class ChatSessionListener implements HttpSessionListener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ChatSessionListener.class);
+	private static final Logger LOG = LogManager.getLogger(ChatSessionListener.class);
 
 	public void sessionCreated(HttpSessionEvent event) {
 	}

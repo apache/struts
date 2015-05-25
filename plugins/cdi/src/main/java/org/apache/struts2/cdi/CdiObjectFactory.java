@@ -21,8 +21,8 @@ package org.apache.struts2.cdi;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
@@ -46,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CdiObjectFactory extends ObjectFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CdiObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
 
     /**
      * The key under which the BeanManager can be found according to CDI API docs

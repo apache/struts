@@ -25,12 +25,11 @@ import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
-import ognl.OgnlException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +47,7 @@ import java.util.Map;
  */
 public class DefaultActionInvocation implements ActionInvocation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultActionInvocation.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultActionInvocation.class);
 
     protected Object action;
     protected ActionProxy proxy;

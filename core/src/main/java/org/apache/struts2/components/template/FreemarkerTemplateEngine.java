@@ -39,8 +39,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
@@ -65,7 +65,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         }
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(FreemarkerTemplateEngine.class);
 
     @Inject
     public void setFreemarkerManager(FreemarkerManager mgr) {

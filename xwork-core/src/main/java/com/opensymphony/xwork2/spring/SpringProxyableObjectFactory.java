@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.spring;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class SpringProxyableObjectFactory extends SpringObjectFactory {
     
-    private static final Logger LOG = LoggerFactory.getLogger(SpringProxyableObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(SpringProxyableObjectFactory.class);
 
     private List<String> skipBeanNames = new ArrayList<String>();
 

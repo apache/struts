@@ -22,8 +22,8 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -94,7 +94,7 @@ import java.util.Map;
 @StrutsTag(name="optiontransferselect", tldTagClass="org.apache.struts2.views.jsp.ui.OptionTransferSelectTag", description="Renders an input form")
 public class OptionTransferSelect extends DoubleListUIBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OptionTransferSelect.class);
+    private static final Logger LOG = LogManager.getLogger(OptionTransferSelect.class);
 
     private static final String TEMPLATE = "optiontransferselect";
 

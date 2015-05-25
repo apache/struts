@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 import com.opensymphony.xwork2.util.Element;
 import com.opensymphony.xwork2.util.Key;
 import com.opensymphony.xwork2.util.KeyProperty;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
@@ -52,7 +52,7 @@ import java.util.Map;
  */
 public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(DefaultObjectTypeDeterminer.class);
+    protected static final Logger LOG = LogManager.getLogger(DefaultObjectTypeDeterminer.class);
 
     public static final String KEY_PREFIX = "Key_";
     public static final String ELEMENT_PREFIX = "Element_";

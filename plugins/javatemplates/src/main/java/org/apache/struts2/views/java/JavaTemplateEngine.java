@@ -24,8 +24,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.BaseTemplateEngine;
 import org.apache.struts2.components.template.Template;
@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
  */
 public class JavaTemplateEngine extends BaseTemplateEngine {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JavaTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(JavaTemplateEngine.class);
 
     // The struts template engine manager
     protected TemplateEngineManager templateEngineManager;

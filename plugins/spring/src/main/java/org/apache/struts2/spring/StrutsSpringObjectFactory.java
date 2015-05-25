@@ -24,8 +24,8 @@ package org.apache.struts2.spring;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -44,7 +44,7 @@ import javax.servlet.ServletContext;
  *
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsSpringObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsSpringObjectFactory.class);
 
     //@Inject
     //public StrutsSpringObjectFactory(

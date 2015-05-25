@@ -40,15 +40,15 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Override Xwork class so we can use an arbitrary config file
  */
 public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsXmlConfigurationProvider.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsXmlConfigurationProvider.class);
     private File baseDir = null;
     private String filename;
     private String reloadKey;

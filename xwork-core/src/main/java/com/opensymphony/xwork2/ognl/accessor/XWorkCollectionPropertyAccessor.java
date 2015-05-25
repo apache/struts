@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 import ognl.ObjectPropertyAccessor;
@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XWorkCollectionPropertyAccessor.class);
+    private static final Logger LOG = LogManager.getLogger(XWorkCollectionPropertyAccessor.class);
     private static final String CONTEXT_COLLECTION_MAP = "xworkCollectionPropertyAccessorContextSetMap";
 
     public static final String KEY_PROPERTY_FOR_CREATION = "makeNew";

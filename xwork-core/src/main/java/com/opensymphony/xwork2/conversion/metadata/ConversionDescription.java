@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.conversion.metadata;
 
 import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -55,7 +55,7 @@ public class ConversionDescription {
     public String type = null;
 
     public ConversionDescription() {
-        log = LoggerFactory.getLogger(this.getClass());
+        log = LogManager.getLogger(this.getClass());
     }
 
     /**
@@ -65,7 +65,7 @@ public class ConversionDescription {
      */
     public ConversionDescription(String property) {
         this.property = property;
-        log = LoggerFactory.getLogger(this.getClass());
+        log = LogManager.getLogger(this.getClass());
     }
 
     /**

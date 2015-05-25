@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Result;
@@ -117,7 +117,7 @@ import java.util.Set;
  * </table>
  */
 public class DefaultResultMapBuilder implements ResultMapBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultResultMapBuilder.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultResultMapBuilder.class);
     private final ServletContext servletContext;
     private Set<String> relativeResultTypes;
     private ConventionsService conventionsService;

@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.osgi.host;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.felix.shell.ShellService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GlassfishOSGiHost.class);
+    private static final Logger LOG = LogManager.getLogger(GlassfishOSGiHost.class);
 
     /**
      * Location inside the WAR where initial bundles are located.

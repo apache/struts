@@ -20,8 +20,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.MapPropertyAccessor;
 import ognl.OgnlException;
@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XWorkMapPropertyAccessor.class);
+    private static final Logger LOG = LogManager.getLogger(XWorkMapPropertyAccessor.class);
 
     private static final String[] INDEX_ACCESS_PROPS = new String[]
             {"size", "isEmpty", "keys", "values"};

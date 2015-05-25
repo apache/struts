@@ -26,8 +26,8 @@ import ognl.OgnlContext;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 
@@ -40,7 +40,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
  */
 public class XWorkMethodAccessor extends ObjectMethodAccessor {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(XWorkMethodAccessor.class);
+	private static final Logger LOG = LogManager.getLogger(XWorkMethodAccessor.class);
 
     /**
      * @deprecated Use {@link ReflectionContextState#DENY_METHOD_EXECUTION} instead

@@ -21,17 +21,15 @@
 
 package org.apache.struts2;
 
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
-
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.Map;
 
 
 /**

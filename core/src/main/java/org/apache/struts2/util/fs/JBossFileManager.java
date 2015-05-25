@@ -4,8 +4,8 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.FileRevision;
 import com.opensymphony.xwork2.util.fs.JarEntryRevision;
 import com.opensymphony.xwork2.util.fs.Revision;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class JBossFileManager extends DefaultFileManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JBossFileManager.class);
+    private static final Logger LOG = LogManager.getLogger(JBossFileManager.class);
 
     private static final String JBOSS5_VFS = "vfs";
     private static final String JBOSS5_VFSZIP = "vfszip";

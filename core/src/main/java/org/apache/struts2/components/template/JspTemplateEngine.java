@@ -34,14 +34,14 @@ import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * JSP based template engine.
  */
 public class JspTemplateEngine extends BaseTemplateEngine {
-    private static final Logger LOG = LoggerFactory.getLogger(JspTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(JspTemplateEngine.class);
 
 	String encoding;
 

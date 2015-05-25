@@ -24,8 +24,8 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -143,7 +143,7 @@ import java.util.TimeZone;
 @StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
 public class Date extends ContextBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Date.class);
+    private static final Logger LOG = LogManager.getLogger(Date.class);
     /**
      * Property name to fall back when no format is specified
      */

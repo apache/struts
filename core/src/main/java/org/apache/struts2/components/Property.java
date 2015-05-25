@@ -22,8 +22,8 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -89,7 +89,7 @@ import java.io.Writer;
 @StrutsTag(name="property", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.PropertyTag",
     description="Print out expression which evaluates against the stack")
 public class Property extends Component {
-    private static final Logger LOG = LoggerFactory.getLogger(Property.class);
+    private static final Logger LOG = LogManager.getLogger(Property.class);
 
     public Property(ValueStack stack) {
         super(stack);

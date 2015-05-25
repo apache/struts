@@ -7,8 +7,8 @@ import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 public class DefaultConversionPropertiesProcessor implements ConversionPropertiesProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultConversionPropertiesProcessor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultConversionPropertiesProcessor.class);
 
     private TypeConverterCreator converterCreator;
     private TypeConverterHolder converterHolder;

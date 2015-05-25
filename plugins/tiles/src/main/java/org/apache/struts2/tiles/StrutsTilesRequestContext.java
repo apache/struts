@@ -24,8 +24,8 @@ package org.apache.struts2.tiles;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.apache.tiles.context.TilesRequestContext;
@@ -48,7 +48,7 @@ import java.io.IOException;
  */
 public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsTilesRequestContext.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsTilesRequestContext.class);
 
     /**
      * The mask used to detect requests which should be intercepted.

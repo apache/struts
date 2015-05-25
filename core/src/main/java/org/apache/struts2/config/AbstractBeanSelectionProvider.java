@@ -11,8 +11,8 @@ import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Properties;
 
@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 public abstract class AbstractBeanSelectionProvider implements BeanSelectionProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractBeanSelectionProvider.class);
+    private static final Logger LOG = LogManager.getLogger(AbstractBeanSelectionProvider.class);
 
     public static final String DEFAULT_BEAN_NAME = "struts";
 

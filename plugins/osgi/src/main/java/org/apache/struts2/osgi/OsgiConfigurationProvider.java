@@ -30,8 +30,8 @@ import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.apache.struts2.osgi.loaders.VelocityBundleResourceLoader;
@@ -53,7 +53,7 @@ import java.util.Set;
  */
 public class OsgiConfigurationProvider implements PackageProvider, BundleListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OsgiConfigurationProvider.class);
+    private static final Logger LOG = LogManager.getLogger(OsgiConfigurationProvider.class);
 
     private Configuration configuration;
     private ObjectFactory objectFactory;

@@ -21,8 +21,8 @@
 
 package mailreader2;
 
-import org.apache.struts.apps.mailreader.dao.User;
 import org.apache.struts.apps.mailreader.dao.ExpiredPasswordException;
+import org.apache.struts.apps.mailreader.dao.User;
 
 /**
  * <p> Validate a user login. </p>

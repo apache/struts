@@ -22,8 +22,8 @@
 package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.JRRewindableDataSource;
@@ -39,7 +39,7 @@ public class ValueStackDataSource implements JRRewindableDataSource {
     /**
      * Logger for this class
      */
-    private static Logger LOG = LoggerFactory.getLogger(ValueStackDataSource.class);
+    private static Logger LOG = LogManager.getLogger(ValueStackDataSource.class);
 
     private Iterator iterator;
     private ValueStack valueStack;

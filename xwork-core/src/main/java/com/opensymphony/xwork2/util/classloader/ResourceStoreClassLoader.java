@@ -15,15 +15,15 @@
  */
 package com.opensymphony.xwork2.util.classloader;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * class taken from Apache JCI
  */
 public final class ResourceStoreClassLoader extends ClassLoader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceStoreClassLoader.class);
+    private static final Logger LOG = LogManager.getLogger(ResourceStoreClassLoader.class);
 
     private final ResourceStore[] stores;
 

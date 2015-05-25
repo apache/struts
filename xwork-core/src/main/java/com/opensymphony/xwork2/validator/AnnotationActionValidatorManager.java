@@ -26,8 +26,8 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 import org.apache.commons.lang3.StringUtils;
 
@@ -59,7 +59,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
 
     private final Map<String, List<ValidatorConfig>> validatorCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
     private final Map<String, List<ValidatorConfig>> validatorFileCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
-    private static final Logger LOG = LoggerFactory.getLogger(AnnotationActionValidatorManager.class);
+    private static final Logger LOG = LogManager.getLogger(AnnotationActionValidatorManager.class);
 
     private ValidatorFactory validatorFactory;
     private ValidatorFileParser validatorFileParser;

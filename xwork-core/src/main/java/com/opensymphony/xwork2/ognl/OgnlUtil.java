@@ -23,8 +23,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import ognl.ClassResolver;
 import ognl.Ognl;
@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
  */
 public class OgnlUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OgnlUtil.class);
+    private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
     private ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<String, Object>();
     private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<Class, BeanInfo>();
     private TypeConverter defaultConverter;

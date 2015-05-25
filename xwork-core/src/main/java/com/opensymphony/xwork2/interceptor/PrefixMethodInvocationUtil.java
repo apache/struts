@@ -16,8 +16,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -63,7 +63,7 @@ import java.lang.reflect.Method;
  */
 public class PrefixMethodInvocationUtil {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(PrefixMethodInvocationUtil.class);
+	private static final Logger LOG = LogManager.getLogger(PrefixMethodInvocationUtil.class);
 
     private static final String DEFAULT_INVOCATION_METHODNAME = "execute";
 

@@ -20,8 +20,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -60,7 +60,7 @@ import org.springframework.web.context.WebApplicationContext;
  * @author Eric Hauser
  */
 public class ActionAutowiringInterceptor extends AbstractInterceptor implements ApplicationContextAware {
-    private static final Logger LOG = LoggerFactory.getLogger(ActionAutowiringInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ActionAutowiringInterceptor.class);
 
     public static final String APPLICATION_CONTEXT = "com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor.applicationContext";
 

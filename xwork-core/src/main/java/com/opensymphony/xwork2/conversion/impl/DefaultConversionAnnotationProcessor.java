@@ -8,8 +8,8 @@ import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class DefaultConversionAnnotationProcessor implements ConversionAnnotationProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultConversionAnnotationProcessor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultConversionAnnotationProcessor.class);
 
     private TypeConverterCreator converterCreator;
     private TypeConverterHolder converterHolder;

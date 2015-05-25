@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -175,7 +175,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
     private static final long serialVersionUID = -2754639196749652512L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExecuteAndWaitInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ExecuteAndWaitInterceptor.class);
 
     public static final String KEY = "__execWait";
     public static final String WAIT = "wait";

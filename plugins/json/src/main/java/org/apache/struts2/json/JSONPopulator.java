@@ -48,8 +48,8 @@ import java.util.Set;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Isolate the process of populating JSON objects from the Interceptor class
@@ -57,7 +57,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class JSONPopulator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONPopulator.class);
+    private static final Logger LOG = LogManager.getLogger(JSONPopulator.class);
 
     private String dateFormat = JSONUtil.RFC3339_FORMAT;
 

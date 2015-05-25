@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import ognl.DefaultMemberAccess;
 
 import java.lang.reflect.Member;
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  */
 public class SecurityMemberAccess extends DefaultMemberAccess {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SecurityMemberAccess.class);
+    private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();

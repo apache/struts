@@ -31,8 +31,8 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -82,7 +82,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
         description="Create a Select component with buttons to move the elements in the select component up and down")
 public class UpDownSelect extends Select {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UpDownSelect.class);
+    private static final Logger LOG = LogManager.getLogger(UpDownSelect.class);
 
 
     final public static String TEMPLATE = "updownselect";

@@ -26,8 +26,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -104,7 +104,7 @@ public class FreemarkerResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -3778230771704661631L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerResult.class);
+    private static final Logger LOG = LogManager.getLogger(FreemarkerResult.class);
 
     protected ActionInvocation invocation;
     protected Configuration configuration;

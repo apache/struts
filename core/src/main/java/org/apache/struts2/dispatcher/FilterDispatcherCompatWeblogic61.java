@@ -29,8 +29,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.config.ServletContextSingleton;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -52,7 +52,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class FilterDispatcherCompatWeblogic61 extends FilterDispatcher {
 
-    private static Logger LOG = LoggerFactory.getLogger(FilterDispatcherCompatWeblogic61.class);
+    private static Logger LOG = LogManager.getLogger(FilterDispatcherCompatWeblogic61.class);
 
     /**
      * dummy setter for {@link #filterConfig}; this method

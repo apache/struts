@@ -29,8 +29,8 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import com.opensymphony.xwork2.util.DomHelper;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * StringAdapter adapts a Java String value to a DOM Element with the specified
@@ -47,7 +47,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class StringAdapter extends AbstractAdapterElement {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
     boolean parseStringAsXML;
 
     public StringAdapter() {

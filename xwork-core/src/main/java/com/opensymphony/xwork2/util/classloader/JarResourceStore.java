@@ -16,8 +16,8 @@
 
 package com.opensymphony.xwork2.util.classloader;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -27,7 +27,7 @@ import java.util.zip.ZipFile;
  * Read resources from a jar file
  */
 public class JarResourceStore implements ResourceStore {
-    private static final Logger LOG = LoggerFactory.getLogger(JarResourceStore.class);
+    private static final Logger LOG = LogManager.getLogger(JarResourceStore.class);
 
     private final File file;
 

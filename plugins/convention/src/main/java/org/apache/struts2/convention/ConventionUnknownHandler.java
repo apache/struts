@@ -38,8 +38,8 @@ import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
@@ -67,7 +67,7 @@ import java.util.Map;
  */
 public class ConventionUnknownHandler implements UnknownHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConventionUnknownHandler.class);
+    private static final Logger LOG = LogManager.getLogger(ConventionUnknownHandler.class);
 
     protected Configuration configuration;
     protected ObjectFactory objectFactory;

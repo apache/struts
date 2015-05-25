@@ -24,8 +24,8 @@ package org.apache.struts2.dispatcher.multipart;
 import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +58,7 @@ import java.util.Vector;
  */
 public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(MultiPartRequestWrapper.class);
+    protected static final Logger LOG = LogManager.getLogger(MultiPartRequestWrapper.class);
 
     private Collection<String> errors;
     private MultiPartRequest multi;

@@ -28,10 +28,8 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     @Inject(value = XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS, required = false)
     public void setOverrideExcludePatterns(String excludePatterns) {
-        if (LOG.isWarnEnabled()) {
-            LOG.warn("Overriding excluded patterns [#0] with [#1], be aware that this affects all instances and safety of your application!",
+        LOG.warn("Overriding excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
                     XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS, excludePatterns);
-        }
         excludedPatterns = new HashSet<Pattern>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
@@ -40,9 +38,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     @Inject(value = XWorkConstants.ADDITIONAL_EXCLUDED_PATTERNS, required = false)
     public void setAdditionalExcludePatterns(String excludePatterns) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Adding additional global patterns [#0] to excluded patterns!", excludePatterns);
-        }
+        LOG.debug("Adding additional global patterns [{}] to excluded patterns!", excludePatterns);
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
@@ -57,9 +53,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     }
 
     public void setExcludedPatterns(Set<String> patterns) {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Sets excluded patterns [#0]", patterns);
-        }
+        LOG.trace("Sets excluded patterns [{}]", patterns);
         excludedPatterns = new HashSet<Pattern>(patterns.size());
         for (String pattern : patterns) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
@@ -69,9 +63,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     public IsExcluded isExcluded(String value) {
         for (Pattern excludedPattern : excludedPatterns) {
             if (excludedPattern.matcher(value).matches()) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("[#0] matches excluded pattern [#1]", value, excludedPattern);
-                }
+                LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
                 return IsExcluded.yes(excludedPattern);
             }
         }

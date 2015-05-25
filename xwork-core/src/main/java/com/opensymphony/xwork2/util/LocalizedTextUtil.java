@@ -223,9 +223,9 @@ public class LocalizedTextUtil {
         }
 
         if (devMode) {
-            LOG.warn("Missing key [#0] in bundles [#1]!", aTextName, localList);
-        } else if (LOG.isDebugEnabled()) {
-            LOG.debug("Missing key [#0] in bundles [#1]!", aTextName, localList);
+            LOG.warn("Missing key [{}] in bundles [{}]!", aTextName, localList);
+        } else {
+            LOG.debug("Missing key [{}] in bundles [{}]!", aTextName, localList);
         }
 
         return null;
@@ -281,9 +281,7 @@ public class LocalizedTextUtil {
                         bundle = bundlesMap.get(key);
                     }
                 } catch (MissingResourceException e) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Missing resource bundle [#0]!", aBundleName);
-                    }
+                    LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
                 }
             }
         }
@@ -643,15 +641,15 @@ public class LocalizedTextUtil {
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException ex) {
             if (devMode) {
-                LOG.warn("Missing key [#0] in bundle [#1]!", aTextName, bundle);
-            } else if (LOG.isDebugEnabled()) {
-                LOG.debug("Missing key [#0] in bundle [#1]!", aTextName, bundle);
+                LOG.warn("Missing key [{}] in bundle [{}]!", aTextName, bundle);
+            } else {
+                LOG.debug("Missing key [{}] in bundle [{}]!", aTextName, bundle);
             }
         }
 
         GetDefaultMessageReturnArg result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
-        if (LOG.isWarnEnabled() && unableToFindTextForKey(result)) {
-            LOG.warn("Unable to find text for key '" + aTextName + "' in ResourceBundles for locale '" + locale + "'");
+        if (unableToFindTextForKey(result)) {
+            LOG.warn("Unable to find text for key '{}' in ResourceBundles for locale '{}'", aTextName, locale);
         }
         return result != null ? result.message : null;
     }
@@ -699,9 +697,9 @@ public class LocalizedTextUtil {
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException e) {
             if (devMode) {
-                LOG.warn("Missing key [#0] in bundle [#1]!", key, bundleName);
-            } else if (LOG.isDebugEnabled()) {
-                LOG.debug("Missing key [#0] in bundle [#1]!", key, bundleName);
+                LOG.warn("Missing key [{}] in bundle [{}]!", key, bundleName);
+            } else {
+                LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
             }
             return null;
         }
@@ -821,11 +819,10 @@ public class LocalizedTextUtil {
                     // now, for the true and utter hack, if we're running in tomcat, clear
                     // it's class loader resource cache as well.
                     clearTomcatCache();
-                    if(context!=null)
+                    if(context!=null) {
                         context.put(RELOADED, true);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Resource bundles reloaded");
                     }
+                    LOG.debug("Resource bundles reloaded");
                 }
             } catch (Exception e) {
                 LOG.error("Could not reload resource bundles", e);
@@ -843,27 +840,19 @@ public class LocalizedTextUtil {
             if ("org.apache.catalina.loader.WebappClassLoader".equals(cl.getName())) {
                 clearMap(cl, loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("class loader " + cl.getName() + " is not tomcat loader.");
-                }
+                LOG.debug("Class loader {} is not tomcat loader.", cl.getName());
             }
         } catch (NoSuchFieldException nsfe) {
             if ("org.apache.catalina.loader.WebappClassLoaderBase".equals(cl.getSuperclass().getName())) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Base class #0 doesn't contain '#1' field, trying with parent!", nsfe, cl.getName(), TOMCAT_RESOURCE_ENTRIES_FIELD);
-                }
+                LOG.debug("Base class {} doesn't contain '{}' field, trying with parent!", cl.getName(), TOMCAT_RESOURCE_ENTRIES_FIELD, nsfe);
                 try {
                     clearMap(cl.getSuperclass(), loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
                 } catch (Exception e) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Couldn't clear tomcat cache using #0", e, cl.getSuperclass().getName());
-                    }
+                    LOG.warn("Couldn't clear tomcat cache using {}", cl.getSuperclass().getName(), e);
                 }
             }
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
-        	    LOG.warn("Couldn't clear tomcat cache", e, cl.getName());
-            }
+      	    LOG.warn("Couldn't clear tomcat cache", cl.getName(), e);
         }
     }
 

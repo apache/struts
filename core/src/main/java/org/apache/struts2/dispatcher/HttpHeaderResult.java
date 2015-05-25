@@ -196,7 +196,7 @@ public class HttpHeaderResult implements Result {
                 errorCode = Integer.parseInt(parse ? TextParseUtil.translateVariables(error, stack) : error);
             } catch (Exception e) {
                 if (LOG.isErrorEnabled()) {
-                    LOG.error("Cannot parse errorCode [#0] value as Integer!", e, error);
+                    LOG.error("Cannot parse errorCode [{}] value as Integer!", error, e);
                 }
             }
             if (errorCode != -1) {

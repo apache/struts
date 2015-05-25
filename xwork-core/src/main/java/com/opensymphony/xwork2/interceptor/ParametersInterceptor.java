@@ -412,7 +412,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean acceptableName(String name) {
         boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name);
         if (devMode && accepted) { // notify only when in devMode
-            LOG.debug("Parameter [#0] was accepted and will be appended to action!", name);
+            LOG.debug("Parameter [{}] was accepted and will be appended to action!", name);
         }
         return accepted;
     }
@@ -420,7 +420,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 	protected boolean isWithinLengthLimit( String name ) {
         boolean matchLength = name.length() <= paramNameMaxLength;
         if (!matchLength) {
-            notifyDeveloper("Parameter [#0] is too long, allowed length is [#1]", name, String.valueOf(paramNameMaxLength));
+            notifyDeveloper("Parameter [{}] is too long, allowed length is [{}]", name, String.valueOf(paramNameMaxLength));
         }
         return matchLength;
 	}
@@ -430,14 +430,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (result.isAccepted()) {
             return true;
         }
-        notifyDeveloper("Parameter [#0] didn't match accepted pattern [#1]!", paramName, result.getAcceptedPattern());
+        notifyDeveloper("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
         return false;
     }
 
     protected boolean isExcluded(String paramName) {
         ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
         if (result.isExcluded()) {
-            notifyDeveloper("Parameter [#0] matches excluded pattern [#1]!", paramName, result.getExcludedPattern());
+            notifyDeveloper("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
             return true;
         }
         return false;

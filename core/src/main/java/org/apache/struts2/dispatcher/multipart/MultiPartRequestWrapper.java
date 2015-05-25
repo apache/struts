@@ -106,7 +106,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     protected String buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Preparing error message for key: [#0]", errorKey);
+            LOG.debug("Preparing error message for key: [{}]", errorKey);
         }
         return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }

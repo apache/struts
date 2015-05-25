@@ -430,9 +430,7 @@ public class FreemarkerManager {
                  }
              }
          } catch (IOException e) {
-             if (LOG.isErrorEnabled()) {
-                LOG.error("Invalid template path specified: #0", e, e.getMessage());
-             }
+             LOG.error("Invalid template path specified: {}", e.getMessage(), e);
          }
 
          // presume that most apps will require the class and webapp template loader

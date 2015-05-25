@@ -126,15 +126,11 @@ public class DefaultFileManager implements FileManager {
             } else if ("file".equals(url.getProtocol())) {
                 return url; // it's already a file
             } else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not normalize URL [#0] to file protocol!", url.toString());
-                }
+                LOG.warn("Could not normalize URL [{}] to file protocol!", url);
                 return null;
             }
         } catch (MalformedURLException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Error normalizing URL [#0] to file protocol!", e, url.toString());
-            }
+            LOG.warn("Error normalizing URL [{}] to file protocol!", url, e);
             return null;
         }
     }

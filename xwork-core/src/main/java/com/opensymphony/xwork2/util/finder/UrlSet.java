@@ -237,9 +237,9 @@ public class UrlSet {
                 //build a URL pointing to the jar, instead of the META-INF dir
                 url = new URL(StringUtils.substringBefore(externalForm, "META-INF"));
                 list.add(url);
-            } else if (LOG.isDebugEnabled())
-                LOG.debug("Ignoring URL [#0] because it is not a jar", url.toExternalForm());
-
+            } else {
+                LOG.debug("Ignoring URL [{}] because it is not a jar", url.toExternalForm());
+            }
         }
 
         //usually the "classes" dir
@@ -264,17 +264,14 @@ public class UrlSet {
                 //build a URL pointing to the jar, instead of the META-INF dir
                 url = new URL(StringUtils.substringBefore(externalForm, "META-INF"));
                 list.add(url);
-            } else if (LOG.isDebugEnabled())
-                LOG.debug("Ignoring URL [#0] because it is not a valid protocol", url.toExternalForm());
-
+            } else {
+                LOG.debug("Ignoring URL [{}] because it is not a valid protocol", url.toExternalForm());
+            }
         }
         return list;
     }
 
     public static interface FileProtocolNormalizer {
-
         URL normalizeToFileProtocol(URL url);
-
     }
-
 }

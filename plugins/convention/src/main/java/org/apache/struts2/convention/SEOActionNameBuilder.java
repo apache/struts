@@ -89,9 +89,7 @@ public class SEOActionNameBuilder implements ActionNameBuilder {
             actionName = actionName.toLowerCase();
         }
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Changed action name from [#0] to [#1]", className, actionName);
-        }
+        LOG.trace("Changed action name from [{}] to [{}]", className, actionName);
 
         return actionName;
     }

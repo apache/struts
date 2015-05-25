@@ -214,7 +214,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
                 ifModifiedSince = request.getDateHeader("If-Modified-Since");
             } catch (Exception e) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("Invalid If-Modified-Since header value: '#0', ignoring", request.getHeader("If-Modified-Since"));
+                    LOG.warn("Invalid If-Modified-Since header value: '{}', ignoring", request.getHeader("If-Modified-Since"));
                 }
             }
             long lastModifiedMillis = lastModifiedCal.getTimeInMillis();

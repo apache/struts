@@ -199,9 +199,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
                     .build();
             throw new XWorkException(message, re);
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Error setting value [#0] with expression [#1]", re, value.toString(), expr);
-            }
+            LOG.warn("Error setting value [{}] with expression [{}]", value, expr, re);
         }
     }
 
@@ -333,7 +331,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         Object ret = findInContext(expr);
         if (ret == null) {
             if (shouldLogMissingPropertyWarning(e)) {
-                LOG.warn("Could not find property [#0]!", e, expr);
+                LOG.warn("Could not find property [{}]!", expr, e);
             }
             if (throwExceptionOnFailure) {
                 throw new XWorkException(e);
@@ -381,12 +379,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      * @param e    The thrown exception.
      */
     private void logLookupFailure(String expr, Exception e) {
-        String msg = LoggerUtils.format("Caught an exception while evaluating expression '#0' against value stack", expr);
         if (devMode && LOG.isWarnEnabled()) {
-            LOG.warn(msg, e);
+            LOG.warn("Caught an exception while evaluating expression '{}' against value stack", expr, e);
             LOG.warn("NOTE: Previous warning message was issued due to devMode set to true.");
-        } else if (LOG.isDebugEnabled()) {
-            LOG.debug(msg, e);
+        } else {
+            LOG.debug("Caught an exception while evaluating expression '{}' against value stack", expr, e);
         }
     }
 

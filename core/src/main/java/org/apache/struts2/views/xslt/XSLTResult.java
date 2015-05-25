@@ -422,9 +422,7 @@ public class XSLTResult implements Result {
             }
 
         } catch (Exception e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Unable to render XSLT Template, '#0'", e, location);
-            }
+            LOG.error("Unable to render XSLT Template, '{}'", location, e);
             throw e;
         }
     }

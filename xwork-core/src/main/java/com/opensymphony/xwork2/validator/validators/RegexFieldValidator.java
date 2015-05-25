@@ -95,9 +95,8 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         // if there is no value - don't do comparison
         // if a value is required, a required validator should be added to the field
         String regexToUse = getRegex();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Defined regexp as [#0]", regexToUse);
-        }
+        LOG.debug("Defined regexp as [{}]", regexToUse);
+
         if (value == null || regexToUse == null) {
             return;
         }

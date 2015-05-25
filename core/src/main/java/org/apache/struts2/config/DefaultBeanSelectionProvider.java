@@ -466,12 +466,10 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
             while (customBundles.hasMoreTokens()) {
                 String name = customBundles.nextToken();
                 try {
-                    if (LOG.isInfoEnabled()) {
-                	    LOG.info("Loading global messages from [#0]", name);
-                    }
+              	    LOG.info("Loading global messages from [{}]", name);
                     LocalizedTextUtil.addDefaultResourceBundle(name);
                 } catch (Exception e) {
-                    LOG.error("Could not find messages file #0.properties. Skipping", name);
+                    LOG.error("Could not find messages file {}.properties. Skipping", name);
                 }
             }
         }

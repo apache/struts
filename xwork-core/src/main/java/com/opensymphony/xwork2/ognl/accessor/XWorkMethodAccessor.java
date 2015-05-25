@@ -120,8 +120,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 			if (LOG.isDebugEnabled()) {
 				if (!(e.getReason() instanceof NoSuchMethodException)) {
 					// the method exists on the target object, but something went wrong
-					String s = "Error calling method through OGNL: object: [#0] method: [#1] args: [#2]";
-					LOG.debug(s, e.getReason(), object.toString(), methodName, Arrays.toString(objects));
+					LOG.debug( "Error calling method through OGNL: object: [{}] method: [{}] args: [{}]", e.getReason(), object.toString(), methodName, Arrays.toString(objects));
 				}
 			}
 			throw e;
@@ -149,8 +148,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 			if (LOG.isDebugEnabled()) {
 				if (!(e.getReason() instanceof NoSuchMethodException)) {
 					// the method exists on the target class, but something went wrong
-					String s = "Error calling method through OGNL, class: [#0] method: [#1] args: [#2]";
-					LOG.debug(s, e.getReason(), aClass.getName(), methodName, Arrays.toString(objects));
+					LOG.debug("Error calling method through OGNL, class: [{}] method: [{}] args: [{}]", e.getReason(), aClass.getName(), methodName, Arrays.toString(objects));
 				}
 			}
 			throw e;

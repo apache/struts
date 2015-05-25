@@ -247,7 +247,7 @@ public class CookieInterceptor extends AbstractInterceptor {
                         populateCookieValueIntoStack(name, value, cookiesMap, stack);
                     }
                 } else {
-                    LOG.warn("Cookie name [#0] with value [#1] was rejected!", name, value);
+                    LOG.warn("Cookie name [{}] with value [{}] was rejected!", name, value);
                 }
             }
         }
@@ -288,12 +288,12 @@ public class CookieInterceptor extends AbstractInterceptor {
         AcceptedPatternsChecker.IsAccepted accepted = acceptedPatternsChecker.isAccepted(name);
         if (accepted.isAccepted()) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Cookie [#0] matches acceptedPattern [#1]", name, accepted.getAcceptedPattern());
+                LOG.trace("Cookie [{}] matches acceptedPattern [{}]", name, accepted.getAcceptedPattern());
             }
             return true;
         }
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Cookie [#0] doesn't match acceptedPattern [#1]", name, accepted.getAcceptedPattern());
+            LOG.trace("Cookie [{}] doesn't match acceptedPattern [{}]", name, accepted.getAcceptedPattern());
         }
         return false;
     }
@@ -308,12 +308,12 @@ public class CookieInterceptor extends AbstractInterceptor {
         ExcludedPatternsChecker.IsExcluded excluded = excludedPatternsChecker.isExcluded(name);
         if (excluded.isExcluded()) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Cookie [#0] matches excludedPattern [#1]", name, excluded.getExcludedPattern());
+                LOG.trace("Cookie [{}] matches excludedPattern [{}]", name, excluded.getExcludedPattern());
             }
             return true;
         }
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Cookie [#0] doesn't match excludedPattern [#1]", name, excluded.getExcludedPattern());
+            LOG.trace("Cookie [{}] doesn't match excludedPattern [{}]", name, excluded.getExcludedPattern());
         }
         return false;
     }
@@ -335,9 +335,9 @@ public class CookieInterceptor extends AbstractInterceptor {
             // we'll inject it into Struts' action
             if (LOG.isDebugEnabled()) {
                 if (cookiesValueSet.isEmpty())
-                    LOG.debug("no cookie value is configured, cookie with name ["+cookieName+"] with value ["+cookieValue+"] will be injected");
+                    LOG.debug("no cookie value is configured, cookie with name [{}] with value [{}] will be injected", cookieName, cookieValue);
                 else if (cookiesValueSet.contains("*"))
-                    LOG.debug("interceptor is configured to accept any value, cookie with name ["+cookieName+"] with value ["+cookieValue+"] will be injected");
+                    LOG.debug("interceptor is configured to accept any value, cookie with name [{}] with value [{}] will be injected", cookieName, cookieValue);
             }
             cookiesMap.put(cookieName, cookieValue);
             stack.setValue(cookieName, cookieValue);
@@ -347,7 +347,7 @@ public class CookieInterceptor extends AbstractInterceptor {
             // inject them into Struts' action
             if (cookiesValueSet.contains(cookieValue)) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("both configured cookie name and value matched, cookie ["+cookieName+"] with value ["+cookieValue+"] will be injected");
+                    LOG.debug("both configured cookie name and value matched, cookie [{}] with value [{}] will be injected", cookieName, cookieValue);
                 }
 
                 cookiesMap.put(cookieName, cookieValue);
@@ -365,9 +365,7 @@ public class CookieInterceptor extends AbstractInterceptor {
      */
     protected void injectIntoCookiesAwareAction(Object action, Map<String, String> cookiesMap) {
         if (action instanceof CookiesAware) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("action ["+action+"] implements CookiesAware, injecting cookies map ["+cookiesMap+"]");
-            }
+            LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);
             ((CookiesAware)action).setCookiesMap(cookiesMap);
         }
     }

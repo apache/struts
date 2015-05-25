@@ -123,7 +123,7 @@ public class BeanAdapter extends AbstractAdapterElement {
                     if (e instanceof InvocationTargetException)
                         e = (Exception) ((InvocationTargetException) e).getTargetException();
                     if (log.isErrorEnabled()) {
-                        log.error("Cannot access bean property: #0", e, propertyName);
+                        log.error("Cannot access bean property: {}", propertyName, e);
                     }
                     continue;
                 }
@@ -139,14 +139,11 @@ public class BeanAdapter extends AbstractAdapterElement {
                 if (childAdapter != null)
                     newAdapters.add(childAdapter);
 
-                if (log.isDebugEnabled()) {
-                    log.debug(this + " adding adapter: " + childAdapter);
-                }
+                log.debug("{} adding adapter: {}", this, childAdapter);
             }
         } else {
             // No properties found
-            log.info(
-                    "Class " + type.getName() + " has no readable properties, " + " trying to adapt " + getPropertyName() + " with StringAdapter...");
+            log.info("Class {} has no readable properties, trying to adapt {} with StringAdapter...", type.getName(), getPropertyName());
         }
 
         return newAdapters;

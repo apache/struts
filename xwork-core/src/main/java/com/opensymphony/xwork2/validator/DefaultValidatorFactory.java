@@ -174,7 +174,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
                         }
                     }
                 } catch (Exception ex) {
-                    LOG.error("Unable to load #0", ex, u.toString());
+                    LOG.error("Unable to load {}", u, ex);
                 }
             }
         } catch (IOException e) {

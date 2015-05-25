@@ -93,7 +93,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         if (servletContext != null) {
             return servletContext.getResourceAsStream(path);
         } else {
-            LOG.warn("ServletContext is null, cannot obtain #0", path);
+            LOG.warn("ServletContext is null, cannot obtain {}", path);
             return null;
         }
     }

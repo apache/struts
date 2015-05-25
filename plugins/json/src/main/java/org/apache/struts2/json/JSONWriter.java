@@ -420,7 +420,7 @@ public class JSONWriter {
 
             Object key = entry.getKey();
             if (key == null) {
-                LOG.error("Cannot build expression for null key in #0", exprStack);
+                LOG.error("Cannot build expression for null key in {}", exprStack);
                 continue;
             }
 
@@ -438,7 +438,7 @@ public class JSONWriter {
             hasData = true;
             if (!warnedNonString && !(key instanceof String)) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on #0", key.getClass().getName());
+                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on {}", key.getClass().getName());
                 }
                 warnedNonString = true;
             }

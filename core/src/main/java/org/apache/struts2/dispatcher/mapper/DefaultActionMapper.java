@@ -384,17 +384,13 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Action [#0] does not match allowed action names pattern [#1], cleaning it up!",
-                        rawActionName, allowedActionNames);
-            }
+            LOG.warn("Action [{}] does not match allowed action names pattern [{}], cleaning it up!",
+                    rawActionName, allowedActionNames);
             String cleanActionName = rawActionName;
             for (String chunk : allowedActionNames.split(rawActionName)) {
                 cleanActionName = cleanActionName.replace(chunk, "");
             }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cleaned action name [#0]", cleanActionName);
-            }
+            LOG.debug("Cleaned action name [{}]", cleanActionName);
             return cleanActionName;
         }
     }

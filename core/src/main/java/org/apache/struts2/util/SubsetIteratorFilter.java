@@ -167,10 +167,8 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
                 return okToAdd;
             }
             catch(Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Decider [#0] encountered an error while decide adding element [#1], element will be ignored, it will not appeared in subseted iterator",
-                            e, decider.toString(), element.toString());
-                }
+                LOG.warn("Decider [{}] encountered an error while decide adding element [{}], element will be ignored, it will not appeared in subseted iterator",
+                            decider, element, e);
                 return false;
             }
         }

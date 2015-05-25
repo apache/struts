@@ -259,9 +259,7 @@ public class DefaultUrlHelper implements UrlHelper {
 		try {
 			return URLEncoder.encode(input, encoding);
 		} catch (UnsupportedEncodingException e) {
-			if (LOG.isWarnEnabled()) {
-				LOG.warn("Could not encode URL parameter '#0', returning value un-encoded", input);
-			}
+    		LOG.warn("Could not encode URL parameter '{}', returning value un-encoded", input);
 			return input;
 		}
 	}
@@ -276,9 +274,7 @@ public class DefaultUrlHelper implements UrlHelper {
 		try {
 			return URLDecoder.decode(input, encoding);
 		} catch (UnsupportedEncodingException e) {
-			if (LOG.isWarnEnabled()) {
-				LOG.warn("Could not decode URL parameter '#0', returning value un-decoded", input);
-			}
+    		LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
 			return input;
 		}
 	}

@@ -145,19 +145,17 @@ public abstract class BaseOsgiHost implements OsgiHost {
                         for (String runLevel : runLevelDirs) {
                             dirs.put(runLevel, StringUtils.chomp(dir,  "/") + "/" + runLevel);
                         }
-                    } else if (LOG.isDebugEnabled()) {
-                        LOG.debug("No run level directories found under the [#0] directory", dir);
+                    } else {
+                        LOG.debug("No run level directories found under the [{}] directory", dir);
                     }
-                } else if (LOG.isWarnEnabled()) {
-                    LOG.warn("Unable to read [#0] directory", dir);
+                } else {
+                    LOG.warn("Unable to read [{}] directory", dir);
                 }
-            } else if (LOG.isWarnEnabled()) {
-                LOG.warn("The [#0] directory was not found", dir);
+            } else {
+                LOG.warn("The [{}] directory was not found", dir);
             }
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unable load bundles from the [#0] directory", e, dir);
-            }
+            LOG.warn("Unable load bundles from the [{}] directory", dir, e);
         }
         return dirs;
     }
@@ -180,25 +178,21 @@ public abstract class BaseOsgiHost implements OsgiHost {
                         //add all the bundles to the list
                         for (File bundle : bundles) {
                             String externalForm = bundle.toURI().toURL().toExternalForm();
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Adding bundle [#0]", externalForm);
-                            }
+                            LOG.debug("Adding bundle [{}]", externalForm);
                             bundleJars.add(externalForm);
                         }
 
-                    } else if (LOG.isDebugEnabled()) {
-                        LOG.debug("No bundles found under the [#0] directory", dir);
+                    } else {
+                        LOG.debug("No bundles found under the [{}] directory", dir);
                     }
-                } else if (LOG.isWarnEnabled()) {
-                    LOG.warn("Unable to read [#0] directory", dir);
+                } else {
+                    LOG.warn("Unable to read [{}] directory", dir);
                 }
-            } else if (LOG.isWarnEnabled()) {
-                LOG.warn("The [#0] directory was not found", dir);
+            } else {
+                LOG.warn("The [{}] directory was not found", dir);
             }
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unable load bundles from the [#0] directory", e, dir);
-            }
+            LOG.warn("Unable load bundles from the [{}] directory", dir, e);
         }
         return bundleJars;
     }
@@ -254,9 +248,7 @@ public abstract class BaseOsgiHost implements OsgiHost {
                     }
                 }
             } catch (IOException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to find subpackages of [#0]", e, rootPackage);
-                }
+                LOG.error("Unable to find subpackages of [{}]", rootPackage, e);
             }
         }
 
@@ -287,9 +279,7 @@ public abstract class BaseOsgiHost implements OsgiHost {
                     return getVersionFromString(jarFile.getName());
                 }
             } catch (Exception e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to extract version from [#0], defaulting to '1.0.0'", url.toExternalForm());
-                }
+                LOG.error("Unable to extract version from [{}], defaulting to '1.0.0'", url.toExternalForm());
             }
         }
         return "1.0.0";

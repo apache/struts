@@ -158,9 +158,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
                 is = fileManager.loadFile(fileUrl);
 
                 if (is != null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Loading validation xml file [#0]", fileName);
-                    }
+                    LOG.debug("Loading validation xml file [{}]", fileName);
                     XMLConfigurer configurer = new XMLConfigurer();
                     configurer.fromXML(is);
                     validatorFileCache.put(fileName, configurer);
@@ -171,7 +169,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
                     try {
                         is.close();
                     } catch (java.io.IOException e) {
-                        LOG.error("Unable to close input stream for [#0] ", e, fileName);
+                        LOG.error("Unable to close input stream for [{}] ", fileName, e);
                     }
                 }
             }

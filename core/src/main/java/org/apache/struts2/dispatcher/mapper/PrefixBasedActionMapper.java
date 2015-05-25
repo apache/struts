@@ -63,8 +63,8 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
                     Object obj = container.getInstance(ActionMapper.class, mapperName);
                     if (obj != null) {
                         actionMappers.put(mapperPrefix, (ActionMapper) obj);
-                    } else if (LOG.isDebugEnabled()) {
-                        LOG.debug("invalid PrefixBasedActionMapper config entry: [#0]", mapper);
+                    } else {
+                        LOG.debug("invalid PrefixBasedActionMapper config entry: [{}]", mapper);
                     }
                 }
             }
@@ -79,30 +79,28 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
             ActionMapper actionMapper = actionMappers.get(uri.substring(0, lastIndex));
             if (actionMapper != null) {
                 ActionMapping actionMapping = actionMapper.getMapping(request, configManager);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using ActionMapper [#0]", actionMapper.toString());
-                }
+                LOG.debug("Using ActionMapper [{}]", actionMapper);
                 if (actionMapping != null) {
                     if (LOG.isDebugEnabled()) {
                         if (actionMapping.getParams() != null) {
-                            LOG.debug("ActionMapper found mapping. Parameters: [#0]", actionMapping.getParams().toString());
+                            LOG.debug("ActionMapper found mapping. Parameters: [{}]", actionMapping.getParams().toString());
                             for (Map.Entry<String, Object> mappingParameterEntry : actionMapping.getParams().entrySet()) {
                                 Object paramValue = mappingParameterEntry.getValue();
                                 if (paramValue == null) {
-                                    LOG.debug("[#0] : null!", mappingParameterEntry.getKey());
+                                    LOG.debug("[{}] : null!", mappingParameterEntry.getKey());
                                 } else if (paramValue instanceof String[]) {
-                                    LOG.debug("[#0] : (String[]) #1", mappingParameterEntry.getKey(), Arrays.toString((String[]) paramValue));
+                                    LOG.debug("[{}] : (String[]) {}", mappingParameterEntry.getKey(), Arrays.toString((String[]) paramValue));
                                 } else if (paramValue instanceof String) {
-                                    LOG.debug("[#0] : (String) [#1]", mappingParameterEntry.getKey(), paramValue.toString());
+                                    LOG.debug("[{}] : (String) [{}]", mappingParameterEntry.getKey(), paramValue.toString());
                                 } else {
-                                    LOG.debug("[#0] : (Object) [#1]", mappingParameterEntry.getKey(), paramValue.toString());
+                                    LOG.debug("[{}] : (Object) [{}]", mappingParameterEntry.getKey(), paramValue.toString());
                                 }
                             }
                         }
                     }
                     return actionMapping;
-                } else if (LOG.isDebugEnabled()) {
-                    LOG.debug("ActionMapper [#0] failed to return an ActionMapping", actionMapper.toString());
+                } else {
+                    LOG.debug("ActionMapper [{}] failed to return an ActionMapping", actionMapper);
                 }
             }
         }
@@ -118,13 +116,11 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
             ActionMapper actionMapper = actionMappers.get(namespace.substring(0, lastIndex));
             if (actionMapper != null) {
                 String uri = actionMapper.getUriFromActionMapping(mapping);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using ActionMapper [#0]", actionMapper.toString());
-                }
+                LOG.debug("Using ActionMapper [{}]", actionMapper);
                 if (uri != null) {
                     return uri;
                 } else if (LOG.isDebugEnabled()) {
-                    LOG.debug("ActionMapper [#0] failed to return an ActionMapping (null)", actionMapper.toString());
+                    LOG.debug("ActionMapper [{}] failed to return an ActionMapping (null)", actionMapper);
                 }
             }
         }

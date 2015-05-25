@@ -836,9 +836,7 @@ public class ResourceFinder {
 
                 }
             } catch (Exception e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Got exception loading resources for #0", e, uri);
-                }
+                LOG.debug("Got exception loading resources for {}", uri, e);
             }
         }
 
@@ -871,9 +869,7 @@ public class ResourceFinder {
 
                 }
             } catch (Exception e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Got exception search for subpackages for #0", e, uri);
-                }
+                LOG.debug("Got exception search for subpackages for {}", uri, e);
             }
         }
 
@@ -906,9 +902,7 @@ public class ResourceFinder {
                     result.put(location, convertPathsToPackages(resources));
                 }
             } catch (Exception e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Got exception finding subpackages for #0", e, uri);
-                }
+                LOG.debug("Got exception finding subpackages for {}", uri, e);
             }
         }
 

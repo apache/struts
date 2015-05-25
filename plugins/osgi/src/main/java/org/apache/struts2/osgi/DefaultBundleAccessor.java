@@ -110,8 +110,7 @@ public class DefaultBundleAccessor implements BundleAccessor {
         Bundle bundle = getCurrentBundle();
         if (bundle != null) {
             Class cls = bundle.loadClass(className);
-            if (LOG.isTraceEnabled())
-                LOG.trace("Located class [#0] in bundle [#1]", className, bundle.getSymbolicName());
+            LOG.trace("Located class [{}] in bundle [{}]", className, bundle.getSymbolicName());
             return cls;
         }
 

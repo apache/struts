@@ -85,8 +85,7 @@ public class DefaultClassFinder implements ClassFinder {
                     }
                 }
             } catch (Exception e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Unable to read URL [#0]", e, location.toExternalForm());
+                LOG.error("Unable to read URL [{}]", location.toExternalForm(), e);
             }
         }
 
@@ -95,8 +94,7 @@ public class DefaultClassFinder implements ClassFinder {
                 if (classNameFilter.test(className))
                     readClassDef(className);
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Unable to read class [#0]", e, className);
+                LOG.error("Unable to read class [{}]", className, e);
             }
         }
     }
@@ -189,8 +187,7 @@ public class DefaultClassFinder implements ClassFinder {
                         classes.add(clazz);
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -220,8 +217,7 @@ public class DefaultClassFinder implements ClassFinder {
                         }
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -251,8 +247,7 @@ public class DefaultClassFinder implements ClassFinder {
                         }
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -282,8 +277,7 @@ public class DefaultClassFinder implements ClassFinder {
                         }
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -302,8 +296,7 @@ public class DefaultClassFinder implements ClassFinder {
                     classes.add(classInfo.get());
                 }
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Error loading class [#0]", e, classInfo.getName());
+                LOG.error("Error loading class [{}]", classInfo.getName(), e);
                 classesNotLoaded.add(classInfo.getName());
             }
         }
@@ -319,8 +312,7 @@ public class DefaultClassFinder implements ClassFinder {
                     classes.add(classInfo.get());
                 }
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Error loading class [#0]", e, classInfo.getName());
+                LOG.error("Error loading class [{}]", classInfo.getName(), e);
                 classesNotLoaded.add(classInfo.getName());
             }
         }
@@ -334,8 +326,7 @@ public class DefaultClassFinder implements ClassFinder {
             try {
                 classes.add(classInfo.get());
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Error loading class [#0]", e, classInfo.getName());
+                LOG.error("Error loading class [{}]", classInfo.getName(), e);
                 classesNotLoaded.add(classInfo.getName());
             }
         }
@@ -352,8 +343,7 @@ public class DefaultClassFinder implements ClassFinder {
                     urls.add(url);
                 }
             } catch (IOException ioe) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Could not read driectory [#0]", ioe, dirName);
+                LOG.error("Could not read directory [{}]", dirName, ioe);
             }
         }
 
@@ -397,9 +387,9 @@ public class DefaultClassFinder implements ClassFinder {
             } finally {
                 in.close();
             }
-        } else if (LOG.isDebugEnabled())
-            LOG.debug("Unable to read [#0]", location.toExternalForm());
-        
+        } else {
+            LOG.debug("Unable to read [{}]", location.toExternalForm());
+        }
         return Collections.emptyList();
     }
 

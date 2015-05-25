@@ -121,13 +121,11 @@ public class RequestUtils {
             try {
                 return fastDateFormat.parse(headerValue);
             } catch (ParseException ignore) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Error parsing value [#0] as [#1]!", headerValue, fastDateFormat);
-                }
+                LOG.debug("Error parsing value [{}] as [{}]!", headerValue, fastDateFormat);
             }
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Error parsing value [#0] as date!", headerValue);
+            LOG.debug("Error parsing value [{}] as date!", headerValue);
         }
         return null;
     }

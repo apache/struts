@@ -52,9 +52,7 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
                 Properties props = new Properties();
                 props.load(url.openStream());
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("processing conversion file [" + propsName + "]");
-                }
+                LOG.debug("Processing conversion file [{}]", propsName);
 
                 for (Object o : props.entrySet()) {
                     Map.Entry entry = (Map.Entry) o;
@@ -63,7 +61,7 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
                     try {
                         TypeConverter _typeConverter = converterCreator.createTypeConverter((String) entry.getValue());
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("\t" + key + ":" + entry.getValue() + " [treated as TypeConverter " + _typeConverter + "]");
+                            LOG.debug("\t{}:{} [treated as TypeConverter {}]", key, entry.getValue(), _typeConverter);
                         }
                         converterHolder.addDefaultMapping(key, _typeConverter);
                     } catch (Exception e) {
@@ -75,9 +73,7 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
             if (require) {
                 throw new XWorkException("Cannot load conversion properties file: "+propsName, ex);
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Cannot load conversion properties file: #0", ex, propsName);
-                }
+                LOG.debug("Cannot load conversion properties file: {}", propsName, ex);
             }
         }
     }

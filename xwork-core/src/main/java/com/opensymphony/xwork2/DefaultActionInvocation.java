@@ -198,9 +198,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         try {
             resultConfig = results.get(resultCode);
         } catch (NullPointerException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Got NPE trying to read result configuration for resultCode [#0]", resultCode);
-            }
+            LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
         }
         
         if (resultConfig == null) {
@@ -212,9 +210,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             try {
                 return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
             } catch (Exception e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("There was an exception while instantiating the result of type #0", e, resultConfig.getClassName());
-                }
+                LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
                 throw new XWorkException(e, resultConfig);
             }
         } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {
@@ -409,9 +405,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected String invokeAction(Object action, ActionConfig actionConfig) throws Exception {
         String methodName = proxy.getMethod();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing action method = #0", methodName);
-        }
+        LOG.debug("Executing action method = {}", methodName);
 
         String timerKey = "invokeAction: " + proxy.getActionName();
         try {

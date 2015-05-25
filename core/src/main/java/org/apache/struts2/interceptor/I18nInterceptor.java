@@ -111,7 +111,7 @@ public class I18nInterceptor extends com.opensymphony.xwork2.interceptor.I18nInt
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("intercept '#0/#1' {",
+            LOG.debug("intercept '{}/{}' {",
                 invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
         }
 
@@ -121,13 +121,13 @@ public class I18nInterceptor extends com.opensymphony.xwork2.interceptor.I18nInt
         saveLocale(invocation, locale);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("before Locale=#0", invocation.getStack().findValue("locale"));
+            LOG.debug("before Locale={}", invocation.getStack().findValue("locale"));
         }
 
         final String result = invocation.invoke();
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("after Locale=#0", invocation.getStack().findValue("locale"));
+            LOG.debug("after Locale={}", invocation.getStack().findValue("locale"));
             LOG.debug("intercept } ");
         }
 

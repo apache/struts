@@ -40,24 +40,18 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     public FileManager getFileManager() {
         FileManager fileManager = lookupFileManager();
         if (fileManager != null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Using FileManager implementation [#0]", fileManager.getClass().getSimpleName());
-            }
+            LOG.debug("Using FileManager implementation [{}]", fileManager.getClass().getSimpleName());
             fileManager.setReloadingConfigs(reloadingConfigs);
             return fileManager;
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using default implementation of FileManager provided under name [system]: #0", systemFileManager.getClass().getSimpleName());
-        }
+        LOG.debug("Using default implementation of FileManager provided under name [system]: {}", systemFileManager.getClass().getSimpleName());
         systemFileManager.setReloadingConfigs(reloadingConfigs);
         return systemFileManager;
     }
 
     private FileManager lookupFileManager() {
         Set<String> names = container.getInstanceNames(FileManager.class);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Found following implementations of FileManager interface: #0", names.toString());
-        }
+        LOG.debug("Found following implementations of FileManager interface: {}", names);
         Set<FileManager> internals = new HashSet<FileManager>();
         Set<FileManager> users = new HashSet<FileManager>();
         for (String fmName : names) {
@@ -70,15 +64,11 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
         }
         for (FileManager fm : users) {
             if (fm.support()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using FileManager implementation [#0]", fm.getClass().getSimpleName());
-                }
+                LOG.debug("Using FileManager implementation [{}]", fm.getClass().getSimpleName());
                 return fm;
             }
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("No user defined FileManager, looking up for internal implementations!");
-        }
+        LOG.debug("No user defined FileManager, looking up for internal implementations!");
         for (FileManager fm : internals) {
             if (fm.support()) {
                 return fm;

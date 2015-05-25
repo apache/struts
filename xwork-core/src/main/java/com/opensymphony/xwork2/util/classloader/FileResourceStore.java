@@ -46,8 +46,7 @@ public final class FileResourceStore implements ResourceStore {
 
             return data;
         } catch (Exception e) {
-            if (LOG.isDebugEnabled())
-                LOG.debug("Unable to read file [#0]", e, pResourceName);
+            LOG.debug("Unable to read file [{}]", pResourceName, e);
             return null;
         } finally {
             closeQuietly(fis);
@@ -63,8 +62,7 @@ public final class FileResourceStore implements ResourceStore {
             if (is != null)
                 is.close();
         } catch (IOException e) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to close file input stream", e);
+            LOG.error("Unable to close file input stream", e);
         }
     }
 

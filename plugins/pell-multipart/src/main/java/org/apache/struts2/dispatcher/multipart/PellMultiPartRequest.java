@@ -181,9 +181,7 @@ public class PellMultiPartRequest implements MultiPartRequest {
                 }
                 if ((currentFile != null) && currentFile.isFile()) {
                     if (!currentFile.delete()) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Resource Leaking:  Could not remove uploaded file [#0]", currentFile.getAbsolutePath());
-                        }
+                        LOG.warn("Resource Leaking: Could not remove uploaded file [{}]", currentFile.getAbsolutePath());
                     }
                 }
             }

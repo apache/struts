@@ -66,10 +66,12 @@ public class ReloadingClassLoader extends ClassLoader {
         } catch (RuntimeException e) {
             // see WW-3121
             // TODO: Fix this for a reloading mechanism to be marked as stable
-            if (root != null)
-                LOG.error("Exception while trying to build the ResourceStore for URL [#0]", e, root.toString());
-            else
+            if (root != null) {
+                LOG.error("Exception while trying to build the ResourceStore for URL [{}]", root.toString(), e);
+            }
+            else {
                 LOG.error("Exception while trying to get root resource from class loader", e);
+            }
             LOG.error("Consider setting struts.convention.classes.reload=false");
             throw e;
         }

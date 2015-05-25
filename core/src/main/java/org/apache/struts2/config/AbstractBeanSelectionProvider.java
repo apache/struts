@@ -50,20 +50,20 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
             String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
             if (builder.contains(type, foundName)) {
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("Choosing bean (#0) for (#1)", foundName, type.getName());
+                    LOG.info("Choosing bean ({}) for ({})", foundName, type.getName());
                 }
                 builder.alias(type, foundName, Container.DEFAULT_NAME);
             } else {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(foundName, this.getClass());
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Choosing bean (#0) for (#1)", cls.getName(), type.getName());
+                        LOG.debug("Choosing bean ({}) for ({})", cls.getName(), type.getName());
                     }
                     builder.factory(type, cls, scope);
                 } catch (ClassNotFoundException ex) {
                     // Perhaps a spring bean id, so we'll delegate to the object factory at runtime
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Choosing bean (#0) for (#1) to be loaded from the ObjectFactory", foundName, type.getName());
+                        LOG.debug("Choosing bean ({}) for ({}) to be loaded from the ObjectFactory", foundName, type.getName());
                     }
                     if (DEFAULT_BEAN_NAME.equals(foundName)) {
                         // Probably an optional bean, will ignore
@@ -77,9 +77,7 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
                 }
             }
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unable to alias bean type (#0), default mapping already assigned.", type.getName());
-            }
+            LOG.warn("Unable to alias bean type ({}), default mapping already assigned.", type.getName());
         }
     }
 

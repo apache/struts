@@ -149,9 +149,7 @@ public class ConfigurationManager {
         try {
             containerProvider.destroy();
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Error while destroying container provider [#0]", e, containerProvider.toString());
-            }
+            LOG.warn("Error while destroying container provider [{}]", containerProvider.toString(), e);
         }
     }
 
@@ -172,9 +170,7 @@ public class ConfigurationManager {
      */
     public synchronized void conditionalReload() {
         if (reloadConfigs || providersChanged) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Checking ConfigurationProviders for reload.");
-            }
+            LOG.debug("Checking ConfigurationProviders for reload.");
             List<ContainerProvider> providers = getContainerProviders();
             boolean reload = needReloadContainerProviders(providers);
             if (!reload) {
@@ -191,7 +187,7 @@ public class ConfigurationManager {
     private void updateReloadConfigsFlag() {
         reloadConfigs = Boolean.parseBoolean(configuration.getContainer().getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION));
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Updating [#0], current value is [#1], new value [#2]",
+            LOG.debug("Updating [{}], current value is [{}], new value [{}]",
                     XWorkConstants.RELOAD_XML_CONFIGURATION, String.valueOf(reloadConfigs), String.valueOf(reloadConfigs));
         }
     }
@@ -200,9 +196,7 @@ public class ConfigurationManager {
         if (packageProviders != null) {
             for (PackageProvider provider : packageProviders) {
                 if (provider.needsReload()) {
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("Detected package provider [#0] needs to be reloaded. Reloading all providers.", provider.toString());
-                    }
+                    LOG.info("Detected package provider [{}] needs to be reloaded. Reloading all providers.", provider);
                     return true;
                 }
             }
@@ -213,9 +207,7 @@ public class ConfigurationManager {
     private boolean needReloadContainerProviders(List<ContainerProvider> providers) {
         for (ContainerProvider provider : providers) {
             if (provider.needsReload()) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("Detected container provider [#0] needs to be reloaded. Reloading all providers.", provider.toString());
-                }
+                LOG.info("Detected container provider [{}] needs to be reloaded. Reloading all providers.", provider);
                 return true;
             }
         }
@@ -227,9 +219,7 @@ public class ConfigurationManager {
             try {
                 containerProvider.destroy();
             } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("error while destroying configuration provider [#0]", e, containerProvider.toString());
-                }
+                LOG.warn("error while destroying configuration provider [{}]", containerProvider, e);
             }
         }
         packageProviders = this.configuration.reloadContainer(providers);

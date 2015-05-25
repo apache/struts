@@ -35,8 +35,8 @@ public class JBossFileManager extends DefaultFileManager {
     @Override
     public boolean support() {
         boolean supports = isJBoss7() || isJBoss5();
-        if (supports && LOG.isDebugEnabled()) {
-            LOG.debug("JBoss server detected, Struts 2 will use [#0] to support file system operations!", JBossFileManager.class.getSimpleName());
+        if (supports) {
+            LOG.debug("JBoss server detected, Struts 2 will use [{}] to support file system operations!", JBossFileManager.class.getSimpleName());
         }
         return supports;
     }
@@ -46,9 +46,7 @@ public class JBossFileManager extends DefaultFileManager {
             Class.forName(VFS_JBOSS5);
             return true;
         } catch (ClassNotFoundException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot load [#0] class, not a JBoss 5!", VFS_JBOSS5);
-            }
+            LOG.debug("Cannot load [{}] class, not a JBoss 5!", VFS_JBOSS5);
             return false;
         }
     }
@@ -58,9 +56,7 @@ public class JBossFileManager extends DefaultFileManager {
             Class.forName(VFS_JBOSS7);
             return true;
         } catch (ClassNotFoundException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot load [#0] class, not a JBoss 7!", VFS_JBOSS7);
-            }
+            LOG.debug("Cannot load [{}] class, not a JBoss 7!", VFS_JBOSS7);
             return false;
         }
     }
@@ -69,13 +65,9 @@ public class JBossFileManager extends DefaultFileManager {
     public void monitorFile(URL fileUrl) {
         if (isJBossUrl(fileUrl)) {
             String fileName = fileUrl.toString();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Creating revision for URL: " + fileName);
-            }
+            LOG.debug("Creating revision for URL: {}", fileName);
             URL normalizedUrl = normalizeToFileProtocol(fileUrl);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Normalized URL for [#0] is [#1]", fileName, normalizedUrl.toString());
-            }
+            LOG.debug("Normalized URL for [{}] is [{}]", fileName, normalizedUrl);
             Revision revision;
             if ("file".equals(normalizedUrl.getProtocol())) {
                 revision = FileRevision.build(normalizedUrl);
@@ -136,9 +128,7 @@ public class JBossFileManager extends DefaultFileManager {
     protected URL getJBossPhysicalUrl(URL url) throws IOException {
         Object content = url.openConnection().getContent();
         String classContent = content.getClass().toString();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Reading physical URL for [#0]", url.toString());
-        }
+        LOG.debug("Reading physical URL for [{}]", url);
         if (classContent.startsWith("class org.jboss.vfs.VirtualFile")) { // JBoss 7 and probably 6
             File physicalFile = readJBossPhysicalFile(content);
             return physicalFile.toURI().toURL();
@@ -174,7 +164,7 @@ public class JBossFileManager extends DefaultFileManager {
             Method method = content.getClass().getDeclaredMethod("getPhysicalFile");
             return (File) method.invoke(content);
         } catch (NoSuchMethodException e) {
-            LOG.error("Provided class content [#0] is not a JBoss VirtualFile, getPhysicalFile() method not found!", e, content.getClass().getSimpleName());
+            LOG.error("Provided class content [{}] is not a JBoss VirtualFile, getPhysicalFile() method not found!", content.getClass().getSimpleName(), e);
         } catch (InvocationTargetException e) {
             LOG.error("Cannot invoke getPhysicalFile() method!", e);
         } catch (IllegalAccessException e) {
@@ -191,7 +181,7 @@ public class JBossFileManager extends DefaultFileManager {
             method = handler.getClass().getMethod("getRealURL");
             return (URL) method.invoke(handler);
         } catch (NoSuchMethodException e) {
-            LOG.error("Provided class content [#0] is not a JBoss VirtualFile, getHandler() or getRealURL() method not found!", e, content.getClass().getSimpleName());
+            LOG.error("Provided class content [{}] is not a JBoss VirtualFile, getHandler() or getRealURL() method not found!", content.getClass().getSimpleName(), e);
         } catch (InvocationTargetException e) {
             LOG.error("Cannot invoke getHandler() or getRealURL() method!", e);
         } catch (IllegalAccessException e) {

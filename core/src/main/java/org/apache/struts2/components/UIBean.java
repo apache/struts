@@ -1006,9 +1006,7 @@ public abstract class UIBean extends Component {
             // this check is needed for backwards compatibility with 2.1.x
             tryId = findStringIfAltSyntax(id);
         } else if (null == (generatedId = escape(name != null ? findString(name) : null))) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot determine id attribute for [#0], consider defining id, name or key attribute!", this);
-            }
+            LOG.debug("Cannot determine id attribute for [{}], consider defining id, name or key attribute!", this);
             tryId = null;
         } else if (form != null) {
             tryId = form.getParameters().get("id") + "_" + generatedId;

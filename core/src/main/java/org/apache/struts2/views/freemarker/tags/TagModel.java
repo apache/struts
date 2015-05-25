@@ -83,9 +83,7 @@ public abstract class TagModel implements TemplateTransformModel {
                     try {
                         map.put(entry.getKey(), objectWrapper.unwrap((TemplateModel) value));
                     } catch (TemplateModelException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("failed to unwrap [#0] it will be ignored", e, value.toString());
-                        }
+                        LOG.error("failed to unwrap [{}] it will be ignored", value.toString(), e);
                     }
                 }
                 // if it doesn't, we'll do it the old way by just returning the toString() representation

@@ -138,12 +138,9 @@ public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
                 LOG.debug("Spring OSGi support is not enabled");
             }
         } catch (Exception e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error(
-                        "The API of Spring OSGi has changed and the field [#0] is no longer available. The OSGi plugin needs to be updated",
-                        e,
-                        "org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext.BUNDLE_CONTEXT_ATTRIBUTE");
-            }
+            LOG.error(
+                        "The API of Spring OSGi has changed and the field [[}] is no longer available. The OSGi plugin needs to be updated",
+                        "org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext.BUNDLE_CONTEXT_ATTRIBUTE", e);
         }
     }
 

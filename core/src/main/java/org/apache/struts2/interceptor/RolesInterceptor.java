@@ -107,7 +107,7 @@ public class RolesInterceptor extends AbstractInterceptor {
     
     private void checkRoles(List<String> roles){
         if (!areRolesValid(roles)){
-          LOG.fatal("An unknown Role was configured: #0", roles.toString());
+          LOG.fatal("An unknown Role was configured: {}", roles);
           isProperlyConfigured = false;
           throw new IllegalArgumentException("An unknown role was configured: " + roles);
         }

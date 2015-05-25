@@ -41,8 +41,7 @@ public class DefaultTagHandlerFactory implements TagHandlerFactory {
             th.setNext(next);
             return th;
         } catch (Exception e) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Failed to instantiate tag handler class [#0]", e, tagHandlerClass.getName());
+            LOG.error("Failed to instantiate tag handler class [{}]", tagHandlerClass.getName(), e);
         }
         
         return null;

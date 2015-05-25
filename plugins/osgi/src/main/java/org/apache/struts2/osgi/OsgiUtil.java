@@ -58,8 +58,7 @@ public class OsgiUtil {
             Method getBeanMethod = beanFactory.getClass().getMethod("getBean", String.class);
             return getBeanMethod.invoke(beanFactory, beanId);
         } catch (Exception ex) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to call getBean() on object of type [#0], with bean id [#1]", ex, beanFactory.getClass().getName(), beanId);
+            LOG.error("Unable to call getBean() on object of type [{}], with bean id [{}]",  beanFactory.getClass().getName(), beanId, ex);
         }
 
         return null;
@@ -74,8 +73,7 @@ public class OsgiUtil {
             Method getBeanMethod = beanFactory.getClass().getMethod("containsBean", String.class);
             return (Boolean) getBeanMethod.invoke(beanFactory, beanId);
         } catch (Exception ex) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to call containsBean() on object of type [#0], with bean id [#1]", ex, beanFactory.getClass().getName(), beanId);
+            LOG.error("Unable to call containsBean() on object of type [{}], with bean id [{}]", beanFactory.getClass().getName(), beanId, ex);
         }
 
         return false;

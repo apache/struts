@@ -25,9 +25,8 @@ public class StrutsOsgiListener implements ServletContextListener {
         ServletContext servletContext = sce.getServletContext();
 
         String platform = servletContext.getInitParameter(PLATFORM_KEY);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Defined OSGi platform as [#0] via context-param [#1]", platform, PLATFORM_KEY);
-        }
+        LOG.debug("Defined OSGi platform as [{}] via context-param [{}]", platform, PLATFORM_KEY);
+
         osgiHost = OsgiHostFactory.createOsgiHost(platform);
         servletContext.setAttribute(OSGI_HOST, osgiHost);
         try {

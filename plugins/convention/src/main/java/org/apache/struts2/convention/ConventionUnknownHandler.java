@@ -145,25 +145,19 @@ public class ConventionUnknownHandler implements UnknownHandler {
             if (!actionName.equals("") && redirectToSlash) {
                 ResultTypeConfig redirectResultTypeConfig = parentPackage.getAllResultTypeConfigs().get("redirect");
                 String redirectNamespace = namespace + "/" + actionName;
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Checking if there is an action named index in the namespace [#0]",
-                            redirectNamespace);
-                }
+                 LOG.trace("Checking if there is an action named index in the namespace {}", redirectNamespace);
 
                 actionConfig = configuration.getRuntimeConfiguration().getActionConfig(redirectNamespace, "index");
                 if (actionConfig != null) {
-                    if (LOG.isTraceEnabled())
-                        LOG.trace("Found action config");
+                    LOG.trace("Found action config");
 
                     PackageConfig packageConfig = configuration.getPackageConfig(actionConfig.getPackageName());
                     if (redirectNamespace.equals(packageConfig.getNamespace())) {
-                        if (LOG.isTraceEnabled())
-                            LOG.trace("Action is not a default - redirecting");
+                        LOG.trace("Action is not a default - redirecting");
                         return buildActionConfig(redirectNamespace + "/", redirectResultTypeConfig);
                     }
 
-                    if (LOG.isTraceEnabled())
-                        LOG.trace("Action was a default - NOT redirecting");
+                    LOG.trace("Action was a default - NOT redirecting");
                 }
 
                 if (resource != null) {
@@ -178,9 +172,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
 
             // try to find index action in current namespace or in default one
             if (actionConfig == null) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Looking for action named [index] in namespace [#0] or in default namespace", namespace);
-                }
+                LOG.trace("Looking for action named [index] in namespace [#0] or in default namespace", namespace);
                 actionConfig = configuration.getRuntimeConfiguration().getActionConfig(namespace, "index");
             }
         }
@@ -198,9 +190,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     protected Resource findResource(Map<String, ResultTypeConfig> resultsByExtension, String... parts) {
         for (String ext : resultsByExtension.keySet()) {
             String canonicalPath = canonicalize(string(parts) + "." + ext);
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Checking for [#0]", canonicalPath);
-            }
+            LOG.trace("Checking for {}", canonicalPath);
 
             try {
                 if (servletContext.getResource(canonicalPath) != null) {
@@ -208,7 +198,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
                 }
             } catch (MalformedURLException e) {
                 if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to parse path to the web application resource [#0] skipping...", canonicalPath);
+                    LOG.error("Unable to parse path to the web application resource {} skipping...", canonicalPath);
                 }
             }
         }
@@ -249,8 +239,8 @@ public class ConventionUnknownHandler implements UnknownHandler {
         for (String ext : resultsByExtension.keySet()) {
             if (LOG.isTraceEnabled()) {
                 String fqan = ns + "/" + actionName;
-                LOG.trace("Trying to locate the correct result for the FQ action [#0]"
-                        + " with an file extension of [#1] in the directory [#2] " + "and a result code of [#3]",
+                LOG.trace("Trying to locate the correct result for the FQ action [{}]"
+                        + " with an file extension of [#1] in the directory [{}] " + "and a result code of [{}]",
                         fqan, ext, pathPrefix, resultCode);
             }
 
@@ -292,7 +282,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             for (String ext : resultsByExtension.keySet()) {
                 if (LOG.isTraceEnabled()) {
                     String fqan = ns + "/" + actionName;
-                    LOG.trace("Checking for [#0/index.#1]", fqan, ext);
+                    LOG.trace("Checking for [{}/index.{}]", fqan, ext);
                 }
 
                 String path = string(pathPrefix, actionName, "/index", nameSeparator, resultCode, ".", ext);
@@ -317,7 +307,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             ActionConfig chainedToConfig = pkg.getActionConfigs().get(chainedTo);
             if (chainedToConfig != null) {
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("Action [#0] used as chain result for [#1] and result [#2]", chainedTo, actionName, resultCode);
+                    LOG.trace("Action [{}] used as chain result for [{}] and result [{}]", chainedTo, actionName, resultCode);
                 }
 
                 ResultTypeConfig chainResultType = pkg.getAllResultTypeConfigs().get("chain");
@@ -333,7 +323,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
         try {
             boolean traceEnabled = LOG.isTraceEnabled();
             if (traceEnabled)
-                LOG.trace("Checking ServletContext for [#0]", path);
+                LOG.trace("Checking ServletContext for {}", path);
 
             if (servletContext.getResource(path) != null) {
                 if (traceEnabled)
@@ -342,7 +332,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             }
 
             if (traceEnabled)
-                LOG.trace("Checking ClasLoader for #0", path);
+                LOG.trace("Checking ClasLoader for {}", path);
 
             String classLoaderPath = path.startsWith("/") ? path.substring(1, path.length()) : path;
             if (ClassLoaderUtil.getResource(classLoaderPath, getClass()) != null) {
@@ -352,7 +342,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             }
         } catch (MalformedURLException e) {
             if (LOG.isErrorEnabled())
-                LOG.error("Unable to parse template path: [#0] skipping...", path);
+                LOG.error("Unable to parse template path: {} skipping...", path);
         }
 
         return null;

@@ -53,9 +53,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         if (checkEnumAccess(target, member)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Allowing access to enum #0", target);
-            }
+            LOG.trace("Allowing access to enum {}", target);
             return true;
         }
 
@@ -63,40 +61,30 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         Class memberClass = member.getDeclaringClass();
 
         if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Support for accessing static methods [target: #0, member: #1, property: #2] is deprecated!", target, member, propertyName);
-            }
+            LOG.debug("Support for accessing static methods [target: {}, member: {}, property: {}] is deprecated!", target, member, propertyName);
             if (!isClassExcluded(member.getDeclaringClass())) {
                 targetClass = member.getDeclaringClass();
             }
         }
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Package of target [#0] or package of member [#1] are excluded!", target, member);
-            }
+            LOG.warn("Package of target [{}] or package of member [{}] are excluded!", target, member);
             return false;
         }
 
         if (isClassExcluded(targetClass)) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Target class [#0] is excluded!", target);
-            }
+            LOG.warn("Target class [{}] is excluded!", target);
             return false;
         }
 
         if (isClassExcluded(memberClass)) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Declaring class of member type [#0] is excluded!", member);
-            }
+            LOG.warn("Declaring class of member type [{}] is excluded!", member);
             return false;
         }
 
         boolean allow = true;
         if (!checkStaticMethodAccess(member)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.warn("Access to static [#0] is blocked!", member);
-            }
+            LOG.warn("Access to static [{}] is blocked!", member);
             allow = false;
         }
 
@@ -128,7 +116,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     protected boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
-        if (LOG.isWarnEnabled() && (targetPackage == null || memberPackage == null)) {
+        if (targetPackage == null || memberPackage == null) {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
         

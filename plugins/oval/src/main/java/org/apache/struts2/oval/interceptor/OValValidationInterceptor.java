@@ -100,7 +100,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
         String context = proxy.getConfig().getName();
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Validating [#0/#1] with method [#2]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
+            LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
         }
 
         //OVal vallidatio (no XML yet)
@@ -118,9 +118,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
             Exception exception = null;
 
             Validateable validateable = (Validateable) action;
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Invoking validate() on action [#0]", validateable.toString());
-            }
+            LOG.debug("Invoking validate() on action [{}]", validateable);
 
             try {
                 PrefixMethodInvocationUtil.invokePrefixMethod(
@@ -129,9 +127,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
             } catch (Exception e) {
                 // If any exception occurred while doing reflection, we want
                 // validate() to be executed
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("An exception occured while executing the prefix method", e);
-                }
+                LOG.warn("An exception occurred while executing the prefix method", e);
                 exception = e;
             }
 
@@ -160,9 +156,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
                 String[] profileNames = profiles.value();
                 if (profileNames != null && profileNames.length > 0) {
                     validator.disableAllProfiles();
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Enabling profiles [#0]", StringUtils.join(profileNames, ","));
-                    }
+                    LOG.debug("Enabling profiles [{}]", StringUtils.join(profileNames, ","));
                     for (String profileName : profileNames)
                         validator.enableProfile(profileName);
                 }
@@ -194,9 +188,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
                 }
 
                 if (isActionError(violation)) {
-                    if (LOG.isDebugEnabled()) {
-                	LOG.debug("Adding action error '#0'", message);
-                    }
+                	LOG.debug("Adding action error '{}'", message);
                     validatorContext.addActionError(message);
                 } else {
                     ValidationError validationError = buildValidationError(violation, message);
@@ -207,9 +199,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
                     	fieldName = parentFieldname + "." + fieldName;
                     }
 
-                    if (LOG.isDebugEnabled()) {
-                	LOG.debug("Adding field error [#0] with message '#1'", fieldName, validationError.getMessage());
-                    }
+                	LOG.debug("Adding field error [{}] with message '{}'", fieldName, validationError.getMessage());
                     validatorContext.addFieldError(fieldName, validationError.getMessage());
 
                     // don't add "model." prefix to fields of model in model driven action

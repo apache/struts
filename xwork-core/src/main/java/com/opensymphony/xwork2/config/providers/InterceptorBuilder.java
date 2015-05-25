@@ -70,11 +70,9 @@ public class InterceptorBuilder {
                     inter = objectFactory.buildInterceptor(config, refParams);
                     result.add(new InterceptorMapping(refName, inter));
                 } catch (ConfigurationException ex) {
-                    if (LOG.isWarnEnabled()) {
-                	    LOG.warn("Unable to load config class #0 at #1 probably due to a missing jar, which might be fine if you never plan to use the #2 interceptor",
-                            config.getClassName(), ex.getLocation().toString(), config.getName());
-                    }
-                    LOG.error("Actual exception", ex);
+              	    LOG.warn("Unable to load config class {} at {} probably due to a missing jar, which might be fine if you never plan to use the {} interceptor",
+                            config.getClassName(), ex.getLocation(), config.getName());
+                    LOG.error("Unable to load config class {}", config.getClassName(), ex);
                 }
 
             } else if (referencedConfig instanceof InterceptorStackConfig) {
@@ -87,7 +85,7 @@ public class InterceptorBuilder {
                 }
 
             } else {
-                LOG.error("Got unexpected type for interceptor " + refName + ". Got " + referencedConfig);
+                LOG.error("Got unexpected type for interceptor {}. Got {}", refName, referencedConfig);
             }
         }
 
@@ -148,9 +146,7 @@ public class InterceptorBuilder {
                 params.put(name, map);
 
             } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("No interceptor found for name = #0", key);
-                }
+                LOG.warn("No interceptor found for name = {}", key);
             }
         }
 

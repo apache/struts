@@ -117,17 +117,13 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
 
     protected String buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Preparing error message for key: [#0]", errorKey);
-        }
+        LOG.debug("Preparing error message for key: [{}]", errorKey);
         return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }
 
     protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
         for (FileItem item : parseRequest(request, saveDir)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Found item " + item.getFieldName());
-            }
+            LOG.debug("Found file item: [{}]", item.getFieldName());
             if (item.isFormField()) {
                 processNormalFormField(item, request.getCharacterEncoding());
             } else {
@@ -137,13 +133,11 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     }
 
     protected void processFileField(FileItem item) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Item is a file upload");
-        }
+        LOG.debug("Item is a file upload");
 
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().length() < 1) {
-            LOG.debug("No file has been uploaded for the field: " + item.getFieldName());
+            LOG.debug("No file has been uploaded for the field: {}", item.getFieldName());
             return;
         }
 
@@ -159,9 +153,8 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     }
 
     protected void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Item is a normal form field");
-        }
+        LOG.debug("Item is a normal form field");
+
         List<String> values;
         if (params.get(item.getFieldName()) != null) {
             values = params.get(item.getFieldName());

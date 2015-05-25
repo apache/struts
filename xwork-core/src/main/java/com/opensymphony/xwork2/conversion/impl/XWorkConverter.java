@@ -313,8 +313,7 @@ public class XWorkConverter extends DefaultTypeConverter {
             try {
                 return tc.convertValue(context, target, member, property, value, toClass);
             } catch (Exception e) {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("unable to convert value using type converter [#0]", e, tc.getClass().getName());
+                LOG.debug("Unable to convert value using type converter [{}]", tc.getClass().getName(), e);
                 handleConversionException(context, property, value, target);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
@@ -323,24 +322,20 @@ public class XWorkConverter extends DefaultTypeConverter {
 
         if (defaultTypeConverter != null) {
             try {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("falling back to default type converter [" + defaultTypeConverter + "]");
+                LOG.debug("Falling back to default type converter [{}]", defaultTypeConverter);
                 return defaultTypeConverter.convertValue(context, target, member, property, value, toClass);
             } catch (Exception e) {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("unable to convert value using type converter [#0]", e, defaultTypeConverter.getClass().getName());
+                LOG.debug("Unable to convert value using type converter [{}]", defaultTypeConverter.getClass().getName(), e);
                 handleConversionException(context, property, value, target);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
             }
         } else {
             try {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("falling back to Ognl's default type conversion");
+                LOG.debug("Falling back to Ognl's default type conversion");
                 return super.convertValue(value, toClass);
             } catch (Exception e) {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("unable to convert value using type converter [#0]", e, super.getClass().getName());
+                LOG.debug("Unable to convert value using type converter [{}]", super.getClass().getName(), e);
                 handleConversionException(context, property, value, target);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
@@ -368,9 +363,7 @@ public class XWorkConverter extends DefaultTypeConverter {
             try {
                 clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
             } catch (ClassNotFoundException cnfe) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Cannot load class #0", cnfe, className);
-                }
+                LOG.debug("Cannot load class {}", className, cnfe);
             }
 
             result = lookupSuper(clazz);
@@ -408,9 +401,8 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     protected Object getConverter(Class clazz, String property) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Retrieving convert for class [#0] and property [#1]", clazz, property);
-        }
+        LOG.debug("Retrieving convert for class [{}] and property [{}]", clazz, property);
+
         synchronized (clazz) {
             if ((property != null) && !converterHolder.containsNoMapping(clazz)) {
                 try {
@@ -423,17 +415,15 @@ public class XWorkConverter extends DefaultTypeConverter {
                     }
 
                     Object converter = mapping.get(property);
-                    if (LOG.isDebugEnabled() && converter == null) {
-                        LOG.debug("Converter is null for property [#0]. Mapping size [#1]:", property, mapping.size());
+                    if (converter == null && LOG.isDebugEnabled()) {
+                        LOG.debug("Converter is null for property [{}]. Mapping size [{}]:", property, mapping.size());
                         for (String next : mapping.keySet()) {
-                            LOG.debug(next + ":" + mapping.get(next));
+                            LOG.debug("{}:{}", next, mapping.get(next));
                         }
                     }
                     return converter;
                 } catch (Throwable t) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Got exception trying to resolve convert for class [#0] and property [#1]", t, clazz, property);
-                    }
+                    LOG.debug("Got exception trying to resolve convert for class [{}] and property [{}]", clazz, property, t);
                     converterHolder.addNoMapping(clazz);
                 }
             }
@@ -499,9 +489,9 @@ public class XWorkConverter extends DefaultTypeConverter {
                     }
                     if (LOG.isDebugEnabled()) {
                         if (StringUtils.isEmpty(tc.key())) {
-                            LOG.debug("WARNING! key of @TypeConversion [#0] applied to [#1] is empty!", tc.converter(), clazz.getName());
+                            LOG.debug("WARNING! key of @TypeConversion [{}] applied to [{}] is empty!", tc.converter(), clazz.getName());
                         } else {
-                            LOG.debug("TypeConversion [#0] with key: [#1]", tc.converter(), tc.key());
+                            LOG.debug("TypeConversion [{}] with key: [{}]", tc.converter(), tc.key());
                         }
                     }
                     annotationProcessor.process(mapping, tc, tc.key());
@@ -522,9 +512,7 @@ public class XWorkConverter extends DefaultTypeConverter {
                     // Default to the property name
                     if (StringUtils.isEmpty(key)) {
                         key = AnnotationUtils.resolvePropertyName(method);
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Retrieved key [#0] from method name [#1]", key, method.getName());
-                        }
+                        LOG.debug("Retrieved key [{}] from method name [{}]", key, method.getName());
                     }
                     annotationProcessor.process(mapping, tc, key);
                 }

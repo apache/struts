@@ -86,7 +86,7 @@ public class CookieProviderInterceptor extends AbstractInterceptor implements Pr
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Sending cookie [#0] with value [#1] for domain [#2]",
+                    LOG.debug("Sending cookie [{}] with value [{}] for domain [{}]",
                             cookie.getName(), cookie.getValue(), (cookie.getDomain() != null ? cookie.getDomain() : "no domain"));
                 }
                 response.addCookie(cookie);
@@ -96,17 +96,13 @@ public class CookieProviderInterceptor extends AbstractInterceptor implements Pr
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         try {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("beforeResult start");
-            }
+            LOG.trace("beforeResult start");
             ActionContext ac = invocation.getInvocationContext();
             if (invocation.getAction() instanceof CookieProvider) {
                 HttpServletResponse response = (HttpServletResponse) ac.get(StrutsStatics.HTTP_RESPONSE);
                 addCookiesToResponse((CookieProvider) invocation.getAction(), response);
             }
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("beforeResult end");
-            }
+            LOG.trace("beforeResult end");
         } catch (Exception ex) {
             LOG.error("Unable to setup cookies", ex);
         }

@@ -287,15 +287,15 @@ public class Date extends ContextBean {
                 date = ((Calendar) dateObject).getTime();
             } else {
                 if (devMode) {
-                    LOG.error("Expression [#0] passed to <s:date/> tag which was evaluated to [#1](#2) isn't instance of java.util.Date nor java.util.Calendar!",
+                    LOG.error("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
                             name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
                 } else {
-                    LOG.debug("Expression [#0] passed to <s:date/> tag which was evaluated to [#1](#2) isn't instance of java.util.Date nor java.util.Calendar!",
+                    LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
                             name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
                 }
             }
         } catch (Exception e) {
-            LOG.error("Could not convert object with key '#0' to a java.util.Date instance", name);
+            LOG.error("Could not convert object with key '{}' to a java.util.Date instance", name);
         }
 
         //try to find the format on the stack

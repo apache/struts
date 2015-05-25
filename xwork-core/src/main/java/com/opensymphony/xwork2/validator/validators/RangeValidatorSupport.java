@@ -76,9 +76,7 @@ public abstract class RangeValidatorSupport<T extends Comparable> extends FieldV
     }
 
     public void setMinExpression(String minExpression) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("${minExpression} was defined as [#0]", minExpression);
-        }
+        LOG.debug("${minExpression} was defined as [{}]", minExpression);
         this.minExpression = minExpression;
     }
 
@@ -97,9 +95,7 @@ public abstract class RangeValidatorSupport<T extends Comparable> extends FieldV
     }
 
     public void setMaxExpression(String maxExpression) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("${maxExpression} was defined as [#0]", maxExpression);
-        }
+        LOG.debug("${maxExpression} was defined as [{}]", maxExpression);
         this.maxExpression = maxExpression;
     }
 

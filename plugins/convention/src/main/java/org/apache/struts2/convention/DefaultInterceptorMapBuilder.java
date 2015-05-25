@@ -79,7 +79,7 @@ public class DefaultInterceptorMapBuilder implements InterceptorMapBuilder {
                 10);
 	    for (InterceptorRef interceptor : interceptors) {
             if (LOG.isTraceEnabled())
-                LOG.trace("Adding interceptor [#0] to [#1]",
+                LOG.trace("Adding interceptor [{}] to [{}]",
                         interceptor.value(), actionName);
             Map<String, String> params = StringTools.createParameterMap(interceptor
                     .params());

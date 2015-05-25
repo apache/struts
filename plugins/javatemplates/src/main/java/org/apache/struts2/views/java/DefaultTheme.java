@@ -116,9 +116,7 @@ public class DefaultTheme implements Theme {
 
         TagGenerator gen = (TagGenerator) handlers.get(0);
         try {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Rendering tag [#0]", tagName);
-            }
+            LOG.trace("Rendering tag [{}]", tagName);
             gen.generate();
         } catch (IOException ex) {
             throw new StrutsException("Unable to write tag: " + tagName, ex);

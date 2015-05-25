@@ -299,9 +299,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
                 return (Class) resultType;
             }
         } catch (Exception e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Error while retrieving generic property class for property = #0", e, property);
-            }
+            LOG.debug("Error while retrieving generic property class for property: {}", property, e);
         }
         return null;
     }

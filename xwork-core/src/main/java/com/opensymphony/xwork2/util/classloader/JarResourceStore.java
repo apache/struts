@@ -51,8 +51,7 @@ public class JarResourceStore implements ResourceStore {
 
             return out.toByteArray();
         } catch (Exception e) {
-            if (LOG.isDebugEnabled())
-                LOG.debug("Unable to read file [#0] from [#1]", e, pResourceName, file.getName());
+            LOG.debug("Unable to read file [{}] from [{}]", pResourceName, file.getName(), e);
             return null;
         } finally {
             closeQuietly(in);
@@ -76,8 +75,7 @@ public class JarResourceStore implements ResourceStore {
             if (is != null)
                 is.close();
         } catch (IOException e) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to close input stream", e);
+            LOG.error("Unable to close input stream", e);
         }
     }
 }

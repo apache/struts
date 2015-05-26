@@ -31,10 +31,8 @@ archetypes/struts2-archetype-starter/target
 archetypes/target
 plugins/convention/target
 plugins/embeddedjsp/target
-plugins/dojo/target
 plugins/osgi/target
 plugins/cdi/target
-plugins/codebehind/target
 plugins/spring/target
 plugins/jfreechart/target
 apps/rest-showcase/target
@@ -49,13 +47,11 @@ apps/target
 bundles/admin/target
 plugins/config-browser/target
 plugins/jasperreports/target
-plugins/jsf/target
 plugins/json/target
 plugins/portlet-tiles/target
 plugins/portlet/target
 plugins/sitegraph/target
 plugins/sitemesh/target
-plugins/struts1/target
 plugins/tiles3/target
 plugins/javatemplates/target
 bundles/demo/target

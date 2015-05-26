@@ -30,6 +30,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Creates loggers.  Static accessor will lazily try to decide on the best factory if none specified.
  */
+@Deprecated
 public abstract class LoggerFactory {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();

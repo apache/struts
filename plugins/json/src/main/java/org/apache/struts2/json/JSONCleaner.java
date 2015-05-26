@@ -32,8 +32,8 @@ import java.util.regex.Matcher;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <p>Isolate the process of cleaning JSON data from the Interceptor class
@@ -47,7 +47,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public abstract class JSONCleaner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONCleaner.class);
+    private static final Logger LOG = LogManager.getLogger(JSONCleaner.class);
 
     public static class Filter
     {

@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *   -Dxwork.loggerFactory=com.opensymphony.xwork2.util.logging.slf4j.Slf4jLoggerFactory
  * </pre>
  */
+@Deprecated
 public class Slf4jLoggerFactory extends LoggerFactory {
 
     @Override

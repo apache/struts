@@ -26,8 +26,8 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -103,7 +103,7 @@ import java.util.Currency;
 @StrutsTag(name = "number", tldBodyContent = "empty", tldTagClass = "org.apache.struts2.views.jsp.NumberTag", description = "Render a formatted number.")
 public class Number extends ContextBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Number.class);
+    private static final Logger LOG = LogManager.getLogger(Number.class);
     /**
      * Property name to fall back when no format is specified
      */

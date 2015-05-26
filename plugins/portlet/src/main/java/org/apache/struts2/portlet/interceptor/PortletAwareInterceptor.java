@@ -23,8 +23,8 @@ package org.apache.struts2.portlet.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.interceptor.PrincipalAware;
 import org.apache.struts2.portlet.PortletConstants;
@@ -37,7 +37,7 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Stru
 
 	private static final long serialVersionUID = 2476509721059587700L;
 	
-	private static final Logger LOG = LoggerFactory.getLogger(PortletAwareInterceptor.class);
+	private static final Logger LOG = LogManager.getLogger(PortletAwareInterceptor.class);
 
 	/**
      * Sets action properties based on the interfaces an action implements. Things like application properties,

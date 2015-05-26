@@ -29,8 +29,8 @@ import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.context.Context;
 
@@ -45,7 +45,7 @@ import java.io.PrintWriter;
  * Extends OldDecorator2NewStrutsDecorator to add Struts functionality for Velocity
  */
 public class OldDecorator2NewStrutsVelocityDecorator extends OldDecorator2NewStrutsDecorator {
-    private static final Logger LOG = LoggerFactory.getLogger(OldDecorator2NewStrutsFreemarkerDecorator.class);
+    private static final Logger LOG = LogManager.getLogger(OldDecorator2NewStrutsFreemarkerDecorator.class);
 
     private static VelocityManager velocityManager;
 

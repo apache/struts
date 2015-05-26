@@ -9,8 +9,8 @@ import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.ServletOutputStream;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * PortletServletResponseJSR286.
@@ -19,7 +19,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class PortletServletResponseJSR286 extends PortletServletResponse {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PortletServletResponseJSR286.class);
+  private static final Logger LOG = LogManager.getLogger(PortletServletResponseJSR286.class);
   
     public PortletServletResponseJSR286( PortletResponse portletResponse ) {
         super(portletResponse);

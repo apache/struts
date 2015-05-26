@@ -29,8 +29,8 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -134,7 +134,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
     public static final String DEFAULT_SEPARATOR = ",";
 
-    private static final Logger LOG = LoggerFactory.getLogger(IteratorGeneratorTag.class);
+    private static final Logger LOG = LogManager.getLogger(IteratorGeneratorTag.class);
 
     String countAttr;
     String separatorAttr;

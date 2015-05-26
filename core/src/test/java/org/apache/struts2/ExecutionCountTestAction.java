@@ -22,8 +22,8 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -34,7 +34,7 @@ public class ExecutionCountTestAction extends ActionSupport {
     private static final long serialVersionUID = -2954211394678430609L;
 
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExecutionCountTestAction.class);
+    private static final Logger LOG = LogManager.getLogger(ExecutionCountTestAction.class);
 
 
     private int executionCount = 0;

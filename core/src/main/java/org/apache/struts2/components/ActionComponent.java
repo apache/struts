@@ -28,8 +28,8 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
@@ -118,7 +118,7 @@ import java.util.Map;
  */
 @StrutsTag(name="action", tldTagClass="org.apache.struts2.views.jsp.ActionTag", description="Execute an action from within a view")
 public class ActionComponent extends ContextBean {
-    private static final Logger LOG = LoggerFactory.getLogger(ActionComponent.class);
+    private static final Logger LOG = LogManager.getLogger(ActionComponent.class);
 
     protected HttpServletResponse res;
     protected HttpServletRequest req;

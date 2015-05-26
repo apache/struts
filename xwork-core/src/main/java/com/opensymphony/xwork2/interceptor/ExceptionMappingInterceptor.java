@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -149,7 +149,7 @@ import java.util.Map;
  */
 public class ExceptionMappingInterceptor extends AbstractInterceptor {
     
-    protected static final Logger LOG = LoggerFactory.getLogger(ExceptionMappingInterceptor.class);
+    protected static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);
 
     protected Logger categoryLogger;
     protected boolean logEnabled = false;
@@ -216,7 +216,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     	if (logCategory != null) {
         	if (categoryLogger == null) {
         		// init category logger
-        		categoryLogger = LoggerFactory.getLogger(logCategory);
+        		categoryLogger = LogManager.getLogger(logCategory);
         	}
         	doLog(categoryLogger, e);
     	} else {

@@ -23,8 +23,8 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.struts2.ServletActionContext;
@@ -95,7 +95,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -1970659272360685627L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServletDispatcherResult.class);
+    private static final Logger LOG = LogManager.getLogger(ServletDispatcherResult.class);
 
     private UrlHelper urlHelper;
 

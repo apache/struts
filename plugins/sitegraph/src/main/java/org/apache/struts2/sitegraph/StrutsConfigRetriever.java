@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.config.DefaultBeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.PropertiesConfigurationProvider;
@@ -48,7 +48,7 @@ import java.util.Set;
  */
 public class StrutsConfigRetriever {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsConfigRetriever.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsConfigRetriever.class);
     private static String configDir;
     private static String[] views;
     private static boolean isXWorkStarted = false;

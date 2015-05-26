@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.json.annotations.JSON;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.annotations.JSONParameter;
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  */
 public class JSONWriter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONWriter.class);
+    private static final Logger LOG = LogManager.getLogger(JSONWriter.class);
 
     /**
      * By default, enums are serialised as name=value pairs
@@ -420,7 +420,7 @@ public class JSONWriter {
 
             Object key = entry.getKey();
             if (key == null) {
-                LOG.error("Cannot build expression for null key in #0", exprStack);
+                LOG.error("Cannot build expression for null key in {}", exprStack);
                 continue;
             }
 
@@ -438,7 +438,7 @@ public class JSONWriter {
             hasData = true;
             if (!warnedNonString && !(key instanceof String)) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on #0", key.getClass().getName());
+                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on {}", key.getClass().getName());
                 }
                 warnedNonString = true;
             }

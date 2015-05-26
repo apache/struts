@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.util;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,7 +26,7 @@ import java.net.URL;
  */
 public class URLUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(URLUtil.class);
+    private static final Logger LOG = LogManager.getLogger(URLUtil.class);
 
     /**
      * Verify That the given String is in valid URL format.
@@ -35,9 +35,7 @@ public class URLUtil {
      */
     @Deprecated
     public static boolean verifyUrl(String url) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Checking if url [#0] is valid", url);
-        }
+        LOG.debug("Checking if url [{}] is valid", url);
         if (url == null) {
             return false;
         }
@@ -52,9 +50,7 @@ public class URLUtil {
 
             return true;
         } catch (MalformedURLException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Url [#0] is invalid: #1", e, url, e.getMessage());
-            }
+            LOG.debug("Url [{}] is invalid: {}", url, e.getMessage(), e);
             return false;
         }
     }

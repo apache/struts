@@ -38,8 +38,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
@@ -77,7 +77,7 @@ public class Dispatcher {
     /**
      * Provide a logging instance.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(Dispatcher.class);
+    private static final Logger LOG = LogManager.getLogger(Dispatcher.class);
 
     /**
      * Provide a thread local instance.
@@ -288,7 +288,7 @@ public class Dispatcher {
             }
             catch(Exception e) {
                 // catch any exception that may occurred during destroy() and log it
-                LOG.error("exception occurred while destroying ObjectFactory [#0]", e, objectFactory.toString());
+                LOG.error("exception occurred while destroying ObjectFactory [{}]", e, objectFactory.toString());
             }
         }
 
@@ -333,9 +333,7 @@ public class Dispatcher {
         if (initParams.containsKey(StrutsConstants.STRUTS_FILE_MANAGER)) {
             final String fileManagerClassName = initParams.get(StrutsConstants.STRUTS_FILE_MANAGER);
             final Class<FileManager> fileManagerClass = (Class<FileManager>) Class.forName(fileManagerClassName);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Custom FileManager specified: #0", fileManagerClassName);
-            }
+            LOG.info("Custom FileManager specified: {}", fileManagerClassName);
             configurationManager.addContainerProvider(new FileManagerProvider(fileManagerClass, fileManagerClass.getSimpleName()));
         } else {
             // add any other Struts 2 provided implementations of FileManager
@@ -344,9 +342,7 @@ public class Dispatcher {
         if (initParams.containsKey(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY)) {
             final String fileManagerFactoryClassName = initParams.get(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY);
             final Class<FileManagerFactory> fileManagerFactoryClass = (Class<FileManagerFactory>) Class.forName(fileManagerFactoryClassName);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Custom FileManagerFactory specified: #0", fileManagerFactoryClassName);
-            }
+            LOG.info("Custom FileManagerFactory specified: {}", fileManagerFactoryClassName);
             configurationManager.addContainerProvider(new FileManagerFactoryProvider(fileManagerFactoryClass));
         }
     }
@@ -595,9 +591,9 @@ public class Dispatcher {
             uri = uri + "?" + request.getQueryString();
         }
         if (devMode) {
-            LOG.error("Could not find action or result\n#0", e, uri);
+            LOG.error("Could not find action or result\n{}", uri, e);
         } else if (LOG.isWarnEnabled()) {
-            LOG.warn("Could not find action or result: #0", e, uri);
+            LOG.warn("Could not find action or result: {}", uri, e);
         }
     }
 

@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationImpl;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ import java.util.Iterator;
  */
 class PropertiesSettings implements Settings {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PropertiesSettings.class);
+    private static final Logger LOG = LogManager.getLogger(PropertiesSettings.class);
 
     private LocatableProperties settings;
 

@@ -90,7 +90,7 @@
         <asm.version>3.3</asm.version>
         <asm5.version>5.0.2</asm5.version>
         <tiles.version>2.0.6</tiles.version>
-        <log4j2.version>2.2</log4j2.version>
+        <log4j2.version>2.3</log4j2.version>
 
         <!-- SCM Site Configuration -->
         <site.mainDirectory>${project.build.directory}/site</site.mainDirectory>
@@ -413,11 +413,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-codebehind-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-javatemplates-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -428,22 +423,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-dojo-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-jasperreports-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-jfreechart-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-jsf-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -469,11 +454,6 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-sitemesh-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-struts1-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

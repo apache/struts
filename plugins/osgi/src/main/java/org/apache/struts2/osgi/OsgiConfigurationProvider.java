@@ -30,8 +30,8 @@ import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.apache.struts2.osgi.loaders.VelocityBundleResourceLoader;
@@ -53,7 +53,7 @@ import java.util.Set;
  */
 public class OsgiConfigurationProvider implements PackageProvider, BundleListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OsgiConfigurationProvider.class);
+    private static final Logger LOG = LogManager.getLogger(OsgiConfigurationProvider.class);
 
     private Configuration configuration;
     private ObjectFactory objectFactory;
@@ -115,9 +115,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
      */
     protected void loadConfigFromBundle(Bundle bundle) {
         String bundleName = bundle.getSymbolicName();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading packages from bundle [#0]", bundleName);
-        }
+        LOG.debug("Loading packages from bundle [{}]", bundleName);
 
         //init action context
         ActionContext ctx = ActionContext.getContext();
@@ -132,9 +130,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
             ctx.put(ClassLoaderInterface.CLASS_LOADER_INTERFACE, new BundleClassLoaderInterface());
             ctx.put(BundleAccessor.CURRENT_BUNDLE_NAME, bundleName);
 
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Loading XML config from bundle [#0]", bundleName);
-            }
+            LOG.trace("Loading XML config from bundle [{}]", bundleName);
 
             //XML config
             PackageLoader loader = new BundlePackageLoader();
@@ -149,8 +145,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
             PackageProvider conventionPackageProvider = configuration.getContainer().getInstance(PackageProvider.class, "convention.packageProvider");
             if (conventionPackageProvider != null) {
-                if (LOG.isTraceEnabled())
-                    LOG.trace("Loading Convention config from bundle [#0]", bundleName);
+                LOG.trace("Loading Convention config from bundle [{}]", bundleName);
                 conventionPackageProvider.loadPackages();
             }
 
@@ -235,8 +230,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
         if (bundleName != null && shouldProcessBundle(bundle)) {
             switch (bundleEvent.getType()) {
                 case BundleEvent.STARTED:
-                    if (LOG.isTraceEnabled())
-                        LOG.trace("The bundlde [#0] has been activated and will be scanned for struts configuration", bundleName);
+                    LOG.trace("The bundle [{}] has been activated and will be scanned for struts configuration", bundleName);
                     loadConfigFromBundle(bundle);
                     break;
                 case BundleEvent.STOPPED:
@@ -255,7 +249,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
         Set<String> packages = bundleAccessor.getPackagesByBundle(bundle);
         if (!packages.isEmpty()) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("The bundle [#0] has been stopped. The packages [#1] will be disabled", bundle.getSymbolicName(), StringUtils.join(packages, ","));
+                LOG.trace("The bundle [{}] has been stopped. The packages [{}] will be disabled", bundle.getSymbolicName(), StringUtils.join(packages, ","));
             }
             for (String packageName : packages) {
                 configuration.removePackageConfig(packageName);

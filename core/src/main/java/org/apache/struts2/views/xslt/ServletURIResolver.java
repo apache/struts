@@ -29,8 +29,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -42,7 +42,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class ServletURIResolver implements URIResolver {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     static final String PROTOCOL = "response:";
 
     private ServletContext sc;

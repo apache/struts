@@ -8,8 +8,8 @@ import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class DefaultConversionAnnotationProcessor implements ConversionAnnotationProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultConversionAnnotationProcessor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultConversionAnnotationProcessor.class);
 
     private TypeConverterCreator converterCreator;
     private TypeConverterHolder converterHolder;
@@ -35,7 +35,7 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
 
     public void process(Map<String, Object> mapping, TypeConversion tc, String key) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("TypeConversion [#0] with key: [#1]", tc.converter(), key);
+            LOG.debug("TypeConversion [{}] with key: [{}]", tc.converter(), key);
         }
         if (key == null) {
             return;
@@ -54,9 +54,7 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
                 //for keys of Maps
                 else if (tc.rule() == ConversionRule.KEY) {
                     Class converterClass = Thread.currentThread().getContextClassLoader().loadClass(tc.converter());
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Converter class: [#0]", converterClass);
-                    }
+                    LOG.debug("Converter class: [{}]", converterClass);
                     //check if the converter is a type converter if it is one
                     //then just put it in the map as is. Otherwise
                     //put a value in for the type converter of the class
@@ -65,7 +63,7 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
                     } else {
                         mapping.put(key, converterClass);
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Object placed in mapping for key [#0] is [#1]", key, mapping.get(key));
+                            LOG.debug("Object placed in mapping for key [{}] is [{}]", key, mapping.get(key));
                         }
                     }
                 }
@@ -75,9 +73,7 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
                 }
             }
         } catch (Exception e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Got exception for #0", e, key);
-            }
+            LOG.debug("Got exception for {}", key, e);
         }
     }
 

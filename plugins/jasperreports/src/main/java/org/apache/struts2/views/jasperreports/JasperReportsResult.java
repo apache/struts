@@ -23,8 +23,8 @@ package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -135,7 +135,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
     private static final long serialVersionUID = -2523174799621182907L;
 
-    private final static Logger LOG = LoggerFactory.getLogger(JasperReportsResult.class);
+    private final static Logger LOG = LogManager.getLogger(JasperReportsResult.class);
 
     protected String dataSource;
     protected String format;

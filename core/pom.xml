@@ -178,6 +178,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
         <!-- File upload -->
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -242,12 +249,6 @@
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
             <scope>test</scope>
         </dependency>
 

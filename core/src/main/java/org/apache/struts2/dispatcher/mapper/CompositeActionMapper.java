@@ -24,8 +24,8 @@ package org.apache.struts2.dispatcher.mapper;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class CompositeActionMapper implements ActionMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CompositeActionMapper.class);
+    private static final Logger LOG = LogManager.getLogger(CompositeActionMapper.class);
 
     protected List<ActionMapper> actionMappers = new LinkedList<ActionMapper>();
 

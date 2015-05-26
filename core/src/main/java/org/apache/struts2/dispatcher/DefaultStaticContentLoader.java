@@ -22,8 +22,8 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.ng.HostConfig;
 
@@ -66,7 +66,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /**
      * Provide a logging instance.
      */
-    private Logger LOG = LoggerFactory.getLogger(DefaultStaticContentLoader.class);
+    private Logger LOG = LogManager.getLogger(DefaultStaticContentLoader.class);
 
     /**
      * Store set of path prefixes to use with static resources.
@@ -214,7 +214,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
                 ifModifiedSince = request.getDateHeader("If-Modified-Since");
             } catch (Exception e) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("Invalid If-Modified-Since header value: '#0', ignoring", request.getHeader("If-Modified-Since"));
+                    LOG.warn("Invalid If-Modified-Since header value: '{}', ignoring", request.getHeader("If-Modified-Since"));
                 }
             }
             long lastModifiedMillis = lastModifiedCal.getTimeInMillis();

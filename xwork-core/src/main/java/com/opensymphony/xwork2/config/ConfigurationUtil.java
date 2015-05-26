@@ -16,8 +16,8 @@
 package com.opensymphony.xwork2.config;
 
 import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  */
 public class ConfigurationUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationUtil.class);
+    private static final Logger LOG = LogManager.getLogger(ConfigurationUtil.class);
 
     private ConfigurationUtil() {
     }

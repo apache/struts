@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -158,7 +158,7 @@ public class FreemarkerManager {
 
     // end freemarker definitions...
 
-    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerManager.class);
+    private static final Logger LOG = LogManager.getLogger(FreemarkerManager.class);
     public static final String CONFIG_SERVLET_CONTEXT_KEY = "freemarker.Configuration";
     public static final String KEY_EXCEPTION = "exception";
 
@@ -430,9 +430,7 @@ public class FreemarkerManager {
                  }
              }
          } catch (IOException e) {
-             if (LOG.isErrorEnabled()) {
-                LOG.error("Invalid template path specified: #0", e, e.getMessage());
-             }
+             LOG.error("Invalid template path specified: {}", e.getMessage(), e);
          }
 
          // presume that most apps will require the class and webapp template loader

@@ -28,8 +28,9 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsStatics;
@@ -199,6 +200,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         }
     }
 
+    @Deprecated
     private void initLogging() {
         String factoryName = filterConfig.getInitParameter("loggerFactory");
         if (factoryName != null) {
@@ -218,7 +220,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             }
         }
 
-        log = LoggerFactory.getLogger(FilterDispatcher.class);
+        log = LogManager.getLogger(FilterDispatcher.class);
 
     }
 

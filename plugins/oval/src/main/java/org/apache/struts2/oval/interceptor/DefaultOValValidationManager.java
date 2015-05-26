@@ -4,8 +4,8 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import net.sf.oval.configuration.Configurer;
 import net.sf.oval.configuration.annotation.AnnotationsConfigurer;
 import net.sf.oval.configuration.annotation.JPAAnnotationsConfigurer;
@@ -22,7 +22,7 @@ import java.util.TreeSet;
 
 
 public class DefaultOValValidationManager implements OValValidationManager {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultOValValidationManager.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultOValValidationManager.class);
 
     protected static final String VALIDATION_CONFIG_SUFFIX = "-validation.xml";
     protected final Map<String, List<Configurer>> validatorCache = new HashMap<String, List<Configurer>>();
@@ -158,9 +158,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
                 is = fileManager.loadFile(fileUrl);
 
                 if (is != null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Loading validation xml file [#0]", fileName);
-                    }
+                    LOG.debug("Loading validation xml file [{}]", fileName);
                     XMLConfigurer configurer = new XMLConfigurer();
                     configurer.fromXML(is);
                     validatorFileCache.put(fileName, configurer);
@@ -171,7 +169,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
                     try {
                         is.close();
                     } catch (java.io.IOException e) {
-                        LOG.error("Unable to close input stream for [#0] ", e, fileName);
+                        LOG.error("Unable to close input stream for [{}] ", fileName, e);
                     }
                 }
             }

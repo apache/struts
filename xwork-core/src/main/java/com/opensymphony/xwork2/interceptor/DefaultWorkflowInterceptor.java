@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.Method;
 
@@ -121,7 +121,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
     private static final long serialVersionUID = 7563014655616490865L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultWorkflowInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultWorkflowInterceptor.class);
 
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
@@ -151,9 +151,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
             ValidationAware validationAwareAction = (ValidationAware) action;
 
             if (validationAwareAction.hasErrors()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Errors on action [#0], returning result name [#1]", validationAwareAction, inputResultName);
-                }
+                LOG.debug("Errors on action [{}], returning result name [{}]", validationAwareAction, inputResultName);
 
                 String resultName = inputResultName;
                 resultName = processValidationWorkflowAware(action, resultName);
@@ -174,10 +172,8 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
         String resultName = currentResultName;
         if (action instanceof ValidationWorkflowAware) {
             resultName = ((ValidationWorkflowAware) action).getInputResultName();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Changing result name from [#0] to [#1] because of processing [#2] interface applied to [#3]",
+            LOG.debug("Changing result name from [{}] to [{}] because of processing [{}] interface applied to [{}]",
                         currentResultName, resultName, InputConfig.class.getSimpleName(), ValidationWorkflowAware.class.getSimpleName(), action);
-            }
         }
         return resultName;
     }
@@ -195,10 +191,8 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
             } else {
                 resultName = annotation.resultName();
             }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Changing result name from [#0] to [#1] because of processing annotation [#2] on action [#3]",
+            LOG.debug("Changing result name from [{}] to [{}] because of processing annotation [{}] on action [{}]",
                         currentResultName, resultName, InputConfig.class.getSimpleName(), action);
-            }
         }
         return resultName;
     }
@@ -210,10 +204,8 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
         String resultName = currentResultName;
         if (action instanceof ValidationErrorAware) {
             resultName = ((ValidationErrorAware) action).actionErrorOccurred(currentResultName);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Changing result name from [#0] to [#1] because of processing interface [#2] on action [#3]",
+            LOG.debug("Changing result name from [{}] to [{}] because of processing interface [{}] on action [{}]",
                         currentResultName, resultName, ValidationErrorAware.class.getSimpleName(), action);
-            }
         }
         return resultName;
     }

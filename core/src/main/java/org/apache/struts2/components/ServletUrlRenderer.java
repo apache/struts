@@ -26,8 +26,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -47,7 +47,7 @@ public class ServletUrlRenderer implements UrlRenderer {
     /**
      * Provide a logging instance.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ServletUrlRenderer.class);
+    private static final Logger LOG = LogManager.getLogger(ServletUrlRenderer.class);
 
     private ActionMapper actionMapper;
     private UrlHelper urlHelper;

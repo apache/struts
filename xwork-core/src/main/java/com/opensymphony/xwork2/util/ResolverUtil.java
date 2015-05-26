@@ -14,8 +14,8 @@
  */
 package com.opensymphony.xwork2.util;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,7 +66,7 @@ import java.util.jar.JarInputStream;
  */
 public class ResolverUtil<T> {
     /** An instance of Log to use for logging in this class. */
-    private static final Logger LOG = LoggerFactory.getLogger(ResolverUtil.class);
+    private static final Logger LOG = LogManager.getLogger(ResolverUtil.class);
 
     /**
      * A simple interface that specifies how to test classes to determine if they

@@ -18,8 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
 import java.util.Set;
@@ -71,7 +71,7 @@ import java.util.Set;
  * @version $Date$ $Id$
  */
 public abstract class MethodFilterInterceptor extends AbstractInterceptor {
-    protected transient Logger log = LoggerFactory.getLogger(getClass());
+    protected transient Logger log = LogManager.getLogger(getClass());
     
     protected Set<String> excludeMethods = Collections.emptySet();
     protected Set<String> includeMethods = Collections.emptySet();

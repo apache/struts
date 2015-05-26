@@ -18,8 +18,8 @@
 package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.util.PatternMatcher;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.Serializable;
@@ -42,7 +42,7 @@ public abstract class AbstractMatcher<E> implements Serializable {
     /**
      * <p> The logging instance </p>
      */
-    private static final Logger log = LoggerFactory.getLogger(AbstractMatcher.class);
+    private static final Logger log = LogManager.getLogger(AbstractMatcher.class);
 
     /**
      * <p> Handles all wildcard pattern matching. </p>

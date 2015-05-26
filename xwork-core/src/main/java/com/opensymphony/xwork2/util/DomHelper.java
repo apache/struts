@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationAttributes;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class DomHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DomHelper.class);
+    private static final Logger LOG = LogManager.getLogger(DomHelper.class);
     
     public static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";
 
@@ -80,16 +80,8 @@ public class DomHelper {
             try {
                 Class clazz = ObjectFactory.getObjectFactory().getClassInstance(parserProp);
                 factory = (SAXParserFactory) clazz.newInstance();
-            }
-            catch (ClassNotFoundException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': #0", e, parserProp);
-                }
-            }
-            catch (Exception e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': #0", e, parserProp);
-                }
+            } catch (Exception e) {
+                LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': {}", parserProp, e);
             }
         }
 
@@ -150,16 +142,8 @@ public class DomHelper {
                 try {
                     Class clazz = ObjectFactory.getObjectFactory().getClassInstance(parserProp);
                     FACTORY = (SAXTransformerFactory) clazz.newInstance();
-                }
-                catch (ClassNotFoundException e) {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': #0", e, parserProp);
-                    }
-                }
-                catch (Exception e) {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': #0", e, parserProp);
-                    }
+                } catch (Exception e) {
+                    LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': {}", parserProp, e);
                 }
             }
 
@@ -348,8 +332,8 @@ public class DomHelper {
             if (dtdMappings != null && dtdMappings.containsKey(publicId)) {
                 String dtdFile = dtdMappings.get(publicId);
                 return new InputSource(ClassLoaderUtil.getResourceAsStream(dtdFile, DomHelper.class));
-            } else if (LOG.isWarnEnabled()) {
-                LOG.warn("Local DTD is missing for publicID: #0 - defined mappings: #1", publicId, dtdMappings);
+            } else {
+                LOG.warn("Local DTD is missing for publicID: {} - defined mappings: {}", publicId, dtdMappings);
             }
             return null;
         }
@@ -367,8 +351,7 @@ public class DomHelper {
 
         @Override
         public void fatalError(SAXParseException exception) throws SAXException {
-            LOG.fatal(exception.getMessage() + " at (" + exception.getPublicId() + ":" + 
-                exception.getLineNumber() + ":" + exception.getColumnNumber() + ")", exception);
+            LOG.fatal("{} at ({}:{}:{})", exception.getMessage(), exception.getPublicId(), exception.getLineNumber(), exception.getColumnNumber(), exception);
             throw exception;
         }
     }

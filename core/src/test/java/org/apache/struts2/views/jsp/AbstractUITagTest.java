@@ -22,8 +22,8 @@
 package org.apache.struts2.views.jsp;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
@@ -38,7 +38,7 @@ import java.util.*;
  */
 public abstract class AbstractUITagTest extends AbstractTagTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractUITagTest.class);
+    private static final Logger LOG = LogManager.getLogger(AbstractUITagTest.class);
 
     static final String FREEMARKER_ERROR_EXPECTATION = "Java backtrace for programmers:";
 

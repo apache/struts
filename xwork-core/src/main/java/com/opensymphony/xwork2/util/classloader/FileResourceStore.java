@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.util.classloader;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ import java.io.InputStream;
  *  class taken from Apache JCI
  */
 public final class FileResourceStore implements ResourceStore {
-    private static final Logger LOG = LoggerFactory.getLogger(FileResourceStore.class);
+    private static final Logger LOG = LogManager.getLogger(FileResourceStore.class);
     private final File root;
 
     public FileResourceStore(final File pFile) {
@@ -46,8 +46,7 @@ public final class FileResourceStore implements ResourceStore {
 
             return data;
         } catch (Exception e) {
-            if (LOG.isDebugEnabled())
-                LOG.debug("Unable to read file [#0]", e, pResourceName);
+            LOG.debug("Unable to read file [{}]", pResourceName, e);
             return null;
         } finally {
             closeQuietly(fis);
@@ -63,8 +62,7 @@ public final class FileResourceStore implements ResourceStore {
             if (is != null)
                 is.close();
         } catch (IOException e) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to close file input stream", e);
+            LOG.error("Unable to close file input stream", e);
         }
     }
 

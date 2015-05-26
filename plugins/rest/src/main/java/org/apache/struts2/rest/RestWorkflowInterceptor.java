@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -134,7 +134,7 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
 	
 	private static final long serialVersionUID = 7563014655616490865L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(RestWorkflowInterceptor.class);
+	private static final Logger LOG = LogManager.getLogger(RestWorkflowInterceptor.class);
 	
 	private String inputResultName = Action.INPUT;
 	

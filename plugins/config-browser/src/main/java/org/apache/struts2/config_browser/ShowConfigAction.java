@@ -25,8 +25,8 @@ package org.apache.struts2.config_browser;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -47,7 +47,7 @@ public class ShowConfigAction extends ActionNamesAction {
     private Set<String> actionNames;
     private String detailView = "results";
     private PropertyDescriptor[] properties;
-    private static Logger LOG = LoggerFactory.getLogger(ShowConfigAction.class);
+    private static Logger LOG = LogManager.getLogger(ShowConfigAction.class);
     
     private ObjectFactory objectFactory;
     private ReflectionProvider reflectionProvider;

@@ -37,8 +37,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -89,7 +89,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
                 " and place it on the value stack")
 public class I18n extends Component {
 
-    private static final Logger LOG = LoggerFactory.getLogger(I18n.class);
+    private static final Logger LOG = LogManager.getLogger(I18n.class);
 
     protected boolean pushed;
     protected String name;

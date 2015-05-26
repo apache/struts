@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -88,7 +88,7 @@ import java.util.Map;
  */
 public class AliasInterceptor extends AbstractInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AliasInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(AliasInterceptor.class);
 
     private static final String DEFAULT_ALIAS_KEY = "aliases";
     protected String aliasesKey = DEFAULT_ALIAS_KEY;

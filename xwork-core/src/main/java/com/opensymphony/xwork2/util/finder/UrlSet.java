@@ -15,8 +15,8 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -51,7 +51,7 @@ import java.util.Set;
  */
 public class UrlSet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UrlSet.class);
+    private static final Logger LOG = LogManager.getLogger(UrlSet.class);
 
     private final Map<String,URL> urls;
     private Set<String> protocols;
@@ -237,9 +237,9 @@ public class UrlSet {
                 //build a URL pointing to the jar, instead of the META-INF dir
                 url = new URL(StringUtils.substringBefore(externalForm, "META-INF"));
                 list.add(url);
-            } else if (LOG.isDebugEnabled())
-                LOG.debug("Ignoring URL [#0] because it is not a jar", url.toExternalForm());
-
+            } else {
+                LOG.debug("Ignoring URL [{}] because it is not a jar", url.toExternalForm());
+            }
         }
 
         //usually the "classes" dir
@@ -264,17 +264,14 @@ public class UrlSet {
                 //build a URL pointing to the jar, instead of the META-INF dir
                 url = new URL(StringUtils.substringBefore(externalForm, "META-INF"));
                 list.add(url);
-            } else if (LOG.isDebugEnabled())
-                LOG.debug("Ignoring URL [#0] because it is not a valid protocol", url.toExternalForm());
-
+            } else {
+                LOG.debug("Ignoring URL [{}] because it is not a valid protocol", url.toExternalForm());
+            }
         }
         return list;
     }
 
     public static interface FileProtocolNormalizer {
-
         URL normalizeToFileProtocol(URL url);
-
     }
-
 }

@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.logging.LoggerUtils;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.*;
@@ -55,7 +55,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private static final long serialVersionUID = 370737852934925530L;
 
     private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
-    private static final Logger LOG = LoggerFactory.getLogger(OgnlValueStack.class);
+    private static final Logger LOG = LogManager.getLogger(OgnlValueStack.class);
 
     CompoundRoot root;
     transient Map<String, Object> context;
@@ -199,9 +199,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
                     .build();
             throw new XWorkException(message, re);
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Error setting value [#0] with expression [#1]", re, value.toString(), expr);
-            }
+            LOG.warn("Error setting value [{}] with expression [{}]", value, expr, re);
         }
     }
 
@@ -333,7 +331,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         Object ret = findInContext(expr);
         if (ret == null) {
             if (shouldLogMissingPropertyWarning(e)) {
-                LOG.warn("Could not find property [#0]!", e, expr);
+                LOG.warn("Could not find property [{}]!", expr, e);
             }
             if (throwExceptionOnFailure) {
                 throw new XWorkException(e);
@@ -381,12 +379,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      * @param e    The thrown exception.
      */
     private void logLookupFailure(String expr, Exception e) {
-        String msg = LoggerUtils.format("Caught an exception while evaluating expression '#0' against value stack", expr);
         if (devMode && LOG.isWarnEnabled()) {
-            LOG.warn(msg, e);
+            LOG.warn("Caught an exception while evaluating expression '{}' against value stack", expr, e);
             LOG.warn("NOTE: Previous warning message was issued due to devMode set to true.");
-        } else if (LOG.isDebugEnabled()) {
-            LOG.debug(msg, e);
+        } else {
+            LOG.debug("Caught an exception while evaluating expression '{}' against value stack", expr, e);
         }
     }
 

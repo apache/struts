@@ -24,8 +24,8 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -143,7 +143,7 @@ import java.util.TimeZone;
 @StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
 public class Date extends ContextBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Date.class);
+    private static final Logger LOG = LogManager.getLogger(Date.class);
     /**
      * Property name to fall back when no format is specified
      */
@@ -287,15 +287,15 @@ public class Date extends ContextBean {
                 date = ((Calendar) dateObject).getTime();
             } else {
                 if (devMode) {
-                    LOG.error("Expression [#0] passed to <s:date/> tag which was evaluated to [#1](#2) isn't instance of java.util.Date nor java.util.Calendar!",
+                    LOG.error("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
                             name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
                 } else {
-                    LOG.debug("Expression [#0] passed to <s:date/> tag which was evaluated to [#1](#2) isn't instance of java.util.Date nor java.util.Calendar!",
+                    LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
                             name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
                 }
             }
         } catch (Exception e) {
-            LOG.error("Could not convert object with key '#0' to a java.util.Date instance", name);
+            LOG.error("Could not convert object with key '{}' to a java.util.Date instance", name);
         }
 
         //try to find the format on the stack

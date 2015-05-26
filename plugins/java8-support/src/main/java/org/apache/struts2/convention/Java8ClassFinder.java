@@ -22,8 +22,8 @@ import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.finder.ClassFinder;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
@@ -60,7 +60,7 @@ import java.util.jar.JarInputStream;
  */
 public class Java8ClassFinder implements ClassFinder {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Java8ClassFinder.class);
+    private static final Logger LOG = LogManager.getLogger(Java8ClassFinder.class);
 
     private final Map<String, List<Info>> annotated = new HashMap<String, List<Info>>();
     private final Map<String, ClassInfo> classInfos = new LinkedHashMap<String, ClassInfo>();
@@ -93,8 +93,7 @@ public class Java8ClassFinder implements ClassFinder {
                     }
                 }
             } catch (Exception e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Unable to read URL [#0]", e, location.toExternalForm());
+                LOG.error("Unable to read URL [{}]", location.toExternalForm(), e);
             }
         }
 
@@ -103,8 +102,7 @@ public class Java8ClassFinder implements ClassFinder {
                 if (classNameFilter.test(className))
                     readClassDef(className);
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Unable to read class [#0]", e, className);
+                LOG.error("Unable to read class [{}]", className, e);
             }
         }
     }
@@ -197,8 +195,7 @@ public class Java8ClassFinder implements ClassFinder {
                         classes.add(clazz);
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -228,8 +225,7 @@ public class Java8ClassFinder implements ClassFinder {
                         }
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -259,8 +255,7 @@ public class Java8ClassFinder implements ClassFinder {
                         }
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -290,8 +285,7 @@ public class Java8ClassFinder implements ClassFinder {
                         }
                     }
                 } catch (Throwable e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Error loading class [#0]", e, classInfo.getName());
+                    LOG.error("Error loading class [{}]", classInfo.getName(), e);
                     classesNotLoaded.add(classInfo.getName());
                 }
             }
@@ -310,8 +304,7 @@ public class Java8ClassFinder implements ClassFinder {
                     classes.add(classInfo.get());
                 }
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Error loading class [#0]", e, classInfo.getName());
+                LOG.error("Error loading class [{}]", classInfo.getName(), e);
                 classesNotLoaded.add(classInfo.getName());
             }
         }
@@ -327,8 +320,7 @@ public class Java8ClassFinder implements ClassFinder {
                     classes.add(classInfo.get());
                 }
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Error loading class [#0]", e, classInfo.getName());
+                LOG.error("Error loading class [{}]", classInfo.getName(), e);
                 classesNotLoaded.add(classInfo.getName());
             }
         }
@@ -342,8 +334,7 @@ public class Java8ClassFinder implements ClassFinder {
             try {
                 classes.add(classInfo.get());
             } catch (Throwable e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Error loading class [#0]", e, classInfo.getName());
+                LOG.error("Error loading class [{}]", classInfo.getName(), e);
                 classesNotLoaded.add(classInfo.getName());
             }
         }
@@ -360,8 +351,7 @@ public class Java8ClassFinder implements ClassFinder {
                     urls.add(url);
                 }
             } catch (IOException ioe) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Could not read driectory [#0]", ioe, dirName);
+                LOG.error("Could not read directory [{}]", dirName, ioe);
             }
         }
 
@@ -405,9 +395,9 @@ public class Java8ClassFinder implements ClassFinder {
             } finally {
                 in.close();
             }
-        } else if (LOG.isDebugEnabled())
-            LOG.debug("Unable to read [#0]", location.toExternalForm());
-        
+        } else {
+            LOG.debug("Unable to read [{}]", location.toExternalForm());
+        }
         return Collections.emptyList();
     }
 

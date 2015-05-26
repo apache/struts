@@ -3,8 +3,8 @@ package com.opensymphony.xwork2.factory;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class DefaultConverterFactory implements ConverterFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultConverterFactory.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultConverterFactory.class);
 
     private Container container;
 
@@ -23,9 +23,7 @@ public class DefaultConverterFactory implements ConverterFactory {
     }
 
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating converter of type [#0]", converterClass.getCanonicalName());
-        }
+        LOG.debug("Creating converter of type [{}]", converterClass.getCanonicalName());
         return container.getInstance(converterClass);
     }
 

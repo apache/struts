@@ -28,14 +28,14 @@ import java.io.InputStreamReader;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.configuration.PlexusConfigurationResourceException;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Utility methods for dealing with Plexus
  */
 public class PlexusUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(PlexusObjectFactory.class);
 
     /**
      * Configures the container with the configuration file

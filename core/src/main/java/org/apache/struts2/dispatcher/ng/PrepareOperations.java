@@ -23,8 +23,8 @@ package org.apache.struts2.dispatcher.ng;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -45,12 +45,12 @@ import java.util.regex.Pattern;
  */
 public class PrepareOperations {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PrepareOperations.class);
+    private static final Logger LOG = LogManager.getLogger(PrepareOperations.class);
 
     private Dispatcher dispatcher;
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
     public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
-    private Logger log = LoggerFactory.getLogger(PrepareOperations.class);
+    private Logger log = LogManager.getLogger(PrepareOperations.class);
 
     @Deprecated
     public PrepareOperations(ServletContext servletContext, Dispatcher dispatcher) {

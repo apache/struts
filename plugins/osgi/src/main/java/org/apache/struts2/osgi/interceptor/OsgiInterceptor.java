@@ -23,8 +23,8 @@ package org.apache.struts2.osgi.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class OsgiInterceptor extends AbstractInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OsgiInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(OsgiInterceptor.class);
 
     private BundleContext bundleContext;
 

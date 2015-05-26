@@ -24,8 +24,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.BaseTemplateEngine;
 import org.apache.struts2.components.template.Template;
@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
  */
 public class JavaTemplateEngine extends BaseTemplateEngine {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JavaTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(JavaTemplateEngine.class);
 
     // The struts template engine manager
     protected TemplateEngineManager templateEngineManager;
@@ -71,9 +71,7 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
         Theme theme = themes.get(t.getTheme());
         if (theme == null) {
             // Theme not supported, so do what struts would have done if we were not here.
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Theme not found [#0] trying default template engine using template type [#1]", t.getTheme(), defaultTemplateType);
-            }
+            LOG.debug("Theme not found [{}] trying default template engine using template type [{}]", t.getTheme(), defaultTemplateType);
             final TemplateEngine engine = templateEngineManager.getTemplateEngine(templateContext.getTemplate(), defaultTemplateType);
 
             if (engine == null) {
@@ -120,24 +118,16 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
         while (customThemes.hasMoreTokens()) {
             String themeClass = customThemes.nextToken().trim();
             try {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("Registering custom theme [#0] to javatemplates engine", themeClass);
-                }
+                LOG.info("Registering custom theme [{}] to javatemplates engine", themeClass);
                 ObjectFactory factory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
                 Theme theme = (Theme) factory.buildBean(themeClass, new HashMap<String, Object>());
                 themes.add(theme);
             } catch (ClassCastException cce) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Invalid java them class [#0]. Class does not implement 'org.apache.struts2.views.java.Theme' interface", cce, themeClass);
-                }
+                LOG.error("Invalid java them class [{}]. Class does not implement 'org.apache.struts2.views.java.Theme' interface", themeClass, cce);
             } catch (ClassNotFoundException cnf) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Invalid java theme class [#0]. Class not found!", cnf, themeClass);
-                }
+                LOG.error("Invalid java theme class [{}]. Class not found!", themeClass, cnf);
             } catch (Exception e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Could not find messages file [#0].properties. Skipping!", e, themeClass);
-                }
+                LOG.error("Could not find messages file [{}].properties. Skipping!", themeClass, e);
             }
         }
     }
@@ -152,8 +142,8 @@ public class JavaTemplateEngine extends BaseTemplateEngine {
         // Make sure we don't set ourself as default for race condition
         if (defaultTemplateTheme != null && !defaultTemplateTheme.equalsIgnoreCase(getSuffix())) {
             this.defaultTemplateType = defaultTemplateTheme.toLowerCase();
-        } else if(LOG.isErrorEnabled()) {
-            LOG.error("Invalid struts.javatemplates.defaultTemplateType value. Cannot be [#0]!", getSuffix());
+        } else {
+            LOG.error("Invalid struts.javatemplates.defaultTemplateType value. Cannot be [{}]!", getSuffix());
         }
     }
 

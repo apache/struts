@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -96,7 +96,7 @@ import java.util.HashMap;
  */
 public class RestActionMapper extends DefaultActionMapper {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(RestActionMapper.class);
+    protected static final Logger LOG = LogManager.getLogger(RestActionMapper.class);
     public static final String HTTP_METHOD_PARAM = "_method";
     private String idParameterName = "id";
     private String indexMethodName = "index";

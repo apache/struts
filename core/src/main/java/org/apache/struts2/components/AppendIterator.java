@@ -33,8 +33,8 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -119,7 +119,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 @StrutsTag(name="append", tldTagClass="org.apache.struts2.views.jsp.iterator.AppendIteratorTag", description="Append the values of a list of iterators to one iterator")
 public class AppendIterator extends ContextBean implements UnnamedParametric {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AppendIterator.class);
+    private static final Logger LOG = LogManager.getLogger(AppendIterator.class);
 
     private AppendIteratorFilter appendIteratorFilter= null;
     private List _parameters;

@@ -17,11 +17,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Unit test for {@link ActionSupport}.

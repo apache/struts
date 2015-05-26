@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -38,7 +38,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class IteratorGenerator implements Iterator, Action {
 
-    private static final Logger LOG = LoggerFactory.getLogger(IteratorGenerator.class);
+    private static final Logger LOG = LogManager.getLogger(IteratorGenerator.class);
 
     List values;
     Object value;

@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.ServletActionContext;
@@ -100,7 +100,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     private static final long serialVersionUID = 6316947346435301270L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServletRedirectResult.class);
+    private static final Logger LOG = LogManager.getLogger(ServletRedirectResult.class);
 
     protected boolean prependServletContext = true;
     protected ActionMapper actionMapper;
@@ -279,25 +279,17 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             URI uri = URI.create(rawUrl.replaceAll(" ", "%20"));
             if (uri.isAbsolute()) {
                 URL validUrl = uri.toURL();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("[#0] is full url, not a path", url);
-                }
+                LOG.debug("[{}] is full url, not a path", url);
                 return validUrl.getProtocol() == null;
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("[#0] isn't absolute URI, assuming it's a path", url);
-                }
+                LOG.debug("[{}] isn't absolute URI, assuming it's a path", url);
                 return true;
             }
         } catch (IllegalArgumentException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("[#0] isn't a valid URL, assuming it's a path", e, url);
-            }
+            LOG.debug("[{}] isn't a valid URL, assuming it's a path", url, e);
             return true;
         } catch (MalformedURLException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("[#0] isn't a valid URL, assuming it's a path", e, url);
-            }
+            LOG.debug("[{}] isn't a valid URL, assuming it's a path", url, e);
             return true;
         }
     }

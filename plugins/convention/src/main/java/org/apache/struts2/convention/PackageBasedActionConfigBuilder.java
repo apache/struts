@@ -44,8 +44,8 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.Test;
 import com.opensymphony.xwork2.util.finder.UrlSet;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
@@ -81,7 +81,7 @@ import java.util.regex.Pattern;
  */
 public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PackageBasedActionConfigBuilder.class);
+    private static final Logger LOG = LogManager.getLogger(PackageBasedActionConfigBuilder.class);
     private static final boolean EXTRACT_BASE_INTERFACES = true;
 
     private final Configuration configuration;
@@ -143,7 +143,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         this.redirectToSlash = Boolean.parseBoolean(redirectToSlash);
 
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Setting action default parent package to [#0]", defaultParentPackage);
+            LOG.trace("Setting action default parent package to [{}]", defaultParentPackage);
         }
 
         this.defaultParentPackage = defaultParentPackage;
@@ -478,8 +478,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (includeJars == null) {
             urlSet = urlSet.exclude(".*?\\.jar(!/|/)?");
         } else {
-            LOG.debug("jar urls regexes were specified: #0", Arrays.asList(includeJars));
-
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("jar urls regexes were specified: {}", Arrays.asList(includeJars));
+            }
             List<URL> rawIncludedUrls = urlSet.getUrls();
             Set<URL> includeUrls = new HashSet<URL>();
             boolean[] patternUsed = new boolean[includeJars.length];
@@ -496,7 +497,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         }
                     }
                 } else {
-                    LOG.debug("It is not a jar [#0]", url);
+                    LOG.debug("It is not a jar [{}]", url);
                     includeUrls.add(url);
                 }
             }
@@ -504,7 +505,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (LOG.isWarnEnabled()) {
                 for (int i = 0; i < patternUsed.length; i++) {
                     if (!patternUsed[i]) {
-                        LOG.warn("The includeJars pattern [#0] did not match any jars in the classpath", includeJars[i]);
+                        LOG.warn("The includeJars pattern [{}] did not match any jars in the classpath", includeJars[i]);
                     }
                 }
             }
@@ -637,8 +638,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 try {
                     return inPackage && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
                 } catch (ClassNotFoundException ex) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Unable to load class [#0]", ex, classInfo.getName());
+                    LOG.error("Unable to load class [{}]", ex, classInfo.getName());
                     return false;
                 }
             }
@@ -655,8 +655,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
             // Skip classes that can't be instantiated
             if (cannotInstantiate(actionClass)) {
-                if (LOG.isTraceEnabled())
-                    LOG.trace("Class [#0] did not pass the instantiation test and will be ignored", actionClass.getName());
+                LOG.trace("Class [{}] did not pass the instantiation test and will be ignored", actionClass.getName());
                 continue;
             }
 
@@ -665,8 +664,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 try {
                     objectFactory.getClassInstance(actionClass.getName());
                 } catch (ClassNotFoundException e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Object Factory was unable to load class [#0]", e, actionClass.getName());
+                    LOG.error("Object Factory was unable to load class [{}]", e, actionClass.getName());
                     throw new StrutsException("Object Factory was unable to load class " + actionClass.getName(), e);
                 }
             }
@@ -674,7 +672,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             // Determine the action package
             String actionPackage = actionClass.getPackage().getName();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Processing class [#0] in package [#1]", actionClass.getName(), actionPackage);
+                LOG.debug("Processing class [{}] in package [{}]", actionClass.getName(), actionPackage);
             }
 
             // Determine the default namespace and action name
@@ -789,9 +787,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         //single namespace
         Namespace namespaceAnnotation = AnnotationUtils.findAnnotation(actionClass, Namespace.class);
         if (namespaceAnnotation != null) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using non-default action namespace from Namespace annotation of [#0]", namespaceAnnotation.value());
-            }
+            LOG.trace("Using non-default action namespace from Namespace annotation of [{}]", namespaceAnnotation.value());
 
             namespaces.add(namespaceAnnotation.value());
         }
@@ -804,7 +800,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 for (Namespace namespace : namespacesAnnotation.value())
                     sb.append(namespace.value()).append(",");
                 sb.deleteCharAt(sb.length() - 1);
-                LOG.trace("Using non-default action namespaces from Namespaces annotation of [#0]", sb.toString());
+                LOG.trace("Using non-default action namespaces from Namespaces annotation of [{}]", sb.toString());
             }
 
             for (Namespace namespace : namespacesAnnotation.value())
@@ -859,9 +855,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     protected String determineActionName(Class<?> actionClass) {
         String actionName = actionNameBuilder.build(actionClass.getSimpleName());
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Got actionName for class [#0] of [#1]", actionClass.toString(), actionName);
-        }
+        LOG.trace("Got actionName for class [{}] of [{}]", actionClass.toString(), actionName);
 
         return actionName;
     }
@@ -939,7 +933,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         actionConfig.methodName(actionMethod);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating action config for class [#0], name [#1] and package name [#2] in namespace [#3]",
+            LOG.debug("Creating action config for class [{}], name [{}] and package name [{}] in namespace [{}]",
                     actionClass.toString(), actionName, pkgCfg.getName(), pkgCfg.getNamespace());
         }
 
@@ -972,8 +966,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (existingPkg != null) {
             // there is a package already with that name, check action
             ActionConfig existingActionConfig = existingPkg.getActionConfigs().get(actionName);
-            if (existingActionConfig != null && LOG.isWarnEnabled())
-                LOG.warn("Duplicated action definition in package [#0] with name [#1].", pkgCfg.getName(), actionName);
+            if (existingActionConfig != null && LOG.isWarnEnabled()) {
+                LOG.warn("Duplicated action definition in package [{}] with name [{}].", pkgCfg.getName(), actionName);
+            }
         }
 
         //watch class file
@@ -988,8 +983,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         List<ExceptionMappingConfig> exceptionMappings = new ArrayList<ExceptionMappingConfig>();
 
         for (ExceptionMapping exceptionMapping : exceptions) {
-            if (LOG.isTraceEnabled())
-                LOG.trace("Mapping exception [#0] to result [#1] for action [#2]", exceptionMapping.exception(),
+            LOG.trace("Mapping exception [{}] to result [{}] for action [{}]", exceptionMapping.exception(),
                         exceptionMapping.result(), actionName);
             ExceptionMappingConfig.Builder builder = new ExceptionMappingConfig.Builder(null, exceptionMapping
                     .exception(), exceptionMapping.result());
@@ -1005,9 +999,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                                                    String actionNamespace, final String actionPackage, final Class<?> actionClass,
                                                    Action action) {
         if (action != null && !action.value().equals(Action.DEFAULT_VALUE)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using non-default action namespace from the Action annotation of [#0]", action.value());
-            }
+            LOG.trace("Using non-default action namespace from the Action annotation of [{}]", action.value());
             String actionName = action.value();
             actionNamespace = StringUtils.contains(actionName, "/") ? StringUtils.substringBeforeLast(actionName, "/") : StringUtils.EMPTY;
         }
@@ -1016,10 +1008,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         ParentPackage parent = AnnotationUtils.findAnnotation(actionClass, ParentPackage.class);
         String parentName = null;
         if (parent != null) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using non-default parent package from annotation of [#0]", parent.value());
-            }
-
+            LOG.trace("Using non-default parent package from annotation of [{}]", parent.value());
             parentName = parent.value();
         }
 
@@ -1051,14 +1040,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (defaultInterceptorRef != null) {
                 pkgConfig.defaultInterceptorRef(defaultInterceptorRef.value());
 
-                if (LOG.isTraceEnabled())
-                    LOG.trace("Setting [#0] as the default interceptor ref for [#1]", defaultInterceptorRef.value(), pkgConfig.getName());
+                LOG.trace("Setting [{}] as the default interceptor ref for [{}]", defaultInterceptorRef.value(), pkgConfig.getName());
             }
         }
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Created package config named [#0] with a namespace [#1]", name, actionNamespace);
-        }
+        LOG.trace("Created package config named [{}] with a namespace [{}]", name, actionNamespace);
 
         return pkgConfig;
     }
@@ -1110,18 +1096,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                             parent.addActionConfig(parentAction, indexActionConfig);
                         }
                     } else if (LOG.isTraceEnabled()) {
-                        LOG.trace("The parent namespace [#0] already contains " +
-                                "an action [#1]", parentNamespace, parentAction);
+                        LOG.trace("The parent namespace [{}] already contains " +
+                                "an action [{}]", parentNamespace, parentAction);
                     }
                 }
             }
 
             // Step #3
             if (pkgConfig.build().getAllActionConfigs().get("") == null) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Creating index ActionConfig with an action name of [] for the action " +
-                            "class [#0]", indexActionConfig.getClassName());
-                }
+                LOG.trace("Creating index ActionConfig with an action name of [] for the action " +
+                            "class [{}]", indexActionConfig.getClassName());
 
                 pkgConfig.addActionConfig("", indexActionConfig);
             }
@@ -1137,7 +1121,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             for (String url : loadedFileUrls) {
                 if (fileManager.fileNeedsReloading(url)) {
                     if (LOG.isDebugEnabled())
-                        LOG.debug("File [#0] changed, configuration will be reloaded", url);
+                        LOG.debug("File [{}] changed, configuration will be reloaded", url);
                     return true;
                 }
             }

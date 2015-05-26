@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
 
@@ -54,7 +54,7 @@ import java.util.Map;
  */
 public class StrutsUtil {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(StrutsUtil.class);
+    protected static final Logger LOG = LogManager.getLogger(StrutsUtil.class);
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -118,7 +118,7 @@ public class StrutsUtil {
         }
         catch (Exception e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot include #0", e, aName.toString());
+                LOG.debug("Cannot include {}", e, aName.toString());
             }
             throw e;
         }
@@ -128,9 +128,7 @@ public class StrutsUtil {
         try {
             return URLEncoder.encode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot encode URL [#0]", e, s);
-            }
+            LOG.debug("Cannot encode URL [{}]", s, e);
             return s;
         }
     }

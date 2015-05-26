@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -152,7 +152,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 9161650888603380164L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(MessageStoreInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(MessageStoreInterceptor.class);
 
     public static final String AUTOMATIC_MODE = "AUTOMATIC";
     public static final String STORE_MODE = "STORE";

@@ -26,8 +26,8 @@
  */
 package com.opensymphony.xwork2.util.profiling;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -282,7 +282,7 @@ public class UtilTimerStack
      */
     public static final String MIN_TIME = "xwork.profile.mintime";
     
-    private static final Logger LOG = LoggerFactory.getLogger(UtilTimerStack.class);
+    private static final Logger LOG = LogManager.getLogger(UtilTimerStack.class);
 
     /**
      * Initialized in a static block, it can be changed at runtime by calling setActive(...)

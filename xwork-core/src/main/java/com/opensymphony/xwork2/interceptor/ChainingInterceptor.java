@@ -22,8 +22,8 @@ import com.opensymphony.xwork2.Unchainable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 import java.util.*;
@@ -100,7 +100,7 @@ import java.util.*;
  */
 public class ChainingInterceptor extends AbstractInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChainingInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ChainingInterceptor.class);
 
     private static final String ACTION_ERRORS = "actionErrors";
     private static final String FIELD_ERRORS = "fieldErrors";

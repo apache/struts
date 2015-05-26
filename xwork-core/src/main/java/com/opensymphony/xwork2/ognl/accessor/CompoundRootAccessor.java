@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import ognl.*;
 
 import java.beans.IntrospectionException;
@@ -56,7 +56,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         return null;
     }
 
-    private final static Logger LOG = LoggerFactory.getLogger(CompoundRootAccessor.class);
+    private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<MethodCall, Boolean>();
 
@@ -210,13 +210,9 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
                 return sb.toString();
             } catch (IntrospectionException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Got exception in callMethod", e);
-                }
+                LOG.debug("Got exception in callMethod", e);
             } catch (OgnlException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Got exception in callMethod", e);
-                }
+                LOG.debug("Got exception in callMethod", e);
             }
 
             return null;
@@ -281,9 +277,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                 }
             }
         } catch (Exception e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Got exception when tried to get class for name [#0]", e, className);
-            }
+            LOG.debug("Got exception when tried to get class for name [{}]", className, e);
         }
 
         return Thread.currentThread().getContextClassLoader().loadClass(className);

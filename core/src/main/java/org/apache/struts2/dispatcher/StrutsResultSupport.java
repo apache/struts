@@ -31,8 +31,8 @@ import org.apache.struts2.StrutsStatics;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -105,7 +105,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public abstract class StrutsResultSupport implements Result, StrutsStatics {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsResultSupport.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsResultSupport.class);
 
     /** The default parameter */
     public static final String DEFAULT_PARAM = "location";

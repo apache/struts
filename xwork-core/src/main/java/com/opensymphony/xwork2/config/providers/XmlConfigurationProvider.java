@@ -35,8 +35,8 @@ import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -64,7 +64,7 @@ import java.util.*;
  */
 public class XmlConfigurationProvider implements ConfigurationProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigurationProvider.class);
+    private static final Logger LOG = LogManager.getLogger(XmlConfigurationProvider.class);
 
     private List<Document> documents;
     private Set<String> includedFileNames;
@@ -246,9 +246,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             if (!optional) {
                                 throw new ConfigurationException("Unable to load bean: type:" + type + " class:" + impl, ex, childNode);
                             } else {
-                                if (LOG.isDebugEnabled()) {
-                                    LOG.debug("Unable to load optional class: #0", impl);
-                                }
+                                LOG.debug("Unable to load optional class: {}", impl);
                             }
                         }
                     } else if ("constant".equals(nodeName)) {
@@ -427,9 +425,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         } else {
             if (!verifyAction(className, name, location)) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to verify action [#0] with class [#1], from [#2]", name, className, location);
-                }
+                LOG.error("Unable to verify action [{}] with class [{}], from [{}]", name, className, location);
                 return;
             }
         }
@@ -465,10 +461,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     protected boolean verifyAction(String className, String name, Location loc) {
         if (className.indexOf('{') > -1) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Action class [" + className + "] contains a wildcard " +
-                        "replacement value, so it can't be verified");
-            }
+            LOG.debug("Action class [{}] contains a wildcard replacement value, so it can't be verified", className);
             return true;
         }
         try {
@@ -480,28 +473,18 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 clazz.getConstructor(new Class[]{});
             }
         } catch (ClassNotFoundException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Class not found for action [#0]", e, className);
-            }
+            LOG.debug("Class not found for action [{}]", className, e);
             throw new ConfigurationException("Action class [" + className + "] not found", loc);
         } catch (NoSuchMethodException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No constructor found for action [#0]", e, className);
-            }
+            LOG.debug("No constructor found for action [{}]", className, e);
             throw new ConfigurationException("Action class [" + className + "] does not have a public no-arg constructor", e, loc);
         } catch (RuntimeException ex) {
             // Probably not a big deal, like request or session-scoped Spring 2 beans that need a real request
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Unable to verify action class [#0] exists at initialization", className);
-            }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Action verification cause", ex);
-            }
+            LOG.info("Unable to verify action class [{}] exists at initialization", className);
+            LOG.debug("Action verification cause", ex);
         } catch (Exception ex) {
             // Default to failing fast
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Unable to verify action class [#0]", ex, className);
-            }
+            LOG.debug("Unable to verify action class [{}]", className, ex);
             throw new ConfigurationException(ex, loc);
         }
         return true;
@@ -514,9 +497,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         String packageName = packageElement.getAttribute("name");
         PackageConfig packageConfig = configuration.getPackageConfig(packageName);
         if (packageConfig != null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Package [#0] already loaded, skipping re-loading it and using existing PackageConfig [#1]", packageName, packageConfig);
-            }
+            LOG.debug("Package [{}] already loaded, skipping re-loading it and using existing PackageConfig [{}]", packageName, packageConfig);
             return packageConfig;
         }
 
@@ -526,9 +507,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             return newPackage.build();
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loaded " + newPackage);
-        }
+        LOG.debug("Loaded {}", newPackage);
 
         // add result types (and default result) to this package
         addResultTypes(newPackage, packageElement);
@@ -581,9 +560,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 try {
                     paramName = (String) clazz.getField("DEFAULT_PARAM").get(null);
                 } catch (Throwable t) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("The result type [#0] doesn't have a default param [DEFAULT_PARAM] defined!", t, className);
-                    }
+                    LOG.debug("The result type [{}] doesn't have a default param [DEFAULT_PARAM] defined!", className, t);
                 }
                 ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name, className).defaultResultParam(paramName)
                         .location(DomHelper.getLocationObject(resultTypeElement));
@@ -607,13 +584,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         try {
             return objectFactory.getClassInstance(className);
         } catch (ClassNotFoundException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Result class [#0] doesn't exist (ClassNotFoundException) at #1, ignoring", e, className, loc.toString());
-            }
+            LOG.warn("Result class [{}] doesn't exist (ClassNotFoundException) at {}, ignoring", className, loc, e);
         } catch (NoClassDefFoundError e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Result class [#0] doesn't exist (NoClassDefFoundError) at #1, ignoring", e, className, loc.toString());
-            }
+            LOG.warn("Result class [{}] doesn't exist (NoClassDefFoundError) at {}, ignoring", className, loc, e);
         }
 
         return null;
@@ -758,9 +731,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                                 resultParams.put(paramName, val);
                             }
                         } else {
-                            if (LOG.isWarnEnabled()) {
-                                LOG.warn("No default parameter defined for result [#0] of type [#1] ", config.getName(), config.getClassName());
-                            }
+                            LOG.warn("No default parameter defined for result [{}] of type [{}] ", config.getName(), config.getClassName());
                         }
                     }
                 }

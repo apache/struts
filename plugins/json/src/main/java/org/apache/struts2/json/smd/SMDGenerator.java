@@ -2,8 +2,8 @@ package org.apache.struts2.json.smd;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.json.JSONUtil;
 import org.apache.struts2.json.annotations.SMD;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class SMDGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SMDGenerator.class);
+    private static final Logger LOG = LogManager.getLogger(SMDGenerator.class);
 
     // rootObject is based on OGNL expression (action by default)
     private Object rootObject;

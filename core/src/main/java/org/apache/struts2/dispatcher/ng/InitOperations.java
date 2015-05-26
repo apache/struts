@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher.ng;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StaticContentLoader;
@@ -46,6 +47,7 @@ public class InitOperations {
     /**
      * Initializes the internal Struts logging
      */
+    @Deprecated
     public void initLogging( HostConfig filterConfig ) {
         String factoryName = filterConfig.getInitParameter("loggerFactory");
         if (factoryName != null) {

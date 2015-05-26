@@ -22,8 +22,8 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -77,7 +77,7 @@ public class PlainTextResult extends StrutsResultSupport {
 
     public static final int BUFFER_SIZE = 1024;
 
-    private static final Logger LOG = LoggerFactory.getLogger(PlainTextResult.class);
+    private static final Logger LOG = LogManager.getLogger(PlainTextResult.class);
 
     private static final long serialVersionUID = 3633371605905583950L;
 

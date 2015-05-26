@@ -21,17 +21,16 @@
 
 package org.apache.struts2;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.Assert;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import junit.framework.Assert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -43,7 +42,7 @@ public class TestResult implements Result {
     private static final long serialVersionUID = -4429258122011663164L;
 
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestResult.class);
+    private static final Logger LOG = LogManager.getLogger(TestResult.class);
 
 
     private List expectedValues = new ArrayList();

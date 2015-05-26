@@ -11,8 +11,8 @@ import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Properties;
 
@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 public abstract class AbstractBeanSelectionProvider implements BeanSelectionProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractBeanSelectionProvider.class);
+    private static final Logger LOG = LogManager.getLogger(AbstractBeanSelectionProvider.class);
 
     public static final String DEFAULT_BEAN_NAME = "struts";
 
@@ -50,20 +50,20 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
             String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
             if (builder.contains(type, foundName)) {
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("Choosing bean (#0) for (#1)", foundName, type.getName());
+                    LOG.info("Choosing bean ({}) for ({})", foundName, type.getName());
                 }
                 builder.alias(type, foundName, Container.DEFAULT_NAME);
             } else {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(foundName, this.getClass());
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Choosing bean (#0) for (#1)", cls.getName(), type.getName());
+                        LOG.debug("Choosing bean ({}) for ({})", cls.getName(), type.getName());
                     }
                     builder.factory(type, cls, scope);
                 } catch (ClassNotFoundException ex) {
                     // Perhaps a spring bean id, so we'll delegate to the object factory at runtime
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Choosing bean (#0) for (#1) to be loaded from the ObjectFactory", foundName, type.getName());
+                        LOG.debug("Choosing bean ({}) for ({}) to be loaded from the ObjectFactory", foundName, type.getName());
                     }
                     if (DEFAULT_BEAN_NAME.equals(foundName)) {
                         // Probably an optional bean, will ignore
@@ -77,9 +77,7 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
                 }
             }
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unable to alias bean type (#0), default mapping already assigned.", type.getName());
-            }
+            LOG.warn("Unable to alias bean type ({}), default mapping already assigned.", type.getName());
         }
     }
 

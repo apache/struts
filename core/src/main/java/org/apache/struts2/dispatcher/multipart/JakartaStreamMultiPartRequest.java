@@ -3,8 +3,8 @@ package org.apache.struts2.dispatcher.multipart;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class JakartaStreamMultiPartRequest implements MultiPartRequest {
 
-    static final Logger LOG = LoggerFactory.getLogger(JakartaStreamMultiPartRequest.class);
+    static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
 
     /**
      * Defines the internal buffer size used during streaming operations.
@@ -120,9 +120,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         for (String fieldName : fileInfos.keySet()) {
             for (FileInfo fileInfo : fileInfos.get(fieldName)) {
                 File file = fileInfo.getFile();
-                LOG.debug("Deleting file '#0'.", file.getName());
+                LOG.debug("Deleting file '{}'.", file.getName());
                 if (!file.delete())
-                    LOG.warn("There was a problem attempting to delete file '#0'.", file.getName());
+                    LOG.warn("There was a problem attempting to delete file '{}'.", file.getName());
             }
         }
     }
@@ -306,7 +306,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
                         // also warn user in the logs.
                         if (!requestSizePermitted) {
                             addFileSkippedError(itemStream.getName(), request);
-                            LOG.warn("Skipped stream '#0', request maximum size (#1) exceeded.", itemStream.getName(), maxSize);
+                            LOG.warn("Skipped stream '{}', request maximum size ({}) exceeded.", itemStream.getName(), maxSize);
                             continue;
                         }
 
@@ -380,8 +380,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
             }
             values.add(fieldValue);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOG.warn("Failed to handle form field '#0'.", fieldName);
+            LOG.warn("Failed to handle form field '{}'.", fieldName, e);
         }
     }
 
@@ -404,8 +403,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
                 try {
                     file.delete();
                 } catch (SecurityException se) {
-                    se.printStackTrace();
-                    LOG.warn("Failed to delete '#0' due to security exception above.", file.getName());
+                    LOG.warn("Failed to delete '{}' due to security exception above.", file.getName(), se);
                 }
             }
         }
@@ -434,7 +432,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         }
 
         File file = File.createTempFile(prefix + "_", suffix, new File(location));
-        LOG.debug("Creating temporary file '#0' (originally '#1').", file.getName(), fileName);
+        LOG.debug("Creating temporary file '{}' (originally '{}').", file.getName(), fileName);
         return file;
     }
 
@@ -453,7 +451,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         try {
             output = new BufferedOutputStream(new FileOutputStream(file), bufferSize);
             byte[] buffer = new byte[bufferSize];
-            LOG.debug("Streaming file using buffer size #0.", bufferSize);
+            LOG.debug("Streaming file using buffer size {}.", bufferSize);
             for (int length = 0; ((length = input.read(buffer)) > 0); )
                 output.write(buffer, 0, length);
             result = true;
@@ -527,7 +525,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     private String buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.message.upload.error." + e.getClass().getSimpleName();
         if (LOG.isDebugEnabled())
-            LOG.debug("Preparing error message for key: [#0]", errorKey);
+            LOG.debug("Preparing error message for key: [{}]", errorKey);
         return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }
 
@@ -541,7 +539,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     private String buildMessage(Throwable e, Object[] args) {
         String messageKey = "struts.message.upload.message." + e.getClass().getSimpleName();
         if (LOG.isDebugEnabled())
-            LOG.debug("Preparing message for key: [#0]", messageKey);
+            LOG.debug("Preparing message for key: [{}]", messageKey);
         return LocalizedTextUtil.findText(this.getClass(), messageKey, defaultLocale, e.getMessage(), args);
     }
 

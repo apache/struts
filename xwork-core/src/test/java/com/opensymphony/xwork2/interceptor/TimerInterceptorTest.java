@@ -19,7 +19,7 @@ import com.opensymphony.xwork2.SimpleFooAction;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.util.logging.Logger;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Unit test for {@link TimerInterceptor}.

@@ -26,8 +26,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.struts2.ServletActionContext;
 
@@ -70,7 +70,7 @@ import java.util.Map;
  */
 public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONValidationInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(JSONValidationInterceptor.class);
 
     private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
     private static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";

@@ -16,8 +16,8 @@
 
 package com.opensymphony.xwork2.validator.validators;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -80,7 +80,7 @@ import java.util.regex.Pattern;
  */
 public class RegexFieldValidator extends FieldValidatorSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RegexFieldValidator.class);
+    private static final Logger LOG = LogManager.getLogger(RegexFieldValidator.class);
 
     private String regex;
     private String regexExpression;
@@ -95,9 +95,8 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         // if there is no value - don't do comparison
         // if a value is required, a required validator should be added to the field
         String regexToUse = getRegex();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Defined regexp as [#0]", regexToUse);
-        }
+        LOG.debug("Defined regexp as [{}]", regexToUse);
+
         if (value == null || regexToUse == null) {
             return;
         }

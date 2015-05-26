@@ -22,8 +22,8 @@
 package org.apache.struts2.osgi.host;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
@@ -51,7 +51,7 @@ import java.util.Properties;
  */
 public class FelixOsgiHost extends BaseOsgiHost {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FelixOsgiHost.class);
+    private static final Logger LOG = LogManager.getLogger(FelixOsgiHost.class);
 
     protected Felix felix;
 
@@ -73,13 +73,11 @@ public class FelixOsgiHost extends BaseOsgiHost {
         // Bundle cache
         String storageDir = System.getProperty("java.io.tmpdir") + ".felix-cache";
         configProps.setProperty(Constants.FRAMEWORK_STORAGE, storageDir);
-        if (LOG.isDebugEnabled())
-            LOG.debug("Storing bundles at [#0]", storageDir);
+        LOG.debug("Storing bundles at [{}]", storageDir);
 
         String cleanBundleCache = getServletContextParam("struts.osgi.clearBundleCache", "true");
         if ("true".equalsIgnoreCase(cleanBundleCache)) {
-            if (LOG.isDebugEnabled())
-                LOG.debug("Clearing bundle cache");
+            LOG.debug("Clearing bundle cache");
             configProps.put(FelixConstants.FRAMEWORK_STORAGE_CLEAN, FelixConstants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
         }
 
@@ -95,9 +93,7 @@ public class FelixOsgiHost extends BaseOsgiHost {
             AutoProcessor.process(configProps, felix.getBundleContext());
             felix.start();
 
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Apache Felix is running");
-            }
+            LOG.trace("Apache Felix is running");
         }
         catch (Exception ex) {
             throw new ConfigurationException("Couldn't start Apache Felix", ex);
@@ -144,9 +140,7 @@ public class FelixOsgiHost extends BaseOsgiHost {
     @Override
     public void destroy() throws Exception {
         felix.stop();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Apache Felix has stopped");
-        }
+        LOG.trace("Apache Felix has stopped");
     }
 
     @Override
@@ -163,11 +157,8 @@ public class FelixOsgiHost extends BaseOsgiHost {
                 LOG.debug("Spring OSGi support is not enabled");
             }
         } catch (Exception e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("The API of Spring OSGi has changed and the field [#0] is no longer available. The OSGi plugin needs to be updated", e,
-                        "org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext.BUNDLE_CONTEXT_ATTRIBUTE");
-            }
+            LOG.error("The API of Spring OSGi has changed and the field [{}] is no longer available. The OSGi plugin needs to be updated",
+                        "org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext.BUNDLE_CONTEXT_ATTRIBUTE", e);
         }
     }
-
 }

@@ -21,7 +21,8 @@
 package org.apache.struts2.showcase.action;
 
 import com.opensymphony.xwork2.Preparable;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.showcase.application.TestDataProvider;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.dao.EmployeeDao;
@@ -42,7 +43,7 @@ public class EmployeeAction extends AbstractCRUDAction implements Preparable {
 
 	private static final long serialVersionUID = 7047317819789938957L;
 
-	private static final Logger log = Logger.getLogger(EmployeeAction.class);
+	private static final Logger log = LogManager.getLogger(EmployeeAction.class);
 
 	@Autowired
 	private EmployeeDao employeeDao;

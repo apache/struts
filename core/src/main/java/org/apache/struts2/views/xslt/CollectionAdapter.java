@@ -27,15 +27,15 @@ import java.util.List;
 
 import org.w3c.dom.Node;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
  */
 public class CollectionAdapter extends AbstractAdapterElement {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     public CollectionAdapter() { }
 

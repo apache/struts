@@ -3,8 +3,8 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import freemarker.template.Template;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultDispatcherErrorHandler.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultDispatcherErrorHandler.class);
 
     private FreemarkerManager freemarkerManager;
     private boolean devMode;
@@ -66,7 +66,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
                 // WW-4103: Only logs error when application error occurred, not Struts error
                 if (LOG.isErrorEnabled()) {
-                    LOG.error("Exception occurred during processing request: #0", e, e.getMessage());
+                    LOG.error("Exception occurred during processing request: {}", e, e.getMessage());
                 }
                 // send a http error response to use the servlet defined error handler
                 // make the exception available to the web.xml defined error page
@@ -84,9 +84,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     }
 
     protected void handleErrorInDevMode(HttpServletResponse response, int code, Exception e) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Exception occurred during processing request: #0", e, e.getMessage());
-        }
+        LOG.debug("Exception occurred during processing request: {}", e, e.getMessage());
         try {
             List<Throwable> chain = new ArrayList<Throwable>();
             Throwable cur = e;

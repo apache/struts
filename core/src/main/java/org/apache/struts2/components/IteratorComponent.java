@@ -22,8 +22,8 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -225,7 +225,7 @@ import java.util.List;
  */
 @StrutsTag(name="iterator", tldTagClass="org.apache.struts2.views.jsp.IteratorTag", description="Iterate over a iterable value")
 public class IteratorComponent extends ContextBean {
-    private static final Logger LOG = LoggerFactory.getLogger(IteratorComponent.class);
+    private static final Logger LOG = LogManager.getLogger(IteratorComponent.class);
 
     protected Iterator iterator;
     protected IteratorStatus status;

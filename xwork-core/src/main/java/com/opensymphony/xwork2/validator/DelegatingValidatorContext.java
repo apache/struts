@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
 
@@ -259,11 +259,11 @@ public class DelegatingValidatorContext implements ValidatorContext {
         private Logger log;
 
         public LoggingValidationAware(Class clazz) {
-            log = LoggerFactory.getLogger(clazz);
+            log = LogManager.getLogger(clazz);
         }
 
         public LoggingValidationAware(Object obj) {
-            log = LoggerFactory.getLogger(obj.getClass());
+            log = LogManager.getLogger(obj.getClass());
         }
 
         public void setActionErrors(Collection<String> errorMessages) {

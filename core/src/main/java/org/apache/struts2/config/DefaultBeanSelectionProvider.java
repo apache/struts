@@ -56,8 +56,8 @@ import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
@@ -357,7 +357,7 @@ import java.util.StringTokenizer;
  */
 public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultBeanSelectionProvider.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultBeanSelectionProvider.class);
 
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
@@ -466,12 +466,10 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
             while (customBundles.hasMoreTokens()) {
                 String name = customBundles.nextToken();
                 try {
-                    if (LOG.isInfoEnabled()) {
-                	    LOG.info("Loading global messages from [#0]", name);
-                    }
+              	    LOG.info("Loading global messages from [{}]", name);
                     LocalizedTextUtil.addDefaultResourceBundle(name);
                 } catch (Exception e) {
-                    LOG.error("Could not find messages file #0.properties. Skipping", name);
+                    LOG.error("Could not find messages file {}.properties. Skipping", name);
                 }
             }
         }

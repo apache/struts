@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.config.entities;
 
 import com.opensymphony.xwork2.util.location.Located;
 import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class PackageConfig extends Located implements Comparable, Serializable, InterceptorLocator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PackageConfig.class);
+    private static final Logger LOG = LogManager.getLogger(PackageConfig.class);
 
     protected Map<String, ActionConfig> actionConfigs;
     protected Map<String, ResultConfig> globalResultConfigs;

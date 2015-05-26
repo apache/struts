@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Logging utility methods
  */
+@Deprecated
 public class LoggerUtils {
 
     /**

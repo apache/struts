@@ -31,8 +31,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.TypeInfo;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * ProxyElementAdapter is a pass-through adapter for objects which already
@@ -45,7 +45,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     public ProxyElementAdapter(AdapterFactory factory, AdapterNode parent, Element value) {
         super(factory, parent, value);

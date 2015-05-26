@@ -23,8 +23,8 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -61,7 +61,7 @@ import java.util.LinkedHashMap;
         description = "Render a HTML href element that when clicked can optionally call a URL via remote XMLHttpRequest and updates its targets",
         allowDynamicAttributes = true)
 public class Anchor extends ClosingUIBean {
-    private static final Logger LOG = LoggerFactory.getLogger(Anchor.class);
+    private static final Logger LOG = LogManager.getLogger(Anchor.class);
 
     public static final String OPEN_TEMPLATE = "a";
     public static final String TEMPLATE = "a-close";

@@ -25,11 +25,11 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -48,7 +48,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     private static final long serialVersionUID = 3293074152487468527L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultActionProxy.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultActionProxy.class);
 
     protected Configuration configuration;
     protected ActionConfig config;
@@ -76,9 +76,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
         this.invocation = inv;
         this.cleanupContext = cleanupContext;
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating an DefaultActionProxy for namespace [#0] and action name [#1]", namespace, actionName);
-        }
+        LOG.debug("Creating an DefaultActionProxy for namespace [{}] and action name [{}]", namespace, actionName);
 
         this.actionName = StringEscapeUtils.escapeHtml4(actionName);
         this.namespace = namespace;

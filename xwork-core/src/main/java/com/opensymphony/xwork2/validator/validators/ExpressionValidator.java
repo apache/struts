@@ -70,13 +70,11 @@ public class ExpressionValidator extends ValidatorSupport {
         if ((obj != null) && (obj instanceof Boolean)) {
             answer = (Boolean) obj;
         } else {
-            log.warn("Got result of [#0] when trying to get Boolean.", obj);
+            log.warn("Got result of [{}] when trying to get Boolean.", obj);
         }
 
         if (!answer) {
-            if (log.isDebugEnabled()) {
-                log.debug("Validation failed on expression [#0] with validated object [#1]", expression, object);
-            }
+            log.debug("Validation failed on expression [{}] with validated object [{}]", expression, object);
             addActionError(object);
         }
     }

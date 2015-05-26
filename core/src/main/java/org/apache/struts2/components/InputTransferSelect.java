@@ -31,8 +31,8 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -75,7 +75,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 @StrutsTag(name="inputtransferselect", tldTagClass="org.apache.struts2.views.jsp.ui.InputTransferSelectTag", description="Renders an input form")
 public class InputTransferSelect extends ListUIBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InputTransferSelect.class);
+    private static final Logger LOG = LogManager.getLogger(InputTransferSelect.class);
 
     private static final String TEMPLATE = "inputtransferselect";
 

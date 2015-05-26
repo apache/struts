@@ -23,8 +23,8 @@ package org.apache.struts2.spring;
 import com.opensymphony.xwork2.util.classloader.FileResourceStore;
 import com.opensymphony.xwork2.util.classloader.JarResourceStore;
 import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 import org.apache.commons.jci.monitor.FilesystemAlterationObserver;
@@ -71,7 +71,7 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationContext implements FilesystemAlterationListener {
-    private static final Logger LOG = LoggerFactory.getLogger(ClassReloadingXMLWebApplicationContext.class);
+    private static final Logger LOG = LogManager.getLogger(ClassReloadingXMLWebApplicationContext.class);
 
     protected ReloadingClassLoader classLoader;
     protected FilesystemAlterationMonitor fam;
@@ -109,9 +109,7 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
                 classLoader.addResourceStore(new JarResourceStore(file));
                 //register with the fam
                 fam.addListener(file, this);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Watching [#0] for changes", file.getAbsolutePath());
-                }
+                LOG.debug("Watching [{}] for changes", file.getAbsolutePath());
             } else {
                 //get all subdirs
                 List<File> dirs = new ArrayList<File>();
@@ -122,9 +120,7 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
                 for (File dir : dirs) {
                     //register with the fam
                     fam.addListener(dir, this);
-                    if (LOG.isDebugEnabled()) {
-                	LOG.debug("Watching [#0] for changes", dir.getAbsolutePath());
-                    }
+                	LOG.debug("Watching [{}] for changes", dir.getAbsolutePath());
                 }
             }
         }
@@ -206,12 +202,10 @@ public class ClassReloadingXMLWebApplicationContext extends XmlWebApplicationCon
     private void reload(File file) {
         if (classLoader != null) {
             final boolean debugEnabled = LOG.isDebugEnabled();
-            if (debugEnabled)
-                LOG.debug("Change detected in file [#0], reloading class loader", file.getAbsolutePath());
+            LOG.debug("Change detected in file [{}], reloading class loader", file.getAbsolutePath());
             classLoader.reload();
             if (reloadConfig && Dispatcher.getInstance() != null) {
-                if (debugEnabled)
-                    LOG.debug("Change detected in file [#0], reloading configuration", file.getAbsolutePath());
+                LOG.debug("Change detected in file [{}], reloading configuration", file.getAbsolutePath());
                 Dispatcher.getInstance().getConfigurationManager().reload();
             }
         }

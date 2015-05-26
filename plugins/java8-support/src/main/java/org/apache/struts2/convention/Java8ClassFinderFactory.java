@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.util.finder.ClassFinder;
 import com.opensymphony.xwork2.util.finder.ClassFinderFactory;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.net.URL;
 import java.util.Collection;
@@ -28,7 +28,7 @@ import java.util.Set;
 
 public class Java8ClassFinderFactory implements ClassFinderFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Java8ClassFinderFactory.class);
+    private static final Logger LOG = LogManager.getLogger(Java8ClassFinderFactory.class);
 
     public Java8ClassFinderFactory() {
         try {

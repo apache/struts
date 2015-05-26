@@ -1,8 +1,8 @@
 package org.apache.struts2.portlet.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.portlet.PortletPhase;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
 import org.apache.struts2.portlet.servlet.PortletServletResponseJSR286;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class Jsr286Dispatcher extends Jsr168Dispatcher {
 
-    private final static Logger LOG = LoggerFactory.getLogger(Jsr286Dispatcher.class);
+    private final static Logger LOG = LogManager.getLogger(Jsr286Dispatcher.class);
 
 
     @Override

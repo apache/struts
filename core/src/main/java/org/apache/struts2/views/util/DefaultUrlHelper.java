@@ -22,8 +22,8 @@
 package org.apache.struts2.views.util;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class DefaultUrlHelper implements UrlHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultUrlHelper.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultUrlHelper.class);
 
     public static final String HTTP_PROTOCOL = "http";
     public static final String HTTPS_PROTOCOL = "https";
@@ -259,9 +259,7 @@ public class DefaultUrlHelper implements UrlHelper {
 		try {
 			return URLEncoder.encode(input, encoding);
 		} catch (UnsupportedEncodingException e) {
-			if (LOG.isWarnEnabled()) {
-				LOG.warn("Could not encode URL parameter '#0', returning value un-encoded", input);
-			}
+    		LOG.warn("Could not encode URL parameter '{}', returning value un-encoded", input);
 			return input;
 		}
 	}
@@ -276,9 +274,7 @@ public class DefaultUrlHelper implements UrlHelper {
 		try {
 			return URLDecoder.decode(input, encoding);
 		} catch (UnsupportedEncodingException e) {
-			if (LOG.isWarnEnabled()) {
-				LOG.warn("Could not decode URL parameter '#0', returning value un-decoded", input);
-			}
+    		LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
 			return input;
 		}
 	}

@@ -22,8 +22,8 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
 
     private final Map<String, List<ValidatorConfig>> validatorCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
     private final Map<String, List<ValidatorConfig>> validatorFileCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
-    private final Logger LOG = LoggerFactory.getLogger(DefaultActionValidatorManager.class);
+    private final Logger LOG = LogManager.getLogger(DefaultActionValidatorManager.class);
     private ValidatorFactory validatorFactory;
     private ValidatorFileParser validatorFileParser;
     private FileManager fileManager;

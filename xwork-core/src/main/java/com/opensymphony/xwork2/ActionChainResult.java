@@ -18,8 +18,8 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -81,7 +81,7 @@ import java.util.*;
 */
 public class ActionChainResult implements Result {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ActionChainResult.class);
+    private static final Logger LOG = LogManager.getLogger(ActionChainResult.class);
 
     /**
      * The result parameter name to set the name of the action to chain to.

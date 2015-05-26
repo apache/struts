@@ -18,8 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Locale;
 import java.util.Map;
@@ -89,7 +89,7 @@ import java.util.Map;
 public class I18nInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = 2496830135246700300L;
 
-    protected static final Logger LOG = LoggerFactory.getLogger(I18nInterceptor.class);
+    protected static final Logger LOG = LogManager.getLogger(I18nInterceptor.class);
 
     public static final String DEFAULT_SESSION_ATTRIBUTE = "WW_TRANS_I18N_LOCALE";
     public static final String DEFAULT_PARAMETER = "request_locale";
@@ -123,7 +123,7 @@ public class I18nInterceptor extends AbstractInterceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("intercept '#0/#1' {",
+            LOG.debug("Intercept '{}/{}' {",
                 invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
         }
 
@@ -133,13 +133,13 @@ public class I18nInterceptor extends AbstractInterceptor {
         saveLocale(invocation, locale);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("before Locale=#0", invocation.getStack().findValue("locale"));
+            LOG.debug("before Locale: {}", invocation.getStack().findValue("locale"));
         }
 
         final String result = invocation.invoke();
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("after Locale=#0", invocation.getStack().findValue("locale"));
+            LOG.debug("after Locale {}", invocation.getStack().findValue("locale"));
             LOG.debug("intercept } ");
         }
 
@@ -222,8 +222,8 @@ public class I18nInterceptor extends AbstractInterceptor {
             locale = (requestedLocale instanceof Locale) ?
                     (Locale) requestedLocale :
                     LocalizedTextUtil.localeFromString(requestedLocale.toString(), null);
-            if (locale != null && LOG.isDebugEnabled()) {
-                LOG.debug("applied request locale=#0", locale);
+            if (locale != null) {
+                LOG.debug("Applied request locale: {}", locale);
             }
         }
         return locale;
@@ -252,9 +252,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         Object sessionLocale = session.get(attributeName);
         if (sessionLocale != null && sessionLocale instanceof Locale) {
             Locale locale = (Locale) sessionLocale;
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("applied session locale=#0", locale);
-            }
+            LOG.debug("Applied session locale: {}", locale);
             return locale;
         }
         return null;
@@ -263,8 +261,8 @@ public class I18nInterceptor extends AbstractInterceptor {
     protected Locale readStoredLocalFromCurrentInvocation(ActionInvocation invocation) {
         // no overriding locale definition found, stay with current invocation (=browser) locale
         Locale locale = invocation.getInvocationContext().getLocale();
-        if (locale != null && LOG.isDebugEnabled()) {
-            LOG.debug("applied invocation context locale=#0", locale);
+        if (locale != null) {
+            LOG.debug("Applied invocation context locale: {}", locale);
         }
         return locale;
     }
@@ -275,9 +273,7 @@ public class I18nInterceptor extends AbstractInterceptor {
                 && ((Object[]) requestedLocale).length > 0) {
             requestedLocale = ((Object[]) requestedLocale)[0];
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("requested_locale=#0", requestedLocale);
-            }
+            LOG.debug("Requested locale: {}", requestedLocale);
         }
         return requestedLocale;
     }

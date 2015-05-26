@@ -33,14 +33,14 @@ import javax.servlet.http.HttpSessionListener;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Manages the Plexus lifecycle for the servlet and session contexts
  */
 public class PlexusLifecycleListener implements ServletContextListener, HttpSessionListener {
-    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(PlexusObjectFactory.class);
 
     private static boolean loaded = false;
     public static final String KEY = "struts.plexus.container";

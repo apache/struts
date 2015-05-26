@@ -26,8 +26,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletResponse;
@@ -80,7 +80,7 @@ import java.util.Map;
 public class HttpHeaderResult implements Result {
 
     private static final long serialVersionUID = 195648957144219214L;
-    private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderResult.class);
+    private static final Logger LOG = LogManager.getLogger(HttpHeaderResult.class);
 
     /**
      * This result type doesn't have a default param, null is ok to reduce noice in logs
@@ -196,7 +196,7 @@ public class HttpHeaderResult implements Result {
                 errorCode = Integer.parseInt(parse ? TextParseUtil.translateVariables(error, stack) : error);
             } catch (Exception e) {
                 if (LOG.isErrorEnabled()) {
-                    LOG.error("Cannot parse errorCode [#0] value as Integer!", e, error);
+                    LOG.error("Cannot parse errorCode [{}] value as Integer!", error, e);
                 }
             }
             if (errorCode != -1) {

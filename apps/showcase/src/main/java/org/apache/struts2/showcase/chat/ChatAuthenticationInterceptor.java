@@ -25,14 +25,14 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.dispatcher.SessionMap;
 
 public class ChatAuthenticationInterceptor implements Interceptor {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOG = LoggerFactory.getLogger(ChatAuthenticationInterceptor.class);
+	private static final Logger LOG = LogManager.getLogger(ChatAuthenticationInterceptor.class);
 	public static final String USER_SESSION_KEY = "chatUserSessionKey";
 
 	public void destroy() {

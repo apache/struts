@@ -28,8 +28,8 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -52,7 +52,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
     description="Render a file input field",
     allowDynamicAttributes=true)
 public class File extends UIBean {
-    private final static Logger LOG = LoggerFactory.getLogger(File.class);
+    private final static Logger LOG = LogManager.getLogger(File.class);
 
     final public static String TEMPLATE = "file";
 

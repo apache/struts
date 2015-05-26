@@ -1,8 +1,8 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.zip.ZipEntry;
  */
 public class JarEntryRevision extends Revision {
 
-    private static Logger LOG = LoggerFactory.getLogger(JarEntryRevision.class);
+    private static Logger LOG = LogManager.getLogger(JarEntryRevision.class);
 
     private static final String JAR_FILE_NAME_SEPARATOR = "!/";
     private static final String JAR_FILE_EXTENSION_END = ".jar/";
@@ -35,11 +35,10 @@ public class JarEntryRevision extends Revision {
                 separatorIndex = fileName.lastIndexOf(JAR_FILE_EXTENSION_END);
             }
             if (separatorIndex == -1) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not find end of jar file!");
-                }
+                LOG.warn("Could not find end of jar file!");
                 return null;
             }
+
             // Split file name
             jarFileName = fileName.substring(0, separatorIndex);
             int index = separatorIndex + JAR_FILE_NAME_SEPARATOR.length();
@@ -54,9 +53,7 @@ public class JarEntryRevision extends Revision {
                 return null;
             }
         } catch (Throwable e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Could not create JarEntryRevision for [#0]!", e, jarFileName);
-            }
+            LOG.warn("Could not create JarEntryRevision for [{}]!", jarFileName, e);
             return null;
         }
     }

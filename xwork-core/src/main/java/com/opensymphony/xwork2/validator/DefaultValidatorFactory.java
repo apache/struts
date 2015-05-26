@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -50,7 +50,7 @@ import java.util.zip.ZipInputStream;
 public class DefaultValidatorFactory implements ValidatorFactory {
 
     protected Map<String, String> validators = new HashMap<String, String>();
-    private static Logger LOG = LoggerFactory.getLogger(DefaultValidatorFactory.class);
+    private static Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);
     protected ObjectFactory objectFactory;
     protected ValidatorFileParser validatorFileParser;
 
@@ -174,7 +174,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
                         }
                     }
                 } catch (Exception ex) {
-                    LOG.error("Unable to load #0", ex, u.toString());
+                    LOG.error("Unable to load {}", u, ex);
                 }
             }
         } catch (IOException e) {

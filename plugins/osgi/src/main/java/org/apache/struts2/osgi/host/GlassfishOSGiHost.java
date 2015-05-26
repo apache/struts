@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.osgi.host;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.felix.shell.ShellService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GlassfishOSGiHost.class);
+    private static final Logger LOG = LogManager.getLogger(GlassfishOSGiHost.class);
 
     /**
      * Location inside the WAR where initial bundles are located.
@@ -138,12 +138,9 @@ public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
                 LOG.debug("Spring OSGi support is not enabled");
             }
         } catch (Exception e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error(
-                        "The API of Spring OSGi has changed and the field [#0] is no longer available. The OSGi plugin needs to be updated",
-                        e,
-                        "org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext.BUNDLE_CONTEXT_ATTRIBUTE");
-            }
+            LOG.error(
+                        "The API of Spring OSGi has changed and the field [[}] is no longer available. The OSGi plugin needs to be updated",
+                        "org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext.BUNDLE_CONTEXT_ATTRIBUTE", e);
         }
     }
 

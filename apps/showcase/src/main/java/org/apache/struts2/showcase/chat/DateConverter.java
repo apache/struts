@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.showcase.chat;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.util.StrutsTypeConverter;
 
 import java.text.ParseException;
@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class DateConverter extends StrutsTypeConverter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DateConverter.class);
+	private static final Logger LOG = LogManager.getLogger(DateConverter.class);
 
 	public Object convertFromString(Map context, String[] values, Class toClass) {
 

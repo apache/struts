@@ -16,8 +16,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -57,7 +57,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * @author Jason Carreira
  */
 public class LoggingInterceptor extends AbstractInterceptor {
-    private static final Logger LOG = LoggerFactory.getLogger(LoggingInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(LoggingInterceptor.class);
     private static final String FINISH_MESSAGE = "Finishing execution stack for action ";
     private static final String START_MESSAGE = "Starting execution stack for action ";
 

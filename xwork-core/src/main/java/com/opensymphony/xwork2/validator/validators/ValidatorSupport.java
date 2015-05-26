@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ShortCircuitableValidator;
 import com.opensymphony.xwork2.validator.ValidationException;
@@ -39,7 +39,7 @@ import java.util.List;
  */
 public abstract class ValidatorSupport implements Validator, ShortCircuitableValidator {
 
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    protected final Logger log = LogManager.getLogger(this.getClass());
 
     protected String defaultMessage = "";
     protected String messageKey;

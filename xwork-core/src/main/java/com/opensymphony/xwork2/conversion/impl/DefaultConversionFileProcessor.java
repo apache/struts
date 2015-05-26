@@ -7,8 +7,8 @@ import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.Properties;
  */
 public class DefaultConversionFileProcessor implements ConversionFileProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultConversionFileProcessor.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultConversionFileProcessor.class);
 
     private FileManager fileManager;
     private TypeConverterCreator converterCreator;
@@ -40,7 +40,7 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
 
             if (is != null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Processing conversion file [#0] for class [#1]", converterFilename, clazz);
+                    LOG.debug("Processing conversion file [{}] for class [{}]", converterFilename, clazz);
                 }
 
                 Properties prop = new Properties();
@@ -55,9 +55,7 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
                     // for keyProperty of Set
                     if (key.startsWith(DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX)
                             || key.startsWith(DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX)) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("\t" + key + ":" + entry.getValue() + "[treated as String]");
-                        }
+                        LOG.debug("\t{}:{} [treated as String]", key, entry.getValue());
                         mapping.put(key, entry.getValue());
                     }
                     //for properties of classes
@@ -66,9 +64,7 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
                             key.startsWith(DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX))
                             ) {
                         TypeConverter _typeConverter = converterCreator.createTypeConverter((String) entry.getValue());
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("\t" + key + ":" + entry.getValue() + "[treated as TypeConverter " + _typeConverter + "]");
-                        }
+                        LOG.debug("\t{}:{} [treated as TypeConverter {}]", key, entry.getValue(), _typeConverter);
                         mapping.put(key, _typeConverter);
                     }
                     //for keys of Maps
@@ -81,31 +77,23 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
                         //put a value in for the type converter of the class
                         if (converterClass.isAssignableFrom(TypeConverter.class)) {
                             TypeConverter _typeConverter = converterCreator.createTypeConverter((String) entry.getValue());
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("\t" + key + ":" + entry.getValue() + "[treated as TypeConverter " + _typeConverter + "]");
-                            }
+                            LOG.debug("\t{}:{} [treated as TypeConverter {}]", key, entry.getValue(), _typeConverter);
                             mapping.put(key, _typeConverter);
                         } else {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("\t" + key + ":" + entry.getValue() + "[treated as Class " + converterClass + "]");
-                            }
+                            LOG.debug("\t{}:{} [treated as Class {}]", key, entry.getValue(), converterClass);
                             mapping.put(key, converterClass);
                         }
                     }
                     //elements(values) of maps / lists
                     else {
                         Class _c = Thread.currentThread().getContextClassLoader().loadClass((String) entry.getValue());
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("\t" + key + ":" + entry.getValue() + "[treated as Class " + _c + "]");
-                        }
+                        LOG.debug("\t{}:{} [treated as Class {}]", key, entry.getValue(), _c);
                         mapping.put(key, _c);
                     }
                 }
             }
         } catch (Exception ex) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Problem loading properties for #0", ex, clazz.getName());
-            }
+            LOG.error("Problem loading properties for {}", clazz.getName(), ex);
         }
     }
 

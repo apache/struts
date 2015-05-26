@@ -26,8 +26,8 @@ import java.util.Map;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -77,7 +77,7 @@ public class ClearSessionInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -2102199238428329238L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClearSessionInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ClearSessionInterceptor.class);
 
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)

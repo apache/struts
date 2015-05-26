@@ -23,8 +23,8 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -88,7 +88,7 @@ import java.util.List;
  */
 public class RolesInterceptor extends AbstractInterceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RolesInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(RolesInterceptor.class);
 
     private boolean isProperlyConfigured = true;
     
@@ -107,7 +107,7 @@ public class RolesInterceptor extends AbstractInterceptor {
     
     private void checkRoles(List<String> roles){
         if (!areRolesValid(roles)){
-          LOG.fatal("An unknown Role was configured: #0", roles.toString());
+          LOG.fatal("An unknown Role was configured: {}", roles);
           isProperlyConfigured = false;
           throw new IllegalArgumentException("An unknown role was configured: " + roles);
         }

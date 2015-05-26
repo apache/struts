@@ -1,7 +1,7 @@
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 
@@ -10,7 +10,7 @@ import java.util.Locale;
  */
 public class DefaultLocaleProvider implements LocaleProvider {
 
-    private final static Logger LOG = LoggerFactory.getLogger(DefaultLocaleProvider.class);
+    private final static Logger LOG = LogManager.getLogger(DefaultLocaleProvider.class);
 
     public Locale getLocale() {
         ActionContext ctx = ActionContext.getContext();

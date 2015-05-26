@@ -5,8 +5,8 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PrefixBasedActionProxyFactory.class);
+    private static final Logger LOG = LogManager.getLogger(PrefixBasedActionProxyFactory.class);
 
     private Map<String, ActionProxyFactory> actionProxyFactories = new HashMap<String, ActionProxyFactory>();
     private ActionProxyFactory defaultFactory;
@@ -60,8 +60,8 @@ public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
                     ActionProxyFactory obj = container.getInstance(ActionProxyFactory.class, factoryName);
                     if (obj != null) {
                         actionProxyFactories.put(factoryPrefix, obj);
-                    } else if (LOG.isWarnEnabled()) {
-                        LOG.warn("Invalid PrefixBasedActionProxyFactory config entry: [#0]", factory);
+                    } else {
+                        LOG.warn("Invalid PrefixBasedActionProxyFactory config entry: [{}]", factory);
                     }
                 }
             }
@@ -76,17 +76,13 @@ public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
             String key = uri.substring(0, lastIndex);
             ActionProxyFactory actionProxyFactory = actionProxyFactories.get(key);
             if (actionProxyFactory != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using ActionProxyFactory [#0] for prefix [#1]", actionProxyFactory, key);
-                }
+                LOG.debug("Using ActionProxyFactory [{}] for prefix [{}]", actionProxyFactory, key);
                 return actionProxyFactory.createActionProxy(namespace, actionName, methodName, extraContext, executeResult, cleanupContext);
-            } else if (LOG.isDebugEnabled()) {
-                LOG.debug("No ActionProxyFactory defined for [#1]", key);
+            } else {
+                LOG.debug("No ActionProxyFactory defined for [{}]", key);
             }
         }
-        if (LOG.isDebugEnabled()){
-            LOG.debug("Cannot find any matching ActionProxyFactory, falling back to [#0]", defaultFactory);
-        }
+        LOG.debug("Cannot find any matching ActionProxyFactory, falling back to [{}]", defaultFactory);
         return defaultFactory.createActionProxy(namespace, actionName, methodName, extraContext, executeResult, cleanupContext);
     }
 

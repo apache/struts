@@ -23,7 +23,7 @@ package org.apache.struts2.sitemesh;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
@@ -31,6 +31,7 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -57,26 +58,11 @@ import java.util.Locale;
  * own manager</p>
  */
 public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.FreemarkerServlet {
-    private static final com.opensymphony.xwork2.util.logging.Logger LOG = LoggerFactory.getLogger(FreemarkerDecoratorServlet.class);
 
-
-    protected FreemarkerManager freemarkerManager;
-
-
+    private static final Logger LOG = LogManager.getLogger(FreemarkerDecoratorServlet.class);
     public static final long serialVersionUID = -2440216393145762479L;
 
-
-/*
-    private static final String EXPIRATION_DATE;
-
-    static {
-        // Generate expiration date that is one year from now in the past
-        GregorianCalendar expiration = new GregorianCalendar();
-        expiration.roll(Calendar.YEAR, -1);
-        SimpleDateFormat httpDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.US);
-        EXPIRATION_DATE = httpDate.format(expiration.getTime());
-    }
-*/
+    protected FreemarkerManager freemarkerManager;
     protected String templatePath;
     protected boolean nocache;
     protected boolean debug;

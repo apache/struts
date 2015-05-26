@@ -23,8 +23,8 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -51,7 +51,7 @@ public class TokenHelper {
      * The name of the field which will hold the token name
      */
     public static final String TOKEN_NAME_FIELD = "struts.token.name";
-    private static final Logger LOG = LoggerFactory.getLogger(TokenHelper.class);
+    private static final Logger LOG = LogManager.getLogger(TokenHelper.class);
     private static final Random RANDOM = new SecureRandom();
 
 

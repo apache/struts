@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.util.logging;
 /**
  * Main logger interface for logging things
  */
+@Deprecated
 public interface Logger {
 
     void trace(String msg, String... args);

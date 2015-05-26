@@ -25,12 +25,11 @@ import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
-import ognl.OgnlException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +47,7 @@ import java.util.Map;
  */
 public class DefaultActionInvocation implements ActionInvocation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultActionInvocation.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultActionInvocation.class);
 
     protected Object action;
     protected ActionProxy proxy;
@@ -199,9 +198,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         try {
             resultConfig = results.get(resultCode);
         } catch (NullPointerException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Got NPE trying to read result configuration for resultCode [#0]", resultCode);
-            }
+            LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
         }
         
         if (resultConfig == null) {
@@ -213,9 +210,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             try {
                 return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
             } catch (Exception e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("There was an exception while instantiating the result of type #0", e, resultConfig.getClassName());
-                }
+                LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
                 throw new XWorkException(e, resultConfig);
             }
         } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {
@@ -410,9 +405,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected String invokeAction(Object action, ActionConfig actionConfig) throws Exception {
         String methodName = proxy.getMethod();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing action method = #0", methodName);
-        }
+        LOG.debug("Executing action method = {}", methodName);
 
         String timerKey = "invokeAction: " + proxy.getActionName();
         try {

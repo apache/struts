@@ -22,8 +22,8 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  */
 public class DefaultSettings implements Settings {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultSettings.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultSettings.class);
 
     /**
      * The Settings object that handles API calls.

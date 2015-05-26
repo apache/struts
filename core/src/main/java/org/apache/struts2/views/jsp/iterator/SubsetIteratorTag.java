@@ -29,8 +29,8 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -155,7 +155,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
     private static final long serialVersionUID = -6252696081713080102L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(SubsetIteratorTag.class);
+    private static final Logger LOG = LogManager.getLogger(SubsetIteratorTag.class);
 
     String countAttr;
     String sourceAttr;

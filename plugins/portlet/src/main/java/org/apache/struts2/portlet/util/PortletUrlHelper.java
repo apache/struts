@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.portlet.util;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.context.PortletActionContext;
@@ -53,7 +53,7 @@ import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
 public class PortletUrlHelper {
     public static final String ENCODING = "UTF-8";
 
-    private static final Logger LOG = LoggerFactory.getLogger(PortletUrlHelper.class);
+    private static final Logger LOG = LogManager.getLogger(PortletUrlHelper.class);
 
     protected static final String PORTLETMODE_NAME_EDIT = "edit";
     protected static final String PORTLETMODE_NAME_VIEW = "view";

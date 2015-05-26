@@ -20,19 +20,14 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.factory.ActionFactory;
-import com.opensymphony.xwork2.factory.ConverterFactory;
-import com.opensymphony.xwork2.factory.InterceptorFactory;
-import com.opensymphony.xwork2.factory.ResultFactory;
-import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
-import com.opensymphony.xwork2.factory.ValidatorFactory;
+import com.opensymphony.xwork2.factory.*;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.validator.Validator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -50,7 +45,7 @@ import java.util.Map;
  */
 public class ObjectFactory implements Serializable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(ObjectFactory.class);
 
     private transient ClassLoader ccl;
     private Container container;

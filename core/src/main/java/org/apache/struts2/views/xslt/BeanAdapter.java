@@ -21,8 +21,8 @@
 
 package org.apache.struts2.views.xslt;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,7 +65,7 @@ public class BeanAdapter extends AbstractAdapterElement {
 
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     //~ Constructors ///////////////////////////////////////////////////////////
 
@@ -123,7 +123,7 @@ public class BeanAdapter extends AbstractAdapterElement {
                     if (e instanceof InvocationTargetException)
                         e = (Exception) ((InvocationTargetException) e).getTargetException();
                     if (log.isErrorEnabled()) {
-                        log.error("Cannot access bean property: #0", e, propertyName);
+                        log.error("Cannot access bean property: {}", propertyName, e);
                     }
                     continue;
                 }
@@ -139,14 +139,11 @@ public class BeanAdapter extends AbstractAdapterElement {
                 if (childAdapter != null)
                     newAdapters.add(childAdapter);
 
-                if (log.isDebugEnabled()) {
-                    log.debug(this + " adding adapter: " + childAdapter);
-                }
+                log.debug("{} adding adapter: {}", this, childAdapter);
             }
         } else {
             // No properties found
-            log.info(
-                    "Class " + type.getName() + " has no readable properties, " + " trying to adapt " + getPropertyName() + " with StringAdapter...");
+            log.info("Class {} has no readable properties, trying to adapt {} with StringAdapter...", type.getName(), getPropertyName());
         }
 
         return newAdapters;

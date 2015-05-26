@@ -33,8 +33,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.UserDataHandler;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * AbstractAdapterNode is the base for childAdapters that expose a read-only view
@@ -82,7 +82,7 @@ public abstract class AbstractAdapterNode implements AdapterNode {
             };
 
     private List<Node> childAdapters;
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     // The domain object that we are adapting
     private Object propertyValue;
@@ -92,8 +92,8 @@ public abstract class AbstractAdapterNode implements AdapterNode {
 
 
     public AbstractAdapterNode() {
-        if (LoggerFactory.getLogger(getClass()).isDebugEnabled()) {
-            LoggerFactory.getLogger(getClass()).debug("Creating " + this);
+        if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+            LogManager.getLogger(getClass()).debug("Creating " + this);
         }
     }
 

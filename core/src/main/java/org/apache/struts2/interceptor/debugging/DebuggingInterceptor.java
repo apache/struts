@@ -50,8 +50,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
@@ -93,7 +93,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -3097324155953078783L;
 
-    private final static Logger LOG = LoggerFactory.getLogger(DebuggingInterceptor.class);
+    private final static Logger LOG = LogManager.getLogger(DebuggingInterceptor.class);
 
     private String[] ignorePrefixes = new String[]{"org.apache.struts.",
             "com.opensymphony.xwork2.", "xwork."};

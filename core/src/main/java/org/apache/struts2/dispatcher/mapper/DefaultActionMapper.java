@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
@@ -110,7 +110,7 @@ import java.util.regex.Pattern;
  */
 public class DefaultActionMapper implements ActionMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultActionMapper.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultActionMapper.class);
 
     protected static final String METHOD_PREFIX = "method:";
     protected static final String ACTION_PREFIX = "action:";
@@ -384,17 +384,13 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Action [#0] does not match allowed action names pattern [#1], cleaning it up!",
-                        rawActionName, allowedActionNames);
-            }
+            LOG.warn("Action [{}] does not match allowed action names pattern [{}], cleaning it up!",
+                    rawActionName, allowedActionNames);
             String cleanActionName = rawActionName;
             for (String chunk : allowedActionNames.split(rawActionName)) {
                 cleanActionName = cleanActionName.replace(chunk, "");
             }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cleaned action name [#0]", cleanActionName);
-            }
+            LOG.debug("Cleaned action name [{}]", cleanActionName);
             return cleanActionName;
         }
     }

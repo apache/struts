@@ -55,17 +55,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-dojo-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-cdi-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-codebehind-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>
             <dependency>
@@ -101,11 +91,6 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-javatemplates-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-jsf-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>
             <dependency>
@@ -171,11 +156,6 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-spring-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-struts1-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>
             <dependency>

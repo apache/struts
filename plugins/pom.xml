@@ -34,6 +34,7 @@
     <name>Struts Plugins</name>
 
     <modules>
+        <module>bean-validation</module>
         <module>cdi</module>
         <module>config-browser</module>
         <module>convention</module>

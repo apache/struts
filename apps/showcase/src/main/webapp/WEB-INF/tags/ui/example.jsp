@@ -1,5 +1,4 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 <html>
 <head>
 	<title>Struts2 Showcase - UI Tags Example</title>

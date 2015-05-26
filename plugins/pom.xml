@@ -35,10 +35,8 @@
 
     <modules>
         <module>cdi</module>
-        <module>codebehind</module>
         <module>config-browser</module>
         <module>convention</module>
-        <module>dojo</module>
         <module>dwr</module>
         <module>embeddedjsp</module>
         <module>gxp</module>
@@ -46,7 +44,6 @@
         <module>java8-support</module>
         <module>javatemplates</module>
         <module>jfreechart</module>
-        <module>jsf</module>
         <module>json</module>
         <module>junit</module>
         <module>osgi</module>
@@ -59,7 +56,6 @@
         <module>sitegraph</module>
         <module>sitemesh</module>
         <module>spring</module>
-        <module>struts1</module>
         <module>testng</module>
         <module>tiles</module>
         <module>tiles3</module>

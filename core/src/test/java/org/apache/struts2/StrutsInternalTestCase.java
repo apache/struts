@@ -22,6 +22,7 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;

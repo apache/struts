@@ -146,7 +146,7 @@ public class PrefixMethodInvocationUtil {
             }
             catch (NoSuchMethodException e) {
                 // hmm -- OK, try next prefix
-                LOG.debug("Cannot find method [{}] in action [{}]", prefixedMethodName, action.toString());
+                LOG.debug("Cannot find method [{}] in action [{}]", prefixedMethodName, action);
             }
         }
 		return null;

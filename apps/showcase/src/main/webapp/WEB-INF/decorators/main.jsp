@@ -195,7 +195,29 @@
                             <li><s:a value="/skill/index.html">CRUD</s:a></li>
                             <li><s:a value="/wait/index.html">Execute &amp; Wait</s:a></li>
                             <li><s:a value="/token/index.html">Token</s:a></li>
-                            <li><s:a value="/validation/index.action">Validation</s:a></li>
+                            <li class="dropdown-submenu">
+                                <a href="#">Validation</a>
+                                <ul class="dropdown-menu">
+
+                                    <s:url var="quizBasic" namespace="/validation" action="quizBasic" method="input"/>
+                                    <s:url var="quizClient" namespace="/validation" action="quizClient" method="input"/>
+                                    <s:url var="quizClientCss" namespace="/validation" action="quizClientCss" method="input"/>
+                                    <s:url var="fieldValidatorUrl" action="showFieldValidatorsExamples" namespace="/validation"/>
+                                    <s:url var="nonFieldValidatorUrl" action="showNonFieldValidatorsExamples" namespace="/validation"/>
+                                    <s:url var="visitorValidatorUrl" action="showVisitorValidatorsExamples" namespace="/validation"/>
+                                    <s:url var="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation"/>
+                                    <s:url var="backToShowcase" action="showcase" namespace="/"/>
+                                    <s:url var="storeMessageAcrossRequestExample" namespace="/validation" action="storeErrorsAcrossRequestExample"/>
+                                    <li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
+                                    <li><s:a href="%{clientSideValidationUrl}">Field Validators with client-side JavaScript</s:a></li>
+                                    <li><s:a href="%{nonFieldValidatorUrl}">Non Field Validator</s:a></li>
+                                    <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
+                                    <li><s:a href="%{quizBasic}">Validation (basic)</s:a></li>
+                                    <li><s:a href="%{quizClient}">Validation (client)</s:a></li>
+                                    <li><s:a href="%{quizClientCss}">Validation (client using css_xhtml theme)</s:a></li>
+                                    <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
+                                </ul>
+                            </li>
                             <li><s:url var="url" namespace="/modelDriven" action="modelDriven"/><s:a
                                     href="%{url}">Model Driven</s:a></li>
                         </ul>

@@ -61,8 +61,9 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
         };
         handler.setFormatter(formatter);
         Logger logger = Logger.getLogger("");
-        if (logger.getHandlers().length > 0)
-            logger.removeHandler(logger.getHandlers ()[0]);
+        if (logger.getHandlers().length > 0) {
+            logger.removeHandler(logger.getHandlers()[0]);
+        }
         logger.addHandler(handler);
         logger.setLevel(Level.WARNING);
         LoggerFactory.setLoggerFactory(new JdkLoggerFactory());

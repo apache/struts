@@ -206,7 +206,6 @@
                                     <s:url var="nonFieldValidatorUrl" action="showNonFieldValidatorsExamples" namespace="/validation"/>
                                     <s:url var="visitorValidatorUrl" action="showVisitorValidatorsExamples" namespace="/validation"/>
                                     <s:url var="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation"/>
-                                    <s:url var="backToShowcase" action="showcase" namespace="/"/>
                                     <s:url var="storeMessageAcrossRequestExample" namespace="/validation" action="storeErrorsAcrossRequestExample"/>
                                     <li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
                                     <li><s:a href="%{clientSideValidationUrl}">Field Validators with client-side JavaScript</s:a></li>

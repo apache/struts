@@ -129,6 +129,10 @@
       </fileSet>
       -->
       <fileSet>
+        <directory>../plugins/bean-validation/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-bean-validation/apidocs</outputDirectory>
+      </fileSet>
+      <fileSet>
         <directory>../plugins/cdi/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-cdi-plugin/apidocs</outputDirectory>
       </fileSet>

@@ -30,7 +30,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>struts2-bean-validation</artifactId>
+    <artifactId>struts2-bean-validation-plugin</artifactId>
     <name>Struts 2 Bean Validation Plugin</name>
     <packaging>jar</packaging>
 

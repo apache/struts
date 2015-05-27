@@ -55,6 +55,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-bean-validation-plugin</artifactId>
+                <version>${struts-version.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-cdi-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>

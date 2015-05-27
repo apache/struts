@@ -24,8 +24,11 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts.beanvalidation.actions.FieldAction;
+import org.apache.struts.beanvalidation.actions.FieldMatchAction;
 import org.apache.struts.beanvalidation.actions.ModelDrivenAction;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -96,9 +99,38 @@ public class BeanValidationInterceptorTest extends XWorkTestCase {
         baseActionProxy.execute();
 
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
-        System.out.println(fieldErrors);
+
         assertNotNull(fieldErrors);
         assertEquals(0, fieldErrors.size());
+    }
+
+    public void testFieldAction() throws Exception {
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("bean-validation", "fieldAction", null, null);
+        FieldAction action = (FieldAction) baseActionProxy.getAction();
+        action.setTest(" ");
+        baseActionProxy.execute();
+
+        Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
+
+        assertNotNull(fieldErrors);
+        assertEquals(1, fieldErrors.size());
+        assertTrue(fieldErrors.get("test").size() > 0);
+    }
+
+    public void testFieldMatchAction() throws Exception {
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("bean-validation", "fieldMatchAction", null, null);
+        FieldMatchAction action = (FieldMatchAction) baseActionProxy.getAction();
+        action.setPassword("pass1");
+        action.setConfirmPassword("pass2");
+        action.setEmail("test1@mail.org");
+        action.setConfirmEmail("test2@mail.org");
+        baseActionProxy.execute();
+
+        Collection<String> actionErrors = ((ValidationAware) baseActionProxy.getAction()).getActionErrors();
+        System.out.println(actionErrors);
+
+        assertNotNull(actionErrors);
+        assertEquals(2, actionErrors.size());
     }
 
     @Override

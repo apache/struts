@@ -26,6 +26,14 @@
             <interceptor-ref name="beanValidation"/>
             <result type="void"/>
         </action>
+        <action name="fieldAction" class="org.apache.struts.beanvalidation.actions.FieldAction">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
+        <action name="fieldMatchAction" class="org.apache.struts.beanvalidation.actions.FieldMatchAction">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
 
     </package>
 </xwork>

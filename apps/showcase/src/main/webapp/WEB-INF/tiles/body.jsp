@@ -1,7 +1,7 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<div>
 				<p>This example illustrates the Struts/Tiles Plugin.</p>
 

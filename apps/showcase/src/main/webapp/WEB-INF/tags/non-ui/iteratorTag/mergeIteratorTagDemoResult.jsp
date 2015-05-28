@@ -10,8 +10,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<s:generator var="iterator1" val="%{iteratorValue1}" separator="," />
 		    <s:generator var="iterator2" val="%{iteratorValue2}" separator="," />
 

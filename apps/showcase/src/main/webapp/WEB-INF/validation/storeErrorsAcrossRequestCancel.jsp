@@ -12,8 +12,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<s:actionmessage cssClass="alert alert-info"/>
 			<s:actionerror cssClass="alert alert-error"/>

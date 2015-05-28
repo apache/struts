@@ -71,6 +71,10 @@
             <result>/WEB-INF/showcase.jsp</result>
         </action>
 
+        <action name="help">
+            <result>/WEB-INF/help.jsp</result>
+        </action>
+
         <action name="viewSource" class="org.apache.struts2.showcase.source.ViewSourceAction">
             <result>/WEB-INF/viewSource.jsp</result>
         </action>

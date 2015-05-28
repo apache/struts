@@ -17,8 +17,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span3">
+	<div class="row">
+		<div class="col-md-3">
 			<ul class="nav nav-tabs nav-stacked">
 				<li><s:url var="url" namespace="/employee" action="list"/><s:a href="%{url}">List available Employees</s:a></li>
 				<li><s:url var="url" namespace="/employee" action="edit"/><s:a href="%{url}">Create/Edit Employee</s:a></li>
@@ -26,7 +26,7 @@
 				<li class="active"><s:url var="url" namespace="/skill" action="edit"/><s:a href="%{url}">Create/Edit Skill</s:a></li>
 			</ul>
 		</div>
-		<div class="span9">
+		<div class="col-md-9">
 
 			<s:form action="save">
 				<s:textfield label="%{getText('skill.name')}" name="currentSkill.name"/>

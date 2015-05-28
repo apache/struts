@@ -18,8 +18,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
         <table class="table table-striped table-bordered table-hover table-condensed">
             <tr>

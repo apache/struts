@@ -11,8 +11,8 @@
 
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12" style="text-align: center;">
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
 
 			<b>We have processed your request.</b>
 			<p/>

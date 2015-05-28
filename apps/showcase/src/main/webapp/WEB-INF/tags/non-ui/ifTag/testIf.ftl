@@ -9,8 +9,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<p>
 			This is a simple freemarker template to test the If Tag (using freemarker directive).
 			There's quite a few combination being tested. The characters in bold and non-bold should be the same.

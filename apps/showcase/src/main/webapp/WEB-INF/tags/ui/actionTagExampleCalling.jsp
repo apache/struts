@@ -10,8 +10,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			  <b>Example 1:</b>
 			  This example calls an action and includes the output on the page
 			  <p id="example1" class="well">

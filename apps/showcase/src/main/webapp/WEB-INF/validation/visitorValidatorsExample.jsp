@@ -34,8 +34,6 @@
 			</s:form>
 
 			<!--  END SNIPPET: visitorValidatorsExample -->
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

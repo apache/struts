@@ -4,6 +4,14 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 	
 <struts>
+
+    <constant name="struts.beanValidation.providerClass" value="org.hibernate.validator.HibernateValidator"/>
+    <constant name="struts.beanValidation.ignoreXMLConfiguration" value="true"/>
+
+    <package name="bean-validation" extends="struts-bean-validation" namespace="/bean-validation">
+		<!-- Actions are configured via annotations -->
+	</package>
+
 	<package name="validation" extends="json-default" namespace="/validation">
         <action name="index">
             <result>/WEB-INF/validation/index.jsp</result>

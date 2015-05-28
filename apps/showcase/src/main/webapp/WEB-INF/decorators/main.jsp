@@ -36,7 +36,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta name="description" content="Struts2 Showcase for Apache Struts Project">
     <meta name="author" content="The Apache Software Foundation">
 
@@ -207,6 +206,8 @@
                                     <s:url var="visitorValidatorUrl" action="showVisitorValidatorsExamples" namespace="/validation"/>
                                     <s:url var="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation"/>
                                     <s:url var="storeMessageAcrossRequestExample" namespace="/validation" action="storeErrorsAcrossRequestExample"/>
+                                    <s:url var="beanValidationUrl" action="bean-validation" namespace="/bean-validation"/>
+                                    <li><s:a href="%{beanValidationUrl}">Bean Validation</s:a></li>
                                     <li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
                                     <li><s:a href="%{clientSideValidationUrl}">Field Validators with client-side JavaScript</s:a></li>
                                     <li><s:a href="%{nonFieldValidatorUrl}">Non Field Validator</s:a></li>

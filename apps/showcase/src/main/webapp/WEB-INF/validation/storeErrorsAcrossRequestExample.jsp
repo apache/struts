@@ -45,8 +45,6 @@
 				Because of the redirect,
 				the input values are not retained.
 			</p>
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

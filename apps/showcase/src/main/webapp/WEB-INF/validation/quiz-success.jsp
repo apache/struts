@@ -18,8 +18,6 @@
 			Thank you, <b><s:property value="name"/></b>. Your answer has been submitted as:
 
 			<b><s:property value="answer"/></b>
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

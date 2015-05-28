@@ -23,21 +23,19 @@
 		<div class="span12">
 
 			<table class="table table-striped table-bordered table-hover table-condensed">
-            <tr>
-                <td>User Name:</td>
-                <td><s:property value="user.name" /></td>
-            </tr>
-            <tr>
-                <td>User Age:</td>          
-                <td><s:property value="user.age" /></td>
-            </tr>
-            <tr>
-                <td>User Birthday:</td>
-                <td><s:property value="user.birthday" /></td>
-            </tr>
-        </table>
-        
-        <s:include value="footer.jsp" />
+                <tr>
+                    <td>User Name:</td>
+                    <td><s:property value="user.name" /></td>
+                </tr>
+                <tr>
+                    <td>User Age:</td>
+                    <td><s:property value="user.age" /></td>
+                </tr>
+                <tr>
+                    <td>User Birthday:</td>
+                    <td><s:property value="user.birthday" /></td>
+                </tr>
+            </table>
 
 		</div>
 	</div>

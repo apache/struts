@@ -1,15 +1,7 @@
-<%-- 
-   fieldValidatorExample.jsp
-   
-   @author tm_jee
-   @version $Date$ $Id$
---%>
-
 <%@taglib prefix="s" uri="/struts-tags" %>
-
 <html>
 <head>
-    <title>Struts2 Showcase - Validation - Field Validators Example</title>
+    <title>Struts2 Showcase - Validation - Bean Validation Example</title>
     <s:head theme="xhtml"/>
 </head>
 <body>
@@ -22,7 +14,11 @@
     <div class="row-fluid">
         <div class="span12">
 
-            <!-- START SNIPPET: fieldValidatorsExample -->
+            <!-- START SNIPPET: beanValidatationExample -->
+
+            <h3>All Action Errors Will Appear Here</h3>
+            <s:actionerror/>
+            <hr/>
 
             <h3>All Field Errors Will Appear Here</h3>
             <s:fielderror/>
@@ -40,7 +36,7 @@
             </s:fielderror>
             <hr/>
 
-            <s:form action="submitFieldValidatorsExamples" namespace="/validation" method="POST" theme="xhtml">
+            <s:form action="bean-validation-example" namespace="/bean-validation" method="POST" theme="xhtml">
                 <s:textfield label="Required Validator Field" name="requiredValidatorField"/>
                 <s:textfield label="Required String Validator Field" name="requiredStringValidatorField"/>
                 <s:textfield label="Integer Validator Field" name="integerValidatorField"/>
@@ -53,7 +49,7 @@
                 <s:submit label="Submit" cssClass="btn btn-primary"/>
             </s:form>
 
-            <!-- END SNIPPET: fieldValidatorsExample -->
+            <!-- END SNIPPET: beanValidatationExample -->
         </div>
     </div>
 </div>

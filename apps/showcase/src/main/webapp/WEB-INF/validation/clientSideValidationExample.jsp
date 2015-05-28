@@ -54,9 +54,6 @@
 			</s:form>
 
 			<!-- END SNIPPET: fieldValidatorsExample -->
-
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

@@ -21,8 +21,6 @@
 
 			<s:url var="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
 			<s:a href="%{#id}">Try Again</s:a>
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

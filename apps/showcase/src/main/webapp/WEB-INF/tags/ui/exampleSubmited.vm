@@ -51,9 +51,6 @@
 					</td>
 				</tr>
 			</table>
-
-			#surl ("id=url" "value=index.jsp")
-			#sa("href=${url}")Back to index.jsp#end
 		</div>
 	</div>
 </div>

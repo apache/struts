@@ -24,9 +24,6 @@
 				<s:textfield label="Favorite color" name="answer"/>
 				<s:submit cssClass="btn btn-primary"/>
 			</s:form>
-
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

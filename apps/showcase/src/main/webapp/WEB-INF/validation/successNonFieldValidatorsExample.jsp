@@ -23,21 +23,19 @@
 		<div class="span12">
 
 			<table class="table table-striped table-bordered table-hover table-condensed">
-            <tr>
-                <td>Some Text: </td>
-                <td><s:property value="someText" /></td>
-            </tr>
-            <tr>
-                <td>Some Text Retyped: </td>
-                <td><s:property value="someTextRetype" /></td>
-            </tr>
-            <tr>
-                <td>Some Text Retyped Again: </td>
-                <td><s:property value="someTextRetypeAgain" /></td>
-            </tr>
-        </table>
-        
-        <s:include value="footer.jsp" />
+                <tr>
+                    <td>Some Text: </td>
+                    <td><s:property value="someText" /></td>
+                </tr>
+                <tr>
+                    <td>Some Text Retyped: </td>
+                    <td><s:property value="someTextRetype" /></td>
+                </tr>
+                <tr>
+                    <td>Some Text Retyped Again: </td>
+                    <td><s:property value="someTextRetypeAgain" /></td>
+                </tr>
+            </table>
 		</div>
 	</div>
 </div>

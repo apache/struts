@@ -55,8 +55,6 @@
                 <td>Field Expression Validator Field: <s:property value="fieldExpressionValidatorField" /></td>
             </tr>
         </table>
-
-        <s:include value="footer.jsp" />
 		</div>
 	</div>
 </div>

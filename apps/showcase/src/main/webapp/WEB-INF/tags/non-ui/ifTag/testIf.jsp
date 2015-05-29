@@ -10,8 +10,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 				<p>
 					This is a simple jsp to test the If Tag. There's quite a few combination being tested.
 					The characters in bold an non-bold should be the same.

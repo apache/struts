@@ -12,8 +12,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<p>
 				This is an example demonstrating the use of MessageStoreInterceptor.
@@ -45,8 +45,6 @@
 				Because of the redirect,
 				the input values are not retained.
 			</p>
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

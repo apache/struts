@@ -9,8 +9,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 
 			See the jsp code <s:url var="url" action="showEnumJspCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>

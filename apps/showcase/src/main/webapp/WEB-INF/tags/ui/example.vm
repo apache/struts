@@ -9,8 +9,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			#sform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
 			    #stextfield ("label=Name" "name=name")
@@ -27,8 +27,6 @@
 			    #sreset("cssClass=btn btn-danger")
 			#end
 
-			#surl ("id=url" "value=index.jsp")
-			<a href="${url}" class="btn btn-info"><i class="icon icon-arrow-left"></i> Back to index.jsp</a>
 		</div>
 	</div>
 </div>

@@ -12,8 +12,8 @@
 
 
     <div class="container-fluid">
-	    <div class="row-fluid">
-		    <div class="span6" style="text-align: center;">
+	    <div class="row">
+		    <div class="col-md-6" style="text-align: center;">
 			    <div class="alert alert-info">
 				    The browser should display the Struts logo.
 			    </div>
@@ -21,7 +21,7 @@
 			    <s:url var="url" action="download"/>
 			    <s:a href="%{url}" cssClass="btn btn-large btn-info"><i class="icon-picture"></i> Download image file.</s:a>
 		    </div>
-		    <div class="span6" style="text-align: center;">
+		    <div class="col-md-6" style="text-align: center;">
 			    <div class="alert alert-info">
 				    The browser should prompt for a location to save the ZIP file.
 			    </div>

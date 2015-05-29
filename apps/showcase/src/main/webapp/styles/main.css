@@ -16,4 +16,12 @@ body {
 .errorMessage, label.errorLabel {
 	color: red;
 }
-label.errorLabel
+
+.wwFormTable tr {
+	padding-bottom: 5px;
+}
+
+.page-header, .footer {
+	margin-left: 10px;
+	margin-right: 10px;
+}

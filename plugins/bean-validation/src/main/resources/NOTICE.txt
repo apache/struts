@@ -1,0 +1,8 @@
+Apache Struts
+Copyright 2000-2015 The Apache Software Foundation
+
+This plugin is based on the work of Umesh Awasthi implementation
+https://github.com/umeshawasthi/jsr303-validator-plugin
+
+This product includes software developed by
+The Apache Software Foundation (http://www.apache.org/).

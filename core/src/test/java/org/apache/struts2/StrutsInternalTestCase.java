@@ -22,6 +22,7 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
@@ -60,8 +61,9 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
         };
         handler.setFormatter(formatter);
         Logger logger = Logger.getLogger("");
-        if (logger.getHandlers().length > 0)
-            logger.removeHandler(logger.getHandlers ()[0]);
+        if (logger.getHandlers().length > 0) {
+            logger.removeHandler(logger.getHandlers()[0]);
+        }
         logger.addHandler(handler);
         logger.setLevel(Level.WARNING);
         LoggerFactory.setLoggerFactory(new JdkLoggerFactory());

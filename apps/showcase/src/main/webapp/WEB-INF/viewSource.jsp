@@ -6,8 +6,8 @@
 <body>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<h1>View Sources</h1>
 
 			<ul class="nav nav-tabs" id="codeTab">

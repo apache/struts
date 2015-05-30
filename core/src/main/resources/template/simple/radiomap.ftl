@@ -73,9 +73,6 @@
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly!false>
- readonly="readonly"<#rt/>
-</#if>
 <#if parameters.tabindex?has_content>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>

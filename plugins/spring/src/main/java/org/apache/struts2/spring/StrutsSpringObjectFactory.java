@@ -24,10 +24,10 @@ package org.apache.struts2.spring;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.apache.struts2.StrutsConstants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -74,9 +74,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
           
         super();
         boolean useClassCache = "true".equals(useClassCacheStr);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Initializing Struts-Spring integration...");
-        }
+        LOG.info("Initializing Struts-Spring integration...");
 
         Object rootWebApplicationContext =  servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
@@ -112,9 +110,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
             ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext;
             reloadingContext.setupReloading(watchList.split(","), acceptClasses, servletContext, "true".equals(reloadConfig));
-            if (LOG.isInfoEnabled()) {
-        	LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!", watchList);
-            }
+            LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!\n{}", watchList);
 
             setClassLoader(reloadingContext.getReloadingClassLoader());
 
@@ -144,8 +140,6 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
         this.setEnableAopSupport(enableAopSupport);
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("... initialized Struts-Spring integration successfully");
-        }
+        LOG.info("... initialized Struts-Spring integration successfully");
     }
 }

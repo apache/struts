@@ -213,7 +213,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
 
         req.setCharacterEncoding("text/html");
-        req.setContentType("multipart/form-data; boundary=---1234");
+        req.addHeader("Content-type", "multipart/form-data");
         req.setContent(null); // there is no content
 
         MyFileupAction action = new MyFileupAction();
@@ -224,7 +224,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         Map param = new HashMap();
         ActionContext.getContext().setParameters(param);
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest((HttpServletRequest) req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
 
@@ -234,8 +234,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testSuccessUploadOfATextFileMultipartRequest() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding("text/html");
-        req.setContentType("multipart/form-data; boundary=---1234");
-        req.addHeader("Content-type", "multipart/form-data");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -291,8 +290,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding("text/html");
         req.setMethod("POST");
-        req.setContentType("multipart/form-data; boundary=" + bondary);
-        req.addHeader("Content-type", "multipart/form-data");
+        req.addHeader("Content-type", "multipart/form-data; boundary=" + bondary);
         StringBuilder content = new StringBuilder(128);
         content.append(encodeTextFile(bondary, endline, "file", "test.html", "text/plain", plainContent));
         content.append(encodeTextFile(bondary, endline, "file", "test1.html", "text/html", htmlContent));

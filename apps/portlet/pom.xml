@@ -49,7 +49,7 @@
                     <plugin>
                         <groupId>org.apache.pluto</groupId>
                         <artifactId>maven-pluto-plugin</artifactId>
-                        <version>1.1.3</version>
+                        <version>1.1.7</version>
                         <executions>
                             <execution>
                                 <phase>generate-resources</phase>
@@ -68,7 +68,7 @@
                             <webDefaultXml>src/main/webapp/WEB-INF/jetty-pluto-web-default.xml</webDefaultXml>
                             <systemProperties>
                                 <systemProperty>
-                                    <name>org.apache.pluto.embedded.portletId</name>
+                                    <name>org.apache.pluto.embedded.portletIds</name>
                                     <value>StrutsPortlet</value>
                                 </systemProperty>
                             </systemProperties>
@@ -172,7 +172,7 @@
         <dependency>
             <groupId>com.bekk.boss</groupId>
             <artifactId>maven-jetty-pluto-embedded</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
 

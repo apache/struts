@@ -5,10 +5,10 @@ import org.mortbay.jetty.webapp.WebAppContext;
 
 public class JettyPlutoLauncher {
 	public static void main(String[] args) throws Exception {
-	    System.setProperty("org.apache.pluto.embedded.portletId", "StrutsPortlet");
-	    Server server = new Server(8080);
-	    WebAppContext webapp = new WebAppContext("src/main/webapp", "/test");
-	    webapp.setDefaultsDescriptor("/WEB-INF/jetty-pluto-web-default.xml");
+        System.setProperty("org.apache.pluto.embedded.portletIds", "StrutsPortlet");
+        Server server = new Server(8080);
+        WebAppContext webapp = new WebAppContext(System.getProperty("user.dir") + "/apps/portlet/src/main/webapp", "/test");
+        webapp.setDefaultsDescriptor("/WEB-INF/jetty-pluto-web-default.xml");
 	    ServletHolder portletServlet = new ServletHolder(new PortletServlet());
 	    portletServlet.setInitParameter("portlet-name", "StrutsPortlet");
 	    portletServlet.setInitOrder(1);

@@ -158,9 +158,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
 
-        URL url = ClassLoaderUtil.getResource("log4j.properties", FileUploadInterceptorTest.class);
+        URL url = ClassLoaderUtil.getResource("log4j2.xml", FileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
-        assertTrue("log4j.properties should be in src/test folder", file.exists());
+        assertTrue("log4j2.xml should be in src/test folder", file.exists());
         boolean notOk = interceptor.acceptFile(action, file, "filename", "text/html", "inputName", validation);
 
         assertFalse(notOk);
@@ -169,10 +169,10 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         List errors = (List) validation.getFieldErrors().get("inputName");
         assertEquals(1, errors.size());
         String msg = (String) errors.get(0);
-        // the error message shoul contain at least this test
+        // the error message should contain at least this test
         assertTrue(msg.startsWith("The file is to large to be uploaded"));
         assertTrue(msg.indexOf("inputName") > 0);
-        assertTrue(msg.indexOf("log4j.properties") > 0);
+        assertTrue(msg.indexOf("log4j2.xml") > 0);
     }
 
     public void testNoMultipartRequest() throws Exception {

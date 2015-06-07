@@ -23,8 +23,8 @@ package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ import java.util.StringTokenizer;
 
 /**
  * Extended version of {@link RestfulActionMapper}, see documentation for more details
- * http://struts.apache.org/2.x/docs/restfulactionmapper.html
+ * http://struts.apache.org/docs/restfulactionmapper.html
  */
 public class Restful2ActionMapper extends DefaultActionMapper {
 

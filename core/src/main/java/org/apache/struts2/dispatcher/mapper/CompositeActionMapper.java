@@ -24,8 +24,8 @@ package org.apache.struts2.dispatcher.mapper;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ import java.util.List;
  * A composite action mapper that is capable of delegating to a series of {@link ActionMapper} if the former
  * failed to obtained a valid {@link ActionMapping} or uri.
  *
- * More details: http://struts.apache.org/2.x/docs/actionmapper.html
+ * More details: http://struts.apache.org/docs/actionmapper.html
  *
  * @see ActionMapper
  * @see ActionMapping

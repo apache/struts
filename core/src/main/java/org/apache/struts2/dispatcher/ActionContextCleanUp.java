@@ -22,16 +22,11 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -150,7 +145,7 @@ public class ActionContextCleanUp implements Filter {
                 "*             This can be a source of unpredictable problems!             *\n" +
                 "*                                                                         *\n" +
                 "*                Please refer to the docs for more details!               *\n" +
-                "*              http://struts.apache.org/2.x/docs/webxml.html              *\n" +
+                        "*              http://struts.apache.org/docs/webxml.html                  *\n" +
                 "*                                                                         *\n" +
                 "***************************************************************************\n\n";
         System.out.println(msg);

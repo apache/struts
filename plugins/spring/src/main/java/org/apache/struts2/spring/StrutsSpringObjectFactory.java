@@ -24,6 +24,7 @@ package org.apache.struts2.spring;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,14 +47,6 @@ import javax.servlet.ServletContext;
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
     private static final Logger LOG = LogManager.getLogger(StrutsSpringObjectFactory.class);
 
-    //@Inject
-    //public StrutsSpringObjectFactory(
-    //        @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
-    //        @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
-    //        @Inject ServletContext servletContext) {
-    //    this(autoWire, "false", useClassCacheStr, servletContext);
-    //}
-
     /**
      * Constructs the spring object factory
      * @param autoWire The type of autowiring to use
@@ -73,7 +66,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject Container container) {
           
         super();
-        boolean useClassCache = "true".equals(useClassCacheStr);
+        boolean useClassCache = BooleanUtils.toBoolean(useClassCacheStr);
         LOG.info("Initializing Struts-Spring integration...");
 
         Object rootWebApplicationContext =  servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
@@ -136,7 +129,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
         this.setUseClassCache(useClassCache);
 
-        this.setAlwaysRespectAutowireStrategy("true".equalsIgnoreCase(alwaysAutoWire));
+        this.setAlwaysRespectAutowireStrategy(BooleanUtils.toBoolean(alwaysAutoWire));
 
         this.setEnableAopSupport(enableAopSupport);
 

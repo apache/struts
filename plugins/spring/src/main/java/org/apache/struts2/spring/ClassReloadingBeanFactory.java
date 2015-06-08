@@ -43,22 +43,12 @@ public class ClassReloadingBeanFactory extends DefaultListableBeanFactory {
             return instantiateUsingFactoryMethod(beanName, mbd, args);
         }
 
-        //commented to cached constructor is not used
-        /* // Shortcut when re-creating the same bean...
-        if (mbd.resolvedConstructorOrFactoryMethod != null) {
-            if (mbd.constructorArgumentsResolved) {
-                return autowireConstructor(beanName, mbd, null, args);
-            } else {
-                return instantiateBean(beanName, mbd);
-            }
-        }*/
-
         // Need to determine the constructor...
-        Constructor[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
-        if (ctors != null ||
+        Constructor[] constructors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
+        if (constructors != null ||
                 mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_CONSTRUCTOR ||
                 mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
-            return autowireConstructor(beanName, mbd, ctors, args);
+            return autowireConstructor(beanName, mbd, constructors, args);
         }
 
         // No special handling: simply use no-arg constructor.
@@ -67,10 +57,6 @@ public class ClassReloadingBeanFactory extends DefaultListableBeanFactory {
 
     protected Class resolveBeanClass(RootBeanDefinition mbd, String beanName, Class[] typesToMatch) {
         try {
-             //commented to cached class is not used
-            /* if (mbd.hasBeanClass()) {
-                return mbd.getBeanClass();
-            }*/
             if (typesToMatch != null) {
                 ClassLoader tempClassLoader = getTempClassLoader();
                 if (tempClassLoader != null) {

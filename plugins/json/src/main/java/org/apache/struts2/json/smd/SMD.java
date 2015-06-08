@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /*
- * HOlds SMD declarations for a class
+ * Holds SMD declarations for a class
  */
 public class SMD {
     public static final String DEFAULT_VERSION = ".1";
@@ -34,7 +34,7 @@ public class SMD {
     private String objectName;
     private String serviceType = DEFAULT_SERVICE_TYPE;
     private String serviceUrl;
-    private Set<SMDMethod> methods = new TreeSet<SMDMethod>();
+    private Set<SMDMethod> methods = new TreeSet<>();
 
     public void addSMDMethod(SMDMethod method) {
         this.methods.add(method);

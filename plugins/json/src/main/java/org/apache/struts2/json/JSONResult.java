@@ -26,8 +26,9 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.json.smd.SMDGenerator;
@@ -116,7 +117,7 @@ public class JSONResult implements Result {
     public void setExcludeProperties(String commaDelim) {
         Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
         if (excludePatterns != null) {
-            this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
+            this.excludeProperties = new ArrayList<>(excludePatterns.size());
             for (String pattern : excludePatterns) {
                 this.excludeProperties.add(Pattern.compile(pattern));
             }
@@ -132,7 +133,7 @@ public class JSONResult implements Result {
     public void setExcludeWildcards(String commaDelim) {
         Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
         if (excludePatterns != null) {
-            this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
+            this.excludeProperties = new ArrayList<>(excludePatterns.size());
             for (String pattern : excludePatterns) {
                 this.excludeProperties.add(WildcardUtil.compileWildcardPattern(pattern));
             }
@@ -248,8 +249,9 @@ public class JSONResult implements Result {
     protected String addCallbackIfApplicable(HttpServletRequest request, String json) {
         if ((callbackParameter != null) && (callbackParameter.length() > 0)) {
             String callbackName = request.getParameter(callbackParameter);
-            if ((callbackName != null) && (callbackName.length() > 0))
+            if (StringUtils.isNotEmpty(callbackName)) {
                 json = callbackName + "(" + json + ")";
+            }
         }
         return json;
     }

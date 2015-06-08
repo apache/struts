@@ -29,7 +29,9 @@ package org.apache.struts2.json.bridge;
 public class StringBridge implements FieldBridge{
 
     public String objectToString(Object object) {
-        if(object==null) return null;
+        if (object == null) {
+            return null;
+        }
         return object.toString();
     }
 }

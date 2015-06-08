@@ -20,36 +20,21 @@
  */
 package org.apache.struts2.json;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.json.annotations.JSON;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.struts2.json.annotations.JSON;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.util.*;
 
 /**
  * Isolate the process of populating JSON objects from the Interceptor class
@@ -86,8 +71,7 @@ public class JSONPopulator {
         PropertyDescriptor[] props = info.getPropertyDescriptors();
 
         // iterate over class fields
-        for (int i = 0; i < props.length; ++i) {
-            PropertyDescriptor prop = props[i];
+        for (PropertyDescriptor prop : props) {
             String name = prop.getName();
 
             if (elements.containsKey(name)) {
@@ -106,8 +90,7 @@ public class JSONPopulator {
                         Type[] genericTypes = method.getGenericParameterTypes();
 
                         if (paramTypes.length == 1) {
-                            Object convertedValue = this.convert(paramTypes[0], genericTypes[0], value,
-                                    method);
+                            Object convertedValue = this.convert(paramTypes[0], genericTypes[0], value, method);
                             method.invoke(object, new Object[] { convertedValue });
                         }
                     }
@@ -139,9 +122,9 @@ public class JSONPopulator {
             this.populateObject(convertedValue, (Map) value);
             return convertedValue;
         } else if (BigDecimal.class.equals(clazz)) {
-            return new BigDecimal(value != null ? value.toString() : "0");
+            return new BigDecimal(value.toString());
         } else if (BigInteger.class.equals(clazz)) {
-            return new BigInteger(value != null ? value.toString() : "0");
+            return new BigInteger(value.toString());
         } else
             throw new JSONException("Incompatible types for property " + method.getName());
     }
@@ -177,7 +160,7 @@ public class JSONPopulator {
                     Array.set(newArray, j, this.convertPrimitive(arrayType, listValue, accessor));
                 } else if (listValue instanceof Map) {
                     // array of other class
-                    Object newObject = null;
+                    Object newObject;
                     if (Map.class.isAssignableFrom(arrayType)) {
                         newObject = convertToMap(arrayType, type, listValue, accessor);
                     } else if (List.class.isAssignableFrom(arrayType)) {
@@ -230,8 +213,7 @@ public class JSONPopulator {
             }
 
             // create an object for each element
-            for (int j = 0; j < values.size(); j++) {
-                Object listValue = values.get(j);
+            for (Object listValue : values) {
 
                 if (itemClass.equals(Object.class)) {
                     // Object[]
@@ -279,7 +261,7 @@ public class JSONPopulator {
             }
             Map values = (Map) value;
 
-            Map newMap = null;
+            Map newMap;
             try {
                 newMap = (Map) clazz.newInstance();
             } catch (InstantiationException ex) {
@@ -288,9 +270,8 @@ public class JSONPopulator {
             }
 
             // create an object for each element
-            Iterator iter = values.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry) iter.next();
+            for (Object next : values.entrySet()) {
+                Map.Entry entry = (Map.Entry) next;
                 String key = (String) entry.getKey();
                 Object v = entry.getValue();
 
@@ -350,27 +331,27 @@ public class JSONPopulator {
             if (Short.TYPE.equals(clazz))
                 return number.shortValue();
             else if (Short.class.equals(clazz))
-                return new Short(number.shortValue());
+                return number.shortValue();
             else if (Byte.TYPE.equals(clazz))
                 return number.byteValue();
             else if (Byte.class.equals(clazz))
-                return new Byte(number.byteValue());
+                return number.byteValue();
             else if (Integer.TYPE.equals(clazz))
                 return number.intValue();
             else if (Integer.class.equals(clazz))
-                return new Integer(number.intValue());
+                return number.intValue();
             else if (Long.TYPE.equals(clazz))
                 return number.longValue();
             else if (Long.class.equals(clazz))
-                return new Long(number.longValue());
+                return number.longValue();
             else if (Float.TYPE.equals(clazz))
                 return number.floatValue();
             else if (Float.class.equals(clazz))
-                return new Float(number.floatValue());
+                return number.floatValue();
             else if (Double.TYPE.equals(clazz))
                 return number.doubleValue();
             else if (Double.class.equals(clazz))
-                return new Double(number.doubleValue());
+                return number.doubleValue();
             else if (String.class.equals(clazz))
                 return value.toString();
         } else if (clazz.equals(Date.class)) {
@@ -381,7 +362,7 @@ public class JSONPopulator {
                         (json != null) && (json.format().length() > 0) ? json.format() : this.dateFormat);
                 return formatter.parse((String) value);
             } catch (ParseException e) {
-                LOG.error(e.getMessage(), e);
+                LOG.error("Unable to parse date from: {}", value, e);
                 throw new JSONException("Unable to parse date from: " + value);
             }
         } else if (clazz.isEnum()) {
@@ -425,7 +406,7 @@ public class JSONPopulator {
                 if (Character.TYPE.equals(clazz))
                     return charValue;
                 else
-                    return new Character(charValue);
+                    return charValue;
             } else if (clazz.equals(Locale.class)) {
                 String[] components = sValue.split("_", 2);
                 if (components.length == 2) {

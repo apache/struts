@@ -60,8 +60,6 @@ import javax.servlet.http.HttpServletResponse;
 public class Radio extends ListUIBean {
     final public static String TEMPLATE = "radiomap";
     
-    protected String readonly;
-
     public Radio(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -72,14 +70,5 @@ public class Radio extends ListUIBean {
     
     public void evaluateExtraParams() {
     	super.evaluateExtraParams();
-        
-        if (readonly != null) {
-            addParameter("readonly", findValue(readonly, Boolean.class));
-        }
-    }
-    
-    @StrutsTagAttribute(description="Whether the input is readonly", type="Boolean", defaultValue="false")
-    public void setReadonly(String readonly) {
-        this.readonly = readonly;
     }
 }

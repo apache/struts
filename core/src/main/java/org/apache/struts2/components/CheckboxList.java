@@ -53,8 +53,6 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class CheckboxList extends ListUIBean {
     final public static String TEMPLATE = "checkboxlist";
     
-    protected String readonly;
-
     public CheckboxList(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -65,15 +63,6 @@ public class CheckboxList extends ListUIBean {
     
     public void evaluateExtraParams() {
     	super.evaluateExtraParams();
-        
-        if (readonly != null) {
-            addParameter("readonly", findValue(readonly, Boolean.class));
-        }
-    }
-    
-    @StrutsTagAttribute(description="Whether the input is readonly", type="Boolean", defaultValue="false")
-    public void setReadonly(String readonly) {
-        this.readonly = readonly;
     }
 
 }

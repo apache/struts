@@ -25,10 +25,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -106,7 +106,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     protected ActionMapper actionMapper;
     protected int statusCode = SC_FOUND;
     protected boolean suppressEmptyParameters = false;
-    protected Map<String, Object> requestParameters = new LinkedHashMap<String, Object>();
+    protected Map<String, Object> requestParameters = new LinkedHashMap<>();
     protected String anchor;
 
     private UrlHelper urlHelper;
@@ -221,10 +221,8 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
         }
 
         finalLocation = response.encodeRedirectURL(tmpLocation.toString());
- 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Redirecting to finalLocation " + finalLocation);
-        }
+
+        LOG.debug("Redirecting to finalLocation: {}", finalLocation);
 
         sendRedirect(response, finalLocation);
     }

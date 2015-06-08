@@ -21,15 +21,14 @@
 
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -75,17 +74,13 @@ public class File extends UIBean {
             String encType = (String) form.getParameters().get("enctype");
             if (!"multipart/form-data".equals(encType)) {
                 // uh oh, this isn't good! Let's warn the developer
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to enctype 'multipart/form-data'. This is probably an error!");
-                }
+                LOG.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to enctype 'multipart/form-data'. This is probably an error!");
             }
 
             String method = (String) form.getParameters().get("method");
             if (!"post".equalsIgnoreCase(method)) {
                 // uh oh, this isn't good! Let's warn the developer
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to method 'POST'. This is probably an error!");
-                }
+                LOG.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to method 'POST'. This is probably an error!");
             }
         }
 

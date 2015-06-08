@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -62,17 +63,15 @@ public class Restful2ActionMapper extends DefaultActionMapper {
         }
 
         String actionName = mapping.getName();
-
         String id = null;
 
         // Only try something if the action name is specified
-        if (actionName != null && actionName.length() > 0) {
+        if (StringUtils.isNotBlank(actionName)) {
 
             int lastSlashPos = actionName.lastIndexOf('/');
             if (lastSlashPos > -1) {
                 id = actionName.substring(lastSlashPos+1);
             }
-
 
             // If a method hasn't been explicitly named, try to guess using ReST-style patterns
             if (mapping.getMethod() == null) {
@@ -124,7 +123,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
             int actionSlashPos = actionName.lastIndexOf('/', lastSlashPos - 1);
             if (actionSlashPos > 0 && actionSlashPos < lastSlashPos) {
                 String params = actionName.substring(0, actionSlashPos);
-                HashMap<String,String> parameters = new HashMap<String,String>();
+                HashMap<String, String> parameters = new HashMap<>();
                 try {
                     StringTokenizer st = new StringTokenizer(params, "/");
                     boolean isNameTok = true;
@@ -152,9 +151,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.getParams().putAll(parameters);
                     }
                 } catch (Exception e) {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("Unable to determine parameters from the url", e);
-                    }
                 }
                 mapping.setName(actionName.substring(actionSlashPos+1));
             }

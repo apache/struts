@@ -21,9 +21,9 @@
 
 package org.apache.struts2.components;
 
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 /**
  * Base class for control and data tags
@@ -36,7 +36,7 @@ public abstract class ContextBean extends Component {
     }
 
     protected void putInContext(Object value) {
-        if (var != null && var.length() > 0) {
+        if (StringUtils.isNotBlank(var)) {
             stack.getContext().put(var, value);
         }
     }

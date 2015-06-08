@@ -12,7 +12,7 @@ import com.opensymphony.xwork2.inject.Container;
  */
 class ContainerHolder {
 
-    private static ThreadLocal<Container> instance = new ThreadLocal<Container>();
+    private static ThreadLocal<Container> instance = new ThreadLocal<>();
 
     public static void store(Container instance) {
         ContainerHolder.instance.set(instance);

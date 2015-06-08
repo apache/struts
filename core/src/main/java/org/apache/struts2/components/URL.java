@@ -23,8 +23,6 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -110,7 +108,7 @@ import java.io.Writer;
  */
 @StrutsTag(name="url", tldTagClass="org.apache.struts2.views.jsp.URLTag", description="This tag is used to create a URL")
 public class URL extends ContextBean {
-    private static final Logger LOG = LogManager.getLogger(URL.class);
+
     private UrlProvider urlProvider;
     private UrlRenderer urlRenderer;
 

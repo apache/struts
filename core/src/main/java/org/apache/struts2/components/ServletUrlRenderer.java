@@ -26,9 +26,9 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -201,7 +201,7 @@ public class ServletUrlRenderer implements UrlRenderer {
             // Warn user that the specified namespace/action combo
             // was not found in the configuration.
             if (namespace != null && LOG.isWarnEnabled()) {
-                LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
+                LOG.warn("No configuration found for the specified action: '{}' in namespace: '{}'. Form action defaulting to 'action' attribute's literal value.", actionName, namespace);
             }
 
             String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, null, scheme, formComponent.includeContext, true);
@@ -264,17 +264,11 @@ public class ServletUrlRenderer implements UrlRenderer {
                 includeGetParameters(urlComponent);
                 includeExtraParameters(urlComponent);
             } else if (includeParams != null) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Unknown value for includeParams parameter to URL tag: " + includeParams);
-                }
+                LOG.warn("Unknown value for includeParams parameter to URL tag: {}", includeParams);
             }
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unable to put request parameters (" + urlComponent.getHttpServletRequest().getQueryString() + ") into parameter map.", e);
-            }
+            LOG.warn("Unable to put request parameters ({}) into parameter map.", urlComponent.getHttpServletRequest().getQueryString(), e);
         }
-
-
     }
 
     private void includeExtraParameters(UrlProvider urlComponent) {
@@ -324,13 +318,13 @@ public class ServletUrlRenderer implements UrlRenderer {
      */
     protected void mergeRequestParameters(String value, Map<String, Object> parameters, Map<String, Object> contextParameters) {
 
-        Map<String, Object> mergedParams = new LinkedHashMap<String, Object>(contextParameters);
+        Map<String, Object> mergedParams = new LinkedHashMap<>(contextParameters);
 
         // Merge contextParameters (from current request) with parameters specified in value attribute
         // eg. value="someAction.action?id=someId&venue=someVenue"
         // where the parameters specified in value attribute takes priority.
 
-        if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
+        if (StringUtils.contains(value, "?")) {
             String queryString = value.substring(value.indexOf("?") + 1);
 
             mergedParams = urlHelper.parseQueryString(queryString, false);

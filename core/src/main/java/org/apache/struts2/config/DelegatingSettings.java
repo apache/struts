@@ -69,7 +69,7 @@ class DelegatingSettings implements Settings {
     public Iterator list() {
         boolean workedAtAll = false;
 
-        Set<Object> settingList = new HashSet<Object>();
+        Set<Object> settingList = new HashSet<>();
         UnsupportedOperationException e = null;
 
         for (Settings delegate : delegates) {
@@ -83,7 +83,6 @@ class DelegatingSettings implements Settings {
                 workedAtAll = true;
             } catch (UnsupportedOperationException ex) {
                 e = ex;
-
                 // Try next delegate
             }
         }

@@ -5,8 +5,9 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Field;
@@ -47,7 +48,7 @@ public class DeprecationInterceptor extends AbstractInterceptor {
      * @throws Exception
      */
     private String validate() throws Exception {
-        Set<String> constants = new HashSet<String>();
+        Set<String> constants = new HashSet<>();
 
         readConstants(constants, StrutsConstants.class);
         readConstants(constants, XWorkConstants.class);
@@ -55,7 +56,7 @@ public class DeprecationInterceptor extends AbstractInterceptor {
         Set<String> applicationConstants = container.getInstanceNames(String.class);
         String message = null;
         if (!constants.containsAll(applicationConstants)) {
-            Set<String> deprecated = new HashSet<String>(applicationConstants);
+            Set<String> deprecated = new HashSet<>(applicationConstants);
             deprecated.removeAll(constants);
             message = prepareMessage(deprecated);
         }
@@ -94,7 +95,7 @@ public class DeprecationInterceptor extends AbstractInterceptor {
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String state) {
-        this.devMode = "true".equals(state);
+        this.devMode = BooleanUtils.toBoolean(state);
     }
 
     @Inject

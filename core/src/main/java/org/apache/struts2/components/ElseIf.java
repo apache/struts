@@ -21,12 +21,11 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -75,27 +74,27 @@ public class ElseIf extends Component {
     public boolean start(Writer writer) {
         Boolean ifResult = (Boolean) stack.getContext().get(If.ANSWER);
 
-        if ((ifResult == null) || (ifResult.booleanValue())) {
+        if ((ifResult == null) || (ifResult)) {
             return false;
         }
 
-        //make the comparision
+        //make the comparison
         answer = (Boolean) findValue(test, Boolean.class);
 
         if (answer == null) {
             answer = Boolean.FALSE;
         }
-        if (answer.booleanValue()) {
+        if (answer) {
             stack.getContext().put(If.ANSWER, answer);
         }
-        return answer.booleanValue();
+        return answer;
     }
 
     public boolean end(Writer writer, String body) {
         if (answer == null) {
             answer = Boolean.FALSE;
         }
-        if (answer.booleanValue()) {
+        if (answer) {
             stack.getContext().put(If.ANSWER, answer);
         }
         return super.end(writer, "");

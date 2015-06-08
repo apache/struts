@@ -21,18 +21,16 @@
 
 package org.apache.struts2.components;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.util.MakeIterator;
-
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -158,7 +156,7 @@ public class ComboBox extends TextField {
                 "Example: people or people.{name}");
     }
 
-    @StrutsTagAttribute(description="Iteratable source to populate from. " +
+    @StrutsTagAttribute(description = "Iterable source to populate from. " +
                 "If this is missing, the select widget is simply not displayed.", required=true)
     public void setList(String list) {
         this.list = list;
@@ -179,12 +177,12 @@ public class ComboBox extends TextField {
         this.headerValue = headerValue;
     }
 
-    @StrutsTagAttribute(description="Set the key used to retrive the option key.")
+    @StrutsTagAttribute(description = "Set the key used to retrieve the option key.")
     public void setListKey(String listKey) {
         this.listKey = listKey;
     }
 
-    @StrutsTagAttribute(description="Set the value used to retrive the option value.")
+    @StrutsTagAttribute(description = "Set the value used to retrieve the option value.")
     public void setListValue(String listValue) {
         this.listValue = listValue;
     }

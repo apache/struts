@@ -39,7 +39,6 @@ public class RequestMap extends AbstractMap implements Serializable {
     private Set<Object> entries;
     private HttpServletRequest request;
 
-
     /**
      * Saves the request to use as the backing for getting and setting values
      *
@@ -70,7 +69,7 @@ public class RequestMap extends AbstractMap implements Serializable {
      */
     public Set entrySet() {
         if (entries == null) {
-            entries = new HashSet<Object>();
+            entries = new HashSet<>();
 
             Enumeration enumeration = request.getAttributeNames();
 

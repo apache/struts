@@ -170,7 +170,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     /**
      * Maintains per-request override of devMode configuration.
      */
-    private static ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<Boolean>();
+    private static ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<>();
 
     /**
      * Initializes the filter by creating a default dispatcher
@@ -226,7 +226,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     public void destroy() {
         if (dispatcher == null) {
-            log.warn("something is seriously wrong, Dispatcher is not initialized (null) ");
+            log.warn("something is seriously wrong, Dispatcher is not initialized (null)");
         } else {
             try {
                 dispatcher.cleanup();
@@ -243,10 +243,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * 
      * @param devMode   the override value
      */
-    public static void overrideDevMode(
-        boolean devMode)
-    {
-        devModeOverride.set(Boolean.valueOf(devMode));
+    public static void overrideDevMode(boolean devMode) {
+        devModeOverride.set(devMode);
     }
 
     /**
@@ -265,7 +263,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @return Initialized Dispatcher
      */
     protected Dispatcher createDispatcher(FilterConfig filterConfig) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         for (Enumeration e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
             String name = (String) e.nextElement();
             String value = filterConfig.getInitParameter(name);

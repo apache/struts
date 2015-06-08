@@ -22,8 +22,9 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -150,34 +151,28 @@ public class OptionTransferSelect extends DoubleListUIBean {
             doubleValue = findValue(doubleList);
             addParameter("doubleList", doubleValue);
         }
-        if (size == null || size.trim().length() <= 0) {
+        if (StringUtils.isBlank(size)) {
             addParameter("size", "15");
         }
-        if (doubleSize == null || doubleSize.trim().length() <= 0) {
+        if (StringUtils.isBlank(doubleSize)) {
             addParameter("doubleSize", "15");
         }
-        if (multiple == null || multiple.trim().length() <= 0) {
+        if (StringUtils.isBlank(multiple)) {
             addParameter("multiple", Boolean.TRUE);
         }
-        if (doubleMultiple == null || doubleMultiple.trim().length() <= 0) {
+        if (StringUtils.isBlank(doubleMultiple)) {
             addParameter("doubleMultiple", Boolean.TRUE);
         }
 
-
-
-
-
         // buttonCssClass
-        if (buttonCssClass != null && buttonCssClass.trim().length() > 0) {
+        if (StringUtils.isNotBlank(buttonCssClass)) {
             addParameter("buttonCssClass", buttonCssClass);
         }
 
         // buttonCssStyle
-        if (buttonCssStyle != null && buttonCssStyle.trim().length() > 0) {
+        if (StringUtils.isNotBlank(buttonCssStyle)) {
             addParameter("buttonCssStyle", buttonCssStyle);
         }
-
-
 
         // allowSelectAll
         addParameter("allowSelectAll",

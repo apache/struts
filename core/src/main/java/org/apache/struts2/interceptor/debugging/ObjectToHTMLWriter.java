@@ -21,16 +21,15 @@
 
 package org.apache.struts2.interceptor.debugging;
 
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+
 import java.beans.IntrospectionException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
  * Writes an object as a table, where each field can be expanded if it is an Object/Collection/Array
@@ -51,9 +50,8 @@ class ObjectToHTMLWriter {
         prettyWriter.addAttribute("class", "debugTable");
 
         if (root instanceof Map) {
-            for (Iterator iterator = ((Map) root).entrySet().iterator(); iterator
-                .hasNext();) {
-                Map.Entry property = (Map.Entry) iterator.next();
+            for (Object next : ((Map) root).entrySet()) {
+                Map.Entry property = (Map.Entry) next;
                 String key = property.getKey().toString();
                 Object value = property.getValue();
                 writeProperty(key, value, expr);
@@ -66,8 +64,8 @@ class ObjectToHTMLWriter {
             }
         } else if (root instanceof Set) {
             Set set = (Set) root;
-            for (Iterator iterator = set.iterator(); iterator.hasNext();) {
-                writeProperty("", iterator.next(), expr);
+            for (Object next : set) {
+                writeProperty("", next, expr);
             }
         } else if (root.getClass().isArray()) {
             Object[] objects = (Object[]) root;
@@ -81,8 +79,9 @@ class ObjectToHTMLWriter {
                 String name = property.getKey();
                 Object value = property.getValue();
 
-                if ("class".equals(name))
+                if ("class".equals(name)) {
                     continue;
+                }
 
                 writeProperty(name, value, expr);
             }
@@ -104,9 +103,8 @@ class ObjectToHTMLWriter {
         prettyWriter.startNode("td");
         if (value != null) {
             //if is is an empty collection or array, don't write a link
-            if (value != null &&
-                (isEmptyCollection(value) || isEmptyMap(value) || (value.getClass()
-                    .isArray() && ((Object[]) value).length == 0))) {
+            if (isEmptyCollection(value) || isEmptyMap(value) || (value.getClass()
+                    .isArray() && ((Object[]) value).length == 0)) {
                 prettyWriter.addAttribute("class", "emptyCollection");
                 prettyWriter.setValue("empty");
             } else {

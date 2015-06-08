@@ -27,21 +27,17 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -185,18 +181,18 @@ public class DefaultActionMapper implements ActionMapper {
     }
 
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
-    public void setAllowDynamicMethodCalls(String allow) {
-        allowDynamicMethodCalls = "true".equalsIgnoreCase(allow);
+    public void setAllowDynamicMethodCalls(String enableDynamicMethodCalls) {
+        this.allowDynamicMethodCalls = BooleanUtils.toBoolean(enableDynamicMethodCalls);
     }
 
     @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
-    public void setSlashesInActionNames(String allow) {
-        allowSlashesInActionNames = "true".equals(allow);
+    public void setSlashesInActionNames(String enableSlashesInActionNames) {
+        this.allowSlashesInActionNames = BooleanUtils.toBoolean(enableSlashesInActionNames);
     }
 
     @Inject(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE)
-    public void setAlwaysSelectFullNamespace(String val) {
-        this.alwaysSelectFullNamespace = "true".equals(val);
+    public void setAlwaysSelectFullNamespace(String alwaysSelectFullNamespace) {
+        this.alwaysSelectFullNamespace = BooleanUtils.toBoolean(alwaysSelectFullNamespace);
     }
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
@@ -206,12 +202,12 @@ public class DefaultActionMapper implements ActionMapper {
 
     @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_ENABLED)
     public void setAllowActionPrefix(String allowActionPrefix) {
-        this.allowActionPrefix = "true".equalsIgnoreCase(allowActionPrefix);
+        this.allowActionPrefix = BooleanUtils.toBoolean(allowActionPrefix);
     }
 
     @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES)
     public void setAllowActionCrossNamespaceAccess(String allowActionCrossNamespaceAccess) {
-        this.allowActionCrossNamespaceAccess = "true".equalsIgnoreCase(allowActionCrossNamespaceAccess);
+        this.allowActionCrossNamespaceAccess = BooleanUtils.toBoolean(allowActionCrossNamespaceAccess);
     }
 
     @Inject
@@ -221,8 +217,8 @@ public class DefaultActionMapper implements ActionMapper {
 
     @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
     public void setExtensions(String extensions) {
-        if (extensions != null && !"".equals(extensions)) {
-            List<String> list = new ArrayList<String>();
+        if (StringUtils.isNotEmpty(extensions)) {
+            List<String> list = new ArrayList<>();
             String[] tokens = extensions.split(",");
             Collections.addAll(list, tokens);
             if (extensions.endsWith(",")) {
@@ -292,7 +288,7 @@ public class DefaultActionMapper implements ActionMapper {
      */
     public void handleSpecialParameters(HttpServletRequest request, ActionMapping mapping) {
         // handle special parameter prefixes.
-        Set<String> uniqueParameters = new HashSet<String>();
+        Set<String> uniqueParameters = new HashSet<>();
         Map parameterMap = request.getParameterMap();
         for (Object o : parameterMap.keySet()) {
             String key = (String) o;

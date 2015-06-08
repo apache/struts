@@ -21,19 +21,13 @@
 
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.ContentTypeMatcher;
@@ -41,14 +35,7 @@ import org.apache.struts2.util.ContentTypeMatcher;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -288,9 +275,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                     // get a File object for the uploaded File
                     File[] files = multiWrapper.getFiles(inputName);
                     if (files != null && files.length > 0) {
-                        List<File> acceptedFiles = new ArrayList<File>(files.length);
-                        List<String> acceptedContentTypes = new ArrayList<String>(files.length);
-                        List<String> acceptedFileNames = new ArrayList<String>(files.length);
+                        List<File> acceptedFiles = new ArrayList<>(files.length);
+                        List<String> acceptedContentTypes = new ArrayList<>(files.length);
+                        List<String> acceptedFileNames = new ArrayList<>(files.length);
                         String contentTypeName = inputName + "ContentType";
                         String fileNameName = inputName + "FileName";
 

@@ -82,7 +82,7 @@ public class ActionMessage extends UIBean {
         addParameter("escape", escape);
     }
 
-    @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
+    @StrutsTagAttribute(description = "Whether to escape HTML", type = "Boolean", defaultValue = "true")
     public void setEscape(boolean escape) {
         this.escape = escape;
     }

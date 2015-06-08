@@ -21,13 +21,12 @@
 
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -41,8 +40,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;s:textarea label="Comments" name="comments" cols="30" rows="8"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- *
- * @see TabbedPanel
  *
  */
 @StrutsTag(

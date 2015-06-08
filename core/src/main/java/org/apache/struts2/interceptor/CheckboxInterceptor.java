@@ -22,14 +22,14 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -59,7 +59,7 @@ public class CheckboxInterceptor extends AbstractInterceptor {
 
     public String intercept(ActionInvocation ai) throws Exception {
         Map<String, Object> parameters = ai.getInvocationContext().getParameters();
-        Map<String, String[]> newParams = new HashMap<String, String[]>();
+        Map<String, String[]> newParams = new HashMap<>();
         Set<Map.Entry<String, Object>> entries = parameters.entrySet();
 
         for (Iterator<Map.Entry<String, Object>> iterator = entries.iterator(); iterator.hasNext();) {

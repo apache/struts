@@ -21,15 +21,14 @@
 
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.ActionContext;
-
-import java.util.Map;
-import java.util.Collections;
-import java.util.TreeMap;
-
+import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -75,8 +74,7 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
 
     /**
      * @param ac The action context
-     * @return the parameters from the action mapping in the context.  If none found, returns
-     *         an empty map.
+     * @return the parameters from the action mapping in the context.  If none found, returns an empty map.
      */
     @Override
     protected Map<String, Object> retrieveParameters(ActionContext ac) {
@@ -100,7 +98,7 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
     @Override
     protected void addParametersToContext(ActionContext ac, Map newParams) {
         Map previousParams = ac.getParameters();
-        Map combinedParams = null;
+        Map combinedParams;
         if (previousParams != null) {
             combinedParams = new TreeMap(previousParams);
         } else {

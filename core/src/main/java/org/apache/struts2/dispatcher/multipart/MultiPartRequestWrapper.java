@@ -21,23 +21,16 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 
 /**
@@ -76,7 +69,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
                                    String saveDir, LocaleProvider provider,
                                    boolean disableRequestAttributeValueStackLookup) {
         super(request, disableRequestAttributeValueStackLookup);
-        errors = new ArrayList<String>();
+        errors = new ArrayList<>();
         multi = multiPartRequest;
         defaultLocale = provider.getLocale();
         setLocale(request);
@@ -86,9 +79,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
                 addError(error);
             }
         } catch (IOException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn(e.getMessage(), e);
-            }
+            LOG.warn(e.getMessage(), e);
             addError(buildErrorMessage(e, new Object[] {e.getMessage()}));
         } 
     }
@@ -105,9 +96,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 
     protected String buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Preparing error message for key: [{}]", errorKey);
-        }
+        LOG.debug("Preparing error message for key: [{}]", errorKey);
         return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }
 
@@ -194,7 +183,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @see javax.servlet.http.HttpServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
-        Map<String, String[]> map = new HashMap<String, String[]>();
+        Map<String, String[]> map = new HashMap<>();
         Enumeration enumeration = getParameterNames();
 
         while (enumeration.hasMoreElements()) {

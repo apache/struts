@@ -3,31 +3,19 @@ package org.apache.struts2.dispatcher.multipart;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * Multi-part form data request adapter for Jakarta Commons FileUpload package that
@@ -50,22 +38,22 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Map between file fields and file data.
      */
-    private Map<String, List<FileInfo>> fileInfos = new HashMap<String, List<FileInfo>>();
+    private Map<String, List<FileInfo>> fileInfos = new HashMap<>();
 
     /**
      * Map between non-file fields and values.
      */
-    private Map<String, List<String>> parameters = new HashMap<String, List<String>>();
+    private Map<String, List<String>> parameters = new HashMap<>();
 
     /**
      * Internal list of raised errors to be passed to the the Struts2 framework.
      */
-    private List<String> errors = new ArrayList<String>();
+    private List<String> errors = new ArrayList<>();
 
     /**
      * Internal list of non-critical messages to be passed to the Struts2 framework.
      */
-    private List<String> messages = new ArrayList<String>();
+    private List<String> messages = new ArrayList<>();
 
     /**
      * Specifies the maximum size of the entire request.
@@ -121,8 +109,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
             for (FileInfo fileInfo : fileInfos.get(fieldName)) {
                 File file = fileInfo.getFile();
                 LOG.debug("Deleting file '{}'.", file.getName());
-                if (!file.delete())
+                if (!file.delete()) {
                     LOG.warn("There was a problem attempting to delete file '{}'.", file.getName());
+                }
             }
         }
     }
@@ -132,12 +121,14 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     public String[] getContentType(String fieldName) {
         List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null)
+        if (infos == null) {
             return null;
+        }
 
-        List<String> types = new ArrayList<String>(infos.size());
-        for (FileInfo fileInfo : infos)
+        List<String> types = new ArrayList<>(infos.size());
+        for (FileInfo fileInfo : infos) {
             types.add(fileInfo.getContentType());
+        }
 
         return types.toArray(new String[types.size()]);
     }
@@ -163,12 +154,14 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     public File[] getFile(String fieldName) {
         List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null)
+        if (infos == null) {
             return null;
+        }
 
-        List<File> files = new ArrayList<File>(infos.size());
-        for (FileInfo fileInfo : infos)
+        List<File> files = new ArrayList<>(infos.size());
+        for (FileInfo fileInfo : infos) {
             files.add(fileInfo.getFile());
+        }
 
         return files.toArray(new File[files.size()]);
     }
@@ -178,12 +171,14 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     public String[] getFileNames(String fieldName) {
         List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null)
+        if (infos == null) {
             return null;
+        }
 
-        List<String> names = new ArrayList<String>(infos.size());
-        for (FileInfo fileInfo : infos)
+        List<String> names = new ArrayList<>(infos.size());
+        for (FileInfo fileInfo : infos) {
             names.add(getCanonicalName(fileInfo.getOriginalName()));
+        }
 
         return names.toArray(new String[names.size()]);
     }
@@ -200,12 +195,14 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     public String[] getFilesystemName(String fieldName) {
         List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null)
+        if (infos == null) {
             return null;
+        }
 
-        List<String> names = new ArrayList<String>(infos.size());
-        for (FileInfo fileInfo : infos)
+        List<String> names = new ArrayList<>(infos.size());
+        for (FileInfo fileInfo : infos) {
             names.add(fileInfo.getFile().getName());
+        }
 
         return names.toArray(new String[names.size()]);
     }
@@ -215,8 +212,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     public String getParameter(String name) {
         List<String> values = parameters.get(name);
-        if (values != null && values.size() > 0)
+        if (values != null && values.size() > 0) {
             return values.get(0);
+        }
         return null;
     }
 
@@ -232,24 +230,25 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     public String[] getParameterValues(String name) {
         List<String> values = parameters.get(name);
-        if (values != null && values.size() > 0)
+        if (values != null && values.size() > 0) {
             return values.toArray(new String[values.size()]);
+        }
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#parse(javax.servlet.http.HttpServletRequest, java.lang.String)
      */
-    public void parse(HttpServletRequest request, String saveDir)
-            throws IOException {
+    public void parse(HttpServletRequest request, String saveDir) throws IOException {
         try {
             setLocale(request);
             processUpload(request, saveDir);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.warn("Error occurred during parsing of multi part request", e);
             String errorMessage = buildErrorMessage(e, new Object[]{});
-            if (!errors.contains(errorMessage))
+            if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
+            }
         }
     }
 
@@ -260,8 +259,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      * @param request
      */
     protected void setLocale(HttpServletRequest request) {
-        if (defaultLocale == null)
+        if (defaultLocale == null) {
             defaultLocale = request.getLocale();
+        }
     }
 
     /**
@@ -271,8 +271,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      * @param saveDir
      * @throws Exception
      */
-    private void processUpload(HttpServletRequest request, String saveDir)
-            throws Exception {
+    private void processUpload(HttpServletRequest request, String saveDir) throws Exception {
 
         // Sanity check that the request is a multi-part/form-data request.
         if (ServletFileUpload.isMultipartContent(request)) {
@@ -313,7 +312,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
                         processFileItemStreamAsFileField(itemStream, saveDir);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.warn("Error occurred during process upload", e);
                 }
             }
         }
@@ -329,8 +328,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         // if maxSize is specified as -1, there is no sanity check and it's
         // safe to return true for any request, delegating the failure
         // checks later in the upload process.
-        if (maxSize == -1 || request == null)
+        if (maxSize == -1 || request == null) {
             return true;
+        }
 
         return request.getContentLength() < maxSize;
     }
@@ -343,8 +343,10 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     private long getRequestSize(HttpServletRequest request) {
         long requestSize = 0;
-        if (request != null)
+        if (request != null) {
             requestSize = request.getContentLength();
+        }
+
         return requestSize;
     }
 
@@ -358,8 +360,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
         FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), maxSize);
         String message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), maxSize});
-        if (!errors.contains(message))
+        if (!errors.contains(message)) {
             errors.add(message);
+        }
     }
 
     /**
@@ -370,10 +373,10 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     private void processFileItemStreamAsFormField(FileItemStream itemStream) {
         String fieldName = itemStream.getFieldName();
         try {
-            List<String> values = null;
+            List<String> values;
             String fieldValue = Streams.asString(itemStream.openStream());
             if (!parameters.containsKey(fieldName)) {
-                values = new ArrayList<String>();
+                values = new ArrayList<>();
                 parameters.put(fieldName, values);
             } else {
                 values = parameters.get(fieldName);
@@ -396,8 +399,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
             // Create the temporary upload file.
             file = createTemporaryFile(itemStream.getName(), location);
 
-            if (streamFileToDisk(itemStream, file))
+            if (streamFileToDisk(itemStream, file)) {
                 createFileInfoFromItemStream(itemStream, file);
+            }
         } catch (IOException e) {
             if (file != null) {
                 try {
@@ -417,8 +421,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      * @return
      * @throws IOException
      */
-    private File createTemporaryFile(String fileName, String location)
-            throws IOException {
+    private File createTemporaryFile(String fileName, String location) throws IOException {
         String name = fileName
                 .substring(fileName.lastIndexOf('/') + 1)
                 .substring(fileName.lastIndexOf('\\') + 1);
@@ -452,22 +455,23 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
             output = new BufferedOutputStream(new FileOutputStream(file), bufferSize);
             byte[] buffer = new byte[bufferSize];
             LOG.debug("Streaming file using buffer size {}.", bufferSize);
-            for (int length = 0; ((length = input.read(buffer)) > 0); )
+            for (int length = 0; ((length = input.read(buffer)) > 0); ) {
                 output.write(buffer, 0, length);
+            }
             result = true;
         } finally {
             if (output != null) {
                 try {
                     output.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.warn("Error occurred during closing of OutputStream.", e);
                 }
             }
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.warn("Error occurred during closing of InputStream.", e);
                 }
             }
         }
@@ -490,7 +494,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         FileInfo fileInfo = new FileInfo(file, itemStream.getContentType(), fileName);
         // append or create new entry.
         if (!fileInfos.containsKey(fieldName)) {
-            List<FileInfo> infos = new ArrayList<FileInfo>();
+            List<FileInfo> infos = new ArrayList<>();
             infos.add(fileInfo);
             fileInfos.put(fieldName, infos);
         } else {
@@ -524,8 +528,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     private String buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.message.upload.error." + e.getClass().getSimpleName();
-        if (LOG.isDebugEnabled())
-            LOG.debug("Preparing error message for key: [{}]", errorKey);
+        LOG.debug("Preparing error message for key: [{}]", errorKey);
         return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }
 
@@ -538,8 +541,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      */
     private String buildMessage(Throwable e, Object[] args) {
         String messageKey = "struts.message.upload.message." + e.getClass().getSimpleName();
-        if (LOG.isDebugEnabled())
-            LOG.debug("Preparing message for key: [{}]", messageKey);
+        LOG.debug("Preparing message for key: [{}]", messageKey);
         return LocalizedTextUtil.findText(this.getClass(), messageKey, defaultLocale, e.getMessage(), args);
     }
 

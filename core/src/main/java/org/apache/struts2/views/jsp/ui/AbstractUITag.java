@@ -82,7 +82,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String tooltipIconPath;
 
     // dynamic attributes.
-    protected Map<String, Object> dynamicAttributes = new HashMap<String, Object>();
+    protected Map<String, Object> dynamicAttributes = new HashMap<>();
 
     protected void populateParams() {
         super.populateParams();

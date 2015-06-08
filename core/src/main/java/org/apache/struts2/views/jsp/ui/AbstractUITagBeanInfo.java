@@ -21,8 +21,8 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
@@ -42,7 +42,7 @@ public class AbstractUITagBeanInfo extends SimpleBeanInfo {
     @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         try {
-            List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
+            List<PropertyDescriptor> descriptors = new ArrayList<>();
 
             // Add the tricky one first
             Method classSetter = AbstractUITag.class.getMethod("setCssClass", String.class);

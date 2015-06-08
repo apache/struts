@@ -23,14 +23,13 @@ package org.apache.struts2.util;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.*;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.Charset;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.CoderResult;
-import java.nio.CharBuffer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
+import java.util.LinkedList;
 
 
 /**
@@ -136,7 +135,7 @@ public class FastByteArrayOutputStream extends OutputStream {
     private void writeToFile() {
         FileOutputStream fileOutputStream = null;
         try {
-            fileOutputStream = new FileOutputStream("/tmp/" + getClass().getName() + System.currentTimeMillis() + ".log");
+            fileOutputStream = new FileOutputStream(File.createTempFile(getClass().getName() + System.currentTimeMillis(), ".log"));
             writeTo(fileOutputStream);
         } catch (IOException e) {
             // Ignore
@@ -219,7 +218,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 
     protected void addBuffer() {
         if (buffers == null) {
-            buffers = new LinkedList<byte[]>();
+            buffers = new LinkedList<>();
         }
         buffers.addLast(buffer);
         buffer = new byte[blockSize];

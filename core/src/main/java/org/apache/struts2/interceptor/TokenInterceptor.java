@@ -136,9 +136,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
      */
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("Intercepting invocation to check for valid transaction token.");
-        }
+        log.debug("Intercepting invocation to check for valid transaction token.");
         return handleToken(invocation);
     }
 

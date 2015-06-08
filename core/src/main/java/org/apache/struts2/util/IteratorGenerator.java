@@ -21,14 +21,14 @@
 
 package org.apache.struts2.util;
 
+import com.opensymphony.xwork2.Action;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import com.opensymphony.xwork2.Action;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -93,9 +93,7 @@ public class IteratorGenerator implements Iterator, Action {
                             values.add(convertedObj);
                         }
                         catch(Exception e) { // make sure things, goes on, we just ignore the bad ones
-                            if (LOG.isWarnEnabled()) {
-                        	LOG.warn("unable to convert ["+token+"], skipping this token, it will not appear in the generated iterator", e);
-                            }
+                            LOG.warn("Unable to convert [{}], skipping this token, it will not appear in the generated iterator", token, e);
                         }
                     }
                     else {

@@ -52,7 +52,7 @@ public class RestfulActionMapper implements ActionMapper {
         }
 
         String actionName = uri.substring(1, nextSlash);
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         try {
             StringTokenizer st = new StringTokenizer(uri.substring(nextSlash), "/");
             boolean isNameTok = true;
@@ -80,9 +80,7 @@ public class RestfulActionMapper implements ActionMapper {
                 }
             }
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
         	LOG.warn("Cannot determine url parameters", e);
-            }
         }
 
         return new ActionMapping(actionName, "", "", parameters);

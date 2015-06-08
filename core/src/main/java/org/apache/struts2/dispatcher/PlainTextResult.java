@@ -22,8 +22,8 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -132,9 +132,7 @@ public class PlainTextResult extends StrutsResultSupport {
             } else {
                 reader = new InputStreamReader(resourceAsStream);
             }
-            if (resourceAsStream != null) {
-                sendStream(writer, reader);
-            }
+            sendStream(writer, reader);
         } finally {
             if (reader != null)
                 reader.close();
@@ -152,9 +150,7 @@ public class PlainTextResult extends StrutsResultSupport {
 
     protected void logWrongStream(String finalLocation, InputStream resourceAsStream) {
         if (resourceAsStream == null) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Resource at location [" + finalLocation + "] cannot be obtained (return null) from ServletContext !!! ");
-            }
+            LOG.warn("Resource at location [{}] cannot be obtained (return null) from ServletContext !!!", finalLocation);
         }
     }
 
@@ -191,13 +187,10 @@ public class PlainTextResult extends StrutsResultSupport {
             if (Charset.isSupported(charSet)) {
                 charset = Charset.forName(charSet);
             } else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("charset [" + charSet + "] is not recognized ");
-                }
+                LOG.warn("charset [{}] is not recognized", charset);
                 charset = null;
             }
         }
         return charset;
     }
-
 }

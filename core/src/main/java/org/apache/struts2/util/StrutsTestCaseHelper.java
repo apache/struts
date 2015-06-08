@@ -21,21 +21,19 @@
 
 package org.apache.struts2.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.opensymphony.xwork2.inject.Container;
-import org.apache.struts2.dispatcher.Dispatcher;
-
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generic test setup methods to be used with any unit testing framework. 
@@ -52,7 +50,7 @@ public class StrutsTestCaseHelper {
     
     public static Dispatcher initDispatcher(ServletContext ctx, Map<String,String> params) {
         if (params == null) {
-            params = new HashMap<String,String>();
+            params = new HashMap<>();
         }
         Dispatcher du = new DispatcherWrapper(ctx, params);
         du.init();

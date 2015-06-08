@@ -3,8 +3,9 @@ package org.apache.struts2.dispatcher.mapper;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 
@@ -44,7 +45,7 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
     private static final Logger LOG = LogManager.getLogger(PrefixBasedActionMapper.class);
 
     protected Container container;
-    protected Map<String, ActionMapper> actionMappers = new HashMap<String, ActionMapper>();
+    protected Map<String, ActionMapper> actionMappers = new HashMap<>();
 
     @Inject
     public void setContainer(Container container) {
@@ -53,19 +54,17 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
 
     @Inject(StrutsConstants.PREFIX_BASED_MAPPER_CONFIGURATION)
     public void setPrefixBasedActionMappers(String list) {
-        if (list != null) {
-            String[] mappers = list.split(",");
-            for (String mapper : mappers) {
-                String[] thisMapper = mapper.split(":");
-                if ((thisMapper != null) && (thisMapper.length == 2)) {
-                    String mapperPrefix = thisMapper[0].trim();
-                    String mapperName = thisMapper[1].trim();
-                    Object obj = container.getInstance(ActionMapper.class, mapperName);
-                    if (obj != null) {
-                        actionMappers.put(mapperPrefix, (ActionMapper) obj);
-                    } else {
-                        LOG.debug("invalid PrefixBasedActionMapper config entry: [{}]", mapper);
-                    }
+        String[] mappers = StringUtils.split(StringUtils.trimToEmpty(list), ",");
+        for (String mapper : mappers) {
+            String[] thisMapper = mapper.split(":");
+            if (thisMapper.length == 2) {
+                String mapperPrefix = thisMapper[0].trim();
+                String mapperName = thisMapper[1].trim();
+                Object obj = container.getInstance(ActionMapper.class, mapperName);
+                if (obj != null) {
+                    actionMappers.put(mapperPrefix, (ActionMapper) obj);
+                } else {
+                    LOG.debug("invalid PrefixBasedActionMapper config entry: [{}]", mapper);
                 }
             }
         }
@@ -104,9 +103,7 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
                 }
             }
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("No ActionMapper found");
-        }
+        LOG.debug("No ActionMapper found");
         return null;
     }
 
@@ -124,9 +121,7 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
                 }
             }
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("ActionMapper failed to return a uri");
-        }
+        LOG.debug("ActionMapper failed to return a uri");
         return null;
     }
 

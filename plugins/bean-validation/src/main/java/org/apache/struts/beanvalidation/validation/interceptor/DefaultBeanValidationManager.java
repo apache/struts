@@ -35,13 +35,13 @@ import javax.validation.spi.ValidationProvider;
 
 /**
  * <p>
- * This is the central class for javax.validation (JSR-303) setup in a Struts2 : It bootstraps a
- * javax.validation.ValidationFactory and exposes it through the javax.validation.Validator interface and the. When
+ * This is the central class for javax.validation (JSR-303) in a Struts2 setup : It bootstraps a
+ * javax.validation.ValidationFactory and exposes it through the javax.validation.Validator interface. When
  * talking to an instance of this bean we will be talking to the default Validator of the underlying ValidatorFactory.
  * </p>
  * <p>
  * This is very convenient in that you don't have to perform yet another call on the factory, assuming that you will
- * almost always use the default Validator anyway.You need to pass provider class in order for this plugin to hook
+ * almost always use the default Validator anyway. You need to pass provider class in order for this plugin to hook
  * itself to underlying validation Factory. Any of following Validation provider can be provided using
  * <code>struts.beanValidation.providerClass</code>
  * <ul>

@@ -25,7 +25,7 @@ import javax.validation.Validator;
 /**
  * <p>
  * Validation manager which is responsible for providing instance of {@link Validator} based on the underlying validation provider.
- * For any JSR303 complaint implementation,{@link Validator} should be implemented in thread safe way.
+ * For any JSR303 complaint implementation, {@link Validator} should be implemented in thread safe way.
  * </p>
  */
 public interface BeanValidationManager {

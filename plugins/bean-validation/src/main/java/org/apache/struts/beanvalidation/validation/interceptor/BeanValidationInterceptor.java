@@ -43,8 +43,8 @@ import java.util.Set;
 
 /**
  * <p>
- * Bean Validation interceptor. This Interceptor do not itself provide any Bean validation functionality but
- * works as a bridge between Bean validation implementation's like Apache Bval or Hibernate Validator and Struts2 validation mechanism.
+ * Bean Validation interceptor. This Interceptor does not itself provide any Bean validation functionality but
+ * works as a bridge between Bean validation implementations like Apache Bval or Hibernate Validator and Struts2 validation mechanism.
  * </p>
  * <p>
  * Interceptor will create a Validation Factory based on the provider class and will validate requested method or Action

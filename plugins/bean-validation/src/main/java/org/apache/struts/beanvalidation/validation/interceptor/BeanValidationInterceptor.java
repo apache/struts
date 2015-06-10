@@ -109,7 +109,8 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
         if (action instanceof ModelDriven) {
             LOG.trace("Performing validation on model..");
-            constraintViolations = validator.validate(((ModelDriven) action).getModel());
+            Object model = (Object)((ModelDriven<?>) action).getModel();
+            constraintViolations = validator.validate(model);
         } else {
             LOG.trace("Performing validation on action..");
             constraintViolations = validator.validate(action);
@@ -173,7 +174,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
     /**
      * This is copied from DefaultActionInvocation
      */
-    protected Method getActionMethod(Class actionClass, String methodName) throws NoSuchMethodException {
+    protected Method getActionMethod(Class<?> actionClass, String methodName) throws NoSuchMethodException {
         Method method;
 
         try {

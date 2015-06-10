@@ -55,7 +55,7 @@ public class DefaultBeanValidationManager
 
     private static final Logger LOG = LogManager.getLogger(DefaultBeanValidationManager.class);
 
-    protected Class<? extends ValidationProvider> providerClass;
+    protected Class<? extends ValidationProvider<? extends Configuration<?>>> providerClass;
 
     private ValidatorFactory validationFactory;
 
@@ -68,7 +68,8 @@ public class DefaultBeanValidationManager
 
         if (StringUtils.isNotBlank(providerClassName)) {
             try {
-                this.providerClass = (Class<? extends ValidationProvider>) Class.forName(providerClassName);
+                this.providerClass =
+                    (Class<? extends ValidationProvider<? extends Configuration<?>>>) Class.forName(providerClassName);
                 LOG.info(this.providerClass.getName() + " validator found");
             } catch (ClassNotFoundException e) {
                 LOG.error("Unable to find any bean validator implementation for " + providerClassName);
@@ -80,9 +81,10 @@ public class DefaultBeanValidationManager
             LOG.info("********** No bean validator class defined - Falling back to default provider **********");
         }
 
-        Configuration configuration =
-                (this.providerClass != null ? Validation.byProvider(this.providerClass).configure()
-                        : Validation.byDefaultProvider().configure());
+        Configuration<? extends Configuration<?>> configuration =
+                this.providerClass != null
+                    ? Validation.byProvider(this.providerClass).configure()
+                    : Validation.byDefaultProvider().configure();
         if (BooleanUtils.toBoolean(ignoreXMLConfiguration)) {
             configuration.ignoreXmlConfiguration();
             LOG.info("XML configurations will be ignore by Validator, to enable XML based validation, set struts.beanValidation.ignoreXMLConfiguration to false.");

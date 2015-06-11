@@ -32,7 +32,6 @@
     <packaging>pom</packaging>
     <name>Struts 2 Webapps</name>
     <modules>
-        <module>blank</module>
         <module>jboss-blank</module>
         <module>mailreader</module>
         <module>portlet</module>

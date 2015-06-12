@@ -7,7 +7,7 @@
 <body>
 
 <div class="page-header">
-    <h1>Field Validation Examples</h1>
+    <h1>Bean Validation Examples</h1>
 </div>
 
 <div class="container-fluid">

@@ -64,7 +64,7 @@ public class DefaultBeanValidationManager
                 @Inject(value = ValidatorConstants.PROVIDER_CLASS, required = false) String providerClassName,
                 @Inject(value = ValidatorConstants.IGNORE_XMLCONFIGURAITION, required = false)String ignoreXMLConfiguration) {
         super();
-        LOG.info("Initializing bean validation11 factory to get a validator");
+        LOG.info("Initializing bean validation factory to get a validator");
 
         if (StringUtils.isNotBlank(providerClassName)) {
             try {
@@ -78,7 +78,7 @@ public class DefaultBeanValidationManager
 
         }
         if (this.providerClass == null) {
-            LOG.info("********** No bean validator class defined - Falling back to default provider **********");
+            LOG.warn("********** No bean validator class defined - Falling back to default provider **********");
         }
 
         Configuration<? extends Configuration<?>> configuration =
@@ -87,7 +87,7 @@ public class DefaultBeanValidationManager
                     : Validation.byDefaultProvider().configure();
         if (BooleanUtils.toBoolean(ignoreXMLConfiguration)) {
             configuration.ignoreXmlConfiguration();
-            LOG.info("XML configurations will be ignore by Validator, to enable XML based validation, set struts.beanValidation.ignoreXMLConfiguration to false.");
+            LOG.info("XML configurations will be ignored by Validator, to enable XML based validation, set struts.beanValidation.ignoreXMLConfiguration to false.");
         }
         if (configuration != null) {
             this.validationFactory = configuration.buildValidatorFactory();

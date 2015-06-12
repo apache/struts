@@ -20,7 +20,9 @@
  */
 package org.apache.struts.beanvalidation.validation.interceptor;
 
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -62,14 +64,14 @@ public class DefaultBeanValidationManager
     @Inject
     public DefaultBeanValidationManager(
                 @Inject(value = ValidatorConstants.PROVIDER_CLASS, required = false) String providerClassName,
-                @Inject(value = ValidatorConstants.IGNORE_XMLCONFIGURAITION, required = false)String ignoreXMLConfiguration) {
+                @Inject(value = ValidatorConstants.IGNORE_XMLCONFIGURAITION, required = false)String ignoreXMLConfiguration,
+                @Inject(required = true) ObjectFactory objectFactory) {
         super();
         LOG.info("Initializing bean validation factory to get a validator");
 
         if (StringUtils.isNotBlank(providerClassName)) {
             try {
-                this.providerClass =
-                    (Class<? extends ValidationProvider<? extends Configuration<?>>>) Class.forName(providerClassName);
+            	this.providerClass = objectFactory.getClassInstance(providerClassName);
                 LOG.info(this.providerClass.getName() + " validator found");
             } catch (ClassNotFoundException e) {
                 LOG.error("Unable to find any bean validator implementation for " + providerClassName);

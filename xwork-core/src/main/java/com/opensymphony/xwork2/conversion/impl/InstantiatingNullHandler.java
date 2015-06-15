@@ -19,10 +19,10 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.PropertyDescriptor;
 import java.util.*;
@@ -93,18 +93,12 @@ public class InstantiatingNullHandler implements NullHandler {
     }
 
     public Object nullMethodResult(Map<String, Object> context, Object target, String methodName, Object[] args) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Entering nullMethodResult ");
-        }
-
+        LOG.debug("Entering nullMethodResult");
         return null;
     }
 
     public Object nullPropertyValue(Map<String, Object> context, Object target, Object property) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Entering nullPropertyValue [target="+target+", property="+property+"]");
-        }
-
+        LOG.debug("Entering nullPropertyValue [target={}, property={}]", target, property);
         boolean c = ReflectionContextState.isCreatingNullObjects(context);
 
         if (!c) {
@@ -140,9 +134,7 @@ public class InstantiatingNullHandler implements NullHandler {
 
             return param;
         } catch (Exception e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Could not create and/or set value back on to object", e);
-            }
+            LOG.error("Could not create and/or set value back on to object", e);
         }
 
         return null;

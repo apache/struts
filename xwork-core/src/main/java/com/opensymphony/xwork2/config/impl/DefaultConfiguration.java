@@ -15,91 +15,29 @@
  */
 package com.opensymphony.xwork2.config.impl;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.DefaultLocaleProvider;
-import com.opensymphony.xwork2.DefaultTextProvider;
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.ContainerProvider;
-import com.opensymphony.xwork2.config.FileManagerFactoryProvider;
-import com.opensymphony.xwork2.config.FileManagerProvider;
-import com.opensymphony.xwork2.config.PackageProvider;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.*;
+import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
-import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
-import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
-import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.conversion.TypeConverterCreator;
-import com.opensymphony.xwork2.conversion.TypeConverterHolder;
-import com.opensymphony.xwork2.conversion.impl.ArrayConverter;
-import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
-import com.opensymphony.xwork2.conversion.impl.DateConverter;
-import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor;
-import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
-import com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor;
-import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterCreator;
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder;
-import com.opensymphony.xwork2.conversion.impl.NumberConverter;
-import com.opensymphony.xwork2.conversion.impl.StringConverter;
-import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.factory.ActionFactory;
-import com.opensymphony.xwork2.factory.ConverterFactory;
-import com.opensymphony.xwork2.factory.DefaultActionFactory;
-import com.opensymphony.xwork2.factory.DefaultConverterFactory;
-import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
-import com.opensymphony.xwork2.factory.DefaultResultFactory;
-import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
-import com.opensymphony.xwork2.factory.InterceptorFactory;
-import com.opensymphony.xwork2.factory.ResultFactory;
-import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.inject.Scope;
+import com.opensymphony.xwork2.conversion.*;
+import com.opensymphony.xwork2.conversion.impl.*;
+import com.opensymphony.xwork2.factory.*;
+import com.opensymphony.xwork2.inject.*;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
-import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.OgnlTextParser;
-import com.opensymphony.xwork2.util.PatternMatcher;
-import com.opensymphony.xwork2.util.TextParser;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import ognl.PropertyAccessor;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
@@ -114,11 +52,11 @@ public class DefaultConfiguration implements Configuration {
 
 
     // Programmatic Action Configurations
-    protected Map<String, PackageConfig> packageContexts = new LinkedHashMap<String, PackageConfig>();
+    protected Map<String, PackageConfig> packageContexts = new LinkedHashMap<>();
     protected RuntimeConfiguration runtimeConfiguration;
     protected Container container;
     protected String defaultFrameworkBeanName;
-    protected Set<String> loadedFileNames = new TreeSet<String>();
+    protected Set<String> loadedFileNames = new TreeSet<>();
     protected List<UnknownHandlerConfig> unknownHandlerStack;
 
 
@@ -173,11 +111,8 @@ public class DefaultConfiguration implements Configuration {
         if (check != null) {
             if (check.getLocation() != null && packageContext.getLocation() != null
                     && check.getLocation().equals(packageContext.getLocation())) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("The package name '" + name
-                    + "' is already been loaded by the same location and could be removed: "
-                    + packageContext.getLocation());
-                }
+                LOG.debug("The package name '{}' is already been loaded by the same location and could be removed: {}",
+                        name, packageContext.getLocation());
             } else {
                 throw new ConfigurationException("The package name '" + name
                         + "' at location "+packageContext.getLocation()
@@ -213,7 +148,7 @@ public class DefaultConfiguration implements Configuration {
     public synchronized void reload(List<ConfigurationProvider> providers) throws ConfigurationException {
 
         // Silly copy necessary due to lack of ability to cast generic lists
-        List<ContainerProvider> contProviders = new ArrayList<ContainerProvider>();
+        List<ContainerProvider> contProviders = new ArrayList<>();
         contProviders.addAll(providers);
 
         reloadContainer(contProviders);
@@ -228,7 +163,7 @@ public class DefaultConfiguration implements Configuration {
     public synchronized List<PackageProvider> reloadContainer(List<ContainerProvider> providers) throws ConfigurationException {
         packageContexts.clear();
         loadedFileNames.clear();
-        List<PackageProvider> packageProviders = new ArrayList<PackageProvider>();
+        List<PackageProvider> packageProviders = new ArrayList<>();
 
         ContainerProperties props = new ContainerProperties();
         ContainerBuilder builder = new ContainerBuilder();
@@ -362,8 +297,8 @@ public class DefaultConfiguration implements Configuration {
      * will have two results.
      */
     protected synchronized RuntimeConfiguration buildRuntimeConfiguration() throws ConfigurationException {
-        Map<String, Map<String, ActionConfig>> namespaceActionConfigs = new LinkedHashMap<String, Map<String, ActionConfig>>();
-        Map<String, String> namespaceConfigs = new LinkedHashMap<String, String>();
+        Map<String, Map<String, ActionConfig>> namespaceActionConfigs = new LinkedHashMap<>();
+        Map<String, String> namespaceConfigs = new LinkedHashMap<>();
 
         for (PackageConfig packageConfig : packageContexts.values()) {
 
@@ -372,7 +307,7 @@ public class DefaultConfiguration implements Configuration {
                 Map<String, ActionConfig> configs = namespaceActionConfigs.get(namespace);
 
                 if (configs == null) {
-                    configs = new LinkedHashMap<String, ActionConfig>();
+                    configs = new LinkedHashMap<>();
                 }
 
                 Map<String, ActionConfig> actionConfigs = packageConfig.getAllActionConfigs();
@@ -418,8 +353,8 @@ public class DefaultConfiguration implements Configuration {
      *
      */
     private ActionConfig buildFullActionConfig(PackageConfig packageContext, ActionConfig baseConfig) throws ConfigurationException {
-        Map<String, String> params = new TreeMap<String, String>(baseConfig.getParams());
-        Map<String, ResultConfig> results = new TreeMap<String, ResultConfig>();
+        Map<String, String> params = new TreeMap<>(baseConfig.getParams());
+        Map<String, ResultConfig> results = new TreeMap<>();
 
         if (!baseConfig.getPackageName().equals(packageContext.getName()) && packageContexts.containsKey(baseConfig.getPackageName())) {
             results.putAll(packageContexts.get(baseConfig.getPackageName()).getAllGlobalResults());
@@ -431,7 +366,7 @@ public class DefaultConfiguration implements Configuration {
 
         setDefaultResults(results, packageContext);
 
-        List<InterceptorMapping> interceptors = new ArrayList<InterceptorMapping>(baseConfig.getInterceptors());
+        List<InterceptorMapping> interceptors = new ArrayList<>(baseConfig.getInterceptors());
 
         if (interceptors.size() <= 0) {
             String defaultInterceptorRefName = packageContext.getFullDefaultInterceptorRef();
@@ -465,7 +400,7 @@ public class DefaultConfiguration implements Configuration {
             this.namespaceActionConfigs = namespaceActionConfigs;
             this.namespaceConfigs = namespaceConfigs;
 
-            this.namespaceActionConfigMatchers = new LinkedHashMap<String, ActionConfigMatcher>();
+            this.namespaceActionConfigMatchers = new LinkedHashMap<>();
             this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet());
 
             for (String ns : namespaceActionConfigs.keySet()) {
@@ -501,7 +436,7 @@ public class DefaultConfiguration implements Configuration {
             }
 
             // fail over to empty namespace
-            if ((config == null) && (namespace != null) && (!"".equals(namespace.trim()))) {
+            if (config == null && StringUtils.isNotBlank(namespace)) {
                 config = findActionConfigInNamespace("", name);
             }
 
@@ -564,7 +499,7 @@ public class DefaultConfiguration implements Configuration {
         public Object setProperty(String key, String value) {
             String oldValue = getProperty(key);
             if (LOG.isInfoEnabled() && oldValue != null && !oldValue.equals(value) && !defaultFrameworkBeanName.equals(oldValue)) {
-                LOG.info("Overriding property "+key+" - old value: "+oldValue+" new value: "+value);
+                LOG.info("Overriding property {} - old value: {} new value: {}", key, oldValue, value);
             }
             return super.setProperty(key, value);
         }
@@ -572,8 +507,7 @@ public class DefaultConfiguration implements Configuration {
         public void setConstants(ContainerBuilder builder) {
             for (Object keyobj : keySet()) {
                 String key = (String)keyobj;
-                builder.factory(String.class, key,
-                        new LocatableConstantFactory<String>(getProperty(key), getPropertyLocation(key)));
+                builder.factory(String.class, key, new LocatableConstantFactory<>(getProperty(key), getPropertyLocation(key)));
             }
         }
     }

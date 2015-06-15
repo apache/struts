@@ -41,7 +41,7 @@ public class ScopedModelDrivenInterceptorTest extends XWorkTestCase {
 
     public void testResolveModel() throws Exception {
         ActionContext ctx = ActionContext.getContext();
-        ctx.setSession(new HashMap());
+        ctx.setSession(new HashMap<String, Object>());
         
         ObjectFactory factory = ObjectFactory.getObjectFactory();
         Object obj = inter.resolveModel(factory, ctx, "java.lang.String", "request", "foo");

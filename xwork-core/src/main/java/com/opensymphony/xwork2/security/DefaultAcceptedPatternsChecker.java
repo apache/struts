@@ -3,8 +3,8 @@ package com.opensymphony.xwork2.security;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     public void setOverrideAcceptedPatterns(String acceptablePatterns) {
         LOG.warn("Overriding accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
                     XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS, acceptablePatterns);
-        acceptedPatterns = new HashSet<Pattern>();
+        acceptedPatterns = new HashSet<>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
             acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
@@ -48,12 +48,12 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     }
 
     public void setAcceptedPatterns(String[] additionalPatterns) {
-        setAcceptedPatterns(new HashSet<String>(Arrays.asList(additionalPatterns)));
+        setAcceptedPatterns(new HashSet<>(Arrays.asList(additionalPatterns)));
     }
 
     public void setAcceptedPatterns(Set<String> patterns) {
         LOG.trace("Sets accepted patterns [{}]", patterns);
-        acceptedPatterns = new HashSet<Pattern>(patterns.size());
+        acceptedPatterns = new HashSet<>(patterns.size());
         for (String pattern : patterns) {
             acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }

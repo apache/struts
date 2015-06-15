@@ -23,27 +23,18 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import ognl.ClassResolver;
-import ognl.Ognl;
-import ognl.OgnlContext;
-import ognl.OgnlException;
-import ognl.OgnlRuntime;
-import ognl.SimpleNode;
-import ognl.TypeConverter;
+import ognl.*;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
@@ -58,16 +49,16 @@ import java.util.regex.Pattern;
 public class OgnlUtil {
 
     private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
-    private ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<String, Object>();
-    private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<Class, BeanInfo>();
+    private ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
     private TypeConverter defaultConverter;
 
     private boolean devMode = false;
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
-    private Set<Class<?>> excludedClasses = new HashSet<Class<?>>();
-    private Set<Pattern> excludedPackageNamePatterns = new HashSet<Pattern>();
+    private Set<Class<?>> excludedClasses = new HashSet<>();
+    private Set<Pattern> excludedPackageNamePatterns = new HashSet<>();
 
     private Container container;
     private boolean allowStaticMethodAccess;
@@ -79,12 +70,12 @@ public class OgnlUtil {
 
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
-        devMode = "true".equals(mode);
+        this.devMode = BooleanUtils.toBoolean(mode);
     }
 
     @Inject(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE)
     public void setEnableExpressionCache(String cache) {
-       enableExpressionCache = "true".equals(cache);
+        enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
 
     @Inject(value = XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, required = false)
@@ -249,12 +240,9 @@ public class OgnlUtil {
 
             try {
                 for (Object target : cr) {
-                    if (
-                            OgnlRuntime.hasSetProperty((OgnlContext) context, target, property)
-                                    ||
-                                    OgnlRuntime.hasGetProperty((OgnlContext) context, target, property)
-                                    ||
-                                    OgnlRuntime.getIndexedPropertyType((OgnlContext) context, target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
+                    if (OgnlRuntime.hasSetProperty((OgnlContext) context, target, property)
+                            || OgnlRuntime.hasGetProperty((OgnlContext) context, target, property)
+                            || OgnlRuntime.getIndexedPropertyType((OgnlContext) context, target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
                             ) {
                         return target;
                     }
@@ -268,7 +256,6 @@ public class OgnlUtil {
 
         return root;
     }
-
 
     /**
      * Wrapper around Ognl.setValue() to handle type conversion for collection elements.
@@ -373,18 +360,15 @@ public class OgnlUtil {
      */
     public void copy(final Object from, final Object to, final Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
         if (from == null || to == null) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
-            }
-
+            LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
             return;
         }
 
-        TypeConverter conv = getTypeConverterFromContext(context);
+        TypeConverter converter = getTypeConverterFromContext(context);
         final Map contextFrom = createDefaultContext(from, null);
-        Ognl.setTypeConverter(contextFrom, conv);
+        Ognl.setTypeConverter(contextFrom, converter);
         final Map contextTo = createDefaultContext(to, null);
-        Ognl.setTypeConverter(contextTo, conv);
+        Ognl.setTypeConverter(contextTo, converter);
 
         PropertyDescriptor[] fromPds;
         PropertyDescriptor[] toPds;
@@ -393,13 +377,11 @@ public class OgnlUtil {
             fromPds = getPropertyDescriptors(from);
             toPds = getPropertyDescriptors(to);
         } catch (IntrospectionException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("An error occured", e);
-            }
+            LOG.error("An error occurred", e);
             return;
         }
 
-        Map<String, PropertyDescriptor> toPdHash = new HashMap<String, PropertyDescriptor>();
+        Map<String, PropertyDescriptor> toPdHash = new HashMap<>();
 
         for (PropertyDescriptor toPd : toPds) {
             toPdHash.put(toPd.getName(), toPd);
@@ -427,9 +409,7 @@ public class OgnlUtil {
                             });
 
                         } catch (OgnlException e) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Got OGNL exception", e);
-                            }
+                            LOG.debug("Got OGNL exception", e);
                         }
                     }
 
@@ -491,7 +471,7 @@ public class OgnlUtil {
      * @throws OgnlException          is thrown by OGNL if the property value could not be retrieved
      */
     public Map<String, Object> getBeanMap(final Object source) throws IntrospectionException, OgnlException {
-        Map<String, Object> beanMap = new HashMap<String, Object>();
+        Map<String, Object> beanMap = new HashMap<>();
         final Map sourceMap = createDefaultContext(source, null);
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(source);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {

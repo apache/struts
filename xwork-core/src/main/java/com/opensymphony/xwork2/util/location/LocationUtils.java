@@ -36,8 +36,8 @@ public class LocationUtils {
      * The string representation of an unknown location: "<code>[unknown location]</code>".
      */
     public static final String UNKNOWN_STRING = "[unknown location]";
-    
-    private static List<WeakReference<LocationFinder>> finders = new ArrayList<WeakReference<LocationFinder>>();
+
+    private static List<WeakReference<LocationFinder>> finders = new ArrayList<>();
     
     /**
      * An finder or object locations
@@ -182,7 +182,7 @@ public class LocationUtils {
         synchronized(LocationFinder.class) {
             // Update a clone of the current finder list to avoid breaking
             // any iteration occuring in another thread.
-            List<WeakReference<LocationFinder>> newFinders = new ArrayList<WeakReference<LocationFinder>>(finders);
+            List<WeakReference<LocationFinder>> newFinders = new ArrayList<>(finders);
             newFinders.add(new WeakReference<LocationFinder>(finder));
             finders = newFinders;
         }
@@ -259,7 +259,7 @@ public class LocationUtils {
                 // This finder was garbage collected: update finders
                 synchronized(LocationFinder.class) {
                     // Update a clone of the current list to avoid breaking current iterations
-                    List<WeakReference<LocationFinder>> newFinders = new ArrayList<WeakReference<LocationFinder>>(finders);
+                    List<WeakReference<LocationFinder>> newFinders = new ArrayList<>(finders);
                     newFinders.remove(ref);
                     finders = newFinders;
                 }

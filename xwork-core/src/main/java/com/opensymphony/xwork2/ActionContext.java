@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class ActionContext implements Serializable {
 
-    static ThreadLocal<ActionContext> actionContext = new ThreadLocal<ActionContext>();
+    static ThreadLocal<ActionContext> actionContext = new ThreadLocal<>();
 
     /**
      * Constant for the name of the action being executed.
@@ -197,7 +197,7 @@ public class ActionContext implements Serializable {
         Map<String, Object> errors = (Map) get(CONVERSION_ERRORS);
 
         if (errors == null) {
-            errors = new HashMap<String, Object>();
+            errors = new HashMap<>();
             setConversionErrors(errors);
         }
 

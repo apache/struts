@@ -16,12 +16,7 @@
 package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.ContainerProvider;
-import com.opensymphony.xwork2.config.PackageProvider;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
@@ -30,11 +25,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -42,8 +33,8 @@ import java.util.Set;
  */
 public class MockConfiguration implements Configuration {
 
-    private Map<String, PackageConfig> packages = new HashMap<String, PackageConfig>();
-    private Set<String> loadedFiles = new HashSet<String>();
+    private Map<String, PackageConfig> packages = new HashMap<>();
+    private Set<String> loadedFiles = new HashSet<>();
     private Container container;
     protected List<UnknownHandlerConfig> unknownHandlerStack;
     private ContainerBuilder builder;

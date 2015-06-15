@@ -43,7 +43,7 @@ public class ResultTypeConfig extends Located implements Serializable {
     protected ResultTypeConfig(String name, String className) {
         this.name = name;
         this.className = className;
-        params = new LinkedHashMap<String,String>();
+        params = new LinkedHashMap<>();
     }
 
     protected ResultTypeConfig(ResultTypeConfig orig) {

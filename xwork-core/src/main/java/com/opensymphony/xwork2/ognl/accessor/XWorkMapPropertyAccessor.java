@@ -20,11 +20,11 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.MapPropertyAccessor;
 import ognl.OgnlException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -38,8 +38,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
     private static final Logger LOG = LogManager.getLogger(XWorkMapPropertyAccessor.class);
 
-    private static final String[] INDEX_ACCESS_PROPS = new String[]
-            {"size", "isEmpty", "keys", "values"};
+    private static final String[] INDEX_ACCESS_PROPS = new String[]{"size", "isEmpty", "keys", "values"};
     
     private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;
@@ -62,10 +61,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
     @Override
     public Object getProperty(Map context, Object target, Object name) throws OgnlException {
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Entering getProperty ("+context+","+target+","+name+")");
-        }
+        LOG.trace("Entering getProperty ({},{},{})", context, target, name);
 
         ReflectionContextState.updateCurrentPropertyPath(context, name);
         // if this is one of the regular index access
@@ -79,7 +75,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
         try{
             result = super.getProperty(context, target, name);
-        } catch(ClassCastException ex){
+        } catch (ClassCastException ex) {
         }
 
         if (result == null) {
@@ -103,9 +99,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
                     result = objectFactory.buildBean(valueClass, context);
                     map.put(key, result);
                 } catch (Exception exc) {
-
                 }
-
             }
         }
         return result;
@@ -127,16 +121,14 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
     @Override
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
-        if (LOG.isDebugEnabled()) {
-     		LOG.debug("Entering setProperty("+context+","+target+","+name+","+value+")");
-     	}
-        
+        LOG.trace("Entering setProperty({},{},{},{})", context, target, name, value);
+
         Object key = getKey(context, name);
         Map map = (Map) target;
         map.put(key, getValue(context, value));
      }
 
-     private Object getValue(Map context, Object value) {
+    private Object getValue(Map context, Object value) {
          Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
          String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
          if (lastClass == null || lastProperty == null) {
@@ -147,7 +139,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
              return value; // nothing is specified, we assume it will be the value passed in.
          }
          return xworkConverter.convertValue(context, value, elementClass);
-}
+    }
 
     private Object getKey(Map context, Object name) {
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
@@ -163,7 +155,6 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
         }
 
         return xworkConverter.convertValue(context, name, keyClass);
-
     }
 }
 

@@ -61,10 +61,10 @@ public class ConfigurationTest extends XWorkTestCase {
     }
 
     public void testDefaultNamespace() {
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("blah", "this is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {

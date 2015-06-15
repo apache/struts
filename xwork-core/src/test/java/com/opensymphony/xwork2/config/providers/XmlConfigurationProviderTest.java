@@ -43,7 +43,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         XmlConfigurationProvider prov = new XmlConfigurationProvider("xwork-test-load-order.xml", true) {
             @Override
             protected Iterator<URL> getConfigurationUrls(String fileName) throws IOException {
-                List<URL> urls = new ArrayList<URL>();
+                List<URL> urls = new ArrayList<>();
                 urls.add(ClassLoaderUtil.getResource("com/opensymphony/xwork2/config/providers/loadorder1/xwork-test-load-order.xml", XmlConfigurationProvider.class));
                 urls.add(ClassLoaderUtil.getResource("com/opensymphony/xwork2/config/providers/loadorder2/xwork-test-load-order.xml", XmlConfigurationProvider.class));
                 urls.add(ClassLoaderUtil.getResource("com/opensymphony/xwork2/config/providers/loadorder3/xwork-test-load-order.xml", XmlConfigurationProvider.class));

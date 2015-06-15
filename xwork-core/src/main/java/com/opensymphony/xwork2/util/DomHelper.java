@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationAttributes;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -92,7 +92,7 @@ public class DomHelper {
         factory.setValidating((dtdMappings != null));
         factory.setNamespaceAware(true);
 
-        SAXParser parser = null;
+        SAXParser parser;
         try {
             parser = factory.newSAXParser();
         } catch (Exception ex) {
@@ -344,8 +344,7 @@ public class DomHelper {
 
         @Override
         public void error(SAXParseException exception) throws SAXException {
-            LOG.error(exception.getMessage() + " at (" + exception.getPublicId() + ":" + 
-                exception.getLineNumber() + ":" + exception.getColumnNumber() + ")", exception);
+            LOG.error("{} at ({}:{}:{})", exception.getMessage(), exception.getPublicId(), exception.getLineNumber(), exception.getColumnNumber(), exception);
             throw exception;
         }
 

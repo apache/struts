@@ -25,7 +25,7 @@ import java.util.Map;
  * Stub value stack for testing
  */
 public class StubValueStack implements ValueStack {
-    Map<String, Object> ctx = new HashMap<String, Object>();
+    Map<String, Object> ctx = new HashMap<>();
     CompoundRoot root = new CompoundRoot();
     
     public Map<String, Object> getContext() {

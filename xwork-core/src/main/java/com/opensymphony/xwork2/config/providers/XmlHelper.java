@@ -15,11 +15,11 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Document;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class XmlHelper {
      * @return
      */
     public static Map<String, String> getParams(Element paramsElement) {
-        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
         if (paramsElement == null) {
             return params;
@@ -97,8 +97,7 @@ public class XmlHelper {
         NodeList childNodes = element.getChildNodes();
         for (int j = 0; j < childNodes.getLength(); j++) {
             Node currentNode = childNodes.item(j);
-            if (currentNode != null &&
-                    currentNode.getNodeType() == Node.TEXT_NODE) {
+            if (currentNode != null && currentNode.getNodeType() == Node.TEXT_NODE) {
                 String val = currentNode.getNodeValue();
                 if (val != null) {
                     paramValue.append(val.trim());

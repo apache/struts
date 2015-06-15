@@ -90,7 +90,7 @@ public interface ClassFinder {
     }
 
     public class Annotatable {
-        private final List<AnnotationInfo> annotations = new ArrayList<AnnotationInfo>();
+        private final List<AnnotationInfo> annotations = new ArrayList<>();
 
         public Annotatable(AnnotatedElement element) {
             for (Annotation annotation : element.getAnnotations()) {
@@ -136,12 +136,12 @@ public interface ClassFinder {
 
     public class ClassInfo extends Annotatable implements Info {
         private final String name;
-        private final List<MethodInfo> methods = new ArrayList<MethodInfo>();
-        private final List<MethodInfo> constructors = new ArrayList<MethodInfo>();
+        private final List<MethodInfo> methods = new ArrayList<>();
+        private final List<MethodInfo> constructors = new ArrayList<>();
         private final String superType;
-        private final List<String> interfaces = new ArrayList<String>();
-        private final List<String> superInterfaces = new ArrayList<String>();
-        private final List<FieldInfo> fields = new ArrayList<FieldInfo>();
+        private final List<String> interfaces = new ArrayList<>();
+        private final List<String> superInterfaces = new ArrayList<>();
+        private final List<FieldInfo> fields = new ArrayList<>();
         private Class<?> clazz;
         private ClassFinder classFinder;
         private ClassNotFoundException notFound;
@@ -216,7 +216,7 @@ public interface ClassFinder {
         private final ClassInfo declaringClass;
         private final String returnType;
         private final String name;
-        private final List<List<AnnotationInfo>> parameterAnnotations = new ArrayList<List<AnnotationInfo>>();
+        private final List<List<AnnotationInfo>> parameterAnnotations = new ArrayList<>();
 
         public MethodInfo(ClassInfo info, Constructor constructor){
             super(constructor);
@@ -245,7 +245,7 @@ public interface ClassFinder {
         public List<AnnotationInfo> getParameterAnnotations(int index) {
             if (index >= parameterAnnotations.size()) {
                 for (int i = parameterAnnotations.size(); i <= index; i++) {
-                    List<AnnotationInfo> annotationInfos = new ArrayList<AnnotationInfo>();
+                    List<AnnotationInfo> annotationInfos = new ArrayList<>();
                     parameterAnnotations.add(i, annotationInfos);
                 }
             }

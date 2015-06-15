@@ -1,10 +1,10 @@
 package com.opensymphony.xwork2.security;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,12 +49,12 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     }
 
     public void setExcludedPatterns(String[] patterns) {
-        setExcludedPatterns(new HashSet<String>(Arrays.asList(patterns)));
+        setExcludedPatterns(new HashSet<>(Arrays.asList(patterns)));
     }
 
     public void setExcludedPatterns(Set<String> patterns) {
         LOG.trace("Sets excluded patterns [{}]", patterns);
-        excludedPatterns = new HashSet<Pattern>(patterns.size());
+        excludedPatterns = new HashSet<>(patterns.size());
         for (String pattern : patterns) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }

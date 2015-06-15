@@ -19,8 +19,8 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -41,8 +41,8 @@ public class ConfigurationManager {
     protected static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
     protected Configuration configuration;
     protected Lock providerLock = new ReentrantLock();
-    private List<ContainerProvider> containerProviders = new CopyOnWriteArrayList<ContainerProvider>();
-    private List<PackageProvider> packageProviders = new CopyOnWriteArrayList<PackageProvider>();
+    private List<ContainerProvider> containerProviders = new CopyOnWriteArrayList<>();
+    private List<PackageProvider> packageProviders = new CopyOnWriteArrayList<>();
     protected String defaultFrameworkBeanName;
     private boolean providersChanged = false;
     private boolean reloadConfigs = true; // for the first time
@@ -117,7 +117,7 @@ public class ConfigurationManager {
     public void setContainerProviders(List<ContainerProvider> containerProviders) {
         providerLock.lock();
         try {
-            this.containerProviders = new CopyOnWriteArrayList<ContainerProvider>(containerProviders);
+            this.containerProviders = new CopyOnWriteArrayList<>(containerProviders);
             providersChanged = true;
         } finally {
             providerLock.unlock();

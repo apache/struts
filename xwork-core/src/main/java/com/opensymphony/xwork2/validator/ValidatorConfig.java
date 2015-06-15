@@ -45,12 +45,12 @@ public class ValidatorConfig extends Located {
      */
     protected ValidatorConfig(String validatorType) {
         this.type = validatorType;
-        params = new LinkedHashMap<String, Object>();
+        params = new LinkedHashMap<>();
     }
 
     protected ValidatorConfig(ValidatorConfig orig) {
         this.type = orig.type;
-        this.params = new LinkedHashMap<String,Object>(orig.params);
+        this.params = new LinkedHashMap<>(orig.params);
         this.defaultMessage = orig.defaultMessage;
         this.messageKey = orig.messageKey;
         this.shortCircuit = orig.shortCircuit;

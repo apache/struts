@@ -36,7 +36,7 @@ public class SpringProxyableObjectFactory extends SpringObjectFactory {
     
     private static final Logger LOG = LogManager.getLogger(SpringProxyableObjectFactory.class);
 
-    private List<String> skipBeanNames = new ArrayList<String>();
+    private List<String> skipBeanNames = new ArrayList<>();
 
     @Override
     public Object buildBean(String beanName, Map<String, Object> extraContext) throws Exception {

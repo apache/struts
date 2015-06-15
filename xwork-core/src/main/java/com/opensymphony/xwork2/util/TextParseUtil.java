@@ -19,11 +19,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -119,7 +115,7 @@ public class TextParseUtil {
     /**
      * Converted object from variable translation.
      *
-     * @param open
+     * @param openChars
      * @param expression
      * @param stack
      * @param asType
@@ -147,7 +143,7 @@ public class TextParseUtil {
     /**
      * Converted object from variable translation.
      *
-     * @param open
+     * @param openChars
      * @param expression
      * @param stack
      * @param asType
@@ -216,7 +212,7 @@ public class TextParseUtil {
         if (result instanceof Collection) {
             @SuppressWarnings("unchecked")
             Collection<Object> casted = (Collection<Object>)result;
-            resultCol = new ArrayList<String>();
+            resultCol = new ArrayList<>();
 
             XWorkConverter conv = ((Container)context.get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
 
@@ -230,7 +226,7 @@ public class TextParseUtil {
                 }
             }
         } else {
-            resultCol = new ArrayList<String>();
+            resultCol = new ArrayList<>();
             String resultStr = translateVariables(expression, stack, evaluator);
             if (shallBeIncluded(resultStr, excludeEmptyElements)) {
                 resultCol.add(resultStr);
@@ -258,7 +254,7 @@ public class TextParseUtil {
      * @return A set from comma delimted Strings.
      */
     public static Set<String> commaDelimitedStringToSet(String s) {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         String[] split = s.split(",");
         for (String aSplit : split) {
             String trimmed = aSplit.trim();

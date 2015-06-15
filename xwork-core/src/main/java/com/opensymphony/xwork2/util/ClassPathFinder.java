@@ -48,8 +48,8 @@ public class ClassPathFinder {
      * The PatternMatcher implementation to use
      */
 	private PatternMatcher<int[]> patternMatcher = new WildcardHelper();
-	
-	private Vector<String> compared = new Vector<String>();
+
+	private Vector<String> compared = new Vector<>();
 	
 	/**
 	 * retrieves the pattern in use
@@ -74,13 +74,13 @@ public class ClassPathFinder {
      * @return Vector<String> containing matching filenames
      */
 	public Vector<String> findMatches() {
-		Vector<String> matches = new Vector<String>();
+		Vector<String> matches = new Vector<>();
 		URLClassLoader cl = getURLClassLoader();
 		if (cl == null ) {
 			throw new XWorkException("unable to attain an URLClassLoader") ;
 		}
 		URL[] parentUrls = cl.getURLs();
-		compiledPattern = (int[]) patternMatcher.compilePattern(pattern);
+		compiledPattern = patternMatcher.compilePattern(pattern);
 		for (URL url : parentUrls) {
 			if (!"file".equals(url.getProtocol())) {
 				continue ;
@@ -105,8 +105,8 @@ public class ClassPathFinder {
 		if (entries == null ) {
 			return null;
 		}
-		
-		Vector<String> matches = new Vector<String>();
+
+		Vector<String> matches = new Vector<>();
 		for (String listEntry : entries) {
 			File tempFile ;
 			if (!"".equals(prefix) ) {

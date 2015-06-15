@@ -35,10 +35,10 @@ import java.util.Map;
 public class ShortRangeValidatorTest extends XWorkTestCase {
 
     public void testRangeValidation() {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("shortFoo", "200");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {

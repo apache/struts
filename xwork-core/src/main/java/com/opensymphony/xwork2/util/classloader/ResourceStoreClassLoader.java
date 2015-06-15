@@ -15,15 +15,10 @@
  */
 package com.opensymphony.xwork2.util.classloader;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 /**
  * class taken from Apache JCI
  */
 public final class ResourceStoreClassLoader extends ClassLoader {
-
-    private static final Logger LOG = LogManager.getLogger(ResourceStoreClassLoader.class);
 
     private final ResourceStore[] stores;
 
@@ -63,7 +58,6 @@ public final class ResourceStoreClassLoader extends ClassLoader {
                 } else {
                     throw new ClassNotFoundException(name);
                 }
-
             }
         }
 

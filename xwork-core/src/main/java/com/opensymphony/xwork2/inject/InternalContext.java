@@ -28,8 +28,7 @@ import java.util.Map;
 class InternalContext {
 
   final ContainerImpl container;
-  final Map<Object, ConstructionContext<?>> constructionContexts =
-      new HashMap<Object, ConstructionContext<?>>();
+  final Map<Object, ConstructionContext<?>> constructionContexts = new HashMap<Object, ConstructionContext<?>>();
   Scope.Strategy scopeStrategy;
   ExternalContext<?> externalContext;
 
@@ -50,8 +49,7 @@ class InternalContext {
       scopeStrategy = (Scope.Strategy) container.localScopeStrategy.get();
 
       if (scopeStrategy == null) {
-        throw new IllegalStateException("Scope strategy not set. "
-            + "Please call Container.setScopeStrategy().");
+        throw new IllegalStateException("Scope strategy not set. Please call Container.setScopeStrategy().");
       }
     }
 
@@ -60,8 +58,7 @@ class InternalContext {
 
   @SuppressWarnings("unchecked")
   <T> ConstructionContext<T> getConstructionContext(Object key) {
-    ConstructionContext<T> constructionContext =
-        (ConstructionContext<T>) constructionContexts.get(key);
+    ConstructionContext<T> constructionContext = (ConstructionContext<T>) constructionContexts.get(key);
     if (constructionContext == null) {
       constructionContext = new ConstructionContext<T>();
       constructionContexts.put(key, constructionContext);

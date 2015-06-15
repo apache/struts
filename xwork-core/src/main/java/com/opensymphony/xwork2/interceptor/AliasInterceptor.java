@@ -20,15 +20,15 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -184,9 +184,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                 if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
                     stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("invalid alias expression:" + aliasesKey);
-                }
+                LOG.debug("invalid alias expression: {}", aliasesKey);
             }
         }
         

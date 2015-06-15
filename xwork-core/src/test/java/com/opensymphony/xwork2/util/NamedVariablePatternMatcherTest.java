@@ -15,19 +15,15 @@
  */
 package com.opensymphony.xwork2.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import com.opensymphony.xwork2.util.NamedVariablePatternMatcher.CompiledPattern;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.junit.Test;
-
-import com.opensymphony.xwork2.util.NamedVariablePatternMatcher.CompiledPattern;
+import static org.junit.Assert.*;
 
 public class NamedVariablePatternMatcherTest {
 
@@ -64,7 +60,7 @@ public class NamedVariablePatternMatcherTest {
     public void testMatch() {
         NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
 
-        Map<String,String> vars = new HashMap<String,String>();
+        Map<String, String> vars = new HashMap<>();
         CompiledPattern pattern = new CompiledPattern(Pattern.compile("foo([^/]+)"), Arrays.asList("bar"));
 
         assertTrue(matcher.match(vars, "foobaz", pattern));

@@ -58,7 +58,7 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
 
         if (configuration != null && container != null) {
             List<UnknownHandlerConfig> unkownHandlerStack = configuration.getUnknownHandlerStack();
-            unknownHandlers = new ArrayList<UnknownHandler>();
+            unknownHandlers = new ArrayList<>();
 
             if (unkownHandlerStack != null && !unkownHandlerStack.isEmpty()) {
                 //get UnknownHandlers in the specified order
@@ -68,9 +68,9 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
                 }
             } else {
                 //add all available UnknownHandlers
-                Set<String> unknowHandlerNames = container.getInstanceNames(UnknownHandler.class);
-                for (String unknowHandlerName : unknowHandlerNames) {
-                    UnknownHandler uh = container.getInstance(UnknownHandler.class, unknowHandlerName);
+                Set<String> unknownHandlerNames = container.getInstanceNames(UnknownHandler.class);
+                for (String unknownHandlerName : unknownHandlerNames) {
+                    UnknownHandler uh = container.getInstance(UnknownHandler.class, unknownHandlerName);
                     unknownHandlers.add(uh);
                 }
             }
@@ -83,8 +83,9 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
     public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) {
         for (UnknownHandler unknownHandler : unknownHandlers) {
             Result result = unknownHandler.handleUnknownResult(actionContext, actionName, actionConfig, resultCode);
-            if (result != null)
+            if (result != null) {
                 return result;
+            }
         }
 
         return null;
@@ -98,8 +99,9 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
     public Object handleUnknownMethod(Object action, String methodName) throws NoSuchMethodException {
         for (UnknownHandler unknownHandler : unknownHandlers) {
             Object result = unknownHandler.handleUnknownActionMethod(action, methodName);
-            if (result != null)
+            if (result != null) {
                 return result;
+            }
         }
 
         return null;
@@ -111,8 +113,9 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
     public ActionConfig handleUnknownAction(String namespace, String actionName) {
         for (UnknownHandler unknownHandler : unknownHandlers) {
             ActionConfig result = unknownHandler.handleUnknownAction(namespace, actionName);
-            if (result != null)
+            if (result != null) {
                 return result;
+            }
         }
 
         return null;

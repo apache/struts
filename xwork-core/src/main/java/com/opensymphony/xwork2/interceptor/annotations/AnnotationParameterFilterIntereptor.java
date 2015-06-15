@@ -43,8 +43,8 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
         }
 
         boolean blockByDefault = action.getClass().isAnnotationPresent(BlockByDefault.class);
-        List<Field> annotatedFields = new ArrayList<Field>();
-        HashSet<String> paramsToRemove = new HashSet<String>();
+        List<Field> annotatedFields = new ArrayList<>();
+        HashSet<String> paramsToRemove = new HashSet<>();
 
         if (blockByDefault) {
             AnnotationUtils.addAllFields(Allowed.class, action.getClass(), annotatedFields);
@@ -75,7 +75,6 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
             }
 
             for (String paramName : parameters.keySet()) {
-
                 for (Field field : annotatedFields) {
                     //TODO only matches exact field names.  need to change to it matches start of ognl expression
                     //i.e take param name up to first . (period) and match against that

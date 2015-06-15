@@ -18,16 +18,12 @@
 package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.util.PatternMatcher;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p> Matches patterns against pre-compiled wildcard expressions pulled from
@@ -52,7 +48,8 @@ public abstract class AbstractMatcher<E> implements Serializable {
     /**
      * <p> The compiled patterns and their associated target objects </p>
      */
-    List<Mapping<E>> compiledPatterns = new ArrayList<Mapping<E>>();;
+    List<Mapping<E>> compiledPatterns = new ArrayList<>();
+    ;
     
     public AbstractMatcher(PatternMatcher<?> helper) {
         this.wildcard = (PatternMatcher<Object>) helper;
@@ -86,9 +83,7 @@ public abstract class AbstractMatcher<E> implements Serializable {
                 name = name.substring(1);
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Compiling pattern '" + name + "'");
-            }
+            log.debug("Compiling pattern '{}'", name);
 
             pattern = wildcard.compilePattern(name);
             compiledPatterns.add(new Mapping<E>(name, pattern, target));
@@ -119,22 +114,13 @@ public abstract class AbstractMatcher<E> implements Serializable {
         E config = null;
 
         if (compiledPatterns.size() > 0) {
-            if (log.isDebugEnabled()) {
-                log.debug("Attempting to match '" + potentialMatch
-                    + "' to a wildcard pattern, "+ compiledPatterns.size()
-                    + " available");
-            }
+            log.debug("Attempting to match '{}' to a wildcard pattern, {} available", potentialMatch, compiledPatterns.size());
 
             Map<String,String> vars = new LinkedHashMap<String,String>();
             for (Mapping<E> m : compiledPatterns) {
                 if (wildcard.match(vars, potentialMatch, m.getPattern())) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Value matches pattern '"
-                            + m.getOriginalPattern() + "'");
-                    }
-
-                    config =
-                        convert(potentialMatch, m.getTarget(), vars);
+                    log.debug("Value matches pattern '{}'", m.getOriginalPattern());
+                    config = convert(potentialMatch, m.getTarget(), vars);
                     break;
                 }
             }
@@ -159,11 +145,11 @@ public abstract class AbstractMatcher<E> implements Serializable {
      * <p> Replaces parameter values
      * </p>
      *
-     * @param orig  The original parameters with placehold values
+     * @param orig  The original parameters with placeholder values
      * @param vars  A Map of wildcard-matched strings
      */
     protected Map<String,String> replaceParameters(Map<String, String> orig, Map<String,String> vars) {
-        Map<String,String> map = new LinkedHashMap<String,String>();
+        Map<String, String> map = new LinkedHashMap<>();
         
         //this will set the group index references, like {1}
         for (String key : orig.keySet()) {

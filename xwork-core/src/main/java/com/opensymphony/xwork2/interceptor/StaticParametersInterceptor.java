@@ -19,13 +19,14 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Map;
@@ -84,8 +85,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
     private boolean parse;
     private boolean overwrite;
     private boolean merge = true;
-
-    static boolean devMode = false;
+    private boolean devMode = false;
 
     private static final Logger LOG = LogManager.getLogger(StaticParametersInterceptor.class);
 
@@ -97,16 +97,16 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
     }
 
     @Inject(XWorkConstants.DEV_MODE)
-    public static void setDevMode(String mode) {
-        devMode = "true".equals(mode);
+    public void setDevMode(String mode) {
+        devMode = BooleanUtils.toBoolean(mode);
     }    
 
     public void setParse(String value) {
-        this.parse = Boolean.valueOf(value).booleanValue();
+        this.parse = BooleanUtils.toBoolean(value);
     }
 
      public void setMerge(String value) {
-        this.merge = Boolean.valueOf(value).booleanValue();
+         this.merge = BooleanUtils.toBoolean(value);
     }
 
     /**
@@ -116,7 +116,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
      * @param value
      */
     public void setOverwrite(String value) {
-        this.overwrite = Boolean.valueOf(value).booleanValue();
+        this.overwrite = BooleanUtils.toBoolean(value);
     }
 
     @Override
@@ -126,9 +126,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
 
         final Map<String, String> parameters = config.getParams();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Setting static parameters " + parameters);
-        }
+        LOG.debug("Setting static parameters: {}", parameters);
 
         // for actions marked as Parameterizable, pass the static parameters directly
         if (action instanceof Parameterizable) {
@@ -220,18 +218,18 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
         Map<String, Object> combinedParams;
         if ( overwrite ) {
             if (previousParams != null) {
-                combinedParams = new TreeMap<String, Object>(previousParams);
+                combinedParams = new TreeMap<>(previousParams);
             } else {
-                combinedParams = new TreeMap<String, Object>();
+                combinedParams = new TreeMap<>();
             }
             if ( newParams != null) {
                 combinedParams.putAll(newParams);
             }
         } else {
             if (newParams != null) {
-                combinedParams = new TreeMap<String, Object>(newParams);
+                combinedParams = new TreeMap<>(newParams);
             } else {
-                combinedParams = new TreeMap<String, Object>();
+                combinedParams = new TreeMap<>();
             }
             if ( previousParams != null) {
                 combinedParams.putAll(previousParams);

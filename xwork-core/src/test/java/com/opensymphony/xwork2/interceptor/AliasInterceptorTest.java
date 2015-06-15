@@ -43,7 +43,7 @@ import java.util.Map;
 public class AliasInterceptorTest extends XWorkTestCase {
 
     public void testUsingDefaultInterceptorThatAliasPropertiesAreCopied() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("aliasSource", "source here");
 
         XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");

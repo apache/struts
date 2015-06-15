@@ -144,7 +144,7 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
         String fieldName = getFieldName();
         String val = (String) getFieldValue(fieldName, object);
 
-        if (val == null || val.length() <= 0) {
+        if (StringUtils.isEmpty(val)) {
             // use a required validator for these
             return;
         }

@@ -14,8 +14,8 @@ public class CycleDetector<T> {
 
     public CycleDetector(DirectedGraph<T> graph) {
         this.graph = graph;
-        marks = new HashMap<T, String>();
-        verticesInCycles = new ArrayList<T>();
+        marks = new HashMap<>();
+        verticesInCycles = new ArrayList<>();
     }
 
     public boolean containsCycle() {

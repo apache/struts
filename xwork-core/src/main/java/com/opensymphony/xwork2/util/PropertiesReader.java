@@ -25,37 +25,54 @@ import java.util.List;
  * not terminate with new-line chars but rather when there is no
  * backslash sign a the end of the line.  This is used to
  * concatenate multiple lines for readability.
- * 
+ * <p/>
  * This class was pulled out of Jakarta Commons Configuration and
  * Jakarta Commons Lang trunk revision 476093
  */
-public class PropertiesReader extends LineNumberReader
-{
-    /** Stores the comment lines for the currently processed property.*/
+public class PropertiesReader extends LineNumberReader {
+    /**
+     * Stores the comment lines for the currently processed property.
+     */
     private List<String> commentLines;
 
-    /** Stores the name of the last read property.*/
+    /**
+     * Stores the name of the last read property.
+     */
     private String propertyName;
 
-    /** Stores the value of the last read property.*/
+    /**
+     * Stores the value of the last read property.
+     */
     private String propertyValue;
 
-    /** Stores the list delimiter character.*/
+    /**
+     * Stores the list delimiter character.
+     */
     private char delimiter;
-    
-    /** Constant for the supported comment characters.*/
+
+    /**
+     * Constant for the supported comment characters.
+     */
     static final String COMMENT_CHARS = "#!";
-    
-    /** Constant for the radix of hex numbers.*/
+
+    /**
+     * Constant for the radix of hex numbers.
+     */
     private static final int HEX_RADIX = 16;
 
-    /** Constant for the length of a unicode literal.*/
+    /**
+     * Constant for the length of a unicode literal.
+     */
     private static final int UNICODE_LEN = 4;
-    
-    /** The list of possible key/value separators */
-    private static final char[] SEPARATORS = new char[] {'=', ':'};
 
-    /** The white space characters used as key/value separators. */
+    /**
+     * The list of possible key/value separators
+     */
+    private static final char[] SEPARATORS = new char[]{'=', ':'};
+
+    /**
+     * The white space characters used as key/value separators.
+     */
     private static final char[] WHITE_SPACE = new char[]{' ', '\t', '\f'};
 
     /**
@@ -63,8 +80,7 @@ public class PropertiesReader extends LineNumberReader
      *
      * @param reader A Reader.
      */
-    public PropertiesReader(Reader reader)
-    {
+    public PropertiesReader(Reader reader) {
         this(reader, ',');
     }
 
@@ -72,17 +88,16 @@ public class PropertiesReader extends LineNumberReader
      * Creates a new instance of <code>PropertiesReader</code> and sets
      * the underlaying reader and the list delimiter.
      *
-     * @param reader the reader
+     * @param reader        the reader
      * @param listDelimiter the list delimiter character
      * @since 1.3
      */
-    public PropertiesReader(Reader reader, char listDelimiter)
-    {
+    public PropertiesReader(Reader reader, char listDelimiter) {
         super(reader);
         commentLines = new ArrayList<String>();
         delimiter = listDelimiter;
     }
-    
+
     /**
      * Tests whether a line is a comment, i.e. whether it starts with a comment
      * character.
@@ -91,8 +106,7 @@ public class PropertiesReader extends LineNumberReader
      * @return a flag if this is a comment line
      * @since 1.3
      */
-    boolean isCommentLine(String line)
-    {
+    boolean isCommentLine(String line) {
         String s = line.trim();
         // blanc lines are also treated as comment lines
         return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
@@ -106,38 +120,30 @@ public class PropertiesReader extends LineNumberReader
      * = <code>&lt;value&gt;</code>)
      *
      * @return A string containing a property value or null
-     *
      * @throws IOException in case of an I/O error
      */
-    public String readProperty() throws IOException
-    {
+    public String readProperty() throws IOException {
         commentLines.clear();
         StringBuilder buffer = new StringBuilder();
 
-        while (true)
-        {
+        while (true) {
             String line = readLine();
-            if (line == null)
-            {
+            if (line == null) {
                 // EOF
                 return null;
             }
 
-            if (isCommentLine(line))
-            {
+            if (isCommentLine(line)) {
                 commentLines.add(line);
                 continue;
             }
 
             line = line.trim();
 
-            if (checkCombineLines(line))
-            {
+            if (checkCombineLines(line)) {
                 line = line.substring(0, line.length() - 1);
                 buffer.append(line);
-            }
-            else
-            {
+            } else {
                 buffer.append(line);
                 break;
             }
@@ -156,12 +162,10 @@ public class PropertiesReader extends LineNumberReader
      * @throws IOException if an error occurs
      * @since 1.3
      */
-    public boolean nextProperty() throws IOException
-    {
+    public boolean nextProperty() throws IOException {
         String line = readProperty();
 
-        if (line == null)
-        {
+        if (line == null) {
             return false; // EOF
         }
 
@@ -179,8 +183,7 @@ public class PropertiesReader extends LineNumberReader
      * <code>readProperty()</code>
      * @since 1.3
      */
-    public List<String> getCommentLines()
-    {
+    public List<String> getCommentLines() {
         return commentLines;
     }
 
@@ -192,8 +195,7 @@ public class PropertiesReader extends LineNumberReader
      * @return the name of the last read property
      * @since 1.3
      */
-    public String getPropertyName()
-    {
+    public String getPropertyName() {
         return propertyName;
     }
 
@@ -205,8 +207,7 @@ public class PropertiesReader extends LineNumberReader
      * @return the value of the last read property
      * @since 1.3
      */
-    public String getPropertyValue()
-    {
+    public String getPropertyValue() {
         return propertyValue;
     }
 
@@ -217,11 +218,9 @@ public class PropertiesReader extends LineNumberReader
      * @param line the line
      * @return a flag if the lines should be combined
      */
-    private boolean checkCombineLines(String line)
-    {
+    private boolean checkCombineLines(String line) {
         int bsCount = 0;
-        for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)
-        {
+        for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--) {
             bsCount++;
         }
 
@@ -235,8 +234,7 @@ public class PropertiesReader extends LineNumberReader
      * @return an array with the property's key and value
      * @since 1.2
      */
-    private String[] parseProperty(String line)
-    {
+    private String[] parseProperty(String line) {
         // sorry for this spaghetti code, please replace it as soon as
         // possible with a regexp when the Java 1.3 requirement is dropped
 
@@ -251,42 +249,30 @@ public class PropertiesReader extends LineNumberReader
         // 3: value parsing
         int state = 0;
 
-        for (int pos = 0; pos < line.length(); pos++)
-        {
+        for (int pos = 0; pos < line.length(); pos++) {
             char c = line.charAt(pos);
 
-            switch (state)
-            {
+            switch (state) {
                 case 0:
-                    if (c == '\\')
-                    {
+                    if (c == '\\') {
                         state = 1;
-                    }
-                    else if (contains(WHITE_SPACE, c))
-                    {
+                    } else if (contains(WHITE_SPACE, c)) {
                         // switch to the separator crossing state
                         state = 2;
-                    }
-                    else if (contains(SEPARATORS, c))
-                    {
+                    } else if (contains(SEPARATORS, c)) {
                         // switch to the value parsing state
                         state = 3;
-                    }
-                    else
-                    {
+                    } else {
                         key.append(c);
                     }
 
                     break;
 
                 case 1:
-                    if (contains(SEPARATORS, c) || contains(WHITE_SPACE, c))
-                    {
+                    if (contains(SEPARATORS, c) || contains(WHITE_SPACE, c)) {
                         // this is an escaped separator or white space
                         key.append(c);
-                    }
-                    else
-                    {
+                    } else {
                         // another escaped character, the '\' is preserved
                         key.append('\\');
                         key.append(c);
@@ -298,18 +284,13 @@ public class PropertiesReader extends LineNumberReader
                     break;
 
                 case 2:
-                    if (contains(WHITE_SPACE, c))
-                    {
+                    if (contains(WHITE_SPACE, c)) {
                         // do nothing, eat all white spaces
                         state = 2;
-                    }
-                    else if (contains(SEPARATORS, c))
-                    {
+                    } else if (contains(SEPARATORS, c)) {
                         // switch to the value parsing state
                         state = 3;
-                    }
-                    else
-                    {
+                    } else {
                         // any other character indicates we encoutered the beginning of the value
                         value.append(c);
 
@@ -330,22 +311,20 @@ public class PropertiesReader extends LineNumberReader
 
         return result;
     }
-    
+
     /**
      * <p>Unescapes any Java literals found in the <code>String</code> to a
      * <code>Writer</code>.</p> This is a slightly modified version of the
      * StringEscapeUtils.unescapeJava() function in commons-lang that doesn't
      * drop escaped separators (i.e '\,').
      *
-     * @param str  the <code>String</code> to unescape, may be null
+     * @param str       the <code>String</code> to unescape, may be null
      * @param delimiter the delimiter for multi-valued properties
      * @return the processed string
      * @throws IllegalArgumentException if the Writer is <code>null</code>
      */
-    protected static String unescapeJava(String str, char delimiter)
-    {
-        if (str == null)
-        {
+    protected static String unescapeJava(String str, char delimiter) {
+        if (str == null) {
             return null;
         }
         int sz = str.length();
@@ -353,98 +332,67 @@ public class PropertiesReader extends LineNumberReader
         StringBuffer unicode = new StringBuffer(UNICODE_LEN);
         boolean hadSlash = false;
         boolean inUnicode = false;
-        for (int i = 0; i < sz; i++)
-        {
+        for (int i = 0; i < sz; i++) {
             char ch = str.charAt(i);
-            if (inUnicode)
-            {
+            if (inUnicode) {
                 // if in unicode, then we're reading unicode
                 // values in somehow
                 unicode.append(ch);
-                if (unicode.length() == UNICODE_LEN)
-                {
+                if (unicode.length() == UNICODE_LEN) {
                     // unicode now contains the four hex digits
                     // which represents our unicode character
-                    try
-                    {
+                    try {
                         int value = Integer.parseInt(unicode.toString(), HEX_RADIX);
                         out.append((char) value);
                         unicode.setLength(0);
                         inUnicode = false;
                         hadSlash = false;
-                    }
-                    catch (NumberFormatException nfe)
-                    {
+                    } catch (NumberFormatException nfe) {
                         throw new RuntimeException("Unable to parse unicode value: " + unicode, nfe);
                     }
                 }
                 continue;
             }
 
-            if (hadSlash)
-            {
+            if (hadSlash) {
                 // handle an escaped value
                 hadSlash = false;
 
-                if (ch == '\\')
-                {
+                if (ch == '\\') {
                     out.append('\\');
-                }
-                else if (ch == '\'')
-                {
+                } else if (ch == '\'') {
                     out.append('\'');
-                }
-                else if (ch == '\"')
-                {
+                } else if (ch == '\"') {
                     out.append('"');
-                }
-                else if (ch == 'r')
-                {
+                } else if (ch == 'r') {
                     out.append('\r');
-                }
-                else if (ch == 'f')
-                {
+                } else if (ch == 'f') {
                     out.append('\f');
-                }
-                else if (ch == 't')
-                {
+                } else if (ch == 't') {
                     out.append('\t');
-                }
-                else if (ch == 'n')
-                {
+                } else if (ch == 'n') {
                     out.append('\n');
-                }
-                else if (ch == 'b')
-                {
+                } else if (ch == 'b') {
                     out.append('\b');
-                }
-                else if (ch == delimiter)
-                {
+                } else if (ch == delimiter) {
                     out.append('\\');
                     out.append(delimiter);
-                }
-                else if (ch == 'u')
-                {
+                } else if (ch == 'u') {
                     // uh-oh, we're in unicode country....
                     inUnicode = true;
-                }
-                else
-                {
+                } else {
                     out.append(ch);
                 }
 
                 continue;
-            }
-            else if (ch == '\\')
-            {
+            } else if (ch == '\\') {
                 hadSlash = true;
                 continue;
             }
             out.append(ch);
         }
 
-        if (hadSlash)
-        {
+        if (hadSlash) {
             // then we're in the weird case of a \ at the end of the
             // string, let's output it anyway.
             out.append('\\');
@@ -452,14 +400,14 @@ public class PropertiesReader extends LineNumberReader
 
         return out.toString();
     }
-    
+
     /**
      * <p>Checks if the object is in the given array.</p>
-     *
+     * <p/>
      * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
-     * 
-     * @param array  the array to search through
-     * @param objectToFind  the object to find
+     *
+     * @param array        the array to search through
+     * @param objectToFind the object to find
      * @return <code>true</code> if the array contains the object
      */
     public boolean contains(char[] array, char objectToFind) {
@@ -473,14 +421,14 @@ public class PropertiesReader extends LineNumberReader
         }
         return false;
     }
-    
+
     /**
      * <p>Unescapes any Java literals found in the <code>String</code>.
      * For example, it will turn a sequence of <code>'\'</code> and
      * <code>'n'</code> into a newline character, unless the <code>'\'</code>
      * is preceded by another <code>'\'</code>.</p>
-     * 
-     * @param str  the <code>String</code> to unescape, may be null
+     *
+     * @param str the <code>String</code> to unescape, may be null
      * @return a new unescaped <code>String</code>, <code>null</code> if null string input
      */
     public static String unescapeJava(String str) {
@@ -501,17 +449,17 @@ public class PropertiesReader extends LineNumberReader
     /**
      * <p>Unescapes any Java literals found in the <code>String</code> to a
      * <code>Writer</code>.</p>
-     *
+     * <p/>
      * <p>For example, it will turn a sequence of <code>'\'</code> and
      * <code>'n'</code> into a newline character, unless the <code>'\'</code>
      * is preceded by another <code>'\'</code>.</p>
-     * 
+     * <p/>
      * <p>A <code>null</code> string input has no effect.</p>
-     * 
-     * @param out  the <code>Writer</code> used to output unescaped characters
-     * @param str  the <code>String</code> to unescape, may be null
+     *
+     * @param out the <code>Writer</code> used to output unescaped characters
+     * @param str the <code>String</code> to unescape, may be null
      * @throws IllegalArgumentException if the Writer is <code>null</code>
-     * @throws IOException if error occurs on underlying Writer
+     * @throws IOException              if error occurs on underlying Writer
      */
     public static void unescapeJava(Writer out, String str) throws IOException {
         if (out == null) {
@@ -573,13 +521,12 @@ public class PropertiesReader extends LineNumberReader
                     case 'b':
                         out.write('\b');
                         break;
-                    case 'u':
-                        {
-                            // uh-oh, we're in unicode country....
-                            inUnicode = true;
-                            break;
-                        }
-                    default :
+                    case 'u': {
+                        // uh-oh, we're in unicode country....
+                        inUnicode = true;
+                        break;
+                    }
+                    default:
                         out.write(ch);
                         break;
                 }

@@ -21,10 +21,11 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 import com.opensymphony.xwork2.util.Element;
 import com.opensymphony.xwork2.util.Key;
 import com.opensymphony.xwork2.util.KeyProperty;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.IntrospectionException;
 import java.lang.annotation.Annotation;
@@ -64,9 +65,9 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
     private XWorkConverter xworkConverter;
 
     @Inject
-    public DefaultObjectTypeDeterminer(@Inject XWorkConverter conv, @Inject ReflectionProvider prov) {
-        this.reflectionProvider = prov;
-        this.xworkConverter = conv;
+    public DefaultObjectTypeDeterminer(@Inject XWorkConverter converter, @Inject ReflectionProvider provider) {
+        this.reflectionProvider = provider;
+        this.xworkConverter = converter;
     }
 
     /**
@@ -116,7 +117,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
         clazz = (Class) xworkConverter.getConverter(parentClass, ELEMENT_PREFIX + property);
         if (clazz == null) {
             clazz = (Class) xworkConverter.getConverter(parentClass, DEPRECATED_ELEMENT_PREFIX + property);
-            if (LOG.isInfoEnabled() && clazz != null) {
+            if (clazz != null) {
                 LOG.info("The Collection_xxx pattern for collection type conversion is deprecated. Please use Element_xxx!");
             }
         }
@@ -163,12 +164,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
         String configValue = (String) xworkConverter.getConverter(parentClass, CREATE_IF_NULL_PREFIX + property);
         //check if a value is in the config
         if (configValue != null) {
-            if ("true".equalsIgnoreCase(configValue)) {
-                return true;
-            }
-            if ("false".equalsIgnoreCase(configValue)) {
-                return false;
-            }
+            return BooleanUtils.toBoolean(configValue);
         }
 
         //default values depend on target type
@@ -218,9 +214,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
             if (getter != null) {
                 return getter.getAnnotation(annotationClass);
             }
-        } catch (ReflectionException ognle) {
-            // ignore
-        } catch (IntrospectionException ie) {
+        } catch (ReflectionException | IntrospectionException e) {
             // ignore
         }
         return null;
@@ -241,9 +235,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
             if (setter != null) {
                 return setter.getAnnotation(annotationClass);
             }
-        } catch (ReflectionException ognle) {
-            // ignore
-        } catch (IntrospectionException ie) {
+        } catch (ReflectionException | IntrospectionException e) {
             // ignore
         }
         return null;
@@ -270,9 +262,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
                 try {
                     Method setter = reflectionProvider.getSetMethod(parentClass, property);
                     genericType = setter != null ? setter.getGenericParameterTypes()[0] : null;
-                } catch (ReflectionException ognle) {
-                    // ignore
-                } catch (IntrospectionException ie) {
+                } catch (ReflectionException | IntrospectionException e) {
                     // ignore
                 }
             }
@@ -282,9 +272,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
                 try {
                     Method getter = reflectionProvider.getGetMethod(parentClass, property);
                     genericType = getter.getGenericReturnType();
-                } catch (ReflectionException ognle) {
-                    // ignore
-                } catch (IntrospectionException ie) {
+                } catch (ReflectionException | IntrospectionException e) {
                     // ignore
                 }
             }

@@ -103,7 +103,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         interceptor.setCopyErrors("true");
         interceptor.setCopyMessages("true");
 
-        Collection excludes = new ArrayList();
+        Collection<String> excludes = new ArrayList<>();
         excludes.add("count");
         interceptor.setExcludes(excludes);
 
@@ -125,7 +125,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         stack.push(bean);
         stack.push(action);
 
-        Collection excludes = new ArrayList();
+        Collection<String> excludes = new ArrayList<>();
         excludes.add("name");
         excludes.add("count");
         interceptor.setExcludes(excludes);
@@ -152,7 +152,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         mockInvocation = new Mock(ActionInvocation.class);
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-        mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(new HashMap()));
+        mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(new HashMap<String, Object>()));
         mockInvocation.expectAndReturn("getResult", new ActionChainResult());
         invocation = (ActionInvocation) mockInvocation.proxy();
         interceptor = new ChainingInterceptor();

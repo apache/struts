@@ -18,8 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Map;
@@ -84,7 +84,6 @@ public class ParameterRemoverInterceptor extends AbstractInterceptor {
 	private static final long serialVersionUID = 1;
 
 	private Set<String> paramNames = Collections.emptySet();
-
 	private Set<String> paramValues = Collections.emptySet();
 
 	
@@ -107,18 +106,15 @@ public class ParameterRemoverInterceptor extends AbstractInterceptor {
                     if (parameters.containsKey(removeName)) {
 
                         try {
-                            String[] values = (String[]) parameters
-                                    .get(removeName);
-                            String value = values[0];
-                            if (null != value && this.paramValues.contains(value)) {
+							String[] values = (String[]) parameters.get(removeName);
+							String value = values[0];
+							if (null != value && this.paramValues.contains(value)) {
                                 parameters.remove(removeName);
                             }
                         } catch (Exception e) {
-                            if (LOG.isErrorEnabled()) {
-                                LOG.error("Failed to convert parameter to string", e);
-                            }
-                        }
-                    }
+							LOG.error("Failed to convert parameter to string", e);
+						}
+					}
                 }
 			}
 		}

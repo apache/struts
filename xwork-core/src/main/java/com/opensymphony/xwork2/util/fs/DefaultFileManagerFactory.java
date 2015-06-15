@@ -5,8 +5,8 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,8 +52,8 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     private FileManager lookupFileManager() {
         Set<String> names = container.getInstanceNames(FileManager.class);
         LOG.debug("Found following implementations of FileManager interface: {}", names);
-        Set<FileManager> internals = new HashSet<FileManager>();
-        Set<FileManager> users = new HashSet<FileManager>();
+        Set<FileManager> internals = new HashSet<>();
+        Set<FileManager> users = new HashSet<>();
         for (String fmName : names) {
             FileManager fm = container.getInstance(FileManager.class, fmName);
             if (fm.internal()) {

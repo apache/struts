@@ -21,19 +21,17 @@ import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-
 import ognl.ObjectPropertyAccessor;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.SetPropertyAccessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +40,6 @@ import java.util.Map;
 public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
 
     private static final Logger LOG = LogManager.getLogger(XWorkCollectionPropertyAccessor.class);
-    private static final String CONTEXT_COLLECTION_MAP = "xworkCollectionPropertyAccessorContextSetMap";
 
     public static final String KEY_PROPERTY_FOR_CREATION = "makeNew";
 
@@ -87,18 +84,13 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
      * @see ognl.PropertyAccessor#getProperty(java.util.Map, Object, Object)
      */
     @Override
-    public Object getProperty(Map context, Object target, Object key)
-            throws OgnlException {
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Entering getProperty()");
-        }
+    public Object getProperty(Map context, Object target, Object key) throws OgnlException {
+        LOG.trace("Entering getProperty()");
 
         //check if it is a generic type property.
         //if so, return the value from the
         //superclass which will determine this.
-        if (!ReflectionContextState.isGettingByKeyProperty(context)
-                && !key.equals(KEY_PROPERTY_FOR_CREATION)) {
+        if (!ReflectionContextState.isGettingByKeyProperty(context) && !key.equals(KEY_PROPERTY_FOR_CREATION)) {
             return super.getProperty(context, target, key);
         }	else {
             //reset context property
@@ -119,17 +111,15 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
             ReflectionContextState.updateCurrentPropertyPath(context, key);
             return super.getProperty(context, target, key);
         }
-        
-        
+
         //get the key property to index the
         //collection with from the ObjectTypeDeterminer
-        String keyProperty = objectTypeDeterminer
-                .getKeyProperty(lastBeanClass, lastPropertyClass);
+        String keyProperty = objectTypeDeterminer.getKeyProperty(lastBeanClass, lastPropertyClass);
 
         //get the collection class of the
         Class collClass = objectTypeDeterminer.getElementClass(lastBeanClass, lastPropertyClass, key);
 
-        Class keyType = null;
+        Class keyType;
         Class toGetTypeFrom = (collClass != null) ? collClass : c.iterator().next().getClass();
         try {
             keyType = OgnlRuntime.getPropertyDescriptor(toGetTypeFrom, keyProperty).getPropertyType();
@@ -139,7 +129,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
 
 
         if (ReflectionContextState.isCreatingNullObjects(context)) {
-            Map collMap = getSetMap(context, c, keyProperty, collClass);
+            Map collMap = getSetMap(context, c, keyProperty);
             if (key.toString().equals(KEY_PROPERTY_FOR_CREATION)) {
                 //this should return the XWorkList
                 //for this set that contains new entries
@@ -171,7 +161,6 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
                 	    
                 	}	catch (Exception exc) {
                 	    throw new OgnlException("Error adding new element to collection", exc);
-                	    
                 	}
                 
             }
@@ -194,21 +183,15 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
       * Gets an indexed Map by a given key property with the key being
       * the value of the property and the value being the
       */
-    private Map getSetMap(Map context, Collection collection, String property, Class valueClass)
-            throws OgnlException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getting set Map");
-        }
-        
+    private Map getSetMap(Map context, Collection collection, String property) throws OgnlException {
+        LOG.trace("getting set Map");
+
         String path = ReflectionContextState.getCurrentPropertyPath(context);
-        Map map = ReflectionContextState.getSetMap(context,
-                path);
+        Map map = ReflectionContextState.getSetMap(context, path);
 
         if (map == null) {
-            if (LOG.isDebugEnabled()) {
-        	LOG.debug("creating set Map");
-            }
-            
+            LOG.trace("creating set Map");
+
             map = new HashMap();
             map.put(null, new SurrugateList(collection));
             for (Object currTest : collection) {
@@ -238,9 +221,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value)
-            throws OgnlException {
-
+    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
         Class convertToClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, name);

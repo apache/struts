@@ -29,11 +29,14 @@ import java.util.Map;
  */
 public class ReflectionContextState {
 
+	private static final String GETTING_BY_KEY_PROPERTY = "xwork.getting.by.key.property";
+	private static final String SET_MAP_KEY = "set.map.key";
+
     public static final String CURRENT_PROPERTY_PATH="current.property.path";
     public static final String FULL_PROPERTY_PATH="current.property.path";
-    private static final String GETTING_BY_KEY_PROPERTY="xwork.getting.by.key.property";
-
-    private static final String SET_MAP_KEY="set.map.key";
+	public static final String CREATE_NULL_OBJECTS = "xwork.NullHandler.createNullObjects";
+	public static final String DENY_METHOD_EXECUTION = "xwork.MethodAccessor.denyMethodExecution";
+	public static final String DENY_INDEXED_ACCESS_EXECUTION = "xwork.IndexedPropertyAccessor.denyMethodExecution";
 
     public static boolean isCreatingNullObjects(Map<String, Object> context) {
 		//TODO
@@ -126,7 +129,7 @@ public class ReflectionContextState {
 	public static void setSetMap(Map<String, Object> context, Map<Object, Object> setMap, String path) {
 		Map<Object, Map<Object, Object>> mapOfSetMaps=(Map)context.get(SET_MAP_KEY);
 		if (mapOfSetMaps==null) {
-			mapOfSetMaps=new HashMap<Object, Map<Object, Object>>();
+			mapOfSetMaps = new HashMap<>();
 			context.put(SET_MAP_KEY, mapOfSetMaps);
 		}
 		mapOfSetMaps.put(path, setMap);
@@ -157,7 +160,6 @@ public class ReflectionContextState {
 
 	}
 
-
     public static void clear(Map<String, Object> context) {
         if (context != null) {
             context.put(XWorkConverter.LAST_BEAN_CLASS_ACCESSED,null);
@@ -168,12 +170,4 @@ public class ReflectionContextState {
         }
 
     }
-
-
-    public static final String CREATE_NULL_OBJECTS = "xwork.NullHandler.createNullObjects";
-    public static final String DENY_METHOD_EXECUTION = "xwork.MethodAccessor.denyMethodExecution";
-    public static final String DENY_INDEXED_ACCESS_EXECUTION = "xwork.IndexedPropertyAccessor.denyMethodExecution";
-
-
-
 }

@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
+import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -44,8 +45,8 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     private boolean allowStaticMethodAccess;
 
     @Inject
-    public void setXWorkConverter(XWorkConverter conv) {
-        this.xworkConverter = conv;
+    public void setXWorkConverter(XWorkConverter converter) {
+        this.xworkConverter = converter;
     }
     
     @Inject("system")
@@ -55,7 +56,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     
     @Inject(value="allowStaticMethodAccess", required=false)
     public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        this.allowStaticMethodAccess = "true".equalsIgnoreCase(allowStaticMethodAccess);
+        this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
     }
 
     public ValueStack createValueStack() {

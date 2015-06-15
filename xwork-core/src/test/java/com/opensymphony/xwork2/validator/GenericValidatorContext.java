@@ -43,7 +43,7 @@ public class GenericValidatorContext extends DelegatingValidatorContext {
 
     @Override
     public synchronized Collection<String> getActionErrors() {
-        return new ArrayList<String>(internalGetActionErrors());
+        return new ArrayList<>(internalGetActionErrors());
     }
 
     @Override
@@ -90,7 +90,7 @@ public class GenericValidatorContext extends DelegatingValidatorContext {
         List<String> thisFieldErrors = errors.get(fieldName);
 
         if (thisFieldErrors == null) {
-            thisFieldErrors = new ArrayList<String>();
+            thisFieldErrors = new ArrayList<>();
             errors.put(fieldName, thisFieldErrors);
         }
 
@@ -119,7 +119,7 @@ public class GenericValidatorContext extends DelegatingValidatorContext {
 
     private Collection<String> internalGetActionErrors() {
         if (actionErrors == null) {
-            actionErrors = new ArrayList<String>();
+            actionErrors = new ArrayList<>();
         }
 
         return actionErrors;
@@ -127,7 +127,7 @@ public class GenericValidatorContext extends DelegatingValidatorContext {
 
     private Collection<String> internalGetActionMessages() {
         if (actionMessages == null) {
-            actionMessages = new ArrayList<String>();
+            actionMessages = new ArrayList<>();
         }
 
         return actionMessages;
@@ -135,7 +135,7 @@ public class GenericValidatorContext extends DelegatingValidatorContext {
 
     private Map<String, List<String>> internalGetFieldErrors() {
         if (fieldErrors == null) {
-            fieldErrors = new HashMap<String, List<String>>();
+            fieldErrors = new HashMap<>();
         }
 
         return fieldErrors;

@@ -17,8 +17,8 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -299,15 +299,15 @@ public class DelegatingValidatorContext implements ValidatorContext {
         }
 
         public void addActionError(String anErrorMessage) {
-            log.error("Validation error: " + anErrorMessage);
+            log.error("Validation error: {}", anErrorMessage);
         }
 
         public void addActionMessage(String aMessage) {
-            log.info("Validation Message: " + aMessage);
+            log.info("Validation Message: {}", aMessage);
         }
 
         public void addFieldError(String fieldName, String errorMessage) {
-            log.error("Validation error for " + fieldName + ":" + errorMessage);
+            log.error("Validation error for {}:{}", fieldName, errorMessage);
         }
 
         public boolean hasActionErrors() {

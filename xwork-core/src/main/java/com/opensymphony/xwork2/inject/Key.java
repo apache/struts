@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2006 Google Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,55 +23,55 @@ package com.opensymphony.xwork2.inject;
  */
 class Key<T> {
 
-  final Class<T> type;
-  final String name;
-  final int hashCode;
+    final Class<T> type;
+    final String name;
+    final int hashCode;
 
-  private Key(Class<T> type, String name) {
-    if (type == null) {
-      throw new NullPointerException("Type is null.");
+    private Key(Class<T> type, String name) {
+        if (type == null) {
+            throw new NullPointerException("Type is null.");
+        }
+        if (name == null) {
+            throw new NullPointerException("Name is null.");
+        }
+
+        this.type = type;
+        this.name = name;
+
+        hashCode = type.hashCode() * 31 + name.hashCode();
     }
-    if (name == null) {
-      throw new NullPointerException("Name is null.");
+
+    Class<T> getType() {
+        return type;
     }
 
-    this.type = type;
-    this.name = name;
-
-    hashCode = type.hashCode() * 31 + name.hashCode();
-  }
-
-  Class<T> getType() {
-    return type;
-  }
-
-  String getName() {
-    return name;
-  }
-
-  @Override
-  public int hashCode() {
-    return hashCode;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (!(o instanceof Key)) {
-      return false;
+    String getName() {
+        return name;
     }
-    if (o == this) {
-      return true;
+
+    @Override
+    public int hashCode() {
+        return hashCode;
     }
-    Key other = (Key) o;
-    return name.equals(other.name) && type.equals(other.type);
-  }
 
-  @Override
-  public String toString() {
-    return "[type=" + type.getName() + ", name='" + name + "']";
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Key)) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        Key other = (Key) o;
+        return name.equals(other.name) && type.equals(other.type);
+    }
 
-  static <T> Key<T> newInstance(Class<T> type, String name) {
-    return new Key<T>(type, name);
-  }
+    @Override
+    public String toString() {
+        return "[type=" + type.getName() + ", name='" + name + "']";
+    }
+
+    static <T> Key<T> newInstance(Class<T> type, String name) {
+        return new Key<T>(type, name);
+    }
 }

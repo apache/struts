@@ -19,15 +19,7 @@ package com.opensymphony.xwork2.spring;
  * Created on Mar 8, 2004
  */
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionChainResult;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ModelDrivenAction;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.SimpleAction;
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
@@ -115,7 +107,7 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
     }
 
     public void testFallsBackToDefaultObjectFactoryValidatorBuilding() throws Exception {
-        Map<String,Object> extraContext = new HashMap<String, Object>();
+        Map<String, Object> extraContext = new HashMap<>();
         Validator validator = objectFactory.buildValidator(RequiredStringValidator.class.getName(), new HashMap<String, Object>(), extraContext);
 
         assertEquals(RequiredStringValidator.class, validator.getClass());
@@ -152,7 +144,7 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
     public void testObtainValidatorBySpringName() throws Exception {
         sac.registerPrototype("expression-validator", ExpressionValidator.class, new MutablePropertyValues());
 
-        Map<String, Object> extraContext = new HashMap<String, Object>();
+        Map<String, Object> extraContext = new HashMap<>();
         Validator validator = objectFactory.buildValidator("expression-validator", new HashMap<String, Object>(), extraContext);
 
         assertEquals(ExpressionValidator.class, validator.getClass());

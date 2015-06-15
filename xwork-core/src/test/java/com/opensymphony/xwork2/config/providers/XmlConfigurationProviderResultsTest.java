@@ -42,24 +42,24 @@ public class XmlConfigurationProviderResultsTest extends ConfigurationTestBase {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-results.xml";
         ConfigurationProvider provider = buildConfigurationProvider(filename);
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
-        HashMap<String, ResultConfig> results = new HashMap<String, ResultConfig>();
+        HashMap<String, String> parameters = new HashMap<>();
+        HashMap<String, ResultConfig> results = new HashMap<>();
 
         results.put("chainDefaultTypedResult", new ResultConfig.Builder("chainDefaultTypedResult", ActionChainResult.class.getName()).build());
 
         results.put("mockTypedResult", new ResultConfig.Builder("mockTypedResult", MockResult.class.getName()).build());
 
-        Map<String, String> resultParams = new HashMap<String, String>();
+        Map<String, String> resultParams = new HashMap<>();
         resultParams.put("actionName", "bar.vm");
         results.put("specificLocationResult", new ResultConfig.Builder("specificLocationResult", ActionChainResult.class.getName())
                 .addParams(resultParams).build());
 
-        resultParams = new HashMap<String, String>();
+        resultParams = new HashMap<>();
         resultParams.put("actionName", "foo.vm");
         results.put("defaultLocationResult", new ResultConfig.Builder("defaultLocationResult", ActionChainResult.class.getName())
                 .addParams(resultParams).build());
 
-        resultParams = new HashMap<String, String>();
+        resultParams = new HashMap<>();
         resultParams.put("foo", "bar");
         results.put("noDefaultLocationResult", new ResultConfig.Builder("noDefaultLocationResult", ActionChainResult.class.getName())
                 .addParams(resultParams).build());

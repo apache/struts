@@ -18,16 +18,15 @@ package com.opensymphony.xwork2.validator;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
+import org.easymock.EasyMock;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.easymock.EasyMock;
 
 /**
  * Unit test for ExpressionValidator.
@@ -60,12 +59,12 @@ public class ExpressionValidatorTest extends XWorkTestCase {
     }
 
     public void testExpressionValidatorFailure() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("date", "12/23/2002");
         params.put("foo", "5");
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
@@ -88,7 +87,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         params.put("foo", "10");
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);

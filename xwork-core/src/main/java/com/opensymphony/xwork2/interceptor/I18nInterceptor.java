@@ -18,8 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 import java.util.Map;
@@ -103,9 +103,7 @@ public class I18nInterceptor extends AbstractInterceptor {
     protected enum Storage { SESSION, NONE }
 
     public I18nInterceptor() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("new I18nInterceptor()");
-        }
+        LOG.debug("new I18nInterceptor()");
     }
 
     public void setParameterName(String parameterName) {
@@ -123,8 +121,7 @@ public class I18nInterceptor extends AbstractInterceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Intercept '{}/{}' {",
-                invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
+            LOG.debug("Intercept '{}/{}' {", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
         }
 
         LocaleFinder localeFinder = new LocaleFinder(invocation);

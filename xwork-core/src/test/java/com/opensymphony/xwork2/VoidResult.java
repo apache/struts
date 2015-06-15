@@ -25,11 +25,7 @@ public class VoidResult implements Result {
             return true;
         }
 
-        if (!(o instanceof VoidResult)) {
-            return false;
-        }
-
-        return true;
+        return o instanceof VoidResult;
     }
 
     public void execute(ActionInvocation invocation) throws Exception {

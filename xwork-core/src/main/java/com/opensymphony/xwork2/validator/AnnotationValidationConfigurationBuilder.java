@@ -15,25 +15,7 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.validator.annotations.ConditionalVisitorFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.CustomValidator;
-import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.EmailValidator;
-import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
-import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
-import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.ShortRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.UrlValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
-import com.opensymphony.xwork2.validator.annotations.ValidationParameter;
-import com.opensymphony.xwork2.validator.annotations.Validations;
-import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -41,12 +23,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,7 +47,7 @@ public class AnnotationValidationConfigurationBuilder {
 
     private List<ValidatorConfig> processAnnotations(Object o) {
 
-        List<ValidatorConfig> result = new ArrayList<ValidatorConfig>();
+        List<ValidatorConfig> result = new ArrayList<>();
 
         String fieldName = null;
         String methodName = null;
@@ -96,7 +73,6 @@ public class AnnotationValidationConfigurationBuilder {
                 // Process collection of custom validations
                 if (a instanceof Validations) {
                     processValidationAnnotation(a, fieldName, methodName, result);
-
                 }
 
                 // Process single custom validator
@@ -377,7 +353,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processExpressionValidatorAnnotation(ExpressionValidator v, String fieldName, String methodName) {
         String validatorType = "expression";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -398,32 +374,28 @@ public class AnnotationValidationConfigurationBuilder {
 
     private ValidatorConfig processCustomValidatorAnnotation(CustomValidator v, String fieldName, String methodName) {
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
 
         String validatorType = v.type();
-
         validatorFactory.lookupRegisteredValidatorType(validatorType);
 
         Annotation[] recursedAnnotations = v.parameters();
 
         if (recursedAnnotations != null) {
             for (Annotation a2 : recursedAnnotations) {
-
                 if (a2 instanceof ValidationParameter) {
-
                     ValidationParameter parameter = (ValidationParameter) a2;
                     String parameterName = parameter.name();
                     String parameterValue = parameter.value();
                     params.put(parameterName, parameterValue);
                 }
-
             }
         }
 
@@ -440,11 +412,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processRegexFieldValidatorAnnotation(RegexFieldValidator v, String fieldName, String methodName) {
         String validatorType = "regex";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -469,11 +441,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processConditionalVisitorFieldValidatorAnnotation(ConditionalVisitorFieldValidator v, String fieldName, String methodName) {
         String validatorType = "conditionalvisitor";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -496,11 +468,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processVisitorFieldValidatorAnnotation(VisitorFieldValidator v, String fieldName, String methodName) {
         String validatorType = "visitor";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -521,11 +493,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processUrlValidatorAnnotation(UrlValidator v, String fieldName, String methodName) {
         String validatorType = "url";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
         if (StringUtils.isNotEmpty(v.urlRegex())) {
@@ -549,7 +521,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processStringLengthFieldValidatorAnnotation(StringLengthFieldValidator v, String fieldName, String methodName) {
         String validatorType = "stringlength";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -609,11 +581,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processRequiredStringValidatorAnnotation(RequiredStringValidator v, String fieldName, String methodName) {
         String validatorType = "requiredstring";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -633,11 +605,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processRequiredFieldValidatorAnnotation(RequiredFieldValidator v, String fieldName, String methodName) {
         String validatorType = "required";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -655,11 +627,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processIntRangeFieldValidatorAnnotation(IntRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "int";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -690,11 +662,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processShortRangeFieldValidatorAnnotation(ShortRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "short";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -725,7 +697,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processDoubleRangeFieldValidatorAnnotation(DoubleRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "double";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -775,11 +747,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processFieldExpressionValidatorAnnotation(FieldExpressionValidator v, String fieldName, String methodName) {
         String validatorType = "fieldexpression";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -799,11 +771,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processEmailValidatorAnnotation(EmailValidator v, String fieldName, String methodName) {
         String validatorType = "email";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -821,7 +793,7 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processDateRangeFieldValidatorAnnotation(DateRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "date";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
@@ -858,11 +830,11 @@ public class AnnotationValidationConfigurationBuilder {
     private ValidatorConfig processConversionErrorFieldValidatorAnnotation(ConversionErrorFieldValidator v, String fieldName, String methodName) {
         String validatorType = "conversion";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         if (fieldName != null) {
             params.put("fieldName", fieldName);
-        } else if (v.fieldName() != null && v.fieldName().length() > 0) {
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
         }
 
@@ -880,7 +852,7 @@ public class AnnotationValidationConfigurationBuilder {
 
     public List<ValidatorConfig> buildAnnotationClassValidatorConfigs(Class aClass) {
 
-        List<ValidatorConfig> result = new ArrayList<ValidatorConfig>();
+        List<ValidatorConfig> result = new ArrayList<>();
 
         List<ValidatorConfig> temp = processAnnotations(aClass);
         if (temp != null) {

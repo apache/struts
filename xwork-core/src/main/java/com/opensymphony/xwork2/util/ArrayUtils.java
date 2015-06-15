@@ -22,7 +22,9 @@ import java.util.Set;
 
 /**
  * @author Dan Oxlade, dan d0t oxlade at gmail d0t c0m
+ * @deprecated Can be replaced eith ArrayUtils from lang3 package --> org.apache.commons.lang3.ArrayUtils
  */
+@Deprecated
 public class ArrayUtils {
 
     public static boolean isEmpty(Object[] array) {

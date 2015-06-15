@@ -16,8 +16,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -79,9 +79,7 @@ public class LoggingInterceptor extends AbstractInterceptor {
             }
 
             message.append(invocation.getProxy().getActionName());
-            if (LOG.isInfoEnabled()) {
         	LOG.info(message.toString());
-            }
         }
     }
 

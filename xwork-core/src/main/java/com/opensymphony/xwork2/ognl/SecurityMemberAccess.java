@@ -15,9 +15,9 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import ognl.DefaultMemberAccess;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
@@ -53,7 +53,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         if (checkEnumAccess(target, member)) {
-            LOG.trace("Allowing access to enum {}", target);
+            LOG.trace("Allowing access to enum: {}", target);
             return true;
         }
 
@@ -89,12 +89,12 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         }
 
         //failed static test
-        if (!allow)
+        if (!allow) {
             return false;
+        }
 
         // Now check for standard scope rules
-        return super.isAccessible(context, target, member, propertyName)
-                && isAcceptableProperty(propertyName);
+        return super.isAccessible(context, target, member, propertyName) && isAcceptableProperty(propertyName);
     }
 
     protected boolean checkStaticMethodAccess(Member member) {
@@ -109,8 +109,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     protected boolean checkEnumAccess(Object target, Member member) {
         if (target instanceof Class) {
             Class clazz = (Class) target;
-            if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values"))
+            if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values")) {
                 return true;
+            }
         }
         return false;
     }

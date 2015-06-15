@@ -17,14 +17,10 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
-import com.opensymphony.xwork2.validator.ShortCircuitableValidator;
-import com.opensymphony.xwork2.validator.ValidationException;
-import com.opensymphony.xwork2.validator.Validator;
-import com.opensymphony.xwork2.validator.ValidatorContext;
+import com.opensymphony.xwork2.validator.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +80,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
             }
             List<Object> parsedMessageParameters = null;
             if (messageParameters != null) {
-                parsedMessageParameters = new ArrayList<Object>();
+                parsedMessageParameters = new ArrayList<>();
                 for (String messageParameter : messageParameters) {
                     if (messageParameter != null) {
                         try {
@@ -93,7 +89,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
                         } catch (Exception e) {
                             // if there's an exception in parsing, we'll just treat the expression itself as the
                             // parameter
-                            log.warn("exception while parsing message parameter [" + messageParameter + "]", e);
+                            log.warn("exception while parsing message parameter [{}]", messageParameter, e);
                             parsedMessageParameters.add(messageParameter);
                         }
                     }
@@ -101,7 +97,6 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
             }
 
             message = validatorContext.getText(messageKey, defaultMessage, parsedMessageParameters);
-
         } else {
             message = defaultMessage;
         }

@@ -17,21 +17,18 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.MemberAccessValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
+import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -155,7 +152,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
-        devMode = "true".equalsIgnoreCase(mode);
+        this.devMode = BooleanUtils.toBoolean(mode);
     }
 
     @Inject
@@ -207,7 +204,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             final Map<String, Object> parameters = retrieveParameters(ac);
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting params " + getParameterLogMap(parameters));
+                LOG.debug("Setting params {}", getParameterLogMap(parameters));
             }
 
             if (parameters != null) {
@@ -256,12 +253,12 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         Map<String, Object> params;
         Map<String, Object> acceptableParameters;
         if (ordered) {
-            params = new TreeMap<String, Object>(getOrderedComparator());
-            acceptableParameters = new TreeMap<String, Object>(getOrderedComparator());
+            params = new TreeMap<>(getOrderedComparator());
+            acceptableParameters = new TreeMap<>(getOrderedComparator());
             params.putAll(parameters);
         } else {
-            params = new TreeMap<String, Object>(parameters);
-            acceptableParameters = new TreeMap<String, Object>();
+            params = new TreeMap<>(parameters);
+            acceptableParameters = new TreeMap<>();
         }
 
         for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -447,9 +444,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (devMode) {
             LOG.warn(message, parameters);
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(message, parameters);
-            }
+            LOG.debug(message, parameters);
         }
     }
 

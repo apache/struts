@@ -18,13 +18,14 @@ package com.opensymphony.xwork2.validator.validators;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Field Validator that checks if a conversion error occured for this field.
+ * Field Validator that checks if a conversion error occurred for this field.
  * <!-- END SNIPPET: javadoc -->
  * <p/>
  * <!-- START SNIPPET: parameters -->
@@ -72,7 +73,7 @@ public class ConversionErrorFieldValidator extends RepopulateConversionErrorFiel
         Map<String, Object> conversionErrors = context.getConversionErrors();
         
         if (conversionErrors.containsKey(fullFieldName)) {
-            if ((defaultMessage == null) || ("".equals(defaultMessage.trim()))) {
+            if (StringUtils.isBlank(defaultMessage)) {
                 defaultMessage = XWorkConverter.getConversionErrorMessage(fullFieldName, context.getValueStack());
             }
             

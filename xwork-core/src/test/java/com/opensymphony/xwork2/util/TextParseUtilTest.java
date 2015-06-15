@@ -15,18 +15,11 @@
  */
 package com.opensymphony.xwork2.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
+import org.junit.Assert;
+
+import java.util.*;
 
 /**
  * Unit test of {@link TextParseUtil}.
@@ -49,8 +42,8 @@ public class TextParseUtilTest extends XWorkTestCase {
 
 		TextParseUtil.ParsedValueEvaluator evaluator = new TextParseUtil.ParsedValueEvaluator() {
 			public Object evaluate(String parsedValue) {
-				return parsedValue.toString()+"Something";
-			}
+                return parsedValue + "Something";
+            }
 		};
 
 		String result = TextParseUtil.translateVariables("Hello ${myVariable}", stack, evaluator);
@@ -125,7 +118,7 @@ public class TextParseUtilTest extends XWorkTestCase {
 
     public void testCommaDelimitedStringToSet() {
         assertEquals(0, TextParseUtil.commaDelimitedStringToSet("").size());
-        assertEquals(new HashSet<String>(Arrays.asList("foo", "bar", "tee")),
+        assertEquals(new HashSet<>(Arrays.asList("foo", "bar", "tee")),
                 TextParseUtil.commaDelimitedStringToSet(" foo, bar,tee"));
     }
 

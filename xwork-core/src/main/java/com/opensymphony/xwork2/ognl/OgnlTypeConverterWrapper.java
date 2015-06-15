@@ -26,12 +26,12 @@ import java.util.Map;
 public class OgnlTypeConverterWrapper implements ognl.TypeConverter {
 
     private TypeConverter typeConverter;
-    
-    public OgnlTypeConverterWrapper(TypeConverter conv) {
-        if (conv == null) {
+
+    public OgnlTypeConverterWrapper(TypeConverter converter) {
+        if (converter == null) {
             throw new IllegalArgumentException("Wrapped type converter cannot be null");
         }
-        this.typeConverter = conv;
+        this.typeConverter = converter;
     }
     
     public Object convertValue(Map context, Object target, Member member,

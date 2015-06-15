@@ -22,12 +22,12 @@ import java.util.HashSet;
 public class MethodFilterInterceptorUtilTest extends XWorkTestCase {
     
     public void testApplyMethodNoWildcards() {
-        
-        HashSet<String> included= new HashSet<String>();
+
+        HashSet<String> included = new HashSet<>();
         included.add("included");
         included.add("includedAgain");
 
-        HashSet<String> excluded= new HashSet<String>();
+        HashSet<String> excluded = new HashSet<>();
         excluded.add("excluded");
         excluded.add("excludedAgain");
         
@@ -43,10 +43,10 @@ public class MethodFilterInterceptorUtilTest extends XWorkTestCase {
 
     public void testApplyMethodWithWildcards() {
 
-        HashSet<String> included= new HashSet<String>();
+        HashSet<String> included = new HashSet<>();
         included.add("included*");
 
-        HashSet<String> excluded= new HashSet<String>();
+        HashSet<String> excluded = new HashSet<>();
         excluded.add("excluded*");
         
         assertTrue(MethodFilterInterceptorUtil.applyMethod(excluded, included, "includedMethod"));

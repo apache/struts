@@ -15,28 +15,16 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.XWorkMessages;
-import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
-import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
-import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
-import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.conversion.TypeConverterHolder;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.annotations.Conversion;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.AnnotationUtils;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
@@ -158,8 +146,8 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     @Inject
-    public void setDefaultTypeConverter(XWorkBasicConverter conv) {
-        this.defaultTypeConverter = conv;
+    public void setDefaultTypeConverter(XWorkBasicConverter converter) {
+        this.defaultTypeConverter = converter;
     }
 
     @Inject
@@ -203,7 +191,7 @@ public class XWorkConverter extends DefaultTypeConverter {
 
         List<String> indexValues = getIndexValues(propertyName);
 
-        propertyName = removeAllIndexesInProperytName(propertyName);
+        propertyName = removeAllIndexesInPropertyName(propertyName);
 
         String getTextExpression = "getText('" + CONVERSION_ERROR_PROPERTY_PREFIX + propertyName + "','" + defaultMessage + "')";
         String message = (String) stack.findValue(getTextExpression);
@@ -217,13 +205,13 @@ public class XWorkConverter extends DefaultTypeConverter {
         return message;
     }
 
-    private static String removeAllIndexesInProperytName(String propertyName) {
+    private static String removeAllIndexesInPropertyName(String propertyName) {
         return propertyName.replaceAll(MESSAGE_INDEX_PATTERN, PERIOD);
     }
 
     private static List<String> getIndexValues(String propertyName) {
         Matcher matcher = messageIndexPattern.matcher(propertyName);
-        List<String> indexes = new ArrayList<String>();
+        List<String> indexes = new ArrayList<>();
         while (matcher.find()) {
             Integer index = new Integer(matcher.group().replaceAll(MESSAGE_INDEX_BRACKET_PATTERN, "")) + 1;
             indexes.add(Integer.toString(index));
@@ -280,9 +268,7 @@ public class XWorkConverter extends DefaultTypeConverter {
             }
 
             tc = (TypeConverter) getConverter(clazz, property);
-
-            if (LOG.isDebugEnabled())
-                LOG.debug("field-level type converter for property [" + property + "] = " + (tc == null ? "none found" : tc));
+            LOG.debug("field-level type converter for property [{}] = {}", property, (tc == null ? "none found" : tc));
         }
 
         if (tc == null && context != null) {
@@ -305,7 +291,7 @@ public class XWorkConverter extends DefaultTypeConverter {
             }
 
             if (LOG.isDebugEnabled())
-                LOG.debug("global-level type converter for property [" + property + "] = " + (tc == null ? "none found" : tc));
+                LOG.debug("global-level type converter for property [{}] = {} ", property, (tc == null ? "none found" : tc));
         }
 
 
@@ -443,7 +429,7 @@ public class XWorkConverter extends DefaultTypeConverter {
             Map<String, Object> conversionErrors = (Map<String, Object>) context.get(ActionContext.CONVERSION_ERRORS);
 
             if (conversionErrors == null) {
-                conversionErrors = new HashMap<String, Object>();
+                conversionErrors = new HashMap<>();
                 context.put(ActionContext.CONVERSION_ERRORS, conversionErrors);
             }
 
@@ -530,7 +516,7 @@ public class XWorkConverter extends DefaultTypeConverter {
      * @return the converter mappings
      */
     protected Map<String, Object> buildConverterMapping(Class clazz) throws Exception {
-        Map<String, Object> mapping = new HashMap<String, Object>();
+        Map<String, Object> mapping = new HashMap<>();
 
         // check for conversion mapping associated with super classes and any implemented interfaces
         Class curClazz = clazz;

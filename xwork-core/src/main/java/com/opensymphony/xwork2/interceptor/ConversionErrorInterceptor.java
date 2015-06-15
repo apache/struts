@@ -115,7 +115,7 @@ public class ConversionErrorInterceptor extends AbstractInterceptor {
                 }
 
                 if (fakie == null) {
-                    fakie = new HashMap<Object, Object>();
+                    fakie = new HashMap<>();
                 }
 
                 fakie.put(propertyName, getOverrideExpr(invocation, value));

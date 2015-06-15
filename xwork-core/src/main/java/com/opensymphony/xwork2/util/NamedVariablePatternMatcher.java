@@ -74,7 +74,7 @@ public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariable
     public CompiledPattern compilePattern(String data) {
         StringBuilder regex = new StringBuilder();
         if (data != null && data.length() > 0) {
-            List<String> varNames = new ArrayList<String>();
+            List<String> varNames = new ArrayList<>();
             StringBuilder varName = null;
             for (int x=0; x<data.length(); x++) {
                 char c = data.charAt(x);

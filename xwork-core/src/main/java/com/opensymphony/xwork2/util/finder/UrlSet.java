@@ -15,24 +15,16 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Use with ClassFinder to filter the Urls to be scanned, example:
@@ -57,7 +49,7 @@ public class UrlSet {
     private Set<String> protocols;
 
     private UrlSet() {
-        this.urls = new HashMap<String,URL>();
+        this.urls = new HashMap<>();
     }
 
     public UrlSet(ClassLoaderInterface classLoader) throws IOException {
@@ -92,21 +84,19 @@ public class UrlSet {
             try {
                 this.urls.put(location.toExternalForm(), location);
             } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Cannot translate url to external form!", e);
-                }
+                LOG.warn("Cannot translate url to external form!", e);
             }
         }
     }
 
     public UrlSet include(UrlSet urlSet){
-        Map<String, URL> urls = new HashMap<String, URL>(this.urls);
+        Map<String, URL> urls = new HashMap<>(this.urls);
         urls.putAll(urlSet.urls);
         return new UrlSet(urls);
     }
 
     public UrlSet exclude(UrlSet urlSet) {
-        Map<String, URL> urls = new HashMap<String, URL>(this.urls);
+        Map<String, URL> urls = new HashMap<>(this.urls);
         Map<String, URL> parentUrls = urlSet.urls;
         for (String url : parentUrls.keySet()) {
             urls.remove(url);
@@ -148,9 +138,7 @@ public class UrlSet {
     public UrlSet excludeJavaHome() throws MalformedURLException {
         String path = System.getProperty("java.home");
         if (path != null) {
-
             File java = new File(path);
-
             if (path.matches("/System/Library/Frameworks/JavaVM.framework/Versions/[^/]+/Home")){
                 java = java.getParentFile();
             }
@@ -173,7 +161,7 @@ public class UrlSet {
     }
 
     public UrlSet matching(String pattern) {
-        Map<String, URL> urls = new HashMap<String, URL>();
+        Map<String, URL> urls = new HashMap<>();
         for (Map.Entry<String, URL> entry : this.urls.entrySet()) {
             String url = entry.getKey();
             if (url.matches(pattern)){
@@ -198,7 +186,7 @@ public class UrlSet {
                 URL normalizedUrl = normalizer.normalizeToFileProtocol(warUrl);
                 URL finalUrl = ObjectUtils.defaultIfNull(normalizedUrl, warUrl);
 
-                Map<String, URL> newUrls = new HashMap<String, URL>(this.urls);
+                Map<String, URL> newUrls = new HashMap<>(this.urls);
                 if ("jar".equals(finalUrl.getProtocol()) || "file".equals(finalUrl.getProtocol())) {
                     newUrls.put(finalUrl.toExternalForm(), finalUrl);
                 }
@@ -211,7 +199,7 @@ public class UrlSet {
 
     public UrlSet relative(File file) throws MalformedURLException {
         String urlPath = file.toURI().toURL().toExternalForm();
-        Map<String, URL> urls = new HashMap<String, URL>();
+        Map<String, URL> urls = new HashMap<>();
         for (Map.Entry<String, URL> entry : this.urls.entrySet()) {
             String url = entry.getKey();
             if (url.startsWith(urlPath) || url.startsWith("jar:"+urlPath)){
@@ -222,11 +210,11 @@ public class UrlSet {
     }
 
     public List<URL> getUrls() {
-        return new ArrayList<URL>(urls.values());
+        return new ArrayList<>(urls.values());
     }
 
     private List<URL> getUrls(ClassLoaderInterface classLoader) throws IOException {
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
 
         //find jars
         ArrayList<URL> urls = Collections.list(classLoader.getResources("META-INF"));
@@ -253,7 +241,7 @@ public class UrlSet {
             return getUrls(classLoader);
         }
 
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
 
         //find jars
         ArrayList<URL> urls = Collections.list(classLoader.getResources("META-INF"));

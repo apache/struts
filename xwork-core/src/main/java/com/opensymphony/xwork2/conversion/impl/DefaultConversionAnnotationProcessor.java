@@ -8,8 +8,8 @@ import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -34,9 +34,7 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
     }
 
     public void process(Map<String, Object> mapping, TypeConversion tc, String key) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("TypeConversion [{}] with key: [{}]", tc.converter(), key);
-        }
+        LOG.debug("TypeConversion [{}] with key: [{}]", tc.converter(), key);
         if (key == null) {
             return;
         }
@@ -62,9 +60,7 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
                         mapping.put(key, converterCreator.createTypeConverter(tc.converter()));
                     } else {
                         mapping.put(key, converterClass);
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Object placed in mapping for key [{}] is [{}]", key, mapping.get(key));
-                        }
+                        LOG.debug("Object placed in mapping for key [{}] is [{}]", key, mapping.get(key));
                     }
                 }
                 //elements(values) of maps / lists

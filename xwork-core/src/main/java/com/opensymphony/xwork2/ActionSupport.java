@@ -83,9 +83,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         if (ctx != null) {
             return ctx.getLocale();
         } else {
-            if (LOG.isDebugEnabled()) {
         	LOG.debug("Action context not initialized");
-            }
             return null;
         }
     }

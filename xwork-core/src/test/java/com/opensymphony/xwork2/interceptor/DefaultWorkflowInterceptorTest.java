@@ -16,14 +16,13 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-
-import java.util.HashMap;
-
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+
+import java.util.HashMap;
 
 
 /**
@@ -191,9 +190,9 @@ public class DefaultWorkflowInterceptorTest extends XWorkTestCase {
         EasyMock.replay(action);
         EasyMock.replay(proxy);
 
-        ActionContext contex = new ActionContext(new HashMap<String, Object>());
-        ActionContext.setContext(contex);
-        contex.setActionInvocation(invocation);
+        ActionContext actionContext = new ActionContext(new HashMap<String, Object>());
+        ActionContext.setContext(actionContext);
+        actionContext.setActionInvocation(invocation);
     }
 
     @Override
@@ -204,7 +203,7 @@ public class DefaultWorkflowInterceptorTest extends XWorkTestCase {
     protected ValidationInterceptor create() {
         ObjectFactory objectFactory = container.getInstance(ObjectFactory.class);
         return (ValidationInterceptor) objectFactory.buildInterceptor(
-                new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), new HashMap());
+                new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), new HashMap<String, String>());
     }
 
     

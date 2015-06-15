@@ -7,8 +7,8 @@ import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -39,9 +39,7 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
             InputStream is = fileManager.loadFile(ClassLoaderUtil.getResource(converterFilename, clazz));
 
             if (is != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Processing conversion file [{}] for class [{}]", converterFilename, clazz);
-                }
+                LOG.debug("Processing conversion file [{}] for class [{}]", converterFilename, clazz);
 
                 Properties prop = new Properties();
                 prop.load(is);

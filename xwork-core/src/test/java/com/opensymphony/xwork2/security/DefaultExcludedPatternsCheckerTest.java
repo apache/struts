@@ -67,7 +67,7 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
 
     public void testParamWithClassInName() throws Exception {
         // given
-        List<String> properParams = new ArrayList<String>();
+        List<String> properParams = new ArrayList<>();
         properParams.add("eventClass");
         properParams.add("form.eventClass");
         properParams.add("form[\"eventClass\"]");
@@ -88,7 +88,7 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
 
     public void testStrutsTokenIsExcluded() throws Exception {
         // given
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList<>();
         tokens.add("struts.token.name");
         tokens.add("struts.token");
 

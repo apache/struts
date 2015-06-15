@@ -21,9 +21,10 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import ognl.*;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -58,13 +59,12 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
     private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
-    private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<MethodCall, Boolean>();
-
-    static boolean devMode = false;
+    private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
+    private boolean devMode = false;
 
     @Inject(XWorkConstants.DEV_MODE)
-    public static void setDevMode(String mode) {
-        devMode = "true".equals(mode);
+    public void setDevMode(String mode) {
+        this.devMode = BooleanUtils.toBoolean(mode);
     }
 
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
@@ -121,7 +121,6 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
         if (name instanceof Integer) {
             Integer index = (Integer) name;
-
             return root.cutStack(index);
         } else if (name instanceof String) {
             if ("top".equals(name)) {
@@ -187,7 +186,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                     }
                 }
 
-                SortedSet<String> set = new TreeSet<String>();
+                SortedSet<String> set = new TreeSet<>();
                 StringBuffer sb = new StringBuffer();
                 for (PropertyDescriptor pd : descriptors.values()) {
 
@@ -209,12 +208,9 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                 }
 
                 return sb.toString();
-            } catch (IntrospectionException e) {
-                LOG.debug("Got exception in callMethod", e);
-            } catch (OgnlException e) {
+            } catch (IntrospectionException | OgnlException e) {
                 LOG.debug("Got exception in callMethod", e);
             }
-
             return null;
         }
 

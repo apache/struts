@@ -17,8 +17,9 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -106,7 +107,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
 
         Map<String, Object> parameters = invocation.getInvocationContext().getParameters();
-        HashSet<String> paramsToRemove = new HashSet<String>();
+        HashSet<String> paramsToRemove = new HashSet<>();
 
         Map<String, Boolean> includesExcludesMap = getIncludesExcludesMap();
 
@@ -116,7 +117,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
             for (String currRule : includesExcludesMap.keySet()) {
                 if (param.startsWith(currRule)
                         && (param.length() == currRule.length()
-                        || isPropSeperator(param.charAt(currRule.length())))) {
+                        || isPropertySeparator(param.charAt(currRule.length())))) {
                     currentAllowed = includesExcludesMap.get(currRule).booleanValue();
                 }
             }
@@ -125,9 +126,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
             }
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Params to remove: " + paramsToRemove);
-        }
+        LOG.debug("Params to remove: {}", paramsToRemove);
 
         for (Object aParamsToRemove : paramsToRemove) {
             parameters.remove(aParamsToRemove);
@@ -137,18 +136,18 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Tests if the given char is a property seperator char <code>.([</code>.
+     * Tests if the given char is a property separator char <code>.([</code>.
      *
      * @param c the char
      * @return <tt>true</tt>, if char is property separator, <tt>false</tt> otherwise.
      */
-    private static boolean isPropSeperator(char c) {
+    private static boolean isPropertySeparator(char c) {
         return c == '.' || c == '(' || c == '[';
     }
 
     private Map<String, Boolean> getIncludesExcludesMap() {
         if (this.includesExcludesMap == null) {
-            this.includesExcludesMap = new TreeMap<String, Boolean>();
+            this.includesExcludesMap = new TreeMap<>();
 
             if (getAllowedCollection() != null) {
                 for (String e : getAllowedCollection()) {
@@ -228,7 +227,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
      * @return A collection from the comma delimited String. Returns <tt>null</tt> if the string is empty.
      */
     private Collection<String> asCollection(String commaDelim) {
-        if (commaDelim == null || commaDelim.trim().length() == 0) {
+        if (StringUtils.isBlank(commaDelim)) {
             return null;
         }
         return TextParseUtil.commaDelimitedStringToSet(commaDelim);

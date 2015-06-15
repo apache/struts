@@ -66,16 +66,14 @@ class ConstructionContext<T> {
     // instance (as opposed to one per caller).
 
     if (!expectedType.isInterface()) {
-      throw new DependencyException(
-          expectedType.getName() + " is not an interface.");
+      throw new DependencyException(expectedType.getName() + " is not an interface.");
     }
 
     if (invocationHandlers == null) {
       invocationHandlers = new ArrayList<DelegatingInvocationHandler<T>>();
     }
 
-    DelegatingInvocationHandler<T> invocationHandler =
-        new DelegatingInvocationHandler<T>();
+    DelegatingInvocationHandler<T> invocationHandler = new DelegatingInvocationHandler<>();
     invocationHandlers.add(invocationHandler);
 
     return Proxy.newProxyInstance(
@@ -87,8 +85,7 @@ class ConstructionContext<T> {
 
   void setProxyDelegates(T delegate) {
     if (invocationHandlers != null) {
-      for (DelegatingInvocationHandler<T> invocationHandler
-          : invocationHandlers) {
+      for (DelegatingInvocationHandler<T> invocationHandler : invocationHandlers) {
         invocationHandler.setDelegate(delegate);
       }
     }
@@ -108,9 +105,7 @@ class ConstructionContext<T> {
 
       try {
         return method.invoke(delegate, args);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
-      } catch (IllegalArgumentException e) {
+      } catch (IllegalAccessException | IllegalArgumentException e) {
         throw new RuntimeException(e);
       } catch (InvocationTargetException e) {
         throw e.getTargetException();

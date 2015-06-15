@@ -34,11 +34,7 @@ public class MockResult implements Result {
             return true;
         }
 
-        if (!(o instanceof MockResult)) {
-            return false;
-        }
-
-        return true;
+        return o instanceof MockResult;
     }
 
     public void execute(ActionInvocation invocation) throws Exception {

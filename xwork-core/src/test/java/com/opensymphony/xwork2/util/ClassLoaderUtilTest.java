@@ -19,9 +19,9 @@ import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 public class ClassLoaderUtilTest extends TestCase {
 
@@ -79,26 +79,26 @@ public class ClassLoaderUtilTest extends TestCase {
     }
 
     public void testAggregateIterator() {
-       ClassLoaderUtil.AggregateIterator<String> aggr = new ClassLoaderUtil.AggregateIterator<String>();
+        ClassLoaderUtil.AggregateIterator<String> aggr = new ClassLoaderUtil.AggregateIterator<>();
 
-       Enumeration en1 = new Enumeration() {
-           private Iterator itt = Arrays.asList("str1", "str1", "str3", "str1").iterator();
+        Enumeration<String> en1 = new Enumeration<String>() {
+            private Iterator<String> itt = Arrays.asList("str1", "str1", "str3", "str1").iterator();
            public boolean hasMoreElements() {
                return itt.hasNext();
            }
 
-           public Object nextElement() {
+            public String nextElement() {
                return itt.next();
            }
        };
 
-       Enumeration en2 = new Enumeration() {
-           private Iterator itt = Arrays.asList("str4", "str5").iterator();
+        Enumeration<String> en2 = new Enumeration<String>() {
+            private Iterator<String> itt = Arrays.asList("str4", "str5").iterator();
            public boolean hasMoreElements() {
                return itt.hasNext();
            }
 
-           public Object nextElement() {
+            public String nextElement() {
                return itt.next();
            }
        };

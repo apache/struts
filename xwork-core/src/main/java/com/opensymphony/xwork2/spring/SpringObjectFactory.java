@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.spring;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -44,7 +45,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     protected ApplicationContext appContext;
     protected AutowireCapableBeanFactory autoWiringFactory;
     protected int autowireStrategy = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
-    private final Map<String, Object> classes = new HashMap<String, Object>();
+    private final Map<String, Object> classes = new HashMap<>();
     private boolean useClassCache = true;
     private boolean alwaysRespectAutowireStrategy = false;
     /**
@@ -62,7 +63,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
 
     @Inject(value = "enableAopSupport", required = false)
     public void setEnableAopSupport(String enableAopSupport) {
-        this.enableAopSupport = Boolean.parseBoolean(enableAopSupport);
+        this.enableAopSupport = BooleanUtils.toBoolean(enableAopSupport);
     }
 
     /**
@@ -203,8 +204,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
      */
     public Object autoWireBean(Object bean, AutowireCapableBeanFactory autoWiringFactory) {
         if (autoWiringFactory != null) {
-            autoWiringFactory.autowireBeanProperties(bean,
-                    autowireStrategy, false);
+            autoWiringFactory.autowireBeanProperties(bean, autowireStrategy, false);
         }
         injectApplicationContext(bean);
 

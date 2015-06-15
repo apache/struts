@@ -118,14 +118,14 @@ public class AnnotationUtils {
 	 *  method {@link AnnotatedElement}s matching the specified {@link Annotation}s
 	 */
 	public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation){
-		Collection<Method> toReturn = new HashSet<Method>();
-		
-		for(Method m : clazz.getMethods()){
-			if( ArrayUtils.isNotEmpty(annotation) && isAnnotatedBy(m, annotation) ){
-				toReturn.add(m);
-			}else if( ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(m.getAnnotations())){
-				toReturn.add(m);
-			}
+        Collection<Method> toReturn = new HashSet<>();
+
+        for (Method m : clazz.getMethods()) {
+            if (org.apache.commons.lang3.ArrayUtils.isNotEmpty(annotation) && isAnnotatedBy(m, annotation)) {
+                toReturn.add(m);
+            } else if (org.apache.commons.lang3.ArrayUtils.isEmpty(annotation) && org.apache.commons.lang3.ArrayUtils.isNotEmpty(m.getAnnotations())) {
+                toReturn.add(m);
+            }
 		}
 		
 		return toReturn;
@@ -136,7 +136,9 @@ public class AnnotationUtils {
 	 * @see AnnotatedElement
 	 */
 	public static boolean isAnnotatedBy(AnnotatedElement annotatedElement, Class<? extends Annotation>... annotation) {
-		if(ArrayUtils.isEmpty(annotation)) return false;
+        if (org.apache.commons.lang3.ArrayUtils.isEmpty(annotation)) {
+            return false;
+        }
 
 		for( Class<? extends Annotation> c : annotation ){
 			if( annotatedElement.isAnnotationPresent(c) ) return true;
@@ -173,20 +175,21 @@ public class AnnotationUtils {
      * Returns the annotation on the given class or the package of the class. This searchs up the
      * class hierarchy and the package hierarchy for the closest match.
      *
-     * @param   klass The class to search for the annotation.
+     * @param   clazz The class to search for the annotation.
      * @param   annotationClass The Class of the annotation.
      * @return  The annotation or null.
      */
-    public static <T extends Annotation> T findAnnotation(Class<?> klass, Class<T> annotationClass) {
-        T ann = klass.getAnnotation(annotationClass);
-        while (ann == null && klass != null) {
-            ann = klass.getAnnotation(annotationClass);
-            if (ann == null)
-                ann = klass.getPackage().getAnnotation(annotationClass);
+    public static <T extends Annotation> T findAnnotation(Class<?> clazz, Class<T> annotationClass) {
+        T ann = clazz.getAnnotation(annotationClass);
+        while (ann == null && clazz != null) {
+            ann = clazz.getAnnotation(annotationClass);
             if (ann == null) {
-                klass = klass.getSuperclass();
-                if (klass != null ) {
-                    ann = klass.getAnnotation(annotationClass);
+                ann = clazz.getPackage().getAnnotation(annotationClass);
+            }
+            if (ann == null) {
+                clazz = clazz.getSuperclass();
+                if (clazz != null) {
+                    ann = clazz.getAnnotation(annotationClass);
                 }
             }
         }

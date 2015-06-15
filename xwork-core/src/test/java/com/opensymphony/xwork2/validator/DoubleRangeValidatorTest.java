@@ -9,7 +9,6 @@ import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -24,8 +23,8 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
     public void testRangeValidationWithError() throws Exception {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
-        Map<String, Object> context = new HashMap<String, Object>();
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("percentage", 100.0123d);
         context.put(ActionContext.PARAMETERS, params);
 
@@ -45,8 +44,8 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
     }
 
     public void testRangeValidationNoError() throws Exception {
-        Map<String, Object> context = new HashMap<String, Object>();
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("percentage", 1.234567d);
         context.put(ActionContext.PARAMETERS, params);
 
@@ -182,8 +181,8 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
     public void testRangeValidationWithExpressionsFail() throws Exception {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
-        Map<String, Object> context = new HashMap<String, Object>();
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("percentage", 100.0123d);
         context.put(ActionContext.PARAMETERS, params);
 

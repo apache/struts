@@ -76,10 +76,10 @@ public class ActionInvocationTest extends XWorkTestCase {
     }
 
     public void testSimple() {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("blah", "this is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {

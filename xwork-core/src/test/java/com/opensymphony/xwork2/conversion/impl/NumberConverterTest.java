@@ -13,7 +13,7 @@ public class NumberConverterTest extends XWorkTestCase {
     public void testStringToNumberConversionPL() throws Exception {
         // given
         NumberConverter converter = new NumberConverter();
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
 
         SimpleFooAction foo = new SimpleFooAction();
@@ -28,7 +28,7 @@ public class NumberConverterTest extends XWorkTestCase {
     public void testStringToNumberConversionUS() throws Exception {
         // given
         NumberConverter converter = new NumberConverter();
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, new Locale("en", "US"));
 
         SimpleFooAction foo = new SimpleFooAction();

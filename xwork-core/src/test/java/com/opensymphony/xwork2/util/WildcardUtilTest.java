@@ -20,7 +20,6 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 public class WildcardUtilTest extends XWorkTestCase {
 	

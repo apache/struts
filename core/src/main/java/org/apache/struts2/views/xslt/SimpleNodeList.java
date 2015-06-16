@@ -21,13 +21,12 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.util.List;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.util.List;
 
 public class SimpleNodeList implements NodeList {
     private Logger log = LogManager.getLogger(SimpleNodeList.class);
@@ -39,13 +38,14 @@ public class SimpleNodeList implements NodeList {
     }
 
     public int getLength() {
-        if (log.isTraceEnabled())
-            log.trace("getLength: " + nodes.size());
+        if (log.isTraceEnabled()) {
+            log.trace("getLength: {}", nodes.size());
+        }
         return nodes.size();
     }
 
     public Node item(int i) {
-        log.trace("getItem: " + i);
+        log.trace("getItem: {}", i);
         return nodes.get(i);
     }
 

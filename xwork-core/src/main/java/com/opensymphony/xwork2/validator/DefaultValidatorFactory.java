@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -30,12 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -49,7 +44,7 @@ import java.util.zip.ZipInputStream;
  */
 public class DefaultValidatorFactory implements ValidatorFactory {
 
-    protected Map<String, String> validators = new HashMap<String, String>();
+    protected Map<String, String> validators = new HashMap<>();
     private static Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);
     protected ObjectFactory objectFactory;
     protected ValidatorFileParser validatorFileParser;
@@ -88,10 +83,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
     }
 
     public void registerValidator(String name, String className) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Registering validator of class " + className + " with name " + name);
-        }
-
+        LOG.debug("Registering validator of class {} with name {}", className, name);
         validators.put(name, className);
     }
 
@@ -107,11 +99,9 @@ public class DefaultValidatorFactory implements ValidatorFactory {
     }
 
     private void parseValidators() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading validator definitions.");
-        }
+        LOG.debug("Loading validator definitions.");
 
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         try {
             // Get custom validator configurations via the classpath
             Iterator<URL> urls = ClassLoaderUtil.getResources("", DefaultValidatorFactory.class, false);
@@ -137,7 +127,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
                                     files.addAll(Arrays.asList(ff));
                                 }
                             } catch (SecurityException se) {
-                                LOG.error("Security Exception while accessing directory '" + f + "'", se);
+                                LOG.error("Security Exception while accessing directory '{}'", f, se);
                             }
 
                         } else {
@@ -158,9 +148,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
                                 ZipEntry zipEntry = zipInputStream.getNextEntry();
                                 while (zipEntry != null) {
                                     if (zipEntry.getName().endsWith("-validators.xml")) {
-                                        if (LOG.isTraceEnabled()) {
-                                            LOG.trace("Adding validator " + zipEntry.getName());
-                                        }
+                                        LOG.trace("Adding validator {}", zipEntry.getName());
                                         files.add(new File(zipEntry.getName()));
                                     }
                                     zipEntry = zipInputStream.getNextEntry();

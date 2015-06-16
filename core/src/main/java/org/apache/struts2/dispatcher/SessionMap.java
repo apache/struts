@@ -21,17 +21,10 @@
 
 package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.components.Submit;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.AbstractMap;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -110,9 +103,9 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
 
         synchronized (session.getId().intern()) {
             if (entries == null) {
-                entries = new HashSet<Map.Entry<K, V>>();
+                entries = new HashSet<>();
 
-                Enumeration<? extends Object> enumeration = session.getAttributeNames();
+                Enumeration<?> enumeration = session.getAttributeNames();
 
                 while (enumeration.hasMoreElements()) {
                     final String key = enumeration.nextElement().toString();

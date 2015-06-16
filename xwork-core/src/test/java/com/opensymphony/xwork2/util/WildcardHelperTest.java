@@ -26,7 +26,7 @@ public class WildcardHelperTest extends XWorkTestCase {
 	public void testMatch() {
 		
 		WildcardHelper wild = new WildcardHelper();
-		HashMap<String,String> matchedPatterns = new HashMap<String,String>();
+		HashMap<String, String> matchedPatterns = new HashMap<>();
 		int[] pattern = wild.compilePattern("wes-rules");
 		assertEquals(wild.match(matchedPatterns,"wes-rules", pattern), true);
 		assertEquals(wild.match(matchedPatterns, "rules-wes", pattern), false);

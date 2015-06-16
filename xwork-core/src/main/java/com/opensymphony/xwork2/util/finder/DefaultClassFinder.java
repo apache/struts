@@ -19,9 +19,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.FieldVisitor;
@@ -38,26 +38,17 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 public class DefaultClassFinder implements ClassFinder {
     private static final Logger LOG = LogManager.getLogger(DefaultClassFinder.class);
 
-    private final Map<String, List<Info>> annotated = new HashMap<String, List<Info>>();
-    private final Map<String, ClassInfo> classInfos = new LinkedHashMap<String, ClassInfo>();
+    private final Map<String, List<Info>> annotated = new HashMap<>();
+    private final Map<String, ClassInfo> classInfos = new LinkedHashMap<>();
 
-    private final List<String> classesNotLoaded = new ArrayList<String>();
+    private final List<String> classesNotLoaded = new ArrayList<>();
 
     private boolean extractBaseInterfaces;
     private ClassLoaderInterface classLoaderInterface;
@@ -68,7 +59,7 @@ public class DefaultClassFinder implements ClassFinder {
         this.extractBaseInterfaces = extractBaseInterfaces;
         this.fileManager = ActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
 
-        List<String> classNames = new ArrayList<String>();
+        List<String> classNames = new ArrayList<>();
         for (URL location : urls) {
             try {
                 if (protocols.contains(location.getProtocol())) {
@@ -105,8 +96,8 @@ public class DefaultClassFinder implements ClassFinder {
 
     public DefaultClassFinder(List<Class> classes){
         this.classLoaderInterface = null;
-        List<Info> infos = new ArrayList<Info>();
-        List<Package> packages = new ArrayList<Package>();
+        List<Info> infos = new ArrayList<>();
+        List<Package> packages = new ArrayList<>();
         for (Class clazz : classes) {
 
             Package aPackage = clazz.getPackage();
@@ -154,7 +145,7 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Package> findAnnotatedPackages(Class<? extends Annotation> annotation) {
         classesNotLoaded.clear();
-        List<Package> packages = new ArrayList<Package>();
+        List<Package> packages = new ArrayList<>();
         List<Info> infos = getAnnotationInfos(annotation.getName());
         for (Info info : infos) {
             if (info instanceof PackageInfo) {
@@ -175,7 +166,7 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Class> findAnnotatedClasses(Class<? extends Annotation> annotation) {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         List<Info> infos = getAnnotationInfos(annotation.getName());
         for (Info info : infos) {
             if (info instanceof ClassInfo) {
@@ -197,8 +188,8 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Method> findAnnotatedMethods(Class<? extends Annotation> annotation) {
         classesNotLoaded.clear();
-        List<ClassInfo> seen = new ArrayList<ClassInfo>();
-        List<Method> methods = new ArrayList<Method>();
+        List<ClassInfo> seen = new ArrayList<>();
+        List<Method> methods = new ArrayList<>();
         List<Info> infos = getAnnotationInfos(annotation.getName());
         for (Info info : infos) {
             if (info instanceof MethodInfo && !"<init>".equals(info.getName())) {
@@ -227,8 +218,8 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Constructor> findAnnotatedConstructors(Class<? extends Annotation> annotation) {
         classesNotLoaded.clear();
-        List<ClassInfo> seen = new ArrayList<ClassInfo>();
-        List<Constructor> constructors = new ArrayList<Constructor>();
+        List<ClassInfo> seen = new ArrayList<>();
+        List<Constructor> constructors = new ArrayList<>();
         List<Info> infos = getAnnotationInfos(annotation.getName());
         for (Info info : infos) {
             if (info instanceof MethodInfo && "<init>".equals(info.getName())) {
@@ -257,15 +248,17 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Field> findAnnotatedFields(Class<? extends Annotation> annotation) {
         classesNotLoaded.clear();
-        List<ClassInfo> seen = new ArrayList<ClassInfo>();
-        List<Field> fields = new ArrayList<Field>();
+        List<ClassInfo> seen = new ArrayList<>();
+        List<Field> fields = new ArrayList<>();
         List<Info> infos = getAnnotationInfos(annotation.getName());
         for (Info info : infos) {
             if (info instanceof FieldInfo) {
                 FieldInfo fieldInfo = (FieldInfo) info;
                 ClassInfo classInfo = fieldInfo.getDeclaringClass();
 
-                if (seen.contains(classInfo)) continue;
+                if (seen.contains(classInfo)) {
+                    continue;
+                }
 
                 seen.add(classInfo);
 
@@ -287,7 +280,7 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Class> findClassesInPackage(String packageName, boolean recursive) {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         for (ClassInfo classInfo : classInfos.values()) {
             try {
                 if (recursive && classInfo.getPackageName().startsWith(packageName)){
@@ -305,7 +298,7 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Class> findClasses(Test<ClassInfo> test) {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         for (ClassInfo classInfo : classInfos.values()) {
             try {
                 if (test.test(classInfo)) {
@@ -321,7 +314,7 @@ public class DefaultClassFinder implements ClassFinder {
 
     public List<Class> findClasses() {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         for (ClassInfo classInfo : classInfos.values()) {
             try {
                 classes.add(classInfo.get());
@@ -334,7 +327,7 @@ public class DefaultClassFinder implements ClassFinder {
     }
 
     private static List<URL> getURLs(ClassLoaderInterface classLoader, String[] dirNames) {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         for (String dirName : dirNames) {
             try {
                 Enumeration<URL> classLoaderURLs = classLoader.getResources(dirName);
@@ -351,7 +344,7 @@ public class DefaultClassFinder implements ClassFinder {
     }
 
     private List<String> file(URL location) {
-        List<String> classNames = new ArrayList<String>();
+        List<String> classNames = new ArrayList<>();
         File dir = new File(URLDecoder.decode(location.getPath()));
         if ("META-INF".equals(dir.getName())) {
             dir = dir.getParentFile(); // Scrape "META-INF" off
@@ -394,7 +387,7 @@ public class DefaultClassFinder implements ClassFinder {
     }
 
     private List<String> jar(JarInputStream jarStream) throws IOException {
-        List<String> classNames = new ArrayList<String>();
+        List<String> classNames = new ArrayList<>();
 
         JarEntry entry;
         while ((entry = jarStream.getNextJarEntry()) != null) {
@@ -444,7 +437,7 @@ public class DefaultClassFinder implements ClassFinder {
     private List<Info> getAnnotationInfos(String name) {
         List<Info> infos = annotated.get(name);
         if (infos == null) {
-            infos = new ArrayList<Info>();
+            infos = new ArrayList<>();
             annotated.put(name, infos);
         }
         return infos;

@@ -21,6 +21,22 @@
 
 package org.apache.struts2.interceptor.debugging;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.FilterDispatcher;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.views.freemarker.FreemarkerResult;
+
+import javax.servlet.http.HttpServletResponse;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -29,30 +45,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.FilterDispatcher;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-import org.apache.struts2.views.freemarker.FreemarkerResult;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import java.util.*;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -99,7 +92,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             "com.opensymphony.xwork2.", "xwork."};
     private String[] _ignoreKeys = new String[]{"application", "session",
             "parameters", "request"};
-    private HashSet<String> ignoreKeys = new HashSet<String>(Arrays.asList(_ignoreKeys));
+    private HashSet<String> ignoreKeys = new HashSet<>(Arrays.asList(_ignoreKeys));
 
     private final static String XML_MODE = "xml";
     private final static String CONSOLE_MODE = "console";
@@ -145,7 +138,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         boolean actionOnly = false;
         boolean cont = true;
         Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
-        boolean devMode = devModeOverride != null ? devModeOverride.booleanValue() : this.devMode;
+        boolean devMode = devModeOverride != null ? devModeOverride : this.devMode;
         if (devMode) {
             final ActionContext ctx = ActionContext.getContext();
             String type = getParameter(DEBUG_PARAM);
@@ -266,7 +259,6 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         }
     }
 
-
     /**
      * Gets a single string from the request parameters
      *
@@ -280,7 +272,6 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         }
         return null;
     }
-
 
     /**
      * Prints the current context to the response in XML format.
@@ -299,7 +290,6 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         }
     }
 
-
     /**
      * Prints the current request to the existing writer.
      *
@@ -308,8 +298,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     protected void printContext(PrettyPrintWriter writer) {
         ActionContext ctx = ActionContext.getContext();
         writer.startNode(DEBUG_PARAM);
-        serializeIt(ctx.getParameters(), "parameters", writer,
-                new ArrayList<Object>());
+        serializeIt(ctx.getParameters(), "parameters", writer, new ArrayList<>());
         writer.startNode("context");
         String key;
         Map ctxMap = ctx.getContextMap();
@@ -324,24 +313,23 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                 }
             }
             if (print) {
-                serializeIt(ctxMap.get(key), key, writer, new ArrayList<Object>());
+                serializeIt(ctxMap.get(key), key, writer, new ArrayList<>());
             }
         }
         writer.endNode();
         Map requestMap = (Map) ctx.get("request");
         serializeIt(requestMap, "request", writer, filterValueStack(requestMap));
-        serializeIt(ctx.getSession(), "session", writer, new ArrayList<Object>());
+        serializeIt(ctx.getSession(), "session", writer, new ArrayList<>());
 
         ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
-        serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList<Object>());
+        serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList<>());
         writer.endNode();
     }
-
 
     /**
      * Recursive function to serialize objects to XML. Currently it will
      * serialize Collections, maps, Arrays, and JavaBeans. It maintains a stack
-     * of objects serialized already in the current functioncall. This is used
+     * of objects serialized already in the current function call. This is used
      * to avoid looping (stack overflow) of circular linked objects. Struts and
      * XWork objects are ignored.
      *
@@ -356,10 +344,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         writer.flush();
         // Check stack for this object
         if ((bean != null) && (stack.contains(bean))) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Circular reference detected, not serializing object: "
-                        + name);
-            }
+            LOG.info("Circular reference detected, not serializing object: {}", name);
             return;
         } else if (bean != null) {
             // Push object onto stack.
@@ -428,7 +413,6 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         stack.remove(bean);
     }
 
-
     /**
      * @param enableXmlWithConsole the enableXmlWithConsole to set
      */
@@ -436,17 +420,14 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         this.enableXmlWithConsole = enableXmlWithConsole;
     }
 
-    
     private List<Object> filterValueStack(Map requestMap) {
-    	List<Object> filter = new ArrayList<Object>();
-    	Object valueStack = requestMap.get("struts.valueStack");
+        List<Object> filter = new ArrayList<>();
+        Object valueStack = requestMap.get("struts.valueStack");
     	if(valueStack != null) {
     		filter.add(valueStack);
     	}
     	return filter;
     }
-
-
 }
 
 

@@ -156,9 +156,9 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     public void setResultCode(String resultCode) {
-        if (isExecuted())
+        if (isExecuted()) {
             throw new IllegalStateException("Result has already been executed.");
-
+        }
         this.resultCode = resultCode;
     }
 
@@ -176,7 +176,7 @@ public class DefaultActionInvocation implements ActionInvocation {
      */
     public void addPreResultListener(PreResultListener listener) {
         if (preResultListeners == null) {
-            preResultListeners = new ArrayList<PreResultListener>(1);
+            preResultListeners = new ArrayList<>(1);
         }
 
         preResultListeners.add(listener);
@@ -236,9 +236,8 @@ public class DefaultActionInvocation implements ActionInvocation {
                 String interceptorMsg = "interceptor: " + interceptor.getName();
                 UtilTimerStack.push(interceptorMsg);
                 try {
-                                resultCode = interceptor.getInterceptor().intercept(DefaultActionInvocation.this);
-                            }
-                finally {
+                    resultCode = interceptor.getInterceptor().intercept(DefaultActionInvocation.this);
+                } finally {
                     UtilTimerStack.pop(interceptorMsg);
                 }
             } else {
@@ -289,7 +288,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             UtilTimerStack.push(timerKey);
             action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
         } catch (InstantiationException e) {
-            throw new XWorkException("Unable to intantiate Action!", e, proxy.getConfig());
+            throw new XWorkException("Unable to instantiate Action!", e, proxy.getConfig());
         } catch (IllegalAccessException e) {
             throw new XWorkException("Illegal access to constructor, is it public?", e, proxy.getConfig());
         } catch (Exception e) {
@@ -367,7 +366,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                         + " and result " + getResultCode(), proxy.getConfig());
             } else {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("No result returned for action " + getAction().getClass().getName() + " at " + proxy.getConfig().getLocation());
+                    LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
                 }
             }
         } finally {
@@ -398,7 +397,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         invocationContext.setName(proxy.getActionName());
 
         // get a new List so we don't get problems with the iterator if someone changes the list
-        List<InterceptorMapping> interceptorList = new ArrayList<InterceptorMapping>(proxy.getConfig().getInterceptors());
+        List<InterceptorMapping> interceptorList = new ArrayList<>(proxy.getConfig().getInterceptors());
         interceptors = interceptorList.iterator();
     }
 

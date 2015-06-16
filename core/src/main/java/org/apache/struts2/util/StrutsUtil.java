@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
 
@@ -42,12 +42,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Struts base utility class, for use in Velocity and Freemarker templates
@@ -58,7 +53,7 @@ public class StrutsUtil {
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
-    protected Map<String, Class> classes = new Hashtable<String, Class>();
+    protected Map<String, Class> classes = new Hashtable<>();
     protected OgnlTool ognl;
     protected ValueStack stack;
 
@@ -117,9 +112,7 @@ public class StrutsUtil {
             return responseWrapper.getData();
         }
         catch (Exception e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot include {}", e, aName.toString());
-            }
+            LOG.debug("Cannot include {}", aName.toString(), e);
             throw e;
         }
     }

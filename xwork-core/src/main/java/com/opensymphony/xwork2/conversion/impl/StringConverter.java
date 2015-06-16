@@ -18,7 +18,7 @@ public class StringConverter extends DefaultTypeConverter {
 
         if (value instanceof int[]) {
             int[] x = (int[]) value;
-            List<Integer> intArray = new ArrayList<Integer>(x.length);
+            List<Integer> intArray = new ArrayList<>(x.length);
 
             for (int aX : x) {
                 intArray.add(Integer.valueOf(aX));
@@ -27,7 +27,7 @@ public class StringConverter extends DefaultTypeConverter {
             result = StringUtils.join(intArray, ", ");
         } else if (value instanceof long[]) {
             long[] x = (long[]) value;
-            List<Long> longArray = new ArrayList<Long>(x.length);
+            List<Long> longArray = new ArrayList<>(x.length);
 
             for (long aX : x) {
                 longArray.add(Long.valueOf(aX));
@@ -36,7 +36,7 @@ public class StringConverter extends DefaultTypeConverter {
             result = StringUtils.join(longArray, ", ");
         } else if (value instanceof double[]) {
             double[] x = (double[]) value;
-            List<Double> doubleArray = new ArrayList<Double>(x.length);
+            List<Double> doubleArray = new ArrayList<>(x.length);
 
             for (double aX : x) {
                 doubleArray.add(new Double(aX));
@@ -45,7 +45,7 @@ public class StringConverter extends DefaultTypeConverter {
             result = StringUtils.join(doubleArray, ", ");
         } else if (value instanceof boolean[]) {
             boolean[] x = (boolean[]) value;
-            List<Boolean> booleanArray = new ArrayList<Boolean>(x.length);
+            List<Boolean> booleanArray = new ArrayList<>(x.length);
 
             for (boolean aX : x) {
                 booleanArray.add(new Boolean(aX));

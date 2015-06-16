@@ -75,7 +75,7 @@ public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
         if ((obj != null) && (obj instanceof Boolean)) {
             answer = (Boolean) obj;
         } else {
-            log.warn("Got result of " + obj + " when trying to get Boolean.");
+            log.warn("Got result of {} when trying to get Boolean.", obj);
         }
 
         return answer;

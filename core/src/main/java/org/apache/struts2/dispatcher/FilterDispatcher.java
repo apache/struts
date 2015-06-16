@@ -29,22 +29,16 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.ng.filter.FilterHostConfig;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -176,7 +170,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     /**
      * Maintains per-request override of devMode configuration.
      */
-    private static ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<Boolean>();
+    private static ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<>();
 
     /**
      * Initializes the filter by creating a default dispatcher
@@ -232,7 +226,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     public void destroy() {
         if (dispatcher == null) {
-            log.warn("something is seriously wrong, Dispatcher is not initialized (null) ");
+            log.warn("something is seriously wrong, Dispatcher is not initialized (null)");
         } else {
             try {
                 dispatcher.cleanup();
@@ -249,10 +243,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * 
      * @param devMode   the override value
      */
-    public static void overrideDevMode(
-        boolean devMode)
-    {
-        devModeOverride.set(Boolean.valueOf(devMode));
+    public static void overrideDevMode(boolean devMode) {
+        devModeOverride.set(devMode);
     }
 
     /**
@@ -271,7 +263,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @return Initialized Dispatcher
      */
     protected Dispatcher createDispatcher(FilterConfig filterConfig) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         for (Enumeration e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
             String name = (String) e.nextElement();
             String value = filterConfig.getInitParameter(name);
@@ -457,7 +449,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 "*           This can be a source of unpredictable problems!           *\n" +
                 "*                                                                     *\n" +
                 "*              Please refer to the docs for more details!             *\n" +
-                "*            http://struts.apache.org/2.x/docs/webxml.html            *\n" +
+                        "*            http://struts.apache.org/docs/webxml.html                *\n" +
                 "*                                                                     *\n" +
                 "***********************************************************************\n\n";
         System.out.println(msg);

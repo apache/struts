@@ -38,7 +38,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
     }
 
     public synchronized Collection<String> getActionErrors() {
-        return new LinkedList<String>(internalGetActionErrors());
+        return new LinkedList<>(internalGetActionErrors());
     }
 
     public synchronized void setActionMessages(Collection<String> messages) {
@@ -46,7 +46,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
     }
 
     public synchronized Collection<String> getActionMessages() {
-        return new LinkedList<String>(internalGetActionMessages());
+        return new LinkedList<>(internalGetActionMessages());
     }
 
     public synchronized void setFieldErrors(Map<String, List<String>> errorMap) {
@@ -54,7 +54,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
     }
 
     public synchronized Map<String, List<String>> getFieldErrors() {
-        return new LinkedHashMap<String, List<String>>(internalGetFieldErrors());
+        return new LinkedHashMap<>(internalGetFieldErrors());
     }
 
     public synchronized void addActionError(String anErrorMessage) {
@@ -70,7 +70,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
         List<String> thisFieldErrors = errors.get(fieldName);
 
         if (thisFieldErrors == null) {
-            thisFieldErrors = new ArrayList<String>();
+            thisFieldErrors = new ArrayList<>();
             errors.put(fieldName, thisFieldErrors);
         }
 
@@ -95,7 +95,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     private Collection<String> internalGetActionErrors() {
         if (actionErrors == null) {
-            actionErrors = new ArrayList<String>();
+            actionErrors = new ArrayList<>();
         }
 
         return actionErrors;
@@ -103,7 +103,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     private Collection<String> internalGetActionMessages() {
         if (actionMessages == null) {
-            actionMessages = new ArrayList<String>();
+            actionMessages = new ArrayList<>();
         }
 
         return actionMessages;
@@ -111,7 +111,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     private Map<String, List<String>> internalGetFieldErrors() {
         if (fieldErrors == null) {
-            fieldErrors = new LinkedHashMap<String, List<String>>();
+            fieldErrors = new LinkedHashMap<>();
         }
 
         return fieldErrors;

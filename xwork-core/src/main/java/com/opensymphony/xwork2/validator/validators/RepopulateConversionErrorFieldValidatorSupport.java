@@ -19,10 +19,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -173,9 +173,7 @@ public abstract class RepopulateConversionErrorFieldValidatorSupport extends Fie
                     doExprOverride = true;
                     fakeParams.put(fullFieldName, escape(tmpValue[0]));
                 } else {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("value is an empty array of String or with first element in it as null [" + value + "], will not repopulate conversion error ");
-                    }
+                    LOG.warn("value is an empty array of String or with first element in it as null [{}], will not repopulate conversion error", value);
                 }
             } else if (value instanceof String) {
                 String tmpValue = (String) value;
@@ -183,9 +181,7 @@ public abstract class RepopulateConversionErrorFieldValidatorSupport extends Fie
                 fakeParams.put(fullFieldName, escape(tmpValue));
             } else {
                 // opps... it should be 
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("conversion error value is not a String or array of String but instead is [" + value + "], will not repopulate conversion error");
-                }
+                LOG.warn("conversion error value is not a String or array of String but instead is [{}], will not repopulate conversion error", value);
             }
 
             if (doExprOverride) {

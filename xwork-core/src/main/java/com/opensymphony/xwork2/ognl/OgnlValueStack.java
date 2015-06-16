@@ -27,11 +27,11 @@ import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.util.logging.LoggerUtils;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.*;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -97,12 +97,12 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
-        devMode = "true".equalsIgnoreCase(mode);
+        this.devMode = BooleanUtils.toBoolean(mode);
     }
 
     @Inject(value = "logMissingProperties", required = false)
     public void setLogMissingProperties(String logMissingProperties) {
-        this.logMissingProperties = "true".equalsIgnoreCase(logMissingProperties);
+        this.logMissingProperties = BooleanUtils.toBoolean(logMissingProperties);
     }
 
     /**
@@ -207,11 +207,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     	boolean shouldLog = shouldLogMissingPropertyWarning(e);
     	String msg = null;
     	if (throwExceptionOnFailure || shouldLog) {
-    		msg = ErrorMessageBuilder.create()
-                    .errorSettingExpressionWithValue(expr, value)
-                    .build();
-    	}
-    	if (shouldLog) {
+            msg = ErrorMessageBuilder.create().errorSettingExpressionWithValue(expr, value).build();
+        }
+        if (shouldLog) {
             LOG.warn(msg, e);
     	}
     	
@@ -451,7 +449,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
         CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
         TextProvider prov = cont.getInstance(TextProvider.class, "system");
-        boolean allow = "true".equals(cont.getInstance(String.class, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS));
+        boolean allow = BooleanUtils.toBoolean(cont.getInstance(String.class, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS));
         OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, allow);
         aStack.setOgnlUtil(cont.getInstance(OgnlUtil.class));
         aStack.setRoot(xworkConverter, accessor, this.root, allow);

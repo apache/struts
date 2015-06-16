@@ -22,10 +22,10 @@
 package org.apache.struts2.views.util;
 
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Default implementation of UrlHelper
@@ -187,9 +182,7 @@ public class DefaultUrlHelper implements UrlHelper {
         try {
             result = encodeResult ? response.encodeURL(result) : result;
         } catch (Exception ex) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Could not encode the URL for some reason, use it unchanged", ex);
-            }
+            LOG.debug("Could not encode the URL for some reason, use it unchanged", ex);
             result = link.toString();
         }
 

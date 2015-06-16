@@ -20,13 +20,8 @@ import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.test.annotations.Person;
 
-import java.lang.reflect.Member;
 import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Test case for XWorkBasicConverter
@@ -60,7 +55,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testDateWithLocalePoland() throws Exception {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         Locale locale = new Locale("pl", "PL");
         map.put(ActionContext.LOCALE, locale);
 
@@ -74,7 +69,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testDateWithLocaleFrance() throws Exception {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         Locale locale = new Locale("fr", "FR");
         map.put(ActionContext.LOCALE, locale);
 
@@ -88,7 +83,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testDateWithLocaleUK() throws Exception {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         Locale locale = new Locale("en", "US");
         map.put(ActionContext.LOCALE, locale);
 
@@ -242,13 +237,12 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
 
     public void testConvert() {
-        Map context = new HashMap();
+        Map<String, Object> context = new HashMap<>();
         Person o = new Person();
-        Member member = null;
         String s = "names";
         Object value = new Person[0];
         Class toType = String.class;
-        basicConverter.convertValue(context, value, member, s, value, toType);
+        basicConverter.convertValue(context, value, null, s, value, toType);
     }
 
     @Override

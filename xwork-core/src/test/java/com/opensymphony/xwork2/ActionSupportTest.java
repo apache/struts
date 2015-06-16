@@ -223,7 +223,7 @@ public class ActionSupportTest extends XWorkTestCase {
         ActionContext.getContext().setLocale(new Locale("da"));
         MyActionSupport mas = new MyActionSupport();
 
-        List<Object> args = new ArrayList<Object>();
+        List<Object> args = new ArrayList<>();
         args.add("Santa");
         args.add("loud");
         assertEquals("Hello World", mas.getText("hello", "this is default", args)); // no args in bundle
@@ -273,7 +273,7 @@ public class ActionSupportTest extends XWorkTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
 
-        List<Object> args = new ArrayList<Object>();
+        List<Object> args = new ArrayList<>();
         args.add("Santa");
         args.add("loud");
         assertEquals("Hello World", mas.getText("hello", "this is default", args, stack)); // no args in bundle

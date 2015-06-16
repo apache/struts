@@ -133,9 +133,9 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
     }
 
     private Map<String,ActionConfig> buildActionConfigMap() {
-        Map<String, ActionConfig> map = new HashMap<String,ActionConfig>();
+        Map<String, ActionConfig> map = new HashMap<>();
 
-        HashMap params = new HashMap();
+        HashMap<String, String> params = new HashMap<>();
         params.put("first", "{1}");
         params.put("second", "{2}");
 
@@ -143,7 +143,7 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
                 .methodName("do{2}")
                 .addParams(params)
                 .addExceptionMapping(new ExceptionMappingConfig.Builder("foo{1}", "java.lang.{2}Exception", "success{1}")
-                    .addParams(new HashMap(params))
+                        .addParams(new HashMap<>(params))
                     .build())
                 .addInterceptor(new InterceptorMapping(null, null))
                 .addResultConfig(new ResultConfig.Builder("success{1}", "foo.{2}").addParams(params).build())

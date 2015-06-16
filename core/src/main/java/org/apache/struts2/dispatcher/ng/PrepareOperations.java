@@ -23,8 +23,8 @@ package org.apache.struts2.dispatcher.ng;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -50,7 +50,6 @@ public class PrepareOperations {
     private Dispatcher dispatcher;
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
     public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
-    private Logger log = LogManager.getLogger(PrepareOperations.class);
 
     @Deprecated
     public PrepareOperations(ServletContext servletContext, Dispatcher dispatcher) {
@@ -75,7 +74,7 @@ public class PrepareOperations {
         ActionContext oldContext = ActionContext.getContext();
         if (oldContext != null) {
             // detected existing context, so we are probably in a forward
-            ctx = new ActionContext(new HashMap<String, Object>(oldContext.getContextMap()));
+            ctx = new ActionContext(new HashMap<>(oldContext.getContextMap()));
         } else {
             ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
             stack.getContext().putAll(dispatcher.createContextMap(request, response, null));
@@ -95,9 +94,7 @@ public class PrepareOperations {
             counterVal -= 1;
             request.setAttribute(CLEANUP_RECURSION_COUNTER, counterVal);
             if (counterVal > 0 ) {
-                if (log.isDebugEnabled()) {
-                    log.debug("skipping cleanup counter="+counterVal);
-                }
+                LOG.debug("skipping cleanup counter={}", counterVal);
                 return;
             }
         }

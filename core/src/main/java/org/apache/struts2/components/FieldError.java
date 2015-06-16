@@ -91,7 +91,7 @@ import java.util.List;
                 "or partial depending on param tag nested)if they exists")
 public class FieldError extends UIBean implements UnnamedParametric {
 
-    private List<String> errorFieldNames = new ArrayList<String>();
+    private List<String> errorFieldNames = new ArrayList<>();
     private boolean escape = true;
 
     public FieldError(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {

@@ -21,15 +21,14 @@
 
 package org.apache.struts2.dispatcher;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -259,9 +258,7 @@ public class StreamResult extends StrutsResultSupport {
                     }
                 }
                 catch(NumberFormatException e) {
-                    if (LOG.isWarnEnabled()) {
-                	LOG.warn("failed to recongnize "+_contentLength+" as a number, contentLength header will not be set", e);
-                    }
+                    LOG.warn("failed to recognize {} as a number, contentLength header will not be set", _contentLength, e);
                 }
             }
 
@@ -279,24 +276,18 @@ public class StreamResult extends StrutsResultSupport {
             // Get the outputstream
             oOutput = oResponse.getOutputStream();
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Streaming result [" + inputName + "] type=[" + contentType + "] length=[" + contentLength +
-                    "] content-disposition=[" + contentDisposition + "] charset=[" + contentCharSet + "]");
-            }
+            LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
+                    inputName, contentType, contentLength, contentDisposition, contentCharSet);
 
             // Copy input to output
-            if (LOG.isDebugEnabled()) {
         	LOG.debug("Streaming to output buffer +++ START +++");
-            }
             byte[] oBuff = new byte[bufferSize];
             int iSize;
             while (-1 != (iSize = inputStream.read(oBuff))) {
                 oOutput.write(oBuff, 0, iSize);
             }
-            if (LOG.isDebugEnabled()) {
         	LOG.debug("Streaming to output buffer +++ END +++");
-            }
-            
+
             // Flush
             oOutput.flush();
         }
@@ -334,7 +325,7 @@ public class StreamResult extends StrutsResultSupport {
 
         Integer bufferSize = (Integer) stack.findValue("bufferSize", Integer.class);
         if (bufferSize != null) {
-            setBufferSize(bufferSize.intValue());
+            setBufferSize(bufferSize);
         }
 
         if (contentCharSet != null ) {

@@ -21,17 +21,15 @@
 
 package org.apache.struts2.components;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.RequestUtils;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.util.FastByteArrayOutputStream;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,17 +38,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-
-import org.apache.struts2.RequestUtils;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.util.FastByteArrayOutputStream;
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -135,24 +125,20 @@ public class Include extends Component {
             String concat = "";
 
             // Set parameters
-            Iterator iter = parameters.entrySet().iterator();
-
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry) iter.next();
+            for (Object next : parameters.entrySet()) {
+                Map.Entry entry = (Map.Entry) next;
                 Object name = entry.getKey();
                 List values = (List) entry.getValue();
 
-                for (int i = 0; i < values.size(); i++) {
+                for (Object value : values) {
                     urlBuf.append(concat);
                     urlBuf.append(name);
                     urlBuf.append('=');
 
                     try {
-                        urlBuf.append(URLEncoder.encode(values.get(i).toString(), "UTF-8"));
-                    } catch (Exception e) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("unable to url-encode "+values.get(i).toString()+", it will be ignored");
-                        }
+                        urlBuf.append(URLEncoder.encode(value.toString(), "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        LOG.warn("Unable to url-encode {}, it will be ignored", value);
                     }
 
                     concat = "&";
@@ -165,10 +151,8 @@ public class Include extends Component {
         // Include
         try {
             include(result, writer, req, res, defaultEncoding);
-        } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
-        	LOG.warn("Exception thrown during include of " + result, e);
-            }
+        } catch (ServletException | IOException e) {
+            LOG.warn("Exception thrown during include of {}", result, e);
         }
 
         return super.end(writer, body);
@@ -199,7 +183,7 @@ public class Include extends Component {
 
         // .. is illegal in an absolute path according to the Servlet Spec and will cause
         // known problems on Orion application servers.
-        if (returnValue.indexOf("..") != -1) {
+        if (returnValue.contains("..")) {
             Stack stack = new Stack();
             StringTokenizer pathParts = new StringTokenizer(returnValue.replace('\\', '/'), "/");
 

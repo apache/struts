@@ -23,25 +23,12 @@ package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRRtfExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXmlExporter;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.export.*;
 import net.sf.jasperreports.engine.util.JRLoader;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 
@@ -249,9 +236,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Will throw a runtime exception if no "datasource" property. TODO Best place for that is...?
         initializeProperties(invocation);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating JasperReport for dataSource = " + dataSource + ", format = " + format);
-        }
+        LOG.debug("Creating JasperReport for dataSource = {}, format = {}", dataSource, format);
 
         HttpServletRequest request = (HttpServletRequest) invocation.getInvocationContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext().get(ServletActionContext.HTTP_RESPONSE);
@@ -311,9 +296,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Add any report parameters from action to param map.
         Map reportParams = (Map) stack.findValue(reportParameters);
         if (reportParams != null) {
-            if (LOG.isDebugEnabled()) {
         	LOG.debug("Found report parameters; adding to parameters...");
-            }
             parameters.putAll(reportParams);
         }
 
@@ -323,12 +306,14 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Fill the report and produce a print object
         try {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(systemId);
-            if (conn == null)
+            if (conn == null) {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
-            else
+            }
+            else {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
+            }
         } catch (JRException e) {
-            LOG.error("Error building report for uri " + systemId, e);
+            LOG.error("Error building report for uri {}", systemId, e);
             throw new ServletException(e.getMessage(), e);
         }
 
@@ -386,16 +371,13 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
             Map exportParams = (Map) stack.findValue(exportParameters);
             if (exportParams != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Found export parameters; adding to exporter parameters...");
-                }
+                LOG.debug("Found export parameters; adding to exporter parameters...");
                 exporter.getParameters().putAll(exportParams);
             }
 
             output = exportReportToBytes(jasperPrint, exporter);
         } catch (JRException e) {
-            String message = "Error producing " + format + " report for uri " + systemId;
-            LOG.error(message, e);
+            LOG.error("Error producing {} report for uri {}", format, systemId, e);
             throw new ServletException(e.getMessage(), e);
         }
 

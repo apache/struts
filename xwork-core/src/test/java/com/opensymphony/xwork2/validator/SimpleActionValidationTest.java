@@ -34,7 +34,7 @@ import java.util.*;
 public class SimpleActionValidationTest extends XWorkTestCase {
 
     public void testAliasValidation() {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("baz", "10");
 
         //valid values
@@ -81,7 +81,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
     }
 
     public void testLookingUpFieldNameAsTextKey() {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
 
         // should cause a message
         params.put("baz", "-1");
@@ -89,7 +89,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         //valid values
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
@@ -111,10 +111,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
     }
 
     public void testMessageKey() {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("foo", "200");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
@@ -160,10 +160,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
     }
 
     public void testParamterizedMessage() {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("bar", "42");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
@@ -185,7 +185,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
     }
 
     public void testSubPropertiesAreValidated() {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("baz", "10");
 
         //valid values
@@ -198,7 +198,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         // this should cause a message
         params.put("bean.count", "100");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {

@@ -10,7 +10,7 @@ import java.util.Map;
 public class Indexed {
 
     public Object[] values = new Object[3];
-    public Map<String, Object> map = new HashMap<String, Object>();
+    public Map<String, Object> map = new HashMap<>();
 
     public void setSimple(int i, Object v) {
         values[i] = v;

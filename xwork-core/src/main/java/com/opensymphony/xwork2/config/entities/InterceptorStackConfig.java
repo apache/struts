@@ -57,7 +57,7 @@ public class InterceptorStackConfig extends Located implements Serializable {
      */
     protected InterceptorStackConfig(InterceptorStackConfig orig) {
         this.name = orig.name;
-        this.interceptors = new ArrayList<InterceptorMapping>(orig.interceptors);
+        this.interceptors = new ArrayList<>(orig.interceptors);
         this.location = orig.location;
     }
 

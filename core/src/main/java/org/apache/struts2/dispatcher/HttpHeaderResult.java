@@ -26,8 +26,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletResponse;
@@ -83,7 +83,7 @@ public class HttpHeaderResult implements Result {
     private static final Logger LOG = LogManager.getLogger(HttpHeaderResult.class);
 
     /**
-     * This result type doesn't have a default param, null is ok to reduce noice in logs
+     * This result type doesn't have a default param, null is ok to reduce noise in logs
      */
     public static final String DEFAULT_PARAM = null;
 
@@ -95,7 +95,7 @@ public class HttpHeaderResult implements Result {
 
     public HttpHeaderResult() {
         super();
-        headers = new HashMap<String, String>();
+        headers = new HashMap<>();
     }
 
     public HttpHeaderResult(int status) {
@@ -195,9 +195,7 @@ public class HttpHeaderResult implements Result {
             try {
                 errorCode = Integer.parseInt(parse ? TextParseUtil.translateVariables(error, stack) : error);
             } catch (Exception e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Cannot parse errorCode [{}] value as Integer!", error, e);
-                }
+                LOG.error("Cannot parse errorCode [{}] value as Integer!", error, e);
             }
             if (errorCode != -1) {
                 if (errorMessage != null) {

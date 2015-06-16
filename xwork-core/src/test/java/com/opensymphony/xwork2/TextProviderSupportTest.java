@@ -54,7 +54,7 @@ public class TextProviderSupportTest extends XWorkTestCase {
     }
 
     public void testGetTextsWithListArgs() throws Exception {
-        List<Object> args = new ArrayList<Object>();
+        List<Object> args = new ArrayList<>();
         args.add("Santa");
         args.add("loud");
         assertEquals("Hello World", tp.getText("hello", "this is default", args)); // no args in bundle

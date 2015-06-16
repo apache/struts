@@ -32,9 +32,9 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testBlockingByDefault() throws Exception {
-		
-		Map contextMap = new HashMap();
-		Map parameterMap = new HashMap();
+
+		Map<String, Object> contextMap = new HashMap<>();
+		Map<String, Object> parameterMap = new HashMap<>();
 		
 		parameterMap.put("job", "Baker");
 		parameterMap.put("name", "Martin");
@@ -54,8 +54,8 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		
 		AnnotationParameterFilterIntereptor intereptor = new AnnotationParameterFilterIntereptor();
 		intereptor.intercept(invocation);
-		
-		assertEquals("Paramter map should contain one entry", 1, parameterMap.size());
+
+		assertEquals("Parameter map should contain one entry", 1, parameterMap.size());
 		assertNull(parameterMap.get("job"));
 		assertNotNull(parameterMap.get("name"));
 		
@@ -67,9 +67,9 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testAllowingByDefault() throws Exception {
-		
-		Map contextMap = new HashMap();
-		Map parameterMap = new HashMap();
+
+		Map<String, Object> contextMap = new HashMap<>();
+		Map<String, Object> parameterMap = new HashMap<>();
 		
 		parameterMap.put("job", "Baker");
 		parameterMap.put("name", "Martin");
@@ -102,9 +102,9 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testBlockingByDefaultWithModel() throws Exception {
-		
-		Map contextMap = new HashMap();
-		Map parameterMap = new HashMap();
+
+		Map<String, Object> contextMap = new HashMap<>();
+		Map<String, Object> parameterMap = new HashMap<>();
 		
 		parameterMap.put("job", "Baker");
 		parameterMap.put("name", "Martin");
@@ -139,9 +139,9 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testAllowingByDefaultWithModel() throws Exception {
-		
-		Map contextMap = new HashMap();
-		Map parameterMap = new HashMap();
+
+		Map<String, Object> contextMap = new HashMap<>();
+		Map<String, Object> parameterMap = new HashMap<>();
 		
 		parameterMap.put("job", "Baker");
 		parameterMap.put("name", "Martin");

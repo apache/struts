@@ -27,7 +27,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
      * @throws Exception when action throws exception
      */
     public void testInvoke() throws Exception {
-        List<InterceptorMapping> interceptorMappings = new ArrayList<InterceptorMapping>();
+        List<InterceptorMapping> interceptorMappings = new ArrayList<>();
         MockInterceptor mockInterceptor1 = new MockInterceptor();
         mockInterceptor1.setFoo("test1");
         mockInterceptor1.setExpectedFoo("test1");

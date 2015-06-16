@@ -19,7 +19,7 @@ public class DefaultTypeConverterHolder implements TypeConverterHolder {
      * - TypeConverter - instance of TypeConverter
      * </pre>
      */
-    private HashMap<String, TypeConverter> defaultMappings = new HashMap<String, TypeConverter>();  // non-action (eg. returned value)
+    private HashMap<String, TypeConverter> defaultMappings = new HashMap<>();  // non-action (eg. returned value)
 
     /**
      * Target class conversion Mappings.
@@ -40,12 +40,12 @@ public class DefaultTypeConverterHolder implements TypeConverterHolder {
      *                    Element_property=foo.bar.MyObject
      * </pre>
      */
-    private HashMap<Class, Map<String, Object>> mappings = new HashMap<Class, Map<String, Object>>(); // action
+    private HashMap<Class, Map<String, Object>> mappings = new HashMap<>(); // action
 
     /**
      * Unavailable target class conversion mappings, serves as a simple cache.
      */
-    private HashSet<Class> noMapping = new HashSet<Class>(); // action
+    private HashSet<Class> noMapping = new HashSet<>(); // action
 
     /**
      * Record classes that doesn't have conversion mapping defined.
@@ -53,7 +53,7 @@ public class DefaultTypeConverterHolder implements TypeConverterHolder {
      * - String -> classname as String
      * </pre>
      */
-    protected HashSet<String> unknownMappings = new HashSet<String>();     // non-action (eg. returned value)
+    protected HashSet<String> unknownMappings = new HashSet<>();     // non-action (eg. returned value)
 
     public void addDefaultMapping(String className, TypeConverter typeConverter) {
         defaultMappings.put(className, typeConverter);

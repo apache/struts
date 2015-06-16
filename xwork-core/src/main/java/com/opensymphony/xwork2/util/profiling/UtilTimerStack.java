@@ -26,204 +26,204 @@
  */
 package com.opensymphony.xwork2.util.profiling;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
  * A timer stack.
- *
- * <p />
- * 
+ * <p/>
+ * <p/>
+ * <p/>
  * <!-- START SNIPPET: profilingAspect_struts2 -->
- * 
+ * <p/>
  * Struts2 profiling aspects involves the following :-
  * <ul>
- *   <li>ActionContextCleanUp</li>
- *   <li>FreemarkerPageFilter</li>
- *   <li>DispatcherFilter</li>
- *   <ul>
- *      <li>Dispatcher</li>
- *      <ul>
- *          <li>creation of DefaultActionProxy</li>
- *          <ul>
- *              <li>creation of DefaultActionInvocation</li>
- *              <ul>
- *   	          <li>creation of Action</li>
- *              </ul>
- *          </ul>
- *          <li>execution of DefaultActionProxy</li>
- *          <ul>
- *              <li>invocation of DefaultActionInvocation</li>
- *              <ul>
- *                  <li>invocation of Interceptors</li>
- *                  <li>invocation of Action</li>
- *                  <li>invocation of PreResultListener</li>
- *                  <li>invocation of Result</li>
- *              </ul>
- *          </ul>
- *      </ul>
- *   </ul>
+ * <li>ActionContextCleanUp</li>
+ * <li>FreemarkerPageFilter</li>
+ * <li>DispatcherFilter</li>
+ * <ul>
+ * <li>Dispatcher</li>
+ * <ul>
+ * <li>creation of DefaultActionProxy</li>
+ * <ul>
+ * <li>creation of DefaultActionInvocation</li>
+ * <ul>
+ * <li>creation of Action</li>
  * </ul>
- * 
+ * </ul>
+ * <li>execution of DefaultActionProxy</li>
+ * <ul>
+ * <li>invocation of DefaultActionInvocation</li>
+ * <ul>
+ * <li>invocation of Interceptors</li>
+ * <li>invocation of Action</li>
+ * <li>invocation of PreResultListener</li>
+ * <li>invocation of Result</li>
+ * </ul>
+ * </ul>
+ * </ul>
+ * </ul>
+ * </ul>
+ * <p/>
  * <!-- END SNIPPET: profilingAspect_struts2 -->
- *
- *
+ * <p/>
+ * <p/>
  * <!-- START SNIPPET: profilingAspect_xwork -->
- * 
+ * <p/>
  * XWork2 profiling aspects involves the following :-
  * <ul>
- *   <ul>
- *      <li>creation of DefaultActionProxy</li>
- *      <ul>
- *         <li>creation of DefaultActionInvocation</li>
- *         <ul>
- *   	      <li>creation of Action</li>
- *        </ul>
- *      </ul>
- *      <li>execution of DefaultActionProxy</li>
- *      <ul>
- *         <li>invocation of DefaultActionInvocation</li>
- *         <ul>
- *           <li>invocation of Interceptors</li>
- *           <li>invocation of Action</li>
- *           <li>invocation of PreResultListener</li>
- *           <li>invocation of Result</li>
- *        </ul>
- *     </ul>
- *   </ul>
+ * <ul>
+ * <li>creation of DefaultActionProxy</li>
+ * <ul>
+ * <li>creation of DefaultActionInvocation</li>
+ * <ul>
+ * <li>creation of Action</li>
  * </ul>
- * 
- * <!-- END SNIPPET: profilingAspect_xwork -->
- * 
- * 
- * <!-- START SNIPPET: activationDescription -->
- * 
- * Activating / Deactivating of the profiling feature could be done through:- 
- * 
- * <!-- END SNIPPET: activationDescription -->
- * 
+ * </ul>
+ * <li>execution of DefaultActionProxy</li>
+ * <ul>
+ * <li>invocation of DefaultActionInvocation</li>
+ * <ul>
+ * <li>invocation of Interceptors</li>
+ * <li>invocation of Action</li>
+ * <li>invocation of PreResultListener</li>
+ * <li>invocation of Result</li>
+ * </ul>
+ * </ul>
+ * </ul>
+ * </ul>
  * <p/>
- * 
+ * <!-- END SNIPPET: profilingAspect_xwork -->
+ * <p/>
+ * <p/>
+ * <!-- START SNIPPET: activationDescription -->
+ * <p/>
+ * Activating / Deactivating of the profiling feature could be done through:-
+ * <p/>
+ * <!-- END SNIPPET: activationDescription -->
+ * <p/>
+ * <p/>
+ * <p/>
  * System properties:- <p/>
  * <pre>
  * <!-- START SNIPPET: activationThroughSystemProperty -->
- * 
+ *
  *  -Dxwork.profile.activate=true
- *  
- * <!-- END SNIPPET: activationThroughSystemProperty --> 
+ *
+ * <!-- END SNIPPET: activationThroughSystemProperty -->
  * </pre>
- * 
+ * <p/>
  * <!-- START SNIPPET: activationThroughSystemPropertyDescription -->
- * 
- * This could be done in the container startup script eg. CATALINA_OPTS in catalina.sh 
- * (tomcat) or using "java -Dxwork.profile.activate=true -jar start.jar" (jetty) 
- * 
+ * <p/>
+ * This could be done in the container startup script eg. CATALINA_OPTS in catalina.sh
+ * (tomcat) or using "java -Dxwork.profile.activate=true -jar start.jar" (jetty)
+ * <p/>
  * <!-- END SNIPPET: activationThroughSystemPropertyDescription -->
- * 
+ * <p/>
  * <p/>
  * Code :- <p/>
  * <pre>
  * <!-- START SNIPPET: activationThroughCode -->
- *   
+ *
  *  UtilTimerStack.setActivate(true);
- *    
- * <!-- END SNIPPET: activationThroughCode --> 
+ *
+ * <!-- END SNIPPET: activationThroughCode -->
  * </pre>
- * 
- * 
- * 
- * <!-- START SNIPPET: activationThroughCodeDescription -->
- * 
- * This could be done in a static block, in a Spring bean with lazy-init="false", 
- * in a Servlet with init-on-startup as some numeric value, in a Filter or 
- * Listener's init method etc.
- * 
- * <!-- END SNIPPET: activationThroughCodeDescription -->
- * 
  * <p/>
- * Parameter:- 
- * 
+ * <p/>
+ * <p/>
+ * <!-- START SNIPPET: activationThroughCodeDescription -->
+ * <p/>
+ * This could be done in a static block, in a Spring bean with lazy-init="false",
+ * in a Servlet with init-on-startup as some numeric value, in a Filter or
+ * Listener's init method etc.
+ * <p/>
+ * <!-- END SNIPPET: activationThroughCodeDescription -->
+ * <p/>
+ * <p/>
+ * Parameter:-
+ * <p/>
  * <pre>
  * <!-- START SNIPPET: activationThroughParameter -->
- * 
- * &lt;action ... &gt;  
+ *
+ * &lt;action ... &gt;
  *  ...
  *  &lt;interceptor-ref name="profiling"&gt;
  *      &lt;param name="profilingKey"&gt;profiling&lt;/param&gt;
  *  &lt;/interceptor-ref&gt;
  *  ...
  * &lt;/action&gt;
- * 
- * or 
- * 
+ *
+ * or
+ *
  * &lt;action .... &gt;
  * ...
  *  &lt;interceptor-ref name="profiling" /&gt;
  * ...
  * &lt;/action&gt;
- * 
+ *
  * through url
- * 
+ *
  * http://host:port/context/namespace/someAction.action?profiling=true
- * 
+ *
  * through code
- * 
+ *
  * ActionContext.getContext().getParameters().put("profiling", "true);
- * 
+ *
  * <!-- END SNIPPET: activationThroughParameter -->
  * </pre>
- * 
- * 
+ * <p/>
+ * <p/>
  * <!-- START SNIPPET: activationThroughParameterDescription -->
- * 
- * To use profiling activation through parameter, one will need to pass in through 
- * the 'profiling' parameter (which is the default) and could be changed through 
- * the param tag in the interceptor-ref. 
- * 
+ * <p/>
+ * To use profiling activation through parameter, one will need to pass in through
+ * the 'profiling' parameter (which is the default) and could be changed through
+ * the param tag in the interceptor-ref.
+ * <p/>
  * <!-- END SNIPPET: activationThroughParameterDescription -->
- * 
+ * <p/>
  * <p/>
  * Warning:<p/>
  * <!-- START SNIPPET: activationThroughParameterWarning -->
- * 
- * Profiling activation through a parameter requires the following:
- *
- * <ul>
- *  <li>Profiling interceptor in interceptor stack</li>
- *  <li>dev mode on (struts.devMode=true in struts.properties)
- * </ul>
- * 
- * <!-- END SNIPPET: activationThroughParameterWarning -->
- * 
  * <p/>
- * 
+ * Profiling activation through a parameter requires the following:
+ * <p/>
+ * <ul>
+ * <li>Profiling interceptor in interceptor stack</li>
+ * <li>dev mode on (struts.devMode=true in struts.properties)
+ * </ul>
+ * <p/>
+ * <!-- END SNIPPET: activationThroughParameterWarning -->
+ * <p/>
+ * <p/>
+ * <p/>
  * <!-- START SNIPPET: filteringDescription -->
- * 
+ * <p/>
  * One could filter out the profile logging by having a System property as follows. With this
- * 'xwork.profile.mintime' property, one could only log profile information when its execution time 
- * exceed those specified in 'xwork.profile.mintime' system property. If no such property is specified, 
+ * 'xwork.profile.mintime' property, one could only log profile information when its execution time
+ * exceed those specified in 'xwork.profile.mintime' system property. If no such property is specified,
  * it will be assumed to be 0, hence all profile information will be logged.
- * 
+ * <p/>
  * <!-- END SNIPPET: filteringDescription -->
- * 
+ * <p/>
  * <pre>
  * <!-- START SNIPPET: filteringCode -->
- * 
+ *
  *  -Dxwork.profile.mintime=10000
- * 
+ *
  * <!-- END SNIPPET: filteringCode -->
  * </pre>
- * 
+ * <p/>
  * <!-- START SNIPPET: methodDescription -->
- * 
- * One could extend the profiling feature provided by Struts2 in their web application as well. 
- * 
+ * <p/>
+ * One could extend the profiling feature provided by Struts2 in their web application as well.
+ * <p/>
  * <!-- END SNIPPET: methodDescription -->
- * 
+ * <p/>
  * <pre>
  * <!-- START SNIPPET: method1 -->
- * 
+ *
  *    String logMessage = "Log message";
  *    UtilTimerStack.push(logMessage);
  *    try {
@@ -232,43 +232,42 @@ import org.apache.logging.log4j.LogManager;
  *    finally {
  *        UtilTimerStack.pop(logMessage); // this needs to be the same text as above
  *    }
- *    
- * <!-- END SNIPPET: method1 -->   
+ *
+ * <!-- END SNIPPET: method1 -->
  * </pre>
- * 
- * or 
- * 
+ * <p/>
+ * or
+ * <p/>
  * <pre>
  * <!-- START SNIPPET: method2 -->
- * 
- *   String result = UtilTimerStack.profile("purchaseItem: ", 
+ *
+ *   String result = UtilTimerStack.profile("purchaseItem: ",
  *       new UtilTimerStack.ProfilingBlock<String>() {
  *            public String doProfiling() {
  *               // do some code
  *               return "Ok";
  *            }
  *       });
- *       
- * <!-- END SNIPPET: method2 -->      
+ *
+ * <!-- END SNIPPET: method2 -->
  * </pre>
- * 
- * 
+ * <p/>
+ * <p/>
  * <!-- START SNIPPET: profileLogFile -->
- * 
- * Profiled result is logged using commons-logging under the logger named 
+ * <p/>
+ * Profiled result is logged using commons-logging under the logger named
  * 'com.opensymphony.xwork2.util.profiling.UtilTimerStack'. Depending on the underlying logging implementation
- * say if it is Log4j, one could direct the log to appear in a different file, being emailed to someone or have 
+ * say if it is Log4j, one could direct the log to appear in a different file, being emailed to someone or have
  * it stored in the db.
- * 
+ * <p/>
  * <!-- END SNIPPET: profileLogFile -->
- * 
+ *
  * @version $Date$ $Id$
  */
-public class UtilTimerStack
-{
+public class UtilTimerStack {
 
     // A reference to the current ProfilingTimerBean
-    protected static ThreadLocal<ProfilingTimerBean> current = new ThreadLocal<ProfilingTimerBean>();
+    protected static ThreadLocal<ProfilingTimerBean> current = new ThreadLocal<>();
 
     /**
      * System property that controls whether this timer should be used or not.  Set to "true" activates
@@ -281,7 +280,7 @@ public class UtilTimerStack
      * created.
      */
     public static final String MIN_TIME = "xwork.profile.mintime";
-    
+
     private static final Logger LOG = LogManager.getLogger(UtilTimerStack.class);
 
     /**
@@ -294,15 +293,15 @@ public class UtilTimerStack
     }
 
     /**
-     * Create and start a performance profiling with the <code>name</code> given. Deal with 
+     * Create and start a performance profiling with the <code>name</code> given. Deal with
      * profile hierarchy automatically, so caller don't have to be concern about it.
-     * 
+     *
      * @param name profile name
      */
-    public static void push(String name)
-    {
-        if (!isActive())
+    public static void push(String name) {
+        if (!isActive()) {
             return;
+        }
 
         //create a new timer and start it
         ProfilingTimerBean newTimer = new ProfilingTimerBean(name);
@@ -310,8 +309,7 @@ public class UtilTimerStack
 
         //if there is a current timer - add the new timer as a child of it
         ProfilingTimerBean currentTimer = (ProfilingTimerBean) current.get();
-        if (currentTimer != null)
-        {
+        if (currentTimer != null) {
             currentTimer.addChild(newTimer);
         }
 
@@ -322,116 +320,96 @@ public class UtilTimerStack
     /**
      * End a preformance profiling with the <code>name</code> given. Deal with
      * profile hierarchy automatically, so caller don't have to be concern about it.
-     * 
+     *
      * @param name profile name
      */
-    public static void pop(String name)
-    {
-        if (!isActive())
+    public static void pop(String name) {
+        if (!isActive()) {
             return;
+        }
 
-        ProfilingTimerBean currentTimer = (ProfilingTimerBean) current.get();
+        ProfilingTimerBean currentTimer = current.get();
 
         //if the timers are matched up with each other (ie push("a"); pop("a"));
-        if (currentTimer != null && name != null && name.equals(currentTimer.getResource()))
-        {
+        if (currentTimer != null && name != null && name.equals(currentTimer.getResource())) {
             currentTimer.setEndTime();
             ProfilingTimerBean parent = currentTimer.getParent();
             //if we are the root timer, then print out the times
-            if (parent == null)
-            {
+            if (parent == null) {
                 printTimes(currentTimer);
                 current.set(null); //for those servers that use thread pooling
-            }
-            else
-            {
+            } else {
                 current.set(parent);
             }
-        }
-        else
-        {
+        } else {
             //if timers are not matched up, then print what we have, and then print warning.
-            if (currentTimer != null)
-            {
+            if (currentTimer != null) {
                 printTimes(currentTimer);
                 current.set(null); //prevent printing multiple times
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Unmatched Timer.  Was expecting " + currentTimer.getResource() + ", instead got " + name);
-                }
+                LOG.warn("Unmatched Timer. Was expecting {}, instead got {}", currentTimer.getResource(), name);
             }
         }
-
-
     }
 
     /**
      * Do a log (at INFO level) of the time taken for this particular profiling.
-     * 
+     *
      * @param currentTimer profiling timer bean
      */
-    private static void printTimes(ProfilingTimerBean currentTimer)
-    {
-        if (LOG.isInfoEnabled()) {
-            LOG.info(currentTimer.getPrintable(getMinTime()));
-        }
+    private static void printTimes(ProfilingTimerBean currentTimer) {
+        LOG.info(currentTimer.getPrintable(getMinTime()));
     }
 
     /**
      * Get the min time for this profiling, it searches for a System property
      * 'xwork.profile.mintime' and default to 0.
-     * 
+     *
      * @return long
      */
-    private static long getMinTime()
-    {
-        try
-        {
+    private static long getMinTime() {
+        try {
             return Long.parseLong(System.getProperty(MIN_TIME, "0"));
-        }
-        catch (NumberFormatException e)
-        {
-           return -1;
+        } catch (NumberFormatException e) {
+            return -1;
         }
     }
 
     /**
      * Determine if profiling is being activated, by searching for a system property
      * 'xwork.profile.activate', default to false (profiling is off).
-     * 
+     *
      * @return <tt>true</tt>, if active, <tt>false</tt> otherwise.
      */
-    public static boolean isActive()
-    {
+    public static boolean isActive() {
         return active;
     }
 
     /**
      * Turn profiling on or off.
-     * 
+     *
      * @param active
      */
-    public static void setActive(boolean active)
-    {
-        if (active)
+    public static void setActive(boolean active) {
+        if (active) {
             System.setProperty(ACTIVATE_PROPERTY, "true");
-        else
-        	System.clearProperty(ACTIVATE_PROPERTY);
-
-        UtilTimerStack.active = active; 
+        } else {
+            System.clearProperty(ACTIVATE_PROPERTY);
+        }
+        UtilTimerStack.active = active;
     }
 
 
     /**
-     * A convenience method that allows <code>block</code> of code subjected to profiling to be executed 
-     * and avoid the need of coding boiler code that does pushing (UtilTimeBean.push(...)) and 
+     * A convenience method that allows <code>block</code> of code subjected to profiling to be executed
+     * and avoid the need of coding boiler code that does pushing (UtilTimeBean.push(...)) and
      * poping (UtilTimerBean.pop(...)) in a try ... finally ... block.
-     * 
      * <p/>
-     * 
+     * <p/>
+     * <p/>
      * Example of usage:
      * <pre>
      * 	 // we need a returning result
-     *   String result = UtilTimerStack.profile("purchaseItem: ", 
+     *   String result = UtilTimerStack.profile("purchaseItem: ",
      *       new UtilTimerStack.ProfilingBlock<String>() {
      *            public String doProfiling() {
      *               getMyService().purchaseItem(....)
@@ -442,7 +420,7 @@ public class UtilTimerStack
      * or
      * <pre>
      *   // we don't need a returning result
-     *   UtilTimerStack.profile("purchaseItem: ", 
+     *   UtilTimerStack.profile("purchaseItem: ",
      *       new UtilTimerStack.ProfilingBlock<String>() {
      *            public String doProfiling() {
      *               getMyService().purchaseItem(....)
@@ -450,40 +428,38 @@ public class UtilTimerStack
      *            }
      *       });
      * </pre>
-     * 
-     * @param <T> any return value if there's one.
-     * @param name profile name
+     *
+     * @param <T>   any return value if there's one.
+     * @param name  profile name
      * @param block code block subjected to profiling
      * @return T
      * @throws Exception
      */
     public static <T> T profile(String name, ProfilingBlock<T> block) throws Exception {
-    	UtilTimerStack.push(name);
-    	try {
-    		return block.doProfiling();
-    	}
-    	finally {
-    		UtilTimerStack.pop(name);
-    	}
+        UtilTimerStack.push(name);
+        try {
+            return block.doProfiling();
+        } finally {
+            UtilTimerStack.pop(name);
+        }
     }
-    
+
     /**
      * A callback interface where code subjected to profile is to be executed. This eliminates the need
      * of coding boiler code that does pushing (UtilTimerBean.push(...)) and poping (UtilTimerBean.pop(...))
      * in a try ... finally ... block.
-     * 
-     * @version $Date$ $Id$
-     * 
+     *
      * @param <T>
+     * @version $Date$ $Id$
      */
     public static interface ProfilingBlock<T> {
-    	
-    	/**
-    	 * Method that execute the code subjected to profiling.
-    	 * 
-    	 * @return  profiles Type
-    	 * @throws Exception
-    	 */
-    	T doProfiling() throws Exception;
+
+        /**
+         * Method that execute the code subjected to profiling.
+         *
+         * @return profiles Type
+         * @throws Exception
+         */
+        T doProfiling() throws Exception;
     }
 }

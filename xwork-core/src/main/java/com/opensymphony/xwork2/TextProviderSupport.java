@@ -148,7 +148,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @return value of named text or the provided defaultValue if no value is found
      */
     public String getText(String key, String defaultValue, String arg) {
-        List<Object> args = new ArrayList<Object>();
+        List<Object> args = new ArrayList<>();
         args.add(arg);
         return getText(key, defaultValue, args);
     }

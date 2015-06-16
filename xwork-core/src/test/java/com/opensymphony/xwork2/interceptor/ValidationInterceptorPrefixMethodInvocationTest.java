@@ -16,13 +16,11 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import org.easymock.MockControl;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.easymock.IMocksControl;
 
 import java.util.HashMap;
 
@@ -63,8 +61,8 @@ public class ValidationInterceptorPrefixMethodInvocationTest extends XWorkTestCa
 	protected ValidationInterceptor create() {
 	    ObjectFactory objectFactory = container.getInstance(ObjectFactory.class);
 	    return (ValidationInterceptor) objectFactory.buildInterceptor(
-                new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), new HashMap());
-	}
+                new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), new HashMap<String, String>());
+    }
 	
 	private interface ValidateAction extends Action, Validateable, ValidationAware {
 		void validateDoSave();

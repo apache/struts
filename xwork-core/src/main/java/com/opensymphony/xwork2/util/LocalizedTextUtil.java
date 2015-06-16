@@ -25,10 +25,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -90,14 +90,14 @@ public class LocalizedTextUtil {
 
     private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
 
-    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<Integer, List<String>>();
+    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
 
     private static boolean reloadBundles = false;
     private static boolean devMode;
 
-    private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<String, ResourceBundle>();
-    private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<MessageFormatKey, MessageFormat>();
-    private static final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<Integer, ClassLoader>();
+    private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
     private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
     private static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
@@ -112,7 +112,7 @@ public class LocalizedTextUtil {
      */
     public static void clearDefaultResourceBundles() {
         ClassLoader ccl = getCurrentThreadContextClassLoader();
-        List<String> bundles = new ArrayList<String>();
+        List<String> bundles = new ArrayList<>();
         classLoaderMap.put(ccl.hashCode(), bundles);
         bundles.add(0, XWORK_MESSAGES_BUNDLE);
     }
@@ -417,9 +417,7 @@ public class LocalizedTextUtil {
                                   ValueStack valueStack) {
         String indexedTextName = null;
         if (aTextName == null) {
-            if (LOG.isWarnEnabled()) {
         	LOG.warn("Trying to find text with null key!");
-            }
             aTextName = "";
         }
         // calculate indexedTextName (collection[*]) if applicable
@@ -518,12 +516,13 @@ public class LocalizedTextUtil {
                             Class clazz = propertyDescriptor.getPropertyType();
 
                             if (clazz != null) {
-                                if (obj != null)
+                                if (obj != null) {
                                     valueStack.push(obj);
+                                }
                                 msg = findText(clazz, newKey, locale, null, args);
-                                if (obj != null)
+                                if (obj != null) {
                                     valueStack.pop();
-
+                                }
                                 if (msg != null) {
                                     return msg;
                                 }
@@ -531,7 +530,7 @@ public class LocalizedTextUtil {
                         }
                     }
                 } catch (Exception e) {
-                    LOG.debug("unable to find property " + prop, e);
+                    LOG.debug("unable to find property {}", prop, e);
                 }
             }
         }

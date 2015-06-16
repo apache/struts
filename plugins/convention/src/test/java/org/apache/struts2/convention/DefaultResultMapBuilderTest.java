@@ -26,16 +26,7 @@ import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
 import org.apache.struts2.convention.actions.NoAnnotationAction;
-import org.apache.struts2.convention.actions.result.ActionLevelResultAction;
-import org.apache.struts2.convention.actions.result.ActionLevelResultsAction;
-import org.apache.struts2.convention.actions.result.ClassLevelResultAction;
-import org.apache.struts2.convention.actions.result.ClassLevelResultsAction;
-import org.apache.struts2.convention.actions.result.GlobalResultAction;
-import org.apache.struts2.convention.actions.result.GlobalResultOverrideAction;
-import org.apache.struts2.convention.actions.result.InheritedResultExtends;
-import org.apache.struts2.convention.actions.result.InheritedResultsExtends;
-import org.apache.struts2.convention.actions.result.OverrideInheritedResultExtends;
-import org.apache.struts2.convention.actions.result.OverrideResultAction;
+import org.apache.struts2.convention.actions.result.*;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
@@ -121,7 +112,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         String resultPath = "/WEB-INF/location";
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         resources.add(resultPath + "/namespace/action.jsp");
         resources.add(resultPath + "/namespace/action-success.jsp");
         resources.add(resultPath + "/namespace/action-error.jsp");
@@ -179,7 +170,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         resources.add("/WEB-INF/location/namespace/.something");
         resources.add("/WEB-INF/location/namespace/.somethingelse/");
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
@@ -199,7 +190,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         resources.add("/WEB-INF/location/namespace/no-annotation.ftl");
         resources.add("/WEB-INF/location/namespace/no-annotation-success.jsp");
         resources.add("/WEB-INF/location/namespace/no-annotation-failure.jsp");
@@ -233,7 +224,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         resources.add("/WEB-INF/location/namespace/no-annotation/index.ftl");
         resources.add("/WEB-INF/location/namespace/no-annotation/success.jsp");
         resources.add("/WEB-INF/location/namespace/no-annotation/failure.jsp");
@@ -269,7 +260,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         resources.add("/WEB-INF/location/namespace/no-annotation/.svn");
         resources.add("/WEB-INF/location/namespace/no-annotation-success.jsp");
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
@@ -293,7 +284,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
@@ -316,7 +307,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
@@ -339,7 +330,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
@@ -364,7 +355,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
@@ -403,7 +394,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
@@ -442,7 +433,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
@@ -465,7 +456,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
@@ -544,7 +535,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         resources.add(resultPath + "/namespace/action.jsp");
         resources.add(resultPath + "/namespace/action-success.jsp");
         resources.add(resultPath + "/namespace/action-failure.jsp");

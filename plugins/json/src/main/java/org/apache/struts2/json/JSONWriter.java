@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.json;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.json.annotations.JSON;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.annotations.JSONParameter;
@@ -60,11 +60,11 @@ public class JSONWriter {
 
     private static char[] hex = "0123456789ABCDEF".toCharArray();
 
-    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE_IGNORE_HIERARCHY = new ConcurrentHashMap<Class<?>, BeanInfo>();
-    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE = new ConcurrentHashMap<Class<?>, BeanInfo>();
+    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE_IGNORE_HIERARCHY = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE = new ConcurrentHashMap<>();
 
     private StringBuilder buf = new StringBuilder();
-    private Stack<Object> stack = new Stack<Object>();
+    private Stack<Object> stack = new Stack<>();
     private boolean ignoreHierarchy = true;
     private Object root;
     private boolean buildExpr = true;
@@ -110,7 +110,6 @@ public class JSONWriter {
     protected void value(Object object, Method method) throws JSONException {
         if (object == null) {
             this.add("null");
-
             return;
         }
 
@@ -121,10 +120,7 @@ public class JSONWriter {
             if (clazz.isPrimitive() || clazz.equals(String.class)) {
                 this.process(object, method);
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Cyclic reference detected on " + object);
-                }
-
+                LOG.debug("Cyclic reference detected on {}", object);
                 this.add("null");
             }
 
@@ -276,7 +272,7 @@ public class JSONWriter {
             FieldBridge instance = (FieldBridge) impl.newInstance();
 
             if (fieldBridgeAnn.params().length > 0 && ParameterizedBridge.class.isAssignableFrom(impl)) {
-                Map<String, String> params = new HashMap<String, String>(fieldBridgeAnn.params().length);
+                Map<String, String> params = new HashMap<>(fieldBridgeAnn.params().length);
                 for (JSONParameter param : fieldBridgeAnn.params()) {
                     params.put(param.name(), param.value());
                 }

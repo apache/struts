@@ -17,15 +17,15 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.SimpleFooAction;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.SimpleFooAction;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import junit.framework.TestCase;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.io.Serializable;
 
 /**
  * Unit test for I18nInterceptor.
@@ -180,10 +180,10 @@ public class I18nInterceptorTest extends TestCase {
     protected void setUp() throws Exception {
         interceptor = new I18nInterceptor();
         interceptor.init();
-        params = new HashMap<String, Serializable>();
+        params = new HashMap<>();
         session = new HashMap();
 
-        Map<String, Object> ctx = new HashMap<String, Object>();
+        Map<String, Object> ctx = new HashMap<>();
         ctx.put(ActionContext.PARAMETERS, params);
         ctx.put(ActionContext.SESSION, session);
         ac = new ActionContext(ctx);

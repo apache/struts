@@ -34,14 +34,13 @@ import java.util.List;
  *
  * @author <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
- * 
  * @version $Date$ $Id$
  */
 public class ProfilingTimerBean implements java.io.Serializable {
-	
-	private static final long serialVersionUID = -6180672043920208784L;
-	
-	List<ProfilingTimerBean> children = new ArrayList<ProfilingTimerBean>();
+
+    private static final long serialVersionUID = -6180672043920208784L;
+
+    List<ProfilingTimerBean> children = new ArrayList<>();
     ProfilingTimerBean parent = null;
 
     String resource;
@@ -49,41 +48,34 @@ public class ProfilingTimerBean implements java.io.Serializable {
     long startTime;
     long totalTime;
 
-    public ProfilingTimerBean(String resource)
-    {
+    public ProfilingTimerBean(String resource) {
         this.resource = resource;
     }
 
-    protected void addParent(ProfilingTimerBean parent)
-    {
+    protected void addParent(ProfilingTimerBean parent) {
         this.parent = parent;
     }
 
-    public ProfilingTimerBean getParent()
-    {
+    public ProfilingTimerBean getParent() {
         return parent;
     }
 
 
-    public void addChild(ProfilingTimerBean child)
-    {
+    public void addChild(ProfilingTimerBean child) {
         children.add(child);
         child.addParent(this);
     }
 
 
-    public void setStartTime()
-    {
+    public void setStartTime() {
         this.startTime = System.currentTimeMillis();
     }
 
-    public void setEndTime()
-    {
+    public void setEndTime() {
         this.totalTime = System.currentTimeMillis() - startTime;
     }
 
-    public String getResource()
-    {
+    public String getResource() {
         return resource;
     }
 
@@ -91,16 +83,13 @@ public class ProfilingTimerBean implements java.io.Serializable {
      * Get a formatted string representing all the methods that took longer than a specified time.
      */
 
-    public String getPrintable(long minTime)
-    {
+    public String getPrintable(long minTime) {
         return getPrintable("", minTime);
     }
 
-    protected String getPrintable(String indent, long minTime)
-    {
+    protected String getPrintable(String indent, long minTime) {
         //only print the value if we are larger or equal to the min time.
-        if (totalTime >= minTime)
-        {
+        if (totalTime >= minTime) {
             StringBuilder buffer = new StringBuilder();
             buffer.append(indent);
             buffer.append("[" + totalTime + "ms] - " + resource);
@@ -111,8 +100,7 @@ public class ProfilingTimerBean implements java.io.Serializable {
             }
 
             return buffer.toString();
-        }
-        else
+        } else
             return "";
     }
 }

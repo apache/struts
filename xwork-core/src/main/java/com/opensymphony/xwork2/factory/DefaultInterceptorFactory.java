@@ -31,7 +31,7 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map<String, String> interceptorRefParams) throws ConfigurationException {
         String interceptorClassName = interceptorConfig.getClassName();
         Map<String, String> thisInterceptorClassParams = interceptorConfig.getParams();
-        Map<String, String> params = (thisInterceptorClassParams == null) ? new HashMap<String, String>() : new HashMap<String, String>(thisInterceptorClassParams);
+        Map<String, String> params = (thisInterceptorClassParams == null) ? new HashMap<String, String>() : new HashMap<>(thisInterceptorClassParams);
         params.putAll(interceptorRefParams);
 
         String message;

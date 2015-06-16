@@ -27,24 +27,16 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.MultiTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.cache.WebappTemplateLoader;
+import freemarker.cache.*;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
-import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.TemplateModel;
+import freemarker.template.*;
 import freemarker.template.utility.StringUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.TagLibrary;
@@ -60,13 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -210,14 +196,14 @@ public class FreemarkerManager {
     
     @Inject
     public void setContainer(Container container) {
-        Map<String,TagLibraryModelProvider> map = new HashMap<String,TagLibraryModelProvider>();
+        Map<String, TagLibraryModelProvider> map = new HashMap<>();
         Set<String> prefixes = container.getInstanceNames(TagLibraryModelProvider.class);
         for (String prefix : prefixes) {
             map.put(prefix, container.getInstance(TagLibraryModelProvider.class, prefix));
         }
         this.tagLibraries = Collections.unmodifiableMap(map);
 
-        Map<String, TagLibrary> oldMap = new HashMap<String, TagLibrary>();
+        Map<String, TagLibrary> oldMap = new HashMap<>();
         Set<String> oldPrefixes = container.getInstanceNames(TagLibrary.class);
         for (String prefix : oldPrefixes) {
             oldMap.put(prefix, container.getInstance(TagLibrary.class, prefix));
@@ -268,9 +254,7 @@ public class FreemarkerManager {
             try {
                 init(servletContext);
             } catch (TemplateException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Cannot load freemarker configuration: ",e);
-                }
+                LOG.error("Cannot load freemarker configuration: ", e);
             }
             // store this configuration in the servlet context
             servletContext.setAttribute(CONFIG_SERVLET_CONTEXT_KEY, config);
@@ -287,9 +271,7 @@ public class FreemarkerManager {
 
         // Process object_wrapper init-param out of order:
         wrapper = createObjectWrapper(servletContext);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using object wrapper of class " + wrapper.getClass().getName());
-        }
+        LOG.debug("Using object wrapper of class {}", wrapper.getClass().getName());
         config.setObjectWrapper(wrapper);
 
         // Process TemplatePath init-param out of order:
@@ -480,21 +462,15 @@ public class FreemarkerManager {
                 }
             }
         } catch (IOException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
-            }
+            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
         } catch (TemplateException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
-            }
+            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch(IOException io) {
-                    if (LOG.isWarnEnabled()) {
-                	    LOG.warn("Unable to close input stream", io);
-                    }
+                    LOG.warn("Unable to close input stream", io);
                 }
             }
         }

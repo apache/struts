@@ -41,7 +41,7 @@ public class PreResultListenerTest extends XWorkTestCase {
 
 
     public void testPreResultListenersAreCalled() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", new HashMap(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", new HashMap<String, Object>(), false, true);
         ActionInvocation invocation = proxy.getInvocation();
         Mock preResultListenerMock1 = new Mock(PreResultListener.class);
         preResultListenerMock1.expect("beforeResult", C.args(C.eq(invocation), C.eq(Action.SUCCESS)));
@@ -51,7 +51,7 @@ public class PreResultListenerTest extends XWorkTestCase {
     }
 
     public void testPreResultListenersAreCalledInOrder() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", new HashMap(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", new HashMap<String, Object>(), false, true);
         ActionInvocation invocation = proxy.getInvocation();
         CountPreResultListener listener1 = new CountPreResultListener();
         CountPreResultListener listener2 = new CountPreResultListener();
@@ -60,7 +60,7 @@ public class PreResultListenerTest extends XWorkTestCase {
         proxy.execute();
         assertNotNull(listener1.getMyOrder());
         assertNotNull(listener2.getMyOrder());
-        assertEquals(listener1.getMyOrder().intValue() + 1, listener2.getMyOrder().intValue());
+        assertEquals(listener1.getMyOrder() + 1, listener2.getMyOrder().intValue());
     }
 
     @Override
@@ -113,7 +113,7 @@ public class PreResultListenerTest extends XWorkTestCase {
         }
 
         public void beforeResult(ActionInvocation invocation, String resultCode) {
-            myOrder = new Integer(count++);
+            myOrder = count++;
         }
     }
 }

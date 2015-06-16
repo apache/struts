@@ -28,10 +28,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_CREATED;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.*;
 
 public class DefaultHttpHeadersTest extends TestCase {
     private MockHttpServletResponse mockResponse;
@@ -61,9 +58,9 @@ public class DefaultHttpHeadersTest extends TestCase {
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_CREATED, mockResponse.getStatus());
-        assertEquals("http://localhost:80/foo/bar/44.xhtml", mockResponse.getHeader("Location"));
+        assertEquals("http://localhost/foo/bar/44.xhtml", mockResponse.getHeader("Location"));
         assertEquals("asdf", mockResponse.getHeader("ETag"));
-        assertEquals(now.getTime(), mockResponse.getHeader("Last-Modified"));
+        assertEquals(String.valueOf(now.getTime()), mockResponse.getHeader("Last-Modified"));
 
     }
 
@@ -73,7 +70,7 @@ public class DefaultHttpHeadersTest extends TestCase {
         mockRequest.setRequestURI("/foo/bar");
 
         headers.apply(mockRequest, mockResponse, new Object());
-        assertEquals("http://localhost:80/foo/bar/44", mockResponse.getHeader("Location"));
+        assertEquals("http://localhost/foo/bar/44", mockResponse.getHeader("Location"));
         assertEquals(SC_CREATED, mockResponse.getStatus());
     }
 

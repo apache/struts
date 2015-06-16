@@ -17,12 +17,12 @@ import java.util.HashMap;
 public class ValidatorAnnotationTest extends XWorkTestCase {
 
     public void testNotAnnotatedMethodSuccess() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("date", "12/23/2002");
         params.put("foo", "5");
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", extraContext);
@@ -34,9 +34,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     }
 
     public void testNotAnnotatedMethodSuccess2() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", extraContext);
@@ -48,9 +48,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     }
 
     public void testAnnotatedMethodFailure() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", extraContext);
@@ -64,13 +64,13 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     }
 
     public void testAnnotatedMethodSuccess() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
 
         //make it not fail
         params.put("param1", "key1");
         params.put("param2", "key2");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", extraContext);
@@ -79,12 +79,12 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     }
 
     public void testAnnotatedMethodSuccess2() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
 
         //make it not fail
         params.put("param2", "key2");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", extraContext);
@@ -93,12 +93,12 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     }
 
     public void testAnnotatedMethodSuccess3() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
 
         //make it not fail
         params.put("param1", "key1");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", extraContext);

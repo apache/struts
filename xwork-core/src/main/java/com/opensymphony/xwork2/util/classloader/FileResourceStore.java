@@ -15,25 +15,22 @@
  */
 package com.opensymphony.xwork2.util.classloader;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 
 /**
  * Reads a class from disk
  *  class taken from Apache JCI
  */
-public final class FileResourceStore implements ResourceStore {
+public final class FileResourceStore extends AbstractResourceStore {
     private static final Logger LOG = LogManager.getLogger(FileResourceStore.class);
-    private final File root;
 
-    public FileResourceStore(final File pFile) {
-        root = pFile;
+    public FileResourceStore(final File file) {
+        super(file);
     }
 
     public byte[] read(final String pResourceName) {
@@ -53,25 +50,8 @@ public final class FileResourceStore implements ResourceStore {
         }
     }
 
-    public void write(final String pResourceName, final byte[] pData) {
-
-    }
-
-    private void closeQuietly(InputStream is) {
-        try {
-            if (is != null)
-                is.close();
-        } catch (IOException e) {
-            LOG.error("Unable to close file input stream", e);
-        }
-    }
-
     private File getFile(final String pResourceName) {
         final String fileName = pResourceName.replace('/', File.separatorChar);
-        return new File(root, fileName);
-    }
-
-    public String toString() {
-        return this.getClass().getName() + root.toString();
+        return new File(file, fileName);
     }
 }

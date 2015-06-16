@@ -37,7 +37,7 @@ public class InterceptorConfig extends Located implements Serializable {
     protected String name;
 
     protected InterceptorConfig(String name, String className) {
-        this.params = new LinkedHashMap<String,String>();
+        this.params = new LinkedHashMap<>();
         this.name = name;
         this.className = className;
     }
@@ -45,7 +45,7 @@ public class InterceptorConfig extends Located implements Serializable {
     protected InterceptorConfig(InterceptorConfig orig) {
         this.name = orig.name;
         this.className = orig.className;
-        this.params = new LinkedHashMap<String,String>(orig.params);
+        this.params = new LinkedHashMap<>(orig.params);
         this.location = orig.location;
     }
 
@@ -73,8 +73,7 @@ public class InterceptorConfig extends Located implements Serializable {
 
         final InterceptorConfig interceptorConfig = (InterceptorConfig) o;
 
-        if ((className != null) ? (!className.equals(interceptorConfig.className)) : (interceptorConfig.className != null))
-        {
+        if ((className != null) ? (!className.equals(interceptorConfig.className)) : (interceptorConfig.className != null)) {
             return false;
         }
 

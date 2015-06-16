@@ -25,9 +25,10 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -44,11 +45,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -67,7 +64,7 @@ public class Component {
     /**
      * Caches information about common tag's attributes to reduce scanning for annotation @StrutsTagAttribute
      */
-    protected static ConcurrentMap<Class<?>, Collection<String>> standardAttributesMap = new ConcurrentHashMap<Class<?>, Collection<String>>();
+    protected static ConcurrentMap<Class<?>, Collection<String>> standardAttributesMap = new ConcurrentHashMap<>();
 
     protected boolean devMode = false;
     protected ValueStack stack;
@@ -83,7 +80,7 @@ public class Component {
      */
     public Component(ValueStack stack) {
         this.stack = stack;
-        this.parameters = new LinkedHashMap<String, Object>();
+        this.parameters = new LinkedHashMap<>();
         getComponentStack().push(this);
     }
 
@@ -101,7 +98,7 @@ public class Component {
 
     @Inject(value = StrutsConstants.STRUTS_DEVMODE, required = false)
     public void setDevMode(String devMode) {
-        this.devMode = Boolean.parseBoolean(devMode);
+        this.devMode = BooleanUtils.toBoolean(devMode);
     }
 
     @Inject
@@ -111,7 +108,7 @@ public class Component {
 
     @Inject(StrutsConstants.STRUTS_EL_THROW_EXCEPTION)
     public void setThrowExceptionsOnELFailure(String throwException) {
-        this.throwExceptionOnELFailure = "true".equals(throwException);
+        this.throwExceptionOnELFailure = BooleanUtils.toBoolean(throwException);
     }
 
     @Inject
@@ -133,7 +130,7 @@ public class Component {
     public Stack<Component> getComponentStack() {
         Stack<Component> componentStack = (Stack<Component>) stack.getContext().get(COMPONENT_STACK);
         if (componentStack == null) {
-            componentStack = new Stack<Component>();
+            componentStack = new Stack<>();
             stack.getContext().put(COMPONENT_STACK, componentStack);
         }
         return componentStack;
@@ -230,7 +227,7 @@ public class Component {
      * Evaluates the OGNL stack to find a String value.
      * <p/>
      * If the given expression is <tt>null</tt/> a error is logged and a <code>RuntimeException</code> is thrown
-     * constructed with a messaged based on the given field and errorMsg paramter.
+     * constructed with a messaged based on the given field and errorMsg parameter.
      *
      * @param expr  OGNL expression.
      * @param field   field name used when throwing <code>RuntimeException</code>.
@@ -499,7 +496,7 @@ public class Component {
      * If the provided value is <tt>null</tt> any existing parameter with
      * the given key name is removed.
      * @param key  the key of the new parameter to add.
-     * @param value the value assoicated with the key.
+     * @param value the value associated with the key.
      */
     public void addParameter(String key, Object value) {
         if (key != null) {
@@ -539,7 +536,7 @@ public class Component {
         Collection<String> standardAttributes = standardAttributesMap.get(clz);
         if (standardAttributes == null) {
             Collection<Method> methods = AnnotationUtils.getAnnotatedMethods(clz, StrutsTagAttribute.class);
-            standardAttributes = new HashSet<String>(methods.size());
+            standardAttributes = new HashSet<>(methods.size());
             for(Method m : methods) {
                 standardAttributes.add(StringUtils.uncapitalize(m.getName().substring(3)));
             }

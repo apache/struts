@@ -21,16 +21,16 @@
 
 package org.apache.struts2.interceptor.validation;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.StrutsConstants;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Extends the xwork validation interceptor to also check for a @SkipValidation
@@ -45,7 +45,7 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String devMode) {
-        this.devMode = "true".equalsIgnoreCase(devMode);
+        this.devMode = BooleanUtils.toBoolean(devMode);
     }
 
     protected String doIntercept(ActionInvocation invocation) throws Exception {
@@ -79,13 +79,14 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
     // FIXME: This is copied from DefaultActionInvocation but should be exposed through the interface
     protected Method getActionMethod(Class actionClass, String methodName) throws NoSuchMethodException {
         Method method = null;
+        Class[] classes = new Class[0];
         try {
-            method = actionClass.getMethod(methodName, new Class[0]);
+            method = actionClass.getMethod(methodName, classes);
         } catch (NoSuchMethodException e) {
             // hmm -- OK, try doXxx instead
             try {
                 String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
-                method = actionClass.getMethod(altMethodName, new Class[0]);
+                method = actionClass.getMethod(altMethodName, classes);
             } catch (NoSuchMethodException e1) {
                 // throw the original one
                 if (devMode) {

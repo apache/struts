@@ -40,8 +40,8 @@ public class MockActionInvocation implements ActionInvocation {
     private Result result;
     private String resultCode;
     private ValueStack stack;
-    
-    private List<PreResultListener> preResultListeners = new ArrayList<PreResultListener>();
+
+    private List<PreResultListener> preResultListeners = new ArrayList<>();
 
     public Object getAction() {
         return action;

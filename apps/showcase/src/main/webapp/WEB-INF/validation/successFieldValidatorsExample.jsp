@@ -48,8 +48,12 @@
                 <td><s:property value="stringLengthValidatorField" /></td>
             </tr>
             <tr>
-                <td>Regex Validator Field: <s:property value="regexValidatorField" /></td>
-                <td>Field Expression Validator Field: <s:property value="fieldExpressionValidatorField" /></td>
+                <td>Regex Validator Field:</td>
+                <td><s:property value="regexValidatorField" /></td>
+            </tr>
+            <tr>
+                <td>Field Expression Validator Field: </td>
+                <td><s:property value="fieldExpressionValidatorField" /></td>
             </tr>
         </table>
 		</div>

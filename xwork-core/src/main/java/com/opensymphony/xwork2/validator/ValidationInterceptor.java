@@ -21,8 +21,8 @@ import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -210,8 +210,7 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
         String method = proxy.getMethod();
 
         if (log.isDebugEnabled()) {
-            log.debug("Validating "
-                    + invocation.getProxy().getNamespace() + "/" + invocation.getProxy().getActionName() + " with method "+ method +".");
+            log.debug("Validating {}/{} with method {}.", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), method);
         }
         
 
@@ -228,21 +227,15 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
             Exception exception = null; 
             
             Validateable validateable = (Validateable) action;
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Invoking validate() on action "+validateable);
-            }
-            
+            LOG.debug("Invoking validate() on action {}", validateable);
+
             try {
-                PrefixMethodInvocationUtil.invokePrefixMethod(
-                                invocation, 
-                                new String[] { VALIDATE_PREFIX, ALT_VALIDATE_PREFIX });
+                PrefixMethodInvocationUtil.invokePrefixMethod(invocation, new String[]{VALIDATE_PREFIX, ALT_VALIDATE_PREFIX});
             }
             catch(Exception e) {
                 // If any exception occurred while doing reflection, we want 
                 // validate() to be executed
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("an exception occured while executing the prefix method", e);
-                }
+                LOG.warn("an exception occured while executing the prefix method", e);
                 exception = e;
             }
             
@@ -261,7 +254,6 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
         doBeforeInvocation(invocation);
-        
         return invocation.invoke();
     }
     

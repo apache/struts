@@ -25,7 +25,7 @@ import java.util.Set;
 public class ResolverUtilTest extends TestCase {
 
     public void testSimpleFind() throws Exception {
-        ResolverUtil<ObjectFactory> resolver = new ResolverUtil<ObjectFactory>();
+        ResolverUtil<ObjectFactory> resolver = new ResolverUtil<>();
         resolver.findImplementations(ObjectFactory.class, "com");
         Set<Class<? extends ObjectFactory>> impls = resolver.getClasses();
         
@@ -34,7 +34,7 @@ public class ResolverUtilTest extends TestCase {
     }
     
     public void testMissingSomeFind() throws Exception {
-        ResolverUtil<ObjectFactory> resolver = new ResolverUtil<ObjectFactory>();
+        ResolverUtil<ObjectFactory> resolver = new ResolverUtil<>();
         resolver.findImplementations(ObjectFactory.class, "com.opensymphony.xwork2.spring");
         Set<Class<? extends ObjectFactory>> impls = resolver.getClasses();
         

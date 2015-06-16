@@ -21,16 +21,15 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.io.InputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.io.InputStream;
 
 
 /**
@@ -48,15 +47,15 @@ public class ServletURIResolver implements URIResolver {
     private ServletContext sc;
 
     public ServletURIResolver(ServletContext sc) {
-        log.trace("ServletURIResolver: " + sc);
+        log.trace("ServletURIResolver: {}", sc);
         this.sc = sc;
     }
 
     public Source resolve(String href, String base) throws TransformerException {
-        log.debug("ServletURIResolver resolve(): href=" + href + ", base=" + base);
+        log.debug("ServletURIResolver resolve(): href={}, base={}", href, base);
         if (href.startsWith(PROTOCOL)) {
             String res = href.substring(PROTOCOL.length());
-            log.debug("Resolving resource <" + res + ">");
+            log.debug("Resolving resource <{}>", res);
 
             InputStream is = sc.getResourceAsStream(res);
 
@@ -69,6 +68,6 @@ public class ServletURIResolver implements URIResolver {
         }
 
         throw new TransformerException(
-                "Cannot handle procotol of resource " + href);
+                "Cannot handle protocol of resource " + href);
     }
 }

@@ -86,7 +86,7 @@ public class MethodFilterInterceptorUtil {
         for (String pattern : includeMethods) {
             if (pattern.contains("*")) {
                 int[] compiledPattern = wildcard.compilePattern(pattern);
-                HashMap<String,String> matchedPatterns = new HashMap<String, String>();
+                HashMap<String, String> matchedPatterns = new HashMap<>();
                 boolean matches = wildcard.match(matchedPatterns, methodCopy, compiledPattern);
                 if (matches) {
                     return true; // run it, includeMethods takes precedence
@@ -106,7 +106,7 @@ public class MethodFilterInterceptorUtil {
         for ( String pattern : excludeMethods) {
             if (pattern.contains("*")) {
                 int[] compiledPattern = wildcard.compilePattern(pattern);
-                HashMap<String,String> matchedPatterns = new HashMap<String, String>();
+                HashMap<String, String> matchedPatterns = new HashMap<>();
                 boolean matches = wildcard.match(matchedPatterns, methodCopy, compiledPattern);
                 if (matches) {
                     // if found, and wasn't included earlier, don't run it

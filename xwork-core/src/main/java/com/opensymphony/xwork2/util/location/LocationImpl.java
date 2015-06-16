@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.util.location;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,7 +55,7 @@ public class LocationImpl implements Location, Serializable {
      * @param column the column number (starts at 1)
      */
     public LocationImpl(String description, String uri, int line, int column) {
-        if (uri == null || uri.length() == 0) {
+        if (StringUtils.isEmpty(uri)) {
             this.uri = null;
             this.line = -1;
             this.column = -1;
@@ -62,11 +64,7 @@ public class LocationImpl implements Location, Serializable {
             this.line = line;
             this.column = column;
         }
-        
-        if (description != null && description.length() == 0) {
-            description = null;
-        }
-        this.description = description;
+        this.description = StringUtils.trimToNull(description);
     }
     
     /**
@@ -147,7 +145,7 @@ public class LocationImpl implements Location, Serializable {
      * @param padding The amount of lines before and after the error to include
      */
     public List<String> getSnippet(int padding) {
-        List<String> snippet = new ArrayList<String>();
+        List<String> snippet = new ArrayList<>();
         if (getLineNumber() > 0) {
             try {
                 InputStream in = new URL(getURI()).openStream();

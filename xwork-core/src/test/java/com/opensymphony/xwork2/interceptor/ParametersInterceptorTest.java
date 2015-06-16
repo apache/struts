@@ -15,15 +15,7 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ModelDrivenAction;
-import com.opensymphony.xwork2.SimpleAction;
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
@@ -42,14 +34,7 @@ import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -131,7 +116,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             }
         };
 
-        final Map<String, Boolean> excluded = new HashMap<String, Boolean>();
+        final Map<String, Boolean> excluded = new HashMap<>();
         ParametersInterceptor pi = new ParametersInterceptor() {
 
             @Override
@@ -171,7 +156,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             }
         };
 
-        final Map<String, Boolean> excluded = new HashMap<String, Boolean>();
+        final Map<String, Boolean> excluded = new HashMap<>();
         ParametersInterceptor pi = new ParametersInterceptor() {
 
             @Override
@@ -207,10 +192,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testDoesNotAllowMethodInvocations() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("@java.lang.System@exit(1).dummy", "dumb value");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext);
@@ -221,7 +206,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testModelDrivenParameters() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         final String fooVal = "com.opensymphony.xwork2.interceptor.ParametersInterceptorTest.foo";
         params.put("foo", fooVal);
 
@@ -229,7 +214,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("name", nameVal);
         params.put("count", "15");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext);
@@ -243,7 +228,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testParametersDoesNotAffectSession() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
         params.put("#session.foo", "Foo");
         params.put("\u0023session[\'user\']", "0wn3d");
@@ -255,12 +240,12 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("('\u0023'%2b'session[\'user5\']')(unused)", "0wn3d");
         params.put("('\\u0023'%2b'session[\'user5\']')(unused)", "0wn3d");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         ValueStack stack = proxy.getInvocation().getStack();
-        HashMap<String, Object> session = new HashMap<String, Object>();
+        HashMap<String, Object> session = new HashMap<>();
         stack.getContext().put("session", session);
         proxy.execute();
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
@@ -324,13 +309,13 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     public void testAccessToOgnlInternals() throws Exception {
         // given
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
         params.put("('\\u0023_memberAccess[\\'allowStaticMethodAccess\\']')(meh)", "true");
         params.put("('(aaa)(('\\u0023context[\\'xwork.MethodAccessor.denyMethodExecution\\']\\u003d\\u0023foo')(\\u0023foo\\u003dnew java.lang.Boolean(\"false\")))", "");
         params.put("(asdf)(('\\u0023rt.exit(1)')(\\u0023rt\\u003d@java.lang.Runtime@getRuntime()))", "1");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -347,10 +332,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testParameters() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -359,13 +344,13 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testParametersWithSpacesInTheName() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("theProtectedMap['p0 p1']", "test1");
         params.put("theProtectedMap['p0p1 ']", "test2");
         params.put("theProtectedMap[' p0p1 ']", "test3");
         params.put("theProtectedMap[' p0 p1 ']", "test4");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -375,10 +360,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testParametersWithChineseInTheName() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("theProtectedMap['名字']", "test1");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -406,11 +391,11 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             sb.append("x");
         }
 
-        Map<String, Object> actual = new LinkedHashMap<String, Object>();
+        Map<String, Object> actual = new LinkedHashMap<>();
         parametersInterceptor.setValueStackFactory(createValueStackFactory(actual));
         ValueStack stack = createStubValueStack(actual);
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put(sb.toString(), "");
         parameters.put("huuhaa", "");
 
@@ -434,7 +419,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             }
         };
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -465,7 +450,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             }
         };
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -484,11 +469,11 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
 
     public void testParametersNotAccessPrivateVariables() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("protectedMap.foo", "This is blah");
         params.put("theProtectedMap.boo", "This is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -500,11 +485,11 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testParametersNotAccessProtectedMethods() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("theSemiProtectedMap.foo", "This is blah");
         params.put("theProtectedMap.boo", "This is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -522,13 +507,13 @@ public class ParametersInterceptorTest extends XWorkTestCase {
      * @throws Exception
      */
     public void testEvalExpressionAsParameterName() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("blah", "(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new " +
                 "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
                 "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
         params.put("top['blah'](0)", "true");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -543,10 +528,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testParametersOverwriteField() throws Exception {
-        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        Map<String, Object> params = new LinkedHashMap<>();
         params.put("existingMap.boo", "This is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
@@ -562,10 +547,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         container.inject(provider);
         loadConfigurationProviders(provider,
                 new MockConfigurationProvider(Collections.singletonMap("devMode", "true")));
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
@@ -581,10 +566,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         container.inject(provider);
         loadConfigurationProviders(provider,
                 new MockConfigurationProvider(Collections.singletonMap("devMode", "false")));
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
@@ -608,11 +593,11 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     public void testNoOrdered() throws Exception {
         ParametersInterceptor pi = createParametersInterceptor();
-        final Map<String, Object> actual = new LinkedHashMap<String, Object>();
+        final Map<String, Object> actual = new LinkedHashMap<>();
         pi.setValueStackFactory(createValueStackFactory(actual));
         ValueStack stack = createStubValueStack(actual);
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("user.address.city", "London");
         parameters.put("user.name", "Superman");
 
@@ -634,11 +619,11 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ParametersInterceptor pi = new ParametersInterceptor();
         pi.setOrdered(true);
         container.inject(pi);
-        final Map<String, Object> actual = new LinkedHashMap<String, Object>();
+        final Map<String, Object> actual = new LinkedHashMap<>();
         pi.setValueStackFactory(createValueStackFactory(actual));
         ValueStack stack = createStubValueStack(actual);
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("user.address.city", "London");
         parameters.put("user.address['postal']", "QJR387");
         parameters.put("user.name", "Superman");
@@ -728,7 +713,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     private Map<String, Object> injectValueStackFactory(ParametersInterceptor interceptor) {
-        final Map<String, Object> actual = new HashMap<String, Object>();
+        final Map<String, Object> actual = new HashMap<>();
         interceptor.setValueStackFactory(createValueStackFactory(actual));
         return actual;
     }
@@ -806,7 +791,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
 class ValidateAction implements ValidationAware {
 
-    private List<String> messages = new LinkedList<String>();
+    private List<String> messages = new LinkedList<>();
     private String name;
 
     public void setActionErrors(Collection<String> errorMessages) {

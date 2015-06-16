@@ -28,7 +28,7 @@ import java.util.Stack;
 public class PrettyPrintWriter {
 
     private final PrintWriter writer;
-    private final Stack<String> elementStack = new Stack<String>();
+    private final Stack<String> elementStack = new Stack<>();
     private final char[] lineIndenter;
 
     private boolean tagInProgress;
@@ -153,7 +153,7 @@ public class PrettyPrintWriter {
         } else {
             finishTag();
             writer.write(CLOSE);
-            writer.write((String)elementStack.pop());
+            writer.write(elementStack.pop());
             writer.write('>');
         }
         readyForNewLine = true;

@@ -113,7 +113,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
     public String intercept(ActionInvocation invocation) throws Exception {
         final Object action = invocation.getAction();
         invocation.addPreResultListener(this);
-        List<Method> methods = new ArrayList<Method>(AnnotationUtils.getAnnotatedMethods(action.getClass(), Before.class));
+        List<Method> methods = new ArrayList<>(AnnotationUtils.getAnnotatedMethods(action.getClass(), Before.class));
         if (methods.size() > 0) {
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
@@ -123,8 +123,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
                 }
             });
             for (Method m : methods) {
-                final String resultCode = (String) m
-                        .invoke(action, (Object[]) null);
+                final String resultCode = (String) m.invoke(action, (Object[]) null);
                 if (resultCode != null) {
                     // shortcircuit execution
                     return resultCode;

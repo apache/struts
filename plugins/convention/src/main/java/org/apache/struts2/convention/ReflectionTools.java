@@ -22,8 +22,8 @@ package org.apache.struts2.convention;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -34,14 +34,14 @@ public class ReflectionTools {
     /**
      * Determines if the class given contains the method.
      *
-     * @param   klass The class to check for the method.
+     * @param   clazz The class to check for the method.
      * @param   method The method name.
      * @param   parameterTypes The parameter types of the method.
      * @return  True if the method exists, false if not.
      */
-    public static boolean containsMethod(Class<?> klass, String method, Class<?>... parameterTypes) {
+    public static boolean containsMethod(Class<?> clazz, String method, Class<?>... parameterTypes) {
         try {
-            klass.getMethod(method, parameterTypes);
+            clazz.getMethod(method, parameterTypes);
             return true;
         } catch (NoSuchMethodException e) {
             return false;
@@ -51,14 +51,14 @@ public class ReflectionTools {
     /**
      * Retrieves the annotation from the given method in the given class.
      *
-     * @param   klass The class.
+     * @param   clazz The class.
      * @param   methodName The method.
      * @param   annotationClass The annotation to get.
      * @return  The annotation or null if it doesn't exist.
      */
-    public static <T extends Annotation> T getAnnotation(Class<?> klass, String methodName, Class<T> annotationClass) {
+    public static <T extends Annotation> T getAnnotation(Class<?> clazz, String methodName, Class<T> annotationClass) {
         try {
-            Method method = klass.getMethod(methodName);
+            Method method = clazz.getMethod(methodName);
             return method.getAnnotation(annotationClass);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -71,7 +71,7 @@ public class ReflectionTools {
      * @return hierarchy of classes
      */
     public static List<Class<?>> getClassHierarchy(Class<?> clazz) {
-        List<Class<?>> classes = new ArrayList<Class<?>>();
+        List<Class<?>> classes = new ArrayList<>();
         while (clazz != null) {
             classes.add(0, clazz);
             clazz = clazz.getSuperclass();

@@ -24,7 +24,9 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+
 import org.apache.struts.beanvalidation.actions.FieldAction;
+import org.apache.struts.beanvalidation.actions.FieldActionDoExecute;
 import org.apache.struts.beanvalidation.actions.FieldMatchAction;
 import org.apache.struts.beanvalidation.actions.ModelDrivenAction;
 
@@ -131,6 +133,19 @@ public class BeanValidationInterceptorTest extends XWorkTestCase {
 
         assertNotNull(actionErrors);
         assertEquals(2, actionErrors.size());
+    }
+
+    public void testFieldActionDoExecute() throws Exception {
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("bean-validation", "fieldActionDoExecute", null, null);
+        FieldActionDoExecute action = (FieldActionDoExecute) baseActionProxy.getAction();
+        action.setTest(" ");
+        baseActionProxy.execute();
+
+        Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
+
+        assertNotNull(fieldErrors);
+        assertEquals(1, fieldErrors.size());
+        assertTrue(fieldErrors.get("test").size() > 0);
     }
 
     @Override

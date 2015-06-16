@@ -36,7 +36,7 @@ public class SimpleAnnotationAction extends ActionSupport {
 
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private ArrayList<String> someList = new ArrayList<String>();
+    private ArrayList<String> someList = new ArrayList<>();
     private Date date = new Date();
     private Properties settings = new Properties();
     private String blah;

@@ -20,6 +20,7 @@
  */
 package org.apache.struts.beanvalidation.validation.interceptor;
 
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,17 +32,16 @@ import javax.validation.Configuration;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.validation.spi.ValidationProvider;
 
 /**
  * <p>
- * This is the central class for javax.validation (JSR-303) setup in a Struts2 : It bootstraps a
- * javax.validation.ValidationFactory and exposes it through the javax.validation.Validator interface and the. When
+ * This is the central class for javax.validation (JSR-303) in a Struts2 setup : It bootstraps a
+ * javax.validation.ValidationFactory and exposes it through the javax.validation.Validator interface. When
  * talking to an instance of this bean we will be talking to the default Validator of the underlying ValidatorFactory.
  * </p>
  * <p>
  * This is very convenient in that you don't have to perform yet another call on the factory, assuming that you will
- * almost always use the default Validator anyway.You need to pass provider class in order for this plugin to hook
+ * almost always use the default Validator anyway. You need to pass provider class in order for this plugin to hook
  * itself to underlying validation Factory. Any of following Validation provider can be provided using
  * <code>struts.beanValidation.providerClass</code>
  * <ul>
@@ -50,42 +50,43 @@ import javax.validation.spi.ValidationProvider;
  * </ul>
  * </p>
  */
-public class DefaultBeanValidationManager
-        implements BeanValidationManager {
+public class DefaultBeanValidationManager implements BeanValidationManager {
 
     private static final Logger LOG = LogManager.getLogger(DefaultBeanValidationManager.class);
 
-    protected Class<? extends ValidationProvider> providerClass;
+    protected Class providerClass;
 
     private ValidatorFactory validationFactory;
 
     @Inject
     public DefaultBeanValidationManager(
-                @Inject(value = ValidatorConstants.PROVIDER_CLASS, required = false) String providerClassName,
-                @Inject(value = ValidatorConstants.IGNORE_XMLCONFIGURAITION, required = false)String ignoreXMLConfiguration) {
+            @Inject(value = ValidatorConstants.PROVIDER_CLASS, required = false) String providerClassName,
+            @Inject(value = ValidatorConstants.IGNORE_XMLCONFIGURAITION, required = false) String ignoreXMLConfiguration,
+            @Inject(required = true) ObjectFactory objectFactory) {
         super();
-        LOG.info("Initializing bean validation11 factory to get a validator");
+        LOG.info("Initializing bean validation factory to get a validator");
 
         if (StringUtils.isNotBlank(providerClassName)) {
             try {
-                this.providerClass = (Class<? extends ValidationProvider>) Class.forName(providerClassName);
-                LOG.info(this.providerClass.getName() + " validator found");
+                this.providerClass = objectFactory.getClassInstance(providerClassName);
+                LOG.info("{} validator found", this.providerClass.getName());
             } catch (ClassNotFoundException e) {
-                LOG.error("Unable to find any bean validator implementation for " + providerClassName);
+                LOG.error("Unable to find any bean validator implementation for class: {}", providerClassName);
                 LOG.error("Unable to load bean validation provider class", e);
             }
 
         }
         if (this.providerClass == null) {
-            LOG.info("********** No bean validator class defined - Falling back to default provider **********");
+            LOG.warn("********** No bean validator class defined - Falling back to default provider **********");
         }
 
         Configuration configuration =
-                (this.providerClass != null ? Validation.byProvider(this.providerClass).configure()
-                        : Validation.byDefaultProvider().configure());
+                this.providerClass != null
+                        ? Validation.byProvider(this.providerClass).configure()
+                        : Validation.byDefaultProvider().configure();
         if (BooleanUtils.toBoolean(ignoreXMLConfiguration)) {
             configuration.ignoreXmlConfiguration();
-            LOG.info("XML configurations will be ignore by Validator, to enable XML based validation, set struts.beanValidation.ignoreXMLConfiguration to false.");
+            LOG.info("XML configurations will be ignored by Validator, to enable XML based validation, set struts.beanValidation.ignoreXMLConfiguration to false.");
         }
         if (configuration != null) {
             this.validationFactory = configuration.buildValidatorFactory();

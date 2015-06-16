@@ -138,7 +138,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         invocation = (ActionInvocation) mockInvocation.proxy();
         stack = ActionContext.getContext().getValueStack();
         context = new ActionContext(stack.getContext());
-        conversionErrors = new HashMap<String, Object>();
+        conversionErrors = new HashMap<>();
         context.setConversionErrors(conversionErrors);
         mockInvocation.matchAndReturn("getInvocationContext", context);
         mockInvocation.expect("addPreResultListener", C.isA(PreResultListener.class));

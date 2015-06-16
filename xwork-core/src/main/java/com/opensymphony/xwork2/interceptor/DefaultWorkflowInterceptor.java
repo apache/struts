@@ -19,8 +19,9 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 
@@ -185,7 +186,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
         String resultName = currentResultName;
         InputConfig annotation = action.getClass().getMethod(method, EMPTY_CLASS_ARRAY).getAnnotation(InputConfig.class);
         if (annotation != null) {
-            if (!annotation.methodName().equals("")) {
+            if (StringUtils.isNotEmpty(annotation.methodName())) {
                 Method m = action.getClass().getMethod(annotation.methodName());
                 resultName = (String) m.invoke(action);
             } else {

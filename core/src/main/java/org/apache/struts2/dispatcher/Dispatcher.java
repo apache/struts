@@ -38,9 +38,11 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -82,13 +84,12 @@ public class Dispatcher {
     /**
      * Provide a thread local instance.
      */
-    private static ThreadLocal<Dispatcher> instance = new ThreadLocal<Dispatcher>();
+    private static ThreadLocal<Dispatcher> instance = new ThreadLocal<>();
 
     /**
      * Store list of DispatcherListeners.
      */
-    private static List<DispatcherListener> dispatcherListeners =
-        new CopyOnWriteArrayList<DispatcherListener>();
+    private static List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
 
     /**
      * Store ConfigurationManager instance, set on init.
@@ -220,7 +221,7 @@ public class Dispatcher {
      */
     @Inject(value=StrutsConstants.STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP, required=false)
     public void setDisableRequestAttributeValueStackLookup(String disableRequestAttributeValueStackLookup) {
-        this.disableRequestAttributeValueStackLookup = "true".equalsIgnoreCase(disableRequestAttributeValueStackLookup);
+        this.disableRequestAttributeValueStackLookup = BooleanUtils.toBoolean(disableRequestAttributeValueStackLookup);
     }
 
     /**
@@ -278,9 +279,7 @@ public class Dispatcher {
     	// clean up ObjectFactory
         ObjectFactory objectFactory = getContainer().getInstance(ObjectFactory.class);
         if (objectFactory == null) {
-            if (LOG.isWarnEnabled()) {
         	LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
-            }
         }
         if (objectFactory instanceof ObjectFactoryDestroyable) {
             try {
@@ -288,7 +287,7 @@ public class Dispatcher {
             }
             catch(Exception e) {
                 // catch any exception that may occurred during destroy() and log it
-                LOG.error("exception occurred while destroying ObjectFactory [{}]", e, objectFactory.toString());
+                LOG.error("Exception occurred while destroying ObjectFactory [{}]", objectFactory.toString(), e);
             }
         }
 
@@ -303,7 +302,7 @@ public class Dispatcher {
         }
 
         // clean up all interceptors by calling their destroy() method
-        Set<Interceptor> interceptors = new HashSet<Interceptor>();
+        Set<Interceptor> interceptors = new HashSet<>();
         Collection<PackageConfig> packageConfigs = configurationManager.getConfiguration().getPackageConfigs().values();
         for (PackageConfig packageConfig : packageConfigs) {
             for (Object config : packageConfig.getAllInterceptorConfigs().values()) {
@@ -441,11 +440,8 @@ public class Dispatcher {
 
     private void init_CheckWebLogicWorkaround(Container container) {
         // test whether param-access workaround needs to be enabled
-        if (servletContext != null && servletContext.getServerInfo() != null
-                && servletContext.getServerInfo().contains("WebLogic")) {
-            if (LOG.isInfoEnabled()) {
-        	LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
-            }
+        if (servletContext != null && StringUtils.contains(servletContext.getServerInfo(), "WebLogic")) {
+            LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             paramsWorkaroundEnabled = true;
         } else {
             paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
@@ -484,8 +480,7 @@ public class Dispatcher {
             errorHandler.init(servletContext);
 
         } catch (Exception ex) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Dispatcher initialization failed", ex);
+            LOG.error("Dispatcher initialization failed", ex);
             throw new StrutsException(ex);
         }
     }
@@ -591,7 +586,7 @@ public class Dispatcher {
             uri = uri + "?" + request.getQueryString();
         }
         if (devMode) {
-            LOG.error("Could not find action or result\n{}", uri, e);
+            LOG.error("Could not find action or result: {}", uri, e);
         } else if (LOG.isWarnEnabled()) {
             LOG.warn("Could not find action or result: {}", uri, e);
         }
@@ -675,7 +670,7 @@ public class Dispatcher {
                                     Map applicationMap,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
-        HashMap<String,Object> extraContext = new HashMap<String,Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, new HashMap(parameterMap));
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
@@ -715,9 +710,7 @@ public class Dispatcher {
 
         if (saveDir.equals("")) {
             File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            if (LOG.isInfoEnabled()) {
         	LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
-            }
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -737,17 +730,13 @@ public class Dispatcher {
                     if (devMode) {
                         LOG.error(logMessage);
                     } else {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn(logMessage);
-                        }
+                        LOG.warn(logMessage);
                     }
                 }
             }
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("saveDir=" + saveDir);
-        }
+        LOG.debug("saveDir={}", saveDir);
 
         return saveDir;
     }
@@ -794,7 +783,7 @@ public class Dispatcher {
                 request.setCharacterEncoding(encoding);
             }
         } catch (Exception e) {
-            LOG.error("Error setting character encoding to '" + encoding + "' - ignoring.", e);
+            LOG.error("Error setting character encoding to '{}' - ignoring.", encoding, e);
         }
     }
 

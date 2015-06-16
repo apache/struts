@@ -60,7 +60,7 @@ public class ValueStackShadowMap extends HashMap {
      * Implementation of containsKey(), overriding HashMap implementation.
      *
      * @param key - The key to check in HashMap and if not found to check on valueStack.
-     * @return <tt>true</tt>, if conatins key, <tt>false</tt> otherwise.
+     * @return <tt>true</tt>, if contains key, <tt>false</tt> otherwise.
      * @see java.util.HashMap#containsKey
      */
     public boolean containsKey(Object key) {

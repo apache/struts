@@ -19,7 +19,7 @@ public class CompositeTextProvider implements TextProvider {
 
     private static final Logger LOG = LogManager.getLogger(CompositeTextProvider.class);
 
-    private List<TextProvider> textProviders = new ArrayList<TextProvider>();
+    private List<TextProvider> textProviders = new ArrayList<>();
 
     /**
      * Instantiates a {@link CompositeTextProvider} with some predefined <code>textProviders</code>.
@@ -60,7 +60,7 @@ public class CompositeTextProvider implements TextProvider {
      * It will consult each {@link TextProvider}s and return the first valid message for this
      * <code>key</code>
      *
-     * @param key The key to lookup in ressource bundles.
+     * @param key The key to lookup in resource bundles.
      * @return The i18n text for the requested key.
      * @see {@link com.opensymphony.xwork2.TextProvider#getText(String)}
      */
@@ -83,7 +83,7 @@ public class CompositeTextProvider implements TextProvider {
 
     /**
      * It will consult each {@link TextProvider}s and return the first valid message for this
-     * <code>key</code>, before returining <code>defaultValue</code>
+     * <code>key</code>, before returning <code>defaultValue</code>
      * if every else fails.
      *
      * @param key
@@ -97,8 +97,6 @@ public class CompositeTextProvider implements TextProvider {
             {
                 add(obj);
             }
-
-
         });
     }
 
@@ -131,7 +129,7 @@ public class CompositeTextProvider implements TextProvider {
 
     /**
      * It will consult each {@link TextProvider}s and return the first valid message for this
-     * <code>key</code>, before returining <code>defaultValue</code>
+     * <code>key</code>, before returning <code>defaultValue</code>
      *
      * @param key
      * @param defaultValue
@@ -155,7 +153,7 @@ public class CompositeTextProvider implements TextProvider {
 
     /**
      * It will consult each {@link TextProvider}s and return the first valid message for this
-     * <code>key</code>, before returining <code>defaultValue</code>.
+     * <code>key</code>, before returning <code>defaultValue</code>.
      *
      * @param key
      * @param defaultValue
@@ -179,7 +177,7 @@ public class CompositeTextProvider implements TextProvider {
 
     /**
      * It will consult each {@link TextProvider}s and return the first valid message for this
-     * <code>key</code>, before returining <code>defaultValue</code>
+     * <code>key</code>, before returning <code>defaultValue</code>
      *
      * @param key
      * @param defaultValue
@@ -203,7 +201,7 @@ public class CompositeTextProvider implements TextProvider {
 
     /**
      * It will consult each {@link TextProvider}s and return the first valid message for this
-     * <code>key</code>, before returining <code>defaultValue</code>
+     * <code>key</code>, before returning <code>defaultValue</code>
      *
      * @param key
      * @param defaultValue
@@ -234,7 +232,7 @@ public class CompositeTextProvider implements TextProvider {
      * @see {@link TextProvider#getTexts(String)}
      */
     public ResourceBundle getTexts(String bundleName) {
-        // if there's one text provider that gives us a non-null resource bunlde for this bundleName, we are ok, else try the next
+        // if there's one text provider that gives us a non-null resource bundle for this bundleName, we are ok, else try the next
         // text provider
         for (TextProvider textProvider : textProviders) {
             ResourceBundle bundle = textProvider.getTexts(bundleName);

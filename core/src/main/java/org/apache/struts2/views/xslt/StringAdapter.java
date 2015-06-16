@@ -21,16 +21,15 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.opensymphony.xwork2.util.DomHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import com.opensymphony.xwork2.util.DomHelper;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * StringAdapter adapts a Java String value to a DOM Element with the specified
@@ -73,17 +72,17 @@ public class StringAdapter extends AbstractAdapterElement {
     protected List<Node> buildChildAdapters() {
         Node node;
         if (getParseStringAsXML()) {
-            log.debug("parsing string as xml: " + getStringValue());
+            log.debug("parsing string as xml: {}", getStringValue());
             // Parse the String to a DOM, then proxy that as our child
             node = DomHelper.parse(new InputSource(new StringReader(getStringValue())));
             node = getAdapterFactory().proxyNode(this, node);
         } else {
-            log.debug("using string as is: " + getStringValue());
+            log.debug("using string as is: {}", getStringValue());
             // Create a Text node as our child
             node = new SimpleTextNode(getAdapterFactory(), this, "text", getStringValue());
         }
 
-        List<Node> children = new ArrayList<Node>();
+        List<Node> children = new ArrayList<>();
         children.add(node);
         return children;
     }

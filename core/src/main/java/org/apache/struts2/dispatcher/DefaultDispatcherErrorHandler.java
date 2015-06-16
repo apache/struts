@@ -3,9 +3,10 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import freemarker.template.Template;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
@@ -39,7 +40,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String devMode) {
-        this.devMode = "true".equalsIgnoreCase(devMode);
+        this.devMode = BooleanUtils.toBoolean(devMode);
     }
 
     public void init(ServletContext ctx) {
@@ -65,9 +66,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             // WW-1977: Only put errors in the request when code is a 500 error
             if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
                 // WW-4103: Only logs error when application error occurred, not Struts error
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Exception occurred during processing request: {}", e, e.getMessage());
-                }
+                LOG.error("Exception occurred during processing request: {}", e, e.getMessage());
                 // send a http error response to use the servlet defined error handler
                 // make the exception available to the web.xml defined error page
                 request.setAttribute("javax.servlet.error.exception", e);
@@ -86,7 +85,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     protected void handleErrorInDevMode(HttpServletResponse response, int code, Exception e) {
         LOG.debug("Exception occurred during processing request: {}", e, e.getMessage());
         try {
-            List<Throwable> chain = new ArrayList<Throwable>();
+            List<Throwable> chain = new ArrayList<>();
             Throwable cur = e;
             chain.add(cur);
             while ((cur = cur.getCause()) != null) {
@@ -101,9 +100,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             response.getWriter().close();
         } catch (Exception exp) {
             try {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Cannot show problem report!", exp);
-                }
+                LOG.debug("Cannot show problem report!", exp);
                 response.sendError(code, "Unable to show problem report:\n" + exp + "\n\n" + LocationUtils.getLocation(exp));
             } catch (IOException ex) {
                 // we're already sending an error, not much else we can do if more stuff breaks
@@ -112,7 +109,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     }
 
     protected HashMap<String, Object> createReportData(Exception e, List<Throwable> chain) {
-        HashMap<String,Object> data = new HashMap<String,Object>();
+        HashMap<String, Object> data = new HashMap<>();
         data.put("exception", e);
         data.put("unknown", Location.UNKNOWN);
         data.put("chain", chain);

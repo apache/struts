@@ -20,8 +20,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -97,9 +97,7 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
                     WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
             if (applicationContext == null) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("ApplicationContext could not be found.  Action classes will not be autowired.");
-                }
+                LOG.warn("ApplicationContext could not be found.  Action classes will not be autowired.");
             } else {
                 setApplicationContext(applicationContext);
                 factory = new SpringObjectFactory();

@@ -48,7 +48,7 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         ActionContext context = new ActionContext(stack.getContext());
 
-        Map<String, Object> conversionErrors = new HashMap<String, Object>();
+        Map<String, Object> conversionErrors = new HashMap<>();
         conversionErrors.put("foo", "bar");
         context.setConversionErrors(conversionErrors);
         validator = new ConversionErrorFieldValidator();

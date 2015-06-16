@@ -40,13 +40,13 @@ public class ActionContextTest extends XWorkTestCase {
         super.setUp();
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         Map<String, Object> extraContext = valueStack.getContext();
-        Map<String, Object> application = new HashMap<String, Object>();
+        Map<String, Object> application = new HashMap<>();
         application.put(APPLICATION_KEY, APPLICATION_KEY);
 
-        Map<String, Object> session = new HashMap<String, Object>();
+        Map<String, Object> session = new HashMap<>();
         session.put(SESSION_KEY, SESSION_KEY);
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put(PARAMETERS_KEY, PARAMETERS_KEY);
         extraContext.put(ActionContext.APPLICATION, application);
         extraContext.put(ActionContext.SESSION, session);
@@ -76,19 +76,19 @@ public class ActionContextTest extends XWorkTestCase {
     }
 
     public void testApplication() {
-        Map<String, Object> app = new HashMap<String, Object>();
+        Map<String, Object> app = new HashMap<>();
         context.setApplication(app);
         assertEquals(app, context.getApplication());
     }
 
     public void testContextMap() {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         context.setContextMap(map);
         assertEquals(map, context.getContextMap());
     }
 
     public void testParameters() {
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         context.setParameters(param);
         assertEquals(param, context.getParameters());
     }
@@ -98,7 +98,7 @@ public class ActionContextTest extends XWorkTestCase {
         assertNotNull(errors);
         assertEquals(0, errors.size());
 
-        Map<String, Object> errors2 = new HashMap<String, Object>();
+        Map<String, Object> errors2 = new HashMap<>();
         context.setConversionErrors(errors);
         assertEquals(errors2, context.getConversionErrors());
     }

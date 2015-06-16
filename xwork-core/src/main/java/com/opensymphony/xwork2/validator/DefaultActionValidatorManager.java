@@ -22,9 +22,8 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,7 +97,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         List<ValidatorConfig> cfgs = validatorCache.get(validatorKey);
 
         // create clean instances of the validators for the caller's use
-        ArrayList<Validator> validators = new ArrayList<Validator>(cfgs.size());
+        ArrayList<Validator> validators = new ArrayList<>(cfgs.size());
         for (ValidatorConfig cfg : cfgs) {
             if (method == null || method.equals(cfg.getParams().get("methodName"))) {
                 Validator validator = validatorFactory.getValidator(cfg);
@@ -131,9 +130,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         try {
                 validator.setValidatorContext(validatorContext);
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Running validator: " + validator + " for object " + object + " and method " + method);
-                }
+            LOG.debug("Running validator: {} for object {} and method {}", validator, object, method);
 
                 FieldValidator fValidator = null;
                 String fullFieldName = null;
@@ -143,10 +140,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
                     fullFieldName = fValidator.getValidatorContext().getFullFieldName(fValidator.getFieldName());
 
                     if ((shortcircuitedFields != null) && shortcircuitedFields.contains(fullFieldName)) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Short-circuited, skipping");
-                        }
-
+                        LOG.debug("Short-circuited, skipping");
                         continue;
                     }
                 }
@@ -160,7 +154,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
                             Collection<String> fieldErrors = validatorContext.getFieldErrors().get(fullFieldName);
 
                             if (fieldErrors != null) {
-                                errs = new ArrayList<String>(fieldErrors);
+                                errs = new ArrayList<>(fieldErrors);
                             }
                         }
                     } else if (validatorContext.hasActionErrors()) {
@@ -178,12 +172,10 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
                             Collection<String> errCol = validatorContext.getFieldErrors().get(fullFieldName);
 
                             if ((errCol != null) && !errCol.equals(errs)) {
-                                if (LOG.isDebugEnabled()) {
-                                    LOG.debug("Short-circuiting on field validation");
-                                }
+                                LOG.debug("Short-circuiting on field validation");
 
                                 if (shortcircuitedFields == null) {
-                                    shortcircuitedFields = new TreeSet<String>();
+                                    shortcircuitedFields = new TreeSet<>();
                                 }
 
                                 shortcircuitedFields.add(fullFieldName);
@@ -193,14 +185,10 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
                         Collection<String> errCol = validatorContext.getActionErrors();
 
                         if ((errCol != null) && !errCol.equals(errs)) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Short-circuiting");
-                            }
-
+                            LOG.debug("Short-circuiting");
                             break;
                         }
                     }
-
                     continue;
                 }
 
@@ -281,7 +269,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      * @return a list of validator configs for the given class and context.
      */
     private List<ValidatorConfig> buildValidatorConfigs(Class clazz, String context, boolean checkFile, Set<String> checked) {
-        List<ValidatorConfig> validatorConfigs = new ArrayList<ValidatorConfig>();
+        List<ValidatorConfig> validatorConfigs = new ArrayList<>();
 
         if (checked == null) {
             checked = new TreeSet<String>();
@@ -329,22 +317,12 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         List<ValidatorConfig> retList = Collections.emptyList();
         URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
         if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
-            InputStream is = null;
-
-            try {
-                is = fileManager.loadFile(fileUrl);
-
+            try (InputStream is = fileManager.loadFile(fileUrl)) {
                 if (is != null) {
-                    retList = new ArrayList<ValidatorConfig>(validatorFileParser.parseActionValidatorConfigs(validatorFactory, is, fileName));
+                    retList = new ArrayList<>(validatorFileParser.parseActionValidatorConfigs(validatorFactory, is, fileName));
                 }
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        LOG.error("Unable to close input stream for " + fileName, e);
-                    }
-                }
+            } catch (IOException e) {
+                LOG.error("Caught exception while loading file {}", fileName, e);
             }
 
             validatorFileCache.put(fileName, retList);

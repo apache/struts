@@ -17,15 +17,11 @@ package com.opensymphony.xwork2.config.entities;
 
 import com.opensymphony.xwork2.util.location.Located;
 import com.opensymphony.xwork2.util.location.Location;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -57,12 +53,12 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
     protected PackageConfig(String name) {
         this.name = name;
-        actionConfigs = new LinkedHashMap<String, ActionConfig>();
-        globalResultConfigs = new LinkedHashMap<String, ResultConfig>();
-        interceptorConfigs = new LinkedHashMap<String, Object>();
-        resultTypeConfigs = new LinkedHashMap<String, ResultTypeConfig>();
-        globalExceptionMappingConfigs = new ArrayList<ExceptionMappingConfig>();
-        parents = new ArrayList<PackageConfig>();
+        actionConfigs = new LinkedHashMap<>();
+        globalResultConfigs = new LinkedHashMap<>();
+        interceptorConfigs = new LinkedHashMap<>();
+        resultTypeConfigs = new LinkedHashMap<>();
+        globalExceptionMappingConfigs = new ArrayList<>();
+        parents = new ArrayList<>();
     }
 
     protected PackageConfig(PackageConfig orig) {
@@ -74,12 +70,12 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         this.namespace = orig.namespace;
         this.isAbstract = orig.isAbstract;
         this.needsRefresh = orig.needsRefresh;
-        this.actionConfigs = new LinkedHashMap<String, ActionConfig>(orig.actionConfigs);
-        this.globalResultConfigs = new LinkedHashMap<String, ResultConfig>(orig.globalResultConfigs);
-        this.interceptorConfigs = new LinkedHashMap<String, Object>(orig.interceptorConfigs);
-        this.resultTypeConfigs = new LinkedHashMap<String, ResultTypeConfig>(orig.resultTypeConfigs);
-        this.globalExceptionMappingConfigs = new ArrayList<ExceptionMappingConfig>(orig.globalExceptionMappingConfigs);
-        this.parents = new ArrayList<PackageConfig>(orig.parents);
+        this.actionConfigs = new LinkedHashMap<>(orig.actionConfigs);
+        this.globalResultConfigs = new LinkedHashMap<>(orig.globalResultConfigs);
+        this.interceptorConfigs = new LinkedHashMap<>(orig.interceptorConfigs);
+        this.resultTypeConfigs = new LinkedHashMap<>(orig.resultTypeConfigs);
+        this.globalExceptionMappingConfigs = new ArrayList<>(orig.globalExceptionMappingConfigs);
+        this.parents = new ArrayList<>(orig.parents);
         this.location = orig.location;
     }
 
@@ -99,7 +95,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      * @see ActionConfig
      */
     public Map<String, ActionConfig> getAllActionConfigs() {
-        Map<String, ActionConfig> retMap = new LinkedHashMap<String, ActionConfig>();
+        Map<String, ActionConfig> retMap = new LinkedHashMap<>();
 
         if (!parents.isEmpty()) {
             for (PackageConfig parent : parents) {
@@ -120,7 +116,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      * @see ResultConfig
      */
     public Map<String, ResultConfig> getAllGlobalResults() {
-        Map<String, ResultConfig> retMap = new LinkedHashMap<String, ResultConfig>();
+        Map<String, ResultConfig> retMap = new LinkedHashMap<>();
 
         if (!parents.isEmpty()) {
             for (PackageConfig parentConfig : parents) {
@@ -142,7 +138,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      * @see InterceptorStackConfig
      */
     public Map<String, Object> getAllInterceptorConfigs() {
-        Map<String, Object> retMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> retMap = new LinkedHashMap<>();
 
         if (!parents.isEmpty()) {
             for (PackageConfig parentContext : parents) {
@@ -163,7 +159,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      * @see ResultTypeConfig
      */
     public Map<String, ResultTypeConfig> getAllResultTypeConfigs() {
-        Map<String, ResultTypeConfig> retMap = new LinkedHashMap<String, ResultTypeConfig>();
+        Map<String, ResultTypeConfig> retMap = new LinkedHashMap<>();
 
         if (!parents.isEmpty()) {
             for (PackageConfig parentContext : parents) {
@@ -184,7 +180,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      * @see ExceptionMappingConfig
      */
     public List<ExceptionMappingConfig> getAllExceptionMappingConfigs() {
-        List<ExceptionMappingConfig> allExceptionMappings = new ArrayList<ExceptionMappingConfig>();
+        List<ExceptionMappingConfig> allExceptionMappings = new ArrayList<>();
 
         if (!parents.isEmpty()) {
             for (PackageConfig parentContext : parents) {
@@ -310,7 +306,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     }
 
     public List<PackageConfig> getParents() {
-        return new ArrayList<PackageConfig>(parents);
+        return new ArrayList<>(parents);
     }
 
     /**

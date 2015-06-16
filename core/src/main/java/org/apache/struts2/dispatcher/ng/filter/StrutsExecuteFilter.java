@@ -27,12 +27,7 @@ import org.apache.struts2.dispatcher.ng.ExecuteOperations;
 import org.apache.struts2.dispatcher.ng.InitOperations;
 import org.apache.struts2.dispatcher.ng.PrepareOperations;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -80,8 +75,8 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
 
         ActionMapping mapping = prepare.findActionMapping(request, response);
 
-        //if recusrion counter is > 1, it means we are in a "forward", in that case a mapping will still be
-        //in the request, if we handle it, it will lead to an infinte loop, see WW-3077
+        //if recursion counter is > 1, it means we are in a "forward", in that case a mapping will still be
+        //in the request, if we handle it, it will lead to an infinite loop, see WW-3077
         Integer recursionCounter = (Integer) request.getAttribute(PrepareOperations.CLEANUP_RECURSION_COUNTER);
 
         if (mapping == null || recursionCounter > 1) {

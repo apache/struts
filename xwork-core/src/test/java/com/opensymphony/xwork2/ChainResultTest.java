@@ -52,7 +52,7 @@ public class ChainResultTest extends XWorkTestCase {
 
         String expectedActionName = "testActionName";
         String expectedNamespace = "testNamespace";
-        Map<String, Object> values = new HashMap<String, Object>();
+        Map<String, Object> values = new HashMap<>();
         values.put("actionName", expectedActionName);
         values.put("namespace", expectedNamespace);
 

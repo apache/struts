@@ -24,8 +24,9 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.Template;
@@ -504,7 +505,7 @@ public abstract class UIBean extends Component {
     protected String tooltipIconPath;
 
     // dynamic attributes
-    protected Map<String,Object> dynamicAttributes = new HashMap<String,Object>();
+    protected Map<String, Object> dynamicAttributes = new HashMap<>();
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;
@@ -576,9 +577,7 @@ public abstract class UIBean extends Component {
             throw new ConfigurationException("Unable to find a TemplateEngine for template " + template);
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Rendering template " + template);
-        }
+        LOG.debug("Rendering template {}", template);
 
         final TemplateRenderingContext context = new TemplateRenderingContext(template, writer, getStack(), getParameters(), this);
         engine.renderTemplate(context);
@@ -593,17 +592,17 @@ public abstract class UIBean extends Component {
 
         // If templateDir is not explicitly given,
         // try to find attribute which states the dir set to use
-        if ((templateDir == null) || (templateDir.equals(""))) {
+        if (StringUtils.isBlank(templateDir)) {
             templateDir = stack.findString("#attr.templateDir");
         }
 
         // Default template set
-        if ((templateDir == null) || (templateDir.equals(""))) {
+        if (StringUtils.isBlank(templateDir)) {
             templateDir = defaultTemplateDir;
         }
 
         // Defaults to 'template'
-        if ((templateDir == null) || (templateDir.equals(""))) {
+        if (StringUtils.isBlank(templateDir)) {
             templateDir = "template";
         }
 
@@ -617,7 +616,7 @@ public abstract class UIBean extends Component {
             theme = findString(this.theme);
         }
 
-        if ( theme == null || theme.equals("") ) {
+        if (StringUtils.isBlank(theme)) {
             Form form = (Form) findAncestor(Form.class);
             if (form != null) {
                 theme = form.getTheme();
@@ -626,12 +625,12 @@ public abstract class UIBean extends Component {
 
         // If theme set is not explicitly given,
         // try to find attribute which states the theme set to use
-        if ((theme == null) || (theme.equals(""))) {
+        if (StringUtils.isBlank(theme)) {
             theme = stack.findString("#attr.theme");
         }
 
         // Default theme set
-        if ((theme == null) || (theme.equals(""))) {
+        if (StringUtils.isBlank(theme)) {
             theme = defaultUITheme;
         }
 
@@ -662,7 +661,6 @@ public abstract class UIBean extends Component {
                 // lookup the label from a TextProvider (default value is the key)
                 providedLabel = TextProviderHelper.getText(key, key, stack);
             }
-
         }
 
         if (this.name != null) {
@@ -841,7 +839,7 @@ public abstract class UIBean extends Component {
             if (form != null) { // inform the containing form that we need tooltip javascript included
                 form.addParameter("hasTooltip", Boolean.TRUE);
 
-                // tooltipConfig defined in component itseilf will take precedence
+                // tooltipConfig defined in component itself will take precedence
                 // over those defined in the containing form
                 Map overallTooltipConfigMap = getTooltipConfig(form);
                 overallTooltipConfigMap.putAll(tooltipConfigMap); // override parent form's tooltip config
@@ -852,9 +850,7 @@ public abstract class UIBean extends Component {
                 }
             }
             else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
-                }
+                LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work");
             }
 
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
@@ -886,8 +882,6 @@ public abstract class UIBean extends Component {
                 if (this.tooltipCssClass != null)
                     this.addParameter("tooltipCssClass", findString(this.tooltipCssClass));
             }
-
-
         }
 
         evaluateExtraParams();
@@ -947,14 +941,14 @@ public abstract class UIBean extends Component {
 
     protected Map getTooltipConfig(UIBean component) {
         Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
-        Map<String, String> tooltipConfig = new LinkedHashMap<String, String>();
+        Map<String, String> tooltipConfig = new LinkedHashMap<>();
 
         if (tooltipConfigObj instanceof Map) {
             // we get this if its configured using
             // 1] UI component's tooltipConfig attribute  OR
             // 2] <param name="tooltip" value="" /> param tag value attribute
 
-            tooltipConfig = new LinkedHashMap<String, String>((Map)tooltipConfigObj);
+            tooltipConfig = new LinkedHashMap<>((Map) tooltipConfigObj);
         } else if (tooltipConfigObj instanceof String) {
 
             // we get this if its configured using
@@ -970,9 +964,7 @@ public abstract class UIBean extends Component {
                     value = configEntry[1].trim();
                     tooltipConfig.put(key, value);
                 } else {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("component " + component + " tooltip config param " + key + " has no value defined, skipped");
-                    }
+                    LOG.warn("component {} tooltip config param {} has no value defined, skipped", component, key);
                 }
             }
         }

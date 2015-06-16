@@ -34,7 +34,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * Validation annotation to validate that two fields are equals.
+ * Validation annotation to validate that two fields are equal.
  * An array of fields and their matching confirmation fields can be supplied.
  * <p/>
  * Example, compare 1 pair of fields:

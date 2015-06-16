@@ -21,7 +21,7 @@
 package org.apache.struts.beanvalidation.validation.constant;
 
 /**
- * <p>Class consisting various constant values being used within
+ * <p>Class consisting of various constant values being used within
  * bean validation plugin </p>
  * <p/>
  * <p>

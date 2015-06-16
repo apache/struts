@@ -23,10 +23,10 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.views.util.UrlHelper;
@@ -122,9 +122,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
      *                   HTTP request.
      */
     public void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Forwarding to location " + finalLocation);
-        }
+        LOG.debug("Forwarding to location: {}", finalLocation);
 
         PageContext pageContext = ServletActionContext.getPageContext();
 

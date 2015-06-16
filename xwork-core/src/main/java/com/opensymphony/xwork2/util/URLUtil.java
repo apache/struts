@@ -15,10 +15,12 @@
  */
 package com.opensymphony.xwork2.util;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -46,10 +48,14 @@ public class URLUtil {
         }
 
         try {
-            new URL(url);
-
+            URL u = new URL(url);
+            URI uri = u.toURI(); // perform a additional url syntax check
+            if (uri.getHost() == null) {
+                LOG.debug("Url [{}] does not contains a valid host: {}", url, uri);
+                return false;
+            }
             return true;
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             LOG.debug("Url [{}] is invalid: {}", url, e.getMessage(), e);
             return false;
         }

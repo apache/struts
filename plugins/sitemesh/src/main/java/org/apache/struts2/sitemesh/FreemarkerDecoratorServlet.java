@@ -23,14 +23,9 @@ package org.apache.struts2.sitemesh;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.xwork2.ActionContext;
-import org.apache.logging.log4j.LogManager;
 import freemarker.core.InvalidReferenceException;
-import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
+import freemarker.template.*;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
@@ -74,17 +69,15 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
     public void init() throws ServletException {
         try {
             Dispatcher dispatcher = (Dispatcher) getServletContext().getAttribute(StrutsStatics.SERVLET_DISPATCHER);
-            if (dispatcher == null)
+            if (dispatcher == null) {
                 throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
-
+            }
             freemarkerManager = dispatcher.getContainer().getInstance(FreemarkerManager.class);
             config = createConfiguration();
 
             // Process object_wrapper init-param out of order:
             wrapper = config.getObjectWrapper();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Using object wrapper of class " + wrapper.getClass().getName());
-            }
+            LOG.debug("Using object wrapper of class {}", wrapper.getClass().getName());
 
             // Process all other init-params:
             Enumeration initpnames = getServletConfig().getInitParameterNames();
@@ -92,10 +85,10 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
                 String name = (String) initpnames.nextElement();
                 String value = getInitParameter(name);
                 if (name == null) {
-                    throw new ServletException("init-param without param-name. " + "Maybe the web.xml is not well-formed?");
+                    throw new ServletException("init-param without param-name. Maybe the web.xml is not well-formed?");
                 }
                 if (value == null) {
-                    throw new ServletException("init-param without param-value. " + "Maybe the web.xml is not well-formed?");
+                    throw new ServletException("init-param without param-value. Maybe the web.xml is not well-formed?");
                 }
 
                 // template path is already handled!
@@ -132,7 +125,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
             log("Requested template: " + path);
         }
 
-        Template template = null;
+        Template template;
         try {
             template = config.getTemplate(path, deduceLocale(path, request, response));
         } catch (FileNotFoundException e) {
@@ -176,11 +169,15 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
             // this exception is thrown if there is an error processing a reference.  We want to report these!
             HttpServletRequest req = ((StrutsRequestWrapper) ActionContext.getContext().get("com.opensymphony.xwork2.dispatcher.HttpServletRequest"));
             String resultCode = ActionContext.getContext().getActionInvocation().getResultCode();
-            if (req == null) req = request;
+            if (req == null){
+                req = request;
+            }
 
             StringBuilder msgBuf = new StringBuilder("Error applying freemarker template to\n       request: ");
             msgBuf.append(req.getRequestURL());
-            if (req.getQueryString() != null) msgBuf.append("?").append(req.getQueryString());
+            if (req.getQueryString() != null){
+                msgBuf.append("?").append(req.getQueryString());
+            }
             msgBuf.append(" with resultCode: ").append(resultCode).append(".\n\n").append(x.getMessage());
             String msg = msgBuf.toString();
             LOG.error(msg, x);

@@ -21,18 +21,17 @@
 
 package org.apache.struts2.dispatcher;
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsStatics;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.apache.struts2.StrutsStatics;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -227,7 +226,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
                 excludeEmptyElements,
                 new EncodingParsedValueEvaluator());
         } else {
-            Collection<String> collection = new ArrayList<String>(1);
+            Collection<String> collection = new ArrayList<>(1);
             collection.add(param);
             return collection;
         }
@@ -246,9 +245,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
                         return URLEncoder.encode(parsedValue, DEFAULT_URL_ENCODING);
                     }
                     catch(UnsupportedEncodingException e) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("error while trying to encode ["+parsedValue+"]", e);
-                        }
+                        LOG.warn("error while trying to encode [{}]", parsedValue, e);
                     }
                 }
             }

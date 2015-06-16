@@ -21,19 +21,18 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.apache.struts2.dispatcher.ServletRedirectResult;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.ServletRedirectResult;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -189,18 +188,14 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("entering MessageStoreInterceptor ...");
-        }
+        LOG.debug("entering MessageStoreInterceptor ...");
 
         before(invocation);
         String result = invocation.invoke();
         after(invocation, result);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("exit executing MessageStoreInterceptor");
-        }
-        
+        LOG.debug("exit executing MessageStoreInterceptor");
+
         return result;
     }
 
@@ -224,17 +219,13 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
 
                 if (session == null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Session is not open, no errors / messages could be retrieve for action ["+action+"]");
-                    }
+                    LOG.debug("Session is not open, no errors / messages could be retrieve for action [{}]", action);
                     return;
                 }
 
                 ValidationAware validationAwareAction = (ValidationAware) action;
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("retrieve error / message from session to populate into action ["+action+"]");
-                }
+                LOG.debug("Retrieve error / message from session to populate into action [{}]", action);
 
                 Collection actionErrors = (Collection) session.get(actionErrorsSessionKey);
                 Collection actionMessages = (Collection) session.get(actionMessagesSessionKey);
@@ -283,23 +274,18 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
 
                 if (session == null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Could not store action ["+action+"] error/messages into session, because session hasn't been opened yet.");
-                    }
+                    LOG.debug("Could not store action [{}] error/messages into session, because session hasn't been opened yet.", action);
                     return;
                 }
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("store action ["+action+"] error/messages into session ");
-                }
+                LOG.debug("Store action [{}] error/messages into session.", action);
 
                 ValidationAware validationAwareAction = (ValidationAware) action;
                 session.put(actionErrorsSessionKey, validationAwareAction.getActionErrors());
                 session.put(actionMessagesSessionKey, validationAwareAction.getActionMessages());
                 session.put(fieldErrorsSessionKey, validationAwareAction.getFieldErrors());
-            }
-            else if(LOG.isDebugEnabled()) {
-        	LOG.debug("Action ["+action+"] is not ValidationAware, no message / error that are storeable");
+            } else {
+                LOG.debug("Action [{}] is not ValidationAware, no message / error that are storeable", action);
             }
         }
     }

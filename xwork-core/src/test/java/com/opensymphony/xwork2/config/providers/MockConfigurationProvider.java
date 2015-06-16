@@ -15,19 +15,11 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionChainResult;
-import com.opensymphony.xwork2.ModelDrivenAction;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor;
@@ -37,11 +29,7 @@ import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -90,11 +78,11 @@ public class MockConfigurationProvider implements ConfigurationProvider {
     public void loadPackages() {
         
         PackageConfig.Builder defaultPackageContext = new PackageConfig.Builder("defaultPackage");
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("bar", "5");
 
-        Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
-        Map<String, String> successParams = new HashMap<String, String>();
+        Map<String, ResultConfig> results = new HashMap<>();
+        Map<String, String> successParams = new HashMap<>();
         successParams.put("actionName", "bar");
         results.put("success", new ResultConfig.Builder("success", ActionChainResult.class.getName()).addParams(successParams).build());
 
@@ -103,12 +91,12 @@ public class MockConfigurationProvider implements ConfigurationProvider {
             .build();
         defaultPackageContext.addActionConfig(FOO_ACTION_NAME, fooActionConfig);
 
-        results = new HashMap<String, ResultConfig>();
-        successParams = new HashMap<String, String>();
+        results = new HashMap<>();
+        successParams = new HashMap<>();
         successParams.put("actionName", "bar");
         results.put("success", new ResultConfig.Builder("success", ActionChainResult.class.getName()).addParams(successParams).build());
 
-        List<InterceptorMapping> interceptors = new ArrayList<InterceptorMapping>();
+        List<InterceptorMapping> interceptors = new ArrayList<>();
         interceptors.add(new InterceptorMapping("params", new ParametersInterceptor()));
 
         ActionConfig paramInterceptorActionConfig = new ActionConfig.Builder("defaultPackage", PARAM_INTERCEPTOR_ACTION_NAME, SimpleAction.class.getName())
@@ -117,7 +105,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
             .build();
         defaultPackageContext.addActionConfig(PARAM_INTERCEPTOR_ACTION_NAME, paramInterceptorActionConfig);
 
-        interceptors = new ArrayList<InterceptorMapping>();
+        interceptors = new ArrayList<>();
         interceptors.add(new InterceptorMapping("model", 
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ModelDrivenInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
         interceptors.add(new InterceptorMapping("params",
@@ -132,15 +120,15 @@ public class MockConfigurationProvider implements ConfigurationProvider {
         //List paramFilterInterceptor=new ArrayList();
         //paramFilterInterceptor.add(new ParameterFilterInterC)
         //ActionConfig modelParamFilterActionConfig = new ActionConfig(null, ModelDrivenAction.class, null, null, interceptors);
-        
 
-        results = new HashMap<String, ResultConfig>();
-        successParams = new HashMap<String, String>();
+
+        results = new HashMap<>();
+        successParams = new HashMap<>();
         successParams.put("actionName", "bar");
         results.put("success", new ResultConfig.Builder("success", ActionChainResult.class.getName()).addParams(successParams).build());
         results.put(Action.ERROR, new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build());
 
-        interceptors = new ArrayList<InterceptorMapping>();
+        interceptors = new ArrayList<>();
         interceptors.add(new InterceptorMapping("staticParams", 
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", StaticParametersInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
         interceptors.add(new InterceptorMapping("model", 
@@ -151,7 +139,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
 
         //Explicitly set an out-of-range date for DateRangeValidatorTest
-        params = new HashMap<String, String>();
+        params = new HashMap<>();
         ActionConfig validationActionConfig = new ActionConfig.Builder("defaultPackage", VALIDATION_ACTION_NAME, SimpleAction.class.getName())
             .addInterceptors(interceptors)
             .addParams(params)
@@ -164,7 +152,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
                 new ActionConfig.Builder(validationActionConfig).name(VALIDATION_SUBPROPERTY_NAME).build());
 
 
-        params = new HashMap<String, String>();
+        params = new HashMap<>();
         ActionConfig percentageActionConfig = new ActionConfig.Builder("defaultPackage", "percentage", SimpleAction.class.getName())
                 .addParams(params)
                 .addResultConfigs(results)

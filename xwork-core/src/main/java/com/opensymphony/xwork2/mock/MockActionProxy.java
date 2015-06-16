@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Mock for an {@link ActionProxy}.
@@ -110,7 +111,7 @@ public class MockActionProxy implements ActionProxy {
 
     public void setMethod(String method) {
         this.method = method;
-        methodSpecified=method!=null && !"".equals(method);
+        methodSpecified = StringUtils.isNotEmpty(method);
     }
 
     public boolean isMethodSpecified()

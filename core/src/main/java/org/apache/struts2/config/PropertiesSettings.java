@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationImpl;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 
 import java.io.IOException;
@@ -56,9 +56,7 @@ class PropertiesSettings implements Settings {
         URL settingsUrl = ClassLoaderUtil.getResource(name + ".properties", getClass());
         
         if (settingsUrl == null) {
-            if (LOG.isDebugEnabled()) {
-        	LOG.debug(name + ".properties missing");
-            }
+            LOG.debug("{}.properties missing", name);
             settings = new LocatableProperties();
             return;
         }
@@ -71,15 +69,13 @@ class PropertiesSettings implements Settings {
             in = settingsUrl.openStream();
             settings.load(in);
         } catch (IOException e) {
-            throw new StrutsException("Could not load " + name + ".properties:" + e, e);
+            throw new StrutsException("Could not load " + name + ".properties: " + e, e);
         } finally {
             if(in != null) {
                 try {
                     in.close();
                 } catch(IOException io) {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("Unable to close input stream", io);
-                    }
                 }
             }
         }

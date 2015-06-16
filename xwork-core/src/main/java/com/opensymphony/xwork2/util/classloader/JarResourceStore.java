@@ -16,8 +16,8 @@
 
 package com.opensymphony.xwork2.util.classloader;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -26,16 +26,11 @@ import java.util.zip.ZipFile;
 /**
  * Read resources from a jar file
  */
-public class JarResourceStore implements ResourceStore {
+public class JarResourceStore extends AbstractResourceStore {
     private static final Logger LOG = LogManager.getLogger(JarResourceStore.class);
 
-    private final File file;
-
     public JarResourceStore(File file) {
-        this.file = file;
-    }
-
-    public void write(String pResourceName, byte[] pResourceData) {
+        super(file);
     }
 
     public byte[] read(String pResourceName) {
@@ -58,8 +53,7 @@ public class JarResourceStore implements ResourceStore {
         }
     }
 
-    public static long copy(InputStream input, OutputStream output)
-            throws IOException {
+    public static long copy(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024 * 4];
         long count = 0;
         int n = 0;
@@ -68,14 +62,5 @@ public class JarResourceStore implements ResourceStore {
             count += n;
         }
         return count;
-    }
-
-    private void closeQuietly(InputStream is) {
-        try {
-            if (is != null)
-                is.close();
-        } catch (IOException e) {
-            LOG.error("Unable to close input stream", e);
-        }
     }
 }

@@ -4,15 +4,11 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.BeanSelectionProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.inject.Scope;
+import com.opensymphony.xwork2.inject.*;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Properties;
 
@@ -87,8 +83,6 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
         }
     }
 
-
-
     static class ObjectFactoryDelegateFactory implements Factory {
 
         String name;
@@ -107,6 +101,5 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
                 throw new ConfigurationException("Unable to load bean "+type.getName()+" ("+name+")");
             }
         }
-
     }
 }

@@ -22,9 +22,9 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -165,9 +165,7 @@ public class Property extends Component {
                 writer.write(prepare(defaultValue));
             }
         } catch (IOException e) {
-            if (LOG.isInfoEnabled()) {
-        	LOG.info("Could not print out value '" + value + "'", e);
-            }
+            LOG.info("Could not print out value '{}'", value, e);
         }
 
         return result;

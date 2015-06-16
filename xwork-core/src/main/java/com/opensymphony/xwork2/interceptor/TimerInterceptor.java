@@ -16,8 +16,9 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -138,7 +139,7 @@ public class TimerInterceptor extends AbstractInterceptor {
         StringBuilder message = new StringBuilder(100);
         message.append("Executed action [");
         String namespace = invocation.getProxy().getNamespace();
-        if ((namespace != null) && (namespace.trim().length() > 0)) {
+        if (StringUtils.isNotBlank(namespace)) {
             message.append(namespace).append("/");
         }
         message.append(invocation.getProxy().getActionName());

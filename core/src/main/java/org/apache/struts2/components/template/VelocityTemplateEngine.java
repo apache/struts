@@ -21,23 +21,21 @@
 
 package org.apache.struts2.components.template;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
-import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Velocity based template engine.
@@ -84,7 +82,7 @@ public class VelocityTemplateEngine extends BaseTemplateEngine {
         }
 
         if (template == null) {
-            LOG.error("Could not load template " + templateContext.getTemplate());
+            LOG.error("Could not load template {}", templateContext.getTemplate());
             if (exception != null) {
                 throw exception;
             } else {
@@ -92,9 +90,7 @@ public class VelocityTemplateEngine extends BaseTemplateEngine {
             }
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Rendering template " + templateName);
-        }
+        LOG.debug("Rendering template {}", templateName);
 
         Context context = velocityManager.createContext(templateContext.getStack(), req, res);
 

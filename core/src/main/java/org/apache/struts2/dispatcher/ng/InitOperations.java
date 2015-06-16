@@ -23,17 +23,11 @@ package org.apache.struts2.dispatcher.ng;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -103,7 +97,7 @@ public class InitOperations {
      * Create a {@link Dispatcher}
      */
     private Dispatcher createDispatcher( HostConfig filterConfig ) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         for ( Iterator e = filterConfig.getInitParameterNames(); e.hasNext(); ) {
             String name = (String) e.next();
             String value = filterConfig.getInitParameter(name);
@@ -131,7 +125,7 @@ public class InitOperations {
             
     private List<Pattern> buildExcludedPatternsList( String patterns ) {
         if (null != patterns && patterns.trim().length() != 0) {
-            List<Pattern> list = new ArrayList<Pattern>();
+            List<Pattern> list = new ArrayList<>();
             String[] tokens = patterns.split(",");
             for ( String token : tokens ) {
                 list.add(Pattern.compile(token.trim()));

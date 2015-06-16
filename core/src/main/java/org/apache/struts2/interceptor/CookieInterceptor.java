@@ -29,8 +29,8 @@ import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.Cookie;
@@ -195,8 +195,9 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param cookiesName
      */
     public void setCookiesName(String cookiesName) {
-        if (cookiesName != null)
+        if (cookiesName != null) {
             this.cookiesNameSet = TextParseUtil.commaDelimitedStringToSet(cookiesName);
+        }
     }
 
     /**
@@ -207,8 +208,9 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param cookiesValue
      */
     public void setCookiesValue(String cookiesValue) {
-        if (cookiesValue != null)
+        if (cookiesValue != null) {
             this.cookiesValueSet = TextParseUtil.commaDelimitedStringToSet(cookiesValue);
+        }
     }
 
     /**
@@ -222,12 +224,10 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("start interception");
-        }
+        LOG.debug("start interception");
 
         // contains selected cookies
-        final Map<String, String> cookiesMap = new LinkedHashMap<String, String>();
+        final Map<String, String> cookiesMap = new LinkedHashMap<>();
 
         Cookie[] cookies = ServletActionContext.getRequest().getCookies();
         if (cookies != null) {
@@ -239,9 +239,7 @@ public class CookieInterceptor extends AbstractInterceptor {
 
                 if (isAcceptableName(name) && isAcceptableValue(value)) {
                     if (cookiesNameSet.contains("*")) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name [" + name + "] with value [" + value + "] will be injected");
-                        }
+                        LOG.debug("Contains cookie name [*] in configured cookies name set, cookie with name [{}] with value [{}] will be injected", name, value);
                         populateCookieValueIntoStack(name, value, cookiesMap, stack);
                     } else if (cookiesNameSet.contains(cookie.getName())) {
                         populateCookieValueIntoStack(name, value, cookiesMap, stack);
@@ -346,9 +344,7 @@ public class CookieInterceptor extends AbstractInterceptor {
             // if cookiesValues is specified, the cookie's value must match before we
             // inject them into Struts' action
             if (cookiesValueSet.contains(cookieValue)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("both configured cookie name and value matched, cookie [{}] with value [{}] will be injected", cookieName, cookieValue);
-                }
+                LOG.debug("both configured cookie name and value matched, cookie [{}] with value [{}] will be injected", cookieName, cookieValue);
 
                 cookiesMap.put(cookieName, cookieValue);
                 stack.setValue(cookieName, cookieValue);

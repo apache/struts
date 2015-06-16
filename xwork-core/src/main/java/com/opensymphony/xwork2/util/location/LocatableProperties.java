@@ -28,7 +28,7 @@ public class LocatableProperties extends Properties implements Locatable {
     public LocatableProperties(Location loc) {
         super();
         this.location = loc;
-        this.propLocations = new HashMap<String, Location>();
+        this.propLocations = new HashMap<>();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class LocatableProperties extends Properties implements Locatable {
 
     String convertCommentsToString(List<String> lines) {
         StringBuilder sb = new StringBuilder();
-        if (lines != null && lines.size() > 0) {
+        if (lines != null && !lines.isEmpty()) {
             for (String line : lines) {
                 sb.append(line).append('\n');
             }

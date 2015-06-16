@@ -20,8 +20,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,18 +98,18 @@ public class XWorkList extends ArrayList {
      * <p/>
      * This method performs any necessary type conversion.
      *
-     * @param c the elements to be inserted into this list.
+     * @param collection the elements to be inserted into this list.
      * @return <tt>true</tt> if this list changed as a result of the call.
      * @throws NullPointerException if the specified collection is null.
      */
     @Override
-    public boolean addAll(Collection c) {
-        if (c == null) {
+    public boolean addAll(Collection collection) {
+        if (collection == null) {
             throw new NullPointerException("Collection to add is null");
         }
 
-        for (Object aC : c) {
-            add(aC);
+        for (Object nextElement : collection) {
+            add(nextElement);
         }
 
         return true;
@@ -126,12 +126,12 @@ public class XWorkList extends ArrayList {
      * also performs any necessary type conversion.
      *
      * @param index index at which to insert first element from the specified collection.
-     * @param c     elements to be inserted into this list.
+     * @param collection     elements to be inserted into this list.
      * @return <tt>true</tt> if this list changed as a result of the call.
      */
     @Override
-    public boolean addAll(int index, Collection c) {
-        if (c == null) {
+    public boolean addAll(int index, Collection collection) {
+        if (collection == null) {
             throw new NullPointerException("Collection to add is null");
         }
 
@@ -141,7 +141,7 @@ public class XWorkList extends ArrayList {
             trim = true;
         }
 
-        for (Iterator it = c.iterator(); it.hasNext(); index++) {
+        for (Iterator it = collection.iterator(); it.hasNext(); index++) {
             add(index, it.next());
         }
 
@@ -203,12 +203,10 @@ public class XWorkList extends ArrayList {
     private Object convert(Object element) {
         if ((element != null) && !clazz.isAssignableFrom(element.getClass())) {
             // convert to correct type
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Converting from " + element.getClass().getName() + " to " + clazz.getName());
-            }
-            TypeConverter conv = getTypeConverter();
+            LOG.debug("Converting from {} to {}", element.getClass().getName(), clazz.getName());
+            TypeConverter converter = getTypeConverter();
             Map<String, Object> context = ActionContext.getContext().getContextMap();
-            element = conv.convertValue(context, null, null, null, element, clazz);
+            element = converter.convertValue(context, null, null, null, element, clazz);
         }
 
         return element;
@@ -221,7 +219,6 @@ public class XWorkList extends ArrayList {
     @Override
     public boolean contains(Object element) {
         element = convert(element);
-
         return super.contains(element);
     }
 }

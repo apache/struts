@@ -29,12 +29,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.validator.ActionValidatorManager;
-import com.opensymphony.xwork2.validator.FieldValidator;
-import com.opensymphony.xwork2.validator.ValidationException;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import com.opensymphony.xwork2.validator.Validator;
-import com.opensymphony.xwork2.validator.ValidatorContext;
+import com.opensymphony.xwork2.validator.*;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -278,7 +273,7 @@ public class Form extends ClosingUIBean {
         String actionName = mapping.getName();
 
         List<Validator> actionValidators = actionValidatorManager.getValidators(actionClass, actionName);
-        List<Validator> validators = new ArrayList<Validator>();
+        List<Validator> validators = new ArrayList<>();
 
         findFieldValidators(name, actionClass, actionName, actionValidators, validators, "");
 
@@ -286,7 +281,7 @@ public class Form extends ClosingUIBean {
     }
 
     private void findFieldValidators(String name, Class actionClass, String actionName,
-            List<Validator> validatorList, List<Validator> retultValidators, String prefix) {
+                                     List<Validator> validatorList, List<Validator> resultValidators, String prefix) {
 
         for (Validator validator : validatorList) {
             if (validator instanceof FieldValidator) {
@@ -301,14 +296,14 @@ public class Form extends ClosingUIBean {
 
                     List<Validator> visitorValidators = actionValidatorManager.getValidators(clazz, actionName);
                     String vPrefix = prefix + (vfValidator.isAppendPrefix() ? vfValidator.getFieldName() + "." : "");
-                    findFieldValidators(name, clazz, actionName, visitorValidators, retultValidators, vPrefix);
+                    findFieldValidators(name, clazz, actionName, visitorValidators, resultValidators, vPrefix);
                 } else if ((prefix + fieldValidator.getFieldName()).equals(name)) {
                     if (StringUtils.isNotBlank(prefix)) {
                         //fixing field name for js side
                         FieldVisitorValidatorWrapper wrap = new FieldVisitorValidatorWrapper(fieldValidator, prefix);
-                        retultValidators.add(wrap);
+                        resultValidators.add(wrap);
                     } else {
-                        retultValidators.add(fieldValidator);
+                        resultValidators.add(fieldValidator);
                     }
                 }
             }

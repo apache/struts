@@ -32,9 +32,9 @@ public class ProxyInvocationTest extends XWorkTestCase {
      * Needed for the creation of the action proxy
      */
     private Map<String, Object> createDummyContext() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("blah", "this is blah");
-        Map<String, Object> extraContext = new HashMap<String, Object>();
+        Map<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
         return extraContext;
     }

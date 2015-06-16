@@ -35,10 +35,10 @@ import java.util.Map;
 public class LongRangeValidatorTest extends XWorkTestCase {
 
     public void testRangeValidation() {
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("longFoo", "200");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {

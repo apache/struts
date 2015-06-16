@@ -119,7 +119,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
 
 
     public String getText(String key, String defaultValue, String obj) {
-        List<Object> args = new ArrayList<Object>(1);
+        List<Object> args = new ArrayList<>(1);
         args.add(obj);
         return getText(key, defaultValue, args);
     }

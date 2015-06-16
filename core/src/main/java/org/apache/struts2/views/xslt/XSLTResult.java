@@ -27,21 +27,15 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.ErrorListener;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -215,11 +209,13 @@ public class XSLTResult implements Result {
     /** 'stylesheetLocation' parameter.  Points to the xsl. */
     public static final String DEFAULT_PARAM = "stylesheetLocation";
 
-    /** Cache of all tempaltes. */
+    /**
+     * Cache of all templates.
+     */
     private static final Map<String, Templates> templatesCache;
 
     static {
-        templatesCache = new HashMap<String, Templates>();
+        templatesCache = new HashMap<>();
     }
 
     // Configurable Parameters
@@ -256,8 +252,8 @@ public class XSLTResult implements Result {
     }
     
     @Inject(StrutsConstants.STRUTS_XSLT_NOCACHE)
-    public void setNoCache(String val) {
-        noCache = "true".equals(val);
+    public void setNoCache(String xsltNoCache) {
+        this.noCache = BooleanUtils.toBoolean(xsltNoCache);
     }
 
     /**
@@ -410,16 +406,12 @@ public class XSLTResult implements Result {
             Source xmlSource = getDOMSourceForStack(result);
 
             // Transform the source XML to System.out.
-            if (LOG.isDebugEnabled()) {
-        	LOG.debug("xmlSource = " + xmlSource);
-            }
+            LOG.debug("xmlSource = {}", xmlSource);
             transformer.transform(xmlSource, new StreamResult(writer));
 
             writer.flush(); // ...and flush...
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Time:" + (System.currentTimeMillis() - startTime) + "ms");
-            }
+            LOG.debug("Time: {}ms", (System.currentTimeMillis() - startTime));
 
         } catch (Exception e) {
             LOG.error("Unable to render XSLT Template, '{}'", location, e);
@@ -465,9 +457,7 @@ public class XSLTResult implements Result {
                     throw new TransformerException("Stylesheet " + path + " not found in resources.");
                 }
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Preparing XSLT stylesheet templates: " + path);
-                }
+                LOG.debug("Preparing XSLT stylesheet templates: {}", path);
 
                 TransformerFactory factory = TransformerFactory.newInstance();
                 factory.setURIResolver(getURIResolver());

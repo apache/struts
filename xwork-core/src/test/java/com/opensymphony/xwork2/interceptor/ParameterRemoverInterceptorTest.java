@@ -15,14 +15,14 @@ import java.util.Map;
  */
 public class ParameterRemoverInterceptorTest extends TestCase {
 
-	protected Map contextMap;
+	protected Map<String, Object> contextMap;
 	protected ActionContext context;
 	protected MockControl actionInvocationControl;
 	protected ActionInvocation actionInvocation;
 	
 	@Override
     protected void setUp() throws Exception {
-		contextMap = new LinkedHashMap();
+		contextMap = new LinkedHashMap<>();
 		context = new ActionContext(contextMap);
 		
 		actionInvocationControl = MockControl.createControl(ActionInvocation.class);
@@ -33,7 +33,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 	}
 	
 	public void testInterception1() throws Exception {
-		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap() {
+		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap<String, Object>() {
 			private static final long serialVersionUID = 0L;
 			{
 				put("param1", new String[] { "paramValue1" });
@@ -62,7 +62,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 	
 	
 	public void testInterception2() throws Exception {
-		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap() {
+		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap<String, Object>() {
 			private static final long serialVersionUID = 0L;
 			{
 				put("param1", new String[] { "paramValue2" });
@@ -85,7 +85,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 	
 	
 	public void testInterception3() throws Exception {
-		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap() {
+		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap<String, Object>() {
 			private static final long serialVersionUID = 0L;
 			{
 				put("param1", new String[] { "paramValueOne" });

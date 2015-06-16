@@ -5,6 +5,6 @@ plugin.
 
 For more on Struts plugins, see 
 
-* http://struts.apache.org/2.x/docs/plugins.html
+* http://struts.apache.org/docs/plugins.html
 
 ----------------------------------------------------------------------------

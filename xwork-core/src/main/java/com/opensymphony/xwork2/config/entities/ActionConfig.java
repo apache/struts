@@ -20,14 +20,7 @@ import com.opensymphony.xwork2.util.location.Location;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -82,11 +75,11 @@ public class ActionConfig extends Located implements Serializable {
         this.className = orig.className;
         this.methodName = orig.methodName;
         this.packageName = orig.packageName;
-        this.params = new LinkedHashMap<String,String>(orig.params);
-        this.interceptors = new ArrayList<InterceptorMapping>(orig.interceptors);
-        this.results = new LinkedHashMap<String,ResultConfig>(orig.results);
-        this.exceptionMappings = new ArrayList<ExceptionMappingConfig>(orig.exceptionMappings);
-        this.allowedMethods = new HashSet<String>(orig.allowedMethods);
+        this.params = new LinkedHashMap<>(orig.params);
+        this.interceptors = new ArrayList<>(orig.interceptors);
+        this.results = new LinkedHashMap<>(orig.results);
+        this.exceptionMappings = new ArrayList<>(orig.exceptionMappings);
+        this.allowedMethods = new HashSet<>(orig.allowedMethods);
         this.location = orig.location;
     }
 

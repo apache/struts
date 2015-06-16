@@ -21,20 +21,18 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.util.MergeIteratorFilter;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -152,12 +150,9 @@ public class MergeIterator extends ContextBean implements UnnamedParametric {
 
     public boolean end(Writer writer, String body) {
 
-        for (Iterator parametersIterator = _parameters.iterator(); parametersIterator.hasNext(); ) {
-            Object iteratorEntryObj = parametersIterator.next();
+        for (Object iteratorEntryObj : _parameters) {
             if (! MakeIterator.isIterable(iteratorEntryObj)) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("param with value resolved as "+iteratorEntryObj+" cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator");
-                }
+                LOG.warn("param with value resolved as {} cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator", iteratorEntryObj);
                 continue;
             }
             mergeIteratorFilter.setSource(MakeIterator.convert(iteratorEntryObj));

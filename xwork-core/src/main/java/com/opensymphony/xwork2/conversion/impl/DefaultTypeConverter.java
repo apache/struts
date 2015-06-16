@@ -64,7 +64,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     private Container container;
 
     static {
-        Map<Class, Object> map = new HashMap<Class, Object>();
+        Map<Class, Object> map = new HashMap<>();
         map.put(Boolean.TYPE, Boolean.FALSE);
         map.put(Byte.TYPE, Byte.valueOf((byte) 0));
         map.put(Short.TYPE, Short.valueOf((short) 0));
@@ -134,19 +134,19 @@ public abstract class DefaultTypeConverter implements TypeConverter {
                 }
             } else {
                 if ((toType == Integer.class) || (toType == Integer.TYPE))
-                    result = Integer.valueOf((int) longValue(value));
+                    result = (int) longValue(value);
                 if ((toType == Double.class) || (toType == Double.TYPE))
-                    result = new Double(doubleValue(value));
+                    result = doubleValue(value);
                 if ((toType == Boolean.class) || (toType == Boolean.TYPE))
                     result = booleanValue(value) ? Boolean.TRUE : Boolean.FALSE;
                 if ((toType == Byte.class) || (toType == Byte.TYPE))
-                    result = Byte.valueOf((byte) longValue(value));
+                    result = (byte) longValue(value);
                 if ((toType == Character.class) || (toType == Character.TYPE))
-                    result = new Character((char) longValue(value));
+                    result = (char) longValue(value);
                 if ((toType == Short.class) || (toType == Short.TYPE))
-                    result = Short.valueOf((short) longValue(value));
+                    result = (short) longValue(value);
                 if ((toType == Long.class) || (toType == Long.TYPE))
-                    result = Long.valueOf(longValue(value));
+                    result = longValue(value);
                 if ((toType == Float.class) || (toType == Float.TYPE))
                     result = new Float(doubleValue(value));
                 if (toType == BigInteger.class)
@@ -156,7 +156,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
                 if (toType == String.class)
                     result = stringValue(value);
                 if (Enum.class.isAssignableFrom(toType))
-                    result = enumValue((Class<Enum>)toType, value);
+                    result = enumValue(toType, value);
             }
         } else {
             if (toType.isPrimitive()) {
@@ -180,11 +180,11 @@ public abstract class DefaultTypeConverter implements TypeConverter {
             return false;
         Class c = value.getClass();
         if (c == Boolean.class)
-            return ((Boolean) value).booleanValue();
+            return (Boolean) value;
         // if ( c == String.class )
         // return ((String)value).length() > 0;
         if (c == Character.class)
-            return ((Character) value).charValue() != 0;
+            return (Character) value != 0;
         if (value instanceof Number)
             return ((Number) value).doubleValue() != 0;
         return true; // non-null
@@ -218,9 +218,9 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c.getSuperclass() == Number.class)
             return ((Number) value).longValue();
         if (c == Boolean.class)
-            return ((Boolean) value).booleanValue() ? 1 : 0;
+            return (Boolean) value ? 1 : 0;
         if (c == Character.class)
-            return ((Character) value).charValue();
+            return (Character) value;
         return Long.parseLong(stringValue(value, true));
     }
 
@@ -240,9 +240,9 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c.getSuperclass() == Number.class)
             return ((Number) value).doubleValue();
         if (c == Boolean.class)
-            return ((Boolean) value).booleanValue() ? 1 : 0;
+            return (Boolean) value ? 1 : 0;
         if (c == Character.class)
-            return ((Character) value).charValue();
+            return (Character) value;
         String s = stringValue(value, true);
 
         return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
@@ -273,7 +273,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c.getSuperclass() == Number.class)
             return BigInteger.valueOf(((Number) value).longValue());
         if (c == Boolean.class)
-            return BigInteger.valueOf(((Boolean) value).booleanValue() ? 1 : 0);
+            return BigInteger.valueOf((Boolean) value ? 1 : 0);
         if (c == Character.class)
             return BigInteger.valueOf(((Character) value).charValue());
         return new BigInteger(stringValue(value, true));
@@ -300,7 +300,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c.getSuperclass() == Number.class)
             return new BigDecimal(((Number) value).doubleValue());
         if (c == Boolean.class)
-            return BigDecimal.valueOf(((Boolean) value).booleanValue() ? 1 : 0);
+            return BigDecimal.valueOf((Boolean) value ? 1 : 0);
         if (c == Character.class)
             return BigDecimal.valueOf(((Character) value).charValue());
         return new BigDecimal(stringValue(value, true));

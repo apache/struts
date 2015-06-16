@@ -23,8 +23,8 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.location.Location;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -57,14 +57,14 @@ public class InterceptorBuilder {
     public static List<InterceptorMapping> constructInterceptorReference(InterceptorLocator interceptorLocator,
                                                                          String refName, Map<String,String> refParams, Location location, ObjectFactory objectFactory) throws ConfigurationException {
         Object referencedConfig = interceptorLocator.getInterceptorConfig(refName);
-        List<InterceptorMapping> result = new ArrayList<InterceptorMapping>();
+        List<InterceptorMapping> result = new ArrayList<>();
 
         if (referencedConfig == null) {
             throw new ConfigurationException("Unable to find interceptor class referenced by ref-name " + refName, location);
         } else {
             if (referencedConfig instanceof InterceptorConfig) {
                 InterceptorConfig config = (InterceptorConfig) referencedConfig;
-                Interceptor inter = null;
+                Interceptor inter;
                 try {
 
                     inter = objectFactory.buildInterceptor(config, refParams);
@@ -105,7 +105,7 @@ public class InterceptorBuilder {
             InterceptorLocator interceptorLocator, InterceptorStackConfig stackConfig, Map<String,String> refParams,
             ObjectFactory objectFactory) {
         List<InterceptorMapping> result;
-        Map<String, Map<String, String>> params = new LinkedHashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> params = new LinkedHashMap<>();
 
         /*
          * We strip
@@ -139,7 +139,7 @@ public class InterceptorBuilder {
                 if (params.containsKey(name)) {
                     map = params.get(name);
                 } else {
-                    map = new LinkedHashMap<String, String>();
+                    map = new LinkedHashMap<>();
                 }
 
                 map.put(key, value);
@@ -150,7 +150,7 @@ public class InterceptorBuilder {
             }
         }
 
-        result = new ArrayList<InterceptorMapping>(stackConfig.getInterceptors());
+        result = new ArrayList<>(stackConfig.getInterceptors());
 
         for (String key : params.keySet()) {
 
@@ -192,7 +192,7 @@ public class InterceptorBuilder {
             } else
             if (interceptorCfgObj instanceof InterceptorStackConfig) {  // interceptor-ref param refer to an interceptor stack
 
-                // If its an interceptor-stack, we call this method recursively untill,
+                // If its an interceptor-stack, we call this method recursively until,
                 // all the params (eg. interceptorStack1.interceptor1.param etc.)
                 // are resolved down to a specific interceptor.
 

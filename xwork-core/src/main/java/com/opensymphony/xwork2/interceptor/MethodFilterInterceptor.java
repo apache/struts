@@ -18,8 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Set;
@@ -104,10 +104,8 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
         String method = invocation.getProxy().getMethod();
         // ValidationInterceptor
         boolean applyMethod = MethodFilterInterceptorUtil.applyMethod(excludeMethods, includeMethods, method);
-        if (log.isDebugEnabled()) {
-        	if (!applyMethod) {
-        		log.debug("Skipping Interceptor... Method [" + method + "] found in exclude list.");
-        	}
+        if (!applyMethod) {
+            log.debug("Skipping Interceptor... Method [{}] found in exclude list.", method);
         }
         return applyMethod;
     }

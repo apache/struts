@@ -23,8 +23,8 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -172,9 +172,7 @@ public class RolesInterceptor extends AbstractInterceptor {
      * @return The result code
      * @throws Exception
      */
-    protected String handleRejection(ActionInvocation invocation,
-            HttpServletResponse response)
-            throws Exception {
+    protected String handleRejection(ActionInvocation invocation, HttpServletResponse response) throws Exception {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
         return null;
     }

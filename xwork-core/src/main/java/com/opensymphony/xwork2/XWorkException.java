@@ -54,7 +54,7 @@ public class XWorkException extends RuntimeException implements Locatable {
      * @param target the target of the exception.
      */
     public XWorkException(String s, Object target) {
-        this(s, (Throwable) null, target);
+        this(s, null, target);
     }
 
     /**

@@ -15,11 +15,7 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ModelDrivenAction;
-import com.opensymphony.xwork2.SimpleAction;
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.User;
@@ -39,16 +35,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -223,7 +210,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         stack.push(action);
         stack.push(action.getModel());
 
-        Map ognlStackContext = stack.getContext();
+        Map<String, Object> ognlStackContext = stack.getContext();
         ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String value = "asdf:123";
@@ -250,7 +237,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         stack.push(action);
 
-        Map ognlStackContext = stack.getContext();
+        Map<String, Object> ognlStackContext = stack.getContext();
         ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action.getBean(), null, "count", "111.1", int.class));
@@ -262,7 +249,7 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringArrayToCollection() {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("foo");
         list.add("bar");
         list.add("baz");
@@ -272,7 +259,7 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringArrayToList() {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("foo");
         list.add("bar");
         list.add("baz");
@@ -286,27 +273,25 @@ public class XWorkConverterTest extends XWorkTestCase {
                 "123", "456"
         }, Long[].class);
         assertNotNull(longs);
-        assertTrue(Arrays.equals(new Long[]{new Long(123), new Long(456)}, longs));
+        assertTrue(Arrays.equals(new Long[]{123L, 456L}, longs));
 
         Integer[] ints = (Integer[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, Integer[].class);
         assertNotNull(ints);
-        assertTrue(Arrays.equals(new Integer[]{
-                new Integer(123), new Integer(456)
-        }, ints));
+        assertTrue(Arrays.equals(new Integer[]{123, 456}, ints));
 
         Double[] doubles = (Double[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, Double[].class);
         assertNotNull(doubles);
-        assertTrue(Arrays.equals(new Double[]{new Double(123), new Double(456)}, doubles));
+        assertTrue(Arrays.equals(new Double[]{123D, 456D}, doubles));
 
         Float[] floats = (Float[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, Float[].class);
         assertNotNull(floats);
-        assertTrue(Arrays.equals(new Float[]{new Float(123), new Float(456)}, floats));
+        assertTrue(Arrays.equals(new Float[]{123F, 456F}, floats));
 
         Boolean[] booleans = (Boolean[]) converter.convertValue(context, null, null, null, new String[]{
                 "true", "false"
@@ -348,7 +333,7 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringArrayToSet() {
-        Set list = new HashSet();
+        Set<String> list = new HashSet<>();
         list.add("foo");
         list.add("bar");
         list.add("baz");
@@ -358,7 +343,7 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringToCollectionConversion() {
-        Map stackContext = stack.getContext();
+        Map<String, Object> stackContext = stack.getContext();
         stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.TRUE);
         stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
         stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
@@ -430,16 +415,16 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(new Integer(123), converter.convertValue(context, null, null, null, "123", Integer.class));
         assertEquals(new Double(123.5), converter.convertValue(context, null, null, null, "123.5", Double.class));
         assertEquals(new Float(123.5), converter.convertValue(context, null, null, null, "123.5", float.class));
-        assertEquals(new Boolean(false), converter.convertValue(context, null, null, null, "false", Boolean.class));
-        assertEquals(new Boolean(true), converter.convertValue(context, null, null, null, "true", Boolean.class));
+        assertEquals(false, converter.convertValue(context, null, null, null, "false", Boolean.class));
+        assertEquals(true, converter.convertValue(context, null, null, null, "true", Boolean.class));
     }
 
     public void testStringToPrimitives() {
         assertEquals(new Long(123), converter.convertValue(context, null, null, null, "123", long.class));
         assertEquals(new Double(123.5), converter.convertValue(context, null, null, null, "123.5", double.class));
         assertEquals(new Float(123.5), converter.convertValue(context, null, null, null, "123.5", float.class));
-        assertEquals(new Boolean(false), converter.convertValue(context, null, null, null, "false", boolean.class));
-        assertEquals(new Boolean(true), converter.convertValue(context, null, null, null, "true", boolean.class));
+        assertEquals(false, converter.convertValue(context, null, null, null, "false", boolean.class));
+        assertEquals(true, converter.convertValue(context, null, null, null, "true", boolean.class));
         assertEquals(new BigDecimal(123.5), converter.convertValue(context, null, null, null, "123.5", BigDecimal.class));
         assertEquals(new BigInteger("123"), converter.convertValue(context, null, null, null, "123", BigInteger.class));
     }
@@ -651,7 +636,7 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testConvertSameCollectionToCollection() {
-        Collection names = new ArrayList();
+        Collection<String> names = new ArrayList<>();
         names.add("XWork");
         names.add("Struts");
 
@@ -717,7 +702,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
 class ListAction {
 
-    private List<Integer> ints = new ArrayList<Integer>();
+    private List<Integer> ints = new ArrayList<>();
 
     public List<Integer> getInts() {
         return ints;

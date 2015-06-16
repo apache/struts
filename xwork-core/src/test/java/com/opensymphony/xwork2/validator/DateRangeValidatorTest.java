@@ -22,12 +22,7 @@ import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -45,8 +40,8 @@ public class DateRangeValidatorTest extends XWorkTestCase {
     public void testRangeValidation() throws Exception {
         Calendar date = Calendar.getInstance();
         date.set(2002, Calendar.NOVEMBER, 20);
-        Map<String, Object> context = new HashMap<String, Object>();
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("date", date.getTime());
         context.put(ActionContext.PARAMETERS, params);
 

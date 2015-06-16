@@ -32,7 +32,7 @@ public class SimpleAction extends ActionSupport {
     public static final String COMMAND_RETURN_CODE = "com.opensymphony.xwork2.SimpleAction.CommandInvoked";
 
 
-    private ArrayList someList = new ArrayList();
+    private ArrayList<String> someList = new ArrayList<>();
     private Date date = new Date();
     private Properties settings = new Properties();
     private String blah;
@@ -45,12 +45,12 @@ public class SimpleAction extends ActionSupport {
     private long longFoo;
     private short shortFoo;
     private double percentage;
-    private Map<Integer,String> indexedProps = new HashMap<Integer,String>();
+    private Map<Integer, String> indexedProps = new HashMap<>();
 
     private String aliasSource;
     private String aliasDest;
-    private Map<String,String> protectedMap = new HashMap<String,String>();
-    private Map<String,String> existingMap = new HashMap<String,String>();
+    private Map<String, String> protectedMap = new HashMap<>();
+    private Map<String, String> existingMap = new HashMap<>();
     
     public static boolean resultCalled;
 
@@ -122,9 +122,7 @@ public class SimpleAction extends ActionSupport {
     }
 
     public boolean[] getBools() {
-        boolean[] b = new boolean[]{true, false, false, true};
-
-        return b;
+        return new boolean[]{true, false, false, true};
     }
 
     public void setDate(Date date) {
@@ -177,11 +175,11 @@ public class SimpleAction extends ActionSupport {
     }
 
 
-    public void setSomeList(ArrayList someList) {
+    public void setSomeList(ArrayList<String> someList) {
         this.someList = someList;
     }
 
-    public ArrayList getSomeList() {
+    public ArrayList<String> getSomeList() {
         return someList;
     }
     

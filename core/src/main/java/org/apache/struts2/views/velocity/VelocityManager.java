@@ -25,9 +25,9 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -51,14 +51,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 
 /**
@@ -110,14 +103,14 @@ public class VelocityManager {
 
     @Inject
     public void setContainer(Container container) {
-        List<TagLibraryDirectiveProvider> list = new ArrayList<TagLibraryDirectiveProvider>();
+        List<TagLibraryDirectiveProvider> list = new ArrayList<>();
         Set<String> prefixes = container.getInstanceNames(TagLibraryDirectiveProvider.class);
         for (String prefix : prefixes) {
             list.add(container.getInstance(TagLibraryDirectiveProvider.class, prefix));
         }
         this.tagLibraries = Collections.unmodifiableList(list);
 
-        List<TagLibrary> oldList = new ArrayList<TagLibrary>();
+        List<TagLibrary> oldList = new ArrayList<>();
         Set<String> oldPrefixes = container.getInstanceNames(TagLibrary.class);
         for (String prefix : oldPrefixes) {
             oldList.add(container.getInstance(TagLibrary.class, prefix));
@@ -165,9 +158,7 @@ public class VelocityManager {
             ctx = ServletActionContext.getServletContext();
         } catch (NullPointerException npe) {
             // in case this was used outside the lifecycle of struts servlet
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("internal toolbox context ignored");
-            }
+            LOG.debug("internal toolbox context ignored");
         }
 
         if (toolboxManager != null && ctx != null) {
@@ -203,9 +194,7 @@ public class VelocityManager {
                 VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, null);
                 contextList.add(velocityContext);
             } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Warning.  " + e.getClass().getName() + " caught while attempting to instantiate a chained VelocityContext, " + className + " -- skipping");
-                }
+                LOG.warn("Warning. {} caught while attempting to instantiate a chained VelocityContext, {} -- skipping", e.getClass().getName(), className);
             }
         }
         if (contextList.size() > 0) {
@@ -312,15 +301,11 @@ public class VelocityManager {
 
             // if we've got something, load 'er up
             if (in != null) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("Initializing velocity using " + resourceLocation);
-                }
+                LOG.info("Initializing velocity using {}", resourceLocation);
                 properties.load(in);
             }
         } catch (IOException e) {
-            if (LOG.isWarnEnabled()) {
-        	LOG.warn("Unable to load velocity configuration " + resourceLocation, e);
-            }
+            LOG.warn("Unable to load velocity configuration {}", resourceLocation, e);
         } finally {
             if (in != null) {
                 try {
@@ -354,14 +339,10 @@ public class VelocityManager {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Initializing Velocity with the following properties ...");
 
-            for (Iterator iter = properties.keySet().iterator();
-                 iter.hasNext();) {
+            for (Iterator iter = properties.keySet().iterator(); iter.hasNext(); ) {
                 String key = (String) iter.next();
                 String value = properties.getProperty(key);
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("    '" + key + "' = '" + value + "'");
-                }
+                LOG.debug("    '{}' = '{}'", key, value);
             }
         }
 
@@ -392,7 +373,7 @@ public class VelocityManager {
     public void setChainedContexts(String contexts) {
         // we expect contexts to be a comma separated list of classnames
         StringTokenizer st = new StringTokenizer(contexts, ",");
-        List<String> contextList = new ArrayList<String>();
+        List<String> contextList = new ArrayList<>();
 
         while (st.hasMoreTokens()) {
             String classname = st.nextToken();

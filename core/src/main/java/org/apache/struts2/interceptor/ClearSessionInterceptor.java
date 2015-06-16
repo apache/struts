@@ -21,13 +21,13 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.Map;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -83,10 +83,8 @@ public class ClearSessionInterceptor extends AbstractInterceptor {
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Clearing HttpSession");
-        }
-        
+        LOG.debug("Clearing HttpSession");
+
         ActionContext ac = invocation.getInvocationContext();
         Map session = ac.getSession();
  

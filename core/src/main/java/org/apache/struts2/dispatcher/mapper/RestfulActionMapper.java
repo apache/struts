@@ -22,8 +22,8 @@
 package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
 /**
  * Simple Restfull Action Mapper to support REST application
  * See docs for more information
- * http://struts.apache.org/2.x/docs/restfulactionmapper.html
+ * http://struts.apache.org/docs/restfulactionmapper.html
  */
 public class RestfulActionMapper implements ActionMapper {
     protected static final Logger LOG = LogManager.getLogger(RestfulActionMapper.class);
@@ -52,7 +52,7 @@ public class RestfulActionMapper implements ActionMapper {
         }
 
         String actionName = uri.substring(1, nextSlash);
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         try {
             StringTokenizer st = new StringTokenizer(uri.substring(nextSlash), "/");
             boolean isNameTok = true;
@@ -80,9 +80,7 @@ public class RestfulActionMapper implements ActionMapper {
                 }
             }
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
         	LOG.warn("Cannot determine url parameters", e);
-            }
         }
 
         return new ActionMapping(actionName, "", "", parameters);

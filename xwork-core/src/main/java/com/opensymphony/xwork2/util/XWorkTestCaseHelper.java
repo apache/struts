@@ -60,8 +60,7 @@ public class XWorkTestCaseHelper {
             public void init(Configuration configuration) throws ConfigurationException {}
             public boolean needsReload() { return false; }
 
-            public void register(ContainerBuilder builder,
-                    LocatableProperties props) throws ConfigurationException {
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
                 builder.setAllowDuplicates(true);
             }
             

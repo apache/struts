@@ -14,8 +14,8 @@ import java.util.Map;
 public class GenericsBean {
     private List<Double> blubb;
     private List<Double> getterList;
-    private Map<Double, Integer> genericMap = new HashMap<Double, Integer>();
-    private Map<Double, List<Integer>> extendedMap = new HashMap<Double, List<Integer>>();
+    private Map<Double, Integer> genericMap = new HashMap<>();
+    private Map<Double, List<Integer>> extendedMap = new HashMap<>();
 
     /**
      * @return Returns the doubles.
@@ -41,7 +41,7 @@ public class GenericsBean {
 
     public List<Double> getGetterList() {
         if ( getterList == null ) {
-            getterList = new ArrayList<Double>(1);
+            getterList = new ArrayList<>(1);
             getterList.add(42.42);
         }
         return getterList;

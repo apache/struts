@@ -34,6 +34,10 @@
             <interceptor-ref name="beanValidation"/>
             <result type="void"/>
         </action>
+        <action name="fieldActionDoExecute" class="org.apache.struts.beanvalidation.actions.FieldActionDoExecute">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
 
     </package>
 </xwork>

@@ -32,7 +32,7 @@ public class XWorkListTest extends XWorkTestCase {
         xworkList.add(new String[]{"a"});
         xworkList.add("b");
 
-        ArrayList addList = new ArrayList();
+        ArrayList<String[]> addList = new ArrayList<>();
         addList.add(new String[]{"1"});
         addList.add(new String[]{"2"});
         addList.add(new String[]{"3"});
@@ -52,7 +52,7 @@ public class XWorkListTest extends XWorkTestCase {
         xworkList.add(new String[]{"a"});
         xworkList.add("b");
 
-        addList = new ArrayList();
+        addList = new ArrayList<>();
         addList.add(new String[]{"1"});
         addList.add(new String[]{"2"});
         addList.add(new String[]{"3"});
@@ -70,7 +70,7 @@ public class XWorkListTest extends XWorkTestCase {
         xworkList.add(new String[]{"a"});
         xworkList.add("b");
 
-        addList = new ArrayList();
+        addList = new ArrayList<>();
         addList.add(new String[]{"1"});
         addList.add(new String[]{"2"});
         addList.add(new String[]{"3"});

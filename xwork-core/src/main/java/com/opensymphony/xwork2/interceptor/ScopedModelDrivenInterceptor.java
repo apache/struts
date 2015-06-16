@@ -95,7 +95,7 @@ public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
     }
     
     protected Object resolveModel(ObjectFactory factory, ActionContext actionContext, String modelClassName, String modelScope, String modelName) throws Exception {
-        Object model = null;
+        Object model;
         Map<String, Object> scopeMap = actionContext.getContextMap();
         if ("session".equals(modelScope)) {
             scopeMap = actionContext.getSession();

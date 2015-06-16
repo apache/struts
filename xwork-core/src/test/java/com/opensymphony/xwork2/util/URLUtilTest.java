@@ -5,11 +5,7 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import junit.framework.TestCase;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
-import java.net.URLStreamHandlerFactory;
+import java.net.*;
 
 public class URLUtilTest extends TestCase {
 
@@ -151,6 +147,8 @@ public class URLUtilTest extends TestCase {
         assertEquals(false, URLUtil.verifyUrl(""));
         assertEquals(false, URLUtil.verifyUrl("   "));
         assertEquals(false, URLUtil.verifyUrl("no url"));
+        assertEquals(false, URLUtil.verifyUrl("http://no url"));
+        assertEquals(false, URLUtil.verifyUrl("https://no url"));
 
         assertEquals(true, URLUtil.verifyUrl("http://www.opensymphony.com"));
         assertEquals(true, URLUtil.verifyUrl("https://www.opensymphony.com"));

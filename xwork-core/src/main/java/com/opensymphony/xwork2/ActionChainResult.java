@@ -186,7 +186,7 @@ public class ActionChainResult implements Result {
         LinkedList<String> chainHistory = (LinkedList<String>) ActionContext.getContext().get(CHAIN_HISTORY);
         //  Add if not exists
         if (chainHistory == null) {
-            chainHistory = new LinkedList<String>();
+            chainHistory = new LinkedList<>();
             ActionContext.getContext().put(CHAIN_HISTORY, chainHistory);
         }
 
@@ -211,8 +211,7 @@ public class ActionChainResult implements Result {
 
         if (isInChainHistory(finalNamespace, finalActionName, finalMethodName)) {
             addToHistory(finalNamespace, finalActionName, finalMethodName);
-            throw new XWorkException("Infinite recursion detected: "
-                    + ActionChainResult.getChainHistory().toString());
+            throw new XWorkException("Infinite recursion detected: " + ActionChainResult.getChainHistory().toString());
         }
 
         if (ActionChainResult.getChainHistory().isEmpty() && invocation != null && invocation.getProxy() != null) {
@@ -220,14 +219,12 @@ public class ActionChainResult implements Result {
         }
         addToHistory(finalNamespace, finalActionName, finalMethodName);
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.VALUE_STACK, ActionContext.getContext().getValueStack());
         extraContext.put(ActionContext.PARAMETERS, ActionContext.getContext().getParameters());
         extraContext.put(CHAIN_HISTORY, ActionChainResult.getChainHistory());
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Chaining to action " + finalActionName);
-        }
+        LOG.debug("Chaining to action {}", finalActionName);
 
         proxy = actionProxyFactory.createActionProxy(finalNamespace, finalActionName, finalMethodName, extraContext);
         proxy.execute();
@@ -261,7 +258,7 @@ public class ActionChainResult implements Result {
             return false;
         } else {
             //  Actions to skip
-            Set<String> skipActionsList = new HashSet<String>();
+            Set<String> skipActionsList = new HashSet<>();
             if (skipActions != null && skipActions.length() > 0) {
                 ValueStack stack = ActionContext.getContext().getValueStack();
                 String finalSkipActions = TextParseUtil.translateVariables(this.skipActions, stack);

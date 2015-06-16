@@ -53,7 +53,7 @@ public class StrutsObjectFactory extends ObjectFactory {
             throws ConfigurationException {
         String className = interceptorConfig.getClassName();
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         Map typeParams = interceptorConfig.getParams();
         if (typeParams != null && !typeParams.isEmpty())
             params.putAll(typeParams);

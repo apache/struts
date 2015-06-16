@@ -19,9 +19,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -125,8 +125,7 @@ public class ReloadingClassLoader extends ClassLoader {
     }
 
     public void reload() {
-        if (LOG.isTraceEnabled())
-            LOG.trace("Reloading class loader");
+        LOG.trace("Reloading class loader");
         delegate = new ResourceStoreClassLoader(parent, stores);
     }
 

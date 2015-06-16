@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class VisitorValidatorTestAction extends ActionSupport {
 
-    private List<TestBean> testBeanList = new ArrayList<TestBean>();
+    private List<TestBean> testBeanList = new ArrayList<>();
     private String context;
     private TestBean bean = new TestBean();
     private TestBean[] testBeanArray;

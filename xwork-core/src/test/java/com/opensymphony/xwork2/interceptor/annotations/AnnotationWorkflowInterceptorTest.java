@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author Zsolt Szasz, zsolt at lorecraft dot com
@@ -87,11 +87,11 @@ public class AnnotationWorkflowInterceptorTest extends XWorkTestCase {
         public void loadPackages() throws ConfigurationException {
             PackageConfig packageConfig = new PackageConfig.Builder("default")
                     .addActionConfig(ANNOTATED_ACTION, new ActionConfig.Builder("defaultPackage", ANNOTATED_ACTION, AnnotatedAction.class.getName())
-                            .addInterceptors(Arrays.asList(new InterceptorMapping[]{ new InterceptorMapping("annotationWorkflow", annotationWorkflow) }))
+                            .addInterceptors(Collections.singletonList(new InterceptorMapping("annotationWorkflow", annotationWorkflow)))
                             .addResultConfig(new ResultConfig.Builder("success", MockResult.class.getName()).build())
                             .build())
                     .addActionConfig(SHORTCIRCUITED_ACTION, new ActionConfig.Builder("defaultPackage", SHORTCIRCUITED_ACTION, ShortcircuitedAction.class.getName())
-                            .addInterceptors(Arrays.asList(new InterceptorMapping[]{ new InterceptorMapping("annotationWorkflow", annotationWorkflow) }))
+                            .addInterceptors(Collections.singletonList(new InterceptorMapping("annotationWorkflow", annotationWorkflow)))
                             .addResultConfig(new ResultConfig.Builder("shortcircuit", MockResult.class.getName()).build())
                             .build())
                     .build();

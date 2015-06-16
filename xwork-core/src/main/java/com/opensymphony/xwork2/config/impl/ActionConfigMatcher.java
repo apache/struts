@@ -120,7 +120,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
 
         Map<String,String> params = replaceParameters(orig.getParams(), vars);
 
-        Map<String,ResultConfig> results = new LinkedHashMap<String,ResultConfig>();
+        Map<String, ResultConfig> results = new LinkedHashMap<>();
         for (String name : orig.getResults().keySet()) {
             ResultConfig result = orig.getResults().get(name);
             name = convertParam(name, vars);

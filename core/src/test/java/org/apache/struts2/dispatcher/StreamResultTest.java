@@ -21,21 +21,20 @@
 
 package org.apache.struts2.dispatcher;
 
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.springframework.mock.web.MockHttpServletResponse;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.springframework.mock.web.MockHttpServletResponse;
-
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Unit test for {@link StreamResult}.
@@ -249,8 +248,8 @@ public class StreamResultTest extends StrutsInternalTestCase {
     public class MyImageAction implements Action {
 
         public InputStream getStreamForImage() throws Exception {
-            // just use src/test/log4j.properties as test file
-            URL url = ClassLoaderUtil.getResource("log4j.properties", StreamResultTest.class);
+            // just use src/test/log4j2.xml as test file
+            URL url = ClassLoaderUtil.getResource("log4j2.xml", StreamResultTest.class);
             File file = new File(new URI(url.toString()));
             FileInputStream fis = new FileInputStream(file);
             return fis;
@@ -261,7 +260,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         }
 
         public long getContentLength() throws Exception {
-            URL url = ClassLoaderUtil.getResource("log4j.properties", StreamResultTest.class);
+            URL url = ClassLoaderUtil.getResource("log4j2.xml", StreamResultTest.class);
             File file = new File(new URI(url.toString()));
             return file.length();
         }

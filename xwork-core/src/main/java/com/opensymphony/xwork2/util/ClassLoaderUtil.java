@@ -48,7 +48,7 @@ public class ClassLoaderUtil {
      */
      public static Iterator<URL> getResources(String resourceName, Class callingClass, boolean aggregate) throws IOException {
 
-         AggregateIterator<URL> iterator = new AggregateIterator<URL>();
+         AggregateIterator<URL> iterator = new AggregateIterator<>();
 
          iterator.addEnumeration(Thread.currentThread().getContextClassLoader().getResources(resourceName));
 
@@ -182,7 +182,7 @@ public class ClassLoaderUtil {
      */
     static class AggregateIterator<E> implements Iterator<E> {
 
-        LinkedList<Enumeration<E>> enums = new LinkedList<Enumeration<E>>();
+        LinkedList<Enumeration<E>> enums = new LinkedList<>();
         Enumeration<E> cur = null;
         E next = null;
         Set<E> loaded = new HashSet<E>();

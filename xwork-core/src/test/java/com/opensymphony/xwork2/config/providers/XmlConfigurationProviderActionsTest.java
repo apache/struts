@@ -59,8 +59,8 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
                 .addParams(params).build();
 
         // foo action is a little more complex, two params, a result and an interceptor stack
-        results = new HashMap<String, ResultConfig>();
-        params = new HashMap<String, String>();
+        results = new HashMap<>();
+        params = new HashMap<>();
         params.put("foo", "18");
         params.put("bar", "24");
         results.put("success", new ResultConfig.Builder("success", MockResult.class.getName()).build());
@@ -75,7 +75,7 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
                 .build();
 
         // wildcard action is simple wildcard example
-        results = new HashMap<String, ResultConfig>();
+        results = new HashMap<>();
         results.put("*", new ResultConfig.Builder("*", MockResult.class.getName()).build());
 
         ActionConfig wildcardAction = new ActionConfig.Builder("", "WildCard", SimpleAction.class.getName())
@@ -87,7 +87,7 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         params = new HashMap<String, String>();
         params.put("foo", "18");
         params.put("bar", "24");
-        results = new HashMap<String, ResultConfig>();
+        results = new HashMap<>();
         results.put("success", new ResultConfig.Builder("success", MockResult.class.getName()).build());
 
         ExceptionMappingConfig exceptionConfig = new ExceptionMappingConfig.Builder("runtime", "java.lang.RuntimeException", "exception")
@@ -102,12 +102,12 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
                 .build();
 
         // TestInterceptorParam action tests that an interceptor worked
-        HashMap<String, String> interceptorParams = new HashMap<String, String>();
+        HashMap<String, String> interceptorParams = new HashMap<>();
         interceptorParams.put("expectedFoo", "expectedFooValue");
         interceptorParams.put("foo", MockInterceptor.DEFAULT_FOO_VALUE);
 
         InterceptorConfig mockInterceptorConfig = new InterceptorConfig.Builder("test", MockInterceptor.class.getName()).build();
-        interceptors = new ArrayList<InterceptorMapping>();
+        interceptors = new ArrayList<>();
         interceptors.add(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptorConfig, interceptorParams)));
 
         ActionConfig intAction = new ActionConfig.Builder("", "TestInterceptorParam", SimpleAction.class.getName())
@@ -115,10 +115,10 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
                 .build();
 
         // TestInterceptorParamOverride action tests that an interceptor with a param override worked
-        interceptorParams = new HashMap<String, String>();
+        interceptorParams = new HashMap<>();
         interceptorParams.put("expectedFoo", "expectedFooValue");
         interceptorParams.put("foo", "foo123");
-        interceptors = new ArrayList<InterceptorMapping>();
+        interceptors = new ArrayList<>();
         interceptors.add(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptorConfig, interceptorParams)));
 
         ActionConfig intOverAction = new ActionConfig.Builder("", "TestInterceptorParamOverride", SimpleAction.class.getName())
@@ -205,10 +205,10 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        params = new HashMap<String, String>();
-        results = new HashMap<String, ResultConfig>();
-        interceptors = new ArrayList<InterceptorMapping>();
-        exceptionMappings = new ArrayList<ExceptionMappingConfig>();
+        params = new HashMap<>();
+        results = new HashMap<>();
+        interceptors = new ArrayList<>();
+        exceptionMappings = new ArrayList<>();
         this.objectFactory = container.getInstance(ObjectFactory.class);
     }
 }

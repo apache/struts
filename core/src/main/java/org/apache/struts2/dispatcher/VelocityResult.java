@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.JspSupportServlet;
@@ -159,7 +159,7 @@ public class VelocityResult extends StrutsResultSupport {
             // to do it all the time (WW-829). Since Velocity support is being deprecated, we'll oblige :)
             writer.flush();
         } catch (Exception e) {
-            LOG.error("Unable to render Velocity Template, '{}'", finalLocation, e);
+            LOG.error("Unable to render velocity template: '{}'", finalLocation, e);
             throw e;
         } finally {
             if (usedJspFactory) {

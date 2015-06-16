@@ -24,10 +24,11 @@ package org.apache.struts2.spring;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.apache.struts2.StrutsConstants;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -45,14 +46,6 @@ import javax.servlet.ServletContext;
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
     private static final Logger LOG = LogManager.getLogger(StrutsSpringObjectFactory.class);
-
-    //@Inject
-    //public StrutsSpringObjectFactory(
-    //        @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
-    //        @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
-    //        @Inject ServletContext servletContext) {
-    //    this(autoWire, "false", useClassCacheStr, servletContext);
-    //}
 
     /**
      * Constructs the spring object factory
@@ -73,10 +66,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject Container container) {
           
         super();
-        boolean useClassCache = "true".equals(useClassCacheStr);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Initializing Struts-Spring integration...");
-        }
+        boolean useClassCache = BooleanUtils.toBoolean(useClassCacheStr);
+        LOG.info("Initializing Struts-Spring integration...");
 
         Object rootWebApplicationContext =  servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
@@ -112,9 +103,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
             ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext;
             reloadingContext.setupReloading(watchList.split(","), acceptClasses, servletContext, "true".equals(reloadConfig));
-            if (LOG.isInfoEnabled()) {
-        	LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!", watchList);
-            }
+            LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!\n{}", watchList);
 
             setClassLoader(reloadingContext.getReloadingClassLoader());
 
@@ -140,12 +129,10 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
         this.setUseClassCache(useClassCache);
 
-        this.setAlwaysRespectAutowireStrategy("true".equalsIgnoreCase(alwaysAutoWire));
+        this.setAlwaysRespectAutowireStrategy(BooleanUtils.toBoolean(alwaysAutoWire));
 
         this.setEnableAopSupport(enableAopSupport);
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("... initialized Struts-Spring integration successfully");
-        }
+        LOG.info("... initialized Struts-Spring integration successfully");
     }
 }

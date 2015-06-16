@@ -33,7 +33,7 @@ import org.hibernate.validator.constraints.ScriptAssert;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.*;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * <!-- START SNIPPET: beanValidatationExample -->

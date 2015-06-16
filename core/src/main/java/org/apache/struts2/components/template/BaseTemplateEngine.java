@@ -22,17 +22,12 @@
 package org.apache.struts2.components.template;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
+import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,7 +44,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
      */
     public static final String DEFAULT_THEME_PROPERTIES_FILE_NAME = "theme.properties";
 
-    private final Map<String, Properties> themeProps = new ConcurrentHashMap<String, Properties>();
+    private final Map<String, Properties> themeProps = new ConcurrentHashMap<>();
 
     public Map getThemeProps(Template template) {
         Properties props = themeProps.get(template.getTheme());
@@ -109,7 +104,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         try {
             props.load(is);
         } catch (IOException e) {
-            LOG.error("Could not load " + propName, e);
+            LOG.error("Could not load property with name: {}", propName, e);
         } finally {
             tryCloseStream(is);
         }
@@ -119,9 +114,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         try {
             is.close();
         } catch (IOException io) {
-            if (LOG.isWarnEnabled()) {
         	LOG.warn("Unable to close input stream", io);
-            }
         }
     }
 
@@ -137,9 +130,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         try {
             return createFileInputStream(propFile);
         } catch (FileNotFoundException e) {
-            if (LOG.isWarnEnabled()) {
-        	LOG.warn("Unable to find file in filesystem [" + propFile.getAbsolutePath() + "]");
-            }
+            LOG.warn("Unable to find file in filesystem [{}]", propFile.getAbsolutePath());
             return null;
         }
     }

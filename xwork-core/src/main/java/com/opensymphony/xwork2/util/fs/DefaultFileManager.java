@@ -16,18 +16,14 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,9 +86,7 @@ public class DefaultFileManager implements FileManager {
     public void monitorFile(URL fileUrl) {
         String fileName = fileUrl.toString();
         Revision revision;
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating revision for URL: " + fileName);
-        }
+        LOG.debug("Creating revision for URL: {}", fileName);
         if (isJarURL(fileUrl)) {
             revision = JarEntryRevision.build(fileUrl, this);
         } else {

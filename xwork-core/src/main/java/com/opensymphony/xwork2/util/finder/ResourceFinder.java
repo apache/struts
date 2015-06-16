@@ -15,30 +15,16 @@
  */
 package com.opensymphony.xwork2.util.finder;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.JarURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
+import java.net.*;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -52,7 +38,7 @@ public class ResourceFinder {
     private final URL[] urls;
     private final String path;
     private final ClassLoaderInterface classLoaderInterface;
-    private final List<String> resourcesNotLoaded = new ArrayList<String>();
+    private final List<String> resourcesNotLoaded = new ArrayList<>();
 
     public ResourceFinder(URL... urls) {
         this(null, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()), urls);
@@ -71,9 +57,8 @@ public class ResourceFinder {
     }
 
     public ResourceFinder(String path, ClassLoaderInterface classLoaderInterface, URL... urls) {
-        if (path == null){
-            path = "";
-        } else if (path.length() > 0 && !path.endsWith("/")) {
+        path = StringUtils.trimToEmpty(path);
+        if (!StringUtils.endsWith(path, "/")) {
             path += "/";
         }
         this.path = path;
@@ -131,7 +116,7 @@ public class ResourceFinder {
         String fullUri = path + uri;
 
         Enumeration<URL> resources = getResources(fullUri);
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         while (resources.hasMoreElements()) {
             URL url = resources.nextElement();
             list.add(url);
@@ -175,7 +160,7 @@ public class ResourceFinder {
     public List<String> findAllStrings(String uri) throws IOException {
         String fulluri = path + uri;
 
-        List<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
         while (resources.hasMoreElements()) {
@@ -199,7 +184,7 @@ public class ResourceFinder {
         resourcesNotLoaded.clear();
         String fulluri = path + uri;
 
-        List<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
         while (resources.hasMoreElements()) {
@@ -239,7 +224,7 @@ public class ResourceFinder {
      * @throws IOException if any of the urls cannot be read
      */
     public Map<String, String> mapAllStrings(String uri) throws IOException {
-        Map<String, String> strings = new HashMap<String, String>();
+        Map<String, String> strings = new HashMap<>();
         Map<String, URL> resourcesMap = getResourcesMap(uri);
         for (Map.Entry<String, URL> entry : resourcesMap.entrySet()) {
             String name = entry.getKey();
@@ -277,7 +262,7 @@ public class ResourceFinder {
      */
     public Map<String, String> mapAvailableStrings(String uri) throws IOException {
         resourcesNotLoaded.clear();
-        Map<String, String> strings = new HashMap<String, String>();
+        Map<String, String> strings = new HashMap<>();
         Map<String, URL> resourcesMap = getResourcesMap(uri);
         for (Map.Entry<String, URL> entry  : resourcesMap.entrySet()) {
             String name = entry.getKey();
@@ -324,7 +309,7 @@ public class ResourceFinder {
      * @throws ClassNotFoundException
      */
     public List<Class> findAllClasses(String uri) throws IOException, ClassNotFoundException {
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         List<String> strings = findAllStrings(uri);
         for (String className : strings) {
             Class clazz = classLoaderInterface.loadClass(className);
@@ -346,7 +331,7 @@ public class ResourceFinder {
      */
     public List<Class> findAvailableClasses(String uri) throws IOException {
         resourcesNotLoaded.clear();
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         List<String> strings = findAvailableStrings(uri);
         for (String className : strings) {
             try {
@@ -383,7 +368,7 @@ public class ResourceFinder {
      * @throws ClassNotFoundException
      */
     public Map<String, Class> mapAllClasses(String uri) throws IOException, ClassNotFoundException {
-        Map<String, Class> classes = new HashMap<String, Class>();
+        Map<String, Class> classes = new HashMap<>();
         Map<String, String> map = mapAllStrings(uri);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
@@ -419,7 +404,7 @@ public class ResourceFinder {
      */
     public Map<String, Class> mapAvailableClasses(String uri) throws IOException {
         resourcesNotLoaded.clear();
-        Map<String, Class> classes = new HashMap<String, Class>();
+        Map<String, Class> classes = new HashMap<>();
         Map<String, String> map = mapAvailableStrings(uri);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
@@ -496,7 +481,7 @@ public class ResourceFinder {
      * @throws ClassCastException     if the class found is not assignable to the specified superclass or interface
      */
     public List<Class> findAllImplementations(Class interfase) throws IOException, ClassNotFoundException {
-        List<Class> implementations = new ArrayList<Class>();
+        List<Class> implementations = new ArrayList<>();
         List<String> strings = findAllStrings(interfase.getName());
         for (String className : strings) {
             Class impl = classLoaderInterface.loadClass(className);
@@ -533,7 +518,7 @@ public class ResourceFinder {
      */
     public List<Class> findAvailableImplementations(Class interfase) throws IOException {
         resourcesNotLoaded.clear();
-        List<Class> implementations = new ArrayList<Class>();
+        List<Class> implementations = new ArrayList<>();
         List<String> strings = findAvailableStrings(interfase.getName());
         for (String className : strings) {
             try {
@@ -576,7 +561,7 @@ public class ResourceFinder {
      * @throws ClassCastException     if the class found is not assignable to the specified superclass or interface
      */
     public Map<String, Class> mapAllImplementations(Class interfase) throws IOException, ClassNotFoundException {
-        Map<String, Class> implementations = new HashMap<String, Class>();
+        Map<String, Class> implementations = new HashMap<>();
         Map<String, String> map = mapAllStrings(interfase.getName());
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
@@ -615,7 +600,7 @@ public class ResourceFinder {
      */
     public Map<String, Class> mapAvailableImplementations(Class interfase) throws IOException {
         resourcesNotLoaded.clear();
-        Map<String, Class> implementations = new HashMap<String, Class>();
+        Map<String, Class> implementations = new HashMap<>();
         Map<String, String> map = mapAvailableStrings(interfase.getName());
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
@@ -686,7 +671,7 @@ public class ResourceFinder {
     public List<Properties> findAllProperties(String uri) throws IOException {
         String fulluri = path + uri;
 
-        List<Properties> properties = new ArrayList<Properties>();
+        List<Properties> properties = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
         while (resources.hasMoreElements()) {
@@ -720,7 +705,7 @@ public class ResourceFinder {
         resourcesNotLoaded.clear();
         String fulluri = path + uri;
 
-        List<Properties> properties = new ArrayList<Properties>();
+        List<Properties> properties = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
         while (resources.hasMoreElements()) {
@@ -757,7 +742,7 @@ public class ResourceFinder {
      * @throws IOException if the URL cannot be read or is not in properties file format
      */
     public Map<String, Properties> mapAllProperties(String uri) throws IOException {
-        Map<String, Properties> propertiesMap = new HashMap<String, Properties>();
+        Map<String, Properties> propertiesMap = new HashMap<>();
         Map<String, URL> map = getResourcesMap(uri);
         for (Map.Entry<String, URL> entry : map.entrySet()) {
             String string = entry.getKey();
@@ -792,7 +777,7 @@ public class ResourceFinder {
      */
     public Map<String, Properties> mapAvailableProperties(String uri) throws IOException {
         resourcesNotLoaded.clear();
-        Map<String, Properties> propertiesMap = new HashMap<String, Properties>();
+        Map<String, Properties> propertiesMap = new HashMap<>();
         Map<String, URL> map = getResourcesMap(uri);
         for (Map.Entry<String, URL> entry : map.entrySet()) {
             String string = entry.getKey();
@@ -816,7 +801,7 @@ public class ResourceFinder {
     public Map<String, URL> getResourcesMap(String uri) throws IOException {
         String basePath = path + uri;
 
-        Map<String, URL> resources = new HashMap<String, URL>();
+        Map<String, URL> resources = new HashMap<>();
         if (!basePath.endsWith("/")) {
             basePath += "/";
         }
@@ -827,13 +812,9 @@ public class ResourceFinder {
 
             try {
                 if ("jar".equals(location.getProtocol())) {
-
                     readJarEntries(location, basePath, resources);
-
                 } else if ("file".equals(location.getProtocol())) {
-
                     readDirectoryEntries(location, resources);
-
                 }
             } catch (Exception e) {
                 LOG.debug("Got exception loading resources for {}", uri, e);
@@ -849,7 +830,7 @@ public class ResourceFinder {
     public Set<String> findPackages(String uri) throws IOException {
         String basePath = path + uri;
 
-        Set<String> resources = new HashSet<String>();
+        Set<String> resources = new HashSet<>();
         if (!basePath.endsWith("/")) {
             basePath += "/";
         }
@@ -860,13 +841,9 @@ public class ResourceFinder {
 
             try {
                 if ("jar".equals(location.getProtocol())) {
-
                     readJarDirectoryEntries(location, basePath, resources);
-
                 } else if ("file".equals(location.getProtocol())) {
-
                     readSubDirectories(new File(location.toURI()), uri, resources);
-
                 }
             } catch (Exception e) {
                 LOG.debug("Got exception search for subpackages for {}", uri, e);
@@ -886,18 +863,18 @@ public class ResourceFinder {
             basePath += "/";
         }
         Enumeration<URL> urls = getResources(basePath);
-        Map<URL, Set<String>> result = new HashMap<URL, Set<String>>();
+        Map<URL, Set<String>> result = new HashMap<>();
 
         while (urls.hasMoreElements()) {
             URL location = urls.nextElement();
 
             try {
                 if ("jar".equals(location.getProtocol())) {
-                    Set<String> resources = new HashSet<String>();
+                    Set<String> resources = new HashSet<>();
                     readJarDirectoryEntries(location, basePath, resources);
                     result.put(location, convertPathsToPackages(resources));
                 } else if ("file".equals(location.getProtocol())) {
-                    Set<String> resources = new HashSet<String>();
+                    Set<String> resources = new HashSet<>();
                     readSubDirectories(new File(location.toURI()), uri, resources);
                     result.put(location, convertPathsToPackages(resources));
                 }
@@ -910,9 +887,9 @@ public class ResourceFinder {
     }
 
     private Set<String> convertPathsToPackages(Set<String> resources) {
-        Set<String> packageNames = new HashSet<String>(resources.size());
+        Set<String> packageNames = new HashSet<>(resources.size());
         for(String resource : resources) {
-            packageNames.add(StringUtils.chomp(StringUtils.replace(resource, "/", "."), "."));
+            packageNames.add(StringUtils.removeEnd(StringUtils.replace(resource, "/", "."), "."));
         }
 
         return packageNames;
@@ -941,7 +918,7 @@ public class ResourceFinder {
             for (File file : files) {
                 if (file.isDirectory()) {
                     String name = file.getName();
-                    String subName = StringUtils.chomp(basePath, "/") + "/" + name;
+                    String subName = StringUtils.removeEnd(basePath, "/") + "/" + name;
                     resources.add(subName);
                     readSubDirectories(file, subName, resources);
                 }
@@ -951,7 +928,7 @@ public class ResourceFinder {
 
     private static void readJarEntries(URL location, String basePath, Map<String, URL> resources) throws IOException {
         JarURLConnection conn = (JarURLConnection) location.openConnection();
-        JarFile jarfile = null;
+        JarFile jarfile;
         jarfile = conn.getJarFile();
 
         Enumeration<JarEntry> entries = jarfile.entries();
@@ -977,7 +954,7 @@ public class ResourceFinder {
     //read directories in the jar that start with the basePath
     private static void readJarDirectoryEntries(URL location, String basePath, Set<String> resources) throws IOException {
         JarURLConnection conn = (JarURLConnection) location.openConnection();
-        JarFile jarfile = null;
+        JarFile jarfile;
         jarfile = conn.getJarFile();
 
         Enumeration<JarEntry> entries = jarfile.entries();
@@ -1058,7 +1035,7 @@ public class ResourceFinder {
             if (currentUrl == null) {
                 continue;
             }
-            JarFile jarFile = null;
+            JarFile jarFile;
             try {
                 String protocol = currentUrl.getProtocol();
                 if ("jar".equals(protocol)) {
@@ -1147,10 +1124,8 @@ public class ResourceFinder {
                         return resourceURL;
                     }
                 }
-            } catch (MalformedURLException e) {
+            } catch (IOException | SecurityException e) {
                 // Keep iterating through the URL list
-            } catch (IOException e) {
-            } catch (SecurityException e) {
             }
         }
         return null;

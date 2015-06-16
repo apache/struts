@@ -21,6 +21,7 @@
 
 package org.apache.struts2;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,8 +70,8 @@ public class RequestUtils {
                 servletPath = requestUri.substring(requestUri.indexOf(servletPath));
             }
         }
-        
-        if (null != servletPath && !"".equals(servletPath)) {
+
+        if (StringUtils.isNotEmpty(servletPath)) {
             return servletPath;
         }
         
@@ -92,14 +93,13 @@ public class RequestUtils {
      */
     public static String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request
-                .getAttribute("javax.servlet.include.servlet_path");
+        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
         if (uri != null) {
             return uri;
         }
 
         uri = getServletPath(request);
-        if (uri != null && !"".equals(uri)) {
+        if (StringUtils.isNotEmpty(uri)) {
             return uri;
         }
 

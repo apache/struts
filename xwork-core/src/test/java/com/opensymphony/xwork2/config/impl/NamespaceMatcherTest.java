@@ -24,7 +24,7 @@ import java.util.Set;
 public class NamespaceMatcherTest extends TestCase {
 
     public void testMatch() {
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         names.add("/bar");
         names.add("/foo/*/bar");
         names.add("/foo/*");

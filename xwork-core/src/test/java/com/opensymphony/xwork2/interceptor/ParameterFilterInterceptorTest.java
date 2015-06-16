@@ -34,12 +34,12 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
     ParameterFilterInterceptor interceptor;
     Mock mockInvocation;
     ValueStack stack;
-    Map contextMap;
+    Map<String, Object> contextMap;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        contextMap=new HashMap();
+        contextMap = new HashMap<>();
         stack = ActionContext.getContext().getValueStack();
         mockInvocation = new Mock(ActionInvocation.class);
         mockInvocation.expectAndReturn("getStack", stack);
@@ -106,7 +106,7 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
     }
     
     private void setUpParameters(String [] paramNames) {
-        Map params=new HashMap();
+        Map<String, String> params = new HashMap<>();
         for (String paramName : paramNames) {
             params.put(paramName, "irrelevant what this is");
 

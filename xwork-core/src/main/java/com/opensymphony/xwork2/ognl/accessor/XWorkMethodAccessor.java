@@ -15,20 +15,15 @@
  */
 package com.opensymphony.xwork2.ognl.accessor;
 
+import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import ognl.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-
-import ognl.MethodFailedException;
-import ognl.ObjectMethodAccessor;
-import ognl.OgnlContext;
-import ognl.OgnlRuntime;
-import ognl.PropertyAccessor;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 
 /**
@@ -59,9 +54,8 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         //this if statement ensures that ognl
         //statements of the form someBean.mySet('keyPropVal')
         //return the set element with value of the keyProp given
-        
-        if (objects.length==1 
-                && context instanceof OgnlContext) {
+
+        if (objects.length == 1 && context instanceof OgnlContext) {
             try {
               OgnlContext ogContext=(OgnlContext)context;
               if (OgnlRuntime.hasSetProperty(ogContext, object, string))  {
@@ -90,11 +84,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         }
 
         //HACK - we pass indexed method access i.e. setXXX(A,B) pattern
-        if (
-                (objects.length == 2 && string.startsWith("set"))
-                        ||
-                        (objects.length == 1 && string.startsWith("get"))
-                ) {
+        if ((objects.length == 2 && string.startsWith("set")) || (objects.length == 1 && string.startsWith("get"))) {
             Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION);
             boolean e = ((exec == null) ? false : exec.booleanValue());
             if (!e) {
@@ -111,18 +101,17 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         }
     }
 
-	private Object callMethodWithDebugInfo(Map context, Object object, String methodName,
-			Object[] objects) throws MethodFailedException {
-		try {
-			return super.callMethod(context, object, methodName, objects);
+    private Object callMethodWithDebugInfo(Map context, Object object, String methodName, Object[] objects) throws MethodFailedException {
+        try {
+            return super.callMethod(context, object, methodName, objects);
 		}
 		catch(MethodFailedException e) {
 			if (LOG.isDebugEnabled()) {
 				if (!(e.getReason() instanceof NoSuchMethodException)) {
 					// the method exists on the target object, but something went wrong
-					LOG.debug( "Error calling method through OGNL: object: [{}] method: [{}] args: [{}]", e.getReason(), object.toString(), methodName, Arrays.toString(objects));
-				}
-			}
+                    LOG.debug("Error calling method through OGNL: object: [{}] method: [{}] args: [{}]", e.getReason(), object.toString(), methodName, Arrays.toString(objects));
+                }
+            }
 			throw e;
 		}
 	}

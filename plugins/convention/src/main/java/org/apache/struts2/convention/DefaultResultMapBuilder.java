@@ -32,21 +32,17 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -135,7 +131,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
     public DefaultResultMapBuilder(ServletContext servletContext, Container container,
             @Inject("struts.convention.relative.result.types") String relativeResultTypes) {
         this.servletContext = servletContext;
-        this.relativeResultTypes = new HashSet<String>(Arrays.asList(relativeResultTypes.split("\\s*[,]\\s*")));
+        this.relativeResultTypes = new HashSet<>(Arrays.asList(relativeResultTypes.split("\\s*[,]\\s*")));
         this.conventionsService = container.getInstance(ConventionsService.class, container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE));
     }
 
@@ -184,7 +180,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         String resultPrefix = defaultResultPath + actionName;
 
         //results from files
-        Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
+        Map<String, ResultConfig> results = new HashMap<>();
         Map<String, ResultTypeConfig> resultsByExtension = conventionsService.getResultTypesByExtension(packageConfig);
         createFromResources(actionClass, results, defaultResultPath, resultPrefix, actionName,
             packageConfig, resultsByExtension);
@@ -318,7 +314,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         if (ctx != null)
             classLoaderInterface = (ClassLoaderInterface) ctx.get(ClassLoaderInterface.CLASS_LOADER_INTERFACE);
 
-        return (ClassLoaderInterface) ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()));
+        return ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()));
 
     }
 
@@ -448,7 +444,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         }
 
         // Add the default parameters for the result type config (if any)
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         if (resultTypeConfig.getParams() != null) {
             params.putAll(resultTypeConfig.getParams());
         }

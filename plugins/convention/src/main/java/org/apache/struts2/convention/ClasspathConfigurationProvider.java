@@ -23,13 +23,14 @@ package org.apache.struts2.convention;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import org.apache.struts2.dispatcher.DispatcherListener;
-import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.DispatcherListener;
 
 /**
  * <p>
@@ -49,20 +50,21 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
-        this.devMode = "true".equals(mode);
+        this.devMode = BooleanUtils.toBoolean(mode);
     }
 
     @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
-        this.reload = "true".equals(reload);
+        this.reload = BooleanUtils.toBoolean(reload);
     }
 
     /**
      * Not used.
      */
     public void destroy() {
-        if (this.listeningToDispatcher)
+        if (this.listeningToDispatcher) {
             Dispatcher.removeDispatcherListener(this);
+        }
         actionConfigBuilder.destroy();
     }
 

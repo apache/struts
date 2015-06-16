@@ -20,34 +20,21 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.UnknownHandler;
-import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -172,7 +159,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
 
             // try to find index action in current namespace or in default one
             if (actionConfig == null) {
-                LOG.trace("Looking for action named [index] in namespace [#0] or in default namespace", namespace);
+                LOG.trace("Looking for action named [index] in namespace [{}] or in default namespace", namespace);
                 actionConfig = configuration.getRuntimeConfiguration().getActionConfig(namespace, "index");
             }
         }
@@ -197,9 +184,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
                     return new Resource(canonicalPath, ext);
                 }
             } catch (MalformedURLException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to parse path to the web application resource {} skipping...", canonicalPath);
-                }
+                LOG.error("Unable to parse path to the web application resource {} skipping...", canonicalPath);
             }
         }
 
@@ -215,8 +200,8 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     protected ActionConfig buildActionConfig(String path, ResultTypeConfig resultTypeConfig) {
-        Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
-        HashMap<String, String> params = new HashMap<String, String>();
+        Map<String, ResultConfig> results = new HashMap<>();
+        HashMap<String, String> params = new HashMap<>();
         if (resultTypeConfig.getParams() != null) {
             params.putAll(resultTypeConfig.getParams());
         }
@@ -240,7 +225,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             if (LOG.isTraceEnabled()) {
                 String fqan = ns + "/" + actionName;
                 LOG.trace("Trying to locate the correct result for the FQ action [{}]"
-                        + " with an file extension of [#1] in the directory [{}] " + "and a result code of [{}]",
+                        + " with an file extension of [{}] in the directory [{}] " + "and a result code of [{}]",
                         fqan, ext, pathPrefix, resultCode);
             }
 
@@ -306,10 +291,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             String chainedTo = actionName + nameSeparator + resultCode;
             ActionConfig chainedToConfig = pkg.getActionConfigs().get(chainedTo);
             if (chainedToConfig != null) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Action [{}] used as chain result for [{}] and result [{}]", chainedTo, actionName, resultCode);
-                }
-
+                LOG.trace("Action [{}] used as chain result for [{}] and result [{}]", chainedTo, actionName, resultCode);
                 ResultTypeConfig chainResultType = pkg.getAllResultTypeConfigs().get("chain");
                 result = buildResult(chainedTo, resultCode, chainResultType, actionContext);
             }
@@ -321,28 +303,22 @@ public class ConventionUnknownHandler implements UnknownHandler {
     protected Result findResult(String path, String resultCode, String ext, ActionContext actionContext,
                                 Map<String, ResultTypeConfig> resultsByExtension) {
         try {
-            boolean traceEnabled = LOG.isTraceEnabled();
-            if (traceEnabled)
-                LOG.trace("Checking ServletContext for {}", path);
+            LOG.trace("Checking ServletContext for {}", path);
 
             if (servletContext.getResource(path) != null) {
-                if (traceEnabled)
-                    LOG.trace("Found");
+                LOG.trace("Found");
                 return buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
             }
 
-            if (traceEnabled)
-                LOG.trace("Checking ClasLoader for {}", path);
+            LOG.trace("Checking ClassLoader for {}", path);
 
             String classLoaderPath = path.startsWith("/") ? path.substring(1, path.length()) : path;
             if (ClassLoaderUtil.getResource(classLoaderPath, getClass()) != null) {
-                if (traceEnabled)
-                    LOG.trace("Found");
+                LOG.trace("Found");
                 return buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
             }
         } catch (MalformedURLException e) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to parse template path: {} skipping...", path);
+            LOG.error("Unable to parse template path: {} skipping...", path);
         }
 
         return null;
@@ -351,7 +327,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     protected Result buildResult(String path, String resultCode, ResultTypeConfig config, ActionContext invocationContext) {
         String resultClass = config.getClassName();
 
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         if (config.getParams() != null) {
             params.putAll(config.getParams());
         }
@@ -389,7 +365,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
             finalPrefix += "/";
         }
 
-        if (namespace == null || "/".equals(namespace)) {
+        if (StringUtils.equals(namespace,"/" )) {
             namespace = "";
         }
 

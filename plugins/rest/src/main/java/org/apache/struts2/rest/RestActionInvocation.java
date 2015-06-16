@@ -21,19 +21,15 @@
 
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpHeaderResult;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
@@ -71,29 +67,29 @@ public class RestActionInvocation extends DefaultActionInvocation {
     }
 
     @Inject("struts.rest.logger")
-    public void setLogger(String value) {
-        logger = Boolean.valueOf(value);
+    public void setLogger(String logger) {
+        this.logger = BooleanUtils.toBoolean(logger);
     }
 
     @Inject("struts.rest.defaultErrorResultName")
-    public void setDefaultErrorResultName(String value) {
-        defaultErrorResultName = value;
+    public void setDefaultErrorResultName(String defaultErrorResultName) {
+        this.defaultErrorResultName = defaultErrorResultName;
     }
 
     /**
      * If set to true (by default) blocks returning content from any other methods than GET,
      * if set to false, the content can be returned for any kind of method
      * 
-     * @param value true or false
+     * @param restrictToGet true or false
      */
     @Inject(value = "struts.rest.content.restrictToGET", required = false)
-    public void setRestrictToGet(String value) {
-        restrictToGet = "true".equalsIgnoreCase(value);
+    public void setRestrictToGet(String restrictToGet) {
+        this.restrictToGet = BooleanUtils.toBoolean(restrictToGet);
     }
 
     @Inject
-    public void setMimeTypeHandlerSelector(ContentTypeHandlerManager sel) {
-        this.handlerSelector = sel;
+    public void setMimeTypeHandlerSelector(ContentTypeHandlerManager selector) {
+        this.handlerSelector = selector;
     }
 
     /**
@@ -149,7 +145,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
 
             } catch (Exception e) {
 
-                // Error proccesing the result
+                // Error processing the result
                 LOG.error("Exception processing the result.", e);
 
                 if (!ServletActionContext.getResponse().isCommitted()) {
@@ -196,9 +192,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
             if (httpHeaders.getStatus() != HttpServletResponse.SC_NOT_MODIFIED ) {
                 executeResult();
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Result not processed because the status code is not modified.");
-                }
+                LOG.debug("Result not processed because the status code is not modified.");
             }
 
         } finally {
@@ -229,20 +223,15 @@ public class RestActionInvocation extends DefaultActionInvocation {
         if (handler != null && !(handler instanceof HtmlHandler)) {
 
             // Specific representation (json, xml...)
-            resultCode = handlerSelector.handleResult(
-                    this.getProxy().getConfig(), httpHeaders, target);
-
+            resultCode = handlerSelector.handleResult(this.getProxy().getConfig(), httpHeaders, target);
         } else {
-
             // Normal struts execution (html o other struts result)
             findResult();
             if (result != null) {
                 this.result.execute(this);
-
             } else {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("No result returned for action " + getAction().getClass().getName()
-                            + " at " + proxy.getConfig().getLocation());
+                    LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
                 }
             }
         }
@@ -289,9 +278,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
             ResultConfig resultConfig = this.proxy.getConfig().getResults().get(defaultErrorResultName);
             if (resultConfig != null) {
                 this.result = objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Found default error result.");
-                }
+                LOG.debug("Found default error result.");
             }
         }
 

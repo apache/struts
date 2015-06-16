@@ -21,8 +21,8 @@ package org.apache.struts2.cdi;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
@@ -114,14 +114,10 @@ public class CdiObjectFactory extends ObjectFactory {
 				bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_COMP_ENV);
 			}
 			if (bm == null) {
-				if (LOG.isErrorEnabled()) {
-					LOG.error("[findBeanManager]: Could not find BeanManager instance for any given JNDI key, giving up");
-				}
+				LOG.error("[findBeanManager]: Could not find BeanManager instance for any given JNDI key, giving up");
 			}
 		} catch ( NamingException e ) {
-			if (LOG.isErrorEnabled()) {
-				LOG.error("[findBeanManager]: Unable to get InitialContext for BeanManager lookup", e);
-			}
+			LOG.error("[findBeanManager]: Unable to get InitialContext for BeanManager lookup", e);
 		}
 		return bm;
 	}
@@ -135,16 +131,12 @@ public class CdiObjectFactory extends ObjectFactory {
 	 * @return the BeanManager, if found; <tt>null</tt> if not found or {@link javax.naming.NamingException} was thrown.
 	 */
 	protected BeanManager lookup( Context context, String jndiKeyToCheck ) {
-		if (LOG.isInfoEnabled()) {
-			LOG.info("[lookup]: Checking for BeanManager under JNDI key " + jndiKeyToCheck);
-		}
+		LOG.info("[lookup]: Checking for BeanManager under JNDI key {}", jndiKeyToCheck);
 		BeanManager result = null;
 		try {
 			result = (BeanManager) context.lookup(jndiKeyToCheck);
 		} catch ( NamingException e ) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("[lookup]: BeanManager lookup failed for JNDI key " + jndiKeyToCheck, e);
-			}
+			LOG.debug("[lookup]: BeanManager lookup failed for JNDI key {}", jndiKeyToCheck, e);
 		}
 		return result;
 	}

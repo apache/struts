@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.InterceptorRefs;
@@ -50,7 +50,7 @@ public class DefaultInterceptorMapBuilder implements InterceptorMapBuilder {
 
 	public List<InterceptorMapping> build(Class<?> actionClass, PackageConfig.Builder builder,
 			String actionName, Action annotation) {
-		List<InterceptorMapping> interceptorList = new ArrayList<InterceptorMapping>(
+		List<InterceptorMapping> interceptorList = new ArrayList<>(
 				10);
 
 		//from @InterceptorRefs annotation
@@ -75,27 +75,19 @@ public class DefaultInterceptorMapBuilder implements InterceptorMapBuilder {
 	}
 
 	protected List<InterceptorMapping> build(InterceptorRef[] interceptors, String actionName, PackageConfig.Builder builder) {
-	    List<InterceptorMapping> interceptorList = new ArrayList<InterceptorMapping>(
-                10);
+	    List<InterceptorMapping> interceptorList = new ArrayList<>(10);
 	    for (InterceptorRef interceptor : interceptors) {
-            if (LOG.isTraceEnabled())
-                LOG.trace("Adding interceptor [{}] to [{}]",
-                        interceptor.value(), actionName);
-            Map<String, String> params = StringTools.createParameterMap(interceptor
-                    .params());
-            interceptorList.addAll(buildInterceptorList(builder,
-                    interceptor, params));
+            LOG.trace("Adding interceptor [{}] to [{}]", interceptor.value(), actionName);
+            Map<String, String> params = StringTools.createParameterMap(interceptor.params());
+            interceptorList.addAll(buildInterceptorList(builder, interceptor, params));
         }
 
 	    return interceptorList;
 	}
 
-	protected List<InterceptorMapping> buildInterceptorList(
-			PackageConfig.Builder builder, InterceptorRef ref, Map params) {
-		return InterceptorBuilder.constructInterceptorReference(builder, ref
-				.value(), params, builder.build().getLocation(),
-                configuration.getContainer().getInstance(
-						ObjectFactory.class));
+	protected List<InterceptorMapping> buildInterceptorList(PackageConfig.Builder builder, InterceptorRef ref, Map params) {
+		return InterceptorBuilder.constructInterceptorReference(builder, ref.value(), params, builder.build().getLocation(),
+                configuration.getContainer().getInstance(ObjectFactory.class));
 	}
 
 	@Inject

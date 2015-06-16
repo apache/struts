@@ -32,7 +32,7 @@ package org.apache.struts2.convention;
 public interface ActionConfigBuilder {
     /**
      * Builds all the action configurations and stores them into the XWork configuration instance
-     * via XWork dependency injetion.
+     * via XWork dependency injection.
      */
     void buildActionConfigs();
 

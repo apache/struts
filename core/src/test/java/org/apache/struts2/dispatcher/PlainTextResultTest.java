@@ -56,13 +56,11 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
 
         response.setExpectedContentType("text/plain");
         response.setExpectedHeader("Content-Disposition", "inline");
-        InputStream jspResourceInputStream =
+
+        try (InputStream jspResourceInputStream =
             ClassLoaderUtil.getResourceAsStream(
                 "org/apache/struts2/dispatcher/someJspFile.jsp",
-                PlainTextResultTest.class);
-
-
-        try {
+                PlainTextResultTest.class)) {
             servletContext.setResourceAsStream(jspResourceInputStream);
             result.execute(invocation);
 
@@ -70,9 +68,6 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
             String e = AbstractUITagTest.normalize(
                     readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
             assertEquals(r, e);
-        }
-        finally {
-            jspResourceInputStream.close();
         }
     }
 
@@ -82,20 +77,15 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
 
         response.setExpectedContentType("text/plain");
         response.setExpectedHeader("Content-Disposition", "inline");
-        InputStream jspResourceInputStream =
-            ClassLoaderUtil.getResourceAsStream("org/apache/struts2/dispatcher/someJspFile.jsp", PlainTextResultTest.class);
 
-
-        try {
+        try (InputStream jspResourceInputStream =
+            ClassLoaderUtil.getResourceAsStream("org/apache/struts2/dispatcher/someJspFile.jsp", PlainTextResultTest.class)) {
             servletContext.setResourceAsStream(jspResourceInputStream);
             result.execute(invocation);
 
             String r = AbstractUITagTest.normalize(stringWriter.getBuffer().toString(), true);
             String e = AbstractUITagTest.normalize(readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
             assertEquals(r, e);
-        }
-        finally {
-            jspResourceInputStream.close();
         }
     }
 
@@ -106,13 +96,11 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
 
         response.setExpectedContentType("text/plain; charset=UTF-8");
         response.setExpectedHeader("Content-Disposition", "inline");
-        InputStream jspResourceInputStream =
+
+        try (InputStream jspResourceInputStream =
             ClassLoaderUtil.getResourceAsStream(
                 "org/apache/struts2/dispatcher/someJspFile.jsp",
-                PlainTextResultTest.class);
-
-
-        try {
+                PlainTextResultTest.class)) {
             servletContext.setResourceAsStream(jspResourceInputStream);
             result.execute(invocation);
 
@@ -121,15 +109,10 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
                     readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
             assertEquals(r, e);
         }
-        finally {
-            jspResourceInputStream.close();
-        }
     }
 
     protected String readAsString(String resource) throws Exception {
-        InputStream is = null;
-        try {
-            is = ClassLoaderUtil.getResourceAsStream(resource, PlainTextResultTest.class);
+        try (InputStream is = ClassLoaderUtil.getResourceAsStream(resource, PlainTextResultTest.class)) {
             int sizeRead = 0;
             byte[] buffer = new byte[1024];
             StringBuilder stringBuilder = new StringBuilder();
@@ -138,11 +121,6 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
             }
             return stringBuilder.toString();
         }
-        finally {
-            if (is != null)
-                is.close();
-        }
-
     }
 
 

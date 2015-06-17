@@ -64,20 +64,10 @@ class PropertiesSettings implements Settings {
         settings = new LocatableProperties(new LocationImpl(null, settingsUrl.toString()));
 
         // Load settings
-        InputStream in = null;
-        try {
-            in = settingsUrl.openStream();
+        try (InputStream in = settingsUrl.openStream()) {
             settings.load(in);
         } catch (IOException e) {
             throw new StrutsException("Could not load " + name + ".properties: " + e, e);
-        } finally {
-            if(in != null) {
-                try {
-                    in.close();
-                } catch(IOException io) {
-                	LOG.warn("Unable to close input stream", io);
-                }
-            }
         }
     }
 

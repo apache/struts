@@ -450,12 +450,9 @@ public class DefaultClassFinder implements ClassFinder {
         try {
             URL resource = classLoaderInterface.getResource(className);
             if (resource != null) {
-                InputStream in = resource.openStream();
-                try {
+                try (InputStream in = resource.openStream()) {
                     ClassReader classReader = new ClassReader(in);
                     classReader.accept(new InfoBuildingVisitor(this), ClassReader.SKIP_DEBUG);
-                } finally {
-                    in.close();
                 }
             } else {
                 throw new XWorkException("Could not load " + className);

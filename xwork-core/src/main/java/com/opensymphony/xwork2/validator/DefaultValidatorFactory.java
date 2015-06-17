@@ -138,8 +138,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
                             // Ex: struts-app.jar -> MyApp.jar -> Login-validators.xml should be
                             // parsed and loaded.
                             ZipInputStream zipInputStream = null;
-                            try {
-                                InputStream inputStream = u.openStream();
+                            try (InputStream inputStream = u.openStream()) {
                                 if (inputStream instanceof ZipInputStream) {
                                     zipInputStream = (ZipInputStream) inputStream;
                                 } else {

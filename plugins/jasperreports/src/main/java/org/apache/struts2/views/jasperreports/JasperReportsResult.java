@@ -23,9 +23,11 @@ package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
+
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.export.*;
 import net.sf.jasperreports.engine.util.JRLoader;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,9 +39,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -244,12 +248,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Handle IE special case: it sends a "contype" request first.
         // TODO Set content type to config settings?
         if ("contype".equals(request.getHeader("User-Agent"))) {
-            try {
+            try (OutputStream outputStream = response.getOutputStream()) {
                 response.setContentType("application/pdf");
                 response.setContentLength(0);
-
-                ServletOutputStream outputStream = response.getOutputStream();
-                outputStream.close();
             } catch (IOException e) {
                 LOG.error("Error writing report output", e);
                 throw new ServletException(e.getMessage(), e);
@@ -300,7 +301,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             parameters.putAll(reportParams);
         }
 
-        byte[] output;
+        ByteArrayOutputStream output;
         JasperPrint jasperPrint;
 
         // Fill the report and produce a print object
@@ -381,8 +382,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             throw new ServletException(e.getMessage(), e);
         }
 
-        response.setContentLength(output.length);
-
+        response.setContentLength(output.size());
         // Will throw ServletException on IOException.
         writeReport(response, output);
     }
@@ -394,24 +394,12 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * @param output   Report bytes to write.
      * @throws ServletException on stream IOException.
      */
-    private void writeReport(HttpServletResponse response, byte[] output) throws ServletException {
-        ServletOutputStream outputStream = null;
-        try {
-            outputStream = response.getOutputStream();
-            outputStream.write(output);
+    private void writeReport(HttpServletResponse response, ByteArrayOutputStream output) throws ServletException {
+        try (OutputStream outputStream = response.getOutputStream()) {
             outputStream.flush();
         } catch (IOException e) {
             LOG.error("Error writing report output", e);
             throw new ServletException(e.getMessage(), e);
-        } finally {
-            try {
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                LOG.error("Error closing report output stream", e);
-                throw new ServletException(e.getMessage(), e);
-            }
         }
     }
 
@@ -456,8 +444,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * @throws net.sf.jasperreports.engine.JRException
      *          If there is a problem running the report
      */
-    private byte[] exportReportToBytes(JasperPrint jasperPrint, JRExporter exporter) throws JRException {
-        byte[] output;
+    private ByteArrayOutputStream exportReportToBytes(JasperPrint jasperPrint, JRExporter exporter) throws JRException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -467,10 +454,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         }
 
         exporter.exportReport();
-
-        output = baos.toByteArray();
-
-        return output;
+        return baos;
     }
 
 }

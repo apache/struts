@@ -251,15 +251,14 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
         }
 
         StringBuilder buffer = new StringBuilder(128);
-        InputStream in = url.openStream();
-        byte[] buf = new byte[4096];
-        int nbytes;
-
-        while ((nbytes = in.read(buf)) > 0) {
-            buffer.append(new String(buf, 0, nbytes));
+        try (InputStream in = url.openStream()) {
+	        byte[] buf = new byte[4096];
+	        int nbytes;
+	
+	        while ((nbytes = in.read(buf)) > 0) {
+	            buffer.append(new String(buf, 0, nbytes));
+	        }
         }
-
-        in.close();
 
         /**
          * compare the trimmed values of each buffer and make sure they're equivalent.  however, let's make sure to

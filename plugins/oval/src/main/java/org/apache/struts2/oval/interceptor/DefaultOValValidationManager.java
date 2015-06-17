@@ -4,14 +4,19 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+
 import net.sf.oval.configuration.Configurer;
 import net.sf.oval.configuration.annotation.AnnotationsConfigurer;
 import net.sf.oval.configuration.annotation.JPAAnnotationsConfigurer;
 import net.sf.oval.configuration.xml.XMLConfigurer;
+
 import org.apache.struts2.StrutsConstants;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,11 +157,8 @@ public class DefaultOValValidationManager implements OValValidationManager {
     protected XMLConfigurer loadFile(String fileName, Class clazz, boolean checkFile) {
         URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
         if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
-            java.io.InputStream is = null;
 
-            try {
-                is = fileManager.loadFile(fileUrl);
-
+            try (InputStream is = fileManager.loadFile(fileUrl)) {
                 if (is != null) {
                     LOG.debug("Loading validation xml file [{}]", fileName);
                     XMLConfigurer configurer = new XMLConfigurer();
@@ -164,14 +166,8 @@ public class DefaultOValValidationManager implements OValValidationManager {
                     validatorFileCache.put(fileName, configurer);
                     return configurer;
                 }
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (java.io.IOException e) {
-                        LOG.error("Unable to close input stream for [{}] ", fileName, e);
-                    }
-                }
+            } catch (IOException e) {
+                LOG.error("Unable to close input stream for [{}] ", fileName, e);
             }
         } else {
             return (XMLConfigurer) validatorFileCache.get(fileName);

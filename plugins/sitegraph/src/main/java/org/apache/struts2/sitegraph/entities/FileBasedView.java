@@ -85,17 +85,13 @@ public abstract class FileBasedView implements View {
     protected abstract Pattern getFormPattern();
 
     protected String readFile(File file) {
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(file));
-
+        try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             String s;
             StringBuilder buffer = new StringBuilder();
 
             while ((s = in.readLine()) != null) {
                 buffer.append(s).append('\n');
             }
-
-            in.close();
 
             return buffer.toString();
         } catch (FileNotFoundException e) {

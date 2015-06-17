@@ -221,9 +221,9 @@ public class StreamResult extends StrutsResultSupport {
         // Override any parameters using values on the stack
         resolveParamsFromStack(invocation.getStack(), invocation);
 
-        OutputStream oOutput = null;
-
-        try {
+        // Find the Response in context
+        HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
+        try (OutputStream oOutput = oResponse.getOutputStream()) {
             if (inputStream == null) {
                 // Find the inputstream from the invocation variable stack
                 inputStream = (InputStream) invocation.getStack().findValue(conditionalParse(inputName, invocation));
@@ -235,9 +235,6 @@ public class StreamResult extends StrutsResultSupport {
                 LOG.error(msg);
                 throw new IllegalArgumentException(msg);
             }
-
-            // Find the Response in context
-            HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
 
             // Set the content type
             if (contentCharSet != null && ! contentCharSet.equals("")) {
@@ -273,9 +270,6 @@ public class StreamResult extends StrutsResultSupport {
                 oResponse.addHeader("Cache-Control", "no-cache");
             }
 
-            // Get the outputstream
-            oOutput = oResponse.getOutputStream();
-
             LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
                     inputName, contentType, contentLength, contentDisposition, contentCharSet);
 
@@ -290,10 +284,6 @@ public class StreamResult extends StrutsResultSupport {
 
             // Flush
             oOutput.flush();
-        }
-        finally {
-            if (inputStream != null) inputStream.close();
-            if (oOutput != null) oOutput.close();
         }
     }
 

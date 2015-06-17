@@ -171,9 +171,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
     }
 
     public void testValidatorWithI18nMessage() throws Exception {
-        InputStream is = null;
-        try {
-            is = ClassLoaderUtil.getResourceAsStream(testFileName6, this.getClass());
+        try (InputStream is = ClassLoaderUtil.getResourceAsStream(testFileName6, this.getClass())) {
             mockValidatorFactory.expectAndReturn("lookupRegisteredValidatorType", C.args(C.eq("requiredstring")), RequiredStringValidator.class.getName());
             mockValidatorFactory.expectAndReturn("lookupRegisteredValidatorType", C.args(C.eq("requiredstring")), RequiredStringValidator.class.getName());
 
@@ -202,11 +200,6 @@ public class DefaultValidatorFileParserTest extends TestCase {
             assertEquals(((ValidatorConfig)validatorConfigs.get(1)).getParams().get("trim"), "true");
             assertEquals(((ValidatorConfig)validatorConfigs.get(1)).getParams().get("anotherParam"), "anotherValue");
             assertEquals(((ValidatorConfig)validatorConfigs.get(1)).getType(), "requiredstring");
-        }
-        finally {
-            if (is != null) {
-                is.close();
-            }
         }
     }
 

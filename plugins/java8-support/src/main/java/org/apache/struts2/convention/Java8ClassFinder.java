@@ -438,12 +438,9 @@ public class Java8ClassFinder implements ClassFinder {
         try {
             URL resource = classLoaderInterface.getResource(className);
             if (resource != null) {
-                InputStream in = resource.openStream();
-                try {
+                try (InputStream in = resource.openStream()) {
                     ClassReader classReader = new ClassReader(in);
                     classReader.accept(new InfoBuildingClassVisitor(this), ClassReader.SKIP_DEBUG);
-                } finally {
-                    in.close();
                 }
             } else {
                 throw new XWorkException("Could not load " + className);

@@ -465,12 +465,11 @@ public class Component {
      * @return the exception as a string.
      */
     protected String toString(Throwable t) {
-        FastByteArrayOutputStream bout = new FastByteArrayOutputStream();
-        PrintWriter wrt = new PrintWriter(bout);
-        t.printStackTrace(wrt);
-        wrt.close();
-
-        return bout.toString();
+        try (FastByteArrayOutputStream bout = new FastByteArrayOutputStream();
+                PrintWriter wrt = new PrintWriter(bout)) {
+            t.printStackTrace(wrt);
+            return bout.toString();
+        }
     }
 
     /**

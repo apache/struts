@@ -192,11 +192,9 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                 HttpServletResponse res = ServletActionContext.getResponse();
                 res.setContentType("text/plain");
 
-                try {
-                    PrintWriter writer =
-                            ServletActionContext.getResponse().getWriter();
+                try (PrintWriter writer =
+                            ServletActionContext.getResponse().getWriter()) {
                     writer.print(stack.findValue(cmd));
-                    writer.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -213,8 +211,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                             ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
                             Object rootObject = stack.findValue(rootObjectExpression);
                             
-                            try {
-                                StringWriter writer = new StringWriter();
+                            try (StringWriter writer = new StringWriter()) {
                                 ObjectToHTMLWriter htmlWriter = new ObjectToHTMLWriter(writer);
                                 htmlWriter.write(reflectionProvider, rootObject, rootObjectExpression);
                                 String html = writer.toString();

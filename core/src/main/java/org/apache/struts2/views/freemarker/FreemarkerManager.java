@@ -436,12 +436,7 @@ public class FreemarkerManager {
      * @see freemarker.template.Configuration#setSettings for the definition of valid settings
      */
     protected void loadSettings(ServletContext servletContext) {
-        InputStream in = null;
-
-        try {
-
-            in = fileManager.loadFile(ClassLoaderUtil.getResource("freemarker.properties", getClass()));
-
+        try (InputStream in = fileManager.loadFile(ClassLoaderUtil.getResource("freemarker.properties", getClass()))){
             if (in != null) {
                 Properties p = new Properties();
                 p.load(in);
@@ -465,14 +460,6 @@ public class FreemarkerManager {
             LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
         } catch (TemplateException e) {
             LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch(IOException io) {
-                    LOG.warn("Unable to close input stream", io);
-                }
-            }
         }
     }
 

@@ -28,14 +28,8 @@ public class UrlUtilTest2 extends TestCase {
 
     private void assertUrlCanBeOpened(URL url) throws IOException {
         InputStream is = url.openStream();
-        JarInputStream jarStream = null;
-        try {
-            jarStream = new JarInputStream(is);
+        try (JarInputStream jarStream = new JarInputStream(is)) {
             assertNotNull(jarStream);
-        } finally {
-            if (jarStream != null)
-                jarStream.close();
-
         }
     }
 }

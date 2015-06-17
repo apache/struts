@@ -122,24 +122,11 @@ public class PlainTextResult extends StrutsResultSupport {
         applyAdditionalHeaders(response);
         String location = adjustLocation(finalLocation);
 
-        PrintWriter writer = response.getWriter();
-        InputStreamReader reader = null;
-        try {
-            InputStream resourceAsStream = readStream(invocation, location);
+        try (PrintWriter writer = response.getWriter();
+                InputStream resourceAsStream = readStream(invocation, location);
+                InputStreamReader reader = new InputStreamReader(resourceAsStream, charset == null ? Charset.defaultCharset() : charset)) {
             logWrongStream(finalLocation, resourceAsStream);
-            if (charset != null) {
-                reader = new InputStreamReader(resourceAsStream, charset);
-            } else {
-                reader = new InputStreamReader(resourceAsStream);
-            }
             sendStream(writer, reader);
-        } finally {
-            if (reader != null)
-                reader.close();
-            if (writer != null) {
-                writer.flush();
-                writer.close();
-            }
         }
     }
 

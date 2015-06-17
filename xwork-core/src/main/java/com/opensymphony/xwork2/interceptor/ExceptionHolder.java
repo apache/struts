@@ -32,6 +32,7 @@ import java.io.Serializable;
  */
 public class ExceptionHolder implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private Exception exception;
 
     /**
@@ -44,37 +45,29 @@ public class ExceptionHolder implements Serializable {
     }
 
     /**
-     * Gets the holded exception
+     * Gets the held exception
      *
-     * @return  the holded exception
+     * @return the held exception
      */
     public Exception getException() {
         return this.exception;
     }
 
     /**
-     * Gets the holded exception stacktrace using {@link Exception#printStackTrace()}.
+     * Gets the held exception stack trace using {@link Exception#printStackTrace()}.
      *
-     * @return  stacktrace
+     * @return stack trace
      */
     public String getExceptionStack() {
         String exceptionStack = null;
 
         if (getException() != null) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-
-            try {
+            try (StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw)) {
                 getException().printStackTrace(pw);
                 exceptionStack = sw.toString();
-            }
-            finally {
-                try {
-                    sw.close();
-                    pw.close();
-                } catch (IOException e) {
-                    // ignore
-                }
+            } catch (IOException e) {
+                // Ignore exception generating stack trace.
             }
         }
 

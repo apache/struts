@@ -82,15 +82,14 @@ public class TestUtils {
         }
 
         StringBuilder buffer = new StringBuilder(128);
-        InputStream in = url.openStream();
-        byte[] buf = new byte[4096];
-        int nbytes;
+        try (InputStream in = url.openStream()) {
+            byte[] buf = new byte[4096];
+            int nbytes;
 
-        while((nbytes = in.read(buf)) > 0) {
-            buffer.append(new String(buf, 0, nbytes));
+            while ((nbytes = in.read(buf)) > 0) {
+                buffer.append(new String(buf, 0, nbytes));
+            }
         }
-
-        in.close();
 
         return buffer.toString();
     }

@@ -1,0 +1,27 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+
+<validators>
+    <field name="name">
+        <field-validator type="requiredstring">
+            <message key="error.name">default message 1</message>
+        </field-validator>
+    </field>
+    <field name="address">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <param name="anotherParam">anotherValue</param>
+            <message key="error.address">  ddddd
+                <param name="1">'tmjee'</param>
+                <param name="2">'phil'</param>
+                <param name="10">'jimmy'</param>
+                <param name="6">'hopkins'</param>
+                <param name="defaultMessage">The Default Message</param>
+                <param name="someNonsenseKey">Some Nonesense Value</param>
+                <param name="3">'rainer'</param>
+            </message>
+        </field-validator>
+    </field>
+</validators>
+

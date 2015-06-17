@@ -1,0 +1,23 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-beans.xml" />
+    <package name="default">
+
+        <action name="Foo" class="com.opensymphony.xwork2.config.providers.PrivateConstructorAction">
+            <param name="foo">13</param>
+        </action>
+
+        <action name="Bar" class="com.opensymphony.xwork2.config.providers.NoNoArgsConstructorAction">
+            <param name="bar">17</param>
+        </action>
+
+        <action name="FooBar" class="com.opensymphony.xwork2.config.providers.IDoNotExistAction">
+            <param name="foobar">17</param>
+        </action>
+
+    </package>
+</xwork>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE xwork PUBLIC 
+	"-//Apache Struts//XWork 1.1.1//EN"
+	"http://struts.apache.org/dtds/xwork-1.1.1.dtd">
+ 
+<xwork>
+    <include file="xwork-test-beans.xml" />
+	<package name="xworkResultTypesTestPackage1">
+		<result-types>
+			<result-type name="result1" class="com.opensymphony.xwork2.mock.MockResult" >
+				<param name="param1">value1</param>
+				<param name="param2">value2</param>
+				<param name="param3">value3</param>
+			</result-type>
+			<result-type name="result2" class="com.opensymphony.xwork2.mock.MockResult">
+				<param name="paramA">valueA</param>
+				<param name="paramB">valueB</param>
+			</result-type>
+		</result-types>
+	</package>
+	
+	
+	<package name="xworkResultTypesTestPackage2">
+		<result-types>
+			<result-type name="result1" class="com.opensymphony.xwork2.mock.MockResult" >
+				<param name="param1">value1</param>
+				<param name="param2">value2</param>
+				<param name="param3">value3</param>
+			</result-type>
+			<result-type name="result2" class="com.opensymphony.xwork2.mock.MockResult">
+				<param name="paramA">valueA</param>
+				<param name="paramB">valueB</param>
+			</result-type>
+		</result-types>
+		
+		<action name="action1">
+			<result name="success" type="result1">
+				<param name="param1">newValue1</param>
+				<param name="param3">newValue3</param>
+				<param name="param10">value10</param>
+				<param name="param11">value11</param>
+			</result>
+		</action>
+		
+		<action name="action2">
+			<result name="success" type="result2">
+				<param name="paramB">newValueB</param>
+				<param name="paramZ">valueZ</param>
+			</result>
+		</action>
+	</package>
+	
+</xwork>

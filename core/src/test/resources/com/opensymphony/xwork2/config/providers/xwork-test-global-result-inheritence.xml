@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-beans.xml" />
+	<package name="parent" namespace="/base">
+		<result-types>
+			<result-type name="mockResult" class="com.opensymphony.xwork2.mock.MockResult" />
+		</result-types>
+		<global-results>
+			<result name="mockResult1" type="mockResult">
+				<param name="identity">p1</param>
+			</result>
+			<result name="mockResult2" type="mockResult">
+				<param name="identity">p2</param>
+			</result>
+		</global-results>
+		<action name="parentAction" />
+	</package>
+
+
+	<package name="another" namespace="/base">
+		<result-types>
+			<result-type name="anotherMockResult" class="com.opensymphony.xwork2.mock.MockResult" />
+		</result-types>
+		<global-results>
+			<result name="mockResult1" type="anotherMockResult">
+				<param name="identity">a1</param>
+			</result>
+			<result name="mockResult2" type="anotherMockResult">
+				<param name="identity">a2</param>
+			</result>
+		</global-results>
+		<action name="anotherAction" />
+	</package>
+
+	<package name="child" extends="parent" namespace="/base">
+		<global-results>
+			<result name="mockResult1" type="mockResult">
+				<param name="identity">c1</param>
+			</result>
+		</global-results>
+		<action name="childAction" />
+	</package>
+</xwork>

@@ -1,0 +1,13 @@
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
+<validators>
+    <field name="count">
+        <field-validator type="required">
+            <message>You must enter a value for count.</message>
+        </field-validator>
+        <field-validator type="int">
+            <param name="min">0</param>
+            <param name="max">5</param>
+            <message>count must be between ${min} and ${max}, current value is ${count}.</message>
+        </field-validator>
+    </field>
+</validators>

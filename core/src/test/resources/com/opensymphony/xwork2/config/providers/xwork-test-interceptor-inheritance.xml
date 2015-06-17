@@ -1,0 +1,34 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-beans.xml" />
+    <package name="default">
+        <interceptors>
+            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="timer"/>
+            </interceptor-stack>
+        </interceptors>
+    </package>
+
+    <package name="subPackage" extends="default">
+        <interceptors>
+            <interceptor-stack name="subDefaultStack">
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+    </package>
+
+    <package name="subSubPackage" extends="subPackage">
+        <interceptors>
+            <interceptor-stack name="subSubDefaultStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="subDefaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+    </package>
+</xwork>

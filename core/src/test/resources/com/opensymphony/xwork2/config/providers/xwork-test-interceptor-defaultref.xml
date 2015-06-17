@@ -1,0 +1,30 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+    <!-- this package has a default interceptor ref - so actions with no refs should have the default ref -->
+    <package name="default">
+        <interceptors>
+            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="logging" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
+        </interceptors>
+
+        <default-interceptor-ref name="timer" />
+        <action name="ActionWithOwnRef" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="logging"/>
+        </action>
+        <action name="ActionWithDefaultRef" class="com.opensymphony.xwork2.SimpleAction" />
+    </package>
+
+    <!-- this package has no default interceptor ref - so actions with no refs should inherit the default interceptor -->
+    <!-- this tests that default interceptor refs are inherited -->
+    <package name="subpackage" extends="default">
+        <action name="ActionWithNoRef" class="com.opensymphony.xwork2.SimpleAction" />
+
+        <action name="AnotherActionWithOwnRef" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="logging"/>
+        </action>
+    </package>
+</xwork>

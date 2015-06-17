@@ -1,0 +1,17 @@
+<!DOCTYPE validators PUBLIC 
+       "-//Apache Struts//XWork Validator 1.0.2//EN"
+       "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+       
+<validators>
+   <field name="myField">
+      <field-validator type="required">
+         <message>a field error message</message>
+      </field-validator>   
+   </field>
+   <validator type="expression">
+      <param name="expression"><![CDATA[false]]></param>
+      <message>an expression error message</message>
+   </validator>
+</validators>
+              
+       

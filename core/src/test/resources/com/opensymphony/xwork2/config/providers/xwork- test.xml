@@ -1,0 +1,81 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 1.1.1//EN"
+    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
+ >
+
+<xwork>
+	<include file="xwork-test-beans.xml" />
+    <package name="default">
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
+            <result-type name="mock" class="com.opensymphony.xwork2.mock.MockResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="logging" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
+            <interceptor name="test" class="com.opensymphony.xwork2.mock.MockInterceptor">
+                <param name="foo">fooDefault</param>
+            </interceptor>
+
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="timer"/>
+            </interceptor-stack>
+        </interceptors>
+
+        <global-results>
+            <result name="login"> <!-- should be chain type since it is the default -->
+                <param name="actionName">login</param>
+            </result>
+        </global-results>
+
+        <action name="Bar" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="foo">17</param>
+            <param name="bar">23</param>
+            <param name="testXW412">foo.jspa?fooID=${fooID}&amp;something=bar</param>
+            <param name="testXW412Again">
+            		something
+            </param>
+            <param name="testForXW171"></param>
+        </action>
+
+        <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="foo">18</param>
+            <param name="bar">24</param>
+            <result name="success" type="mock" />
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="WildCard" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="*" type="mock" />
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="FooBar" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="foo">18</param>
+            <param name="bar">24</param>
+            <result name="success" type="mock" />
+            <interceptor-ref name="defaultStack"/>
+            <exception-mapping name="runtime" exception="java.lang.RuntimeException" result="exception"/>
+        </action>
+
+        <action name="TestInterceptorParam" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="test">
+                <param name="expectedFoo">expectedFooValue</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="TestInterceptorParamOverride" class="com.opensymphony.xwork2.SimpleAction">
+            <interceptor-ref name="test">
+                <param name="foo">foo123</param>
+                <param name="expectedFoo">expectedFooValue</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="BarWithoutClassName">
+            <param name="foo">17</param>
+            <param name="bar">23</param>
+        </action>
+
+    </package>
+</xwork>

@@ -715,7 +715,7 @@
             </dependency>
             <dependency>
                 <groupId>commons-digester</groupId>
-                <artifactId>Switch to latest</artifactId>
+                <artifactId>commons-digester</artifactId>
                 <version>2.1</version>
             </dependency>
             <dependency>

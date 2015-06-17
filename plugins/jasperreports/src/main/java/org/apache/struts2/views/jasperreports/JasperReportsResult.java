@@ -396,7 +396,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      */
     private void writeReport(HttpServletResponse response, ByteArrayOutputStream output) throws ServletException {
         try (OutputStream outputStream = response.getOutputStream()) {
-            output.writeTo(output);
+            output.writeTo(outputStream);
             outputStream.flush();
         } catch (IOException e) {
             LOG.error("Error writing report output", e);

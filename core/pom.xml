@@ -40,25 +40,38 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.myfaces.tobago</groupId>
+                <artifactId>maven-apt-plugin</artifactId>
+                <version>1.0.15</version>
                 <configuration>
-                    <compilerArgs>
-                        <arg>-Auri=/struts-tags</arg>
-                        <arg>-AtlibVersion=${tlib.version}</arg>
-                        <arg>-AjspVersion=2.0</arg>
-                        <arg>-AshortName=s</arg>
-                        <arg>-AdisplayName=Struts Tags</arg>
-                        <arg>-AoutFile=${basedir}/target/classes/META-INF/struts-tags.tld</arg>
-                        <arg>-Adescription="To make it easier to access dynamic data;
-                            the Apache Struts framework includes a library of custom tags.
-                            The tags interact with the framework's validation and
-                            internationalization features;
-                            to ensure that input is correct and output is localized.
-                            The Struts Tags can be used with JSP FreeMarker or Velocity."</arg>
-                        <arg>-AoutTemplatesDir=${basedir}/src/site/resources/tags</arg>
-                    </compilerArgs>
+                    <A>uri=/struts-tags,tlibVersion=${tlib.version},jspVersion=2.0,shortName=s,displayName=Struts Tags,
+                        outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
+                        description="To make it easier to access dynamic data;
+                        the Apache Struts framework includes a library of custom tags.
+                        The tags interact with the framework's validation and internationalization features;
+                        to ensure that input is correct and output is localized.
+                        The Struts Tags can be used with JSP FreeMarker or Velocity.",
+                        outTemplatesDir=${basedir}/src/site/resources/tags
+                    </A>
+                    <resourceTargetPath>target</resourceTargetPath>
+                    <fork>false</fork>
+                    <force>true</force>
+                    <nocompile>true</nocompile>
+                    <showWarnings>true</showWarnings>
+                    <factory>org.apache.struts.annotations.taglib.apt.TLDAnnotationProcessorFactory</factory>
+                    <target>1.5</target>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

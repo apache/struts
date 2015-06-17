@@ -1,9 +1,0 @@
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
-<validators>
-    <field name="name">
-        <field-validator type="fieldexpression">
-            <param name="expression">name.length() > 5</param>
-            <message>Name must be greater than 5 characters, it is currently '${name}'</message>
-        </field-validator>
-    </field>
-</validators>

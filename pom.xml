@@ -61,7 +61,6 @@
 
     <modules>
         <module>bom</module>
-        <module>xwork-core</module>
         <module>core</module>
         <module>apps</module>
         <module>plugins</module>
@@ -356,11 +355,6 @@
                 <version>1.0.5</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.apache.struts.xwork</groupId>
-                <artifactId>xwork-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-core</artifactId>

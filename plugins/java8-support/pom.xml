@@ -31,8 +31,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.struts.xwork</groupId>
-            <artifactId>xwork-core</artifactId>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>asm</groupId>

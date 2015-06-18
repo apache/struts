@@ -24,7 +24,7 @@ package org.apache.struts2.json;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;

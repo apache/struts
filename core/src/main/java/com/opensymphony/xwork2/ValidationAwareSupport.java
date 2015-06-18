@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+
 import java.io.Serializable;
 import java.util.*;
 

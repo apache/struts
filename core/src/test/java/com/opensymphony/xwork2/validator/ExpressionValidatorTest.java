@@ -20,6 +20,7 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
 import org.easymock.EasyMock;
 

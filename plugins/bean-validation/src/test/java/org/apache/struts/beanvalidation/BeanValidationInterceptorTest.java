@@ -21,7 +21,7 @@
 package org.apache.struts.beanvalidation;
 
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 

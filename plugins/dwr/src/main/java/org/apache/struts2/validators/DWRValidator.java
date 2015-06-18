@@ -39,7 +39,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import org.apache.logging.log4j.Logger;

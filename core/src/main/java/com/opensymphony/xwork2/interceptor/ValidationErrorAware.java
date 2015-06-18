@@ -21,7 +21,7 @@ package com.opensymphony.xwork2.interceptor;
  * before {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor} will return 'inputResultName' result
  * to allow change or not the result name
  *
- * This interface can be only applied to action which already implements {@link com.opensymphony.xwork2.ValidationAware} interface!
+ * This interface can be only applied to action which already implements {@link ValidationAware} interface!
  *
  * @since 2.3.15
  */

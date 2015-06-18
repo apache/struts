@@ -17,7 +17,6 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

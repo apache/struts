@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  *
  * This interceptor runs the action through the standard validation framework, which in turn checks the action against
  * any validation rules (found in files such as <i>ActionClass-validation.xml</i>) and adds field-level and action-level
- * error messages (provided that the action implements {@link com.opensymphony.xwork2.ValidationAware}). This interceptor
+ * error messages (provided that the action implements {@link ValidationAware}). This interceptor
  * is often one of the last (or second to last) interceptors applied in a stack, as it assumes that all values have
  * already been set on the action.
  *

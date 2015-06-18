@@ -6,7 +6,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Validateable;
-import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;

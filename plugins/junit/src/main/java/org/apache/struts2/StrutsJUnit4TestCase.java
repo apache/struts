@@ -23,6 +23,7 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.After;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;

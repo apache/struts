@@ -193,8 +193,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                         String scopeStr = child.getAttribute("scope");
                         boolean optional = "true".equals(child.getAttribute("optional"));
                         Scope scope = Scope.SINGLETON;
-                        if ("default".equals(scopeStr)) {
-                            scope = Scope.DEFAULT;
+                        if ("prototype".equals(scopeStr)) {
+                            scope = Scope.PROTOTYPE;
                         } else if ("request".equals(scopeStr)) {
                             scope = Scope.REQUEST;
                         } else if ("session".equals(scopeStr)) {

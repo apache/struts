@@ -150,22 +150,22 @@ public final class ContainerBuilder {
 
     /**
      * Convenience method.&nbsp;Equivalent to {@code factory(type, name, factory,
-     * Scope.DEFAULT)}.
+     * Scope.PROTOTYPE)}.
      *
      * @see #factory(Class, String, Factory, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, String name, Factory<? extends T> factory) {
-        return factory(type, name, factory, Scope.DEFAULT);
+        return factory(type, name, factory, Scope.PROTOTYPE);
     }
 
     /**
      * Convenience method.&nbsp;Equivalent to {@code factory(type,
-     * Container.DEFAULT_NAME, factory, Scope.DEFAULT)}.
+     * Container.DEFAULT_NAME, factory, Scope.PROTOTYPE)}.
      *
      * @see #factory(Class, String, Factory, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, Factory<? extends T> factory) {
-        return factory(type, Container.DEFAULT_NAME, factory, Scope.DEFAULT);
+        return factory(type, Container.DEFAULT_NAME, factory, Scope.PROTOTYPE);
     }
 
     /**
@@ -215,7 +215,7 @@ public final class ContainerBuilder {
      * instances using the container, recursively injecting dependencies.
      * <p/>
      * <p>Sets scope to value from {@link Scoped} annotation on the
-     * implementation class. Defaults to {@link Scope#DEFAULT} if no annotation
+     * implementation class. Defaults to {@link Scope#PROTOTYPE} if no annotation
      * is found.
      *
      * @param type           of dependency
@@ -226,7 +226,7 @@ public final class ContainerBuilder {
     public <T> ContainerBuilder factory(final Class<T> type, String name,
                                         final Class<? extends T> implementation) {
         Scoped scoped = implementation.getAnnotation(Scoped.class);
-        Scope scope = scoped == null ? Scope.DEFAULT : scoped.value();
+        Scope scope = scoped == null ? Scope.PROTOTYPE : scoped.value();
         return factory(type, name, implementation, scope);
     }
 
@@ -419,7 +419,7 @@ public final class ContainerBuilder {
             }
         };
 
-        return factory(Key.newInstance(type, name), factory, Scope.DEFAULT);
+        return factory(Key.newInstance(type, name), factory, Scope.PROTOTYPE);
     }
 
     /**

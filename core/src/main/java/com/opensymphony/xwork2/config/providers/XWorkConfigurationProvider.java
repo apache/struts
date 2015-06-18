@@ -177,8 +177,8 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(NumberConverter.class, Scope.SINGLETON)
                 .factory(StringConverter.class, Scope.SINGLETON)
 
-                .factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class, Scope.DEFAULT)
-                .factory(AcceptedPatternsChecker.class, DefaultAcceptedPatternsChecker.class, Scope.DEFAULT)
+                .factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class, Scope.PROTOTYPE)
+                .factory(AcceptedPatternsChecker.class, DefaultAcceptedPatternsChecker.class, Scope.PROTOTYPE)
         ;
 
         props.setProperty(XWorkConstants.DEV_MODE, Boolean.FALSE.toString());

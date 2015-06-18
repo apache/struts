@@ -28,7 +28,7 @@ public enum Scope {
     /**
      * One instance per injection.
      */
-    DEFAULT {
+    PROTOTYPE {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(Class<T> type, String name,
                                                       InternalFactory<? extends T> factory) {

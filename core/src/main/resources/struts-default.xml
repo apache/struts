@@ -81,8 +81,8 @@
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful" class="org.apache.struts2.dispatcher.mapper.RestfulActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful2" class="org.apache.struts2.dispatcher.mapper.Restful2ActionMapper" />
 
-    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta" class="org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest" scope="default"/>
-    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta-stream" class="org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest" scope="default"/>
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta" class="org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest" scope="prototype"/>
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta-stream" class="org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest" scope="prototype"/>
 
     <bean type="org.apache.struts2.views.TagLibraryDirectiveProvider" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
     <bean type="org.apache.struts2.views.TagLibraryModelProvider" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
@@ -112,7 +112,7 @@
     <bean type="com.opensymphony.xwork2.conversion.impl.NumberConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.NumberConverter" scope="singleton"/>
     <bean type="com.opensymphony.xwork2.conversion.impl.StringConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.StringConverter" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" scope="default" />
+    <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" scope="prototype" />
     <bean type="com.opensymphony.xwork2.LocaleProvider" name="struts" class="com.opensymphony.xwork2.DefaultLocaleProvider" scope="singleton" />
 
     <bean type="org.apache.struts2.components.UrlRenderer" name="struts" class="org.apache.struts2.components.ServletUrlRenderer"/>
@@ -162,8 +162,8 @@
     <bean type="ognl.PropertyAccessor" name="java.util.HashSet" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
     <bean type="ognl.PropertyAccessor" name="java.util.HashMap" class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor" />
 
-    <bean type="com.opensymphony.xwork2.security.ExcludedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker" scope="default" />
-    <bean type="com.opensymphony.xwork2.security.AcceptedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker" scope="default" />
+    <bean type="com.opensymphony.xwork2.security.ExcludedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker" scope="prototype" />
+    <bean type="com.opensymphony.xwork2.security.AcceptedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker" scope="prototype" />
 
     <package name="struts-default" abstract="true">
         <result-types>

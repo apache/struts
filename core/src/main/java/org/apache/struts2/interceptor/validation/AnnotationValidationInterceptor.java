@@ -41,13 +41,6 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
     /** Auto-generated serialization id */
     private static final long serialVersionUID = 1813272797367431184L;
 
-    private boolean devMode;
-
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void setDevMode(String devMode) {
-        this.devMode = BooleanUtils.toBoolean(devMode);
-    }
-
     protected String doIntercept(ActionInvocation invocation) throws Exception {
 
         Object action = invocation.getAction();
@@ -77,24 +70,8 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
     }
 
     // FIXME: This is copied from DefaultActionInvocation but should be exposed through the interface
-    protected Method getActionMethod(Class actionClass, String methodName) throws NoSuchMethodException {
-        Method method = null;
-        Class[] classes = new Class[0];
-        try {
-            method = actionClass.getMethod(methodName, classes);
-        } catch (NoSuchMethodException e) {
-            // hmm -- OK, try doXxx instead
-            try {
-                String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
-                method = actionClass.getMethod(altMethodName, classes);
-            } catch (NoSuchMethodException e1) {
-                // throw the original one
-                if (devMode) {
-                    throw e;
-                }
-            }
-        }
-        return method;
+    protected Method getActionMethod(Class<?> actionClass, String methodName) throws NoSuchMethodException {
+        return actionClass.getMethod(methodName);
     }
 
 }

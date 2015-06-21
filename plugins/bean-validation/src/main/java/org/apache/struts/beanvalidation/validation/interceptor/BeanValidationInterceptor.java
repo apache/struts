@@ -177,19 +177,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
     protected Method getActionMethod(Class<?> actionClass, String methodName) throws NoSuchMethodException {
         Method method;
 
-        try {
-            method = actionClass.getMethod(methodName, new Class[0]);
-        } catch (NoSuchMethodException e) {
-            // hmm -- OK, try doXxx instead
-            try {
-                String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() +
-                        methodName.substring(1);
-                method = actionClass.getMethod(altMethodName, new Class[0]);
-            } catch (NoSuchMethodException e1) {
-                // throw the original one
-                throw e;
-            }
-        }
+        method = actionClass.getMethod(methodName);
 
         return method;
     }

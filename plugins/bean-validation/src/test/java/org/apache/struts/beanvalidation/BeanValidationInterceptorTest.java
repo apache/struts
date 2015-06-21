@@ -135,19 +135,6 @@ public class BeanValidationInterceptorTest extends XWorkTestCase {
         assertEquals(2, actionErrors.size());
     }
 
-    public void testFieldActionDoExecute() throws Exception {
-        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("bean-validation", "fieldActionDoExecute", null, null);
-        FieldActionDoExecute action = (FieldActionDoExecute) baseActionProxy.getAction();
-        action.setTest(" ");
-        baseActionProxy.execute();
-
-        Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
-
-        assertNotNull(fieldErrors);
-        assertEquals(1, fieldErrors.size());
-        assertTrue(fieldErrors.get("test").size() > 0);
-    }
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();

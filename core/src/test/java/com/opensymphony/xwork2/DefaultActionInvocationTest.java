@@ -106,28 +106,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertEquals("success", result);
     }
 
-    public void testInvokingExistingDoInputMethod() throws Exception {
-        // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
-
-        SimpleAction action = new SimpleAction();
-        MockActionProxy proxy = new MockActionProxy();
-        proxy.setMethod("with");
-
-        dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
-
-        // when
-        String result = dai.invokeAction(action, null);
-
-        // then
-        assertEquals("with", result);
-    }
-
     public void testInvokingMissingMethod() throws Exception {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
@@ -202,48 +180,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(actual instanceof IllegalArgumentException);
     }
 
-    public void testInvokingExistingDoMethodThatThrowsException() throws Exception {
-        // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
-
-        UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
-            @Override
-            public boolean hasUnknownHandlers() {
-                return false;
-            }
-        };
-
-        SimpleAction action = new SimpleAction() {
-            @Override
-            public String doWith() throws Exception {
-                throw new IllegalArgumentException();
-            }
-        };
-        MockActionProxy proxy = new MockActionProxy();
-        proxy.setMethod("with");
-
-        dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
-        dai.unknownHandlerManager = uhm;
-
-        // when
-        // when
-        Throwable actual = null;
-        try {
-            dai.invokeAction(action, null);
-        } catch (Exception e) {
-            actual = e;
-        }
-
-        // then
-        assertNotNull(actual);
-        assertTrue(actual instanceof IllegalArgumentException);
-    }
-
     @Deprecated
     public void testUnknownHandlerManagerThatThrowsException() throws Exception {
         // given
@@ -265,12 +201,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
             }
         };
 
-        SimpleAction action = new SimpleAction() {
-            @Override
-            public String doWith() throws Exception {
-                throw new IllegalArgumentException();
-            }
-        };
+        SimpleAction action = new SimpleAction();
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("notExists");
 
@@ -315,7 +246,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         SimpleAction action = new SimpleAction() {
             @Override
-            public String doWith() throws Exception {
+            public String execute() throws Exception {
                 throw new IllegalArgumentException();
             }
         };

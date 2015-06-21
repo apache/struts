@@ -414,33 +414,22 @@ public class DefaultActionInvocation implements ActionInvocation {
             try {
                 methodResult = ognlUtil.getValue(methodName + "()", getStack().getContext(), action);
             } catch (MethodFailedException e) {
-                // if reason is missing method, try find version with "do" prefix
+                // if reason is missing method,  try checking UnknownHandlers
                 if (e.getReason() instanceof NoSuchMethodException) {
-                    try {
-                        String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1) + "()";
-                        methodResult = ognlUtil.getValue(altMethodName, getStack().getContext(), action);
-                    } catch (MethodFailedException e1) {
-                        // if still method doesn't exist, try checking UnknownHandlers
-                        if (e1.getReason() instanceof NoSuchMethodException) {
-                            if (unknownHandlerManager.hasUnknownHandlers()) {
-                                try {
-                                    methodResult = unknownHandlerManager.handleUnknownMethod(action, methodName);
-                                } catch (NoSuchMethodException e2) {
-                                    // throw the original one
-                                    throw e;
-                                }
-                            } else {
-                                // throw the original one
-                                throw e;
-                            }
-                            // throw the original exception as UnknownHandlers weren't able to handle invocation as well
-                            if (methodResult == null) {
-                                throw e;
-                            }
-                        } else {
-                            // exception isn't related to missing action method, throw it
-                            throw e1;
+                    if (unknownHandlerManager.hasUnknownHandlers()) {
+                        try {
+                            methodResult = unknownHandlerManager.handleUnknownMethod(action, methodName);
+                        } catch (NoSuchMethodException ignore) {
+                            // throw the original one
+                            throw e;
                         }
+                    } else {
+                        // throw the original one
+                        throw e;
+                    }
+                    // throw the original exception as UnknownHandlers weren't able to handle invocation as well
+                    if (methodResult == null) {
+                        throw e;
                     }
                 } else {
                     // exception isn't related to missing action method, throw it

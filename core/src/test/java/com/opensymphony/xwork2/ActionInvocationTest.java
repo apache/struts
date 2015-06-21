@@ -52,7 +52,7 @@ public class ActionInvocationTest extends XWorkTestCase {
 			public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException {
 				return null;
 			}
-			public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException {
+			public Object handleUnknownActionMethod(Object action, String methodName) {
 				if (methodName.equals("unknownmethod")) {
 					return "found";
 				} else {

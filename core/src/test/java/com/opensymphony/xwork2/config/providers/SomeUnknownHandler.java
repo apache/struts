@@ -29,7 +29,7 @@ public class SomeUnknownHandler implements UnknownHandler{
         return actionConfig;
     }
 
-    public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException {
+    public Object handleUnknownActionMethod(Object action, String methodName) {
         return actionMethodResult;
     }
 

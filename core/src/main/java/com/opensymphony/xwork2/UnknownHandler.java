@@ -33,7 +33,7 @@ public interface UnknownHandler {
      * @return An generated ActionConfig, can return <tt>null</tt>
      * @throws XWorkException
      */
-    public ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException;
+    ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException;
     
     /**
      * Handles the case when a result cannot be found for an action and result code. 
@@ -45,7 +45,7 @@ public interface UnknownHandler {
      * @return A result to be executed, can return <tt>null</tt>
      * @throws XWorkException
      */
-    public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException;
+    Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException;
     
     /**
      * Handles the case when an action method cannot be found.  This method is responsible both for finding the method and executing it.
@@ -53,11 +53,9 @@ public interface UnknownHandler {
      * @since 2.1
      * @param action The action object
      * @param methodName The method name to call
-     * @return The result returned from invoking the action method, can return <tt>null</tt>
-     * @deprecated @throws NoSuchMethodException If the method cannot be found should return null instead,
-     *                                           don't throw exception as other UnknownHandles won't be invoked
-     *                                           'throws NoSuchMethodException' signature will be removed with next
-     *                                           major release
+     * @return The result returned from invoking the action method, can return <tt>null</tt> if this instance cannot
+     *         handle such methodName to allow other handlers give a chance
      */
-	public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException;
+	Object handleUnknownActionMethod(Object action, String methodName);
+
 }

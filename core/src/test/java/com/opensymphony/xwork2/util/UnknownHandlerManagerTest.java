@@ -77,6 +77,11 @@ public class UnknownHandlerManagerTest extends ConfigurationTestBase {
         //should not pick any
         uh1.setActionMethodResult(null);
         uh2.setActionMethodResult(null);
-        assertEquals(null, uhm.handleUnknownMethod(null, null));
+        try {
+            uhm.handleUnknownMethod(null, null);
+            fail("Should throw exception!");
+        } catch (NoSuchMethodException e) {
+            assertTrue(true);
+        }
     }
 }

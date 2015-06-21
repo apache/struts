@@ -25,8 +25,17 @@ import java.util.List;
  * @see com.opensymphony.xwork2.DefaultUnknownHandlerManager
  */
 public interface UnknownHandlerManager {
+
     Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode);
 
+    /**
+     * Tries to handle passed methodName if cannot find method should re
+     *
+     * @param action Action's instance
+     * @param methodName method name to handle
+     * @return Result representing result of given action method
+     * @throws NoSuchMethodException if method can be handled by defined UnknownHandlers
+     */
     Object handleUnknownMethod(Object action, String methodName) throws NoSuchMethodException;
 
     ActionConfig handleUnknownAction(String namespace, String actionName);

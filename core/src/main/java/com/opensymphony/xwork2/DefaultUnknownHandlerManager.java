@@ -104,7 +104,11 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
             }
         }
 
-        return null;
+        if (unknownHandlers.isEmpty()) {
+            throw new NoSuchMethodException(String.format("No UnknownHandlers defined to handle method [%s]", methodName));
+        } else {
+            throw new NoSuchMethodException(String.format("None of defined UnknownHandlers can handle method [%s]", methodName));
+        }
     }
 
     /**

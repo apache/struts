@@ -385,7 +385,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     /**
      * Not used
      */
-    public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException {
+    public Object handleUnknownActionMethod(Object action, String methodName) {
         return null;
     }
 

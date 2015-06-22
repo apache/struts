@@ -104,7 +104,7 @@ public class JSONResult implements Result {
     }
     
     @Inject(StrutsConstants.STRUTS_DEVMODE) 
-    public void setDebugMode(String val) {
+    public void setDevMode(String val) {
     	this.devMode = BooleanUtils.toBoolean(val);
     }
     

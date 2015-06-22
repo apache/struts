@@ -96,7 +96,7 @@ public class JSONResult implements Result {
     private String contentType;
     private String wrapPrefix;
     private String wrapSuffix;
-    private boolean debugMode = false;
+    private boolean devMode = false;
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String val) {
@@ -105,7 +105,7 @@ public class JSONResult implements Result {
     
     @Inject(StrutsConstants.STRUTS_DEVMODE) 
     public void setDebugMode(String val) {
-    	this.debugMode = BooleanUtils.toBoolean(val);
+    	this.devMode = BooleanUtils.toBoolean(val);
     }
     
     /**
@@ -183,7 +183,7 @@ public class JSONResult implements Result {
         HttpServletResponse response = (HttpServletResponse) actionContext.get(StrutsStatics.HTTP_RESPONSE);
         
         // only permit caching bean information when struts devMode = false
-        cacheBeanInfo = !debugMode;
+        cacheBeanInfo = !devMode;
         
         try {
             Object rootObject;

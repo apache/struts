@@ -55,22 +55,10 @@ import com.opensymphony.xwork2.util.WildcardUtil;
 public class JSONUtil {
 
     public final static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-
+    public static final boolean CACHE_BEAN_INFO_DEFAULT = true;
+    
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
-    private static final boolean CACHE_BEAN_INFO_DEFAULT = true;
-    
-    /**
-     * Serializes an object into JSON.
-     *
-     * @param object
-     *            to be serialized
-     * @return JSON string
-     * @throws JSONException
-     */
-    public static String serialize(Object object) throws JSONException {
-    	return serialize(object, CACHE_BEAN_INFO_DEFAULT);        
-    }
-    
+          
     /**
      * Serializes an object into JSON.
      *

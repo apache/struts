@@ -20,16 +20,6 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-
-import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -44,6 +34,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.StrutsTestCase;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * JSONResultTest
@@ -60,7 +62,7 @@ public class JSONResultTest extends StrutsTestCase {
         Map map = new HashMap();
         map.put("createtime", new Date());
         try {
-            JSONUtil.serialize(map);
+            JSONUtil.serialize(map, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
         } catch (JSONException e) {
             fail(e.getMessage());
         }

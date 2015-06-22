@@ -45,7 +45,7 @@ public class JSONUtilTest extends TestCase {
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        String json = JSONUtil.serialize(bean1);
+        String json = JSONUtil.serialize(bean1, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
 
         Map result = (Map) JSONUtil.deserialize(json);
         assertEquals("str", result.get("stringField"));

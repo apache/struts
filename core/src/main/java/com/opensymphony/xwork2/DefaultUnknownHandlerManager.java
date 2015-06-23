@@ -92,7 +92,8 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
     }
 
     /**
-     * Iterate over UnknownHandlers and return the result of the first one that can handle it
+     * Iterate over UnknownHandlers and return the result of the first one that can handle it.
+     * Must throw an exception if method cannot be handled.
      *
      * @throws NoSuchMethodException
      */

@@ -180,7 +180,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(actual instanceof IllegalArgumentException);
     }
 
-    @Deprecated
     public void testUnknownHandlerManagerThatThrowsException() throws Exception {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
@@ -201,7 +200,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
             }
         };
 
-        SimpleAction action = new SimpleAction();
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("notExists");
 
@@ -213,7 +211,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         // when
         Throwable actual = null;
         try {
-            dai.invokeAction(action, null);
+            dai.invokeAction(new SimpleAction(), null);
         } catch (Exception e) {
             actual = e;
         }
@@ -223,7 +221,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(actual instanceof NoSuchMethodException);
     }
 
-    @Deprecated
     public void testUnknownHandlerManagerThatReturnsNull() throws Exception {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
@@ -244,12 +241,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
             }
         };
 
-        SimpleAction action = new SimpleAction() {
-            @Override
-            public String execute() throws Exception {
-                throw new IllegalArgumentException();
-            }
-        };
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("notExists");
 
@@ -258,10 +249,9 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         dai.unknownHandlerManager = uhm;
 
         // when
-        // when
         Throwable actual = null;
         try {
-            dai.invokeAction(action, null);
+            dai.invokeAction(new SimpleAction(), null);
         } catch (Exception e) {
             actual = e;
         }
@@ -269,6 +259,41 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         // then
         assertNotNull(actual);
         assertTrue(actual instanceof NoSuchMethodException);
+    }
+
+    public void testUnknownHandlerManagerThatReturnsSuccess() throws Exception {
+        // given
+        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
+            public ValueStack getStack() {
+                return new StubValueStack();
+            }
+        };
+
+        UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
+            @Override
+            public boolean hasUnknownHandlers() {
+                return true;
+            }
+
+            @Override
+            public Object handleUnknownMethod(Object action, String methodName) throws NoSuchMethodException {
+                return "success";
+            }
+        };
+
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("notExists");
+
+        dai.proxy = proxy;
+        dai.ognlUtil = new OgnlUtil();
+        dai.unknownHandlerManager = uhm;
+
+        // when
+        String result = dai.invokeAction(new SimpleAction(), null);
+
+        // then
+        assertNotNull(result);
+        assertEquals("success", result);
     }
 
 }

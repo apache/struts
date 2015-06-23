@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.PortletPhase;
 import org.apache.struts2.portlet.context.PortletActionContext;
@@ -115,7 +115,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.result.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */
     public void doExecute(String location, ActionInvocation invocation) throws Exception {
         PortletPhase phase = PortletActionContext.getPhase();

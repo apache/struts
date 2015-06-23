@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.dispatcher;
+package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -31,6 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.result.ServletActionRedirectResult;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;

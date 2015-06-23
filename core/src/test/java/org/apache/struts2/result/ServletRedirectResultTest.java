@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.dispatcher;
+package org.apache.struts2.result;
 
 import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
 import static org.easymock.EasyMock.createControl;
@@ -43,6 +43,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.result.ServletRedirectResult;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;

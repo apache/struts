@@ -25,6 +25,7 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.struts2.result.StrutsResultSupport;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 

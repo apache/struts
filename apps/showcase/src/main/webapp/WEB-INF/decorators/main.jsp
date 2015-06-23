@@ -1,3 +1,4 @@
+<%@ page import="org.apache.struts2.result.StrutsResultSupport" %>
 <!DOCTYPE html>
 <%@ page
         language="java"
@@ -21,8 +22,8 @@
         }
         sourceUrl += "&className=" + inv.getProxy().getConfig().getClassName();
 
-        if (inv.getResult() != null && inv.getResult() instanceof org.apache.struts2.dispatcher.StrutsResultSupport) {
-            sourceUrl += "&page=" + mapping.getNamespace() + "/" + ((org.apache.struts2.dispatcher.StrutsResultSupport) inv.getResult()).getLastFinalLocation();
+        if (inv.getResult() != null && inv.getResult() instanceof StrutsResultSupport) {
+            sourceUrl += "&page=" + mapping.getNamespace() + "/" + ((StrutsResultSupport) inv.getResult()).getLastFinalLocation();
         }
     } else {
         sourceUrl += "?page=" + request.getServletPath();

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.dispatcher;
+package org.apache.struts2.result;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +34,7 @@ import org.apache.struts2.StrutsStatics;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.result.ServletDispatcherResult;
 
 
 /**

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.dispatcher;
+package org.apache.struts2.result;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.result.HttpHeaderResult;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;

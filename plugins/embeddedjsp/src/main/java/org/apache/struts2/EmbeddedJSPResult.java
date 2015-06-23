@@ -22,7 +22,7 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.result.StrutsResultSupport;
 
 /**
  * Can render jsps from the classpath. "includes" in the jsps must not use relative paths

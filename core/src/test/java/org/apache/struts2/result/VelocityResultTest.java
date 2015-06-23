@@ -19,9 +19,11 @@
  * under the License.
  */
 
-package org.apache.struts2.dispatcher;
+package org.apache.struts2.result;
 
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.result.StrutsResultSupport;
+import org.apache.struts2.result.VelocityResult;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;

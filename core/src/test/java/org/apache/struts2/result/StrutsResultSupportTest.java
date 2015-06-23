@@ -19,12 +19,13 @@
  * under the License.
  */
 
-package org.apache.struts2.dispatcher;
+package org.apache.struts2.result;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.result.StrutsResultSupport;
 import org.easymock.EasyMock;
 
 import com.opensymphony.xwork2.ActionContext;

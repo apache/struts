@@ -3,7 +3,7 @@ package org.apache.struts2.views.tiles;
 import com.opensymphony.xwork2.ActionInvocation;
 import freemarker.template.TemplateException;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.tiles.TilesContainer;

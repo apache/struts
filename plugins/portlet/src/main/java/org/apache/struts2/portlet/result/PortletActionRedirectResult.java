@@ -23,7 +23,7 @@ package org.apache.struts2.portlet.result;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.struts2.dispatcher.ServletActionRedirectResult;
+import org.apache.struts2.result.ServletActionRedirectResult;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletConstants;

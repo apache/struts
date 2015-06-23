@@ -29,7 +29,7 @@ import org.apache.struts2.convention.actions.NoAnnotationAction;
 import org.apache.struts2.convention.actions.result.*;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.result.ServletDispatcherResult;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
@@ -205,7 +205,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals(4, results.size());
         assertEquals("success", results.get("success").getName());
         assertEquals(3, results.get("success").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("/WEB-INF/location/namespace/no-annotation-success.jsp", results.get("success").getParams().get("location"));
         assertEquals(1, results.get("input").getParams().size());
         assertEquals("org.apache.struts2.views.freemarker.FreemarkerResult", results.get("input").getClassName());
@@ -214,7 +214,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals("org.apache.struts2.views.freemarker.FreemarkerResult", results.get("error").getClassName());
         assertEquals("/WEB-INF/location/namespace/no-annotation.ftl", results.get("error").getParams().get("location"));
         assertEquals(3, results.get("failure").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("/WEB-INF/location/namespace/no-annotation-failure.jsp", results.get("failure").getParams().get("location"));
         EasyMock.verify(context);
 
@@ -243,7 +243,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
 
         assertEquals("success", results.get("success").getName());
         assertEquals(3, results.get("success").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("/WEB-INF/location/namespace/no-annotation/success.jsp", results.get("success").getParams().get("location"));
 
         assertEquals(1, results.get("index").getParams().size());
@@ -251,7 +251,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals("/WEB-INF/location/namespace/no-annotation/index.ftl", results.get("index").getParams().get("location"));
 
         assertEquals(3, results.get("failure").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("/WEB-INF/location/namespace/no-annotation/failure.jsp", results.get("failure").getParams().get("location"));
         EasyMock.verify(context);
     }
@@ -274,7 +274,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals(1, results.size());
         assertEquals("success", results.get("success").getName());
         assertEquals(3, results.get("success").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("/WEB-INF/location/namespace/no-annotation-success.jsp", results.get("success").getParams().get("location"));
         EasyMock.verify(context);
 
@@ -296,7 +296,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals(1, results.size());
         assertEquals("error", results.get("error").getName());
         assertEquals(3, results.get("error").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("error").getClassName());
         assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
         assertEquals("value", results.get("error").getParams().get("key"));
         assertEquals("value1", results.get("error").getParams().get("key1"));
@@ -319,7 +319,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals(1, results.size());
         assertEquals("error", results.get("error").getName());
         assertEquals(3, results.get("error").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("error").getClassName());
         assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
         assertEquals("value", results.get("error").getParams().get("key"));
         assertEquals("value1", results.get("error").getParams().get("key1"));
@@ -342,7 +342,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals(1, results.size());
         assertEquals("error", results.get("error").getName());
         assertEquals(5, results.get("error").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("error").getClassName());
         assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
         assertEquals("value", results.get("error").getParams().get("key"));
         assertEquals("value1", results.get("error").getParams().get("key1"));
@@ -370,21 +370,21 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals("success", results.get("success").getName());
         assertEquals("failure", results.get("failure").getName());
         assertEquals(3, results.get("error").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("error").getClassName());
         assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
         assertEquals("ann-value", results.get("error").getParams().get("key"));
         assertEquals("ann-value1", results.get("error").getParams().get("key1"));
         assertEquals(1, results.get("input").getParams().size());
         assertEquals("foo.action", results.get("input").getParams().get("actionName"));
-        assertEquals("org.apache.struts2.dispatcher.ServletActionRedirectResult", results.get("input").getClassName());
+        assertEquals("org.apache.struts2.result.ServletActionRedirectResult", results.get("input").getClassName());
         assertEquals(3, results.get("failure").getParams().size());
         assertEquals("/WEB-INF/location/namespace/action-failure.jsp", results.get("failure").getParams().get("location"));
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("failure").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("failure").getClassName());
         assertEquals("value", results.get("failure").getParams().get("key"));
         assertEquals("value1", results.get("failure").getParams().get("key1"));
         assertEquals(3, results.get("success").getParams().size());
         assertEquals("/WEB-INF/location/namespace/action-success.jsp", results.get("success").getParams().get("location"));
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("value", results.get("success").getParams().get("key"));
         assertEquals("value1", results.get("success").getParams().get("key1"));
         EasyMock.verify(context);
@@ -409,21 +409,21 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals("success", results.get("success").getName());
         assertEquals("failure", results.get("failure").getName());
         assertEquals(3, results.get("error").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("error").getClassName());
         assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
         assertEquals("ann-value", results.get("error").getParams().get("key"));
         assertEquals("ann-value1", results.get("error").getParams().get("key1"));
         assertEquals(1, results.get("input").getParams().size());
         assertEquals("foo.action", results.get("input").getParams().get("actionName"));
-        assertEquals("org.apache.struts2.dispatcher.ServletActionRedirectResult", results.get("input").getClassName());
+        assertEquals("org.apache.struts2.result.ServletActionRedirectResult", results.get("input").getClassName());
         assertEquals(3, results.get("failure").getParams().size());
         assertEquals("/WEB-INF/location/namespace/action-failure.jsp", results.get("failure").getParams().get("location"));
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("failure").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("failure").getClassName());
         assertEquals("value", results.get("failure").getParams().get("key"));
         assertEquals("value1", results.get("failure").getParams().get("key1"));
         assertEquals(3, results.get("success").getParams().size());
         assertEquals("/WEB-INF/location/namespace/action-success.jsp", results.get("success").getParams().get("location"));
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("value", results.get("success").getParams().get("key"));
         assertEquals("value1", results.get("success").getParams().get("key1"));
         EasyMock.verify(context);
@@ -445,7 +445,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals(1, results.size());
         assertEquals("success", results.get("success").getName());
         assertEquals(3, results.get("success").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         assertEquals("/WEB-INF/location/namespace/action-success.jsp", results.get("success").getParams().get("location"));
         assertEquals("value", results.get("success").getParams().get("key"));
         assertEquals("value1", results.get("success").getParams().get("key1"));
@@ -471,26 +471,26 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals("success", results.get("success").getName());
         assertEquals("failure", results.get("failure").getName());
         assertEquals(3, results.get("error").getParams().size());
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("error").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("error").getClassName());
         assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
         assertEquals("value", results.get("success").getParams().get("key"));
         assertEquals("value1", results.get("success").getParams().get("key1"));
         assertEquals(1, results.get("input").getParams().size());
         assertEquals("foo.action", results.get("input").getParams().get("actionName"));
-        assertEquals("org.apache.struts2.dispatcher.ServletActionRedirectResult", results.get("input").getClassName());
+        assertEquals("org.apache.struts2.result.ServletActionRedirectResult", results.get("input").getClassName());
         assertEquals(3, results.get("failure").getParams().size());
         assertEquals("/WEB-INF/location/namespace/action-failure.jsp", results.get("failure").getParams().get("location"));
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("failure").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("failure").getClassName());
         assertEquals(3, results.get("success").getParams().size());
         assertEquals("/WEB-INF/location/namespace/action-success.jsp", results.get("success").getParams().get("location"));
-        assertEquals("org.apache.struts2.dispatcher.ServletDispatcherResult", results.get("success").getClassName());
+        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("success").getClassName());
         EasyMock.verify(context);
     }
 
     public void testClassPath() throws Exception {
         ServletContext context = EasyMock.createNiceMock(ServletContext.class);
 
-        ResultTypeConfig resultType = new ResultTypeConfig.Builder("freemarker", "org.apache.struts2.dispatcher.ServletDispatcherResult").
+        ResultTypeConfig resultType = new ResultTypeConfig.Builder("freemarker", "org.apache.struts2.result.ServletDispatcherResult").
                 defaultResultParam("location").build();
         PackageConfig packageConfig = new PackageConfig.Builder("package").
                 defaultResultType("dispatcher").addResultTypeConfig(resultType).build();
@@ -514,11 +514,11 @@ public class DefaultResultMapBuilderTest extends TestCase {
     }
 
     private PackageConfig createPackageConfigBuilder(String namespace) {
-        ResultTypeConfig resultType = new ResultTypeConfig.Builder("dispatcher", "org.apache.struts2.dispatcher.ServletDispatcherResult").
+        ResultTypeConfig resultType = new ResultTypeConfig.Builder("dispatcher", "org.apache.struts2.result.ServletDispatcherResult").
                 addParam("key", "value").addParam("key1", "value1").defaultResultParam("location").build();
 
         ResultTypeConfig redirect = new ResultTypeConfig.Builder("redirectAction",
-                "org.apache.struts2.dispatcher.ServletActionRedirectResult").defaultResultParam("actionName").build();
+                "org.apache.struts2.result.ServletActionRedirectResult").defaultResultParam("actionName").build();
 
         ResultTypeConfig ftlResultType = new ResultTypeConfig.Builder("freemarker",
                 "org.apache.struts2.views.freemarker.FreemarkerResult").defaultResultParam("location").build();

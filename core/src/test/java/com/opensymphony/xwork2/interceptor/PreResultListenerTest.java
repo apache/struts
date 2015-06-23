@@ -41,7 +41,7 @@ public class PreResultListenerTest extends XWorkTestCase {
 
 
     public void testPreResultListenersAreCalled() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", new HashMap<String, Object>(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, new HashMap<String, Object>(), false, true);
         ActionInvocation invocation = proxy.getInvocation();
         Mock preResultListenerMock1 = new Mock(PreResultListener.class);
         preResultListenerMock1.expect("beforeResult", C.args(C.eq(invocation), C.eq(Action.SUCCESS)));
@@ -51,7 +51,7 @@ public class PreResultListenerTest extends XWorkTestCase {
     }
 
     public void testPreResultListenersAreCalledInOrder() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", new HashMap<String, Object>(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, new HashMap<String, Object>(), false, true);
         ActionInvocation invocation = proxy.getInvocation();
         CountPreResultListener listener1 = new CountPreResultListener();
         CountPreResultListener listener2 = new CountPreResultListener();
@@ -84,8 +84,6 @@ public class PreResultListenerTest extends XWorkTestCase {
 
             /**
              * Tells whether the ConfigurationProvider should reload its configuration
-             *
-             * @return
              */
             public boolean needsReload() {
                 return false;

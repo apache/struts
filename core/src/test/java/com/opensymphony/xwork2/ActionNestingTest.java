@@ -67,7 +67,7 @@ public class ActionNestingTest extends XWorkTestCase {
 
     public void testNestedContext() throws Exception {
         assertEquals(context, ActionContext.getContext());
-        ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, SIMPLE_ACTION_NAME, null);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, SIMPLE_ACTION_NAME, null, null);
         proxy.execute();
         assertEquals(context, ActionContext.getContext());
     }
@@ -76,7 +76,7 @@ public class ActionNestingTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         assertEquals(VALUE, stack.findValue(KEY));
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, NO_STACK_ACTION_NAME, null);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, NO_STACK_ACTION_NAME, null, null);
         proxy.execute();
         stack = ActionContext.getContext().getValueStack();
         assertEquals(stack.findValue(KEY), VALUE);
@@ -90,7 +90,7 @@ public class ActionNestingTest extends XWorkTestCase {
         HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.VALUE_STACK, stack);
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, STACK_ACTION_NAME, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, STACK_ACTION_NAME, null, extraContext);
         proxy.execute();
         assertEquals(context, ActionContext.getContext());
         assertEquals(stack, ActionContext.getContext().getValueStack());

@@ -29,7 +29,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         params.put("percentage", 100.0123d);
         context.put(ActionContext.PARAMETERS, params);
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -50,13 +50,11 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         params.put("percentage", 1.234567d);
         context.put(ActionContext.PARAMETERS, params);
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", null, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
         Map<String, List<String>> errors = ((ValidationAware) proxy.getAction()).getFieldErrors();
-        Iterator it = errors.entrySet().iterator();
-
         List<String> errorMessages = errors.get("percentage");
         assertNull("Expected no double range validation error message.", errorMessages);
     }
@@ -187,7 +185,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         params.put("percentage", 100.0123d);
         context.put(ActionContext.PARAMETERS, params);
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, null, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

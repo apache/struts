@@ -43,11 +43,11 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         params.put("date", "12/23/2002");
         params.put("percentage", "1.23456789");
 
-        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
             proxy.execute();
 
             ValidationAware validationAware = (ValidationAware) proxy.getAction();
@@ -56,7 +56,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
             // put in an out-of-range value to see if the old validators still work
             ActionContext.setContext(new ActionContext(new HashMap<String, Object>()));
             params.put("bar", "42");
-            proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ALIAS_NAME, extraContext);
+            proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ALIAS_NAME, null, extraContext);
             proxy.execute();
             validationAware = (ValidationAware) proxy.getAction();
             assertTrue(validationAware.hasFieldErrors());
@@ -94,7 +94,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -119,7 +119,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
             ValueStack stack = ActionContext.getContext().getValueStack();
             ActionContext.setContext(new ActionContext(stack.getContext()));
             ActionContext.getContext().setLocale(Locale.US);
@@ -168,7 +168,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -203,7 +203,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_SUBPROPERTY_NAME, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_SUBPROPERTY_NAME, null, extraContext);
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

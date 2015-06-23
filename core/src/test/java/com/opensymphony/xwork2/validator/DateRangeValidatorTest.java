@@ -45,7 +45,7 @@ public class DateRangeValidatorTest extends XWorkTestCase {
         params.put("date", date.getTime());
         context.put(ActionContext.PARAMETERS, params);
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

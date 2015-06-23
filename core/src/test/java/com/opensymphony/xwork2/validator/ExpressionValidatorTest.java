@@ -68,7 +68,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasActionErrors());
 
@@ -81,7 +81,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
     }
 
     public void testExpressionValidatorSuccess() throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
 
         //make it not fail
         params.put("date", "12/23/2002");
@@ -91,12 +91,12 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, params);
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }
 
-    public void testGetSetExpresion() {
+    public void testGetSetExpression() {
         ExpressionValidator ev = new ExpressionValidator();
         ev.setExpression("{top}");
         assertEquals("{top}", ev.getExpression());
@@ -110,7 +110,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         ev.setValidatorContext(new DelegatingValidatorContext(mock.proxy()));
         ev.setExpression("{top}");
         ev.setValueStack(ActionContext.getContext().getValueStack());
-        ev.validate("Hello"); // {top} will evalute to Hello that is not a Boolean
+        ev.validate("Hello"); // {top} will evaluate to Hello that is not a Boolean
         mock.verify();
     }
 

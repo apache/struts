@@ -20,7 +20,7 @@ public class ProxyInvocationTest extends XWorkTestCase {
     public void testProxyInvocation() throws Exception {
 
         ActionProxy proxy = actionProxyFactory
-            .createActionProxy("", "ProxyInvocation", createDummyContext());
+            .createActionProxy("", "ProxyInvocation", null, createDummyContext());
         ActionInvocation invocation = proxy.getInvocation();
         
         String result = invocation.invokeActionOnly();

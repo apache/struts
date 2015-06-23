@@ -126,6 +126,6 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return actionProxyFactory.createActionProxy("", actionName, extraContext, true, true);
+        return actionProxyFactory.createActionProxy("", actionName, null, extraContext, true, true);
     }
 }

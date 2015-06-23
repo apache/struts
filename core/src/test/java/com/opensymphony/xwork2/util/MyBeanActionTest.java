@@ -39,7 +39,7 @@ public class MyBeanActionTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext);
             proxy.execute();
             assertEquals(2, Integer.parseInt(proxy.getInvocation().getStack().findValue("beanList.size").toString()));
             assertEquals(MyBean.class.getName(), proxy.getInvocation().getStack().findValue("beanList.get(0)").getClass().getName());
@@ -67,13 +67,12 @@ public class MyBeanActionTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext);
             proxy.execute();
             MyBeanAction action = (MyBeanAction) proxy.getInvocation().getAction();
 
             assertEquals(2, Integer.parseInt(proxy.getInvocation().getStack().findValue("beanMap.size").toString()));
 
-            Map map = (Map) proxy.getInvocation().getStack().findValue("beanMap");
             assertEquals(true, action.getBeanMap().containsKey(1234567890L));
             assertEquals(true, action.getBeanMap().containsKey(1234567891L));
 

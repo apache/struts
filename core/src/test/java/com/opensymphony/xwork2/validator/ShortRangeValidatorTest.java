@@ -42,7 +42,7 @@ public class ShortRangeValidatorTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

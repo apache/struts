@@ -20,7 +20,12 @@ import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.TestBean2;
+import org.apache.struts2.util.DateFormatter;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.swing.text.Style;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -113,7 +118,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
 
     public void testAddDefaultResourceBundle() {
         String text = LocalizedTextUtil.findDefaultText("foo.range", Locale.getDefault());
-        assertNull("Found message when it should not be available.", null);
+        assertNull("Found message when it should not be available.", text);
 
         LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/SimpleAction");
 
@@ -124,7 +129,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     public void testAddDefaultResourceBundle2() throws Exception {
         LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/SimpleAction");
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("/", "packagelessAction", new HashMap<String, Object>(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("/", "packagelessAction", null, new HashMap<String, Object>(), false, true);
         proxy.execute();
     }
 
@@ -191,12 +196,14 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         assertEquals("There is no Action mapped for namespace blah and action name AddUser.", message);
     }
 
-    public void testLocalizedDateFormatIsUsed() {
+    public void testLocalizedDateFormatIsUsed() throws ParseException {
         LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
-        Object[] params = new Object[]{new Date()};
+        Date date = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US).parse("01/01/2015");
+        Object[] params = new Object[]{ date };
         String usDate = LocalizedTextUtil.findDefaultText("test.format.date", Locale.US, params);
         String germanDate = LocalizedTextUtil.findDefaultText("test.format.date", Locale.GERMANY, params);
-        assertFalse(usDate.equals(germanDate));
+        assertEquals(usDate, "1/1/15");
+        assertEquals(germanDate, "01.01.15");
     }
 
     public void testXW377() {

@@ -26,7 +26,7 @@ public class ActionsFromSpringTest extends XWorkTestCase {
     }
 
     public void testLoadSimpleAction() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "simpleAction", null);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "simpleAction", null, null);
         Object action = proxy.getAction();
 
         Action expected = (Action) appContext.getBean("simple-action");
@@ -35,19 +35,19 @@ public class ActionsFromSpringTest extends XWorkTestCase {
     }
 
     public void testLoadActionWithDependencies() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "dependencyAction", null);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "dependencyAction", null, null);
         SimpleAction action = (SimpleAction) proxy.getAction();
 
         assertEquals("injected", action.getBlah());
     }
 
     public void testProxiedActionIsNotStateful() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "proxiedAction", null);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "proxiedAction", null, null);
         SimpleAction action = (SimpleAction) proxy.getAction();
 
         action.setBlah("Hello World");
 
-        proxy = actionProxyFactory.createActionProxy(null, "proxiedAction", null);
+        proxy = actionProxyFactory.createActionProxy(null, "proxiedAction", null, null);
         action = (SimpleAction) proxy.getAction();
 
         // If the action is a singleton, this test will fail
@@ -60,7 +60,7 @@ public class ActionsFromSpringTest extends XWorkTestCase {
     }
 
     public void testAutoProxiedAction() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "autoProxiedAction", null);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "autoProxiedAction", null, null);
 
         SimpleAction action = (SimpleAction) proxy.getAction();
 
@@ -69,7 +69,7 @@ public class ActionsFromSpringTest extends XWorkTestCase {
     }
     
     public void testActionWithSpringResult() throws Exception {
-    	        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "simpleActionSpringResult", null);
+    	        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "simpleActionSpringResult", null, null);
     	                
     	        proxy.execute();
     	        

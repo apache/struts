@@ -33,7 +33,7 @@ public class LocaleAwareTest extends XWorkTestCase {
 
     public void testGetText() {
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.FOO_ACTION_NAME, null);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.FOO_ACTION_NAME, null, null);
             ActionContext.getContext().setLocale(Locale.US);
 
             TextProvider localeAware = (TextProvider) proxy.getAction();
@@ -46,7 +46,7 @@ public class LocaleAwareTest extends XWorkTestCase {
 
     public void testLocaleGetText() {
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.FOO_ACTION_NAME, null);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.FOO_ACTION_NAME, null, null);
             ActionContext.getContext().setLocale(Locale.GERMANY);
 
             TextProvider localeAware = (TextProvider) proxy.getAction();

@@ -216,15 +216,6 @@ public final class EmbeddedServletOptions implements Options {
     }
     
     /**
-     * Should errors be sent to client or thrown into stderr?
-     * @deprecated
-     */
-    @Deprecated
-    public boolean getSendErrorToClient() {
-        return true;
-    }
-    
-    /**
      * Should class files be compiled with debug information?
      */
     public boolean getClassDebugInfo() {

@@ -40,6 +40,8 @@ public class InitOperations {
 
     /**
      * Initializes the internal Struts logging
+     *
+     * @deprecated since 2.5
      */
     @Deprecated
     public void initLogging( HostConfig filterConfig ) {

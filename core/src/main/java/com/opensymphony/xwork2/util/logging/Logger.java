@@ -17,6 +17,8 @@ package com.opensymphony.xwork2.util.logging;
 
 /**
  * Main logger interface for logging things
+ *
+ * @deprecated since 2.5
  */
 @Deprecated
 public interface Logger {

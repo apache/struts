@@ -20,6 +20,8 @@ import java.util.List;
 
 /**
  * Logging utility methods
+ *
+ * @deprecated since 2.5
  */
 @Deprecated
 public class LoggerUtils {

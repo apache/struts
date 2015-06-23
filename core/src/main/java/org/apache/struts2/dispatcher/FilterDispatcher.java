@@ -194,6 +194,9 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         }
     }
 
+    /**
+     * @deprecated since 2.5
+     */
     @Deprecated
     private void initLogging() {
         String factoryName = filterConfig.getInitParameter("loggerFactory");

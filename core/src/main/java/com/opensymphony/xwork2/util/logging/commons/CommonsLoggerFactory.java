@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Creates commons-logging-backed loggers
+ *
+ * @deprecated since 2.5
  */
 @Deprecated
 public class CommonsLoggerFactory extends LoggerFactory {

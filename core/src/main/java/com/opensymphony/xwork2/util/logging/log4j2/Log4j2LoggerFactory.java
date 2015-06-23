@@ -25,6 +25,8 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <pre>
  *   -Dxwork.loggerFactory=com.opensymphony.xwork2.util.logging.log4j2.Log4j2LoggerFactory
  * </pre>
+ *
+ * @deprecated since 2.5
  */
 @Deprecated
 public class Log4j2LoggerFactory extends LoggerFactory {

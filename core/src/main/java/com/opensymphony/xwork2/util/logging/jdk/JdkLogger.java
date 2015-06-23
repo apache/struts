@@ -22,6 +22,8 @@ import java.util.logging.Level;
 
 /**
  * Delegates to jdk logger.  Maps fatal to Level.SEVERE along with error.
+ *
+ * @deprecated since 2.5
  */
 @Deprecated
 public class JdkLogger implements Logger {

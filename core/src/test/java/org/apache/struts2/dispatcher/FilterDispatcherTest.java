@@ -56,10 +56,10 @@ public class FilterDispatcherTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest(servletContext);
         MockHttpServletResponse res = new MockHttpServletResponse();
         MockFilterChain chain = new MockFilterChain();
-        final NoOpDispatcher _dispatcher = new NoOpDispatcher(servletContext);
         ConfigurationManager confManager = new ConfigurationManager();
         confManager.setConfiguration(new DefaultConfiguration());
-        _dispatcher.setConfigurationManager(confManager);
+
+        final NoOpDispatcher _dispatcher = new NoOpDispatcher(servletContext, confManager);
         Dispatcher.setInstance(_dispatcher);
 
         
@@ -112,8 +112,9 @@ public class FilterDispatcherTest extends StrutsInternalTestCase {
         protected boolean wrappedRequest = false;
         protected boolean serviceRequest = false;
 
-        public NoOpDispatcher(ServletContext servletContext) {
+        public NoOpDispatcher(ServletContext servletContext, ConfigurationManager cm) {
             super(servletContext, new HashMap());
+            this.configurationManager = cm;
         }
 
         @Override

@@ -92,11 +92,6 @@ public class Dispatcher {
     private static List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
 
     /**
-     * Store ConfigurationManager instance, set on init.
-     */
-    private ConfigurationManager configurationManager;
-
-    /**
      * Store state of StrutsConstants.STRUTS_DEVMODE setting.
      */
     private boolean devMode;
@@ -150,6 +145,11 @@ public class Dispatcher {
      * Interface used to handle internal errors or missing resources
      */
     private DispatcherErrorHandler errorHandler;
+
+    /**
+     * Store ConfigurationManager instance, set on init.
+     */
+    protected ConfigurationManager configurationManager;
 
     /**
      * Provide the dispatcher instance for the current thread.
@@ -865,17 +865,6 @@ public class Dispatcher {
      */
     public ConfigurationManager getConfigurationManager() {
         return configurationManager;
-    }
-
-    /**
-     * Modify the ConfigurationManager instance
-     *
-     * @param mgr The configuration manager
-     * @deprecated should be removed as is used only in tests
-     */
-    public void setConfigurationManager(ConfigurationManager mgr) {
-        ContainerHolder.clear();
-        this.configurationManager = mgr;
     }
 
     /**

@@ -548,7 +548,6 @@ public class URLTagTest extends AbstractUITagTest {
 
         mockContainer = new Mock(Container.class);
 
-        du.setConfigurationManager(configurationManager);
         session = new SessionMap(request);
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
                 request.getParameterMap(),

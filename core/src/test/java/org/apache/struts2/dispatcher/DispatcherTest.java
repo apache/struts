@@ -176,13 +176,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
     
     public void testConfigurationManager() {
     	Dispatcher du;
-    	InternalConfigurationManager configurationManager = new InternalConfigurationManager();
+    	final InternalConfigurationManager configurationManager = new InternalConfigurationManager();
     	try {
-    		du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
-    		du.setConfigurationManager(configurationManager);
-    		
+    		du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
     		du.init();
-    		
             Dispatcher.setInstance(du);
             
             assertFalse(configurationManager.destroyConfiguration);
@@ -200,8 +197,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
     public void testObjectFactoryDestroy() throws Exception {
 
         final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
-        Dispatcher du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
         ConfigurationManager cm = new ConfigurationManager();
+        Dispatcher du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), cm);
         Mock mockConfiguration = new Mock(Configuration.class);
         cm.setConfiguration((Configuration)mockConfiguration.proxy());
         
@@ -216,7 +213,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mockConfiguration.expect("destroy");
         mockConfiguration.matchAndReturn("getPackageConfigs", new HashMap<String, PackageConfig>());
 
-        du.setConfigurationManager(cm);
+        du.init();
         assertFalse(destroyedObjectFactory.destroyed);
         du.cleanup();
         assertTrue(destroyedObjectFactory.destroyed);
@@ -252,8 +249,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
         ConfigurationManager configurationManager = new ConfigurationManager();
         configurationManager.setConfiguration((Configuration) mockConfiguration.proxy());
         
-        Dispatcher dispatcher = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
-        dispatcher.setConfigurationManager(configurationManager);
+        Dispatcher dispatcher = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
+        dispatcher.init();
         dispatcher.cleanup();
         
         mockInterceptor.verify();

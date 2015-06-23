@@ -55,22 +55,6 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         return validationAware.getActionMessages();
     }
 
-    /**
-     * @deprecated Use {@link #getActionErrors()}.
-     */
-    @Deprecated
-    public Collection<String> getErrorMessages() {
-        return getActionErrors();
-    }
-
-    /**
-     * @deprecated Use {@link #getFieldErrors()}.
-     */
-    @Deprecated
-    public Map<String, List<String>> getErrors() {
-        return getFieldErrors();
-    }
-
     public void setFieldErrors(Map<String, List<String>> errorMap) {
         validationAware.setFieldErrors(errorMap);
     }

@@ -392,17 +392,6 @@ public class DefaultActionMapper implements ActionMapper {
     }
 
     /**
-     * Drops the extension from the action name
-     *
-     * @param name The action name
-     * @return The action name without its extension
-     * @deprecated Since 2.1, use {@link #dropExtension(java.lang.String, org.apache.struts2.dispatcher.mapper.ActionMapping)} instead
-     */
-    protected String dropExtension(String name) {
-        return dropExtension(name, new ActionMapping());
-    }
-
-    /**
      * Drops the extension from the action name, storing it in the mapping for later use
      *
      * @param name    The action name

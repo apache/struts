@@ -98,13 +98,6 @@ public class ObjectFactory implements Serializable {
     }
 
     /**
-     * @deprecated Since 2.1
-     */
-    @Deprecated public static ObjectFactory getObjectFactory() {
-        return ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
-    }
-
-    /**
      * Allows for ObjectFactory implementations that support
      * Actions without no-arg constructors.
      *

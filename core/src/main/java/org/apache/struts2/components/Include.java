@@ -228,15 +228,6 @@ public class Include extends Component {
     }
 
     /**
-     * @deprecated use {@link #include(String, java.io.Writer, javax.servlet.ServletRequest,
-     *             javax.servlet.http.HttpServletResponse, String)} instead with correct encoding specified
-     */
-    public static void include( String relativePath, Writer writer, ServletRequest request,
-                                HttpServletResponse response ) throws ServletException, IOException {
-        include(relativePath, writer, request, response, null);
-    }
-
-    /**
      * Include a resource in a response.
      *
      * @param relativePath the relative path of the resource to include; resolves to {@link #getContextRelativePath(javax.servlet.ServletRequest,

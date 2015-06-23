@@ -70,7 +70,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * The default Struts tag library
  */
-public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibraryModelProvider, TagLibrary {
+public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibraryModelProvider {
 
     public Object getModels(ValueStack stack, HttpServletRequest req,
                             HttpServletResponse res) {

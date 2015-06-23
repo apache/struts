@@ -16,8 +16,9 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
-import com.opensymphony.xwork2.util.URLUtil;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.regex.Pattern;
 
 /**
  * URLValidator checks that a given field is a String and a valid URL
@@ -54,9 +55,7 @@ public class URLValidator extends FieldValidatorSupport {
             return;
         }
 
-        // FIXME deprecated! the same regex below should be used instead
-        // replace logic with next major release
-        if (!(value.getClass().equals(String.class)) || !URLUtil.verifyUrl((String) value)) {
+        if (!(value.getClass().equals(String.class)) || !Pattern.compile(getUrlRegex()).matcher((String) value).matches()) {
             addFieldError(fieldName, object);
         }
     }

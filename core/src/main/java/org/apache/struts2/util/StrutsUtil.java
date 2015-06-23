@@ -91,23 +91,16 @@ public class StrutsUtil {
     }
 
     public String include(Object aName) throws Exception {
-        return include(aName, request, response);
-    }
-
-    /**
-     * @deprecated the request and response are stored in this util class, please use include(string)
-     */
-    public String include(Object aName, HttpServletRequest aRequest, HttpServletResponse aResponse) throws Exception {
         try {
-            RequestDispatcher dispatcher = aRequest.getRequestDispatcher(aName.toString());
+            RequestDispatcher dispatcher = request.getRequestDispatcher(aName.toString());
 
             if (dispatcher == null) {
                 throw new IllegalArgumentException("Cannot find included file " + aName);
             }
 
-            ResponseWrapper responseWrapper = new ResponseWrapper(aResponse);
+            ResponseWrapper responseWrapper = new ResponseWrapper(response);
 
-            dispatcher.include(aRequest, responseWrapper);
+            dispatcher.include(request, responseWrapper);
 
             return responseWrapper.getData();
         }

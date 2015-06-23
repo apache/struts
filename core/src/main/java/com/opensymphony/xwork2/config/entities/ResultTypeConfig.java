@@ -62,13 +62,6 @@ public class ResultTypeConfig extends Located implements Serializable {
         return this.defaultResultParam;
     }
 
-    /**
-     * @deprecated Since 2.1, use {@link #getClassName()} instead
-     */
-    @Deprecated public String getClazz() {
-        return className;
-    }
-
     public String getClassName() {
         return className;
     }

@@ -37,16 +37,6 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 	
 	private static final Logger LOG = LogManager.getLogger(XWorkMethodAccessor.class);
 
-    /**
-     * @deprecated Use {@link ReflectionContextState#DENY_METHOD_EXECUTION} instead
-     */
-    @Deprecated public static final String DENY_METHOD_EXECUTION = ReflectionContextState.DENY_METHOD_EXECUTION;
-    /**
-     * @deprecated Use {@link ReflectionContextState#DENY_INDEXED_ACCESS_EXECUTION} instead
-     */
-    @Deprecated public static final String DENY_INDEXED_ACCESS_EXECUTION = ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION;
-
-
     @Override
     public Object callMethod(Map context, Object object, String string, Object[] objects) throws MethodFailedException {
 

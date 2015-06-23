@@ -102,7 +102,7 @@
                         <exclude>**/TestInterceptor.java</exclude>
                         <exclude>**/AnnotatedTestBean.java</exclude>
                         <exclude>**/ContainerImplTest.java</exclude>
-                        <exclude>**/URLUtilTest.java</exclude>
+                        <exclude>**/DefaultFileManagerTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

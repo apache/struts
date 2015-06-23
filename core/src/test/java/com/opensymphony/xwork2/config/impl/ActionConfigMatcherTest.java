@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.util.WildcardHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
     @Override public void setUp() throws Exception {
         super.setUp();
         configMap = buildActionConfigMap();
-        matcher = new ActionConfigMatcher(configMap);
+        matcher = new ActionConfigMatcher(new WildcardHelper(), configMap, false);
     }
 
     @Override public void tearDown() throws Exception {
@@ -104,7 +105,7 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
     
     public void testLooseMatch() {
         configMap.put("*!*", configMap.get("bar/*/**"));
-        ActionConfigMatcher matcher = new ActionConfigMatcher(configMap, true);
+        ActionConfigMatcher matcher = new ActionConfigMatcher(new WildcardHelper(), configMap, true);
         
         // exact match
         ActionConfig m = matcher.match("foo/class/method");

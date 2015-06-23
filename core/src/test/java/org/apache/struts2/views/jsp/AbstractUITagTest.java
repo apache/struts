@@ -106,28 +106,6 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
     }
 
     /**
-     * Simple Helper for setting bean properties. Although BeanUtils from oscore should provide bean property setting
-     * functionality, it does not work (at least with my JDK 1.5.0_05), failing in jdk's PropertyDescriptor constructor.
-     * This implementation works safely in any case, and does not add dependency on commons-beanutils for building.
-     * TODO: Check how we can remove this crap again.
-     *
-     * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
-     * @deprecated use BeanUtils#setProperty
-     */
-    public class BeanHelper {
-        Object bean;
-
-        public BeanHelper(Object bean) {
-            this.bean = bean;
-        }
-
-        public void set(String name, Object value) throws IllegalAccessException, InvocationTargetException {
-            BeanUtils.setProperty(this.bean, name, value);
-        }
-
-    }
-
-    /**
      * Initialize a map of {@link PropertyHolder} for generic tag property testing. Will be used when calling {@link
      * #verifyGenericProperties(org.apache.struts2.views.jsp.ui.AbstractUITag, String, String[])} as properties to
      * verify.<p/> This implementation defines testdata for all common AbstractUITag properties and may be overridden in

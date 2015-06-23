@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.ContainerProvider;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
@@ -40,7 +41,7 @@ public class XmlConfigurationProviderInterceptorParamOverridingTest extends XWor
         factory.setContainer(container);
         factory.setFileManager(new DefaultFileManager());
         p.setFileManagerFactory(factory);
-        conf.reload(new ArrayList<ConfigurationProvider>() {
+        conf.reloadContainer(new ArrayList<ContainerProvider>() {
             {
                 add(new XWorkConfigurationProvider());
                 add(p);

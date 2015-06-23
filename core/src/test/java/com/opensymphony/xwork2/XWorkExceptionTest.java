@@ -42,7 +42,6 @@ public class XWorkExceptionTest extends XWorkTestCase {
         XWorkException e = new XWorkException();
 
         assertNull(e.getCause());
-        assertNull(e.getThrowable());
         assertNull(e.getMessage());
         assertNull(e.getLocation());
 

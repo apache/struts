@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.util;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Location;
@@ -78,7 +79,8 @@ public class DomHelper {
         String parserProp = System.getProperty("xwork.saxParserFactory");
         if (parserProp != null) {
             try {
-                Class clazz = ObjectFactory.getObjectFactory().getClassInstance(parserProp);
+                ObjectFactory objectFactory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
+                Class clazz = objectFactory.getClassInstance(parserProp);
                 factory = (SAXParserFactory) clazz.newInstance();
             } catch (Exception e) {
                 LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': {}", parserProp, e);
@@ -140,7 +142,8 @@ public class DomHelper {
             String parserProp = System.getProperty("xwork.saxTransformerFactory");
             if (parserProp != null) {
                 try {
-                    Class clazz = ObjectFactory.getObjectFactory().getClassInstance(parserProp);
+                    ObjectFactory objectFactory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
+                    Class clazz = objectFactory.getClassInstance(parserProp);
                     FACTORY = (SAXTransformerFactory) clazz.newInstance();
                 } catch (Exception e) {
                     LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': {}", parserProp, e);

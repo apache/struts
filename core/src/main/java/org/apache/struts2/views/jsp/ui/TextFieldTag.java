@@ -54,13 +54,6 @@ public class TextFieldTag extends AbstractUITag {
         textField.setType(type);
     }
 
-    /**
-     * @deprecated please use {@link #setMaxlength} instead
-     */
-    public void setMaxLength(String maxlength) {
-        this.maxlength = maxlength;
-    }
-
     public void setMaxlength(String maxlength) {
         this.maxlength = maxlength;
     }

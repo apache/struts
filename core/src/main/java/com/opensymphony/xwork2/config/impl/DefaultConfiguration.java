@@ -145,21 +145,6 @@ public class DefaultConfiguration implements Configuration {
      *
      * @throws ConfigurationException
      */
-    public synchronized void reload(List<ConfigurationProvider> providers) throws ConfigurationException {
-
-        // Silly copy necessary due to lack of ability to cast generic lists
-        List<ContainerProvider> contProviders = new ArrayList<>();
-        contProviders.addAll(providers);
-
-        reloadContainer(contProviders);
-    }
-
-    /**
-     * Calls the ConfigurationProviderFactory.getConfig() to tell it to reload the configuration and then calls
-     * buildRuntimeConfiguration().
-     *
-     * @throws ConfigurationException
-     */
     public synchronized List<PackageProvider> reloadContainer(List<ContainerProvider> providers) throws ConfigurationException {
         packageContexts.clear();
         loadedFileNames.clear();

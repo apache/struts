@@ -490,16 +490,6 @@ public class Dispatcher {
     }
 
     /**
-     * @deprecated use version without ServletContext param
-     */
-    @Deprecated
-    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context,
-                              ActionMapping mapping) throws ServletException {
-
-        serviceAction(request, response, mapping);
-    }
-
-    /**
      * Load Action class for mapping and invoke the appropriate Action method, or go directly to the Result.
      * <p/>
      * This method first creates the action context from the given parameters,
@@ -593,16 +583,6 @@ public class Dispatcher {
     }
 
     /**
-     * @deprecated use version without servletContext param
-     */
-    @Deprecated
-    public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
-            ActionMapping mapping, ServletContext context) {
-
-        return createContextMap(request, response, mapping);
-    }
-
-    /**
      * Create a context map containing all the wrapped request objects
      *
      * @param request The servlet request
@@ -633,21 +613,6 @@ public class Dispatcher {
             extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
         }
         return extraContext;
-    }
-
-    /**
-     * @deprecated use version without ServletContext param
-     */
-    @Deprecated
-    public HashMap<String,Object> createContextMap(Map requestMap,
-                                    Map parameterMap,
-                                    Map sessionMap,
-                                    Map applicationMap,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    ServletContext servletContext) {
-
-        return createContextMap(requestMap, parameterMap, sessionMap, applicationMap, request, response);
     }
 
     /**
@@ -788,14 +753,6 @@ public class Dispatcher {
     }
 
     /**
-     * @deprecated use version without ServletContext param
-     */
-    @Deprecated
-    public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
-        return wrapRequest(request);
-    }
-
-    /**
      * Wrap and return the given request or return the original request object.
      * </p>
      * This method transparently handles multipart data as a wrapped class around the given request.
@@ -862,22 +819,6 @@ public class Dispatcher {
         }
         MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
         multiWrapper.cleanUp();
-    }
-
-    /**
-     * Send an HTTP error response code.
-     *
-     * @param request  the HttpServletRequest object.
-     * @param response the HttpServletResponse object.
-     * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
-     * @param e        the Exception that is reported.
-     * @param ctx      the ServletContext object.
-     *
-     * @deprecated remove in version 3.0 - use version without ServletContext parameter
-     */
-    @Deprecated
-    public void sendError(HttpServletRequest request, HttpServletResponse response, ServletContext ctx, int code, Exception e) {
-        sendError(request, response, code, e);
     }
 
     /**

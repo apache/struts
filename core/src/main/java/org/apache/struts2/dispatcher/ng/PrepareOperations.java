@@ -51,11 +51,6 @@ public class PrepareOperations {
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
     public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
 
-    @Deprecated
-    public PrepareOperations(ServletContext servletContext, Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
     public PrepareOperations(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }

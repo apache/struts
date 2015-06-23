@@ -105,18 +105,6 @@ public class XWorkException extends RuntimeException implements Locatable {
         }
     }
 
-
-    /**
-     * Gets the underlying cause
-     * 
-     * @return the underlying cause, <tt>null</tt> if no cause
-     * @deprecated Use {@link #getCause()} 
-     */
-    @Deprecated public Throwable getThrowable() {
-        return getCause();
-    }
-
-
     /**
      * Gets the location of the error, if available
      *

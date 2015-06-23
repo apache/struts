@@ -60,12 +60,4 @@ public interface PrincipalProxy {
      */
     boolean isRequestSecure();
 
-    /**
-     * Gets the request.
-     *
-     * @return The request
-     * @deprecated To obtain the HttpServletRequest in your action, use
-     *             {@link org.apache.struts2.servlet.ServletRequestAware}, since this method will be dropped in future.
-     */
-    HttpServletRequest getRequest();
 }

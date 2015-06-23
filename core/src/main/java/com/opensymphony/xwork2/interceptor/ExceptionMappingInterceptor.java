@@ -254,14 +254,6 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * @deprecated since 2.3.15 please use #findMappingFromExceptions directly instead
-     */
-    protected String findResultFromExceptions(List<ExceptionMappingConfig> exceptionMappings, Throwable t) {
-    	ExceptionMappingConfig result = findMappingFromExceptions(exceptionMappings, t);
-        return result==null?null:result.getResult();
-    }
-
-    /**
      * Try to find appropriate {@link ExceptionMappingConfig} based on provided Throwable
      *
      * @param exceptionMappings list of defined exception mappings

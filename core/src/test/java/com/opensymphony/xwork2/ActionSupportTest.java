@@ -138,14 +138,6 @@ public class ActionSupportTest extends XWorkTestCase {
         assertEquals(false, as.hasErrors());
     }
 
-    public void testDeprecated() throws Exception {
-        assertNotNull(as.getErrorMessages());
-        assertEquals(0, as.getErrorMessages().size());
-
-        assertNotNull(as.getErrors());
-        assertEquals(0, as.getErrors().size());
-    }
-
     public void testLocale() {
         Locale defLocale = Locale.getDefault();
         ActionContext.getContext().setLocale(null);

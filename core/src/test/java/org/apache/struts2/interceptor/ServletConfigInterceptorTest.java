@@ -170,7 +170,6 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         assertNotNull(action.getProxy());
 
         PrincipalProxy proxy = action.getProxy();
-        assertEquals(proxy.getRequest(), req);
         assertNull(proxy.getUserPrincipal());
         assertTrue(! proxy.isRequestSecure());
         assertTrue(! proxy.isUserInRole("no.role"));

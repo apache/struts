@@ -445,9 +445,6 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
             if (props.getProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD) == null) {
                 props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
             }
-            if (props.getProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE) == null) {
-                props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE, "false");
-            }
             if (props.getProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY) == null) {
                 props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, "0");
             }

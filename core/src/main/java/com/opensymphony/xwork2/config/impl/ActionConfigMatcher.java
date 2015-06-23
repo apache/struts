@@ -42,41 +42,6 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
      * <p> Finds and precompiles the wildcard patterns from the ActionConfig
      * "path" attributes. ActionConfig's will be evaluated in the order they
      * exist in the config file. Only paths that actually contain a
-     * wildcard will be compiled. Patterns will matched strictly.</p>
-     *
-     * @param configs An array of ActionConfig's to process
-     * @deprecated Since 2.1, use {@link #ActionConfigMatcher(PatternMatcher, Map, boolean)} instead
-     */
-    @Deprecated public ActionConfigMatcher(Map<String, ActionConfig> configs) {
-        this(configs, false);
-    }
-    
-    /**
-     * <p> Finds and precompiles the wildcard patterns from the ActionConfig
-     * "path" attributes. ActionConfig's will be evaluated in the order they
-     * exist in the config file. Only paths that actually contain a
-     * wildcard will be compiled. </p>
-     * 
-     * <p>Patterns can optionally be matched "loosely".  When
-     * the end of the pattern matches \*[^*]\*$ (wildcard, no wildcard,
-     * wildcard), if the pattern fails, it is also matched as if the 
-     * last two characters didn't exist.  The goal is to support the 
-     * legacy "*!*" syntax, where the "!*" is optional.</p> 
-     *
-     * @param configs An array of ActionConfig's to process
-     * @param looseMatch To loosely match wildcards or not
-     * @deprecated Since 2.1, use {@link #ActionConfigMatcher(PatternMatcher, Map, boolean)} instead
-     */
-    @Deprecated public ActionConfigMatcher(Map<String, ActionConfig> configs,
-            boolean looseMatch) {
-
-        this(new WildcardHelper(), configs, looseMatch);
-    }
-    
-    /**
-     * <p> Finds and precompiles the wildcard patterns from the ActionConfig
-     * "path" attributes. ActionConfig's will be evaluated in the order they
-     * exist in the config file. Only paths that actually contain a
      * wildcard will be compiled. </p>
      * 
      * <p>Patterns can optionally be matched "loosely".  When

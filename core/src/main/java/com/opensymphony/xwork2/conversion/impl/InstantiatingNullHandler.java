@@ -68,11 +68,8 @@ import java.util.*;
  */
 public class InstantiatingNullHandler implements NullHandler {
 
-    /**
-     * @deprecated Use {@link ReflectionContextState#CREATE_NULL_OBJECTS} instead
-     */
-    @Deprecated public static final String CREATE_NULL_OBJECTS = ReflectionContextState.CREATE_NULL_OBJECTS;
     private static final Logger LOG = LogManager.getLogger(InstantiatingNullHandler.class);
+
     private ReflectionProvider reflectionProvider;
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;

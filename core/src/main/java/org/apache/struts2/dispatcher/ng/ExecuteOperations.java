@@ -38,11 +38,6 @@ public class ExecuteOperations {
 
     private Dispatcher dispatcher;
 
-    @Deprecated
-    public ExecuteOperations(ServletContext servletContext, Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
     public ExecuteOperations(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }

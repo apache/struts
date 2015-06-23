@@ -86,10 +86,6 @@ public class MockConfiguration implements Configuration {
         throw new UnsupportedOperationException();
     }
 
-    public void reload(List<ConfigurationProvider> providers) throws ConfigurationException {
-        throw new UnsupportedOperationException();
-    }
-
     public PackageConfig removePackageConfig(String name) {
         return packages.remove(name);
     }

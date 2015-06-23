@@ -247,16 +247,6 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     }
 
     /**
-     * This method sets the ObjectFactory used by XWork to this object. It's best used as the "init-method" of a Spring
-     * bean definition in order to hook Spring and XWork together properly (as an alternative to the
-     * org.apache.struts2.spring.lifecycle.SpringObjectFactoryListener)
-     * @deprecated Since 2.1 as it isn't necessary
-     */
-    @Deprecated public void initObjectFactory() {
-        // not necessary anymore
-    }
-
-    /**
      * Allows for ObjectFactory implementations that support
      * Actions without no-arg constructors.
      *

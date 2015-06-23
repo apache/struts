@@ -256,13 +256,6 @@ public class XSLTResult implements Result {
         this.noCache = BooleanUtils.toBoolean(xsltNoCache);
     }
 
-    /**
-     * @deprecated Use #setStylesheetLocation(String)
-     */
-    public void setLocation(String location) {
-        setStylesheetLocation(location);
-    }
-
     public void setStylesheetLocation(String location) {
         if (location == null)
             throw new IllegalArgumentException("Null location");
@@ -279,34 +272,6 @@ public class XSLTResult implements Result {
 
     public void setExposedValue(String exposedValue) {
         this.exposedValue = exposedValue;
-    }
-
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public String getMatchingPattern() {
-        return matchingPattern;
-    }
-
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public void setMatchingPattern(String matchingPattern) {
-        this.matchingPattern = matchingPattern;
-    }
-
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public String getExcludingPattern() {
-        return excludingPattern;
-    }
-
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public void setExcludingPattern(String excludingPattern) {
-        this.excludingPattern = excludingPattern;
     }
 
     public String getStatus() {

@@ -26,7 +26,6 @@ package org.apache.struts2.util;
  * if it requires shutdown hook whenever an ObjectFactory is to be
  * destroyed.
  *
- * @see org.apache.struts2.dispatcher.FilterDispatcher
  * @see org.apache.struts2.dispatcher.Dispatcher
  */
 public interface ObjectFactoryDestroyable {

@@ -32,7 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.FilterDispatcher;
+import org.apache.struts2.dispatcher.ng.PrepareOperations;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
@@ -137,7 +137,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation inv) throws Exception {
         boolean actionOnly = false;
         boolean cont = true;
-        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
+        Boolean devModeOverride = PrepareOperations.getDevModeOverride();
         boolean devMode = devModeOverride != null ? devModeOverride : this.devMode;
         if (devMode) {
             final ActionContext ctx = ActionContext.getContext();

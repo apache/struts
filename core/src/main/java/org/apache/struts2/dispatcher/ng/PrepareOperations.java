@@ -47,6 +47,12 @@ public class PrepareOperations {
 
     private static final Logger LOG = LogManager.getLogger(PrepareOperations.class);
 
+    /**
+     * Maintains per-request override of devMode configuration.
+     */
+    private static ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<>();
+
+
     private Dispatcher dispatcher;
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
     public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
@@ -99,6 +105,7 @@ public class PrepareOperations {
         } finally {
             ActionContext.setContext(null);
             Dispatcher.setInstance(null);
+            devModeOverride.remove();
         }
     }
 
@@ -198,6 +205,25 @@ public class PrepareOperations {
             }
         }
         return false;
+    }
+
+    /**
+     * Set an override of the static devMode value.  Do not set this via a
+     * request parameter or any other unprotected method.  Using a signed
+     * cookie is one safe way to turn it on per request.
+     *
+     * @param devMode   the override value
+     */
+    public static void overrideDevMode(boolean devMode) {
+        devModeOverride.set(devMode);
+    }
+
+    /**
+     * @return Boolean override value, or null if no override
+     */
+    public static Boolean getDevModeOverride()
+    {
+        return devModeOverride.get();
     }
 
 }

@@ -35,13 +35,12 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -273,4 +272,13 @@ public class DispatcherTest extends StrutsInternalTestCase {
     	public boolean isInitialized = false;
     	public boolean isDestroyed = false;
     }
+
+    public static class InnerDestroyableObjectFactory extends ObjectFactory implements ObjectFactoryDestroyable {
+        public boolean destroyed = false;
+
+        public void destroy() {
+            destroyed = true;
+        }
+    }
+
 }

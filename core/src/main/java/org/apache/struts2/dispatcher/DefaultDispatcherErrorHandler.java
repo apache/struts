@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.ng.ExecuteOperations;
+import org.apache.struts2.dispatcher.ng.PrepareOperations;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import javax.servlet.ServletContext;
@@ -53,7 +55,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     }
 
     public void handleError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
-        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
+        Boolean devModeOverride = PrepareOperations.getDevModeOverride();
         if (devModeOverride != null ? devModeOverride : devMode) {
             handleErrorInDevMode(response, code, e);
         } else {

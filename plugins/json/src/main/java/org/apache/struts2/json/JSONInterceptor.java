@@ -31,7 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.FilterDispatcher;
+import org.apache.struts2.dispatcher.ng.PrepareOperations;
 import org.apache.struts2.json.annotations.SMDMethod;
 import org.apache.struts2.json.rpc.RPCError;
 import org.apache.struts2.json.rpc.RPCErrorCode;
@@ -382,7 +382,7 @@ public class JSONInterceptor extends AbstractInterceptor {
      * @return true if debugging is turned on
      */
     public boolean getDebug() {
-        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
+        Boolean devModeOverride = PrepareOperations.getDevModeOverride();
         return devModeOverride != null ? devModeOverride : this.debug;
     }
 

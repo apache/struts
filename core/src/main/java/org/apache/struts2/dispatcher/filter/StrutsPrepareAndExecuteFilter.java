@@ -18,14 +18,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng.filter;
+package org.apache.struts2.dispatcher.filter;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.ng.ExecuteOperations;
-import org.apache.struts2.dispatcher.ng.InitOperations;
-import org.apache.struts2.dispatcher.ng.PrepareOperations;
+import org.apache.struts2.dispatcher.ExecuteOperations;
+import org.apache.struts2.dispatcher.InitOperations;
+import org.apache.struts2.dispatcher.PrepareOperations;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

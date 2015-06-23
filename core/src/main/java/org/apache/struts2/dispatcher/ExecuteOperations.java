@@ -18,14 +18,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng;
+package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.RequestUtils;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

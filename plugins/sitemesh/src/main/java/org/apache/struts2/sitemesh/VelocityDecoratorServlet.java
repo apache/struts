@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.ng.listener.StrutsListener;
+import org.apache.struts2.dispatcher.listener.StrutsListener;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;

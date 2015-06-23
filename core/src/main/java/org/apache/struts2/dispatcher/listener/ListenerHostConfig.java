@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultActionSupport.java 651946 2008-04-27 13:41:38Z apetrelli $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,34 +18,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng.servlet;
+package org.apache.struts2.dispatcher.listener;
 
-import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.dispatcher.HostConfig;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import java.util.Iterator;
-
-import org.apache.struts2.dispatcher.ng.HostConfig;
+import java.util.Collections;
 
 /**
- * Host configuration that wraps a ServletConfig
+ * Host configuration that just holds a ServletContext
  */
-public class ServletHostConfig implements HostConfig {
-    private ServletConfig config;
+public class ListenerHostConfig implements HostConfig {
+    private ServletContext servletContext;
 
-    public ServletHostConfig(ServletConfig config) {
-        this.config = config;
+    public ListenerHostConfig(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
+
     public String getInitParameter(String key) {
-        return config.getInitParameter(key);
+        return null;
     }
 
     public Iterator<String> getInitParameterNames() {
-        return MakeIterator.convert(config.getInitParameterNames());
+        return Collections.<String>emptyList().iterator();
     }
 
     public ServletContext getServletContext() {
-        return config.getServletContext();
+        return servletContext;  
     }
 }

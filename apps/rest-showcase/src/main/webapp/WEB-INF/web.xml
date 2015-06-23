@@ -12,7 +12,7 @@
   <!-- START SNIPPET: filter -->
     <filter>
         <filter-name>action2</filter-name>
-        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+        <filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter</filter-class>
     </filter>
     <!-- END SNIPPET: filter -->
 

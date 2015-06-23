@@ -18,14 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng;
+package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.StaticContentLoader;
 
 import java.util.*;
 import java.util.regex.Pattern;

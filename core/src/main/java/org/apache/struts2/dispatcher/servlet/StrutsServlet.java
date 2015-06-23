@@ -18,13 +18,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng.servlet;
+package org.apache.struts2.dispatcher.servlet;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.ng.ExecuteOperations;
-import org.apache.struts2.dispatcher.ng.InitOperations;
-import org.apache.struts2.dispatcher.ng.PrepareOperations;
+import org.apache.struts2.dispatcher.ExecuteOperations;
+import org.apache.struts2.dispatcher.InitOperations;
+import org.apache.struts2.dispatcher.PrepareOperations;
+import org.apache.struts2.dispatcher.servlet.ServletHostConfig;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -35,7 +36,7 @@ import java.io.IOException;
 
 /**
  * Servlet dispatcher for Struts.  The preferred way to use Struts is as a filter via the
- * {@link org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter} and its variants.  This servlet dispatcher
+ * {@link org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter} and its variants.  This servlet dispatcher
  * is only for those that really know what they are doing as it may not support every feature of Struts, particularly
  * static resource serving.
  */

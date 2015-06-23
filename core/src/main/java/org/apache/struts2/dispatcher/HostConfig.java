@@ -18,35 +18,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng.filter;
+package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.util.MakeIterator;
-
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import java.util.Iterator;
 
-import org.apache.struts2.dispatcher.ng.HostConfig;
-
 /**
- * Host configuration that wraps FilterConfig
+ * Abstraction for host configuration information such as init params or the servlet context.
  */
-public class FilterHostConfig implements HostConfig {
+public interface HostConfig {
 
-    private FilterConfig config;
+    /**
+     * @param key The parameter key
+     * @return The parameter value
+     */
+    String getInitParameter(String key);
 
-    public FilterHostConfig(FilterConfig config) {
-        this.config = config;
-    }
-    public String getInitParameter(String key) {
-        return config.getInitParameter(key);
-    }
+    /**
+     * @return A list of parameter names
+     */
+    Iterator<String> getInitParameterNames();
 
-    public Iterator<String> getInitParameterNames() {
-        return MakeIterator.convert(config.getInitParameterNames());
-    }
-
-    public ServletContext getServletContext() {
-        return config.getServletContext();
-    }
+    /**
+     * @return The servlet context
+     */
+    ServletContext getServletContext();
 }

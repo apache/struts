@@ -18,12 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng.filter;
+package org.apache.struts2.dispatcher.filter;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.ng.InitOperations;
-import org.apache.struts2.dispatcher.ng.PrepareOperations;
+import org.apache.struts2.dispatcher.InitOperations;
+import org.apache.struts2.dispatcher.PrepareOperations;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Prepares the request for execution by a later {@link org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter} filter instance.
+ * Prepares the request for execution by a later {@link org.apache.struts2.dispatcher.filter.StrutsExecuteFilter} filter instance.
  */
 public class StrutsPrepareFilter implements StrutsStatics, Filter {
 

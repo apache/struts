@@ -31,7 +31,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
-import org.apache.struts2.dispatcher.ng.listener.StrutsListener;
+import org.apache.struts2.dispatcher.listener.StrutsListener;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
 

@@ -20,8 +20,6 @@
  */
 package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.dispatcher.ng.HostConfig;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

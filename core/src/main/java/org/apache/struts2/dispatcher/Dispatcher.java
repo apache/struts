@@ -72,7 +72,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * of the primary dispatcher holds an instance of this dispatcher to be shared for
  * all requests.
  *
- * @see org.apache.struts2.dispatcher.ng.InitOperations
+ * @see InitOperations
  */
 public class Dispatcher {
 

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.apache.struts2.servlet.interceptor;
+package org.apache.struts2.interceptor.servlet;
 
 import org.apache.struts2.interceptor.PrincipalProxy;
 

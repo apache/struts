@@ -1,4 +1,4 @@
-package org.apache.struts2.impl;
+package org.apache.struts2.factory;
 
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;

@@ -21,7 +21,7 @@
 
 // Copyright 2006 Google Inc. All Rights Reserved.
 
-package org.apache.struts2.impl;
+package org.apache.struts2.factory;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;

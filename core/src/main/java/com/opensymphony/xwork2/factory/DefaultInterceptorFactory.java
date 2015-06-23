@@ -39,11 +39,16 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
 
         try {
             // interceptor instances are long-lived and used across user sessions, so don't try to pass in any extra context
-            Interceptor interceptor = (Interceptor) objectFactory.buildBean(interceptorClassName, null);
-            reflectionProvider.setProperties(params, interceptor);
-            interceptor.init();
+            Object o = objectFactory.buildBean(interceptorClassName, null);
+            reflectionProvider.setProperties(params, o);
 
-            return interceptor;
+            if (o instanceof Interceptor) {
+                Interceptor interceptor = (Interceptor) o;
+                interceptor.init();
+                return interceptor;
+            }
+
+            throw new ConfigurationException("Class [" + interceptorClassName + "] does not implement Interceptor", interceptorConfig);
         } catch (InstantiationException e) {
             cause = e;
             message = "Unable to instantiate an instance of Interceptor class [" + interceptorClassName + "].";

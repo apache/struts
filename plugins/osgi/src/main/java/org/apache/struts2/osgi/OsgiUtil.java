@@ -21,8 +21,8 @@
 
 package org.apache.struts2.osgi;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.osgi.framework.Bundle;
 
 import java.lang.reflect.Method;
@@ -31,7 +31,7 @@ import java.net.URL;
 
 public class OsgiUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OsgiUtil.class);
+    private static final Logger LOG = LogManager.getLogger(OsgiUtil.class);
 
     /**
      * A bundle is a jar, and a bunble URL will be useless to clients, this method translates
@@ -58,8 +58,7 @@ public class OsgiUtil {
             Method getBeanMethod = beanFactory.getClass().getMethod("getBean", String.class);
             return getBeanMethod.invoke(beanFactory, beanId);
         } catch (Exception ex) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to call getBean() on object of type [#0], with bean id [#1]", ex, beanFactory.getClass().getName(), beanId);
+            LOG.error("Unable to call getBean() on object of type [{}], with bean id [{}]",  beanFactory.getClass().getName(), beanId, ex);
         }
 
         return null;
@@ -74,8 +73,7 @@ public class OsgiUtil {
             Method getBeanMethod = beanFactory.getClass().getMethod("containsBean", String.class);
             return (Boolean) getBeanMethod.invoke(beanFactory, beanId);
         } catch (Exception ex) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to call containsBean() on object of type [#0], with bean id [#1]", ex, beanFactory.getClass().getName(), beanId);
+            LOG.error("Unable to call containsBean() on object of type [{}], with bean id [{}]", beanFactory.getClass().getName(), beanId, ex);
         }
 
         return false;

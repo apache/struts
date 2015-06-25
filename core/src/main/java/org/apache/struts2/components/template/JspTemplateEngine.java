@@ -21,27 +21,24 @@
 
 package org.apache.struts2.components.template;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
-
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+import java.util.List;
 
 /**
  * JSP based template engine.
  */
 public class JspTemplateEngine extends BaseTemplateEngine {
-    private static final Logger LOG = LoggerFactory.getLogger(JspTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(JspTemplateEngine.class);
 
 	String encoding;
 
@@ -53,9 +50,7 @@ public class JspTemplateEngine extends BaseTemplateEngine {
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
         Template template = templateContext.getTemplate();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Trying to render template " + template + ", repeating through parents until we succeed");
-        }
+        LOG.debug("Trying to render template [{}], repeating through parents until we succeed", template);
         UIBean tag = templateContext.getTag();
         ValueStack stack = templateContext.getStack();
         stack.push(tag);
@@ -77,7 +72,7 @@ public class JspTemplateEngine extends BaseTemplateEngine {
         }
 
         if (!success) {
-            LOG.error("Could not render JSP template " + templateContext.getTemplate());
+            LOG.error("Could not render JSP template {}", templateContext.getTemplate());
 
             if (exception != null) {
                 throw exception;

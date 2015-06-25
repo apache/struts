@@ -11,8 +11,8 @@
 
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<p class="alert alert-warning">
 				Double post. Struts intercepted this request and prevents the action from executing again.

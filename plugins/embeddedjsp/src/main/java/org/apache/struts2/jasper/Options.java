@@ -56,13 +56,6 @@ public interface Options {
     public boolean getMappedFile();
 
     /**
-     * Should errors be sent to client or thrown into stderr?
-     * @deprecated
-     */
-    @Deprecated
-    public boolean getSendErrorToClient();
- 
-    /**
      * Should we include debug information in compiled class?
      */
     public boolean getClassDebugInfo();

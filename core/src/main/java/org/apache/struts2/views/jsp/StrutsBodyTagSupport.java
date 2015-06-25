@@ -66,12 +66,12 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
     }
 
     protected String toString(Throwable t) {
-        FastByteArrayOutputStream bout = new FastByteArrayOutputStream();
-        PrintWriter wrt = new PrintWriter(bout);
-        t.printStackTrace(wrt);
-        wrt.close();
+        try (FastByteArrayOutputStream bout = new FastByteArrayOutputStream();
+                PrintWriter wrt = new PrintWriter(bout)) {
+            t.printStackTrace(wrt);
 
-        return bout.toString();
+            return bout.toString();
+        }
     }
 
     protected String getBody() {

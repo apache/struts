@@ -50,7 +50,7 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     private HttpServletRequest request;
     private ServletContext servletContext;
     private ValueStack stack;
-    private final Map<String,TemplateModel> unlistedModels = new HashMap<String,TemplateModel>();
+    private final Map<String, TemplateModel> unlistedModels = new HashMap<>();
     private volatile Object parametersCache;
 
     public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, ValueStack stack) {

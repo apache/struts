@@ -23,10 +23,11 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
 
@@ -50,8 +51,8 @@ public class TokenHelper {
      * The name of the field which will hold the token name
      */
     public static final String TOKEN_NAME_FIELD = "struts.token.name";
-    private static final Logger LOG = LoggerFactory.getLogger(TokenHelper.class);
-    private static final Random RANDOM = new Random();
+    private static final Logger LOG = LogManager.getLogger(TokenHelper.class);
+    private static final Random RANDOM = new SecureRandom();
 
 
     /**
@@ -90,11 +91,9 @@ public class TokenHelper {
 			session.put(buildTokenSessionAttributeName(tokenName), token);
 		} catch ( IllegalStateException e ) {
 			// WW-1182 explain to user what the problem is
-            String msg = "Error creating HttpSession due response is commited to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: " + e.getMessage();
-            if (LOG.isErrorEnabled()) {
-                LOG.error(msg, e);
-            }
-			throw new IllegalArgumentException(msg);
+            String msg = "Error creating HttpSession due response is committed to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: " + e.getMessage();
+            LOG.error(msg, e);
+            throw new IllegalArgumentException(msg);
 		}
 	}
 
@@ -134,15 +133,11 @@ public class TokenHelper {
         String token;
 
         if ((tokens == null) || (tokens.length < 1)) {
-            if (LOG.isWarnEnabled()) {
-        	LOG.warn("Could not find token mapped to token name " + tokenName);
-            }
-
+            LOG.warn("Could not find token mapped to token name: {}", tokenName);
             return null;
         }
 
         token = tokens[0];
-
         return token;
     }
 
@@ -155,10 +150,7 @@ public class TokenHelper {
         Map params = ActionContext.getContext().getParameters();
 
         if (!params.containsKey(TOKEN_NAME_FIELD)) {
-            if (LOG.isWarnEnabled()) {
         	LOG.warn("Could not find token name in params.");
-            }
-
             return null;
         }
 
@@ -166,15 +158,11 @@ public class TokenHelper {
         String tokenName;
 
         if ((tokenNames == null) || (tokenNames.length < 1)) {
-            if (LOG.isWarnEnabled()) {
         	LOG.warn("Got a null or empty token name.");
-            }
-
             return null;
         }
 
         tokenName = tokenNames[0];
-
         return tokenName;
     }
 
@@ -188,18 +176,14 @@ public class TokenHelper {
         String tokenName = getTokenName();
 
         if (tokenName == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("no token name found -> Invalid token ");
-            }
+            LOG.debug("No token name found -> Invalid token ");
             return false;
         }
 
         String token = getToken(tokenName);
 
         if (token == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("no token found for token name "+tokenName+" -> Invalid token ");
-            }
+            LOG.debug("No token found for token name {} -> Invalid token ", tokenName);
             return false;
         }
 

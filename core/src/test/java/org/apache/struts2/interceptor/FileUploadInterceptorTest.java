@@ -158,9 +158,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
 
-        URL url = ClassLoaderUtil.getResource("log4j.properties", FileUploadInterceptorTest.class);
+        URL url = ClassLoaderUtil.getResource("log4j2.xml", FileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
-        assertTrue("log4j.properties should be in src/test folder", file.exists());
+        assertTrue("log4j2.xml should be in src/test folder", file.exists());
         boolean notOk = interceptor.acceptFile(action, file, "filename", "text/html", "inputName", validation);
 
         assertFalse(notOk);
@@ -169,10 +169,10 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         List errors = (List) validation.getFieldErrors().get("inputName");
         assertEquals(1, errors.size());
         String msg = (String) errors.get(0);
-        // the error message shoul contain at least this test
+        // the error message should contain at least this test
         assertTrue(msg.startsWith("The file is to large to be uploaded"));
         assertTrue(msg.indexOf("inputName") > 0);
-        assertTrue(msg.indexOf("log4j.properties") > 0);
+        assertTrue(msg.indexOf("log4j2.xml") > 0);
     }
 
     public void testNoMultipartRequest() throws Exception {
@@ -213,7 +213,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
 
         req.setCharacterEncoding("text/html");
-        req.setContentType("multipart/form-data; boundary=---1234");
+        req.addHeader("Content-type", "multipart/form-data");
         req.setContent(null); // there is no content
 
         MyFileupAction action = new MyFileupAction();
@@ -224,7 +224,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         Map param = new HashMap();
         ActionContext.getContext().setParameters(param);
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest((HttpServletRequest) req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
 
@@ -234,8 +234,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testSuccessUploadOfATextFileMultipartRequest() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding("text/html");
-        req.setContentType("multipart/form-data; boundary=---1234");
-        req.addHeader("Content-type", "multipart/form-data");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -291,8 +290,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding("text/html");
         req.setMethod("POST");
-        req.setContentType("multipart/form-data; boundary=" + bondary);
-        req.addHeader("Content-type", "multipart/form-data");
+        req.addHeader("Content-type", "multipart/form-data; boundary=" + bondary);
         StringBuilder content = new StringBuilder(128);
         content.append(encodeTextFile(bondary, endline, "file", "test.html", "text/plain", plainContent));
         content.append(encodeTextFile(bondary, endline, "file", "test1.html", "text/html", htmlContent));

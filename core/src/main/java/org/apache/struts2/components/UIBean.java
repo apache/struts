@@ -24,8 +24,9 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.Template;
@@ -39,16 +40,10 @@ import org.apache.struts2.views.util.ContextUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * UIBean is the standard superclass of all Struts UI components.
@@ -440,7 +435,7 @@ import java.util.concurrent.ConcurrentMap;
  *
  */
 public abstract class UIBean extends Component {
-    private static final Logger LOG = LoggerFactory.getLogger(UIBean.class);
+    private static final Logger LOG = LogManager.getLogger(UIBean.class);
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -510,15 +505,12 @@ public abstract class UIBean extends Component {
     protected String tooltipIconPath;
 
     // dynamic attributes
-    protected Map<String,Object> dynamicAttributes = new HashMap<String,Object>();
+    protected Map<String, Object> dynamicAttributes = new HashMap<>();
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;
     protected String uiThemeExpansionToken;
     protected TemplateEngineManager templateEngineManager;
-
-    // dynamic attributes support for tags used with FreeMarker templates
-    protected static ConcurrentMap<Class, Set<String>> standardAttributesMap = new ConcurrentHashMap<Class, Set<String>>();
 
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
     public void setDefaultTemplateDir(String dir) {
@@ -585,9 +577,7 @@ public abstract class UIBean extends Component {
             throw new ConfigurationException("Unable to find a TemplateEngine for template " + template);
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Rendering template " + template);
-        }
+        LOG.debug("Rendering template {}", template);
 
         final TemplateRenderingContext context = new TemplateRenderingContext(template, writer, getStack(), getParameters(), this);
         engine.renderTemplate(context);
@@ -602,17 +592,17 @@ public abstract class UIBean extends Component {
 
         // If templateDir is not explicitly given,
         // try to find attribute which states the dir set to use
-        if ((templateDir == null) || (templateDir.equals(""))) {
+        if (StringUtils.isBlank(templateDir)) {
             templateDir = stack.findString("#attr.templateDir");
         }
 
         // Default template set
-        if ((templateDir == null) || (templateDir.equals(""))) {
+        if (StringUtils.isBlank(templateDir)) {
             templateDir = defaultTemplateDir;
         }
 
         // Defaults to 'template'
-        if ((templateDir == null) || (templateDir.equals(""))) {
+        if (StringUtils.isBlank(templateDir)) {
             templateDir = "template";
         }
 
@@ -626,7 +616,7 @@ public abstract class UIBean extends Component {
             theme = findString(this.theme);
         }
 
-        if ( theme == null || theme.equals("") ) {
+        if (StringUtils.isBlank(theme)) {
             Form form = (Form) findAncestor(Form.class);
             if (form != null) {
                 theme = form.getTheme();
@@ -635,12 +625,12 @@ public abstract class UIBean extends Component {
 
         // If theme set is not explicitly given,
         // try to find attribute which states the theme set to use
-        if ((theme == null) || (theme.equals(""))) {
+        if (StringUtils.isBlank(theme)) {
             theme = stack.findString("#attr.theme");
         }
 
         // Default theme set
-        if ((theme == null) || (theme.equals(""))) {
+        if (StringUtils.isBlank(theme)) {
             theme = defaultUITheme;
         }
 
@@ -671,7 +661,6 @@ public abstract class UIBean extends Component {
                 // lookup the label from a TextProvider (default value is the key)
                 providedLabel = TextProviderHelper.getText(key, key, stack);
             }
-
         }
 
         if (this.name != null) {
@@ -850,7 +839,7 @@ public abstract class UIBean extends Component {
             if (form != null) { // inform the containing form that we need tooltip javascript included
                 form.addParameter("hasTooltip", Boolean.TRUE);
 
-                // tooltipConfig defined in component itseilf will take precedence
+                // tooltipConfig defined in component itself will take precedence
                 // over those defined in the containing form
                 Map overallTooltipConfigMap = getTooltipConfig(form);
                 overallTooltipConfigMap.putAll(tooltipConfigMap); // override parent form's tooltip config
@@ -861,9 +850,7 @@ public abstract class UIBean extends Component {
                 }
             }
             else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
-                }
+                LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work");
             }
 
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
@@ -895,8 +882,6 @@ public abstract class UIBean extends Component {
                 if (this.tooltipCssClass != null)
                     this.addParameter("tooltipCssClass", findString(this.tooltipCssClass));
             }
-
-
         }
 
         evaluateExtraParams();
@@ -956,14 +941,14 @@ public abstract class UIBean extends Component {
 
     protected Map getTooltipConfig(UIBean component) {
         Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
-        Map<String, String> tooltipConfig = new LinkedHashMap<String, String>();
+        Map<String, String> tooltipConfig = new LinkedHashMap<>();
 
         if (tooltipConfigObj instanceof Map) {
             // we get this if its configured using
             // 1] UI component's tooltipConfig attribute  OR
             // 2] <param name="tooltip" value="" /> param tag value attribute
 
-            tooltipConfig = new LinkedHashMap<String, String>((Map)tooltipConfigObj);
+            tooltipConfig = new LinkedHashMap<>((Map) tooltipConfigObj);
         } else if (tooltipConfigObj instanceof String) {
 
             // we get this if its configured using
@@ -979,9 +964,7 @@ public abstract class UIBean extends Component {
                     value = configEntry[1].trim();
                     tooltipConfig.put(key, value);
                 } else {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("component " + component + " tooltip config param " + key + " has no value defined, skipped");
-                    }
+                    LOG.warn("component {} tooltip config param {} has no value defined, skipped", component, key);
                 }
             }
         }
@@ -1015,9 +998,7 @@ public abstract class UIBean extends Component {
             // this check is needed for backwards compatibility with 2.1.x
             tryId = findStringIfAltSyntax(id);
         } else if (null == (generatedId = escape(name != null ? findString(name) : null))) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot determine id attribute for [#0], consider defining id, name or key attribute!", this);
-            }
+            LOG.debug("Cannot determine id attribute for [{}], consider defining id, name or key attribute!", this);
             tryId = null;
         } else if (form != null) {
             tryId = form.getParameters().get("id") + "_" + generatedId;
@@ -1072,8 +1053,18 @@ public abstract class UIBean extends Component {
         this.cssClass = cssClass;
     }
 
+    @StrutsTagAttribute(description="The css class to use for element - it's an alias of cssClass attribute.")
+    public void setClass(String cssClass) {
+        this.cssClass = cssClass;
+    }
+
     @StrutsTagAttribute(description="The css style definitions for element to use")
     public void setCssStyle(String cssStyle) {
+        this.cssStyle = cssStyle;
+    }
+
+    @StrutsTagAttribute(description="The css style definitions for element to use - it's an alias of cssStyle attribute.")
+    public void setStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
 
@@ -1253,48 +1244,28 @@ public abstract class UIBean extends Component {
         this.tooltipIconPath = tooltipIconPath;
     }
 
-	public void setDynamicAttributes(Map<String, Object> dynamicAttributes) {
-		this.dynamicAttributes.putAll(dynamicAttributes);
+	public void setDynamicAttributes(Map<String, Object> tagDynamicAttributes) {
+        for (String key : tagDynamicAttributes.keySet()) {
+            if (!isValidTagAttribute(key)) {
+                dynamicAttributes.put(key, tagDynamicAttributes.get(key));
+            }
+        }
     }
 
 	@Override
 	/**
 	 * supports dynamic attributes for freemarker ui tags
 	 * @see https://issues.apache.org/jira/browse/WW-3174
+     * @see https://issues.apache.org/jira/browse/WW-4166
 	 */
-	public void copyParams(Map params) {
-		super.copyParams(params);
-		Set<String> standardAttributes = getStandardAttributes();
+    public void copyParams(Map params) {
+        super.copyParams(params);
         for (Object o : params.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             String key = (String) entry.getKey();
-            if (!key.equals("dynamicAttributes") && !standardAttributes.contains(key)){
+            if(!isValidTagAttribute(key) && !key.equals("dynamicAttributes"))
                 dynamicAttributes.put(key, entry.getValue());
-            }
         }
-	}
-
-	protected Set<String> getStandardAttributes() {
-        Class clz = getClass();
-        Set<String> standardAttributes = standardAttributesMap.get(clz);
-        if (standardAttributes == null) {
-            standardAttributes = new HashSet<String>();
-            while (clz != null) {
-                for (Field f : clz.getDeclaredFields()) {
-                    if (Modifier.isProtected(f.getModifiers())
-                            && (f.getType().equals(String.class) || clz.equals(ListUIBean.class)
-                            && f.getName().equals("list")))
-                        standardAttributes.add(f.getName());
-                }
-                if (clz.equals(UIBean.class)) {
-                    break;
-                } else {
-                    clz = clz.getSuperclass();
-                }
-            }
-            standardAttributesMap.putIfAbsent(clz, standardAttributes);
-        }
-		return standardAttributes;
-	}
+    }
 
 }

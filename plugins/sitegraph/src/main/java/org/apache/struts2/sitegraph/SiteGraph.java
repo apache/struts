@@ -21,8 +21,8 @@
 
 package org.apache.struts2.sitegraph;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.sitegraph.renderers.DOTRenderer;
 
@@ -45,7 +45,7 @@ import java.io.*;
  */
 public class SiteGraph {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SiteGraph.class);
+    private static final Logger LOG = LogManager.getLogger(SiteGraph.class);
 
     private String configDir;
     private String views;
@@ -66,18 +66,17 @@ public class SiteGraph {
         }
 
         if (args.length != 8 && args.length != 6) {
-            InputStream is = SiteGraph.class.getResourceAsStream("sitegraph-usage.txt");
-            byte[] buffer = new byte[2048];
-            int length;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            while ((length = is.read(buffer)) != -1) {
-                baos.write(buffer, 0, length);
+            try (InputStream is = SiteGraph.class.getResourceAsStream("sitegraph-usage.txt");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                byte[] buffer = new byte[2048];
+                int length;
+                while ((length = is.read(buffer)) != -1) {
+                    baos.write(buffer, 0, length);
+                }
+            
+                String usage = baos.toString();
+                System.out.println(usage.replaceAll("//.*", ""));
             }
-            is.close();
-            baos.close();
-
-            String usage = baos.toString();
-            System.out.println(usage.replaceAll("//.*", ""));
             return;
         }
 

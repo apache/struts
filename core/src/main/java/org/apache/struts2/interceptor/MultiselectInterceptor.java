@@ -48,7 +48,7 @@ public class MultiselectInterceptor extends AbstractInterceptor {
      */
     public String intercept(ActionInvocation actionInvocation) throws Exception {
         Map<String, Object> parameters = actionInvocation.getInvocationContext().getParameters();
-        Map<String, Object> newParams = new HashMap<String, Object>();
+        Map<String, Object> newParams = new HashMap<>();
         Set<String> keys = parameters.keySet();
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {

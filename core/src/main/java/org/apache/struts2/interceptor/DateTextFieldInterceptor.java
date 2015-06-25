@@ -1,22 +1,18 @@
 package org.apache.struts2.interceptor;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class DateTextFieldInterceptor implements Interceptor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DateTextFieldInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(DateTextFieldInterceptor.class);
 
     public static enum DateWord {
 
@@ -31,9 +27,9 @@ public class DateTextFieldInterceptor implements Interceptor {
 		private String description;
 		private Integer length;
 		private String dateType;
-		
-		private DateWord(String n, Integer l, String t) {
-			description = n;
+
+        DateWord(String n, Integer l, String t) {
+            description = n;
 			length = l;
 			dateType = t;
 		}
@@ -68,7 +64,7 @@ public class DateTextFieldInterceptor implements Interceptor {
     public String intercept(ActionInvocation ai) throws Exception {
         Map<String, Object> parameters = ai.getInvocationContext().getParameters();
         Set<Entry<String, Object>> entries = parameters.entrySet();
-        Map<String, Map<String, String>> dates = new HashMap<String, Map<String,String>>();
+        Map<String, Map<String, String>> dates = new HashMap<>();
         
         DateWord[] dateWords = DateWord.getAll();
 
@@ -88,8 +84,8 @@ public class DateTextFieldInterceptor implements Interceptor {
                     		iterator.remove();
                     		Map<String, String> map = dates.get(name);
                     		if (map == null) {
-                    			map = new HashMap<String, String>();
-                            	dates.put(name, map);
+                                map = new HashMap<>();
+                                dates.put(name, map);
                     		}
                             map.put(dateWord.getDateType(), values[0]);
                     	}
@@ -100,7 +96,7 @@ public class DateTextFieldInterceptor implements Interceptor {
         }
 
         // Create all the date objects
-        Map<String, Date> newParams = new HashMap<String, Date>();
+        Map<String, Date> newParams = new HashMap<>();
         Set<Entry<String, Map<String, String>>> dateEntries = dates.entrySet();
         for (Entry<String, Map<String, String>> dateEntry : dateEntries) {
         	Set<Entry<String, String>> dateFormatEntries = dateEntry.getValue().entrySet();
@@ -116,8 +112,7 @@ public class DateTextFieldInterceptor implements Interceptor {
                 Date value = formatter.parse(dateValue);
                 newParams.put(dateEntry.getKey(), value);
             } catch (ParseException e) {
-            	LOG.warn("Cannot parse the parameter '" + dateEntry.getKey() 
-            			+ "' with format '" + dateFormat + "' and with value '" + dateValue + "'");
+                LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", dateEntry.getKey(), dateFormat, dateValue);
             }
         }
         parameters.putAll(newParams);

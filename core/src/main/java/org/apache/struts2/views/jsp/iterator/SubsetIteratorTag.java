@@ -21,16 +21,15 @@
 
 package org.apache.struts2.views.jsp.iterator;
 
-import javax.servlet.jsp.JspException;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.util.SubsetIteratorFilter;
 import org.apache.struts2.util.SubsetIteratorFilter.Decider;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import javax.servlet.jsp.JspException;
 
 
 /**
@@ -155,7 +154,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
     private static final long serialVersionUID = -6252696081713080102L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(SubsetIteratorTag.class);
+    private static final Logger LOG = LogManager.getLogger(SubsetIteratorTag.class);
 
     String countAttr;
     String sourceAttr;
@@ -223,9 +222,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                     count = Integer.parseInt((String)countObj);
                 }
                 catch(NumberFormatException e) {
-                    if (LOG.isWarnEnabled()) {
-                	LOG.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
-                    }
+                    LOG.warn("unable to convert count attribute [{}] to number, ignore count attribute", countObj, e);
                 }
             }
         }
@@ -251,9 +248,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                     start = Integer.parseInt((String)startObj);
                 }
                 catch(NumberFormatException e) {
-                    if (LOG.isWarnEnabled()) {
-                	LOG.warn("unable to convert count attribute ["+startObj+"] to number, ignore count attribute", e);
-                    }
+                    LOG.warn("unable to convert count attribute [{}] to number, ignore count attribute", startObj, e);
                 }
             }
         }

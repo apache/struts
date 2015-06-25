@@ -10,8 +10,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<p/>
 				This page shows a simple example of using the debug tag.  <br/>

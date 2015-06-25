@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.json.annotations.JSON;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.annotations.JSONParameter;
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  */
 public class JSONWriter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONWriter.class);
+    private static final Logger LOG = LogManager.getLogger(JSONWriter.class);
 
     /**
      * By default, enums are serialised as name=value pairs
@@ -60,11 +60,11 @@ public class JSONWriter {
 
     private static char[] hex = "0123456789ABCDEF".toCharArray();
 
-    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE_IGNORE_HIERARCHY = new ConcurrentHashMap<Class<?>, BeanInfo>();
-    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE = new ConcurrentHashMap<Class<?>, BeanInfo>();
+    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE_IGNORE_HIERARCHY = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE = new ConcurrentHashMap<>();
 
     private StringBuilder buf = new StringBuilder();
-    private Stack<Object> stack = new Stack<Object>();
+    private Stack<Object> stack = new Stack<>();
     private boolean ignoreHierarchy = true;
     private Object root;
     private boolean buildExpr = true;
@@ -110,7 +110,6 @@ public class JSONWriter {
     protected void value(Object object, Method method) throws JSONException {
         if (object == null) {
             this.add("null");
-
             return;
         }
 
@@ -121,10 +120,7 @@ public class JSONWriter {
             if (clazz.isPrimitive() || clazz.equals(String.class)) {
                 this.process(object, method);
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Cyclic reference detected on " + object);
-                }
-
+                LOG.debug("Cyclic reference detected on {}", object);
                 this.add("null");
             }
 
@@ -276,7 +272,7 @@ public class JSONWriter {
             FieldBridge instance = (FieldBridge) impl.newInstance();
 
             if (fieldBridgeAnn.params().length > 0 && ParameterizedBridge.class.isAssignableFrom(impl)) {
-                Map<String, String> params = new HashMap<String, String>(fieldBridgeAnn.params().length);
+                Map<String, String> params = new HashMap<>(fieldBridgeAnn.params().length);
                 for (JSONParameter param : fieldBridgeAnn.params()) {
                     params.put(param.name(), param.value());
                 }
@@ -305,7 +301,18 @@ public class JSONWriter {
             } catch (Exception ex) {
                 LOG.debug(ex.getMessage(), ex);
             }
-        } else {
+            
+        //in hibernate4.3.7,because javassist3.18.1's class name generate rule is '_$$_jvst'+...
+        } else if(clazz.getName().contains("$$_jvst")){
+            try {
+                baseAccessor = Class.forName(
+                        clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
+                        .getMethod(accessor.getName(), accessor.getParameterTypes());
+            } catch (Exception ex) {
+                LOG.debug(ex.getMessage(), ex);
+            }
+        }
+        else {
             return accessor;
         }
         return baseAccessor;
@@ -409,7 +416,7 @@ public class JSONWriter {
 
             Object key = entry.getKey();
             if (key == null) {
-                LOG.error("Cannot build expression for null key in #0", exprStack);
+                LOG.error("Cannot build expression for null key in {}", exprStack);
                 continue;
             }
 
@@ -427,7 +434,7 @@ public class JSONWriter {
             hasData = true;
             if (!warnedNonString && !(key instanceof String)) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on #0", key.getClass().getName());
+                    LOG.warn("JavaScript doesn't support non-String keys, using toString() on {}", key.getClass().getName());
                 }
                 warnedNonString = true;
             }

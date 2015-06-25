@@ -1,3 +1,4 @@
+'use strict';
 angular.module("ngLocale", [], ["$provide", function($provide) {
 var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
 $provide.value("$locale", {
@@ -14,6 +15,14 @@ $provide.value("$locale", {
       "\u067e\u0646\u062c\u0634\u0646\u0628\u0647",
       "\u062c\u0645\u0639\u0647",
       "\u0634\u0646\u0628\u0647"
+    ],
+    "ERANAMES": [
+      "\u0642\u0628\u0644 \u0627\u0632 \u0645\u06cc\u0644\u0627\u062f",
+      "\u0645\u06cc\u0644\u0627\u062f\u06cc"
+    ],
+    "ERAS": [
+      "\u0642.\u0645.",
+      "\u0645."
     ],
     "MONTH": [
       "\u0698\u0627\u0646\u0648\u06cc\u0647\u0654",
@@ -57,8 +66,8 @@ $provide.value("$locale", {
     "medium": "d MMM y H:mm:ss",
     "mediumDate": "d MMM y",
     "mediumTime": "H:mm:ss",
-    "short": "yyyy/M/d H:mm",
-    "shortDate": "yyyy/M/d",
+    "short": "y/M/d H:mm",
+    "shortDate": "y/M/d",
     "shortTime": "H:mm"
   },
   "NUMBER_FORMATS": {
@@ -69,7 +78,6 @@ $provide.value("$locale", {
       {
         "gSize": 3,
         "lgSize": 3,
-        "macFrac": 0,
         "maxFrac": 3,
         "minFrac": 0,
         "minInt": 1,
@@ -81,18 +89,17 @@ $provide.value("$locale", {
       {
         "gSize": 3,
         "lgSize": 3,
-        "macFrac": 0,
         "maxFrac": 2,
         "minFrac": 2,
         "minInt": 1,
-        "negPre": "\u200e(\u00a4",
-        "negSuf": ")",
+        "negPre": "\u200e\u00a4-",
+        "negSuf": "",
         "posPre": "\u200e\u00a4",
         "posSuf": ""
       }
     ]
   },
   "id": "fa",
-  "pluralCat": function (n) {  return PLURAL_CATEGORY.OTHER;}
+  "pluralCat": function(n, opt_precision) {  var i = n | 0;  if (i == 0 || n == 1) {    return PLURAL_CATEGORY.ONE;  }  return PLURAL_CATEGORY.OTHER;}
 });
 }]);

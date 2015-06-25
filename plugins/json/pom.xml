@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.3.18-SNAPSHOT</version>
+        <version>2.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-json-plugin</artifactId>
@@ -94,6 +94,15 @@
         <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.
+           This is only necessary in tests-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>test</scope>
         </dependency>
 

@@ -8,8 +8,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<table>
 				#slabel ("label=Name" "name=name")
@@ -51,9 +51,6 @@
 					</td>
 				</tr>
 			</table>
-
-			#surl ("id=url" "value=index.jsp")
-			#sa("href=${url}")Back to index.jsp#end
 		</div>
 	</div>
 </div>

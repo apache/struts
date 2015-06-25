@@ -10,10 +10,11 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockInterceptor;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.HttpHeaderResult;
+import org.apache.struts2.result.HttpHeaderResult;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -173,7 +174,7 @@ public class RestActionInvocationTest extends TestCase {
 		
 		restActionInvocation.setDefaultErrorResultName("default-error");
 		ResultConfig resultConfig = new ResultConfig.Builder("default-error", 
-			"org.apache.struts2.dispatcher.HttpHeaderResult")
+			"org.apache.struts2.result.HttpHeaderResult")
 	    	.addParam("status", "123").build();
 	    ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest", 
 				"RestAction", "org.apache.rest.RestAction")
@@ -218,7 +219,7 @@ public class RestActionInvocationTest extends TestCase {
 
 	    // Define result 'success'
 		ResultConfig resultConfig = new ResultConfig.Builder("success", 
-			"org.apache.struts2.dispatcher.HttpHeaderResult")
+			"org.apache.struts2.result.HttpHeaderResult")
 	    	.addParam("status", "123").build();
 	    ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest", 
 				"RestAction", "org.apache.rest.RestAction")
@@ -228,6 +229,7 @@ public class RestActionInvocationTest extends TestCase {
 
 		request.setMethod("GET");
 		
+        restActionInvocation.setOgnlUtil(new OgnlUtil());
         restActionInvocation.invoke();
 
         assertEquals(123, response.getStatus());

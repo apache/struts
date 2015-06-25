@@ -548,7 +548,6 @@ public class URLTagTest extends AbstractUITagTest {
 
         mockContainer = new Mock(Container.class);
 
-        du.setConfigurationManager(configurationManager);
         session = new SessionMap(request);
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
                 request.getParameterMap(),
@@ -571,7 +570,7 @@ public class URLTagTest extends AbstractUITagTest {
         ActionContext.getContext().setActionInvocation(new DefaultActionInvocation(null, true));
         DefaultActionProxyFactory apFactory = new DefaultActionProxyFactory();
         apFactory.setContainer(container);
-        ActionProxy ap = apFactory.createActionProxy("/", "hello", null);
+        ActionProxy ap = apFactory.createActionProxy("/", "hello", null, null);
         ActionContext.getContext().getActionInvocation().init(ap);
 
         request.setScheme("http");

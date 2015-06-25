@@ -1,3 +1,4 @@
+'use strict';
 angular.module("ngLocale", [], ["$provide", function($provide) {
 var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
 $provide.value("$locale", {
@@ -14,6 +15,14 @@ $provide.value("$locale", {
       "\ubaa9\uc694\uc77c",
       "\uae08\uc694\uc77c",
       "\ud1a0\uc694\uc77c"
+    ],
+    "ERANAMES": [
+      "\uae30\uc6d0\uc804",
+      "\uc11c\uae30"
+    ],
+    "ERAS": [
+      "\uae30\uc6d0\uc804",
+      "\uc11c\uae30"
     ],
     "MONTH": [
       "1\uc6d4",
@@ -54,8 +63,8 @@ $provide.value("$locale", {
     ],
     "fullDate": "y\ub144 M\uc6d4 d\uc77c EEEE",
     "longDate": "y\ub144 M\uc6d4 d\uc77c",
-    "medium": "yyyy. M. d. a h:mm:ss",
-    "mediumDate": "yyyy. M. d.",
+    "medium": "y. M. d. a h:mm:ss",
+    "mediumDate": "y. M. d.",
     "mediumTime": "a h:mm:ss",
     "short": "yy. M. d. a h:mm",
     "shortDate": "yy. M. d.",
@@ -69,7 +78,6 @@ $provide.value("$locale", {
       {
         "gSize": 3,
         "lgSize": 3,
-        "macFrac": 0,
         "maxFrac": 3,
         "minFrac": 0,
         "minInt": 1,
@@ -81,18 +89,17 @@ $provide.value("$locale", {
       {
         "gSize": 3,
         "lgSize": 3,
-        "macFrac": 0,
         "maxFrac": 2,
         "minFrac": 2,
         "minInt": 1,
-        "negPre": "(\u00a4",
-        "negSuf": ")",
+        "negPre": "\u00a4-",
+        "negSuf": "",
         "posPre": "\u00a4",
         "posSuf": ""
       }
     ]
   },
   "id": "ko",
-  "pluralCat": function (n) {  return PLURAL_CATEGORY.OTHER;}
+  "pluralCat": function(n, opt_precision) {  return PLURAL_CATEGORY.OTHER;}
 });
 }]);

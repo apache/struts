@@ -79,15 +79,4 @@ public class PortletPrincipalProxy implements PrincipalProxy {
         return request.isSecure();
     }
 
-    /**
-     * Gets the request.
-     *
-     * @return The request
-     * @throws UnsupportedOperationException not supported in this implementation.
-     * @deprecated To obtain the HttpServletRequest in your action, use
-     *             {@link org.apache.struts2.servlet.ServletRequestAware}, since this method will be dropped in future.
-     */
-    public HttpServletRequest getRequest() {
-        throw new UnsupportedOperationException("Usage of getRequest() method is deprecadet and not supported for this implementation");
-    }
 }

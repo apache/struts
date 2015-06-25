@@ -21,18 +21,17 @@
 
 package org.apache.struts2.components;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -40,7 +39,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * Create a input transfer select component which is basically an text input
  * and  &lt;select ...&gt; tag with buttons in the middle of them allowing text
  * to be added to the transfer select. Will auto-select all its
- * elements upon its containing form submision.
+ * elements upon its containing form submission.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -75,7 +74,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 @StrutsTag(name="inputtransferselect", tldTagClass="org.apache.struts2.views.jsp.ui.InputTransferSelectTag", description="Renders an input form")
 public class InputTransferSelect extends ListUIBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InputTransferSelect.class);
+    private static final Logger LOG = LogManager.getLogger(InputTransferSelect.class);
 
     private static final String TEMPLATE = "inputtransferselect";
 
@@ -113,11 +112,11 @@ public class InputTransferSelect extends ListUIBean {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if (size == null || size.trim().length() <= 0) {
+        if (StringUtils.isBlank(size)) {
             addParameter("size", "5");
         }
 
-        if (multiple == null || multiple.trim().length() <= 0) {
+        if (StringUtils.isBlank(multiple)) {
             addParameter("multiple", Boolean.TRUE);
         }
 
@@ -140,12 +139,12 @@ public class InputTransferSelect extends ListUIBean {
 
 
         // buttonCssClass
-        if (buttonCssClass != null && buttonCssClass.trim().length() > 0) {
+        if (StringUtils.isNotBlank(buttonCssClass)) {
             addParameter("buttonCssClass", buttonCssClass);
         }
 
         // buttonCssStyle
-        if (buttonCssStyle != null && buttonCssStyle.trim().length() > 0) {
+        if (StringUtils.isNotBlank(buttonCssStyle)) {
             addParameter("buttonCssStyle", buttonCssStyle);
         }
 
@@ -174,11 +173,11 @@ public class InputTransferSelect extends ListUIBean {
 
 
         // inform the form component our select tag infos, so they know how to select
-        // its elements upon onsubmit
+        // its elements upon onSubmit
         Form formAncestor = (Form) findAncestor(Form.class);
         if (formAncestor != null) {
 
-            // inform ancestor form that we are having a customOnsubmit (see form-close.ftl [simple theme])
+            // inform ancestor form that we are having a customOnSubmit (see form-close.ftl [simple theme])
             enableAncestorFormCustomOnsubmit();
 
 

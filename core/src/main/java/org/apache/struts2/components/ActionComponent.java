@@ -28,8 +28,8 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
@@ -47,7 +47,6 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -118,7 +117,7 @@ import java.util.Map;
  */
 @StrutsTag(name="action", tldTagClass="org.apache.struts2.views.jsp.ActionTag", description="Execute an action from within a view")
 public class ActionComponent extends ContextBean {
-    private static final Logger LOG = LoggerFactory.getLogger(ActionComponent.class);
+    private static final Logger LOG = LogManager.getLogger(ActionComponent.class);
 
     protected HttpServletResponse res;
     protected HttpServletRequest req;
@@ -164,16 +163,13 @@ public class ActionComponent extends ContextBean {
                 try {
                     writer.flush();
                 } catch (IOException e) {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("error while trying to flush writer ", e);
-                    }
                 }
             }
             executeAction();
 
             if ((getVar() != null) && (proxy != null)) {
-                getStack().setValue("#attr['" + getVar() + "']",
-                        proxy.getAction());
+                getStack().setValue("#attr['" + getVar() + "']", proxy.getAction());
             }
         } finally {
             popComponentStack();
@@ -219,14 +215,14 @@ public class ActionComponent extends ContextBean {
             parentParams = new ActionContext(getStack().getContext()).getParameters();
         }
 
-        Map<String,String[]> newParams = (parentParams != null) 
-            ? new HashMap<String,String[]>(parentParams) 
-            : new HashMap<String,String[]>();
+        Map<String, String[]> newParams = (parentParams != null)
+                ? new HashMap<String, String[]>(parentParams)
+                : new HashMap<String, String[]>();
 
         if (parameters != null) {
-            Map<String,String[]> params = new HashMap<String,String[]>();
-            for (Iterator i = parameters.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry entry = (Map.Entry) i.next();
+            Map<String, String[]> params = new HashMap<>();
+            for (Object o : parameters.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
                 String key = (String) entry.getKey();
                 Object val = entry.getValue();
                 if (val.getClass().isArray() && String.class == val.getClass().getComponentType()) {

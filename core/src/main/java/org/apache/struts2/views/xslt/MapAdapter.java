@@ -21,11 +21,11 @@
 
 package org.apache.struts2.views.xslt;
 
+import org.w3c.dom.Node;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.w3c.dom.Node;
 
 /**
  * MapAdapter adapters a java.util.Map type to an XML DOM with the following
@@ -53,14 +53,13 @@ public class MapAdapter extends AbstractAdapterElement {
     }
 
     protected List<Node> buildChildAdapters() {
-        List<Node> children = new ArrayList<Node>(map().entrySet().size());
+        List<Node> children = new ArrayList<>(map().entrySet().size());
 
         for (Object o : map().entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             Object key = entry.getKey();
             Object value = entry.getValue();
-            EntryElement child = new EntryElement(
-                    getAdapterFactory(), this, "entry", key, value);
+            EntryElement child = new EntryElement(getAdapterFactory(), this, "entry", key, value);
             children.add(child);
         }
 
@@ -78,7 +77,7 @@ public class MapAdapter extends AbstractAdapterElement {
         }
 
         protected List<Node> buildChildAdapters() {
-            List<Node> children = new ArrayList<Node>();
+            List<Node> children = new ArrayList<>();
             children.add( getAdapterFactory().adaptNode( this, "key", key ) );
             children.add( getAdapterFactory().adaptNode( this, "value", value ) );
             return children;

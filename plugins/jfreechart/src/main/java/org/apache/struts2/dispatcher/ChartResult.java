@@ -23,8 +23,9 @@ package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.struts2.result.StrutsResultSupport;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 
@@ -102,7 +103,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ChartResult extends StrutsResultSupport {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ChartResult.class);
+    private final static Logger LOG = LogManager.getLogger(ChartResult.class);
 
     private static final long serialVersionUID = -6484761870055986612L;
     private static final String DEFAULT_TYPE = "png";

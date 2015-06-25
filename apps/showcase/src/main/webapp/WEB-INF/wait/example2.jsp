@@ -11,8 +11,8 @@
 
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<p><b>Example 2:</b> As example 1 but uses a delay of 2000 millis before the wait page is shown. Try simulating with
 				a value of 500 millis to see that no wait page is shown at all.</p>

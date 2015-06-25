@@ -12,14 +12,12 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			Thank you, <b><s:property value="name"/></b>. Your answer has been submitted as:
 
 			<b><s:property value="answer"/></b>
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

@@ -415,14 +415,6 @@ public class JspC implements Options {
         return null;
     }
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean getSendErrorToClient() {
-        return true;
-    }
-
     public void setClassDebugInfo( boolean b ) {
         classDebugInfo=b;
     }

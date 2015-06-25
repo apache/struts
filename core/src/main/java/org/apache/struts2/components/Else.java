@@ -21,12 +21,11 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.Map;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -70,6 +69,6 @@ public class Else extends Component {
 
         context.remove(If.ANSWER);
 
-        return !((ifResult == null) || (ifResult.booleanValue()));
+        return !((ifResult == null) || (ifResult));
     }
 }

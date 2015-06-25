@@ -23,11 +23,7 @@ package org.apache.struts2.dispatcher;
 
 import javax.servlet.ServletContext;
 import java.io.Serializable;
-import java.util.AbstractMap;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -74,7 +70,7 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      */
     public Set entrySet() {
         if (entries == null) {
-            entries = new HashSet<Object>();
+            entries = new HashSet<>();
 
             // Add servlet context attributes
             Enumeration enumeration = context.getAttributeNames();

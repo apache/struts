@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.result.ServletDispatcherResult;
 import org.easymock.EasyMock;
 
 import javax.servlet.ServletContext;
@@ -38,11 +38,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.createNiceMock;
-import static org.easymock.classextension.EasyMock.createStrictMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.classextension.EasyMock.*;
 
 public class ConventionUnknownHandlerTest extends TestCase {
 
@@ -161,7 +157,7 @@ public class ConventionUnknownHandlerTest extends TestCase {
 
         ActionConfig actionConfig = null;
         expect(service.determineResultPath(actionConfig)).andReturn("");
-        Map<String, ResultTypeConfig> results = new HashMap<String, ResultTypeConfig>();
+        Map<String, ResultTypeConfig> results = new HashMap<>();
         results.put("jsp", new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName()).build());
         expect(service.getResultTypesByExtension(packageConfiguration)).andReturn(results);
 

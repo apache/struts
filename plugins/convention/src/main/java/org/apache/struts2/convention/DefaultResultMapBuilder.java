@@ -32,21 +32,17 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -117,7 +113,7 @@ import java.util.Set;
  * </table>
  */
 public class DefaultResultMapBuilder implements ResultMapBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultResultMapBuilder.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultResultMapBuilder.class);
     private final ServletContext servletContext;
     private Set<String> relativeResultTypes;
     private ConventionsService conventionsService;
@@ -135,7 +131,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
     public DefaultResultMapBuilder(ServletContext servletContext, Container container,
             @Inject("struts.convention.relative.result.types") String relativeResultTypes) {
         this.servletContext = servletContext;
-        this.relativeResultTypes = new HashSet<String>(Arrays.asList(relativeResultTypes.split("\\s*[,]\\s*")));
+        this.relativeResultTypes = new HashSet<>(Arrays.asList(relativeResultTypes.split("\\s*[,]\\s*")));
         this.conventionsService = container.getInstance(ConventionsService.class, container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE));
     }
 
@@ -173,7 +169,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         }
 
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Using final calculated namespace [#0]", namespace);
+            LOG.trace("Using final calculated namespace [{}]", namespace);
         }
 
         // Add that ending slash for concatenation
@@ -184,7 +180,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         String resultPrefix = defaultResultPath + actionName;
 
         //results from files
-        Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
+        Map<String, ResultConfig> results = new HashMap<>();
         Map<String, ResultTypeConfig> resultsByExtension = conventionsService.getResultTypesByExtension(packageConfig);
         createFromResources(actionClass, results, defaultResultPath, resultPrefix, actionName,
             packageConfig, resultsByExtension);
@@ -243,7 +239,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             final String resultPath, final String resultPrefix, final String actionName,
             PackageConfig packageConfig, Map<String, ResultTypeConfig> resultsByExtension) {
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Searching for results in the Servlet container at [#0]" +
+            LOG.trace("Searching for results in the Servlet container at [{}]" +
             		" with result prefix of [#1]", resultPath, resultPrefix);
         }
 
@@ -252,23 +248,19 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         Set<String> paths = servletContext.getResourcePaths(flatResultLayout ? resultPath : resultPrefix);
         if (paths != null) {
             for (String path : paths) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Processing resource path [#0]", path);
-                }
+                LOG.trace("Processing resource path [{}]", path);
 
                 String fileName = StringUtils.substringAfterLast(path, "/");
                 if (StringUtils.isBlank(fileName) || StringUtils.startsWith(fileName, ".")) {
-                    if (LOG.isTraceEnabled())
-                        LOG.trace("Ignoring file without name [#0]", path);
+                    LOG.trace("Ignoring file without name [{}]", path);
                     continue;
                 }
                 else if(fileName.lastIndexOf(".") > 0){
                     String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
 
                     if(conventionsService.getResultTypesByExtension(packageConfig).get(suffix) == null) {
-                        if (LOG.isDebugEnabled())
-                            LOG.debug("No result type defined for file suffix : [#0]. Ignoring file #1", suffix, fileName);
-                	continue;
+                        LOG.debug("No result type defined for file suffix : [{}]. Ignoring file {}", suffix, fileName);
+                    	continue;
                     }
                 }
 
@@ -280,8 +272,8 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         String classPathLocation = resultPath.startsWith("/") ?
             resultPath.substring(1, resultPath.length()) : resultPath;
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Searching for results in the class path at [#0]"
-                    + " with a result prefix of [#1] and action name [#2]", classPathLocation, resultPrefix,
+            LOG.trace("Searching for results in the class path at [{}]"
+                    + " with a result prefix of [{}] and action name [{}]", classPathLocation, resultPrefix,
                     actionName);
         }
 
@@ -292,9 +284,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                 Test<URL> resourceTest = getResourceTest(resultPath, actionName);
                 for (Map.Entry<String, URL> entry : matches.entrySet()) {
                     if (resourceTest.test(entry.getValue())) {
-                        if (LOG.isTraceEnabled()) {
-                            LOG.trace("Processing URL [#0]", entry.getKey());
-                        }
+                        LOG.trace("Processing URL [{}]", entry.getKey());
 
                         String urlStr = entry.getValue().toString();
                         int index = urlStr.lastIndexOf(resultPrefix);
@@ -305,8 +295,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                 }
             }
         } catch (IOException ex) {
-           if (LOG.isErrorEnabled())
-               LOG.error("Unable to scan directory [#0] for results", ex, classPathLocation);
+            LOG.error("Unable to scan directory [{}] for results", ex, classPathLocation);
         }
     }
 
@@ -325,7 +314,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         if (ctx != null)
             classLoaderInterface = (ClassLoaderInterface) ctx.get(ClassLoaderInterface.CLASS_LOADER_INTERFACE);
 
-        return (ClassLoaderInterface) ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()));
+        return ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()));
 
     }
 
@@ -361,7 +350,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             // This case is when the path doesn't contain a result code
             if (indexOfDot == resultPrefix.length()) {
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("The result file [#0] has no result code and therefore" +
+                    LOG.trace("The result file [{}] has no result code and therefore" +
                         " will be associated with success, input and error by default. This might" +
                         " be overridden by another result file or an annotation.", path);
                 }
@@ -373,7 +362,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             // This case is when the path contains a result code
             } else if (indexOfDot > resultPrefix.length()) {
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("The result file [#0] has a result code and therefore" +
+                    LOG.trace("The result file [{}] has a result code and therefore" +
                         " will be associated with only that result code.", path);
                 }
 
@@ -455,7 +444,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
         }
 
         // Add the default parameters for the result type config (if any)
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         if (resultTypeConfig.getParams() != null) {
             params.putAll(resultTypeConfig.getParams());
         }

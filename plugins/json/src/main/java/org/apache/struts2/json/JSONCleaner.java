@@ -20,20 +20,13 @@
  */
 package org.apache.struts2.json;
 
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.HashMap;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * <p>Isolate the process of cleaning JSON data from the Interceptor class
@@ -47,7 +40,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public abstract class JSONCleaner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONCleaner.class);
+    private static final Logger LOG = LogManager.getLogger(JSONCleaner.class);
 
     public static class Filter
     {
@@ -95,9 +88,7 @@ public abstract class JSONCleaner {
             if (allow(key)) {
                 e.setValue(clean(key, e.getValue()));
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("blocked: " + key);
-                }
+                LOG.debug("Blocked: {}", key);
                 iter.remove();
             }
         }
@@ -132,9 +123,9 @@ public abstract class JSONCleaner {
         }
 
         if (includesExcludesMap == null) {
-            includesExcludesMap = new TreeMap<String, Filter>();
+            includesExcludesMap = new TreeMap<>();
 
-            Map<String, Boolean> existingExpr = new HashMap<String, Boolean>();
+            Map<String, Boolean> existingExpr = new HashMap<>();
 
             Map<String, Map<String, String>> includePatternData = JSONUtil.getIncludePatternData();
             String splitPattern = includePatternData.get(JSONUtil.SPLIT_PATTERN).get(JSONUtil.WILDCARD_PATTERN);
@@ -165,9 +156,7 @@ public abstract class JSONCleaner {
                             if (s.length() > 0) {
                                 includesExcludesMap.put(s, new Filter(s, true));
 
-                                if (LOG.isDebugEnabled()) {
-                                    LOG.debug("Adding include wildcard expression: " + s);
-                                }
+                                LOG.debug("Adding include wildcard expression: {}", s);
                             }
                         }
                     }
@@ -221,7 +210,7 @@ public abstract class JSONCleaner {
     }
 
     /**
-     * @param blocked The blocked paramters as comma separated String.
+     * @param blocked The blocked parameters as comma separated String.
      */
     public void setBlocked(String blocked) {
         setBlockedCollection(asCollection(blocked));

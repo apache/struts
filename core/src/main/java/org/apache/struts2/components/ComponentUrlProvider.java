@@ -56,7 +56,7 @@ public class ComponentUrlProvider implements UrlProvider {
 
     /**
      *
-     * @param component The component used to delagete some calls to
+     * @param component The component used to delegate some calls to
      * @param parameters parameters passed from <param...>
      */
     public ComponentUrlProvider(Component component, Map parameters) {

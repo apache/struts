@@ -22,6 +22,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+
 import java.io.Writer;
 
 /**
@@ -33,14 +34,14 @@ public interface UrlRenderer {
 	
 	/**
 	 * Preprocessing step
-	 * @param urlComponent
+	 * @param provider
 	 */
 	void beforeRenderUrl(UrlProvider provider);
 	
 	/**
 	 * Render a URL.
 	 * @param writer A writer that the implementation can use to write the result to.
-	 * @param urlComponent The {@link UrlProvider} component that "owns" this renderer.
+	 * @param provider The {@link UrlProvider} component that "owns" this renderer.
 	 */
 	void renderUrl(Writer writer, UrlProvider provider);
 	

@@ -22,8 +22,8 @@
 package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.JRRewindableDataSource;
@@ -39,14 +39,14 @@ public class ValueStackDataSource implements JRRewindableDataSource {
     /**
      * Logger for this class
      */
-    private static Logger LOG = LoggerFactory.getLogger(ValueStackDataSource.class);
+    private static Logger LOG = LogManager.getLogger(ValueStackDataSource.class);
 
+    private Iterator iterator;
+    private ValueStack valueStack;
+    private String dataSource;
+    private boolean wrapField;
 
-    Iterator iterator;
-    ValueStack valueStack;
-    String dataSource;
-    boolean firstTimeThrough = true;
-
+    private boolean firstTimeThrough = true;
 
     /**
      * Create a value stack data source on the given iterable property
@@ -54,10 +54,11 @@ public class ValueStackDataSource implements JRRewindableDataSource {
      * @param valueStack      The value stack to base the data source on
      * @param dataSourceParam The property to iterate over for the report
      */
-    public ValueStackDataSource(ValueStack valueStack, String dataSourceParam) {
+    public ValueStackDataSource(ValueStack valueStack, String dataSourceParam, boolean wrapField) {
         this.valueStack = valueStack;
+        this.dataSource = dataSourceParam;
+        this.wrapField = wrapField;
 
-        dataSource = dataSourceParam;
         Object dataSourceValue = valueStack.findValue(dataSource);
 
         if (dataSourceValue != null) {
@@ -99,14 +100,13 @@ public class ValueStackDataSource implements JRRewindableDataSource {
         }
 
         Object value = valueStack.findValue(expression);
+        LOG.debug("Field [{}] = [{}]", field.getName(), value);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Field [#0] = [#1]", field.getName(), value);
-        }
-
-        if (MakeIterator.isIterable(value)) {
+        if (!wrapField && MakeIterator.isIterable(value) && !field.getValueClass().isInstance(value)) {
+            return value;
+        } else if (MakeIterator.isIterable(value)) {
             // wrap value with ValueStackDataSource if not already wrapped
-            return new ValueStackDataSource(this.valueStack, expression);
+            return new ValueStackDataSource(this.valueStack, expression, wrapField);
         } else {
             return value;
         }
@@ -129,9 +129,7 @@ public class ValueStackDataSource implements JRRewindableDataSource {
                 iterator = MakeIterator.convert(array);
             }
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Data source value for data source [" + dataSource + "] was null");
-            }
+            LOG.warn("Data source value for data source [{}] was null", dataSource);
         }
     }
 
@@ -153,14 +151,12 @@ public class ValueStackDataSource implements JRRewindableDataSource {
         if ((iterator != null) && (iterator.hasNext())) {
             valueStack.push(iterator.next());
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Pushed next value: " + valueStack.findValue("."));
+                LOG.debug("Pushed next value: {}", valueStack.findValue("."));
             }
 
             return true;
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No more values");
-            }
+            LOG.debug("No more values");
 
             return false;
         }

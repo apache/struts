@@ -29,14 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Default implementation of the theme
  */
 public class DefaultTheme implements Theme {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultTheme.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultTheme.class);
 
     private String name;
     protected Map<String, List<TagHandlerFactory>> handlerFactories;
@@ -116,9 +116,7 @@ public class DefaultTheme implements Theme {
 
         TagGenerator gen = (TagGenerator) handlers.get(0);
         try {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Rendering tag [#0]", tagName);
-            }
+            LOG.trace("Rendering tag [{}]", tagName);
             gen.generate();
         } catch (IOException ex) {
             throw new StrutsException("Unable to write tag: " + tagName, ex);

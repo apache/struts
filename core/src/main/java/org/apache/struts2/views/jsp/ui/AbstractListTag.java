@@ -29,6 +29,8 @@ public abstract class AbstractListTag extends AbstractUITag {
     protected String list;
     protected String listKey;
     protected String listValue;
+    protected String listValueKey;
+    protected String listLabelKey;
     protected String listCssClass;
     protected String listCssStyle;
     protected String listTitle;
@@ -40,6 +42,8 @@ public abstract class AbstractListTag extends AbstractUITag {
         listUIBean.setList(list);
         listUIBean.setListKey(listKey);
         listUIBean.setListValue(listValue);
+        listUIBean.setListValueKey(listValueKey);
+        listUIBean.setListLabelKey(listLabelKey);
         listUIBean.setListCssClass(listCssClass);
         listUIBean.setListCssStyle(listCssStyle);
         listUIBean.setListTitle(listTitle);
@@ -55,6 +59,14 @@ public abstract class AbstractListTag extends AbstractUITag {
 
     public void setListValue(String listValue) {
         this.listValue = listValue;
+    }
+
+    public void setListValueKey(String listValueKey) {
+        this.listValueKey = listValueKey;
+    }
+
+    public void setListLabelKey(String listLabelKey) {
+        this.listLabelKey = listLabelKey;
     }
 
     public void setListCssClass(String listCssClass) {

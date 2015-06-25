@@ -120,4 +120,12 @@ public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibrar
         return Arrays.asList(directives);
     }
 
+    public Object getFreemarkerModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        return getModels(stack, req, res);
+    }
+
+    public List<Class> getVelocityDirectiveClasses() {
+        return getDirectiveClasses();
+    }
+
 }

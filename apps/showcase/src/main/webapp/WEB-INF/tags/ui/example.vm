@@ -2,7 +2,6 @@
 <head>
 	<title>Struts2 Showcase - UI Tags Example (Velocity)</title>
 	#shead()
-	#sxhead()
 </head>
 <body>
 <div class="page-header">
@@ -10,13 +9,11 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			#sform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
 			    #stextfield ("label=Name" "name=name")
-			    #sxdatetimepicker ("label=Birthday" "name=birthday")
-			    #sxdatetimepicker ("label=Wake up time" "name=wakeup" "type=time")
 			    #stextarea ("label=Biography" "name=bio" "cols=20" "rows=3")
 			    #sselect ("label=Favourite Color" "list={'Red', 'Blue', 'Green'}" "name=favouriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
 			    #sselect ("label=Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")
@@ -30,8 +27,6 @@
 			    #sreset("cssClass=btn btn-danger")
 			#end
 
-			#surl ("id=url" "value=index.jsp")
-			<a href="${url}" class="btn btn-info"><i class="icon icon-arrow-left"></i> Back to index.jsp</a>
 		</div>
 	</div>
 </div>

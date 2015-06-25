@@ -22,14 +22,20 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.FastByteArrayOutputStream;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.UrlHelper;
 
@@ -38,9 +44,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Base class to extend for UI components.
@@ -50,8 +57,16 @@ import java.util.Stack;
  */
 public class Component {
 
+    private static final Logger LOG = LogManager.getLogger(Component.class);
+
     public static final String COMPONENT_STACK = "__component_stack";
 
+    /**
+     * Caches information about common tag's attributes to reduce scanning for annotation @StrutsTagAttribute
+     */
+    protected static ConcurrentMap<Class<?>, Collection<String>> standardAttributesMap = new ConcurrentHashMap<>();
+
+    protected boolean devMode = false;
     protected ValueStack stack;
     protected Map parameters;
     protected ActionMapper actionMapper;
@@ -65,7 +80,7 @@ public class Component {
      */
     public Component(ValueStack stack) {
         this.stack = stack;
-        this.parameters = new LinkedHashMap<String, Object>();
+        this.parameters = new LinkedHashMap<>();
         getComponentStack().push(this);
     }
 
@@ -80,7 +95,12 @@ public class Component {
 
         return name.substring(dot + 1).toLowerCase();
     }
-    
+
+    @Inject(value = StrutsConstants.STRUTS_DEVMODE, required = false)
+    public void setDevMode(String devMode) {
+        this.devMode = BooleanUtils.toBoolean(devMode);
+    }
+
     @Inject
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
@@ -88,7 +108,7 @@ public class Component {
 
     @Inject(StrutsConstants.STRUTS_EL_THROW_EXCEPTION)
     public void setThrowExceptionsOnELFailure(String throwException) {
-        this.throwExceptionOnELFailure = "true".equals(throwException);
+        this.throwExceptionOnELFailure = BooleanUtils.toBoolean(throwException);
     }
 
     @Inject
@@ -110,7 +130,7 @@ public class Component {
     public Stack<Component> getComponentStack() {
         Stack<Component> componentStack = (Stack<Component>) stack.getContext().get(COMPONENT_STACK);
         if (componentStack == null) {
-            componentStack = new Stack<Component>();
+            componentStack = new Stack<>();
             stack.getContext().put(COMPONENT_STACK, componentStack);
         }
         return componentStack;
@@ -207,7 +227,7 @@ public class Component {
      * Evaluates the OGNL stack to find a String value.
      * <p/>
      * If the given expression is <tt>null</tt/> a error is logged and a <code>RuntimeException</code> is thrown
-     * constructed with a messaged based on the given field and errorMsg paramter.
+     * constructed with a messaged based on the given field and errorMsg parameter.
      *
      * @param expr  OGNL expression.
      * @param field   field name used when throwing <code>RuntimeException</code>.
@@ -411,7 +431,7 @@ public class Component {
     /**
      * Pushes this component's parameter Map as well as the component itself on to the stack
      * and then copies the supplied parameters over. Because the component's parameter Map is
-     * pushed before the component itself, any key-value pair that can't be assigned to componet
+     * pushed before the component itself, any key-value pair that can't be assigned to component
      * will be set in the parameters Map.
      *
      * @param params  the parameters to copy.
@@ -423,7 +443,15 @@ public class Component {
             for (Object o : params.entrySet()) {
                 Map.Entry entry = (Map.Entry) o;
                 String key = (String) entry.getKey();
-                stack.setValue(key, entry.getValue());
+
+                if (key.indexOf('-') >= 0) {
+                    // UI component attributes may contain hypens (e.g. data-ajax), but ognl
+                    // can't handle that, and there can't be a component property with a hypen
+                    // so into the parameters map it goes. See WW-4493
+                    parameters.put(key, entry.getValue());
+                } else {
+                    stack.setValue(key, entry.getValue());
+                }
             }
         } finally {
             stack.pop();
@@ -437,12 +465,11 @@ public class Component {
      * @return the exception as a string.
      */
     protected String toString(Throwable t) {
-        FastByteArrayOutputStream bout = new FastByteArrayOutputStream();
-        PrintWriter wrt = new PrintWriter(bout);
-        t.printStackTrace(wrt);
-        wrt.close();
-
-        return bout.toString();
+        try (FastByteArrayOutputStream bout = new FastByteArrayOutputStream();
+                PrintWriter wrt = new PrintWriter(bout)) {
+            t.printStackTrace(wrt);
+            return bout.toString();
+        }
     }
 
     /**
@@ -468,7 +495,7 @@ public class Component {
      * If the provided value is <tt>null</tt> any existing parameter with
      * the given key name is removed.
      * @param key  the key of the new parameter to add.
-     * @param value the value assoicated with the key.
+     * @param value the value associated with the key.
      */
     public void addParameter(String key, Object value) {
         if (key != null) {
@@ -488,6 +515,33 @@ public class Component {
      */
     public boolean usesBody() {
         return false;
+    }
+
+    /**
+     * Checks if provided name is a valid tag's attribute
+     *
+     * @param attrName String name of attribute
+     * @return true if attribute with the same name was already defined
+     */
+    public boolean isValidTagAttribute(String attrName) {
+        return getStandardAttributes().contains(attrName);
+    }
+
+    /**
+     * If needed caches all methods annotated by given annotation to avoid further scans
+     */
+    protected Collection<String> getStandardAttributes() {
+        Class clz = getClass();
+        Collection<String> standardAttributes = standardAttributesMap.get(clz);
+        if (standardAttributes == null) {
+            Collection<Method> methods = AnnotationUtils.getAnnotatedMethods(clz, StrutsTagAttribute.class);
+            standardAttributes = new HashSet<>(methods.size());
+            for(Method m : methods) {
+                standardAttributes.add(StringUtils.uncapitalize(m.getName().substring(3)));
+            }
+            standardAttributesMap.putIfAbsent(clz, standardAttributes);
+        }
+        return standardAttributes;
     }
 
 }

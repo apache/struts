@@ -22,8 +22,8 @@
 package org.apache.struts2.config_browser;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
@@ -45,7 +45,7 @@ import java.util.TreeSet;
 public class ShowValidatorAction extends ListValidatorsAction {
     private static final long serialVersionUID = 4061534149317835177L;
 
-    private static Logger LOG = LoggerFactory.getLogger(ShowValidatorAction.class);
+    private static Logger LOG = LogManager.getLogger(ShowValidatorAction.class);
 
     private Set<PropertyInfo> properties = Collections.emptySet();
     private int selected = 0;

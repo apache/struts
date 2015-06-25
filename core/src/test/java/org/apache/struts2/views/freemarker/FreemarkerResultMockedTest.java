@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -34,25 +35,16 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
     PrintWriter writer;
     StringWriter stringWriter;
     ServletContext servletContext;
-    FreemarkerManager mgr;
     MockHttpServletRequest request;
 
-    public void testActionThatThrowsExceptionTag() throws Exception {
-        //get fm config to use it in mock servlet context
-        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
-        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
-        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+    Configuration freemarkerConfig;
 
-        servletContext = EasyMock.createNiceMock(ServletContext.class);
+    public void testActionThatThrowsExceptionTag() throws Exception {
         File file = new File(FreeMarkerResultTest.class.getResource("callActionFreeMarker2.ftl").toURI());
         EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/callActionFreeMarker.ftl")).andReturn(file.getAbsolutePath());
         file = new File(FreeMarkerResultTest.class.getResource("nested.ftl").toURI());
         EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/nested.ftl")).andReturn(file.getAbsolutePath());
-        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
         EasyMock.replay(servletContext);
-
-        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
-        ServletActionContext.setServletContext(servletContext);
 
         init();
 
@@ -63,21 +55,11 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
     }
 
     public void testActionThatSucceedsTag() throws Exception {
-        //get fm config to use it in mock servlet context
-        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
-        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
-        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-
-        servletContext = EasyMock.createNiceMock(ServletContext.class);
         File file = new File(FreeMarkerResultTest.class.getResource("callActionFreeMarker2.ftl").toURI());
         EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/callActionFreeMarker2.ftl")).andReturn(file.getAbsolutePath());
         file = new File(FreeMarkerResultTest.class.getResource("nested.ftl").toURI());
         EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/nested.ftl")).andReturn(file.getAbsolutePath());
-        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
         EasyMock.replay(servletContext);
-
-        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
-        ServletActionContext.setServletContext(servletContext);
 
         init();
 
@@ -88,13 +70,6 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
     }
 
     public void testDynamicAttributesSupport() throws Exception {
-        //get fm config to use it in mock servlet context
-        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
-        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
-        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-
-        servletContext = EasyMock.createNiceMock(ServletContext.class);
-
         File file = new File(FreeMarkerResultTest.class.getResource("dynaAttributes.ftl").toURI());
         EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/dynaAttributes.ftl")).andReturn(file.getAbsolutePath());
 
@@ -117,11 +92,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
         EasyMock.expect(servletContext.getRealPath("/template/~~~simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
 
-        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
         EasyMock.replay(servletContext);
-
-        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
-        ServletActionContext.setServletContext(servletContext);
 
         init();
 
@@ -150,12 +121,6 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
     }
 
     public void testManualListInTemplate() throws Exception {
-        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
-        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
-        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-
-        servletContext = EasyMock.createNiceMock(ServletContext.class);
-
         File file = new File(FreeMarkerResultTest.class.getResource("manual-list.ftl").toURI());
         EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/manual-list.ftl")).andReturn(file.getAbsolutePath());
 
@@ -178,11 +143,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
         EasyMock.expect(servletContext.getRealPath("/template/~~~simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
 
-        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
         EasyMock.replay(servletContext);
-
-        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
-        ServletActionContext.setServletContext(servletContext);
 
         init();
 
@@ -198,23 +159,13 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
     }
 
     public void testDynamicAttributesInTheme() throws Exception {
-        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
-        Configuration freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
-        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-
-        servletContext = EasyMock.createNiceMock(ServletContext.class);
-
         File file = new File(FreeMarkerResultTest.class.getResource("customTextField.ftl").toURI());
         EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/customTextField.ftl")).andReturn(file.getAbsolutePath());
 
         file = new File(ClassLoaderUtil.getResource("template/test/text.ftl", getClass()).toURI());
         EasyMock.expect(servletContext.getRealPath("/template/test/text.ftl")).andReturn(file.getAbsolutePath());
 
-        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
         EasyMock.replay(servletContext);
-
-        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
-        ServletActionContext.setServletContext(servletContext);
 
         init();
 
@@ -226,17 +177,6 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
     }
 
     private void init() throws MalformedURLException, URISyntaxException {
-        mgr = new FreemarkerManager();
-        mgr.setEncoding("UTF-8");
-
-        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
-        container.inject(factory);
-        mgr.setFileManagerFactory(factory);
-
-        FreemarkerThemeTemplateLoader themeLoader = new FreemarkerThemeTemplateLoader();
-        container.inject(themeLoader);
-        mgr.setThemeTemplateLoader(themeLoader);
-
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         response = new StrutsMockHttpServletResponse();
@@ -257,6 +197,24 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         invocation = new MockActionInvocation();
         invocation.setStack(stack);
         invocation.setInvocationContext(context);
+
+        //get fm config to use it in mock servlet context
+        FreemarkerManager freemarkerManager = container.getInstance(FreemarkerManager.class);
+
+        freemarkerConfig = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        freemarkerConfig.setServletContextForTemplateLoading(servletContext, null);
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        servletContext = EasyMock.createNiceMock(ServletContext.class);
+        EasyMock.expect(servletContext.getInitParameter("TemplatePath")).andReturn(null);
+        EasyMock.expect(servletContext.getInitParameter("templatePath")).andReturn(null);
+
+        EasyMock.expect(servletContext.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY)).andReturn(freemarkerConfig).anyTimes();
     }
 
 }

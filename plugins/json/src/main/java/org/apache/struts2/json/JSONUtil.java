@@ -22,9 +22,9 @@ package org.apache.struts2.json;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.json.annotations.SMDMethod;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ public class JSONUtil {
 
     public final static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSONUtil.class);
+    private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
 
     /**
      * Serializes an object into JSON.
@@ -198,9 +198,7 @@ public class JSONUtil {
 
         String json = stringBuilder.toString();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("[JSON]" + json);
-        }
+        LOG.debug("[JSON] {}", json);
 
         HttpServletResponse response = serializationParams.getResponse();
 
@@ -265,7 +263,7 @@ public class JSONUtil {
      */
     @SuppressWarnings("unchecked")
     public static Method[] listSMDMethods(Class clazz, boolean ignoreInterfaces) {
-        final List<Method> methods = new LinkedList<Method>();
+        final List<Method> methods = new LinkedList<>();
         if (ignoreInterfaces) {
             for (Method method : clazz.getMethods()) {
                 SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
@@ -329,7 +327,7 @@ public class JSONUtil {
      */
     @SuppressWarnings("unchecked")
     public static boolean visitInterfaces(Class aClass, ClassVisitor visitor) {
-        List<Class> classesVisited = new LinkedList<Class>();
+        List<Class> classesVisited = new LinkedList<>();
         return visitUniqueInterfaces(aClass, visitor, classesVisited);
     }
 
@@ -373,8 +371,7 @@ public class JSONUtil {
     }
 
     public static boolean isGzipInRequest(HttpServletRequest request) {
-        String header = request.getHeader("Accept-Encoding");
-        return (header != null) && (header.indexOf("gzip") >= 0);
+        return StringUtils.contains(request.getHeader("Accept-Encoding"), "gzip");
     }
 
     public static final String REGEXP_PATTERN = "regexp";
@@ -386,24 +383,24 @@ public class JSONUtil {
 
     /* package */ static Map<String, Map<String, String>> getIncludePatternData()
     {
-        Map<String, Map<String, String>> includePatternData = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> includePatternData = new HashMap<>();
 
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         data.put(REGEXP_PATTERN, "\\\\\\.");
         data.put(WILDCARD_PATTERN, "\\.");
         includePatternData.put(SPLIT_PATTERN, data);
 
-        data = new HashMap<String, String>();
+        data = new HashMap<>();
         data.put(REGEXP_PATTERN, "\\.");
         data.put(WILDCARD_PATTERN, ".");
         includePatternData.put(JOIN_STRING, data);
 
-        data = new HashMap<String, String>();
+        data = new HashMap<>();
         data.put(REGEXP_PATTERN, "\\[");
         data.put(WILDCARD_PATTERN, "[");
         includePatternData.put(ARRAY_BEGIN_STRING, data);
 
-        data = new HashMap<String, String>();
+        data = new HashMap<>();
         data.put(REGEXP_PATTERN, "\\]");
         data.put(WILDCARD_PATTERN, "]");
         includePatternData.put(ARRAY_END_STRING, data);
@@ -419,8 +416,8 @@ public class JSONUtil {
 
     /* package */ static List<Pattern> processIncludePatterns(Set<String> includePatterns, String type, Map<String, Map<String, String>> includePatternData) {
         if (includePatterns != null) {
-            List<Pattern> results = new ArrayList<Pattern>(includePatterns.size());
-            Map<String, String> existingPatterns = new HashMap<String, String>();
+            List<Pattern> results = new ArrayList<>(includePatterns.size());
+            Map<String, String> existingPatterns = new HashMap<>();
             for (String pattern : includePatterns) {
                 processPattern(results, existingPatterns, pattern, type, includePatternData);
             }
@@ -468,7 +465,7 @@ public class JSONUtil {
     private static void addPattern(List<Pattern> results, String pattern, String type) {
         results.add(REGEXP_PATTERN.equals(type) ? Pattern.compile(pattern) : WildcardUtil.compileWildcardPattern(pattern));
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Adding include " + (REGEXP_PATTERN.equals(type) ? "property" : "wildcard") + " expression:  " + pattern);
+            LOG.trace("Adding include {} expression: {}", (REGEXP_PATTERN.equals(type) ? "property" : "wildcard"), pattern);
         }
     }
 

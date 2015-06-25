@@ -10,8 +10,8 @@
     </div>
 
     <div class="container-fluid">
-	    <div class="row-fluid">
-		    <div class="span12">
+	    <div class="row">
+		    <div class="col-md-12">
 		        <s:label label="Action Chain 1 Property 1" name="actionChain1Property1" /><br/>
                 <s:label label="Action Chain 2 Property 1" name="actionChain2Property1" /><br/>
                 <s:label label="Action Chain 3 Property 1" name="actionChain3Property1" /><br/>

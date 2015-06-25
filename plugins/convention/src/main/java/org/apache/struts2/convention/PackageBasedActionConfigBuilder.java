@@ -26,51 +26,28 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.WildcardHelper;
 import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
-import com.opensymphony.xwork2.util.finder.ClassFinder;
-import com.opensymphony.xwork2.util.finder.ClassFinder.ClassInfo;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
-import com.opensymphony.xwork2.util.finder.Test;
-import com.opensymphony.xwork2.util.finder.UrlSet;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.finder.*;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Actions;
-import org.apache.struts2.convention.annotation.DefaultInterceptorRef;
-import org.apache.struts2.convention.annotation.ExceptionMapping;
-import org.apache.struts2.convention.annotation.ExceptionMappings;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Namespaces;
-import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -80,7 +57,7 @@ import java.util.regex.Pattern;
  */
 public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PackageBasedActionConfigBuilder.class);
+    private static final Logger LOG = LogManager.getLogger(PackageBasedActionConfigBuilder.class);
     private static final boolean EXTRACT_BASE_INTERFACES = true;
 
     private final Configuration configuration;
@@ -100,7 +77,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private String actionSuffix = "Action";
     private boolean checkImplementsAction = true;
     private boolean mapAllMatches = false;
-    private Set<String> loadedFileUrls = new HashSet<String>();
+    private Set<String> loadedFileUrls = new HashSet<>();
     private boolean devMode;
     private ReloadingClassLoader reloadingClassLoader;
     private boolean reload;
@@ -113,6 +90,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private boolean eagerLoading = false;
 
     private FileManager fileManager;
+    private ClassFinderFactory classFinderFactory;
 
     /**
      * Constructs actions based on a list of packages.
@@ -141,7 +119,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         this.redirectToSlash = Boolean.parseBoolean(redirectToSlash);
 
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Setting action default parent package to [#0]", defaultParentPackage);
+            LOG.trace("Setting action default parent package to [{}]", defaultParentPackage);
         }
 
         this.defaultParentPackage = defaultParentPackage;
@@ -149,7 +127,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
-        this.devMode = "true".equals(mode);
+        this.devMode = BooleanUtils.toBoolean(mode);
     }
 
     /**
@@ -158,13 +136,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
-        this.reload = "true".equals(reload);
+        this.reload = BooleanUtils.toBoolean(reload);
     }
 
 
     @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
     public void setSlashesInActionNames(String slashesInActionNames) {
-        this.slashesInActionNames = "true".equals(slashesInActionNames);
+        this.slashesInActionNames = BooleanUtils.toBoolean(slashesInActionNames);
     }
 
     /**
@@ -172,7 +150,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject("struts.convention.exclude.parentClassLoader")
     public void setExcludeParentClassLoader(String exclude) {
-        this.excludeParentClassLoader = "true".equals(exclude);
+        this.excludeParentClassLoader = BooleanUtils.toBoolean(exclude);
     }
 
     /**
@@ -181,7 +159,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject("struts.convention.action.alwaysMapExecute")
     public void setAlwaysMapExecute(String alwaysMapExecute) {
-        this.alwaysMapExecute = "true".equals(alwaysMapExecute);
+        this.alwaysMapExecute = BooleanUtils.toBoolean(alwaysMapExecute);
     }
 
     /**
@@ -200,7 +178,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.disableScanning", required = false)
     public void setDisableActionScanning(String disableActionScanning) {
-        this.disableActionScanning = "true".equals(disableActionScanning);
+        this.disableActionScanning = BooleanUtils.toBoolean(disableActionScanning);
     }
 
     /**
@@ -217,7 +195,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.package.locators.disable", required = false)
     public void setDisablePackageLocatorsScanning(String disablePackageLocatorsScanning) {
-        this.disablePackageLocatorsScanning = "true".equals(disablePackageLocatorsScanning);
+        this.disablePackageLocatorsScanning = BooleanUtils.toBoolean(disablePackageLocatorsScanning);
     }
 
     /**
@@ -237,7 +215,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.checkImplementsAction", required = false)
     public void setCheckImplementsAction(String checkImplementsAction) {
-        this.checkImplementsAction = "true".equals(checkImplementsAction);
+        this.checkImplementsAction = BooleanUtils.toBoolean(checkImplementsAction);
     }
 
     /**
@@ -286,7 +264,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.mapAllMatches", required = false)
     public void setMapAllMatches(String mapAllMatches) {
-        this.mapAllMatches = "true".equals(mapAllMatches);
+        this.mapAllMatches = BooleanUtils.toBoolean(mapAllMatches);
     }
 
     /**
@@ -295,12 +273,17 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.eagerLoading", required = false)
     public void setEagerLoading(String eagerLoading) {
-        this.eagerLoading = "true".equals(eagerLoading);
+        this.eagerLoading = BooleanUtils.toBoolean(eagerLoading);
     }
 
     @Inject
     public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
         this.fileManager = fileManagerFactory.getFileManager();
+    }
+
+    @Inject(required = false)
+    public void setClassFinderFactory(ClassFinderFactory classFinderFactory) {
+        this.classFinderFactory = classFinderFactory;
     }
 
     protected void initReloadClassLoader() {
@@ -336,12 +319,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Loading action configurations");
-                if (actionPackages != null)
-                    LOG.trace("Actions being loaded from action packages " + Arrays.asList(actionPackages));
-                if (packageLocators != null)
-                    LOG.trace("Actions being loaded using package locators " + Arrays.asList(packageLocators));
-                if (excludePackages != null)
-                    LOG.trace("Excluding actions from packages " + Arrays.asList(excludePackages));
+                if (actionPackages != null) {
+                    LOG.trace("Actions being loaded from action packages: {}", actionPackages);
+                }
+                if (packageLocators != null) {
+                    LOG.trace("Actions being loaded using package locator's: {}", packageLocators);
+                }
+                if (excludePackages != null) {
+                    LOG.trace("Excluding actions from packages: {}", excludePackages);
+                }
             }
 
             Set<Class> classes = findActions();
@@ -350,8 +336,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     protected ClassLoaderInterface getClassLoaderInterface() {
-        if (isReloadEnabled())
+        if (isReloadEnabled()) {
             return new ClassLoaderInterfaceDelegate(this.reloadingClassLoader);
+        }
         else {
             /*
             if there is a ClassLoaderInterface in the context, use it, otherwise
@@ -363,9 +350,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             */
             ClassLoaderInterface classLoaderInterface = null;
             ActionContext ctx = ActionContext.getContext();
-            if (ctx != null)
+            if (ctx != null) {
                 classLoaderInterface = (ClassLoaderInterface) ctx.get(ClassLoaderInterface.CLASS_LOADER_INTERFACE);
-
+            }
             return ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(getClassLoader()));
         }
     }
@@ -376,7 +363,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     @SuppressWarnings("unchecked")
     protected Set<Class> findActions() {
-        Set<Class> classes = new HashSet<Class>();
+        Set<Class> classes = new HashSet<>();
         try {
             if (actionPackages != null || (packageLocators != null && !disablePackageLocatorsScanning)) {
 
@@ -387,21 +374,30 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 // specified by the user
                 Test<String> classPackageTest = getClassPackageTest();
                 List<URL> urls = readUrls();
-                ClassFinder finder = new ClassFinder(getClassLoaderInterface(), urls, EXTRACT_BASE_INTERFACES, fileProtocols, classPackageTest);
+                ClassFinder finder = buildClassFinder(classPackageTest, urls);
 
                 Test<ClassFinder.ClassInfo> test = getActionClassTest();
                 classes.addAll(finder.findClasses(test));
             }
         } catch (Exception ex) {
-            if (LOG.isErrorEnabled())
-                LOG.error("Unable to scan named packages", ex);
+            LOG.error("Unable to scan named packages", ex);
         }
 
         return classes;
     }
 
+    protected ClassFinder buildClassFinder(Test<String> classPackageTest, List<URL> urls) {
+        if (classFinderFactory != null) {
+            LOG.trace("Using ClassFinderFactory to create instance of ClassFinder!");
+            return classFinderFactory.buildClassFinder(getClassLoaderInterface(), urls, EXTRACT_BASE_INTERFACES, fileProtocols, classPackageTest);
+        } else {
+            LOG.trace("ClassFinderFactory not defined, fallback to default ClassFinder implementation");
+            return new DefaultClassFinder(getClassLoaderInterface(), urls, EXTRACT_BASE_INTERFACES, fileProtocols, classPackageTest);
+        }
+    }
+
     private List<URL> readUrls() throws IOException {
-        List<URL> resourceUrls = new ArrayList<URL>();
+        List<URL> resourceUrls = new ArrayList<>();
         // Usually the "classes" dir.
         ArrayList<URL> classesList = Collections.list(getClassLoaderInterface().getResources(""));
         for (URL url : classesList) {
@@ -420,7 +416,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             //exclude parent of classloaders
             ClassLoaderInterface parent = classLoaderInterface.getParent();
             //if reload is enabled, we need to step up one level, otherwise the UrlSet will be empty
-            //this happens because the parent of the realoding class loader is the web app classloader
+            //this happens because the parent of the reloading class loader is the web app classloader
             if (parent != null && isReloadEnabled())
                 parent = parent.getParent();
 
@@ -433,8 +429,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 urlSet = urlSet.exclude(new ClassLoaderInterfaceDelegate(systemClassLoader.getParent()));
 
             } catch (SecurityException e) {
-                if (LOG.isWarnEnabled())
-                    LOG.warn("Could not get the system classloader due to security constraints, there may be improper urls left to scan");
+                LOG.warn("Could not get the system classloader due to security constraints, there may be improper urls left to scan");
             }
         }
 
@@ -452,8 +447,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         	urlSet = urlSet.excludeJavaHome();
         } catch (NullPointerException e) {
         	// This happens in GAE since the sandbox contains no java.home directory
-            if (LOG.isWarnEnabled())
-        	    LOG.warn("Could not exclude JAVA_HOME, is this a sandbox jvm?");
+      	    LOG.warn("Could not exclude JAVA_HOME, is this a sandbox jvm?");
         }
         urlSet = urlSet.excludePaths(System.getProperty("sun.boot.class.path", ""));
         urlSet = urlSet.exclude(".*/JavaVM.framework/.*");
@@ -461,14 +455,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (includeJars == null) {
             urlSet = urlSet.exclude(".*?\\.jar(!/|/)?");
         } else {
-            //jar urls regexes were specified
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("jar urls regexes were specified: {}", Arrays.asList(includeJars));
+            }
             List<URL> rawIncludedUrls = urlSet.getUrls();
-            Set<URL> includeUrls = new HashSet<URL>();
+            Set<URL> includeUrls = new HashSet<>();
             boolean[] patternUsed = new boolean[includeJars.length];
 
             for (URL url : rawIncludedUrls) {
                 if (fileProtocols.contains(url.getProtocol())) {
-                    //it is a jar file, make sure it macthes at least a url regex
+                    //it is a jar file, make sure it matches at least a url regex
                     for (int i = 0; i < includeJars.length; i++) {
                         String includeJar = includeJars[i];
                         if (Pattern.matches(includeJar, url.toExternalForm())) {
@@ -478,7 +474,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         }
                     }
                 } else {
-                    //it is not a jar
+                    LOG.debug("It is not a jar [{}]", url);
                     includeUrls.add(url);
                 }
             }
@@ -486,7 +482,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (LOG.isWarnEnabled()) {
                 for (int i = 0; i < patternUsed.length; i++) {
                     if (!patternUsed[i]) {
-                        LOG.warn("The includeJars pattern [#0] did not match any jars in the classpath", includeJars[i]);
+                        LOG.warn("The includeJars pattern [{}] did not match any jars in the classpath", includeJars[i]);
                     }
                 }
             }
@@ -503,7 +499,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * goal is to avoid loading the class if we don't have to, the (actionSuffix
      * || implements Action) test will have to remain until later. See
      * {@link #getActionClassTest()} for the test performed on the loaded
-     * {@link ClassInfo} structure.
+     * {@link ClassFinder.ClassInfo} structure.
      *
      * @param className the name of the class to test
      * @return true if the specified class should be included in the
@@ -525,7 +521,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             WildcardHelper wildcardHelper = new WildcardHelper();
 
             //we really don't care about the results, just the boolean
-            Map<String, String> matchMap = new HashMap<String, String>();
+            Map<String, String> matchMap = new HashMap<>();
 
             for(String packageExclude : excludePackages) {
                 int[] packagePattern = wildcardHelper.compilePattern(packageExclude);
@@ -547,9 +543,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (actionPackages != null) {
             for (String packageName : actionPackages) {
                 String strictPackageName = packageName + ".";
-                if (classPackageName.equals(packageName)
-                        || classPackageName.startsWith(strictPackageName))
+                if (classPackageName.equals(packageName) || classPackageName.startsWith(strictPackageName)) {
                     return true;
+                }
             }
         }
         return false;
@@ -568,8 +564,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             for (String packageLocator : packageLocators) {
                 String[] splitted = classPackageName.split("\\.");
 
-                if (StringTools.contains(splitted, packageLocator, false))
+                if (StringTools.contains(splitted, packageLocator, false)) {
                     return true;
+                }
             }
         }
         return false;
@@ -595,7 +592,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     /**
      * Construct a {@link Test} Object that determines if a specified class
-     * should be included in the package scan based on the full {@link ClassInfo}
+     * should be included in the package scan based on the full {@link ClassFinder.ClassInfo}
      * of the class. At this point, the class has been loaded, so it's ok to
      * perform tests such as checking annotations or looking at interfaces or
      * super-classes of the specified class.
@@ -619,8 +616,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 try {
                     return inPackage && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
                 } catch (ClassNotFoundException ex) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Unable to load class [#0]", ex, classInfo.getName());
+                    LOG.error("Unable to load class [{}]", classInfo.getName(), ex);
                     return false;
                 }
             }
@@ -629,7 +625,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
     @SuppressWarnings("unchecked")
     protected void buildConfiguration(Set<Class> classes) {
-        Map<String, PackageConfig.Builder> packageConfigs = new HashMap<String, PackageConfig.Builder>();
+        Map<String, PackageConfig.Builder> packageConfigs = new HashMap<>();
 
         for (Class<?> actionClass : classes) {
             Actions actionsAnnotation = actionClass.getAnnotation(Actions.class);
@@ -637,8 +633,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
             // Skip classes that can't be instantiated
             if (cannotInstantiate(actionClass)) {
-                if (LOG.isTraceEnabled())
-                    LOG.trace("Class [#0] did not pass the instantiation test and will be ignored", actionClass.getName());
+                LOG.trace("Class [{}] did not pass the instantiation test and will be ignored", actionClass.getName());
                 continue;
             }
 
@@ -647,17 +642,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 try {
                     objectFactory.getClassInstance(actionClass.getName());
                 } catch (ClassNotFoundException e) {
-                    if (LOG.isErrorEnabled())
-                        LOG.error("Object Factory was unable to load class [#0]", e, actionClass.getName());
+                    LOG.error("Object Factory was unable to load class [{}]", actionClass.getName(), e);
                     throw new StrutsException("Object Factory was unable to load class " + actionClass.getName(), e);
                 }
             }
 
             // Determine the action package
             String actionPackage = actionClass.getPackage().getName();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Processing class [#0] in package [#1]", actionClass.getName(), actionPackage);
-            }
+            LOG.debug("Processing class [{}] in package [{}]", actionClass.getName(), actionPackage);
 
             // Determine the default namespace and action name
             List<String> namespaces = determineActionNamespace(actionClass);
@@ -669,7 +661,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 // Verify that the annotations have no errors and also determine if the default action
                 // configuration should still be built or not.
                 Map<String, List<Action>> map = getActionAnnotations(actionClass);
-                Set<String> actionNames = new HashSet<String>();
+                Set<String> actionNames = new HashSet<>();
                 boolean hasDefaultMethod = ReflectionTools.containsMethod(actionClass, DEFAULT_METHOD);
                 if (!map.containsKey(DEFAULT_METHOD)
                         && hasDefaultMethod
@@ -765,15 +757,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @return The namespace or an empty string.
      */
     protected List<String> determineActionNamespace(Class<?> actionClass) {
-        List<String> namespaces = new ArrayList<String>();
+        List<String> namespaces = new ArrayList<>();
 
         // Check if there is a class or package level annotation for the namespace
         //single namespace
         Namespace namespaceAnnotation = AnnotationUtils.findAnnotation(actionClass, Namespace.class);
         if (namespaceAnnotation != null) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using non-default action namespace from Namespace annotation of [#0]", namespaceAnnotation.value());
-            }
+            LOG.trace("Using non-default action namespace from Namespace annotation of [{}]", namespaceAnnotation.value());
 
             namespaces.add(namespaceAnnotation.value());
         }
@@ -786,11 +776,12 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 for (Namespace namespace : namespacesAnnotation.value())
                     sb.append(namespace.value()).append(",");
                 sb.deleteCharAt(sb.length() - 1);
-                LOG.trace("Using non-default action namespaces from Namespaces annotation of [#0]", sb.toString());
+                LOG.trace("Using non-default action namespaces from Namespaces annotation of [{}]", sb.toString());
             }
 
-            for (Namespace namespace : namespacesAnnotation.value())
+            for (Namespace namespace : namespacesAnnotation.value()) {
                 namespaces.add(namespace.value());
+            }
         }
 
         //don't use default if there are annotations
@@ -841,9 +832,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     protected String determineActionName(Class<?> actionClass) {
         String actionName = actionNameBuilder.build(actionClass.getSimpleName());
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Got actionName for class [#0] of [#1]", actionClass.toString(), actionName);
-        }
+        LOG.trace("Got actionName for class [{}] of [{}]", actionClass.toString(), actionName);
 
         return actionName;
     }
@@ -857,7 +846,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     protected Map<String, List<Action>> getActionAnnotations(Class<?> actionClass) {
         Method[] methods = actionClass.getMethods();
-        Map<String, List<Action>> map = new HashMap<String, List<Action>>();
+        Map<String, List<Action>> map = new HashMap<>();
         for (Method method : methods) {
             Actions actionsAnnotation = method.getAnnotation(Actions.class);
             if (actionsAnnotation != null) {
@@ -882,13 +871,12 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     protected List<Action> checkActionsAnnotation(Actions actionsAnnotation) {
         Action[] actionArray = actionsAnnotation.value();
         boolean valuelessSeen = false;
-        List<Action> actions = new ArrayList<Action>();
+        List<Action> actions = new ArrayList<>();
         for (Action ann : actionArray) {
             if (ann.value().equals(Action.DEFAULT_VALUE) && !valuelessSeen) {
                 valuelessSeen = true;
             } else if (ann.value().equals(Action.DEFAULT_VALUE)) {
-                throw new ConfigurationException("You may only add a single Action " +
-                        "annotation that has no value parameter.");
+                throw new ConfigurationException("You may only add a single Action annotation that has no value parameter.");
             }
 
             actions.add(ann);
@@ -921,7 +909,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         actionConfig.methodName(actionMethod);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating action config for class [#0], name [#1] and package name [#2] in namespace [#3]",
+            LOG.debug("Creating action config for class [{}], name [{}] and package name [{}] in namespace [{}]",
                     actionClass.toString(), actionName, pkgCfg.getName(), pkgCfg.getNamespace());
         }
 
@@ -954,8 +942,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (existingPkg != null) {
             // there is a package already with that name, check action
             ActionConfig existingActionConfig = existingPkg.getActionConfigs().get(actionName);
-            if (existingActionConfig != null && LOG.isWarnEnabled())
-                LOG.warn("Duplicated action definition in package [#0] with name [#1].", pkgCfg.getName(), actionName);
+            if (existingActionConfig != null && LOG.isWarnEnabled()) {
+                LOG.warn("Duplicated action definition in package [{}] with name [{}].", pkgCfg.getName(), actionName);
+            }
         }
 
         //watch class file
@@ -967,11 +956,10 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     protected List<ExceptionMappingConfig> buildExceptionMappings(ExceptionMapping[] exceptions, String actionName) {
-        List<ExceptionMappingConfig> exceptionMappings = new ArrayList<ExceptionMappingConfig>();
+        List<ExceptionMappingConfig> exceptionMappings = new ArrayList<>();
 
         for (ExceptionMapping exceptionMapping : exceptions) {
-            if (LOG.isTraceEnabled())
-                LOG.trace("Mapping exception [#0] to result [#1] for action [#2]", exceptionMapping.exception(),
+            LOG.trace("Mapping exception [{}] to result [{}] for action [{}]", exceptionMapping.exception(),
                         exceptionMapping.result(), actionName);
             ExceptionMappingConfig.Builder builder = new ExceptionMappingConfig.Builder(null, exceptionMapping
                     .exception(), exceptionMapping.result());
@@ -987,9 +975,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                                                    String actionNamespace, final String actionPackage, final Class<?> actionClass,
                                                    Action action) {
         if (action != null && !action.value().equals(Action.DEFAULT_VALUE)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using non-default action namespace from the Action annotation of [#0]", action.value());
-            }
+            LOG.trace("Using non-default action namespace from the Action annotation of [{}]", action.value());
             String actionName = action.value();
             actionNamespace = StringUtils.contains(actionName, "/") ? StringUtils.substringBeforeLast(actionName, "/") : StringUtils.EMPTY;
         }
@@ -998,10 +984,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         ParentPackage parent = AnnotationUtils.findAnnotation(actionClass, ParentPackage.class);
         String parentName = null;
         if (parent != null) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using non-default parent package from annotation of [#0]", parent.value());
-            }
-
+            LOG.trace("Using non-default parent package from annotation of [{}]", parent.value());
             parentName = parent.value();
         }
 
@@ -1033,14 +1016,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (defaultInterceptorRef != null) {
                 pkgConfig.defaultInterceptorRef(defaultInterceptorRef.value());
 
-                if (LOG.isTraceEnabled())
-                    LOG.trace("Setting [#0] as the default interceptor ref for [#1]", defaultInterceptorRef.value(), pkgConfig.getName());
+                LOG.trace("Setting [{}] as the default interceptor ref for [{}]", defaultInterceptorRef.value(), pkgConfig.getName());
             }
         }
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Created package config named [#0] with a namespace [#1]", name, actionNamespace);
-        }
+        LOG.trace("Created package config named [{}] with a namespace [{}]", name, actionNamespace);
 
         return pkgConfig;
     }
@@ -1058,7 +1038,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param packageConfigs Used to store the actions.
      */
     protected void buildIndexActions(Map<String, PackageConfig.Builder> packageConfigs) {
-        Map<String, PackageConfig.Builder> byNamespace = new HashMap<String, PackageConfig.Builder>();
+        Map<String, PackageConfig.Builder> byNamespace = new HashMap<>();
         Collection<PackageConfig.Builder> values = packageConfigs.values();
         for (PackageConfig.Builder packageConfig : values) {
             byNamespace.put(packageConfig.getNamespace(), packageConfig);
@@ -1091,20 +1071,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         if (parent.build().getAllActionConfigs().get(parentAction) == null) {
                             parent.addActionConfig(parentAction, indexActionConfig);
                         }
-                    } else if (LOG.isTraceEnabled()) {
-                        LOG.trace("The parent namespace [#0] already contains " +
-                                "an action [#1]", parentNamespace, parentAction);
+                    } else {
+                        LOG.trace("The parent namespace [{}] already contains an action [{}]", parentNamespace, parentAction);
                     }
                 }
             }
 
             // Step #3
             if (pkgConfig.build().getAllActionConfigs().get("") == null) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Creating index ActionConfig with an action name of [] for the action " +
-                            "class [#0]", indexActionConfig.getClassName());
-                }
-
+                LOG.trace("Creating index ActionConfig with an action name of [] for the action class [{}]", indexActionConfig.getClassName());
                 pkgConfig.addActionConfig("", indexActionConfig);
             }
         }
@@ -1118,14 +1093,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (devMode && reload) {
             for (String url : loadedFileUrls) {
                 if (fileManager.fileNeedsReloading(url)) {
-                    if (LOG.isDebugEnabled())
-                        LOG.debug("File [#0] changed, configuration will be reloaded", url);
+                    LOG.debug("File [{}] changed, configuration will be reloaded", url);
                     return true;
                 }
             }
 
             return false;
-        } else
+        } else {
             return false;
+        }
     }
+
 }

@@ -49,7 +49,7 @@ public class RegexPatternMatcher implements PatternMatcher<RegexPatternMatcherEx
     private static final Pattern PATTERN = Pattern.compile("\\{(.*?)\\}");
 
     public RegexPatternMatcherExpression compilePattern(String data) {
-        Map<Integer, String> params = new HashMap<Integer, String>();
+        Map<Integer, String> params = new HashMap<>();
 
         Matcher matcher = PATTERN.matcher(data);
         int count = 0;

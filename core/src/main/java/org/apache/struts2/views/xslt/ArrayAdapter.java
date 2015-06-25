@@ -21,20 +21,19 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  */
 public class ArrayAdapter extends AbstractAdapterElement {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     public ArrayAdapter() {
     }
@@ -44,7 +43,7 @@ public class ArrayAdapter extends AbstractAdapterElement {
     }
 
     protected List<Node> buildChildAdapters() {
-        List<Node> children = new ArrayList<Node>();
+        List<Node> children = new ArrayList<>();
         Object[] values = (Object[]) getPropertyValue();
 
         for (Object value : values) {
@@ -52,9 +51,7 @@ public class ArrayAdapter extends AbstractAdapterElement {
             if (childAdapter != null)
                 children.add(childAdapter);
 
-            if (log.isDebugEnabled()) {
-                log.debug(this + " adding adapter: " + childAdapter);
-            }
+            log.debug("{} adding adapter: {}", this, childAdapter);
         }
 
         return children;

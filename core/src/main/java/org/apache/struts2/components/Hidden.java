@@ -66,10 +66,4 @@ public class Hidden extends UIBean {
         return TEMPLATE;
     }
 
-    @Override
-    public void evaluateParams() {
-        super.evaluateParams();
-        label = null;
-        addParameter("label", null);
-    }
 }

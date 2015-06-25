@@ -22,6 +22,7 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.util.ContainUtil;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -48,7 +49,9 @@ import java.util.Map;
 public abstract class ListUIBean extends UIBean {
     protected Object list;
     protected String listKey;
+    protected String listValueKey;
     protected String listValue;
+    protected String listLabelKey;
     protected String listCssClass;
     protected String listCssStyle;
     protected String listTitle;
@@ -94,11 +97,11 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (value instanceof Collection) {
-            addParameter("listSize", Integer.valueOf(((Collection) value).size()));
+            addParameter("listSize", ((Collection) value).size());
         } else if (value instanceof Map) {
-            addParameter("listSize", Integer.valueOf(((Map) value).size()));
+            addParameter("listSize", ((Map) value).size());
         } else if (value != null && value.getClass().isArray()) {
-            addParameter("listSize", Integer.valueOf(Array.getLength(value)));
+            addParameter("listSize", Array.getLength(value));
         }
 
         if (listKey != null) {
@@ -108,6 +111,11 @@ public abstract class ListUIBean extends UIBean {
             addParameter("listKey", "key");
         }
 
+        if (listValueKey != null) {
+            listValueKey = stripExpressionIfAltSyntax(listValueKey);
+            addParameter("listValueKey", listValueKey);
+        }
+
         if (listValue != null) {
             listValue = stripExpressionIfAltSyntax(listValue);
             addParameter("listValue", listValue);
@@ -115,15 +123,20 @@ public abstract class ListUIBean extends UIBean {
             addParameter("listValue", "value");
         }
 
-        if (listCssClass != null && listCssClass.trim().length() > 0) {
+        if (listLabelKey != null) {
+            listLabelKey = stripExpressionIfAltSyntax(listLabelKey);
+            addParameter("listLabelKey", listLabelKey);
+        }
+
+        if (StringUtils.isNotBlank(listCssClass)) {
             addParameter("listCssClass", listCssClass);
         }
 
-        if (listCssStyle != null && listCssStyle.trim().length() > 0) {
+        if (StringUtils.isNotBlank(listCssStyle)) {
             addParameter("listCssStyle", listCssStyle);
         }
 
-        if (listTitle != null && listTitle.trim().length() > 0) {
+        if (StringUtils.isNotBlank(listTitle)) {
             addParameter("listTitle", listTitle);
         }
     }
@@ -142,14 +155,24 @@ public abstract class ListUIBean extends UIBean {
         this.list = list;
     }
 
-    @StrutsTagAttribute(description = " Property of list objects to get field value from")
+    @StrutsTagAttribute(description = "Property of list objects to get field value from")
     public void setListKey(String listKey) {
         this.listKey = listKey;
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to get field value label from")
+    public void setListValueKey(String listValueKey) {
+        this.listValueKey = listValueKey;
     }
 
     @StrutsTagAttribute(description = "Property of list objects to get field content from")
     public void setListValue(String listValue) {
         this.listValue = listValue;
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to be used to lookup for localised version of field label")
+    public void setListLabelKey(String listLabelKey) {
+        this.listLabelKey = listLabelKey;
     }
 
     @StrutsTagAttribute(description = "Property of list objects to get css class from")

@@ -1,8 +1,8 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.PortletPhase;
 import org.springframework.mock.web.portlet.MockPortletContext;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public abstract class StrutsPortletTestCase extends StrutsTestCase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsPortletTestCase.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsPortletTestCase.class);
 
     protected MockPortletSession portletSession;
     protected MockPortletRequest portletRequest;

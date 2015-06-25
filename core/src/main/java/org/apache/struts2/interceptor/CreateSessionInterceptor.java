@@ -23,8 +23,8 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.SessionMap;
 
@@ -83,7 +83,7 @@ public class CreateSessionInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -4590322556118858869L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateSessionInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CreateSessionInterceptor.class);
 
 
     /* (non-Javadoc)
@@ -92,9 +92,7 @@ public class CreateSessionInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpSession httpSession = ServletActionContext.getRequest().getSession(false);
         if (httpSession == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Creating new HttpSession and new SessionMap in ServletActionContext");
-            }
+            LOG.debug("Creating new HttpSession and new SessionMap in ServletActionContext");
             ServletActionContext.getRequest().getSession(true);
             ServletActionContext.getContext().setSession(new SessionMap<String, Object>(ServletActionContext.getRequest()));
         }

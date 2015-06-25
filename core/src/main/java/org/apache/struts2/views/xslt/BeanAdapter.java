@@ -21,8 +21,8 @@
 
 package org.apache.struts2.views.xslt;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -54,7 +54,7 @@ import java.util.Map;
  * would be rendered as: <myPerson> <firstName>...</firstName> <lastName>...</lastName> </myPerson>
  */
 public class BeanAdapter extends AbstractAdapterElement {
-    //~ Static fields/initializers /////////////////////////////////////////////
+    //Static fields/initializer
 
     private static final Object[] NULLPARAMS = new Object[0];
 
@@ -63,11 +63,11 @@ public class BeanAdapter extends AbstractAdapterElement {
      */
     private static Map<Class, PropertyDescriptor[]> propertyDescriptorCache;
 
-    //~ Instance fields ////////////////////////////////////////////////////////
+    //Instance fields
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
-    //~ Constructors ///////////////////////////////////////////////////////////
+    //Constructors
 
     public BeanAdapter() {
     }
@@ -77,7 +77,7 @@ public class BeanAdapter extends AbstractAdapterElement {
         setContext(adapterFactory, parent, propertyName, value);
     }
 
-    //~ Methods ////////////////////////////////////////////////////////////////
+    //Methods
 
     public String getTagName() {
         return getPropertyName();
@@ -87,15 +87,15 @@ public class BeanAdapter extends AbstractAdapterElement {
         NodeList nl = super.getChildNodes();
         // Log child nodes for debug:
         if (log.isDebugEnabled() && nl != null) {
-            log.debug("BeanAdapter getChildNodes for: " + getTagName());
+            log.debug("BeanAdapter getChildNodes for: {}", getTagName());
             log.debug(nl.toString());
         }
         return nl;
     }
 
     protected List<Node> buildChildAdapters() {
-        log.debug("BeanAdapter building children.  PropName = " + getPropertyName());
-        List<Node> newAdapters = new ArrayList<Node>();
+        log.debug("BeanAdapter building children. Property name: {}", getPropertyName());
+        List<Node> newAdapters = new ArrayList<>();
         Class type = getPropertyValue().getClass();
         PropertyDescriptor[] props = getPropertyDescriptors(getPropertyValue());
 
@@ -107,7 +107,7 @@ public class BeanAdapter extends AbstractAdapterElement {
                     //FIXME: write only property or indexed access
                     continue;
                 }
-                log.debug("Bean reading property method: " + m.getName());
+                log.debug("Bean reading property method: {}", m.getName());
 
                 String propertyName = prop.getName();
                 Object propertyValue;
@@ -120,11 +120,10 @@ public class BeanAdapter extends AbstractAdapterElement {
                 try {
                     propertyValue = m.invoke(getPropertyValue(), NULLPARAMS);
                 } catch (Exception e) {
-                    if (e instanceof InvocationTargetException)
+                    if (e instanceof InvocationTargetException) {
                         e = (Exception) ((InvocationTargetException) e).getTargetException();
-                    if (log.isErrorEnabled()) {
-                        log.error("Cannot access bean property: #0", e, propertyName);
                     }
+                    log.error("Cannot access bean property: {}", propertyName, e);
                     continue;
                 }
 
@@ -139,14 +138,11 @@ public class BeanAdapter extends AbstractAdapterElement {
                 if (childAdapter != null)
                     newAdapters.add(childAdapter);
 
-                if (log.isDebugEnabled()) {
-                    log.debug(this + " adding adapter: " + childAdapter);
-                }
+                log.debug("{} adding adapter: {}", this, childAdapter);
             }
         } else {
             // No properties found
-            log.info(
-                    "Class " + type.getName() + " has no readable properties, " + " trying to adapt " + getPropertyName() + " with StringAdapter...");
+            log.info("Class {} has no readable properties, trying to adapt {} with StringAdapter...", type.getName(), getPropertyName());
         }
 
         return newAdapters;
@@ -164,14 +160,13 @@ public class BeanAdapter extends AbstractAdapterElement {
             PropertyDescriptor[] props = propertyDescriptorCache.get(bean.getClass());
 
             if (props == null) {
-                log.debug("Caching property descriptor for " + bean.getClass().getName());
+                log.debug("Caching property descriptor for {}", bean.getClass().getName());
                 props = Introspector.getBeanInfo(bean.getClass(), Object.class).getPropertyDescriptors();
                 propertyDescriptorCache.put(bean.getClass(), props);
             }
 
             return props;
         } catch (IntrospectionException e) {
-            e.printStackTrace();
             throw new StrutsException("Error getting property descriptors for " + bean + " : " + e.getMessage());
         }
     }

@@ -21,22 +21,23 @@
 
 package org.apache.struts2.interceptor;
 
-import java.io.Serializable;
-import java.util.IdentityHashMap;
-import java.util.Map;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.SessionMap;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.SessionMap;
+
+import java.io.Serializable;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -144,7 +145,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     private static final long serialVersionUID = 9120762699600054395L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ScopeInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ScopeInterceptor.class);
 
     private String[] application = null;
     private String[] session = null;
@@ -182,8 +183,8 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
      * @param value True if it should be created
      */
     public void setAutoCreateSession(String value) {
-        if (value != null && value.length() > 0) {
-            this.autoCreateSession = Boolean.valueOf(value).booleanValue();
+        if (StringUtils.isNotBlank(value)) {
+            this.autoCreateSession = BooleanUtils.toBoolean(value);
         }
     }
 
@@ -219,7 +220,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     private static final Object NULL = new NULLClass();
 
-    private static final Object nullConvert(Object o) {
+    private static Object nullConvert(Object o) {
         if (o == null) {
             return NULL;
         }
@@ -233,10 +234,10 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     private static Map locks = new IdentityHashMap();
 
-    static final void lock(Object o, ActionInvocation invocation) throws Exception {
+    static void lock(Object o, ActionInvocation invocation) throws Exception {
         synchronized (o) {
             int count = 3;
-            Object previous = null;
+            Object previous;
             while ((previous = locks.get(o)) != null) {
                 if (previous == invocation) {
                     return;
@@ -249,12 +250,11 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
                 }
                 o.wait(10000);
             }
-            ;
             locks.put(o, invocation);
         }
     }
 
-    static final void unlock(Object o) {
+    static void unlock(Object o) {
         synchronized (o) {
             locks.remove(o);
             o.notify();
@@ -285,19 +285,13 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         Map app = ActionContext.getContext().getApplication();
         final ValueStack stack = ActionContext.getContext().getValueStack();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("scope interceptor before");
-        }
+        LOG.debug("scope interceptor before");
 
         if (application != null)
-            for (int i = 0; i < application.length; i++) {
-                String string = application[i];
+            for (String string : application) {
                 Object attribute = app.get(key + string);
                 if (attribute != null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("application scoped variable set " + string + " = " + String.valueOf(attribute));
-                    }
-
+                    LOG.debug("Application scoped variable set {} = {}", string, String.valueOf(attribute));
                     stack.setValue(string, nullConvert(attribute));
                 }
             }
@@ -316,13 +310,10 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         }
 
         if (session != null && (!"start".equals(type))) {
-            for (int i = 0; i < session.length; i++) {
-                String string = session[i];
+            for (String string : session) {
                 Object attribute = ses.get(key + string);
                 if (attribute != null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("session scoped variable set " + string + " = " + String.valueOf(attribute));
-                    }
+                    LOG.debug("Session scoped variable set {} = {}", string, String.valueOf(attribute));
                     stack.setValue(string, nullConvert(attribute));
                 }
             }
@@ -342,12 +333,9 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         final ValueStack stack = ActionContext.getContext().getValueStack();
 
         if (application != null)
-            for (int i = 0; i < application.length; i++) {
-                String string = application[i];
+            for (String string : application) {
                 Object value = stack.findValue(string);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("application scoped variable saved " + string + " = " + String.valueOf(value));
-                }
+                LOG.debug("Application scoped variable saved {} = {}", string, String.valueOf(value));
 
                 //if( value != null)
                 app.put(key + string, nullConvert(value));
@@ -359,16 +347,12 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         if (ses != null) {
 
             if (session != null) {
-                for (int i = 0; i < session.length; i++) {
-                    String string = session[i];
+                for (String string : session) {
                     if (ends) {
                         ses.remove(key + string);
                     } else {
                         Object value = stack.findValue(string);
-
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("session scoped variable saved " + string + " = " + String.valueOf(value));
-                        }
+                        LOG.debug("Session scoped variable saved {} = {}", string, String.valueOf(value));
 
                         // Null value should be scoped too
                         //if( value != null)
@@ -380,9 +364,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         } else {
             LOG.debug("No HttpSession created... Cannot save session scoped variables.");
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("scope interceptor after (before result)");
-        }
+        LOG.debug("scope interceptor after (before result)");
     }
 
     /**

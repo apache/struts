@@ -23,7 +23,7 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import org.apache.struts2.ServletActionContext;
@@ -136,9 +136,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
      */
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("Intercepting invocation to check for valid transaction token.");
-        }
+        log.debug("Intercepting invocation to check for valid transaction token.");
         return handleToken(invocation);
     }
 

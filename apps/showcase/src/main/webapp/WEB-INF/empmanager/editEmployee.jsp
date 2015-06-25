@@ -1,5 +1,4 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 <html>
 <head>
 	<s:if test="currentEmployee!=null">
@@ -10,7 +9,6 @@
 	</s:else>
 	<title>Struts2 Showcase - CRUD Example - <s:property value="#title"/></title>
 	<s:head/>
-	<sx:head/>
 </head>
 <body>
 <div class="page-header">
@@ -18,8 +16,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span3">
+	<div class="row">
+		<div class="col-md-3">
 			<ul class="nav nav-tabs nav-stacked">
 				<li><s:url var="url" namespace="/employee" action="list"/><s:a href="%{url}">List available Employees</s:a></li>
 				<li class="active"><s:url var="url" namespace="/employee" action="edit"/><s:a href="%{url}">Create/Edit Employee</s:a></li>
@@ -27,7 +25,7 @@
 				<li><s:url var="url" namespace="/skill" action="edit"/><s:a href="%{url}">Create/Edit Skill</s:a></li>
 			</ul>
 		</div>
-		<div class="span9">
+		<div class="col-md-9">
 
 			<s:action var="skillAction" namespace="/skill" name="list"/>
 
@@ -35,7 +33,7 @@
 				<s:textfield label="Employee Id" name="currentEmployee.empId"/>
 				<s:textfield label="%{getText('employee.firstName')}" name="currentEmployee.firstName"/>
 				<s:textfield label="%{getText('employee.lastName')}" name="currentEmployee.lastName"/>
-				<sx:datetimepicker label="Birthdate" name="currentEmployee.birthDate"/>
+				<s:textfield type="date" label="Birthdate" name="currentEmployee.birthDate"/>
 				<s:textfield label="Salary" name="currentEmployee.salary" value="%{getText('format.number',{currentEmployee.salary})}" />
 				<s:checkbox fieldValue="true" label="Married" name="currentEmployee.married"/>
 				<s:combobox list="availablePositions" label="Position" name="currentEmployee.position"/>

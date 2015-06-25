@@ -21,14 +21,13 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import net.sf.oval.configuration.Configurer;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class OValValidationInterceptorTest extends XWorkTestCase {
@@ -319,7 +318,6 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        Locale.setDefault(Locale.US);
         super.setUp();
         loadConfigurationProviders(new XmlConfigurationProvider("oval-test.xml"));
     }

@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsStatics;
 
 import javax.servlet.http.Cookie;
@@ -68,7 +68,7 @@ import java.util.Set;
  */
 public class CookieProviderInterceptor extends AbstractInterceptor implements PreResultListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CookieProviderInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CookieProviderInterceptor.class);
 
     public String intercept(ActionInvocation invocation) throws Exception {
         invocation.addPreResultListener(this);
@@ -86,7 +86,7 @@ public class CookieProviderInterceptor extends AbstractInterceptor implements Pr
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Sending cookie [#0] with value [#1] for domain [#2]",
+                    LOG.debug("Sending cookie [{}] with value [{}] for domain [{}]",
                             cookie.getName(), cookie.getValue(), (cookie.getDomain() != null ? cookie.getDomain() : "no domain"));
                 }
                 response.addCookie(cookie);
@@ -96,17 +96,13 @@ public class CookieProviderInterceptor extends AbstractInterceptor implements Pr
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         try {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("beforeResult start");
-            }
+            LOG.trace("beforeResult start");
             ActionContext ac = invocation.getInvocationContext();
             if (invocation.getAction() instanceof CookieProvider) {
                 HttpServletResponse response = (HttpServletResponse) ac.get(StrutsStatics.HTTP_RESPONSE);
                 addCookiesToResponse((CookieProvider) invocation.getAction(), response);
             }
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("beforeResult end");
-            }
+            LOG.trace("beforeResult end");
         } catch (Exception ex) {
             LOG.error("Unable to setup cookies", ex);
         }

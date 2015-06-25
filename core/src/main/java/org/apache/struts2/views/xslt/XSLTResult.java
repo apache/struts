@@ -27,21 +27,15 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.ErrorListener;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -171,6 +165,7 @@ import java.util.Map;
  * <ul>
  *
  * <li><b>location (default)</b> - the location to go to after execution.</li>
+ * <li><b>encoding</b> - character encoding used in XML, default UTF-8.</li>
  *
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
@@ -209,16 +204,18 @@ public class XSLTResult implements Result {
     private static final long serialVersionUID = 6424691441777176763L;
 
     /** Log instance for this result. */
-    private static final Logger LOG = LoggerFactory.getLogger(XSLTResult.class);
+    private static final Logger LOG = LogManager.getLogger(XSLTResult.class);
 
     /** 'stylesheetLocation' parameter.  Points to the xsl. */
     public static final String DEFAULT_PARAM = "stylesheetLocation";
 
-    /** Cache of all tempaltes. */
+    /**
+     * Cache of all templates.
+     */
     private static final Map<String, Templates> templatesCache;
 
     static {
-        templatesCache = new HashMap<String, Templates>();
+        templatesCache = new HashMap<>();
     }
 
     // Configurable Parameters
@@ -241,6 +238,8 @@ public class XSLTResult implements Result {
     /** Indicates the status to return in the response */
     private int status = 200;
 
+    private String encoding = "UTF-8";
+
     private boolean parse;
     private AdapterFactory adapterFactory;
 
@@ -253,15 +252,8 @@ public class XSLTResult implements Result {
     }
     
     @Inject(StrutsConstants.STRUTS_XSLT_NOCACHE)
-    public void setNoCache(String val) {
-        noCache = "true".equals(val);
-    }
-
-    /**
-     * @deprecated Use #setStylesheetLocation(String)
-     */
-    public void setLocation(String location) {
-        setStylesheetLocation(location);
+    public void setNoCache(String xsltNoCache) {
+        this.noCache = BooleanUtils.toBoolean(xsltNoCache);
     }
 
     public void setStylesheetLocation(String location) {
@@ -282,34 +274,6 @@ public class XSLTResult implements Result {
         this.exposedValue = exposedValue;
     }
 
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public String getMatchingPattern() {
-        return matchingPattern;
-    }
-
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public void setMatchingPattern(String matchingPattern) {
-        this.matchingPattern = matchingPattern;
-    }
-
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public String getExcludingPattern() {
-        return excludingPattern;
-    }
-
-    /**
-     * @deprecated Since 2.1.1
-     */
-    public void setExcludingPattern(String excludingPattern) {
-        this.excludingPattern = excludingPattern;
-    }
-
     public String getStatus() {
         return String.valueOf(status);
     }
@@ -320,6 +284,14 @@ public class XSLTResult implements Result {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Status value not number " + e.getMessage(), e);
         }
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
     /**
@@ -344,6 +316,7 @@ public class XSLTResult implements Result {
         try {
             HttpServletResponse response = ServletActionContext.getResponse();
             response.setStatus(status);
+            response.setCharacterEncoding(encoding);
             PrintWriter writer = response.getWriter();
 
             // Create a transformer for the stylesheet.
@@ -398,21 +371,15 @@ public class XSLTResult implements Result {
             Source xmlSource = getDOMSourceForStack(result);
 
             // Transform the source XML to System.out.
-            if (LOG.isDebugEnabled()) {
-        	LOG.debug("xmlSource = " + xmlSource);
-            }
+            LOG.debug("xmlSource = {}", xmlSource);
             transformer.transform(xmlSource, new StreamResult(writer));
 
             writer.flush(); // ...and flush...
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Time:" + (System.currentTimeMillis() - startTime) + "ms");
-            }
+            LOG.debug("Time: {}ms", (System.currentTimeMillis() - startTime));
 
         } catch (Exception e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Unable to render XSLT Template, '#0'", e, location);
-            }
+            LOG.error("Unable to render XSLT Template, '{}'", location, e);
             throw e;
         }
     }
@@ -455,9 +422,7 @@ public class XSLTResult implements Result {
                     throw new TransformerException("Stylesheet " + path + " not found in resources.");
                 }
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Preparing XSLT stylesheet templates: " + path);
-                }
+                LOG.debug("Preparing XSLT stylesheet templates: {}", path);
 
                 TransformerFactory factory = TransformerFactory.newInstance();
                 factory.setURIResolver(getURIResolver());

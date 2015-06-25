@@ -129,12 +129,12 @@
       </fileSet>
       -->
       <fileSet>
-        <directory>../plugins/cdi/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-cdi-plugin/apidocs</outputDirectory>
+        <directory>../plugins/bean-validation/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-bean-validation/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/codebehind/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin/apidocs</outputDirectory>
+        <directory>../plugins/cdi/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-cdi-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/config-browser/target/apidocs</directory>
@@ -143,10 +143,6 @@
       <fileSet>
         <directory>../plugins/convention/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-convention-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
-        <directory>../plugins/dojo/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-dojo-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/dwr/target/apidocs</directory>
@@ -171,10 +167,6 @@
       <fileSet>
         <directory>../plugins/jfreechart/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-jfreechart-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
-        <directory>../plugins/jsf/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-jsf-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/json/target/apidocs</directory>
@@ -223,10 +215,6 @@
       <fileSet>
         <directory>../plugins/spring/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-spring-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
-        <directory>../plugins/struts1/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-struts1-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/testng/target/apidocs</directory>

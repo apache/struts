@@ -21,14 +21,11 @@
 
 package org.apache.struts2.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.*;
 
 
 /**
@@ -38,6 +35,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * @see org.apache.struts2.views.jsp.iterator.SortIteratorTag
  */
 public class SortIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
+    private static final Logger LOG = LogManager.getLogger(IteratorGenerator.class);
 
     Comparator comparator;
     Iterator iterator;
@@ -67,8 +65,7 @@ public class SortIteratorFilter extends IteratorFilterSupport implements Iterato
         } else {
             try {
                 if (!MakeIterator.isIterable(source)) {
-                    LoggerFactory.getLogger(SortIteratorFilter.class.getName()).warn("Cannot create SortIterator for source " + source);
-
+                    LOG.warn("Cannot create SortIterator for source: {}", source);
                     return ERROR;
                 }
 
@@ -86,8 +83,7 @@ public class SortIteratorFilter extends IteratorFilterSupport implements Iterato
 
                 return SUCCESS;
             } catch (Exception e) {
-                LoggerFactory.getLogger(SortIteratorFilter.class.getName()).warn("Error creating sort iterator.", e);
-
+                LOG.warn("Error creating sort iterator.", e);
                 return ERROR;
             }
         }

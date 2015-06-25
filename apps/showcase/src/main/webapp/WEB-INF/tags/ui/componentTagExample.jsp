@@ -10,8 +10,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<p>This example tries to demonstrates the usage of &lt;s:component ... &gt; tag.<p/>
 
 			<p>To have a look at the source of this jsp page click

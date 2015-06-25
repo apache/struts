@@ -23,21 +23,21 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.ExcludedPatterns;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.Cookie;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -167,21 +167,25 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 4153142432948747305L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(CookieInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CookieInterceptor.class);
 
     private static final String ACCEPTED_PATTERN = "[a-zA-Z0-9\\.\\]\\[_'\\s]+";
 
     private Set<String> cookiesNameSet = Collections.emptySet();
     private Set<String> cookiesValueSet = Collections.emptySet();
 
-    // Allowed names of cookies
-    private Pattern acceptedPattern = Pattern.compile(ACCEPTED_PATTERN, Pattern.CASE_INSENSITIVE);
-    private Set<Pattern> excludedPatterns = new HashSet<Pattern>();
+    private ExcludedPatternsChecker excludedPatternsChecker;
+    private AcceptedPatternsChecker acceptedPatternsChecker;
 
-    public CookieInterceptor() {
-        for (String pattern : ExcludedPatterns.EXCLUDED_PATTERNS) {
-            excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-        }
+    @Inject
+    public void setExcludedPatternsChecker(ExcludedPatternsChecker excludedPatternsChecker) {
+        this.excludedPatternsChecker = excludedPatternsChecker;
+    }
+
+    @Inject
+    public void setAcceptedPatternsChecker(AcceptedPatternsChecker acceptedPatternsChecker) {
+        this.acceptedPatternsChecker = acceptedPatternsChecker;
+        this.acceptedPatternsChecker.setAcceptedPatterns(ACCEPTED_PATTERN);
     }
 
     /**
@@ -191,8 +195,9 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param cookiesName
      */
     public void setCookiesName(String cookiesName) {
-        if (cookiesName != null)
+        if (cookiesName != null) {
             this.cookiesNameSet = TextParseUtil.commaDelimitedStringToSet(cookiesName);
+        }
     }
 
     /**
@@ -203,26 +208,26 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param cookiesValue
      */
     public void setCookiesValue(String cookiesValue) {
-        if (cookiesValue != null)
+        if (cookiesValue != null) {
             this.cookiesValueSet = TextParseUtil.commaDelimitedStringToSet(cookiesValue);
+        }
     }
 
     /**
-     * Set the <code>acceptCookieNames</code> pattern of allowed names of cookies to protect against remote command execution vulnerability
+     * Set the <code>acceptCookieNames</code> pattern of allowed names of cookies
+     * to protect against remote command execution vulnerability.
      *
-     * @param pattern used to check cookie name against
+     * @param commaDelimitedPattern is used to check cookie name against, can set of comma delimited patterns
      */
-    public void setAcceptCookieNames(String pattern) {
-        acceptedPattern = Pattern.compile(pattern);
+    public void setAcceptCookieNames(String commaDelimitedPattern) {
+        acceptedPatternsChecker.setAcceptedPatterns(commaDelimitedPattern);
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("start interception");
-        }
+        LOG.debug("start interception");
 
         // contains selected cookies
-        final Map<String, String> cookiesMap = new LinkedHashMap<String, String>();
+        final Map<String, String> cookiesMap = new LinkedHashMap<>();
 
         Cookie[] cookies = ServletActionContext.getRequest().getCookies();
         if (cookies != null) {
@@ -234,15 +239,13 @@ public class CookieInterceptor extends AbstractInterceptor {
 
                 if (isAcceptableName(name) && isAcceptableValue(value)) {
                     if (cookiesNameSet.contains("*")) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name [" + name + "] with value [" + value + "] will be injected");
-                        }
+                        LOG.debug("Contains cookie name [*] in configured cookies name set, cookie with name [{}] with value [{}] will be injected", name, value);
                         populateCookieValueIntoStack(name, value, cookiesMap, stack);
                     } else if (cookiesNameSet.contains(cookie.getName())) {
                         populateCookieValueIntoStack(name, value, cookiesMap, stack);
                     }
                 } else {
-                    LOG.warn("Cookie name [#0] with value [#1] was rejected!", name, value);
+                    LOG.warn("Cookie name [{}] with value [{}] was rejected!", name, value);
                 }
             }
         }
@@ -260,16 +263,7 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @return true|false
      */
     protected boolean isAcceptableValue(String value) {
-        for (Pattern excludedPattern : excludedPatterns) {
-            boolean matches = !excludedPattern.matcher(value).matches();
-            if (!matches) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Cookie value [#0] matches excludedPattern [#1]", value, excludedPattern.toString());
-                }
-                return false;
-            }
-        }
-        return true;
+        return !isExcluded(value) && isAccepted(value);
     }
 
     /**
@@ -283,44 +277,41 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Checks if name of Cookie match {@link #acceptedPattern}
+     * Checks if name/value of Cookie is acceptable
      *
      * @param name of Cookie
      * @return true|false
      */
     protected boolean isAccepted(String name) {
-        boolean matches = acceptedPattern.matcher(name).matches();
-        if (matches) {
+        AcceptedPatternsChecker.IsAccepted accepted = acceptedPatternsChecker.isAccepted(name);
+        if (accepted.isAccepted()) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Cookie [#0] matches acceptedPattern [#1]", name, ACCEPTED_PATTERN);
+                LOG.trace("Cookie [{}] matches acceptedPattern [{}]", name, accepted.getAcceptedPattern());
             }
-        } else {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Cookie [#0] doesn't match acceptedPattern [#1]", name, ACCEPTED_PATTERN);
-            }
+            return true;
         }
-        return matches;
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Cookie [{}] doesn't match acceptedPattern [{}]", name, accepted.getAcceptedPattern());
+        }
+        return false;
     }
 
     /**
-     * Checks if name of Cookie match {@link #excludedPatterns}
+     * Checks if name/value of Cookie is excluded
      *
      * @param name of Cookie
      * @return true|false
      */
     protected boolean isExcluded(String name) {
-        for (Pattern excludedPattern : excludedPatterns) {
-            boolean matches = excludedPattern.matcher(name).matches();
-            if (matches) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Cookie [#0] matches excludedPattern [#1]", name, excludedPattern.toString());
-                }
-                return true;
-            } else {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Cookie [#0] doesn't match excludedPattern [#1]", name, excludedPattern.toString());
-                }
+        ExcludedPatternsChecker.IsExcluded excluded = excludedPatternsChecker.isExcluded(name);
+        if (excluded.isExcluded()) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Cookie [{}] matches excludedPattern [{}]", name, excluded.getExcludedPattern());
             }
+            return true;
+        }
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Cookie [{}] doesn't match excludedPattern [{}]", name, excluded.getExcludedPattern());
         }
         return false;
     }
@@ -342,9 +333,9 @@ public class CookieInterceptor extends AbstractInterceptor {
             // we'll inject it into Struts' action
             if (LOG.isDebugEnabled()) {
                 if (cookiesValueSet.isEmpty())
-                    LOG.debug("no cookie value is configured, cookie with name ["+cookieName+"] with value ["+cookieValue+"] will be injected");
+                    LOG.debug("no cookie value is configured, cookie with name [{}] with value [{}] will be injected", cookieName, cookieValue);
                 else if (cookiesValueSet.contains("*"))
-                    LOG.debug("interceptor is configured to accept any value, cookie with name ["+cookieName+"] with value ["+cookieValue+"] will be injected");
+                    LOG.debug("interceptor is configured to accept any value, cookie with name [{}] with value [{}] will be injected", cookieName, cookieValue);
             }
             cookiesMap.put(cookieName, cookieValue);
             stack.setValue(cookieName, cookieValue);
@@ -353,9 +344,7 @@ public class CookieInterceptor extends AbstractInterceptor {
             // if cookiesValues is specified, the cookie's value must match before we
             // inject them into Struts' action
             if (cookiesValueSet.contains(cookieValue)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("both configured cookie name and value matched, cookie ["+cookieName+"] with value ["+cookieValue+"] will be injected");
-                }
+                LOG.debug("both configured cookie name and value matched, cookie [{}] with value [{}] will be injected", cookieName, cookieValue);
 
                 cookiesMap.put(cookieName, cookieValue);
                 stack.setValue(cookieName, cookieValue);
@@ -372,9 +361,7 @@ public class CookieInterceptor extends AbstractInterceptor {
      */
     protected void injectIntoCookiesAwareAction(Object action, Map<String, String> cookiesMap) {
         if (action instanceof CookiesAware) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("action ["+action+"] implements CookiesAware, injecting cookies map ["+cookiesMap+"]");
-            }
+            LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);
             ((CookiesAware)action).setCookiesMap(cookiesMap);
         }
     }

@@ -39,11 +39,11 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * <p/>
@@ -64,7 +64,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  */
 public class DWRValidator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DWRValidator.class);
+    private static final Logger LOG = LogManager.getLogger(DWRValidator.class);
 
     public ValidationAwareSupport doPost(String namespace, String actionName, Map params) throws Exception {
         HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();

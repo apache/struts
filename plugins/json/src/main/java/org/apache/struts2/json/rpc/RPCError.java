@@ -23,14 +23,14 @@ package org.apache.struts2.json.rpc;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * Used to serialize RPC Errors
  */
 public class RPCError {
-    private static final Logger LOG = LoggerFactory.getLogger(RPCError.class);
+    private static final Logger LOG = LogManager.getLogger(RPCError.class);
 
     private int code;
     private String name;

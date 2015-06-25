@@ -35,13 +35,12 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -56,8 +55,6 @@ import java.util.Map;
 public class DispatcherTest extends StrutsInternalTestCase {
 
     public void testDefaultResurceBundlePropertyLoaded() throws Exception {
-        Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties
-
         // some i18n messages from xwork-messages.properties
         assertEquals(
                 LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.US),
@@ -140,12 +137,11 @@ public class DispatcherTest extends StrutsInternalTestCase {
     public void testPrepareMultipartRequest() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        ServletContext ctx = new MockServletContext();
 
         req.setContentType("multipart/form-data");
         Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
         du.prepare(req, res);
-        HttpServletRequest wrapped = du.wrapRequest(req, ctx);
+        HttpServletRequest wrapped = du.wrapRequest(req);
 
         assertTrue(wrapped instanceof MultiPartRequestWrapper);
     }
@@ -179,13 +175,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
     
     public void testConfigurationManager() {
     	Dispatcher du;
-    	InternalConfigurationManager configurationManager = new InternalConfigurationManager();
+    	final InternalConfigurationManager configurationManager = new InternalConfigurationManager();
     	try {
-    		du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
-    		du.setConfigurationManager(configurationManager);
-    		
+    		du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
     		du.init();
-    		
             Dispatcher.setInstance(du);
             
             assertFalse(configurationManager.destroyConfiguration);
@@ -203,8 +196,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
     public void testObjectFactoryDestroy() throws Exception {
 
         final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
-        Dispatcher du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
         ConfigurationManager cm = new ConfigurationManager();
+        Dispatcher du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), cm);
         Mock mockConfiguration = new Mock(Configuration.class);
         cm.setConfiguration((Configuration)mockConfiguration.proxy());
         
@@ -219,7 +212,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mockConfiguration.expect("destroy");
         mockConfiguration.matchAndReturn("getPackageConfigs", new HashMap<String, PackageConfig>());
 
-        du.setConfigurationManager(cm);
+        du.init();
         assertFalse(destroyedObjectFactory.destroyed);
         du.cleanup();
         assertTrue(destroyedObjectFactory.destroyed);
@@ -255,8 +248,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
         ConfigurationManager configurationManager = new ConfigurationManager();
         configurationManager.setConfiguration((Configuration) mockConfiguration.proxy());
         
-        Dispatcher dispatcher = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
-        dispatcher.setConfigurationManager(configurationManager);
+        Dispatcher dispatcher = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
+        dispatcher.init();
         dispatcher.cleanup();
         
         mockInterceptor.verify();
@@ -279,4 +272,13 @@ public class DispatcherTest extends StrutsInternalTestCase {
     	public boolean isInitialized = false;
     	public boolean isDestroyed = false;
     }
+
+    public static class InnerDestroyableObjectFactory extends ObjectFactory implements ObjectFactoryDestroyable {
+        public boolean destroyed = false;
+
+        public void destroy() {
+            destroyed = true;
+        }
+    }
+
 }

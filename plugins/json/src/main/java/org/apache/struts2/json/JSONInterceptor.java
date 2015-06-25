@@ -20,43 +20,40 @@
  */
 package org.apache.struts2.json;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.FilterDispatcher;
-import org.apache.struts2.json.annotations.SMDMethod;
-import org.apache.struts2.json.rpc.RPCError;
-import org.apache.struts2.json.rpc.RPCErrorCode;
-import org.apache.struts2.json.rpc.RPCResponse;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.PrepareOperations;
+import org.apache.struts2.json.annotations.SMDMethod;
+import org.apache.struts2.json.rpc.RPCError;
+import org.apache.struts2.json.rpc.RPCErrorCode;
+import org.apache.struts2.json.rpc.RPCResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Populates an action from a JSON string
  */
 public class JSONInterceptor extends AbstractInterceptor {
+
     private static final long serialVersionUID = 4950170304212158803L;
-    private static final Logger LOG = LoggerFactory.getLogger(JSONInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(JSONInterceptor.class);
+
     private boolean enableSMD = false;
     private boolean enableGZIP = false;
     private boolean wrapWithComments;
@@ -87,8 +84,8 @@ public class JSONInterceptor extends AbstractInterceptor {
         }
 
         Object rootObject = null;
+        final ValueStack stack = invocation.getStack();
         if (this.root != null) {
-            ValueStack stack = invocation.getStack();
             rootObject = stack.findValue(this.root);
 
             if (rootObject == null) {
@@ -99,6 +96,26 @@ public class JSONInterceptor extends AbstractInterceptor {
         if ((contentType != null) && contentType.equalsIgnoreCase("application/json")) {
             // load JSON object
             Object obj = JSONUtil.deserialize(request.getReader());
+
+            // JSON array (this.root cannot be null in this case)
+            if(obj instanceof List && this.root != null) {
+                String mapKey = this.root;
+                rootObject = null;
+
+                if(this.root.indexOf('.') != -1) {
+                    mapKey = this.root.substring(this.root.lastIndexOf('.') + 1);
+
+                    rootObject = stack.findValue(this.root.substring(0, this.root.lastIndexOf('.')));
+                    if (rootObject == null) {
+                        throw new RuntimeException("JSON array: Invalid root expression: '" + this.root + "'.");
+                    }
+                }
+
+                // create a map with a list inside
+                Map m = new HashMap();
+                m.put(mapKey, new ArrayList((List) obj));
+                obj = m;
+            }
 
             if (obj instanceof Map) {
                 Map json = (Map) obj;
@@ -125,8 +142,9 @@ public class JSONInterceptor extends AbstractInterceptor {
                 if (obj instanceof Map) {
                     Map smd = (Map) obj;
 
-                    if (rootObject == null) // model makes no sense when using RPC
+                    if (rootObject == null) { // model makes no sense when using RPC
                         rootObject = invocation.getAction();
+                    }
 
                     // invoke method
                     try {
@@ -163,10 +181,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
             return Action.NONE;
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Content type must be 'application/json' or 'application/json-rpc'. " +
-                          "Ignoring request with content type " + contentType);
-            }
+            LOG.debug("Content type must be 'application/json' or 'application/json-rpc'. Ignoring request with content type ", contentType);
         }
 
         return invocation.invoke();
@@ -236,8 +251,9 @@ public class JSONInterceptor extends AbstractInterceptor {
                 Type genericType = genericTypes[i];
 
                 // clean up the values
-                if (dataCleaner != null)
+                if (dataCleaner != null) {
                     parameter = dataCleaner.clean("[" + i + "]", parameter);
+                }
 
                 Object converted = populator.convert(paramType, genericType, parameter, method);
                 invocationParameters.add(converted);
@@ -366,8 +382,8 @@ public class JSONInterceptor extends AbstractInterceptor {
      * @return true if debugging is turned on
      */
     public boolean getDebug() {
-        Boolean devModeOverride = FilterDispatcher.getDevModeOverride();
-        return devModeOverride != null ? devModeOverride.booleanValue() : this.debug;
+        Boolean devModeOverride = PrepareOperations.getDevModeOverride();
+        return devModeOverride != null ? devModeOverride : this.debug;
     }
 
     /**
@@ -381,10 +397,8 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void setDevMode(
-        String mode)
-    {
-        setDebug("true".equalsIgnoreCase(mode));
+    public void setDevMode(String mode) {
+        setDebug(BooleanUtils.toBoolean(mode));
     }
 
     /**
@@ -397,7 +411,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     public void setExcludeProperties(String commaDelim) {
         Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
         if (excludePatterns != null) {
-            this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
+            this.excludeProperties = new ArrayList<>(excludePatterns.size());
             for (String pattern : excludePatterns) {
                 this.excludeProperties.add(Pattern.compile(pattern));
             }
@@ -414,7 +428,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     public void setExcludeWildcards(String commaDelim) {
         Set<String> excludePatterns = JSONUtil.asSet(commaDelim);
         if (excludePatterns != null) {
-            this.excludeProperties = new ArrayList<Pattern>(excludePatterns.size());
+            this.excludeProperties = new ArrayList<>(excludePatterns.size());
             for (String pattern : excludePatterns) {
                 this.excludeProperties.add(WildcardUtil.compileWildcardPattern(pattern));
             }

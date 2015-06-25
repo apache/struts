@@ -35,9 +35,11 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.interceptor.TokenInterceptor;
 import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
 import org.apache.struts2.views.jsp.ui.DoubleValidationAction;
@@ -163,6 +165,9 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         }
         if (!builder.contains(ActionProxyFactory.class)) {
             builder.factory(ActionProxyFactory.class, DefaultActionProxyFactory.class);
+        }
+        if (!builder.contains(ExcludedPatternsChecker.class)) {
+            builder.factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class);
         }
     }
 }

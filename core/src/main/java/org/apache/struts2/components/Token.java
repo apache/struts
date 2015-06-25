@@ -98,14 +98,6 @@ public class Token extends UIBean {
         addParameter("tokenNameField", TokenHelper.TOKEN_NAME_FIELD);
     }
 
-    /**
-     * This will be removed in a future version of Struts.
-     * @deprecated Templates should use $parameters from now on, not $tag.
-     */
-    public String getTokenNameField() {
-        return TokenHelper.TOKEN_NAME_FIELD;
-    }
-
     private String buildToken(String name) {
         Map context = stack.getContext();
         Object myToken = context.get(name);

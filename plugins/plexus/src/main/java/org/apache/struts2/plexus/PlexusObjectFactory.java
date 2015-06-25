@@ -30,8 +30,8 @@ import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.Validator;
 import org.codehaus.plexus.PlexusContainer;
@@ -71,7 +71,7 @@ import java.util.Map;
  */
 public class PlexusObjectFactory extends ObjectFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(PlexusObjectFactory.class);
 
     private static final String PLEXUS_COMPONENT_TYPE = "plexus.component.type";
 

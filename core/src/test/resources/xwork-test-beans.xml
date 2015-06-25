@@ -1,0 +1,9 @@
+<!DOCTYPE xwork PUBLIC
+        "-//Apache Struts//XWork 2.0//EN"
+        "http://struts.apache.org/dtds/xwork-2.0.dtd">
+
+<xwork>
+
+    <constant name="ognlExcludedClasses" value="java.lang.Object,java.lang.Runtime,ognl.OgnlContext,ognl.MemberAccess,ognl.ClassResolver,ognl.TypeConverter,com.opensymphony.xwork2.ognl.SecurityMemberAccess" />
+
+</xwork>

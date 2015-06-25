@@ -21,20 +21,19 @@
 
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.AppendIteratorFilter;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -119,7 +118,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 @StrutsTag(name="append", tldTagClass="org.apache.struts2.views.jsp.iterator.AppendIteratorTag", description="Append the values of a list of iterators to one iterator")
 public class AppendIterator extends ContextBean implements UnnamedParametric {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AppendIterator.class);
+    private static final Logger LOG = LogManager.getLogger(AppendIterator.class);
 
     private AppendIteratorFilter appendIteratorFilter= null;
     private List _parameters;
@@ -141,9 +140,7 @@ public class AppendIterator extends ContextBean implements UnnamedParametric {
 
             Object iteratorEntryObj = paramEntries.next();
             if (! MakeIterator.isIterable(iteratorEntryObj)) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("param with value resolved as "+iteratorEntryObj+" cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator");
-                }
+                LOG.warn("param with value resolved as {} cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator", iteratorEntryObj);
                 continue;
             }
             appendIteratorFilter.setSource(MakeIterator.convert(iteratorEntryObj));

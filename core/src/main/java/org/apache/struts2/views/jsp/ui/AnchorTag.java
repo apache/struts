@@ -21,13 +21,13 @@
 
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see Anchor
@@ -72,16 +72,16 @@ public class AnchorTag extends AbstractClosingTag {
         tag.setAnchor(anchor);
 
         if (encode != null) {
-            tag.setEncode(Boolean.valueOf(encode).booleanValue());
+            tag.setEncode(BooleanUtils.toBoolean(encode));
         }
         if (includeContext != null) {
-            tag.setIncludeContext(Boolean.valueOf(includeContext).booleanValue());
+            tag.setIncludeContext(BooleanUtils.toBoolean(includeContext));
         }
         if (escapeAmp != null) {
-            tag.setEscapeAmp(Boolean.valueOf(escapeAmp).booleanValue());
+            tag.setEscapeAmp(BooleanUtils.toBoolean(escapeAmp));
         }
 	    if (forceAddSchemeHostAndPort != null) {
-            tag.setForceAddSchemeHostAndPort(Boolean.valueOf(forceAddSchemeHostAndPort).booleanValue());
+            tag.setForceAddSchemeHostAndPort(BooleanUtils.toBoolean(forceAddSchemeHostAndPort));
         }
     }
     

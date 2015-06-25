@@ -63,16 +63,12 @@ public final class StrutsConstants {
 
     /** The com.opensymphony.xwork2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
-
     public static final String STRUTS_OBJECTFACTORY_ACTIONFACTORY = "struts.objectFactory.actionFactory";
-
     public static final String STRUTS_OBJECTFACTORY_RESULTFACTORY = "struts.objectFactory.resultFactory";
-
     public static final String STRUTS_OBJECTFACTORY_CONVERTERFACTORY = "struts.objectFactory.converterFactory";
-
     public static final String STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY = "struts.objectFactory.interceptorFactory";
-
     public static final String STRUTS_OBJECTFACTORY_VALIDATORFACTORY = "struts.objectFactory.validatorFactory";
+    public static final String STRUTS_OBJECTFACTORY_UNKNOWNHANDLERFACTORY = "struts.objectFactory.unknownHandlerFactory";
 
     /** The com.opensymphony.xwork2.util.FileManager implementation class */
     public static final String STRUTS_FILE_MANAGER_FACTORY = "struts.fileManagerFactory";
@@ -97,11 +93,7 @@ public final class StrutsConstants {
 
     /** The org.apache.struts2.views.freemarker.FreemarkerManager implementation class */
     public static final String STRUTS_FREEMARKER_MANAGER_CLASSNAME = "struts.freemarker.manager.classname";
-    
-    @Deprecated
-    /** Cache Freemarker templates, this cache is managed by struts2,instead of native freemarker cache,set STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE >0&&STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY>0*/
-    public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE = "struts.freemarker.templatesCache";
-    
+
     /** Update freemarker templates cache in seconds*/
     public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY = "struts.freemarker.templatesCache.updateDelay";
     
@@ -138,6 +130,9 @@ public final class StrutsConstants {
     /** The directory to use for storing uploaded files */
     public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
 
+    /** Declares the buffer size to be used during streaming multipart content to disk. Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest} */
+    public static final String STRUTS_MULTIPART_BUFFERSIZE = "struts.multipart.bufferSize";
+
     /**
      * The org.apache.struts2.dispatcher.multipart.MultiPartRequest parser implementation
      * for a multipart request (file upload)
@@ -155,6 +150,9 @@ public final class StrutsConstants {
 
     /** Whether Spring should use its class cache or not */
     public static final String STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE = "struts.objectFactory.spring.useClassCache";
+
+    /** Uses different logic to construct beans, see https://issues.apache.org/jira/browse/WW-4110 */
+    public static final String STRUTS_OBJECTFACTORY_SPRING_ENABLE_AOP_SUPPORT = "struts.objectFactory.spring.enableAopSupport";
 
     /** Whether or not XSLT templates should not be cached */
     public static final String STRUTS_XSLT_NOCACHE = "struts.xslt.nocache";
@@ -281,4 +279,22 @@ public final class StrutsConstants {
 
     /** Allows override default DispatcherErrorHandler **/
     public static final String STRUTS_DISPATCHER_ERROR_HANDLER = "struts.dispatcher.errorHandler";
+
+    /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions **/
+    public static final String STRUTS_EXCLUDED_CLASSES = "struts.excludedClasses";
+    public static final String STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS = "struts.excludedPackageNamePatterns";
+
+    /** Dedicated services to check if passed string is excluded/accepted **/
+    public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";
+    public static final String STRUTS_ACCEPTED_PATTERNS_CHECKER = "struts.acceptedPatterns.checker";
+
+    /** Constant is used to override framework's default excluded patterns **/
+    public static final String STRUTS_OVERRIDE_EXCLUDED_PATTERNS = "struts.override.excludedPatterns";
+    public static final String STRUTS_OVERRIDE_ACCEPTED_PATTERNS = "struts.override.acceptedPatterns";
+
+    public static final String STRUTS_ADDITIONAL_EXCLUDED_PATTERNS = "struts.additional.excludedPatterns";
+    public static final String STRUTS_ADDITIONAL_ACCEPTED_PATTERNS = "struts.additional.acceptedPatterns";
+
+    public static final String STRUTS_CONTENT_TYPE_MATCHER = "struts.contentTypeMatcher";
+
 }

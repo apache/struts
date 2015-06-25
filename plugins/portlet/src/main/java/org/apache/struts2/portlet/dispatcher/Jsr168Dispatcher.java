@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -174,7 +174,7 @@ import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
  */
 public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Jsr168Dispatcher.class);
+    private static final Logger LOG = LogManager.getLogger(Jsr168Dispatcher.class);
 
     protected String portletNamespace = null;
 

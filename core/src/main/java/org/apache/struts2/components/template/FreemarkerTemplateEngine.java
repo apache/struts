@@ -21,30 +21,26 @@
 
 package org.apache.struts2.components.template;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Locale;
-import java.util.Map;
-import java.util.List;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-
+import freemarker.core.ParseException;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
-import freemarker.core.ParseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Freemarker based template engine.
@@ -65,7 +61,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         }
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerTemplateEngine.class);
+    private static final Logger LOG = LogManager.getLogger(FreemarkerTemplateEngine.class);
 
     @Inject
     public void setFreemarkerManager(FreemarkerManager mgr) {
@@ -110,11 +106,11 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
         if (template == null) {
             if (LOG.isErrorEnabled()) {
-                LOG.error("Could not load the FreeMarker template named '" + templateContext.getTemplate().getName() +"':");
+                LOG.error("Could not load the FreeMarker template named '{}':", templateContext.getTemplate().getName());
                 for (Template t : templates) {
-                    LOG.error("Attempted: " + getFinalTemplateName(t));
+                    LOG.error("Attempted: {}", getFinalTemplateName(t));
                 }
-                LOG.error("The TemplateLoader provided by the FreeMarker Configuration was a: "+config.getTemplateLoader().getClass().getName());
+                LOG.error("The TemplateLoader provided by the FreeMarker Configuration was a: {}", config.getTemplateLoader().getClass().getName());
             }
             if (exception != null) {
                 throw exception;
@@ -123,9 +119,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
             }
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Rendering template " + templateName);
-        }
+        LOG.debug("Rendering template: {}", templateName);
 
         ActionInvocation ai = ActionContext.getContext().getActionInvocation();
 
@@ -164,6 +158,4 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     protected String getSuffix() {
         return "ftl";
     }
-
-
 }

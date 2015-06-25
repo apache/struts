@@ -21,18 +21,6 @@
 
 package org.apache.struts2.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
@@ -40,15 +28,22 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * Override Xwork class so we can use an arbitrary config file
  */
 public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsXmlConfigurationProvider.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsXmlConfigurationProvider.class);
     private File baseDir = null;
     private String filename;
     private String reloadKey;
@@ -128,7 +123,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             }
         }
         if (url != null) {
-            List<URL> list = new ArrayList<URL>();
+            List<URL> list = new ArrayList<>();
             list.add(url);
             return list.iterator();
         } else {
@@ -139,9 +134,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     protected URL findInFileSystem(String fileName) throws IOException {
         URL url = null;
         File file = new File(fileName);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Trying to load file " + file);
-        }
+        LOG.debug("Trying to load file: {}", file);
 
         // Trying relative path to original file
         if (!file.exists()) {

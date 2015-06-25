@@ -48,10 +48,10 @@
 
     <package name="rest-default" extends="struts-default">
         <result-types>
-            <result-type name="redirect" class="org.apache.struts2.dispatcher.ServletRedirectResult">
+            <result-type name="redirect" class="org.apache.struts2.result.ServletRedirectResult">
                 <param name="statusCode">303</param>
             </result-type>
-            <result-type name="redirectAction" class="org.apache.struts2.dispatcher.ServletActionRedirectResult">
+            <result-type name="redirectAction" class="org.apache.struts2.result.ServletActionRedirectResult">
                 <param name="statusCode">303</param>
             </result-type>
         </result-types>

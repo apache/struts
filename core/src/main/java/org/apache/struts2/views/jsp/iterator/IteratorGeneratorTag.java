@@ -21,16 +21,15 @@
 
 package org.apache.struts2.views.jsp.iterator;
 
-import javax.servlet.jsp.JspException;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.util.IteratorGenerator;
 import org.apache.struts2.util.IteratorGenerator.Converter;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import javax.servlet.jsp.JspException;
 
 
 /**
@@ -134,7 +133,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
     public static final String DEFAULT_SEPARATOR = ",";
 
-    private static final Logger LOG = LoggerFactory.getLogger(IteratorGeneratorTag.class);
+    private static final Logger LOG = LogManager.getLogger(IteratorGeneratorTag.class);
 
     String countAttr;
     String separatorAttr;
@@ -206,9 +205,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
                     count = Integer.parseInt((String)countObj);
                 }
                 catch(NumberFormatException e) {
-                    if (LOG.isWarnEnabled()) {
-                	LOG.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
-                    }
+                    LOG.warn("Unable to convert count attribute [{}] to number, ignore count attribute", countObj, e);
                 }
             }
         }

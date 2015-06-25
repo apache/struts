@@ -9,8 +9,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<s:iterator value="persons" status="status">
                  <s:label label="%{'SET '+#status.index+' Name'}" value="%{name}" /><br/>

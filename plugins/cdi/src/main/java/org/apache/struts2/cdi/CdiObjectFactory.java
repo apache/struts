@@ -21,8 +21,8 @@ package org.apache.struts2.cdi;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
@@ -46,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CdiObjectFactory extends ObjectFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CdiObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
 
     /**
      * The key under which the BeanManager can be found according to CDI API docs
@@ -70,7 +70,6 @@ public class CdiObjectFactory extends ObjectFactory {
 	}
 
 	protected BeanManager beanManager;
-    protected CreationalContext ctx;
 
     Map<Class<?>, InjectionTarget<?>> injectionTargetCache = new ConcurrentHashMap<Class<?>, InjectionTarget<?>>();
 
@@ -79,7 +78,6 @@ public class CdiObjectFactory extends ObjectFactory {
         LOG.info("Initializing Struts2 CDI integration...");
         this.beanManager = findBeanManager();
         if (beanManager != null) {
-            this.ctx = buildNonContextualCreationalContext(beanManager);
             LOG.info("Struts2 CDI integration initialized.");
         } else {
             LOG.error("Struts2 CDI integration could not be initialized.");
@@ -116,14 +114,10 @@ public class CdiObjectFactory extends ObjectFactory {
 				bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_COMP_ENV);
 			}
 			if (bm == null) {
-				if (LOG.isErrorEnabled()) {
-					LOG.error("[findBeanManager]: Could not find BeanManager instance for any given JNDI key, giving up");
-				}
+				LOG.error("[findBeanManager]: Could not find BeanManager instance for any given JNDI key, giving up");
 			}
 		} catch ( NamingException e ) {
-			if (LOG.isErrorEnabled()) {
-				LOG.error("[findBeanManager]: Unable to get InitialContext for BeanManager lookup", e);
-			}
+			LOG.error("[findBeanManager]: Unable to get InitialContext for BeanManager lookup", e);
 		}
 		return bm;
 	}
@@ -137,27 +131,26 @@ public class CdiObjectFactory extends ObjectFactory {
 	 * @return the BeanManager, if found; <tt>null</tt> if not found or {@link javax.naming.NamingException} was thrown.
 	 */
 	protected BeanManager lookup( Context context, String jndiKeyToCheck ) {
-		if (LOG.isInfoEnabled()) {
-			LOG.info("[lookup]: Checking for BeanManager under JNDI key " + jndiKeyToCheck);
-		}
+		LOG.info("[lookup]: Checking for BeanManager under JNDI key {}", jndiKeyToCheck);
 		BeanManager result = null;
 		try {
 			result = (BeanManager) context.lookup(jndiKeyToCheck);
 		} catch ( NamingException e ) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("[lookup]: BeanManager lookup failed for JNDI key " + jndiKeyToCheck, e);
-			}
+			LOG.debug("[lookup]: BeanManager lookup failed for JNDI key {}", jndiKeyToCheck, e);
 		}
 		return result;
 	}
 
 	@Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal)
             throws Exception {
 
         Class<?> clazz = getClassInstance(className);
         InjectionTarget injectionTarget = getInjectionTarget(clazz);
+
+        // a separate CreationalContext is required for every bean
+        final CreationalContext ctx = buildNonContextualCreationalContext(beanManager);
 
         Object o = injectionTarget.produce(ctx);
         injectionTarget.inject(o, ctx);
@@ -198,4 +191,13 @@ public class CdiObjectFactory extends ObjectFactory {
     protected CreationalContext buildNonContextualCreationalContext(BeanManager beanManager) {
         return beanManager != null ? beanManager.createCreationalContext(null) : null;
     }
+
+    /**
+     * Allow constructor injection
+     */
+    @Override
+    public boolean isNoArgConstructorRequired() {
+        return false;
+    }
+
 }

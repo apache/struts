@@ -24,8 +24,8 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -35,7 +35,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -143,7 +142,7 @@ import java.util.TimeZone;
 @StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
 public class Date extends ContextBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Date.class);
+    private static final Logger LOG = LogManager.getLogger(Date.class);
     /**
      * Property name to fall back when no format is specified
      */
@@ -200,10 +199,7 @@ public class Date extends ContextBean {
     }
 
     private TextProvider findProviderInStack() {
-        for (Iterator iterator = getStack().getRoot().iterator(); iterator
-                .hasNext();) {
-            Object o = iterator.next();
-
+        for (Object o : getStack().getRoot()) {
             if (o instanceof TextProvider) {
                 return (TextProvider) o;
             }
@@ -234,31 +230,31 @@ public class Date extends ContextBean {
         int years = days / 365;
 
         if (years > 0) {
-            args.add(Long.valueOf(years));
-            args.add(Long.valueOf(day));
+            args.add(years);
+            args.add(day);
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_YEARS, DATETAG_DEFAULT_YEARS, args));
         } else if (day > 0) {
-            args.add(Long.valueOf(day));
-            args.add(Long.valueOf(hour));
+            args.add(day);
+            args.add(hour);
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_DAYS, DATETAG_DEFAULT_DAYS, args));
         } else if (hour > 0) {
-            args.add(Long.valueOf(hour));
-            args.add(Long.valueOf(min));
+            args.add(hour);
+            args.add(min);
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_HOURS, DATETAG_DEFAULT_HOURS, args));
         } else if (min > 0) {
-            args.add(Long.valueOf(min));
-            args.add(Long.valueOf(sec));
+            args.add(min);
+            args.add(sec);
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_MINUTES, DATETAG_DEFAULT_MINUTES, args));
         } else {
-            args.add(Long.valueOf(sec));
+            args.add(sec);
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_SECONDS, DATETAG_DEFAULT_SECONDS, args));
@@ -285,9 +281,17 @@ public class Date extends ContextBean {
                 date = (java.util.Date) dateObject;
             } else if(dateObject instanceof Calendar){
                 date = ((Calendar) dateObject).getTime();
+            } else {
+                if (devMode) {
+                    LOG.error("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
+                            name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+                } else {
+                    LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
+                            name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+                }
             }
         } catch (Exception e) {
-            LOG.error("Could not convert object with key '#0' to a java.util.Date instance", name);
+            LOG.error("Could not convert object with key '{}' to a java.util.Date instance", name);
         }
 
         //try to find the format on the stack

@@ -22,10 +22,10 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.ng.HostConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,11 +35,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * <b>Default implementation to server static content</b>
@@ -66,7 +62,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /**
      * Provide a logging instance.
      */
-    private Logger LOG = LoggerFactory.getLogger(DefaultStaticContentLoader.class);
+    private Logger LOG = LogManager.getLogger(DefaultStaticContentLoader.class);
 
     /**
      * Store set of path prefixes to use with static resources.
@@ -97,33 +93,33 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
      *
-     * @param val
+     * @param serveStaticContent
      *            New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)
-    public void setServeStaticContent(String val) {
-        serveStatic = "true".equals(val);
+    public void setServeStaticContent(String serveStaticContent) {
+        this.serveStatic = BooleanUtils.toBoolean(serveStaticContent);
     }
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE
      * setting.
      *
-     * @param val
+     * @param serveStaticBrowserCache
      *            New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
-    public void setServeStaticBrowserCache(String val) {
-        serveStaticBrowserCache = "true".equals(val);
+    public void setServeStaticBrowserCache(String serveStaticBrowserCache) {
+        this.serveStaticBrowserCache = BooleanUtils.toBoolean(serveStaticBrowserCache);
     }
 
     /**
      * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     * @param val New setting
+     * @param encoding New setting
      */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public void setEncoding(String val) {
-        encoding = val;
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
     /*
@@ -155,7 +151,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
         if (packages == null) {
             return Collections.emptyList();
         }
-        List<String> pathPrefixes = new ArrayList<String>();
+        List<String> pathPrefixes = new ArrayList<>();
 
         StringTokenizer st = new StringTokenizer(packages, ", \n\t");
         while (st.hasMoreTokens()) {
@@ -213,9 +209,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             try {
                 ifModifiedSince = request.getDateHeader("If-Modified-Since");
             } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Invalid If-Modified-Since header value: '#0', ignoring", request.getHeader("If-Modified-Since"));
-                }
+                LOG.warn("Invalid If-Modified-Since header value: '{}', ignoring", request.getHeader("If-Modified-Since"));
             }
             long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
             long now = cal.getTimeInMillis();

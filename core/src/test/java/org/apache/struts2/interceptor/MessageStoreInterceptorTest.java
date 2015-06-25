@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.dispatcher.ServletActionRedirectResult;
+import org.apache.struts2.result.ServletActionRedirectResult;
 import org.easymock.EasyMock;
 
 import com.opensymphony.xwork2.Action;

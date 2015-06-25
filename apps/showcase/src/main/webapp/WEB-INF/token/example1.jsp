@@ -11,8 +11,8 @@
 
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<p>
 			<b>Example 1:</b> This example illustrates a situation where you can transfer money from

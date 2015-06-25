@@ -9,8 +9,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span3">
+	<div class="row">
+		<div class="col-md-3">
 			<ul class="nav nav-tabs nav-stacked">
 				<s:url id="listpeopleurl" action="list-people" namespace="/person" />
 				<li><s:a href="%{listpeopleurl}">List all people</s:a> </li>
@@ -20,7 +20,7 @@
 				<li><s:a href="%{newpersonurl}">Create a new person</s:a></li>
 			</ul>
 		</div>
-		<div class="span9">
+		<div class="col-md-9">
 			<s:form action="edit-person" theme="simple" validate="false">
 
 				<table class="table table-striped table-bordered table-hover table-condensed">

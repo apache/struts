@@ -20,8 +20,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<!-- START SNIPPET: nonFieldValidatorsExample -->
 			<s:actionerror/>
@@ -35,9 +35,6 @@
 
 
 			<!--  END SNIPPET: nonFieldValidatorsExample -->
-
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

@@ -22,6 +22,7 @@
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.TestAction;
+import org.apache.struts2.components.Component;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 
@@ -108,10 +109,23 @@ public class ComponentTest extends AbstractUITagTest {
         tag.getComponent().addParameter("argle", "bargle");
         tag.getComponent().addParameter("glip", "glop");
         tag.getComponent().addParameter("array", new String[]{"a", "b", "c"});
-        tag.getComponent().addParameter("obj", tag);
+        tag.getComponent().addParameter("objClass", tag.getClass().getName());
         tag.doEndTag();
 
         //        System.out.println(writer);
         verify(ComponentTag.class.getResource("Component-param.txt"));
     }
+
+    public void testTagAttributeExclusion() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+
+        tag.setDynamicAttribute("uri://some.uri", "includeContext", false);
+
+        tag.doStartTag();
+
+        assertTrue(tag.includeContext);
+    }
+
 }
+

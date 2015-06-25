@@ -22,12 +22,7 @@
 package org.apache.struts2.views.xslt;
 
 import org.apache.struts2.StrutsException;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
+import org.w3c.dom.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,7 +86,7 @@ import java.util.Map;
  */
 public class AdapterFactory {
 
-    private Map<Class, Class> adapterTypes = new HashMap<Class, Class>();
+    private Map<Class, Class> adapterTypes = new HashMap<>();
 
     /**
      * Register an adapter type for a Java class type.
@@ -115,9 +110,6 @@ public class AdapterFactory {
      */
     public Document adaptDocument(String propertyName, Object propertyValue)
             throws IllegalAccessException, InstantiationException {
-        //if ( propertyValue instanceof Document )
-        //  return (Document)propertyValue;
-
         return new SimpleAdapterDocument(this, null, propertyName, propertyValue);
     }
 
@@ -131,30 +123,34 @@ public class AdapterFactory {
      */
     public Node adaptNode(AdapterNode parent, String propertyName, Object value) {
         Class adapterClass = getAdapterForValue(value);
-        if (adapterClass != null)
+        if (adapterClass != null) {
             return constructAdapterInstance(adapterClass, parent, propertyName, value);
+        }
 
         // If the property is a Document, "unwrap" it to the root element
-        if (value instanceof Document)
+        if (value instanceof Document) {
             value = ((Document) value).getDocumentElement();
+        }
 
         // If the property is already a Node, proxy it
-        if (value instanceof Node)
+        if (value instanceof Node) {
             return proxyNode(parent, (Node) value);
+        }
 
         // Check other supported types or default to generic JavaBean introspecting adapter
         Class valueType = value.getClass();
 
-        if (valueType.isArray())
+        if (valueType.isArray()) {
             adapterClass = ArrayAdapter.class;
-        else if (value instanceof String || value instanceof Number || value instanceof Boolean || valueType.isPrimitive())
+        } else if (value instanceof String || value instanceof Number || value instanceof Boolean || valueType.isPrimitive()) {
             adapterClass = StringAdapter.class;
-        else if (value instanceof Collection)
+        } else if (value instanceof Collection) {
             adapterClass = CollectionAdapter.class;
-        else if (value instanceof Map)
+        } else if (value instanceof Map) {
             adapterClass = MapAdapter.class;
-        else
+        } else {
             adapterClass = BeanAdapter.class;
+        }
 
         return constructAdapterInstance(adapterClass, parent, propertyName, value);
     }
@@ -173,17 +169,22 @@ public class AdapterFactory {
      */
     public Node proxyNode(AdapterNode parent, Node node) {
         // If the property is a Document, "unwrap" it to the root element
-        if (node instanceof Document)
+        if (node instanceof Document) {
             node = ((Document) node).getDocumentElement();
+        }
 
-        if (node == null)
+        if (node == null) {
             return null;
-        if (node.getNodeType() == Node.ELEMENT_NODE)
+        }
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
             return new ProxyElementAdapter(this, parent, (Element) node);
-        if (node.getNodeType() == Node.TEXT_NODE)
+        }
+        if (node.getNodeType() == Node.TEXT_NODE) {
             return new ProxyTextNodeAdapter(this, parent, (Text) node);
-        if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+        }
+        if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             return new ProxyAttrAdapter(this, parent, (Attr) node);
+        }
 
         return null; // Unsupported Node type - ignore for now
     }
@@ -201,8 +202,7 @@ public class AdapterFactory {
         try {
             adapterClass.getConstructor(new Class []{});
         } catch (NoSuchMethodException e1) {
-            throw new StrutsException("Adapter class: " + adapterClass
-                    + " does not have a no-args consructor.");
+            throw new StrutsException("Adapter class: " + adapterClass + " does not have a no-args constructor.");
         }
 
         try {
@@ -214,9 +214,7 @@ public class AdapterFactory {
 
             return adapterNode;
 
-        } catch (IllegalAccessException e) {
-            throw new StrutsException("Cannot adapt " + propertyValue + " (" + propertyName + ") :" + e.getMessage(), e);
-        } catch (InstantiationException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             throw new StrutsException("Cannot adapt " + propertyValue + " (" + propertyName + ") :" + e.getMessage(), e);
         }
     }

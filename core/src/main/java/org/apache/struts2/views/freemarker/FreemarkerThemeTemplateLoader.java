@@ -37,7 +37,7 @@ public class FreemarkerThemeTemplateLoader implements TemplateLoader{
             return parentTemplateLoader.findTemplateSource(name);
         }
 
-        int themeEndIndex = name.indexOf('/', tokenIndex);
+        int themeEndIndex = name.lastIndexOf('/');
         if (themeEndIndex < 0) {
             return parentTemplateLoader.findTemplateSource(name);
         }

@@ -55,7 +55,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
     public void testNoLocation() throws Exception {
         try {
             result.setParse(false);
-            result.setLocation(null);
+            result.setStylesheetLocation(null);
             result.execute(mai);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {
@@ -66,7 +66,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
     public void testNoFileFound() throws Exception {
         try {
             result.setParse(false);
-            result.setLocation("nofile.xsl");
+            result.setStylesheetLocation("nofile.xsl");
             result.execute(mai);
             fail("Should have thrown a TransformerException");
         } catch (TransformerException e) {
@@ -76,7 +76,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
     public void testSimpleTransform() throws Exception {
         result.setParse(false);
-        result.setLocation("XSLTResultTest.xsl");
+        result.setStylesheetLocation("XSLTResultTest.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
@@ -86,7 +86,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
     public void testSimpleTransformParse() throws Exception {
         result.setParse(true);
-        result.setLocation("${top.myLocation}");
+        result.setStylesheetLocation("${top.myLocation}");
         result.execute(mai);
 
         String out = response.getContentAsString();
@@ -96,7 +96,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
     public void testTransform2() throws Exception {
         result.setParse(false);
-        result.setLocation("XSLTResultTest2.xsl");
+        result.setStylesheetLocation("XSLTResultTest2.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
@@ -107,7 +107,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
     
     public void testTransform3() throws Exception {
         result.setParse(false);
-        result.setLocation("XSLTResultTest3.xsl");
+        result.setStylesheetLocation("XSLTResultTest3.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
@@ -120,7 +120,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
     
     public void testTransformWithBoolean() throws Exception {
         result.setParse(false);
-        result.setLocation("XSLTResultTest5.xsl");
+        result.setStylesheetLocation("XSLTResultTest5.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
@@ -143,7 +143,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
             
         };
         result.setParse(false);
-        result.setLocation("XSLTResultTest4.xsl");
+        result.setStylesheetLocation("XSLTResultTest4.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
@@ -164,7 +164,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         };
         result.setParse(false);
-        result.setLocation("XSLTResultTest4.badinclude.xsl");
+        result.setStylesheetLocation("XSLTResultTest4.badinclude.xsl");
         try {
             result.execute(mai);
             fail("Should have thrown an exception");
@@ -183,7 +183,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
                 };
             }
         };
-        result.setLocation("XSLTResultTest4.xsl");
+        result.setStylesheetLocation("XSLTResultTest4.xsl");
         try {
             result.execute(mai);
             fail("Should have thrown an exception");
@@ -194,7 +194,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
     public void testStatusCode() throws Exception {
         result.setParse(false);
-        result.setLocation("XSLTResultTest.xsl");
+        result.setStylesheetLocation("XSLTResultTest.xsl");
         result.setStatus("302");
         result.execute(mai);
 
@@ -203,6 +203,17 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         assertEquals(302, response.getStatus());
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
+    }
+
+    public void testEncoding() throws Exception {
+        result.setParse(false);
+        result.setStylesheetLocation("XSLTResultTest.xsl");
+        result.setEncoding("ISO-8859-1");
+        result.execute(mai);
+
+        String actual = response.getCharacterEncoding();
+
+        assertEquals(actual, "ISO-8859-1");
     }
 
     protected void setUp() throws Exception {

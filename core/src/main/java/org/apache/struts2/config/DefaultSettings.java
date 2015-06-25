@@ -22,8 +22,8 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  */
 public class DefaultSettings implements Settings {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultSettings.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultSettings.class);
 
     /**
      * The Settings object that handles API calls.
@@ -56,7 +56,7 @@ public class DefaultSettings implements Settings {
      */
     public DefaultSettings() {
 
-        ArrayList<Settings> list = new ArrayList<Settings>();
+        ArrayList<Settings> list = new ArrayList<>();
 
         // stuts.properties, default.properties
         try {
@@ -77,7 +77,7 @@ public class DefaultSettings implements Settings {
                 try {
                     list.add(new PropertiesSettings(name));
                 } catch (Exception e) {
-                    LOG.error("DefaultSettings: Could not find " + name + ".properties. Skipping.");
+                    LOG.error("DefaultSettings: Could not find {}.properties. Skipping.", name);
                 }
             }
 

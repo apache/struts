@@ -24,17 +24,18 @@ package org.apache.struts2.rest;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import java.util.HashMap;
 import java.util.Map;
+
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -134,7 +135,7 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
 	
 	private static final long serialVersionUID = 7563014655616490865L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(RestWorkflowInterceptor.class);
+	private static final Logger LOG = LogManager.getLogger(RestWorkflowInterceptor.class);
 	
 	private String inputResultName = Action.INPUT;
 	
@@ -200,9 +201,7 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
             ValidationAware validationAwareAction = (ValidationAware) action;
 
             if (validationAwareAction.hasErrors()) {
-            	if (LOG.isDebugEnabled()) {
-            		LOG.debug("Errors on action "+validationAwareAction+", returning result name 'input'");
-            	}
+          		LOG.debug("Errors on action {}, returning result name 'input'", validationAwareAction);
             	ActionMapping mapping = (ActionMapping) ActionContext.getContext().get(ServletActionContext.ACTION_MAPPING);
             	String method = inputResultName;
                 if (postMethodName.equals(mapping.getMethod())) {
@@ -217,7 +216,7 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
             	    .renderResult(method)
             	    .withStatus(validationFailureStatusCode);
             	
-            	Map errors = new HashMap();
+            	Map<String, Object> errors = new HashMap<>();
             	
             	errors.put("actionErrors", validationAwareAction.getActionErrors());
             	errors.put("fieldErrors", validationAwareAction.getFieldErrors());

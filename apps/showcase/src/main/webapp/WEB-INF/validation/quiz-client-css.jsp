@@ -15,8 +15,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<s:form method="post" theme="css_xhtml" validate="true">
 				<s:textfield label="Name" name="name"/>
@@ -24,9 +24,6 @@
 				<s:textfield label="Favorite color" name="answer"/>
 				<s:submit cssClass="btn btn-primary"/>
 			</s:form>
-
-
-			<s:include value="footer.jsp"/>
 		</div>
 	</div>
 </div>

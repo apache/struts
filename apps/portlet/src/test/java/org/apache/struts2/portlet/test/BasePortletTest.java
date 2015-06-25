@@ -1,13 +1,12 @@
 package org.apache.struts2.portlet.test;
 
-import java.io.File;
-
 import net.sourceforge.jwebunit.junit.WebTestCase;
-
 import org.apache.pluto.core.PortletServlet;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.webapp.WebAppContext;
+
+import java.io.File;
 
 public abstract class BasePortletTest extends WebTestCase {
 	
@@ -18,8 +17,9 @@ public abstract class BasePortletTest extends WebTestCase {
 	private int port;
 	
 	public void setUp() throws Exception {
-		System.setProperty("org.apache.pluto.embedded.portletId", getPortletName());
+		System.setProperty("org.apache.pluto.embedded.portletIds", getPortletName());
 		server = new Server(port);
+
 		WebAppContext webapp = new WebAppContext("src/main/webapp", contextPath);
 		webapp.setTempDirectory(new File("target/work"));
 		webapp.setDefaultsDescriptor("/WEB-INF/jetty-pluto-web-default.xml");

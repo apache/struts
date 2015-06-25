@@ -23,19 +23,19 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -48,7 +48,7 @@ import java.util.LinkedHashMap;
  * <p/>
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;s:a id="link1" theme="ajax" href="/DoIt.action"&gt;
+ * &lt;s:a id="link1" href="/do-it.action"&gt;
  *     &lt;img border="none" src="&lt;%=request.getContextPath()%&gt;/images/delete.gif"/&gt;
  *     &lt;s:param name="id" value="1"/&gt;
  * &lt;/s:a&gt;
@@ -58,10 +58,10 @@ import java.util.LinkedHashMap;
 @StrutsTag(
         name = "a",
         tldTagClass = "org.apache.struts2.views.jsp.ui.AnchorTag",
-        description = "Render a HTML href element that when clicked can optionally call a URL via remote XMLHttpRequest and updates its targets",
+        description = "Render a HTML href element",
         allowDynamicAttributes = true)
 public class Anchor extends ClosingUIBean {
-    private static final Logger LOG = LoggerFactory.getLogger(Anchor.class);
+    private static final Logger LOG = LogManager.getLogger(Anchor.class);
 
     public static final String OPEN_TEMPLATE = "a";
     public static final String TEMPLATE = "a-close";

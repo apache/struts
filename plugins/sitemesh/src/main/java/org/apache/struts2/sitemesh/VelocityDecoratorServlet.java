@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.ng.listener.StrutsListener;
+import org.apache.struts2.dispatcher.listener.StrutsListener;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
@@ -71,8 +71,9 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         Dispatcher dispatcher = (Dispatcher) getServletContext().getAttribute(StrutsStatics.SERVLET_DISPATCHER);
-        if (dispatcher == null)
+        if (dispatcher == null) {
             throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
+        }
         velocityManager = dispatcher.getContainer().getInstance(VelocityManager.class);
         velocityManager.init(config.getServletContext());
 
@@ -81,9 +82,9 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         toolboxManager = velocityManager.getToolboxManager();
 
         // we can get these now that velocity is initialized
-        defaultContentType = (String) getVelocityProperty(CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+        defaultContentType = getVelocityProperty(CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
 
-        String encoding = (String) getVelocityProperty(RuntimeConstants.OUTPUT_ENCODING, DEFAULT_OUTPUT_ENCODING);
+        String encoding = getVelocityProperty(RuntimeConstants.OUTPUT_ENCODING, DEFAULT_OUTPUT_ENCODING);
 
         // For non Latin-1 encodings, ensure that the charset is
         // included in the Content-Type header.
@@ -107,7 +108,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         String template;
 
         context.put("base", request.getContextPath());
-        // For backwards compatability with apps that used the old VelocityDecoratorServlet
+        // For backwards compatibility with apps that used the old VelocityDecoratorServlet
         // that extended VelocityServlet instead of VelocityViewServlet
         context.put("req", request);
         context.put("res", response);
@@ -140,8 +141,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
 
     private DecoratorMapper getDecoratorMapper() {
         Factory factory = Factory.getInstance(new Config(getServletConfig()));
-        DecoratorMapper decoratorMapper = factory.getDecoratorMapper();
-        return decoratorMapper;
+        return factory.getDecoratorMapper();
     }
 
     /**
@@ -160,7 +160,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
     }
 
     /**
-     * Sets the content type of the response.  This is available to be overriden
+     * Sets the content type of the response.  This is available to be overridden
      * by a derived class.
      * <p/>
      * <p>The default implementation is :

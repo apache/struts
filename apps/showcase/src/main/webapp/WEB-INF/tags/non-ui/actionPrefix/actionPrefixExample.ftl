@@ -8,8 +8,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<b>Action Prefix</b><br/>
 			By clicking on 'action prefix' button, the request will go to the action alias 'actionPrefix'

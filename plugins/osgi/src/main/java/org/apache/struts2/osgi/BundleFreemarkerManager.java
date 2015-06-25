@@ -21,8 +21,8 @@
 
 package org.apache.struts2.osgi;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -43,7 +43,7 @@ import java.net.URI;
  */
 public class BundleFreemarkerManager extends FreemarkerManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BundleFreemarkerManager.class);
+    private static final Logger LOG = LogManager.getLogger(BundleFreemarkerManager.class);
 
     protected TemplateLoader createTemplateLoader(ServletContext servletContext, String templatePath) {
         TemplateLoader templatePathLoader = null;

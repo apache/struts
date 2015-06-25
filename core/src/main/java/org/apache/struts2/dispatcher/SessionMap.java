@@ -24,12 +24,7 @@ package org.apache.struts2.dispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.AbstractMap;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -68,7 +63,7 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
             return;
         }
 
-        synchronized (session) {
+        synchronized (session.getId().intern()) {
             session.invalidate();
             session = null;
             entries = null;
@@ -79,12 +74,13 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
      * Removes all attributes from the session as well as clears entries in this
      * map.
      */
+    @SuppressWarnings("unchecked")
     public void clear() {
         if (session == null) {
             return;
         }
 
-        synchronized (session) {
+        synchronized (session.getId().intern()) {
             entries = null;
             Enumeration<String> attributeNamesEnum = session.getAttributeNames();
             while (attributeNamesEnum.hasMoreElements()) {
@@ -99,16 +95,17 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
      *
      * @return a Set of attributes from the http session.
      */
+    @SuppressWarnings("unchecked")
     public Set<java.util.Map.Entry<K, V>> entrySet() {
         if (session == null) {
             return Collections.emptySet();
         }
 
-        synchronized (session) {
+        synchronized (session.getId().intern()) {
             if (entries == null) {
-                entries = new HashSet<Map.Entry<K, V>>();
+                entries = new HashSet<>();
 
-                Enumeration<? extends Object> enumeration = session.getAttributeNames();
+                Enumeration<?> enumeration = session.getAttributeNames();
 
                 while (enumeration.hasMoreElements()) {
                     final String key = enumeration.nextElement().toString();
@@ -154,12 +151,13 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
      * @param key the name of the session attribute.
      * @return the session attribute or <tt>null</tt> if it doesn't exist.
      */
+    @SuppressWarnings("unchecked")
     public V get(Object key) {
         if (session == null) {
             return null;
         }
 
-        synchronized (session) {
+        synchronized (session.getId().intern()) {
             return (V) session.getAttribute(key.toString());
         }
     }
@@ -177,7 +175,7 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
                 session = request.getSession(true);
             }
         }
-        synchronized (session) {
+        synchronized (session.getId().intern()) {
             V oldValue = get(key);
             entries = null;
             session.setAttribute(key.toString(), value);
@@ -196,7 +194,7 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
             return null;
         }
 
-        synchronized (session) {
+        synchronized (session.getId().intern()) {
             entries = null;
 
             V value = get(key);
@@ -218,7 +216,7 @@ public class SessionMap<K, V> extends AbstractMap<K, V> implements Serializable 
             return false;
         }
 
-        synchronized (session) {
+        synchronized (session.getId().intern()) {
             return (session.getAttribute(key.toString()) != null);
         }
     }

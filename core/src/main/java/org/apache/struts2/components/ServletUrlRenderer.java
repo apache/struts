@@ -25,9 +25,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -41,13 +42,12 @@ import java.util.Map;
 
 /**
  * Implementation of the {@link UrlRenderer} interface that creates URLs suitable in a servlet environment.
- * 
  */
 public class ServletUrlRenderer implements UrlRenderer {
     /**
      * Provide a logging instance.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ServletUrlRenderer.class);
+    private static final Logger LOG = LogManager.getLogger(ServletUrlRenderer.class);
 
     private ActionMapper actionMapper;
     private UrlHelper urlHelper;
@@ -63,40 +63,44 @@ public class ServletUrlRenderer implements UrlRenderer {
     }
 
     /**
-	 * {@inheritDoc}
-	 */
-	public void renderUrl(Writer writer, UrlProvider urlComponent) {
-		String scheme = urlComponent.getHttpServletRequest().getScheme();
+     * {@inheritDoc}
+     */
+    public void renderUrl(Writer writer, UrlProvider urlComponent) {
+        String scheme = urlComponent.getHttpServletRequest().getScheme();
 
-		if (urlComponent.getScheme() != null) {
-			scheme = urlComponent.getScheme();
-		}
+        if (urlComponent.getScheme() != null) {
+            ValueStack vs = ActionContext.getContext().getValueStack();
+            scheme = vs.findString(urlComponent.getScheme());
+            if (scheme == null) {
+                scheme = urlComponent.getScheme();
+            }
+        }
 
-	       String result;
-	       ActionInvocation ai = (ActionInvocation) ActionContext.getContext().get(ActionContext.ACTION_INVOCATION);
-	        if (urlComponent.getValue() == null && urlComponent.getAction() != null) {
-	                result = urlComponent.determineActionURL(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
-	        } else if (urlComponent.getValue() == null && urlComponent.getAction() == null && ai != null) {
-	                // both are null, we will default to the current action
+        String result;
+        ActionInvocation ai = (ActionInvocation) ActionContext.getContext().get(ActionContext.ACTION_INVOCATION);
+        if (urlComponent.getValue() == null && urlComponent.getAction() != null) {
+            result = urlComponent.determineActionURL(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
+        } else if (urlComponent.getValue() == null && urlComponent.getAction() == null && ai != null) {
+            // both are null, we will default to the current action
 
-	                final String action = ai.getProxy().getActionName();
-	                final String namespace = ai.getProxy().getNamespace();
-	                final String method = urlComponent.getMethod() != null || !ai.getProxy().isMethodSpecified() ? urlComponent.getMethod() : ai.getProxy().getMethod();
-	                result = urlComponent.determineActionURL(action, namespace, method, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
-	        } else {
-	                String _value = urlComponent.getValue();
+            final String action = ai.getProxy().getActionName();
+            final String namespace = ai.getProxy().getNamespace();
+            final String method = urlComponent.getMethod() != null || !ai.getProxy().isMethodSpecified() ? urlComponent.getMethod() : ai.getProxy().getMethod();
+            result = urlComponent.determineActionURL(action, namespace, method, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
+        } else {
+            String _value = urlComponent.getValue();
 
-	                // We don't include the request parameters cause they would have been
-	                // prioritised before this [in start(Writer) method]
-	                if (_value != null && _value.indexOf("?") > 0) {
-	                    _value = _value.substring(0, _value.indexOf("?"));
-	                }
-	                result = urlHelper.buildUrl(_value, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
-	        }
-            String anchor = urlComponent.getAnchor();
-	        if (StringUtils.isNotEmpty(anchor)) {
-	        	result += '#' + urlComponent.findString(anchor);
-	        }
+            // We don't include the request parameters cause they would have been
+            // prioritised before this [in start(Writer) method]
+            if (_value != null && _value.indexOf("?") > 0) {
+                _value = _value.substring(0, _value.indexOf("?"));
+            }
+            result = urlHelper.buildUrl(_value, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
+        }
+        String anchor = urlComponent.getAnchor();
+        if (StringUtils.isNotEmpty(anchor)) {
+            result += '#' + urlComponent.findString(anchor);
+        }
 
         if (urlComponent.isPutInContext()) {
             String var = urlComponent.getVar();
@@ -119,31 +123,34 @@ public class ServletUrlRenderer implements UrlRenderer {
                 throw new StrutsException("IOError: " + e.getMessage(), e);
             }
         }
-	}
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void renderFormUrl(Form formComponent) {
-		String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(), formComponent.request);
-		String action;
+    /**
+     * {@inheritDoc}
+     */
+    public void renderFormUrl(Form formComponent) {
+        String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(), formComponent.request);
+        String action;
 
-		if(formComponent.action != null) {
-			action = formComponent.findString(formComponent.action);
-		} else {
-			// no action supplied? ok, then default to the current request
-			// (action or general URL)
-			ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(
-					ActionContext.ACTION_INVOCATION);
-			if (ai != null) {
-				action = ai.getProxy().getActionName();
-				namespace = ai.getProxy().getNamespace();
-			} else {
-				// hmm, ok, we need to just assume the current URL cut down
-				String uri = formComponent.request.getRequestURI();
-				action = uri.substring(uri.lastIndexOf('/'));
-			}
-		}
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        String scheme = vs.findString("scheme");
+
+        if (formComponent.action != null) {
+            action = formComponent.findString(formComponent.action);
+        } else {
+            // no action supplied? ok, then default to the current request
+            // (action or general URL)
+            ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(
+                    ActionContext.ACTION_INVOCATION);
+            if (ai != null) {
+                action = ai.getProxy().getActionName();
+                namespace = ai.getProxy().getNamespace();
+            } else {
+                // hmm, ok, we need to just assume the current URL cut down
+                String uri = formComponent.request.getRequestURI();
+                action = uri.substring(uri.lastIndexOf('/'));
+            }
+        }
 
         Map actionParams = null;
         if (action != null && action.indexOf("?") > 0) {
@@ -156,82 +163,82 @@ public class ServletUrlRenderer implements UrlRenderer {
         String actionName = nameMapping.getName();
         String actionMethod = nameMapping.getMethod();
 
-		final ActionConfig actionConfig = formComponent.configuration.getRuntimeConfiguration().getActionConfig(
-				namespace, actionName);
-		if (actionConfig != null) {
+        final ActionConfig actionConfig = formComponent.configuration.getRuntimeConfiguration().getActionConfig(
+                namespace, actionName);
+        if (actionConfig != null) {
 
-			ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
-			String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
-                    formComponent.request, formComponent.response, actionParams, null, formComponent.includeContext, true, false, false);
-			formComponent.addParameter("action", result);
+            ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
+            String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
+                    formComponent.request, formComponent.response, actionParams, scheme, formComponent.includeContext, true, false, false);
+            formComponent.addParameter("action", result);
 
-			// let's try to get the actual action class and name
-			// this can be used for getting the list of validators
-			formComponent.addParameter("actionName", actionName);
-			try {
-				Class clazz = formComponent.objectFactory.getClassInstance(actionConfig.getClassName());
-				formComponent.addParameter("actionClass", clazz);
-			} catch (ClassNotFoundException e) {
-				// this is OK, we'll just move on
-			}
+            // let's try to get the actual action class and name
+            // this can be used for getting the list of validators
+            formComponent.addParameter("actionName", actionName);
+            try {
+                Class clazz = formComponent.objectFactory.getClassInstance(actionConfig.getClassName());
+                formComponent.addParameter("actionClass", clazz);
+            } catch (ClassNotFoundException e) {
+                // this is OK, we'll just move on
+            }
 
-			formComponent.addParameter("namespace", namespace);
+            formComponent.addParameter("namespace", namespace);
 
-			// if the name isn't specified, use the action name
-			if (formComponent.name == null) {
-				formComponent.addParameter("name", actionName);
-			}
+            // if the name isn't specified, use the action name
+            if (formComponent.name == null) {
+                formComponent.addParameter("name", actionName);
+            }
 
-			// if the id isn't specified, use the action name
-			if (formComponent.getId() == null  && actionName!=null ) {
-				formComponent.addParameter("id", formComponent.escape(actionName));
-			}
-		} else if (action != null) {
-			// Since we can't find an action alias in the configuration, we just
-			// assume the action attribute supplied is the path to be used as
-			// the URI this form is submitting to.
+            // if the id isn't specified, use the action name
+            if (formComponent.getId() == null && actionName != null) {
+                formComponent.addParameter("id", formComponent.escape(actionName));
+            }
+        } else if (action != null) {
+            // Since we can't find an action alias in the configuration, we just
+            // assume the action attribute supplied is the path to be used as
+            // the URI this form is submitting to.
 
             // Warn user that the specified namespace/action combo
             // was not found in the configuration.
             if (namespace != null && LOG.isWarnEnabled()) {
-              LOG.warn("No configuration found for the specified action: '" + actionName + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
+                LOG.warn("No configuration found for the specified action: '{}' in namespace: '{}'. Form action defaulting to 'action' attribute's literal value.", actionName, namespace);
             }
 
-			String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, null, null, formComponent.includeContext, true);
-			formComponent.addParameter("action", result);
+            String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, null, scheme, formComponent.includeContext, true);
+            formComponent.addParameter("action", result);
 
-			// namespace: cut out anything between the start and the last /
-			int slash = result.lastIndexOf('/');
-			if (slash != -1) {
-				formComponent.addParameter("namespace", result.substring(0, slash));
-			} else {
-				formComponent.addParameter("namespace", "");
-			}
+            // namespace: cut out anything between the start and the last /
+            int slash = result.lastIndexOf('/');
+            if (slash != -1) {
+                formComponent.addParameter("namespace", result.substring(0, slash));
+            } else {
+                formComponent.addParameter("namespace", "");
+            }
 
-			// name/id: cut out anything between / and . should be the id and
-			// name
-			String id = formComponent.getId();
-			if (id == null) {
-				slash = result.lastIndexOf('/');
-				int dot = result.indexOf('.', slash);
-				if (dot != -1) {
-					id = result.substring(slash + 1, dot);
-				} else {
-					id = result.substring(slash + 1);
-				}
-				formComponent.addParameter("id", formComponent.escape(id));
-			}
-		}
+            // name/id: cut out anything between / and . should be the id and
+            // name
+            String id = formComponent.getId();
+            if (id == null) {
+                slash = result.lastIndexOf('/');
+                int dot = result.indexOf('.', slash);
+                if (dot != -1) {
+                    id = result.substring(slash + 1, dot);
+                } else {
+                    id = result.substring(slash + 1);
+                }
+                formComponent.addParameter("id", formComponent.escape(id));
+            }
+        }
 
-		// WW-1284
-		// evaluate if client-side js is to be enabled. (if validation
-		// interceptor does allow validation eg. method is not filtered out)
-		formComponent.evaluateClientSideJsEnablement(actionName, namespace, actionMethod);
-	}
+        // WW-1284
+        // evaluate if client-side js is to be enabled. (if validation
+        // interceptor does allow validation eg. method is not filtered out)
+        formComponent.evaluateClientSideJsEnablement(actionName, namespace, actionMethod);
+    }
 
 
-	public void beforeRenderUrl(UrlProvider urlComponent) {
-		if (urlComponent.getValue() != null) {
+    public void beforeRenderUrl(UrlProvider urlComponent) {
+        if (urlComponent.getValue() != null) {
             urlComponent.setValue(urlComponent.findString(urlComponent.getValue()));
         }
 
@@ -257,27 +264,22 @@ public class ServletUrlRenderer implements UrlRenderer {
                 includeGetParameters(urlComponent);
                 includeExtraParameters(urlComponent);
             } else if (includeParams != null) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Unknown value for includeParams parameter to URL tag: " + includeParams);
-                }
+                LOG.warn("Unknown value for includeParams parameter to URL tag: {}", includeParams);
             }
         } catch (Exception e) {
-            if (LOG.isWarnEnabled()) {
-        	LOG.warn("Unable to put request parameters (" + urlComponent.getHttpServletRequest().getQueryString() + ") into parameter map.", e);
-            }
+            LOG.warn("Unable to put request parameters ({}) into parameter map.", urlComponent.getHttpServletRequest().getQueryString(), e);
         }
+    }
 
-		
-	}
-	
     private void includeExtraParameters(UrlProvider urlComponent) {
         if (urlComponent.getExtraParameterProvider() != null) {
             mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlComponent.getExtraParameterProvider().getExtraParameters());
         }
     }
+
     private void includeGetParameters(UrlProvider urlComponent) {
-    	String query = extractQueryString(urlComponent);
-    	mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlHelper.parseQueryString(query, false));
+        String query = extractQueryString(urlComponent);
+        mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), urlHelper.parseQueryString(query, false));
     }
 
     private String extractQueryString(UrlProvider urlComponent) {
@@ -297,7 +299,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         }
         return query;
     }
-    
+
     /**
      * Merge request parameters into current parameters. If a parameter is
      * already present, than the request parameter in the current request and value atrribute
@@ -314,16 +316,16 @@ public class ServletUrlRenderer implements UrlRenderer {
      * @param parameters component parameters
      * @param contextParameters request parameters
      */
-    protected void mergeRequestParameters(String value, Map<String, Object> parameters, Map<String, Object> contextParameters){
+    protected void mergeRequestParameters(String value, Map<String, Object> parameters, Map<String, Object> contextParameters) {
 
-        Map<String, Object> mergedParams = new LinkedHashMap<String, Object>(contextParameters);
+        Map<String, Object> mergedParams = new LinkedHashMap<>(contextParameters);
 
         // Merge contextParameters (from current request) with parameters specified in value attribute
         // eg. value="someAction.action?id=someId&venue=someVenue"
         // where the parameters specified in value attribute takes priority.
 
-        if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
-            String queryString = value.substring(value.indexOf("?")+1);
+        if (StringUtils.contains(value, "?")) {
+            String queryString = value.substring(value.indexOf("?") + 1);
 
             mergedParams = urlHelper.parseQueryString(queryString, false);
             for (Map.Entry<String, Object> entry : contextParameters.entrySet()) {
@@ -345,4 +347,5 @@ public class ServletUrlRenderer implements UrlRenderer {
             }
         }
     }
+
 }

@@ -27,8 +27,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
 
@@ -42,23 +42,18 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Struts base utility class, for use in Velocity and Freemarker templates
  */
 public class StrutsUtil {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(StrutsUtil.class);
+    protected static final Logger LOG = LogManager.getLogger(StrutsUtil.class);
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
-    protected Map<String, Class> classes = new Hashtable<String, Class>();
+    protected Map<String, Class> classes = new Hashtable<>();
     protected OgnlTool ognl;
     protected ValueStack stack;
 
@@ -96,30 +91,21 @@ public class StrutsUtil {
     }
 
     public String include(Object aName) throws Exception {
-        return include(aName, request, response);
-    }
-
-    /**
-     * @deprecated the request and response are stored in this util class, please use include(string)
-     */
-    public String include(Object aName, HttpServletRequest aRequest, HttpServletResponse aResponse) throws Exception {
         try {
-            RequestDispatcher dispatcher = aRequest.getRequestDispatcher(aName.toString());
+            RequestDispatcher dispatcher = request.getRequestDispatcher(aName.toString());
 
             if (dispatcher == null) {
                 throw new IllegalArgumentException("Cannot find included file " + aName);
             }
 
-            ResponseWrapper responseWrapper = new ResponseWrapper(aResponse);
+            ResponseWrapper responseWrapper = new ResponseWrapper(response);
 
-            dispatcher.include(aRequest, responseWrapper);
+            dispatcher.include(request, responseWrapper);
 
             return responseWrapper.getData();
         }
         catch (Exception e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot include #0", e, aName.toString());
-            }
+            LOG.debug("Cannot include {}", aName.toString(), e);
             throw e;
         }
     }
@@ -128,9 +114,7 @@ public class StrutsUtil {
         try {
             return URLEncoder.encode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot encode URL [#0]", e, s);
-            }
+            LOG.debug("Cannot encode URL [{}]", s, e);
             return s;
         }
     }

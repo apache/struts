@@ -24,8 +24,8 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.servlet.http.HttpSession;
 
@@ -34,7 +34,7 @@ import javax.servlet.http.HttpSession;
  */
 public class ChatInterceptor implements Interceptor {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ChatInterceptor.class);
+	private static final Logger LOG = LogManager.getLogger(ChatInterceptor.class);
 
 	private static final long serialVersionUID = 1L;
 

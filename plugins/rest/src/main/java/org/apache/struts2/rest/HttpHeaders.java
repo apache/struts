@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Type-safe rest-related informtion to apply to a response
+ * Type-safe rest-related information to apply to a response
  */
 public interface HttpHeaders {
 

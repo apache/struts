@@ -21,26 +21,21 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.Collections;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.struts2.util.TokenHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 
 /**
@@ -175,7 +170,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
     private static final long serialVersionUID = -2754639196749652512L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExecuteAndWaitInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ExecuteAndWaitInterceptor.class);
 
     public static final String KEY = "__execWait";
     public static final String WAIT = "wait";
@@ -264,12 +259,9 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
                 Map results = proxy.getConfig().getResults();
                 if (!results.containsKey(WAIT)) {
-                    if (LOG.isWarnEnabled()) {
                 	LOG.warn("ExecuteAndWait interceptor has detected that no result named 'wait' is available. " +
                             "Defaulting to a plain built-in wait page. It is highly recommend you " +
-                            "provide an action-specific or global result named '" + WAIT +
-                            "'.");
-                    }
+                            "provide an action-specific or global result named '{}'.", WAIT);
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
 
                     //we used to add a fake "wait" result here, since the configuration is unmodifiable, that is no longer
@@ -314,7 +306,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
      * Performs the initial delay.
      * <p/>
      * When this interceptor is executed for the first time this methods handles any provided initial delay.
-     * An initial delay is a time in miliseconds we let the server wait before we continue.
+     * An initial delay is a time in milliseconds we let the server wait before we continue.
      * <br/> During the wait this interceptor will wake every 100 millis to check if the background
      * process is done premature, thus if the job for some reason doesn't take to long the wait
      * page is not shown to the user.
@@ -328,16 +320,12 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         }
 
         int steps = delay / delaySleepInterval;
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Delaying for " + delay + " millis. (using " + steps + " steps)");
-        }
+        LOG.debug("Delaying for {} millis. (using {} steps)", delay, steps);
         int step;
         for (step = 0; step < steps && !bp.isDone(); step++) {
             Thread.sleep(delaySleepInterval);
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Sleeping ended after " + step + " steps and the background process is " + (bp.isDone() ? " done" : " not done"));
-        }
+        LOG.debug("Sleeping ended after {} steps and the background process is {}", step, (bp.isDone() ? " done" : " not done"));
     }
 
     /**

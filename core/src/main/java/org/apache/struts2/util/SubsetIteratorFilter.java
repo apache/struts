@@ -22,8 +22,8 @@
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class SubsetIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SubsetIteratorFilter.class);
+    private static final Logger LOG = LogManager.getLogger(SubsetIteratorFilter.class);
 
     Iterator iterator;
     Object source;
@@ -69,7 +69,7 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
     // Action implementation -----------------------------------------
     public String execute() {
         if (source == null) {
-            LoggerFactory.getLogger(SubsetIteratorFilter.class.getName()).warn("Source is null returning empty set.");
+            LogManager.getLogger(SubsetIteratorFilter.class.getName()).warn("Source is null returning empty set.");
 
             return ERROR;
         }
@@ -167,10 +167,8 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
                 return okToAdd;
             }
             catch(Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Decider [#0] encountered an error while decide adding element [#1], element will be ignored, it will not appeared in subseted iterator",
-                            e, decider.toString(), element.toString());
-                }
+                LOG.warn("Decider [{}] encountered an error while decide adding element [{}], element will be ignored, it will not appeared in subseted iterator",
+                            decider, element, e);
                 return false;
             }
         }

@@ -1,0 +1,43 @@
+<!DOCTYPE xwork PUBLIC
+        "-//Apache Struts//XWork 2.0//EN"
+        "http://struts.apache.org/dtds/xwork-2.0.dtd"
+        >
+
+<xwork>
+    <constant name="struts.beanValidation.providerClass" value="org.hibernate.validator.HibernateValidator"/>
+    <constant name="struts.beanValidation.ignoreXMLConfiguration" value="false"/>
+    <constant name="struts.beanValidation.convertMessageToUtf" value="false"/>
+    <constant name="struts.beanValidation.convertMessageFromEncoding" value="ISO-8859-1"/>
+
+    <bean type="org.apache.struts.beanvalidation.validation.interceptor.BeanValidationManager"
+          class="org.apache.struts.beanvalidation.validation.interceptor.DefaultBeanValidationManager"
+          scope="singleton"/>
+
+    <package namespace="bean-validation" name="bean-validation-test" extends="">
+        <result-types>
+            <result-type name="void" class="org.apache.struts.beanvalidation.VoidResult"/>
+        </result-types>
+        <interceptors>
+            <interceptor name="beanValidation"
+                         class="org.apache.struts.beanvalidation.validation.interceptor.BeanValidationInterceptor"/>
+        </interceptors>
+
+        <action name="modelDrivenAction" class="org.apache.struts.beanvalidation.actions.ModelDrivenAction">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
+        <action name="fieldAction" class="org.apache.struts.beanvalidation.actions.FieldAction">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
+        <action name="fieldMatchAction" class="org.apache.struts.beanvalidation.actions.FieldMatchAction">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
+        <action name="fieldActionDoExecute" class="org.apache.struts.beanvalidation.actions.FieldActionDoExecute">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
+
+    </package>
+</xwork>

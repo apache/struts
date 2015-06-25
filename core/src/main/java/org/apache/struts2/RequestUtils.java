@@ -21,9 +21,10 @@
 
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -37,7 +38,7 @@ import java.util.TimeZone;
  */
 public class RequestUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RequestUtils.class);
+    private static final Logger LOG = LogManager.getLogger(RequestUtils.class);
 
     private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
@@ -69,8 +70,8 @@ public class RequestUtils {
                 servletPath = requestUri.substring(requestUri.indexOf(servletPath));
             }
         }
-        
-        if (null != servletPath && !"".equals(servletPath)) {
+
+        if (StringUtils.isNotEmpty(servletPath)) {
             return servletPath;
         }
         
@@ -92,14 +93,13 @@ public class RequestUtils {
      */
     public static String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request
-                .getAttribute("javax.servlet.include.servlet_path");
+        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
         if (uri != null) {
             return uri;
         }
 
         uri = getServletPath(request);
-        if (uri != null && !"".equals(uri)) {
+        if (StringUtils.isNotEmpty(uri)) {
             return uri;
         }
 
@@ -121,13 +121,11 @@ public class RequestUtils {
             try {
                 return fastDateFormat.parse(headerValue);
             } catch (ParseException ignore) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Error parsing value [#0] as [#1]!", headerValue, fastDateFormat);
-                }
+                LOG.debug("Error parsing value [{}] as [{}]!", headerValue, fastDateFormat);
             }
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Error parsing value [#0] as date!", headerValue);
+            LOG.debug("Error parsing value [{}] as date!", headerValue);
         }
         return null;
     }

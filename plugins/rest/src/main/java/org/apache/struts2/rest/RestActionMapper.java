@@ -25,8 +25,9 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -96,8 +97,16 @@ import java.util.HashMap;
  */
 public class RestActionMapper extends DefaultActionMapper {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(RestActionMapper.class);
+    protected static final Logger LOG = LogManager.getLogger(RestActionMapper.class);
+
     public static final String HTTP_METHOD_PARAM = "_method";
+
+    private static final String GET = "get";
+    private static final String POST = "post";
+    private static final String PUT = "put";
+    private static final String DELETE = "delete";
+    private static final String OPTIONS = "options";
+
     private String idParameterName = "id";
     private String indexMethodName = "index";
     private String getMethodName = "show";
@@ -201,7 +210,7 @@ public class RestActionMapper extends DefaultActionMapper {
 
         String fullName = mapping.getName();
         // Only try something if the action name is specified
-        if (fullName != null && fullName.length() > 0) {
+        if (StringUtils.isNotEmpty(fullName)) {
 
             // cut off any ;jsessionid= type appendix but allow the rails-like ;edit
             int scPos = fullName.indexOf(';');
@@ -282,7 +291,7 @@ public class RestActionMapper extends DefaultActionMapper {
             if (id != null) {
                 if (!"new".equals(id)) {
                     if (mapping.getParams() == null) {
-                        mapping.setParams(new HashMap());
+                        mapping.setParams(new HashMap<String, Object>());
                     }
                     mapping.getParams().put(idParameterName, new String[]{id});
                 }
@@ -317,8 +326,7 @@ public class RestActionMapper extends DefaultActionMapper {
      * @param mapping
      *            The action mapping to populate
      */
-    protected void parseNameAndNamespace(String uri, ActionMapping mapping,
-            ConfigurationManager configManager) {
+    protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
         if (lastSlash == -1) {
@@ -353,31 +361,23 @@ public class RestActionMapper extends DefaultActionMapper {
     }
 
     protected boolean isGet(HttpServletRequest request) {
-        return "get".equalsIgnoreCase(request.getMethod());
+        return GET.equalsIgnoreCase(request.getMethod());
     }
 
     protected boolean isPost(HttpServletRequest request) {
-        return "post".equalsIgnoreCase(request.getMethod());
+        return POST.equalsIgnoreCase(request.getMethod());
     }
 
     protected boolean isPut(HttpServletRequest request) {
-        if ("put".equalsIgnoreCase(request.getMethod())) {
-            return true;
-        } else {
-            return isPost(request) && "put".equalsIgnoreCase(request.getParameter(HTTP_METHOD_PARAM));
-        }
+        return PUT.equalsIgnoreCase(request.getMethod()) || isPost(request) && PUT.equalsIgnoreCase(request.getParameter(HTTP_METHOD_PARAM));
     }
 
     protected boolean isDelete(HttpServletRequest request) {
-        if ("delete".equalsIgnoreCase(request.getMethod())) {
-            return true;
-        } else {
-            return "delete".equalsIgnoreCase(request.getParameter(HTTP_METHOD_PARAM));
-        }
+        return DELETE.equalsIgnoreCase(request.getMethod()) || DELETE.equalsIgnoreCase(request.getParameter(HTTP_METHOD_PARAM));
     }
 
     protected boolean isOptions(HttpServletRequest request) {
-        return "options".equalsIgnoreCase(request.getMethod());
+        return OPTIONS.equalsIgnoreCase(request.getMethod());
     }
     
     protected boolean isExpectContinue(HttpServletRequest request) {

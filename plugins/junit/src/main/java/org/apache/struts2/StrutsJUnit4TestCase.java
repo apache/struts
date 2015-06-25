@@ -21,12 +21,9 @@
 
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.XWorkJUnit4TestCase;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.After;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -52,11 +49,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -241,7 +234,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
 
     protected void initDispatcherParams() {
         if (StringUtils.isNotBlank(getConfigPath())) {
-            dispatcherInitParams = new HashMap<String, String>();
+            dispatcherInitParams = new HashMap<>();
             dispatcherInitParams.put("config", "struts-default.xml," + getConfigPath());
         }
     }

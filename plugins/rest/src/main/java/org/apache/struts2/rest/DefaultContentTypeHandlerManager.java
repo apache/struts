@@ -42,9 +42,9 @@ import java.util.Set;
 public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManager {
 
     /** ContentTypeHandlers keyed by the extension */
-    Map<String,ContentTypeHandler> handlersByExtension = new HashMap<String,ContentTypeHandler>();
+    Map<String,ContentTypeHandler> handlersByExtension = new HashMap<>();
     /** ContentTypeHandlers keyed by the content-type */
-    Map<String,ContentTypeHandler> handlersByContentType = new HashMap<String,ContentTypeHandler>();
+    Map<String,ContentTypeHandler> handlersByContentType = new HashMap<>();
 
     private String defaultExtension;
 

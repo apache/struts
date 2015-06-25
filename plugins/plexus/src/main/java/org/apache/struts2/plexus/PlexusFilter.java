@@ -36,14 +36,14 @@ import javax.servlet.http.HttpSession;
 
 import org.codehaus.plexus.PlexusContainer;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Creates a plexus container for the application, session, and request
  */
 public class PlexusFilter implements Filter {
-    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(PlexusObjectFactory.class);
     private static final String CHILD_CONTAINER_NAME = "request";
 
     private static boolean loaded = false;

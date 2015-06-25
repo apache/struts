@@ -21,16 +21,15 @@
 
 package org.apache.struts2.views.xslt;
 
-import java.util.List;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.util.List;
 
 public class SimpleNodeList implements NodeList {
-    private Logger log = LoggerFactory.getLogger(SimpleNodeList.class);
+    private Logger log = LogManager.getLogger(SimpleNodeList.class);
 
     private List<Node> nodes;
 
@@ -39,13 +38,14 @@ public class SimpleNodeList implements NodeList {
     }
 
     public int getLength() {
-        if (log.isTraceEnabled())
-            log.trace("getLength: " + nodes.size());
+        if (log.isTraceEnabled()) {
+            log.trace("getLength: {}", nodes.size());
+        }
         return nodes.size();
     }
 
     public Node item(int i) {
-        log.trace("getItem: " + i);
+        log.trace("getItem: {}", i);
         return nodes.get(i);
     }
 

@@ -23,8 +23,8 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class TextProviderHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TextProviderHelper.class);
+    private static final Logger LOG = LogManager.getLogger(TextProviderHelper.class);
 
      /**
      * <p>Get a message from the first TextProvider encountered in the stack.
@@ -79,7 +79,7 @@ public class TextProviderHelper {
         }
 
         if (msg == null) {
-            // evaluate the defaultMesage as an OGNL expression
+            // evaluate the defaultMessage as an OGNL expression
             if (searchStack)
                 msg = stack.findString(defaultMessage);
             
@@ -90,14 +90,14 @@ public class TextProviderHelper {
 
             if (LOG.isWarnEnabled()) {
                 if (tp != null) {
-                	LOG.warn("The first TextProvider in the ValueStack ("+tp.getClass().getName()+") could not locate the message resource with key '"+key+"'");
+                    LOG.warn("The first TextProvider in the ValueStack ({}) could not locate the message resource with key '{}'", tp.getClass().getName(), key);
                 } else {
-                	LOG.warn("Could not locate the message resource '"+key+"' as there is no TextProvider in the ValueStack.");
+                    LOG.warn("Could not locate the message resource '{}' as there is no TextProvider in the ValueStack.", key);
                 }
                 if (defaultMessage.equals(msg)) {
-                	LOG.warn("The default value expression '"+defaultMessage+"' was evaluated and did not match a property.  The literal value '"+defaultMessage+"' will be used.");
+                    LOG.warn("The default value expression '{}' was evaluated and did not match a property. The literal value '{}' will be used.", defaultMessage, defaultMessage);
                 } else {
-                	LOG.warn("The default value expression '"+defaultMessage+"' evaluated to '"+msg+"'");
+                    LOG.warn("The default value expression '{}' evaluated to '{}'", defaultMessage, msg);
                 }
             }
         }

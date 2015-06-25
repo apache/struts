@@ -32,11 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Base test case for JUnit testing Struts.
@@ -65,8 +61,9 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
         };
         handler.setFormatter(formatter);
         Logger logger = Logger.getLogger("");
-        if (logger.getHandlers().length > 0)
-            logger.removeHandler(logger.getHandlers ()[0]);
+        if (logger.getHandlers().length > 0) {
+            logger.removeHandler(logger.getHandlers()[0]);
+        }
         logger.addHandler(handler);
         logger.setLevel(Level.WARNING);
         LoggerFactory.setLoggerFactory(new JdkLoggerFactory());

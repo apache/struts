@@ -1,10 +1,8 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 <html>
 <head>
 	<title>Struts2 Showcase - UI Tags Example</title>
 	<s:head/>
-	<sx:head />
 </head>
 <body>
 <div class="page-header">
@@ -12,8 +10,8 @@
 </div>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 
 			<s:actionerror cssClass="alert alert-error"/>
 			<s:actionmessage cssClass="alert alert-info"/>
@@ -26,12 +24,12 @@
 			            name="name"
 			            tooltip="Enter your Name here"/>
 
-			    <sx:datetimepicker
+			    <s:textfield
 			            tooltip="Select Your Birthday"
 			            label="Birthday"
 			            name="birthday" />
 
-			    <sx:datetimepicker
+			    <s:textfield
 			            tooltip="Enter the time you wake up"
 			            label="Wake up time"
 			            name="wakeup"

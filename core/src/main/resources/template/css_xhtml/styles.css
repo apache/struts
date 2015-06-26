@@ -30,3 +30,11 @@
 .checkboxLabel {}
 .checkboxErrorLabel {color:red; }
 .required {color:red;}
+
+.tdTransferSelect {text-align:center; vertical-align:middle;}
+.tdLabelTop {text-align:left; vertical-align:top;}
+.tdCheckboxLabel {text-align:right; vertical-align:top;}
+.tdCheckboxInput {text-align:left; vertical-align:top;}
+.tdCheckboxErrorMessage {text-align:left; vertical-align:top;}
+.tdErrorMessage {text-align:center; vertical-align:top;}
+.formButton {text-align:right;}

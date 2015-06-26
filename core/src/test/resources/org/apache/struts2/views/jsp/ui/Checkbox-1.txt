@@ -1,7 +1,7 @@
 <tr>
-	<td valign="top" align="right">
+	<td class="tdCheckboxLabel">
 	</td>
-    <td valign="top" align="left">
+    <td class="tdCheckboxInput">
 		<input type="checkbox" name="foo" value="baz" checked="checked" id="someId" title="mytitle" onfocus="test();"/>
 		<input type="hidden" id="__checkbox_someId" name="__checkbox_foo" value="baz"/>
         <label for="someId" class="checkboxLabel">mylabel</label>

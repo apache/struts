@@ -24,7 +24,7 @@
 	<script type="text/javascript" src="<@s.url value="/struts/inputtransferselect.js" encode='false' includeParams='none'/>"></script>
 	<#assign temporaryVariable = stack.setValue("#inputtransferselect_js_included", "true") /><#t/>
 </#if><#t/>
-<table border="0">
+<table>
 <tr>
 <td>
 <#if parameters.leftTitle??><#t/>
@@ -61,7 +61,7 @@
 
 
 </td>
-<td valign="middle" align="center">
+<td class="tdTransferSelect">
 	<#assign addLabel=(parameters.addLabel!"->")?html /><#t/>
 	<input type="button"
 		<#if parameters.buttonCssClass?has_content><#t/>

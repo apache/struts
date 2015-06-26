@@ -37,7 +37,6 @@ public class ResetTag extends AbstractUITag {
 
     protected String action;
     protected String method;
-    protected String align;
     protected String type;
     protected String src;
 
@@ -51,7 +50,6 @@ public class ResetTag extends AbstractUITag {
         Reset reset = ((Reset) component);
         reset.setAction(action);
         reset.setMethod(method);
-        reset.setAlign(align);
         reset.setType(type);
         reset.setSrc(src);
     }
@@ -62,10 +60,6 @@ public class ResetTag extends AbstractUITag {
 
     public void setMethod(String method) {
         this.method = method;
-    }
-
-    public void setAlign(String align) {
-        this.align = align;
     }
 
     public void setType(String type) {

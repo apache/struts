@@ -38,7 +38,6 @@ public class SubmitTag extends AbstractClosingTag {
 
     protected String action;
     protected String method;
-    protected String align;
     protected String type;
     protected String src;
 
@@ -52,7 +51,6 @@ public class SubmitTag extends AbstractClosingTag {
         Submit submit = ((Submit) component);
         submit.setAction(action);
         submit.setMethod(method);
-        submit.setAlign(align);
         submit.setType(type);
         submit.setSrc(src);
     }
@@ -63,10 +61,6 @@ public class SubmitTag extends AbstractClosingTag {
 
     public void setMethod(String method) {
         this.method = method;
-    }
-
-    public void setAlign(String align) {
-        this.align = align;
     }
 
     public String getType() {

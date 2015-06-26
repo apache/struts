@@ -20,12 +20,16 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.WildcardUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,13 +37,12 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.json.smd.SMDGenerator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.WildcardUtil;
 
 /**
  * <!-- START SNIPPET: description --> <p/> This result serializes an action
@@ -84,6 +87,7 @@ public class JSONResult implements Result {
     private boolean ignoreInterfaces = true;
     private boolean enumAsBean = JSONWriter.ENUM_AS_BEAN_DEFAULT;
     private boolean noCache = false;
+    private boolean cacheBeanInfo = true;
     private boolean excludeNullProperties = false;
     private String defaultDateFormat = null;
     private int statusCode;
@@ -92,12 +96,18 @@ public class JSONResult implements Result {
     private String contentType;
     private String wrapPrefix;
     private String wrapSuffix;
-
+    private boolean devMode = false;
+    
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String val) {
         this.defaultEncoding = val;
     }
-
+    
+    @Inject(StrutsConstants.STRUTS_DEVMODE) 
+    public void setDevMode(String val) {
+    	this.devMode = BooleanUtils.toBoolean(val);
+    }
+    
     /**
      * Gets a list of regular expressions of properties to exclude from the JSON
      * output.
@@ -171,7 +181,10 @@ public class JSONResult implements Result {
         ActionContext actionContext = invocation.getInvocationContext();
         HttpServletRequest request = (HttpServletRequest) actionContext.get(StrutsStatics.HTTP_REQUEST);
         HttpServletResponse response = (HttpServletResponse) actionContext.get(StrutsStatics.HTTP_RESPONSE);
-
+        
+        // only permit caching bean information when struts devMode = false
+        cacheBeanInfo = !devMode;
+        
         try {
             Object rootObject;
             rootObject = readRootObject(invocation);
@@ -202,7 +215,7 @@ public class JSONResult implements Result {
 
     protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
         String json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
-                                         enumAsBean, excludeNullProperties, defaultDateFormat);
+                                         enumAsBean, excludeNullProperties, defaultDateFormat, cacheBeanInfo);
         json = addCallbackIfApplicable(request, json);
         return json;
     }

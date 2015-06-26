@@ -74,6 +74,7 @@ public class JSONWriter {
     private DateFormat formatter;
     private boolean enumAsBean = ENUM_AS_BEAN_DEFAULT;
     private boolean excludeNullProperties;
+    private boolean cacheBeanInfo = true;
 
     /**
      * @param object Object to be serialized into JSON
@@ -619,6 +620,10 @@ public class JSONWriter {
         if (defaultDateFormat != null) {
             this.formatter = new SimpleDateFormat(defaultDateFormat);
         }
+    }
+    
+    public void setCacheBeanInfo(boolean cacheBeanInfo) {
+    	this.cacheBeanInfo = cacheBeanInfo;
     }
 
     protected static class JSONAnnotationFinder {

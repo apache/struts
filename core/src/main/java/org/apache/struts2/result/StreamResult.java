@@ -278,6 +278,7 @@ public class StreamResult extends StrutsResultSupport {
             byte[] oBuff = new byte[bufferSize];
             int iSize;
             while (-1 != (iSize = inputStream.read(oBuff))) {
+                LOG.debug("Sending stream ... {}", iSize);
                 oOutput.write(oBuff, 0, iSize);
             }
         	LOG.debug("Streaming to output buffer +++ END +++");

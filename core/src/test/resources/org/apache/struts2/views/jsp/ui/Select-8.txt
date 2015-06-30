@@ -1,5 +1,5 @@
 <tr>
-<td class="tdLabel"><label for="myPet" class="label">myLabel:</label></td>
+<td class="struts-tdLabel"><label for="myPet" class="struts-label">myLabel:</label></td>
 <td>
 <select name="myPet" id="myPet">
     <option value="-1" selected="selected">--- Please Select ---</option>

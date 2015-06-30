@@ -1,7 +1,7 @@
 <tr errorFor="myId">
-    <td class="tdErrorMessage" colspan="2"><span class="errorMessage">bar error message</span></td>
+    <td class="struts-tdErrorMessage" colspan="2"><span class="struts-errorMessage">bar error message</span></td>
 </tr>
 <tr>
-    <td class="tdLabel"><label for="myId" class="errorLabel">mylabel:</label></td>
+    <td class="struts-tdLabel"><label for="myId" class="struts-errorLabel">mylabel:</label></td>
     <td><input type="text" name="foo" value="bar" id="myId" class="errclass" title="mytitle"/></td>
 </tr>

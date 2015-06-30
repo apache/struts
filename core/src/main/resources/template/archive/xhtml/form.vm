@@ -25,4 +25,4 @@
 <script src="${base}/struts/template/xhtml/validation.js"></script>
 #end
 #parse("/$parameters.templateDir/simple/form.vm")
-<table class="wwFormTable">
+<table class="struts-wwFormTable">

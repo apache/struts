@@ -1,5 +1,5 @@
 <tr>
-    <td class="tdLabel"><label for="mySelection" class="label">My Selection:</label></td>
+    <td class="struts-tdLabel"><label for="mySelection" class="struts-label">My Selection:</label></td>
     <td>
 <select name="mySelection" id="mySelection">
     <option value="ONE">one</option>

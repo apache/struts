@@ -1,4 +1,4 @@
-<ul id="someid" class="errorMessage">
+<ul id="someid" class="struts-errorMessage">
 	<li><span>action error number 1</span></li>
 	<li><span>action error number 2</span></li>
 	<li><span>action error number 3</span></li>

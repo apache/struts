@@ -37,7 +37,7 @@
         <input type="checkbox" name="$!struts.htmlEncode($parameters.name)" value="$!struts.htmlEncode($itemKey)"
         #parse("/$parameters.templateDir/simple/scripting-events.vm")
         id="$!struts.htmlEncode($parameters.name)-$itemCount" #if( $tag.contains($parameters.nameValue, $itemKey) ) checked="checked" #end />
-        <label for="$!struts.htmlEncode($parameters.name)-$itemCount" class="checkboxLabel">$!struts.htmlEncode($itemValue)</label><br />
+        <label for="$!struts.htmlEncode($parameters.name)-$itemCount" class="struts-checkboxLabel">$!struts.htmlEncode($itemValue)</label><br />
         #set ($trash = $stack.pop())
     #end
 #else

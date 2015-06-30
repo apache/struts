@@ -1,5 +1,5 @@
 <tr>
-    <td class="tdLabel"><label for="myId" class="label">media1:</label></td>
+    <td class="struts-tdLabel"><label for="myId" class="struts-label">media1:</label></td>
     <td><select name="myName" id="myId" multiple="multiple">
     <option value=""></option>
     <option value="aaa">aaa</option>

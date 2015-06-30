@@ -1,13 +1,13 @@
 <tr>
-    <td class="tdLabel">
-        <label for="myId" class="errorLabel">mylabel:</label>
+    <td class="struts-tdLabel">
+        <label for="myId" class="struts-errorLabel">mylabel:</label>
     </td>
     <td>
         <input type="text" name="foo" value="bar" id="myId" title="mytitle"/>
     </td>
 </tr>
 <tr errorFor="myId">
-    <td class="tdErrorMessage" colspan="2">
-        <span class="errorMessage">barerrormessage</span>
+    <td class="struts-tdErrorMessage" colspan="2">
+        <span class="struts-errorMessage">barerrormessage</span>
     </td>
 </tr>

@@ -54,7 +54,7 @@ function clearErrorLabelsCSS(form) {
     for (i = 0; i < labels.length; i++) {
         var label = labels[i];
         if (label) {
-            if(label.getAttribute("class") === "errorLabel"){
+            if(label.getAttribute("class") === "struts-errorLabel"){
                 label.setAttribute("class", "label");//standard way.. works for ie mozilla
                 label.setAttribute("className", "label"); //ie hack cause ie does not support setAttribute
             }
@@ -130,8 +130,8 @@ function addErrorCSS(e, errorText) {
 
         var label = enclosingDiv.getElementsByTagName("label")[0];
         if (label) {
-            label.setAttribute("class", "errorLabel"); //standard way.. works for ie mozilla
-            label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
+            label.setAttribute("class", "struts-errorLabel"); //standard way.. works for ie mozilla
+            label.setAttribute("className", "struts-errorLabel"); //ie hack cause ie does not support setAttribute
         }
 
         var firstCtrNode = findWWCtrlNode(enclosingDiv); // either wwctrl_ or wwlbl_
@@ -139,8 +139,8 @@ function addErrorCSS(e, errorText) {
         var error = document.createTextNode(errorText);
         var errorDiv = document.createElement("div");
 
-        errorDiv.setAttribute("class", "errorMessage");//standard way.. works for ie mozilla
-        errorDiv.setAttribute("className", "errorMessage");//ie hack cause ie does not support setAttribute
+        errorDiv.setAttribute("class", "struts-errorMessage");//standard way.. works for ie mozilla
+        errorDiv.setAttribute("className", "struts-errorMessage");//ie hack cause ie does not support setAttribute
         errorDiv.setAttribute("errorFor", elem.id);
         errorDiv.appendChild(error);
         if(!firstCtrNode && navigator.appName === 'Microsoft Internet Explorer') {

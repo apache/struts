@@ -28,8 +28,8 @@ ${parameters.after?if_exists}<#t/>
 <#if hasFieldErrors>
 <#list fieldErrors[parameters.name] as error>
 <tr errorFor="${parameters.id}">
-    <td class="tdErrorMessage" colspan="2"><#rt/>
-        <span class="errorMessage">${error?html}</span><#t/>
+    <td class="struts-tdErrorMessage" colspan="2"><#rt/>
+        <span class="struts-errorMessage">${error?html}</span><#t/>
     </td><#lt/>
 </tr>
 </#list>

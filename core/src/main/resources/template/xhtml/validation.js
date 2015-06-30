@@ -109,10 +109,10 @@ function addErrorXHTML(e, errorText) {
         var tr = document.createElement("tr");
         var td = document.createElement("td");
         var span = document.createElement("span");
-        td.className = "tdErrorMessage";
+        td.className = "struts-tdErrorMessage";
         td.colSpan = 2;
-        span.setAttribute("class", "errorMessage");
-        span.setAttribute("className", "errorMessage"); //ie hack cause ie does not support setAttribute
+        span.setAttribute("class", "struts-errorMessage");
+        span.setAttribute("className", "struts-errorMessage"); //ie hack cause ie does not support setAttribute
         span.appendChild(error);
         td.appendChild(span);
         tr.appendChild(td);
@@ -124,8 +124,8 @@ function addErrorXHTML(e, errorText) {
         var labelRow = row.cells.length > 1 ? row : StrutsUtils.previousElement(tr, "tr");
         var label = labelRow.cells[0].getElementsByTagName("label")[0];
         if (label) {
-            label.setAttribute("class", "errorLabel");
-            label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
+            label.setAttribute("class", "struts-errorLabel");
+            label.setAttribute("className", "struts-errorLabel"); //ie hack cause ie does not support setAttribute
         }
     } catch (err) {
         alert(err);

@@ -1,5 +1,5 @@
 <tr>
-    <td class="tdLabel"><label for="myFavouriteFruit" class="label">My Favourite Fruit:</label></td>
+    <td class="struts-tdLabel"><label for="myFavouriteFruit" class="struts-label">My Favourite Fruit:</label></td>
     <td>
 <script type="text/javascript">
 	function autoPopulate_myFavouriteFruit(targetElement) {

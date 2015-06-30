@@ -1,5 +1,5 @@
 <tr>
-    <td class="tdLabel"><label for="myname" class="label">mylabel:</label></td>
+    <td class="struts-tdLabel"><label for="myname" class="struts-label">mylabel:</label></td>
     <td>
         <input type="radio" name="myname" id="mynamehello" value="hello" dojo="checked:hello"/><label for="mynamehello">world</label>
         <input type="radio" name="myname" id="mynamefoo" value="foo" dojo="checked:foo"/><label for="mynamefoo">bar</label>

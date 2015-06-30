@@ -29,8 +29,8 @@
 <#if hasFieldErrors>
 <#list fieldErrors[parameters.name] as error>
 <tr errorFor="${parameters.id}">
-    <td class="tdErrorMessage" colspan="2"><#rt/>
-        <span class="errorMessage">${error?html}</span><#t/>
+    <td class="struts-tdErrorMessage" colspan="2"><#rt/>
+        <span class="struts-errorMessage">${error?html}</span><#t/>
     </td><#lt/>
 </tr>
 </#list>
@@ -47,9 +47,9 @@
 -->
 <tr>
 <#if labelpos?default("") == 'top'>
-    <td class="tdLabelTop" colspan="2"><#rt/>
+    <td class="struts-tdLabelTop" colspan="2"><#rt/>
 <#else>
-    <td class="tdLabel"><#rt/>
+    <td class="struts-tdLabel"><#rt/>
 </#if>
 <#if parameters.label??>
     <label <#t/>
@@ -57,17 +57,17 @@
         for="${parameters.id?html}" <#t/>
 </#if>
 <#if hasFieldErrors>
-        class="errorLabel"<#t/>
+        class="struts-errorLabel"<#t/>
 <#else>
-        class="label"<#t/>
+        class="struts-label"<#t/>
 </#if>
     ><#t/>
 <#if parameters.required?default(false) && parameters.requiredPosition?default("right") != 'right'>
-        <span class="required">*</span><#t/>
+        <span class="struts-required">*</span><#t/>
 </#if>
 ${parameters.label?html}<#t/>
 <#if parameters.required?default(false) && parameters.requiredPosition?default("right") == 'right'>
- <span class="required">*</span><#t/>
+ <span class="struts-required">*</span><#t/>
 </#if>
 ${parameters.labelseparator?default(":")?html}<#t/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />

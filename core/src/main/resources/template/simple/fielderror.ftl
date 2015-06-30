@@ -40,7 +40,7 @@
                         <#if parameters.cssClass?has_content>
                                 class="${parameters.cssClass?html}"<#rt/>
                             <#else>
-                                class="errorMessage"<#rt/>
+                                class="struts-errorMessage"<#rt/>
                         </#if>
                         <#if parameters.cssStyle?has_content>
                                 style="${parameters.cssStyle?html}"<#rt/>
@@ -64,7 +64,7 @@
             <#if parameters.cssClass?has_content>
                     class="${parameters.cssClass?html}"<#rt/>
                 <#else>
-                    class="errorMessage"<#rt/>
+                    class="struts-errorMessage"<#rt/>
             </#if>
             <#if parameters.cssStyle?has_content>
                     style="${parameters.cssStyle?html}"<#rt/>

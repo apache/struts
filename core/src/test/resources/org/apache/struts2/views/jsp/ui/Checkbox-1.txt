@@ -1,9 +1,9 @@
 <tr>
-	<td class="tdCheckboxLabel">
+	<td class="struts-tdCheckboxLabel">
 	</td>
-    <td class="tdCheckboxInput">
+    <td class="struts-tdCheckboxInput">
 		<input type="checkbox" name="foo" value="baz" checked="checked" id="someId" title="mytitle" onfocus="test();"/>
 		<input type="hidden" id="__checkbox_someId" name="__checkbox_foo" value="baz"/>
-        <label for="someId" class="checkboxLabel">mylabel</label>
+        <label for="someId" class="struts-checkboxLabel">mylabel</label>
     </td>
 </tr>

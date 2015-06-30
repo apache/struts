@@ -66,8 +66,8 @@ StrutsUtils.showValidationErrors = function(form, errors) {
 	if (errors.errors) {
 		var l, errorList = document.createElement("ul");
 
-		errorList.setAttribute("class", "errorMessage");
-		errorList.setAttribute("className", "errorMessage"); // ie hack cause ie does not support setAttribute
+		errorList.setAttribute("class", "struts-errorMessage");
+		errorList.setAttribute("className", "struts-errorMessage"); // ie hack cause ie does not support setAttribute
 
 		for ( l = 0; l < errors.errors.length; l++) {
 			var item = document.createElement("li");

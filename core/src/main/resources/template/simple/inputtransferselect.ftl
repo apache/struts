@@ -61,7 +61,7 @@
 
 
 </td>
-<td class="tdTransferSelect">
+<td class="struts-tdTransferSelect">
 	<#assign addLabel=(parameters.addLabel!"->")?html /><#t/>
 	<input type="button"
 		<#if parameters.buttonCssClass?has_content><#t/>

@@ -18,20 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+(function() {
+    'use strict';
 
-var angularStrutsApp = angular.module('angularStrutsApp', ['ngRoute']);
+    angular
+    .module('app')
+        .config(['$routeProvider', '$locationProvider',
+            function($routeProvider, $locationProvider) {
 
-angularStrutsApp.config(['$routeProvider', '$locationProvider',
-    function($routeProvider, $locationProvider) {
+                $locationProvider.html5Mode(true).hashPrefix('!');
 
-        $locationProvider.html5Mode(true).hashPrefix('!');
-
-        $routeProvider.when('/projects', {
-            templateUrl: 'partials/projects.html',
-            controller: 'ApacheProjectsController'
-        }).when('/home', {
-            templateUrl: 'partials/home.html',
-            controller: 'HomeController'
-        }).otherwise({ redirectTo: '/home' });
-    }
-]);
+                $routeProvider.when('/projects', {
+                    templateUrl: 'partials/projects.html',
+                    controller: 'ApacheProjectsController'
+                }).when('/home', {
+                    templateUrl: 'partials/home.html',
+                    controller: 'HomeController'
+                }).otherwise({ redirectTo: '/home' });
+            }
+        ]);
+})();

@@ -18,20 +18,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-angularStrutsApp.controller('AppController', function ($scope) {  });
+(function() {
+    'use strict';
 
-angularStrutsApp.controller('HomeController', function ($scope) {
-    $scope.name = "Sunshine";
-});
+    angular
+        .module('app')
+        .controller('ApacheProjectsController', ApacheProjectsController);
 
-angularStrutsApp.controller('ApacheProjectsController', function ($scope, $log, DataService) {
-    this.init = function() {
-        DataService.getProjects().then(function(data) {
-            $scope.projects = data.projectNames;
-        }, function() {
-            $log.error('Could not receive project names.')
-        });
-    };
+    function ApacheProjectsController($scope, $log, DataService) {
+        this.init = function() {
+            DataService.getProjects().then(function(data) {
+                $scope.projects = data.projectNames;
+            }, function() {
+                $log.error('Could not receive project names.')
+            });
+        };
 
-    this.init();
-});
+        this.init();
+    }
+})();

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<html lang="en" ng-app="angularStrutsApp">
+<html lang="en" ng-app="app">
 <head>
     <meta charset="utf-8">
     <title>My AngularJS Struts2 App</title>
 
-    <s:url var="ctxUrl" forceAddSchemeHostAndPort="true" includeContext="true" value="/" namespace="/" ></s:url>
-    <base href="<s:property value="ctxUrl"/>">
+    <base href="<s:url forceAddSchemeHostAndPort="true" includeContext="true" value="/" namespace="/" />">
 </head>
 <body>
 
@@ -23,9 +22,11 @@
 
 <script src="<s:url value="js/lib/angular/angular.min.js" />"></script>
 <script src="<s:url value="js/lib/angular/angular-route.min.js" />"></script>
-<script src="<s:url value="js/bootstrap.js" />"></script>
-<script src="<s:url value="js/directives.js" />"></script>
-<script src="<s:url value="js/services.js" />"></script>
-<script src="<s:url value="js/controllers.js" />"></script>
+<script src="<s:url value="js/app.js" />"></script>
+<script src="<s:url value="js/config.js" />"></script>
+<script src="<s:url value="js/services/DataService.js" />"></script>
+<script src="<s:url value="js/controllers/AppController.js" />"></script>
+<script src="<s:url value="js/controllers/HomeController.js" />"></script>
+<script src="<s:url value="js/controllers/ApacheProjectsController.js" />"></script>
 </body>
 </html>

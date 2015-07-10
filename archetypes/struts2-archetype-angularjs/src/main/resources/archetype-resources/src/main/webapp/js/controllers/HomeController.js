@@ -18,17 +18,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ${package}.actions;
+(function() {
+    'use strict';
 
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.StrutsTestCase;
+    angular
+        .module('app')
+        .controller('HomeController', HomeController);
 
-public class IndexTest extends StrutsTestCase {
-
-    public void testIndex() throws Exception {
-        Index index = new Index();
-        String result = index.execute();
-        assertTrue("Expected a success result!", ActionSupport.SUCCESS.equals(result));
-        assertTrue("Expected the 'hello' action name!!", "application".equals(index.getRedirectName()));
+    function HomeController($scope) {
+        $scope.name = "Sunshine";
     }
-}
+})();

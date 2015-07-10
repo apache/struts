@@ -18,3 +18,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+(function() {
+    'use strict';
+
+    angular
+    .module('app')
+    .controller('AppController', AppController);
+
+    function AppController() {
+
+    }
+})();

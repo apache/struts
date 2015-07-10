@@ -61,10 +61,11 @@
             <scope>test</scope>
         </dependency>
 
+
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -73,15 +74,6 @@
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.
-           This is only necessary in tests-->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

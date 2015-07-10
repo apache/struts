@@ -27,13 +27,26 @@
 
     function DataService($http, $log, $q) {
 
-        var DataService = {
-            urls : {
-                projects : "data/projects"
-            }
+        /** Object to manage all backend URL's */
+        var urls = {
+            projects : "data/projects"
         };
 
-        DataService._request = function(url, method, model){
+        /** The DataService with all public methods */
+        var DataService = {
+            getProjects: getProjects
+        };
+
+        return DataService;
+
+        /** Get all projects */
+        function getProjects() {
+            return _request(urls.projects);
+        }
+
+
+        /** A generic helper method to execute a HTTP request to the backend */
+        function _request(url, method, model){
             if(!method) {
                 method = 'GET';
             }
@@ -55,13 +68,8 @@
                 });
             }
             return def.promise;
-        };
+        }
 
-        DataService.getProjects = function () {
-            return this._request(this.urls.projects);
-        };
-
-        return DataService;
     }
 
 })();

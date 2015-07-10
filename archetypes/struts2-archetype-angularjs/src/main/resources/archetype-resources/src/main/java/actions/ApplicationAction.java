@@ -25,7 +25,7 @@ import com.opensymphony.xwork2.ActionSupport;
 /**
  * <code>Set welcome message.</code>
  */
-public class HelloAction extends ActionSupport {
+public class ApplicationAction extends ActionSupport {
 
     private static final long serialVersionUID = -3243216917801206214L;
 

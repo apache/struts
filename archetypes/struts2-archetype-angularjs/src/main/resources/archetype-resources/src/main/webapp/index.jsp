@@ -1,1 +1,1 @@
-<% response.sendRedirect("hello"); %>
+<% response.sendRedirect("application"); %>

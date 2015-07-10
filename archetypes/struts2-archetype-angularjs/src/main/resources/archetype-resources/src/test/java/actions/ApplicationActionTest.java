@@ -23,14 +23,12 @@ package ${package}.actions;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.StrutsTestCase;
 
-public class HelloActionTest extends StrutsTestCase {
+public class ApplicationActionTest extends StrutsTestCase {
 
-    public void testHelloAction() throws Exception {
-        HelloAction hello = new HelloAction();
+    public void testApplicationAction() throws Exception {
+        ApplicationAction hello = new ApplicationAction();
         String result = hello.execute();
-        assertTrue("Expected a success result!",
-                ActionSupport.SUCCESS.equals(result));
-        assertTrue("Expected the default message!",
-                hello.getText(HelloAction.MESSAGE).equals(hello.getMessage()));
+        assertTrue("Expected a success result!", ActionSupport.SUCCESS.equals(result));
+        assertTrue("Expected the default message!", hello.getText(ApplicationAction.MESSAGE).equals(hello.getMessage()));
     }
 }

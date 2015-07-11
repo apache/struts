@@ -120,14 +120,10 @@ public class RolesInterceptor extends AbstractInterceptor {
           throw new IllegalArgumentException("RolesInterceptor is misconfigured, check logs for erroneous configuration!");
         }
         if (!isAllowed(request, invocation.getAction())) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Request is NOT allowed. Rejecting.");
-            }
+            LOG.debug("Request is NOT allowed. Rejecting.");
             return handleRejection(invocation, response);
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Request is allowed. Invoking.");
-            }
+            LOG.debug("Request is allowed. Invoking.");
             return invocation.invoke();
         }
     }
@@ -154,25 +150,19 @@ public class RolesInterceptor extends AbstractInterceptor {
     protected boolean isAllowed(HttpServletRequest request, Object action) {
         for (String role : disallowedRoles) {
             if (request.isUserInRole(role)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("User role '" + role + "' is in the disallowedRoles list.");
-                }
+                LOG.debug("User role '{}' is in the disallowedRoles list.", role);
                 return false;
             }
         }
   
         if (allowedRoles.isEmpty()){
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("The allowedRoles list is empty.");
-            }
+            LOG.debug("The allowedRoles list is empty.");
             return true;
         }
         
         for (String role : allowedRoles) {
             if (request.isUserInRole(role)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("User role '" + role + "' is in the allowedRoles list.");
-                }
+                LOG.debug("User role '{}' is in the allowedRoles list.", role);
                 return true;
             }
         }

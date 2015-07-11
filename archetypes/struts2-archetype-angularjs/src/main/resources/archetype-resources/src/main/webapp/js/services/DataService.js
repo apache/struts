@@ -33,11 +33,11 @@
         };
 
         /** The DataService with all public methods */
-        var DataService = {
+        var service = {
             getProjects: getProjects
         };
 
-        return DataService;
+        return service;
 
         /** Get all projects */
         function getProjects() {

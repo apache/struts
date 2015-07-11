@@ -30,7 +30,7 @@
             DataService.getProjects().then(function(data) {
                 $scope.projects = data.projectNames;
             }, function() {
-                $log.error('Could not receive project names.')
+                $log.error('Could not receive project names.');
             });
         };
 

@@ -120,8 +120,10 @@ public class RolesInterceptor extends AbstractInterceptor {
           throw new IllegalArgumentException("RolesInterceptor is misconfigured, check logs for erroneous configuration!");
         }
         if (!isAllowed(request, invocation.getAction())) {
+            LOG.debug("Request is NOT allowed. Rejecting.");
             return handleRejection(invocation, response);
         } else {
+            LOG.debug("Request is allowed. Invoking.");
             return invocation.invoke();
         }
     }
@@ -148,16 +150,19 @@ public class RolesInterceptor extends AbstractInterceptor {
     protected boolean isAllowed(HttpServletRequest request, Object action) {
         for (String role : disallowedRoles) {
             if (request.isUserInRole(role)) {
+                LOG.debug("User role '{}' is in the disallowedRoles list.", role);
                 return false;
             }
         }
   
         if (allowedRoles.isEmpty()){
+            LOG.debug("The allowedRoles list is empty.");
             return true;
         }
         
         for (String role : allowedRoles) {
             if (request.isUserInRole(role)) {
+                LOG.debug("User role '{}' is in the allowedRoles list.", role);
                 return true;
             }
         }

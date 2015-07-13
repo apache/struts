@@ -44,8 +44,8 @@ import java.util.Map;
  * Maps, both the key and the value may be specified by using the pattern <b>Key_xxx</b> and <b>Element_xxx</b>,
  * respectively.
  *
- * <p/> From WebWork 2.1.x, the <b>Collection_xxx</b> format is still supported and honored, although it is deprecated
- * and will be removed eventually.
+ * <p> From WebWork 2.1.x, the <b>Collection_xxx</b> format is still supported and honored, although it is deprecated
+ * and will be removed eventually.</p>
  *
  * <!-- END SNIPPET: javadoc -->
  *

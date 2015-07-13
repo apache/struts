@@ -27,8 +27,9 @@ import java.util.Map;
 
 /**
  * Is able to access (set/get) properties on a given object.
- * <p/>
+ * <p>
  * Uses Ognl internal.
+ * </p>
  *
  * @author Gabe
  */

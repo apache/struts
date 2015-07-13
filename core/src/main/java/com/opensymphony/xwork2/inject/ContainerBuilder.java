@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * dependency type and name uniquely identifies a dependency mapping; you can
  * use the same name for two different types. Not safe for concurrent use.
  *
- * <p>Adds the following factories by default:
+ * <p>Adds the following factories by default:</p>
  *
  * <ul>
  *   <li>Injects the current {@link Container}.

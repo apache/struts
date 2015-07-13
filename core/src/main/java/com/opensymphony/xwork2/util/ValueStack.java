@@ -44,9 +44,10 @@ public interface ValueStack {
     public abstract void setDefaultType(Class defaultType);
 
     /**
-     * Set a override map containing <code>key -> values</code> that takes precedent when doing find operations on the ValueStack.
-     * <p/>
+     * Set a override map containing <code> key -&gt; values </code> that takes precedent when doing find operations on the ValueStack.
+     * <p>
      * See the unit test for ValueStackTest for examples.
+     * </p>
      *
      * @param overrides  overrides map.
      */

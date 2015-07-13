@@ -50,7 +50,7 @@ public class DefaultTypeConverterHolder implements TypeConverterHolder {
     /**
      * Record classes that doesn't have conversion mapping defined.
      * <pre>
-     * - String -> classname as String
+     * - String -&gt; classname as String
      * </pre>
      */
     protected HashSet<String> unknownMappings = new HashSet<>();     // non-action (eg. returned value)

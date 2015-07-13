@@ -95,10 +95,11 @@ public abstract class ReferenceCache<K, V> extends ReferenceMap<K, V> {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * If this map does not contain an entry for the given key and {@link
      * #create(Object)} has been overridden, this method will create a new
      * value, put it in the map, and return it.
+     * </p>
      *
      * @throws NullPointerException                       if {@link #create(Object)} returns null.
      * @throws java.util.concurrent.CancellationException if the creation is

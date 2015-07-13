@@ -98,10 +98,11 @@ public interface ReflectionProvider {
     
     /**
      * Creates a Map with read properties for the given source object.
-     * <p/>
+     * <p>
      * If the source object does not have a read property (i.e. write-only) then
      * the property is added to the map with the value <code>here is no read method for property-name</code>.
-     * 
+     * </p>
+     *
      * @param source   the source object.
      * @return  a Map with (key = read property name, value = value of read property).
      * @throws IntrospectionException is thrown if an exception occurs during introspection.

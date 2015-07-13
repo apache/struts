@@ -25,13 +25,15 @@ import java.lang.annotation.Target;
  * A marker annotation for type conversions at Type level.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p>
+ *     <u>Annotation usage:</u>
+ * </p>
  *
  * <!-- START SNIPPET: usage -->
  * The Conversion annotation must be applied at Type level.
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p> <u>Annotation parameters:</u> </p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table>
@@ -54,7 +56,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p> <u>Example code:</u> </p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

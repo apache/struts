@@ -18,8 +18,9 @@ package com.opensymphony.xwork2.conversion;
 /**
  * Determines what the key and and element class of a Map or Collection should be. For Maps, the elements are the
  * values. For Collections, the elements are the elements of the collection.
- * <p/>
+ * <p>
  * See the implementations for javadoc description for the methods as they are dependent on the concrete implementation.
+ * </p>
  *
  * @author Gabriel Zimmerman
  */

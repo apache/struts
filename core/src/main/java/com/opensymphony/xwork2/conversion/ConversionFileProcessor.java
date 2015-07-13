@@ -3,7 +3,7 @@ package com.opensymphony.xwork2.conversion;
 import java.util.Map;
 
 /**
- * Used to process <clazz>-conversion.properties file to read defined Converters
+ * Used to process &lt;clazz&gt;-conversion.properties file to read defined Converters
  */
 public interface ConversionFileProcessor {
 

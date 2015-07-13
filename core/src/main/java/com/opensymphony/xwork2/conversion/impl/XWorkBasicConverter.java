@@ -30,10 +30,11 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * <p/>
+ * <p>
  * XWork will automatically handle the most common type conversion for you. This includes support for converting to
  * and from Strings for each of the following:
- * <p/>
+ * </p>
+ *
  * <ul>
  * <li>String</li>
  * <li>boolean / Boolean</li>
@@ -44,9 +45,12 @@ import java.util.Map;
  * <li>collections - if not object type can be determined, it is assumed to be a String and a new ArrayList is
  * created</li>
  * </ul>
- * <p/> Note that with arrays the type conversion will defer to the type of the array elements and try to convert each
+ *
+ * <p> Note that with arrays the type conversion will defer to the type of the array elements and try to convert each
  * item individually. As with any other type conversion, if the conversion can't be performed the standard type
  * conversion error reporting is used to indicate a problem occurred while processing the type conversion.
+ * </p>
+ *
  * <!-- END SNIPPET: javadoc -->
  *
  * @author <a href="mailto:plightbo@gmail.com">Pat Lightbody</a>

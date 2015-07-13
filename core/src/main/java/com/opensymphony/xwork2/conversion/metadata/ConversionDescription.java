@@ -70,7 +70,7 @@ public class ConversionDescription {
 
     /**
      * <p>
-     * Sets the property name to be inserted into the related conversion.properties file.<br/>
+     * Sets the property name to be inserted into the related conversion.properties file.<br>
      * Note: Do not add COLLECTION_PREFIX or MAP_PREFIX keys to property names.
      * </p>
      *
@@ -91,7 +91,7 @@ public class ConversionDescription {
 
     /**
      * Sets the rule prefix for COLLECTION_PREFIX or MAP_PREFIX key.
-     * Defaults to en emtpy String.
+     * Defaults to en empty String.
      *
      * @param rule
      */
@@ -131,9 +131,9 @@ public class ConversionDescription {
     /**
      * Returns the conversion description as property entry.
      * <p>
-     * Example:<br/>
-     * property.name = converter.className<br/>
-     * Collection_property.name = converter.className<br/>
+     * Example:<br>
+     * property.name = converter.className<br>
+     * Collection_property.name = converter.className<br>
      * Map_property.name = converter.className
      * KeyProperty_name = id
      * </p>

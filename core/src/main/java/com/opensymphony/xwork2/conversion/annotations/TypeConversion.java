@@ -22,27 +22,29 @@ import java.lang.annotation.Target;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>This annotation is used for class and application wide conversion rules.
+ * <p>This annotation is used for class and application wide conversion rules.</p>
+ *
  * <p>
  * Class wide conversion:<br/>
  * The conversion rules will be assembled in a file called <code>XXXAction-conversion.properties</code>
  * within the same package as the related action class.
  * Set type to: <code>type = ConversionType.CLASS</code>
  * </p>
+ *
  * <p>
- * Allication wide conversion:<br/>
+ * Application wide conversion:<br/>
  * The conversion rules will be assembled within the <code>xwork-conversion.properties</code> file within the classpath root.
  * Set type to: <code>type = ConversionType.APPLICATION</code>
- * <p/>
+ * </p>
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p> <u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
  * The TypeConversion annotation can be applied at property and method level.
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p> <u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table>
@@ -90,7 +92,7 @@ import java.lang.annotation.Target;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p> <u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

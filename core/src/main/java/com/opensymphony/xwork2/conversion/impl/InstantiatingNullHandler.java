@@ -36,7 +36,7 @@ import java.util.*;
  * that have caused a NullPointerException will be temporarily stopped for evaluation while the system automatically
  * tries to solve the null references by automatically creating the object.
  *
- * <p/> The following rules are used when handling null references:
+ * <p> The following rules are used when handling null references:</p>
  *
  * <ul>
  *

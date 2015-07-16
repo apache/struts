@@ -47,7 +47,7 @@ public class XWork {
      * @param namespace The namespace
      * @param name The action name
      * @param method The method name
-     * @throws Exception If anything goes wrong
+     * @throws XWorkException If anything goes wrong
      */
     public void executeAction(String namespace, String name, String method) throws XWorkException {
         Map<String, Object> extraContext = Collections.emptyMap();
@@ -61,7 +61,7 @@ public class XWork {
      * @param name The action name
      * @param method The method name
      * @param extraContext A map of extra context information
-     * @throws Exception If anything goes wrong
+     * @throws XWorkException If anything goes wrong
      */
     public void executeAction(String namespace, String name, String method, Map<String, Object> extraContext) throws XWorkException {
         Configuration config = configurationManager.getConfiguration();

@@ -23,15 +23,15 @@ import java.lang.annotation.Target;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>Sets the Element for type conversion.
+ * <p>Sets the Element for type conversion.</p>
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The Element annotation must be applied at field or method level.
+ * <p>The Element annotation must be applied at field or method level.</p>
  * <!-- END SNIPPET: usage -->
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table>
@@ -54,7 +54,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  * <pre>
  * <!-- START SNIPPET: example -->
  * // The key property for User objects within the users collection is the <code>userName</code> attribute.
@@ -67,7 +67,6 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Rainer Hermanns
- * @version $Id$
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})

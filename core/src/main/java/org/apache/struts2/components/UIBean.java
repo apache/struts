@@ -46,9 +46,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * <p>
  * UIBean is the standard superclass of all Struts UI components.
  * It defines common Struts and html properties all UI components should present for usage.
- *
+ * </p>
  * <!-- START SNIPPET: templateRelatedAttributes -->
  *
  * <table border="1">
@@ -98,8 +99,6 @@ import java.util.Map;
  * </table>
  *
  * <!-- END SNIPPET: templateRelatedAttributes -->
- *
- * <p/>
  *
  * <!-- START SNIPPET: generalAttributes -->
  *
@@ -202,8 +201,6 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: generalAttributes -->
  *
- * <p/>
- *
  * <!-- START SNIPPET: javascriptRelatedAttributes -->
  *
  * <table border="1">
@@ -299,8 +296,6 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: javascriptRelatedAttributes -->
  *
- * <p/>
- *
  * <!-- START SNIPPET: tooltipattributes -->
  *
  * <table border="1">
@@ -345,33 +340,37 @@ import java.util.Map;
  *
  *
  * <!-- START SNIPPET: tooltipdescription -->
+ * <p>
  * <b>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </b>
+ * </p>
  *
+ * <p>
  * Every Form UI component (in xhtml / css_xhtml or any other that extends them) can
  * have tooltips assigned to them. The Form component's tooltip related attribute, once
  * defined, will be applied to all form UI components that are created under it unless
- * explicitly overriden by having the Form UI component itself defined with their own tooltip attribute.
+ * explicitly overridden by having the Form UI component itself defined with their own tooltip attribute.
+ * </p>
  *
- * <p/>
- *
- * In Example 1, the textfield will inherit the tooltipDelay and tooltipIconPath attribte from
+ * <p>
+ * In Example 1, the textfield will inherit the tooltipDelay and tooltipIconPath attribute from
  * its containing form. In other words, although it doesn't define a tooltipIconPath
  * attribute, it will have that attribute inherited from its containing form.
+ * </p>
  *
- * <p/>
- *
- * In Example 2, the  textfield will inherite both the tooltipDelay and
+ * <p>
+ * In Example 2, the  textfield will inherit both the tooltipDelay and
  * tooltipIconPath attribute from its containing form, but the tooltipDelay
- * attribute is overriden at the textfield itself. Hence, the textfield actually will
+ * attribute is overridden at the textfield itself. Hence, the textfield actually will
  * have its tooltipIcon defined as /myImages/myIcon.gif, inherited from its containing form, and
  * tooltipDelay defined as 5000.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * Example 3, 4 and 5 show different ways of setting the tooltip configuration attribute.<br/>
  * <b>Example 3:</b> Set tooltip config through the body of the param tag<br/>
  * <b>Example 4:</b> Set tooltip config through the value attribute of the param tag<br/>
  * <b>Example 5:</b> Set tooltip config through the tooltip attributes of the component tag<br/>
+ * </p>
  *
  * <!-- END SNIPPET: tooltipdescription -->
  *

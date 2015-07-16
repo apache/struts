@@ -25,15 +25,24 @@ public interface ClassFinder {
     boolean isAnnotationPresent(Class<? extends Annotation> annotation);
 
     /**
+     * <p>
      * Returns a list of classes that could not be loaded in last invoked findAnnotated* method.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * The list will only contain entries of classes whose byte code matched the requirements
      * of last invoked find* method, but were unable to be loaded and included in the results.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * The list returned is unmodifiable.  Once obtained, the returned list will be a live view of the
      * results from the last findAnnotated* method call.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * This method is not thread safe.
+     * </p>
+     *
      * @return an unmodifiable live view of classes that could not be loaded in previous findAnnotated* call.
      */
     List<String> getClassesNotLoaded();

@@ -36,15 +36,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * <p>
  * Default implementation of TilesUtil.
  * This class contains default implementation of utilities. This implementation
  * is intended to be used without Struts.
- * <p/>
+ * </p>
+ *
+ * <p>
  * TilesUtilImpl implementation used to intercept .ftl requests and
  * ensure that they are setup properly to take advantage of the
  * {@link FreemarkerResult}.
- *
- * @version $Id$
+ * </p>
  */
 public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
 

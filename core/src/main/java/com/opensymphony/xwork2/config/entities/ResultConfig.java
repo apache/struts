@@ -26,8 +26,10 @@ import java.util.Map;
 
 /**
  * Configuration for Result.
- * <p/>
+ *
+ * <p>
  * In the xml configuration file this is defined as the <code>result</code> tag.
+ * </p>
  *
  * @author Mike
  */

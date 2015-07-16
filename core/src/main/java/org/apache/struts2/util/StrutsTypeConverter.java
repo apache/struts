@@ -28,19 +28,22 @@ import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
 /**
  * <!-- START SNIPPET: javadoc -->
  *
+ * <p>
  * Base class for type converters used in Struts. This class provides two abstract methods that are used to convert
- * both to and from strings -- the critical functionality that is core to Struts's type coversion system.
- *
- * <p/> Type converters do not have to use this class. It is merely a helper base class, although it is recommended that
+ * both to and from strings -- the critical functionality that is core to Struts's type conversion system.
+ * </p>
+ * <p> Type converters do not have to use this class. It is merely a helper base class, although it is recommended that
  * you use this class as it provides the common type conversion contract required for all web-based type conversion.
+ * </p>
  *
- * <p/> There's a hook (fall back method) called <code>performFallbackConversion</code> of which
+ * <p> There's a hook (fall back method) called <code>performFallbackConversion</code> of which
  * could be used to perform some fallback conversion if <code>convertValue</code> method of this
  * failed. By default it just ask its super class (Ognl's DefaultTypeConverter) to do the conversion.
+ * </p>
  *
- * <p/> To allow the framework to recognize that a conversion error has occurred, throw an XWorkException or
+ * <p> To allow the framework to recognize that a conversion error has occurred, throw an XWorkException or
  * preferable a TypeConversionException.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
  */

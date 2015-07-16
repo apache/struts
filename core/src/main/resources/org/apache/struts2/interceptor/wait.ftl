@@ -26,8 +26,8 @@
     </head>
     <body>
         Please wait while we process your request...
-        <p/>
-
+        <p>
         This page will reload automatically and display your request when it is completed.
+        </p>
     </body>
 </html>

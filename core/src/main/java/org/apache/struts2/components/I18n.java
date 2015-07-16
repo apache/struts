@@ -48,8 +48,6 @@ import java.util.ResourceBundle;
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/>
- *
  * <!-- START SNIPPET: params-->
  *
  * <ul>
@@ -58,9 +56,9 @@ import java.util.ResourceBundle;
  *
  * <!-- END SNIPPET: params -->
  *
- * <p/>
- *
+ * <p>
  * Example:
+ * </p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

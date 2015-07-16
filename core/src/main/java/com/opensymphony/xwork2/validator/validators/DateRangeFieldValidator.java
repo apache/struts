@@ -30,8 +30,6 @@ import java.util.Date;
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/>
- *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * 		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
@@ -84,7 +82,6 @@ import java.util.Date;
  *
  *
  * @author Jason Carreira
- * @version $Date$ $Id$
  */
 public final class DateRangeFieldValidator extends RangeValidatorSupport<Date> {
 

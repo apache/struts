@@ -25,16 +25,22 @@ import java.util.Map;
 
 
 /**
+ * <p>
  * The ActionContext is the context in which an {@link Action} is executed. Each context is basically a
- * container of objects an action needs for execution like the session, parameters, locale, etc. <p>
- * <p/>
+ * container of objects an action needs for execution like the session, parameters, locale, etc.
+ * </p>
+ *
+ * <p>
  * The ActionContext is thread local which means that values stored in the ActionContext are
  * unique per thread. See the {@link ThreadLocal} class for more information. The benefit of
  * this is you don't need to worry about a user specific action context, you just get it:
- * <p/>
+ * </p>
+ *
  * <ul><code>ActionContext context = ActionContext.getContext();</code></ul>
- * <p/>
+ *
+ * <p>
  * Finally, because of the thread local usage you don't need to worry about making your actions thread safe.
+ * </p>
  *
  * @author Patrick Lightbody
  * @author Bill Lynch (docs)

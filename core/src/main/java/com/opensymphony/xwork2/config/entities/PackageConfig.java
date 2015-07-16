@@ -26,8 +26,10 @@ import java.util.*;
 
 /**
  * Configuration for Package.
- * <p/>
+ *
+ * <p>
  * In the xml configuration file this is defined as the <code>package</code> tag.
+ * </p>
  *
  * @author Rainer Hermanns
  * @version $Revision$
@@ -257,10 +259,14 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     }
 
     /**
+     * <p>
      * Returns the default result type for this package.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If there is no default result type, but this package has parents - we will try to
      * look up the default result type of a parent.
+     * </p>
      */
     public String getFullDefaultResultType() {
         if ((defaultResultType == null) && !parents.isEmpty()) {

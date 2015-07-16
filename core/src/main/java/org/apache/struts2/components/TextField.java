@@ -30,14 +30,16 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Render an HTML input field of type text</p>
+ * <p>Render an HTML input field of type text</p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
- * <p/>
+ * <p><b>Examples</b></p>
+ * <p>
  * <!-- START SNIPPET: exdescription -->
  * In this example, a text control for the "user" property is rendered. The label is also retrieved from a ResourceBundle via the key attribute.
  * <!-- END SNIPPET: exdescription -->
+ * </p>
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;s:textfield key="user" /&gt;
@@ -49,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
  * &lt;s:textfield name="user" label="User Name" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
-
  */
 @StrutsTag(
     name="textfield",

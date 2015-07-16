@@ -36,12 +36,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  * the rest of your UI controls.</p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
- * <p/>
+ * <p><b>Examples</b></p>
+ *
  * <!-- START SNIPPET: exdescription -->
- * In this example, a label is rendered. The label is retrieved from a ResourceBundle via the key attribute
+ * <p>In this example, a label is rendered. The label is retrieved from a ResourceBundle via the key attribute
  * giving you an output of 'User Name: Ford.Prefect'. Assuming that i18n message userName corresponds
- * to 'User Name' and the action's getUserName() method returns 'Ford.Prefect'<p/>
+ * to 'User Name' and the action's getUserName() method returns 'Ford.Prefect'</p>
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->

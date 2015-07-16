@@ -40,7 +40,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * the unique token.</p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

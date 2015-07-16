@@ -36,7 +36,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  * <pre>
  * <!-- START SNIPPET: example -->
  *
@@ -65,8 +65,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * <p/>
- *
+ * <p>
  * <!-- START SNIPPET: exnote -->
  *
  * Note: For any of the tags that use lists (select probably being the most ubiquitous), which uses the OGNL list
@@ -74,10 +73,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  * the '01', '02', etc.) is typed. '1' is a char, '01' is a String, "1" is a String. This is important since if
  * the value returned by your "value" attribute is NOT the same type as the key in the "list" attribute, they
  * WILL NOT MATCH, even though their String values may be equivalent. If they don't match, nothing in your list
- * will be auto-selected.<p/>
+ * will be auto-selected.
  *
  * <!-- END SNIPPET: exnote -->
- *
+ * </p>
  */
 @StrutsTag(
     name="select",

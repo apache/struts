@@ -93,12 +93,14 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     }
 
     /**
+     * <p>
      * Execute this result, using the specified template location. <p/>The
-     * template location has already been interoplated for any variable
-     * substitutions <p/>this method obtains the freemarker configuration and
+     * template location has already been interpolated for any variable
+     * substitutions <br>this method obtains the freemarker configuration and
      * the object wrapper from the provided hooks. It them implements the
      * template processing workflow by calling the hooks for preTemplateProcess
      * and postTemplateProcess
+     * </p>
      */
     public void doExecute(String location, ActionInvocation invocation)
             throws IOException, TemplateException, PortletException {
@@ -186,7 +188,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * to obtain the FreeMarker configuration object that this result will use
      * for template loading. This is a hook that allows you to custom-configure
      * the configuration object in a subclass, or to fetch it from an IoC
-     * container. <p/><b>The default implementation obtains the configuration
+     * container. <br><b>The default implementation obtains the configuration
      * from the ConfigurationManager instance. </b>
      */
     protected Configuration getConfiguration() throws TemplateException {
@@ -197,7 +199,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * This method is called from {@link #doExecute(String, ActionInvocation)}
      * to obtain the FreeMarker object wrapper object that this result will use
      * for adapting objects into template models. This is a hook that allows you
-     * to custom-configure the wrapper object in a subclass. <p/><b>The default
+     * to custom-configure the wrapper object in a subclass. <br><b>The default
      * implementation returns {@link Configuration#getObjectWrapper()}</b>
      */
     protected ObjectWrapper getObjectWrapper() {
@@ -212,8 +214,12 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     }
 
     /**
+     * <p>
      * Build the instance of the ScopesHashModel, including JspTagLib support
-     * <p/>Objects added to the model are <p/>
+     * </p>
+     *
+     * <p>Objects added to the model are:</p>
+     *
      * <ul>
      * <li>Application - servlet context attributes hash model
      * <li>JspTaglibs - jsp tag lib factory model

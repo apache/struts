@@ -28,14 +28,14 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * This interceptor extends {@link ConversionErrorInterceptor} but only adds conversion errors from the ActionContext to
  * the field errors of the action if the field value is not null, "", or {""} (a size 1 String array with only an empty
  * String). See {@link ConversionErrorInterceptor} for more information, as well as the Type Conversion documentation.
- *
+ * </p>
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -47,14 +47,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
- *
+ * <p>
  * There are no known extension points for this interceptor.
- *
+ * </p>
  * <!-- END SNIPPET: extending -->
  *
  * <pre>

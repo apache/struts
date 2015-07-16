@@ -55,8 +55,8 @@ import java.io.Writer;
  * execution environment and then displays a Velocity template that will be
  * streamed directly to the servlet output.
  *
- * <!-- END SNIPPET: description --> <p/><b>This result type takes the
- * following parameters: </b>
+ * <!-- END SNIPPET: description -->
+ * <p><b>This result type takes the following parameters: </b></p>
  *
  * <!-- START SNIPPET: params -->
  *
@@ -75,7 +75,7 @@ import java.io.Writer;
  *
  * <!-- END SNIPPET: params -->
  *
- * <b>Example: </b>
+ * <p><b>Example: </b></p>
  *
  * <pre>
  * &lt;!-- START SNIPPET: example --&gt;
@@ -200,7 +200,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     }
 
     /**
-     * Retrieve the content type for this template. <p/>People can override
+     * Retrieve the content type for this template. <br>People can override
      * this method if they want to provide specific content types for specific
      * templates (eg text/xml).
      *
@@ -212,7 +212,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     }
 
     /**
-     * Retrieve the encoding for this template. <p/>People can override this
+     * Retrieve the encoding for this template. <br>People can override this
      * method if they want to provide specific encodings for specific templates.
      *
      * @return The encoding associated with this template (defaults to the value

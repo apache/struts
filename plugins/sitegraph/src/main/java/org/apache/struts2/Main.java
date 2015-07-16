@@ -33,14 +33,15 @@ import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Struts comes with various related tools included in the struts-core-VERSION.jar file. You can access these
  * tools by simply unpacking the Struts distribution and running <b>java -jar struts-core-VERSION.jar</b>.
  * Struts will automatically include all jars in the same directory as the struts-core-VERSION.jar file as well as all
  * jars in the <i>lib</i> directory. This means you can invoke these tools either from within the standard directory
  * structure found in the Struts distribution, or from within your WEB-INF/lib directory.
+ * </p>
  *
- * <p/> You can access the help information for these tools by simply running the jar without any arguments.
+ * <p>You can access the help information for these tools by simply running the jar without any arguments.</p>
  *
  * <!-- END SNIPPET: javadoc -->
  */

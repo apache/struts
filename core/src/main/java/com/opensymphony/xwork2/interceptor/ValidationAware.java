@@ -113,8 +113,6 @@ public interface ValidationAware {
 
     /**
      * Checks whether there are any action errors or field errors.
-     * <p/>
-     * <b>Note</b>: that this does not have the same meaning as in WW 1.x.
      *
      * @return <code>(hasActionErrors() || hasFieldErrors())</code>
      */

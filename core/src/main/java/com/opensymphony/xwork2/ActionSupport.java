@@ -162,10 +162,14 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
 
     /**
      * A default implementation that does nothing an returns "success".
-     * <p/>
+     *
+     * <p>
      * Subclasses should override this method to provide their business logic.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * See also {@link com.opensymphony.xwork2.Action#execute()}.
+     * </p>
      *
      * @return returns {@link #SUCCESS}
      * @throws Exception can be thrown by subclasses.
@@ -246,13 +250,16 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      * <!-- START SNIPPET: pause-method -->
      * Stops the action invocation immediately (by throwing a PauseException) and causes the action invocation to return
      * the specified result, such as {@link #SUCCESS}, {@link #INPUT}, etc.
-     * <p/>
-     * <p/>
+     *
+     * <p>
      * The next time this action is invoked (and using the same continuation ID), the method will resume immediately
      * after where this method was called, with the entire call stack in the execute method restored.
-     * <p/>
-     * <p/>
+     * </p>
+     *
+     * <p>
      * Note: this method can <b>only</b> be called within the {@link #execute()} method.
+     * </p>
+     *
      * <!-- END SNIPPET: pause-method -->
      *
      * @param result the result to return - the same type of return value in the {@link #execute()} method.

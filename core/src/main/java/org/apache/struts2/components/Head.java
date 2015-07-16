@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * Renders parts of the HEAD section for an HTML file. Encoding can be set using this tag.
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example1 -->

@@ -36,16 +36,17 @@ import java.util.Map;
  * <!-- START SNIPPET: description -->
  *
  * The aim of this Interceptor is to alias a named parameter to a different named parameter. By acting as the glue
- * between actions sharing similiar parameters (but with different names), it can help greatly with action chaining.
+ * between actions sharing similar parameters (but with different names), it can help greatly with action chaining.
  *
- * <p/>  Action's alias expressions should be in the form of  <code>#{ "name1" : "alias1", "name2" : "alias2" }</code>.
+ * <p>Action's alias expressions should be in the form of  <code>#{ "name1" : "alias1", "name2" : "alias2" }</code>.
  * This means that assuming an action (or something else in the stack) has a value for the expression named <i>name1</i> and the
  * action this interceptor is applied to has a setter named <i>alias1</i>, <i>alias1</i> will be set with the value from
  * <i>name1</i>.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -58,9 +59,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
@@ -68,7 +67,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -106,9 +105,13 @@ public class AliasInterceptor extends AbstractInterceptor {
     }
 
     /**
+     * <p>
      * Sets the name of the action parameter to look for the alias map.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * Default is <code>aliases</code>.
+     * </p>
      *
      * @param aliasesKey  the name of the action parameter
      */

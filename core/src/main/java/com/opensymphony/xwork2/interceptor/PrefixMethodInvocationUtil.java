@@ -23,16 +23,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * <p>
  * A utility class for invoking prefixed methods in action class.
  * 
  * Interceptors that made use of this class are:
+ * </p>
  * <ul>
  * 	 <li>DefaultWorkflowInterceptor</li>
  *   <li>PrepareInterceptor</li>
  * </ul>
- * 
- * <p/>
- * 
+ *  *
  * <!-- START SNIPPET: javadocDefaultWorkflowInterceptor -->
  * 
  * <b>In DefaultWorkflowInterceptor</b>
@@ -70,37 +70,45 @@ public class PrefixMethodInvocationUtil {
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
     /**
+	 * <p>
 	 * This method will prefix <code>actionInvocation</code>'s <code>ActionProxy</code>'s
 	 * <code>method</code> with <code>prefixes</code> before invoking the prefixed method.
 	 * Order of the <code>prefixes</code> is important, as this method will return once 
 	 * a prefixed method is found in the action class.
-	 * 
-	 * <p/>
-	 * 
+	 * </p>
+	 *
+	 * <p>
 	 * For example, with
+	 * </p>
+	 *
 	 * <pre>
 	 *   invokePrefixMethod(actionInvocation, new String[] { "prepare", "prepareDo" });
 	 * </pre>
-	 * 
+	 *
+	 * <p>
 	 * Assuming <code>actionInvocation.getProxy(),getMethod()</code> returns "submit", 
 	 * the order of invocation would be as follows:-
+	 * </p>
+	 *
 	 * <ol>
 	 *   <li>prepareSubmit()</li>
 	 *   <li>prepareDoSubmit()</li>
 	 * </ol>
-	 * 
+	 *
+	 * <p>
 	 * If <code>prepareSubmit()</code> exists, it will be invoked and this method 
 	 * will return, <code>prepareDoSubmit()</code> will NOT be invoked. 
-	 * 
-	 * <p/>
-	 * 
+	 * </p>
+	 *
+	 * <p>
 	 * On the other hand, if <code>prepareDoSubmit()</code> does not exists, and 
 	 * <code>prepareDoSubmit()</code> exists, it will be invoked.
-	 * 
-	 * <p/>
-	 * 
+	 * </p>
+	 *
+	 * <p>
 	 * If none of those two methods exists, nothing will be invoked.
-	 * 
+	 * </p>
+	 *
 	 * @param actionInvocation  the action invocation
 	 * @param prefixes  prefixes for method names
 	 * @throws InvocationTargetException is thrown if invocation of a method failed.

@@ -39,20 +39,17 @@ import org.apache.logging.log4j.LogManager;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Create a optgroup component which needs to resides within a select tag.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/>
- *
  * <!-- START SNIPPET: notice -->
- *
+ * <p>
  * This component is to be used within a  Select component.
+ * </p>
  *
  * <!-- END SNIPPET: notice -->
- *
- * <p/>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

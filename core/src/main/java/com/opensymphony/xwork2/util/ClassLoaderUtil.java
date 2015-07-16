@@ -24,10 +24,10 @@ import java.util.*;
 /**
  * This class is extremely useful for loading resources and classes in a fault tolerant manner
  * that works across different applications servers.
- * <p/>
+ * <p>
  * It has come out of many months of frustrating use of multiple application servers at Atlassian,
  * please don't change things unless you're sure they're not going to break in one server or another!
- *
+ * </p>
  */
 public class ClassLoaderUtil {
 
@@ -73,8 +73,10 @@ public class ClassLoaderUtil {
 
     /**
      * Load a given resource.
-     * <p/>
+     * <p>
      * This method will try to load the resource using the following methods (in order):
+     * </p>
+     *
      * <ul>
      * <li>From {@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}
      * <li>From {@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}
@@ -125,14 +127,19 @@ public class ClassLoaderUtil {
     }
 
     /**
+     * <p>
      * Load a class with a given name.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * It will try to load the class in the following order:
+     * </p>
+     *
      * <ul>
-     * <li>From {@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}
-     * <li>Using the basic {@link Class#forName(java.lang.String) }
-     * <li>From {@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}
-     * <li>From the {@link Class#getClassLoader() callingClass.getClassLoader() }
+     *  <li>From {@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}
+     *  <li>Using the basic {@link Class#forName(java.lang.String) }
+     *  <li>From {@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}
+     *  <li>From the {@link Class#getClassLoader() callingClass.getClassLoader() }
      * </ul>
      *
      * @param className    The name of the class to load

@@ -41,29 +41,33 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * This is designed to solve a few simple issues related to wizard-like functionality in Struts. One of those issues is
  * that some applications have a application-wide parameters commonly used, such <i>pageLen</i> (used for records per
  * page). Rather than requiring that each action check if such parameters are supplied, this interceptor can look for
  * specified parameters and pull them out of the session.
+ * </p>
  *
- * <p/> This works by setting listed properties at action start with values from session/application attributes keyed
+ * <p>This works by setting listed properties at action start with values from session/application attributes keyed
  * after the action's class, the action's name, or any supplied key. After action is executed all the listed properties
  * are taken back and put in session or application context.
+ * </p>
  *
- * <p/> To make sure that each execution of the action is consistent it makes use of session-level locking. This way it
+ * <p>To make sure that each execution of the action is consistent it makes use of session-level locking. This way it
  * guarantees that each action execution is atomic at the session level. It doesn't guarantee application level
  * consistency however there has yet to be enough reasons to do so. Application level consistency would also be a big
  * performance overkill.
+ * </p>
  *
- * <p/> Note that this interceptor takes a snapshot of action properties just before result is presented (using a {@link
+ * <p>Note that this interceptor takes a snapshot of action properties just before result is presented (using a {@link
  * PreResultListener}), rather than after action is invoked. There is a reason for that: At this moment we know that
  * action's state is "complete" as it's values may depend on the rest of the stack and specifically - on the values of
  * nested interceptors.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -110,17 +114,15 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
- * There are no know extension points for this interceptor.
+ * <p>There are no know extension points for this interceptor.</p>
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

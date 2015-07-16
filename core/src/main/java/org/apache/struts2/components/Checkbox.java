@@ -34,7 +34,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Renders an HTML input element of type checkbox, populated by the specified property from the ValueStack.
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

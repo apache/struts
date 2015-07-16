@@ -71,7 +71,7 @@ public class JSONEnumTest extends TestCase {
     }
 
     /**
-     * Asserts that a bean can be serialized to JSON and restored as a map <p/>
+     * Asserts that a bean can be serialized to JSON and restored as a map <br>
      * In this case, the name of the enum is in _name and the two properties of
      * AnEnumBean are also serialized
      */

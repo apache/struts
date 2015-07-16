@@ -26,9 +26,7 @@ import org.apache.commons.lang3.StringUtils;
  * characters.  The "trim" parameter determines whether it will {@link String#trim() trim} the
  * String before performing the length check.  If unspecified, the String will be trimmed.
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * <p/>
- * <p/>
+ *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
@@ -40,11 +38,11 @@ import org.apache.commons.lang3.StringUtils;
  * <li>trimExpression - (Optional) String. Defines th trim param as an OGNL expression</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
- * <p/>
+ *
  * <!-- START SNIPPET: parameters-warning -->
  * Do not use ${minLengthExpression}, ${maxLengthExpression} and ${trimExpression} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters-warning -->
- * <p/>
+ *
  * <pre>
  * <!--START SNIPPET: example -->
  * &lt;validators&gt;
@@ -83,7 +81,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author Jason Carreira
  * @author Mark Woon
  * @author tmjee
- * @version $Date$ $Id$
  */
 public class StringLengthFieldValidator extends FieldValidatorSupport {
 

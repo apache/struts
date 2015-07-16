@@ -39,11 +39,11 @@ import java.util.TreeMap;
  * implements {@link Parameterizable}, a map of the static parameters will be also be passed directly to the action.
  * The static params will be added to the request params map, unless "merge" is set to false.
  *
- * <p/> Parameters are typically defined with &lt;param&gt; elements within xwork.xml.
+ * <p> Parameters are typically defined with &lt;param&gt; elements within xwork.xml.</p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -55,15 +55,15 @@ import java.util.TreeMap;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
- * <p/>There are no extension points to this interceptor.
+ * <p>There are no extension points to this interceptor.</p>
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p> <u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

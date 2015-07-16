@@ -26,15 +26,16 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * Watches for {@link ModelDriven} actions and adds the action's model on to the value stack.
  *
- * <p/> <b>Note:</b>  The ModelDrivenInterceptor must come before the both {@link StaticParametersInterceptor} and
+ * <p> <b>Note:</b>  The ModelDrivenInterceptor must come before the both {@link StaticParametersInterceptor} and
  * {@link ParametersInterceptor} if you want the parameters to be applied to the model.
- * 
- * <p/> <b>Note:</b>  The ModelDrivenInterceptor will only push the model into the stack when the
+ * </p>
+ * <p> <b>Note:</b>  The ModelDrivenInterceptor will only push the model into the stack when the
  * model is not null, else it will be ignored.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -49,9 +50,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
@@ -59,14 +58,14 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="modelDriven"/&gt;
- *     &lt;interceptor-ref name="basicStack"/&gt;
- *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
+ * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;modelDriven&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;basicStack&quot;/&gt;
+ *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
  * <!-- END SNIPPET: example -->
  * </pre>

@@ -32,29 +32,31 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * This interceptor extends the original xwork i18n interceptor
  * and adds functionality to support cookies.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
  * <!-- START SNIPPET: parameters -->
-  * <p/>
+  *
   * <ul>
-  * <p/>
+  *
   * <li>parameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to and save
   * in the session. By default this is <b>request_locale</b></li>
-  * <p/>
+  *
   * <li>requestCookieParameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to
   * and save in a cookien. By default this is <b>request_cookie_locale</b></li>
-  * <p/>
+  *
   * <li>requestOnlyParameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to
   * for the current request only, without saving it in the session. By default this is <b>request_only_locale</b></li>
-  * <p/>
+  *
   * <li>attributeName (optional) - the name of the session key to store the selected locale. By default this is
   * <b>WW_TRANS_I18N_LOCALE</b></li>
-  * <p/>
+  *
   * </ul>
-  * <p/>
+  *
   * <!-- END SNIPPET: parameters -->
   *
   * <!-- START SNIPPET: example -->

@@ -32,14 +32,14 @@ import java.io.OutputStream;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * A custom Result type for sending raw data (via an InputStream) directly to the
  * HttpServletResponse. Very useful for allowing users to download content.
- *
+ * </p>
  * <!-- END SNIPPET: description -->
- * <p/>
+ * <p>
  * <b>This result type takes the following parameters:</b>
- *
+ * </p>
  * <!-- START SNIPPET: params -->
  *
  * <ul>
@@ -73,8 +73,9 @@ import java.io.OutputStream;
  * provide <code>getContentType()</code> to override that parameter for the current action.</p>
  *
  * <!-- END SNIPPET: params -->
- *
+ * <p>
  * <b>Example:</b>
+ * </p>
  *
  * <pre><!-- START SNIPPET: example -->
  * &lt;result name="success" type="stream"&gt;

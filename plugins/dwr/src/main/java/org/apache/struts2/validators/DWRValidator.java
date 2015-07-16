@@ -46,8 +46,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
- * <p/>
- * Use the dwr configuration as follows :-
+ * <p>
+ * Use the dwr configuration as follows:
+ * </p>
  *
  * <pre>
  * <!-- START SNIPPET: dwrConfiguration -->

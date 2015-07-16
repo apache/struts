@@ -39,13 +39,14 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * <p/>
+ * <p>
  * A tag that creates a HTML &lt;a &gt;.This tag supports the same attributes as the "url" tag,
- * including nested parameters using the "param" tag.<p/>
+ * including nested parameters using the "param" tag.
+ * </p>
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * <p/> <b>Examples</b>
- * <p/>
+ *
+ * <p><b>Examples</b></p>
+ *
  * <pre>
  * <!-- START SNIPPET: example1 -->
  * &lt;s:a id="link1" href="/do-it.action"&gt;

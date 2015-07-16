@@ -32,14 +32,17 @@ import java.util.Set;
 
 /**
  * A Map that holds 4 levels of scope.
- * <p/>
- * The scopes are the ones known in the web world.:
+ * <p>
+ * The scopes are the ones known in the web world:
+ * </p>
+ *
  * <ul>
  *   <li>Page scope</li>
  *   <li>Request scope</li>
  *   <li>Session scope</li>
  *   <li>Application scope</li>
  * </ul>
+ *
  * A object is searched in the order above, starting from page and ending at application scope.
  *
  */

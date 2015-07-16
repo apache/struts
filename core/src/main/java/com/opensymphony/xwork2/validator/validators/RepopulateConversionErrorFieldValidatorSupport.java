@@ -28,33 +28,30 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *
- *
+ * <p>
  * An abstract base class that adds in the capability to populate the stack with
  * a fake parameter map when a conversion error has occurred and the 'repopulateField'
  * property is set to "true".
- *
- * <p/>
- *
+ * </p>
  *
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * The capability of auto-repopulating the stack with a fake parameter map when
  * a conversion error has occurred can be done with 'repopulateField' property
  * set to "true".
+ * </p>
  *
- * <p/>
- *
- * This is typically usefull when one wants to repopulate the field with the original value
+ * <p>
+ * This is typically useful when one wants to repopulate the field with the original value
  * when a conversion error occurred. Eg. with a textfield that only allows an Integer
  * (the action class have an Integer field declared), upon conversion error, the incorrectly
  * entered integer (maybe a text 'one') will not appear when dispatched back. With 'repopulateField'
- * porperty set to true, it will, meaning the textfield will have 'one' as its value
+ * property set to true, it will, meaning the textfield will have 'one' as its value
  * upon conversion error.
+ * </p>
  *
  * <!-- END SNIPPET: javadoc -->
- *
- * <p/>
+
  *
  * <pre>
  * <!-- START SNIPPET: exampleJspPage -->
@@ -130,7 +127,6 @@ import java.util.Map;
  * </pre>
  *
  * @author tm_jee
- * @version $Date$ $Id$
  */
 public abstract class RepopulateConversionErrorFieldValidatorSupport extends FieldValidatorSupport {
 

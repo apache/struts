@@ -45,18 +45,23 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.WildcardUtil;
 
 /**
- * <!-- START SNIPPET: description --> <p/> This result serializes an action
- * into JSON. <p/> <!-- END SNIPPET: description --> <p/> <p/> <u>Result
- * parameters:</u> <p/> <!-- START SNIPPET: parameters --> <p/>
+ * <!-- START SNIPPET: description -->
+ * <p>
+ * This result serializes an action into JSON.
+ * </p>
+ * <!-- END SNIPPET: description -->
+ * <p><u>Result parameters:</u></p>
+ * <!-- START SNIPPET: parameters -->
  * <ul>
- * <p/>
+ *
  * <li>excludeProperties - list of regular expressions matching the properties
  * to be excluded. The regular expressions are evaluated against the OGNL
  * expression representation of the properties. </li>
- * <p/>
+ *
  * </ul>
- * <p/> <!-- END SNIPPET: parameters --> <p/> <b>Example:</b> <p/>
- * <p/>
+ * <!-- END SNIPPET: parameters -->
+ * <p><b>Example:</b></p>
+ *
  * <pre>
  * &lt;!-- START SNIPPET: example --&gt;
  * &lt;result name=&quot;success&quot; type=&quot;json&quot; /&gt;
@@ -236,7 +241,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Retrieve the encoding <p/>
+     * Retrieve the encoding
      *
      * @return The encoding associated with this template (defaults to the value
      *         of param 'encoding', if empty default to 'struts.i18n.encoding' property)

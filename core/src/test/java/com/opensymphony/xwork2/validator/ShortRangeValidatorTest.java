@@ -27,11 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * ShortRangeValidatorTest
- * <p/>
- *
- */
 public class ShortRangeValidatorTest extends XWorkTestCase {
 
     public void testRangeValidation() {

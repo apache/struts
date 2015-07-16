@@ -144,8 +144,9 @@ public class StrutsUtil {
 
     /**
      * the selectedList objects are matched to the list.listValue
-     * <p/>
+     * <p>
      * listKey and listValue are optional, and if not provided, the list item is used
+     * </p>
      *
      * @param selectedList the name of the action property
      *                     that contains the list of selected items

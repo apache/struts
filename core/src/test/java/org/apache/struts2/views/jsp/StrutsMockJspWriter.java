@@ -28,10 +28,11 @@ import javax.servlet.jsp.JspWriter;
 
 
 /**
- * Unforunately, the MockJspWriter throws a NotImplementedException when any of the Writer methods are invoked and
+ * <p>
+ * Unfortunately, the MockJspWriter throws a NotImplementedException when any of the Writer methods are invoked and
  * as you might guess, Velocity uses the Writer methods.  I'velocityEngine subclassed the MockJspWriter for the time being so
  * that we can do testing on the results until MockJspWriter gets fully implemented.
- * <p/>
+ * </p>
  * todo replace this once MockJspWriter implements Writer correctly (i.e. doesn't throw NotImplementException)
  */
 public class StrutsMockJspWriter extends JspWriter {

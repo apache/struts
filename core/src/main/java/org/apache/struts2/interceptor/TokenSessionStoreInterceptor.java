@@ -37,23 +37,24 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * This interceptor builds off of the {@link TokenInterceptor}, providing advanced logic for handling invalid tokens.
  * Unlike the normal token interceptor, this interceptor will attempt to provide intelligent fail-over in the event of
  * multiple requests using the same session. That is, it will block subsequent requests until the first request is
  * complete, and then instead of returning the <i>invalid.token</i> code, it will attempt to display the same response
  * that the original, valid action invocation would have displayed if no multiple requests were submitted in the first
  * place.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * <b>NOTE:</b> As this method extends off MethodFilterInterceptor, it is capable of
  * deciding if it is applicable only to selective methods in the action class. See
  * <code>MethodFilterInterceptor</code> for more info.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -65,17 +66,15 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
- *
+ * <p>
  * There are no known extension points for this interceptor.
- *
+ * </p>
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

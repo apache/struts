@@ -40,14 +40,17 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * Includes or forwards to a view (usually a jsp). Behind the scenes Struts
  * will use a RequestDispatcher, where the target servlet/JSP receives the same
  * request/response objects as the original servlet/JSP. Therefore, you can pass
  * data between them using request.setAttribute() - the Struts action is
  * available.
- * <p/>
+ * </p>
+ *
+ * <p>
  * There are three possible ways the result can be executed:
+ * </p>
  *
  * <ul>
  *
@@ -65,7 +68,7 @@ import java.util.Map;
  * </ul>
  * <!-- END SNIPPET: description -->
  *
- * <b>This result type takes the following parameters:</b>
+ * <p><b>This result type takes the following parameters:</b></p>
  *
  * <!-- START SNIPPET: params -->
  *
@@ -79,7 +82,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: params -->
  *
- * <b>Example:</b>
+ * <p><b>Example:</b></p>
  *
  * <pre><!-- START SNIPPET: example -->
  * &lt;result name="success" type="dispatcher"&gt;
@@ -87,7 +90,9 @@ import java.util.Map;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
+ * <p>
  * This result follows the same rules from {@link StrutsResultSupport}.
+ * </p>
  *
  * @see javax.servlet.RequestDispatcher
  */

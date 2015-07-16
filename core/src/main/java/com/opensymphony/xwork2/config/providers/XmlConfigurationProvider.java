@@ -599,9 +599,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
+     * <p>
      * This method builds a package context by looking for the parents of this new package.
-     * <p/>
+     * </p>
+     * <p>
      * If no parents are found, it will return a root package.
+     * </p>
      */
     protected PackageConfig.Builder buildPackageContext(Element packageElement) {
         String parent = packageElement.getAttribute("extends");

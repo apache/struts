@@ -64,9 +64,14 @@ public class TemplateEngineManager {
     }
     
     /**
+     * <p>
      * Registers the given template engine.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * Will add the engine to the existing list of known engines.
+     * </p>
+     *
      * @param templateExtension  filename extension (eg. .jsp, .ftl, .vm).
      * @param templateEngine     the engine.
      */
@@ -79,11 +84,13 @@ public class TemplateEngineManager {
     }
 
     /**
+     * <p>
      * Gets the TemplateEngine for the template name. If the template name has an extension (for instance foo.jsp), then
      * this extension will be used to look up the appropriate TemplateEngine. If it does not have an extension, it will
      * look for a Configuration setting "struts.ui.templateSuffix" for the extension, and if that is not set, it
      * will fall back to "ftl" as the default.
-     *
+     * </p>
+     * 
      * @param template               Template used to determine which TemplateEngine to return
      * @param templateTypeOverride Overrides the default template type
      * @return the engine.

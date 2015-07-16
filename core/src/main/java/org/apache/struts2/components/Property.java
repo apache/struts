@@ -33,14 +33,11 @@ import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Used to get the property of a <i>value</i>, which will default to the top of
  * the stack if none is specified.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
- *
- * <p/>
- *
  *
  * <!-- START SNIPPET: params -->
  *
@@ -69,10 +66,10 @@ import java.io.Writer;
  *
  * <pre>
  * <!-- START SNIPPET: exampledescription -->
- *
+ * <p>
  * Example 1 prints the result of myBean's getMyBeanProperty() method.
  * Example 2 prints the result of myBean's getMyBeanProperty() method and if it is null, print 'a default value' instead.
- *
+ * </p>
  * <!-- END SNIPPET: exampledescription -->
  * </pre>
  *

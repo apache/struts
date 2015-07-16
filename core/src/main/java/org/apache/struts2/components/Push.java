@@ -40,7 +40,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: params -->
  *
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  * <pre>
  * <!-- START SNIPPET: example1 -->
  * &lt;s:push value="user"&gt;

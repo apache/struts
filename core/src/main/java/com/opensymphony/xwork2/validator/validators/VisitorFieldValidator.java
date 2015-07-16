@@ -28,14 +28,17 @@ import java.util.Collection;
 
 /**
  * <!-- START SNIPPET: javadoc -->
+ *
+ * <p>
  * The VisitorFieldValidator allows you to forward validation to object
  * properties of your action using the object's own validation files.  This
  * allows you to use the ModelDriven development pattern and manage your
  * validations for your models in one place, where they belong, next to your
  * model classes.  The VisitorFieldValidator can handle either simple Object
  * properties, Collections of Objects, or Arrays.
+ * </p>
+ *
  * <!-- END SNIPPET: javadoc -->
- * <p/>
  *
  * <!-- START SNIPPET: parameters -->
  * <ul>
@@ -75,7 +78,6 @@ import java.util.Collection;
  *
  * @author Jason Carreira
  * @author Rainer Hermanns
- * @version $Date$ $Id$
  */
 public class VisitorFieldValidator extends FieldValidatorSupport {
 

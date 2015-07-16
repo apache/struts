@@ -1,17 +1,21 @@
 /**
  * Copyright (C) 2006 Google Inc.
- * <p/>
+ *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * </p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * </p>
  */
 
 package com.opensymphony.xwork2.inject.util;
@@ -37,7 +41,7 @@ import static com.opensymphony.xwork2.inject.util.ReferenceType.STRONG;
  * after keys and values at any time can lead to some racy semantics. For
  * example, {@link #size()} returns an upper bound on the size, i.e. the actual
  * size may be smaller in cases where the key or value has been reclaimed but
- * the map entry has not been cleaned up yet.
+ * the map entry has not been cleaned up yet.</p>
  *
  * <p>Another example: If {@link #get(Object)} cannot find an existing entry
  * for a key, it will try to create one. This operation is not atomic. One
@@ -45,9 +49,9 @@ import static com.opensymphony.xwork2.inject.util.ReferenceType.STRONG;
  * thread running {@code get()} checks for an entry and decides to create one.
  * In this case, the newly created value will replace the put value in the
  * map. Also, two threads running {@code get()} concurrently can potentially
- * create duplicate values for a given key.
+ * create duplicate values for a given key.</p>
  *
- * <p>In other words, this class is great for caching but not atomicity.
+ * <p>In other words, this class is great for caching but not atomicity.</p>
  *
  * @author crazybob@google.com (Bob Lee)
  */

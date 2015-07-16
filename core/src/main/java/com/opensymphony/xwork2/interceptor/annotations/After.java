@@ -26,14 +26,14 @@ import java.lang.annotation.Target;
  * executed. Return value is ignored.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
  * The After annotation can be applied at method level.
  *
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -52,7 +52,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

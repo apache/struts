@@ -420,10 +420,10 @@ public class JSONUtil {
 
     /**
      * Visit all the interfaces realized by the specified object, its
-     * superclasses and its interfaces <p/> Visitation is performed in the
+     * superclasses and its interfaces <br> Visitation is performed in the
      * following order: aClass aClass' interfaces the interface's superclasses
      * (interfaces) aClass' superclass superclass' interfaces superclass'
-     * interface's superclasses (interfaces) super-superclass and so on <p/> The
+     * interface's superclasses (interfaces) super-superclass and so on <br> The
      * Object base class is base excluded. Classes/interfaces are only visited
      * once each
      *
@@ -443,7 +443,7 @@ public class JSONUtil {
     /**
      * Recursive method to visit all the interfaces of a class (and its
      * superclasses and super-interfaces) if they haven't already been visited.
-     * <p/> Always visits itself if it hasn't already been visited
+     * <br> Always visits itself if it hasn't already been visited
      *
      * @param thisClass
      *            the current class to visit (if not already done so)

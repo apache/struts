@@ -37,26 +37,25 @@ import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
+ * <p>
  * Render a I18n text message.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * The message must be in a resource bundle
  * with the same name as the action that it is associated with. In practice
  * this means that you should create a properties file in the same package
  * as your Java class with the same name as your class, but with .properties
  * extension.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * If the named message is not found in a property file, then the body of the
  * tag will be used as default message. If no body is used, then the stack will
  * be searched, and if a value is returned, it will written to the output.
  * If no value is found on the stack, the key of the message will be written out.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
- *
- *
  *
  * <!-- START SNIPPET: params -->
  *
@@ -66,9 +65,10 @@ import java.util.List;
  *
  * <!-- END SNIPPET: params -->
  *
- * <p/>
- *
+ * <p>
  * Example:
+ * </p>
+ *
  * <pre>
  * <!-- START SNIPPET: exdescription -->
  *

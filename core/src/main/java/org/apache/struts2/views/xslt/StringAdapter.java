@@ -57,13 +57,17 @@ public class StringAdapter extends AbstractAdapterElement {
     }
 
     /**
+     * <p>
      * Get the object to be adapted as a String value.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * This method can be overridden by subclasses that wish to use StringAdapter
      * as a simplified customizable XML adapter for Java types. A subclass can
      * enable parsing of the value string as containing XML text via the
      * setParseStringAsXML() method and then override getStringValue() to return a
      * String containing the custom formatted XML.
+     * </p>
      */
     protected String getStringValue() {
         return getPropertyValue().toString();

@@ -31,81 +31,86 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * A timer stack.
- * <p/>
- * <p/>
- * <p/>
+ * <p>A timer stack.</p>
  * <!-- START SNIPPET: profilingAspect_struts2 -->
- * <p/>
- * Struts2 profiling aspects involves the following :-
+ * <p>
+ * Struts2 profiling aspects involves the following:
+ * </p>
+ *
  * <ul>
- * <li>ActionContextCleanUp</li>
- * <li>FreemarkerPageFilter</li>
- * <li>DispatcherFilter</li>
- * <ul>
- * <li>Dispatcher</li>
- * <ul>
- * <li>creation of DefaultActionProxy</li>
- * <ul>
- * <li>creation of DefaultActionInvocation</li>
- * <ul>
- * <li>creation of Action</li>
+ *  <li>ActionContextCleanUp</li>
+ *  <li>FreemarkerPageFilter</li>
+ *  <li>DispatcherFilter
+ *      <ul>
+ *          <li>Dispatcher
+ *              <ul>
+ *                  <li>creation of DefaultActionProxy
+ *                      <ul>
+ *                          <li>creation of DefaultActionInvocation
+ *                              <ul>
+ *                                  <li>creation of Action</li>
+ *                              </ul>
+ *                          </li>
+ *                      </ul>
+ *                  </li>
+ *                  <li>execution of DefaultActionProxy
+ *                      <ul>
+ *                          <li>invocation of DefaultActionInvocation
+ *                              <ul>
+ *                                  <li>invocation of Interceptors</li>
+ *                                  <li>invocation of Action</li>
+ *                                  <li>invocation of PreResultListener</li>
+ *                                  <li>invocation of Result</li>
+ *                              </ul>
+ *                          </li>
+ *                      </ul>
+ *                  </li>
+ *              </ul>
+ *          </li>
+ *      </ul>
+ *  </li>
  * </ul>
- * </ul>
- * <li>execution of DefaultActionProxy</li>
- * <ul>
- * <li>invocation of DefaultActionInvocation</li>
- * <ul>
- * <li>invocation of Interceptors</li>
- * <li>invocation of Action</li>
- * <li>invocation of PreResultListener</li>
- * <li>invocation of Result</li>
- * </ul>
- * </ul>
- * </ul>
- * </ul>
- * </ul>
- * <p/>
+ *
  * <!-- END SNIPPET: profilingAspect_struts2 -->
- * <p/>
- * <p/>
+ *
+ *
  * <!-- START SNIPPET: profilingAspect_xwork -->
- * <p/>
- * XWork2 profiling aspects involves the following :-
+ * <p>
+ * XWork2 profiling aspects involves the following:
+ * </p>
+ *
  * <ul>
- * <ul>
- * <li>creation of DefaultActionProxy</li>
- * <ul>
- * <li>creation of DefaultActionInvocation</li>
- * <ul>
- * <li>creation of Action</li>
+ *  <li>creation of DefaultActionProxy
+ *      <ul>
+ *          <li>creation of DefaultActionInvocation</li>
+ *      <ul>
+ *  </li>
+ *  <li>creation of Action</li>
+ *  <li>execution of DefaultActionProxy</li>
+ *      <ul>
+ *          <li>invocation of DefaultActionInvocation
+ *              <ul>
+ *                  <li>invocation of Interceptors</li>
+ *                  <li>invocation of Action</li>
+ *                  <li>invocation of PreResultListener</li>
+ *                  <li>invocation of Result</li>
+ *              </ul>
+ *          </li>
+ *      </ul>
  * </ul>
- * </ul>
- * <li>execution of DefaultActionProxy</li>
- * <ul>
- * <li>invocation of DefaultActionInvocation</li>
- * <ul>
- * <li>invocation of Interceptors</li>
- * <li>invocation of Action</li>
- * <li>invocation of PreResultListener</li>
- * <li>invocation of Result</li>
- * </ul>
- * </ul>
- * </ul>
- * </ul>
- * <p/>
+ *
  * <!-- END SNIPPET: profilingAspect_xwork -->
- * <p/>
- * <p/>
+ *
+ *
  * <!-- START SNIPPET: activationDescription -->
- * <p/>
- * Activating / Deactivating of the profiling feature could be done through:-
- * <p/>
+ * <p>
+ * Activating / Deactivating of the profiling feature could be done through:
+ * </p>
  * <!-- END SNIPPET: activationDescription -->
- * <p/>
- * <p/>
- * <p/>
- * System properties:- <p/>
+ *
+ *
+ *
+ * <p>System properties:</p>
  * <pre>
  * <!-- START SNIPPET: activationThroughSystemProperty -->
  *
@@ -113,16 +118,16 @@ import org.apache.logging.log4j.Logger;
  *
  * <!-- END SNIPPET: activationThroughSystemProperty -->
  * </pre>
- * <p/>
+ *
  * <!-- START SNIPPET: activationThroughSystemPropertyDescription -->
- * <p/>
+ * <p>
  * This could be done in the container startup script eg. CATALINA_OPTS in catalina.sh
- * (tomcat) or using "java -Dxwork.profile.activate=true -jar start.jar" (jetty)
- * <p/>
+ * (tomcat) or using 'java -Dxwork.profile.activate=true -jar start.jar' (jetty)
+ * </p>
  * <!-- END SNIPPET: activationThroughSystemPropertyDescription -->
- * <p/>
- * <p/>
- * Code :- <p/>
+ *
+ *
+ * <p>Code :</p>
  * <pre>
  * <!-- START SNIPPET: activationThroughCode -->
  *
@@ -130,27 +135,25 @@ import org.apache.logging.log4j.Logger;
  *
  * <!-- END SNIPPET: activationThroughCode -->
  * </pre>
- * <p/>
- * <p/>
- * <p/>
  * <!-- START SNIPPET: activationThroughCodeDescription -->
- * <p/>
- * This could be done in a static block, in a Spring bean with lazy-init="false",
+ * <p>
+ * This could be done in a static block, in a Spring bean with lazy-init='false',
  * in a Servlet with init-on-startup as some numeric value, in a Filter or
  * Listener's init method etc.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: activationThroughCodeDescription -->
- * <p/>
- * <p/>
- * Parameter:-
- * <p/>
+ *
+ * <p>
+ * Parameter:
+ * </p>
+ *
  * <pre>
  * <!-- START SNIPPET: activationThroughParameter -->
  *
  * &lt;action ... &gt;
  *  ...
- *  &lt;interceptor-ref name="profiling"&gt;
- *      &lt;param name="profilingKey"&gt;profiling&lt;/param&gt;
+ *  &lt;interceptor-ref name=&quot;profiling&quot;&gt;
+ *      &lt;param name=&quot;profilingKey&quot;&gt;profiling&lt;/param&gt;
  *  &lt;/interceptor-ref&gt;
  *  ...
  * &lt;/action&gt;
@@ -159,7 +162,7 @@ import org.apache.logging.log4j.Logger;
  *
  * &lt;action .... &gt;
  * ...
- *  &lt;interceptor-ref name="profiling" /&gt;
+ *  &lt;interceptor-ref name=&quot;profiling&quot; /&gt;
  * ...
  * &lt;/action&gt;
  *
@@ -169,44 +172,44 @@ import org.apache.logging.log4j.Logger;
  *
  * through code
  *
- * ActionContext.getContext().getParameters().put("profiling", "true);
+ * ActionContext.getContext().getParameters().put(&quot;profiling&quot;, &quot;true);
  *
  * <!-- END SNIPPET: activationThroughParameter -->
  * </pre>
- * <p/>
- * <p/>
+ *
+ *
  * <!-- START SNIPPET: activationThroughParameterDescription -->
- * <p/>
+ * <p>
  * To use profiling activation through parameter, one will need to pass in through
  * the 'profiling' parameter (which is the default) and could be changed through
  * the param tag in the interceptor-ref.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: activationThroughParameterDescription -->
- * <p/>
- * <p/>
- * Warning:<p/>
+ *
+ * <p>Warning:</p>
+ *
  * <!-- START SNIPPET: activationThroughParameterWarning -->
- * <p/>
+ * <p>
  * Profiling activation through a parameter requires the following:
- * <p/>
+ * </p>
+ *
  * <ul>
  * <li>Profiling interceptor in interceptor stack</li>
  * <li>dev mode on (struts.devMode=true in struts.properties)
  * </ul>
- * <p/>
+ *
  * <!-- END SNIPPET: activationThroughParameterWarning -->
- * <p/>
- * <p/>
- * <p/>
+ *
  * <!-- START SNIPPET: filteringDescription -->
- * <p/>
+ * <p>
  * One could filter out the profile logging by having a System property as follows. With this
  * 'xwork.profile.mintime' property, one could only log profile information when its execution time
  * exceed those specified in 'xwork.profile.mintime' system property. If no such property is specified,
  * it will be assumed to be 0, hence all profile information will be logged.
- * <p/>
+ * </p>
+ *
  * <!-- END SNIPPET: filteringDescription -->
- * <p/>
+ *
  * <pre>
  * <!-- START SNIPPET: filteringCode -->
  *
@@ -214,17 +217,17 @@ import org.apache.logging.log4j.Logger;
  *
  * <!-- END SNIPPET: filteringCode -->
  * </pre>
- * <p/>
+ *
  * <!-- START SNIPPET: methodDescription -->
- * <p/>
+ * <p>
  * One could extend the profiling feature provided by Struts2 in their web application as well.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: methodDescription -->
- * <p/>
+ *
  * <pre>
  * <!-- START SNIPPET: method1 -->
  *
- *    String logMessage = "Log message";
+ *    String logMessage = &quot;Log message&quot;;
  *    UtilTimerStack.push(logMessage);
  *    try {
  *        // do some code
@@ -235,34 +238,33 @@ import org.apache.logging.log4j.Logger;
  *
  * <!-- END SNIPPET: method1 -->
  * </pre>
- * <p/>
+ * <p>
  * or
- * <p/>
+ * </p>
  * <pre>
  * <!-- START SNIPPET: method2 -->
  *
- *   String result = UtilTimerStack.profile("purchaseItem: ",
+ *   String result = UtilTimerStack.profile(&quot;purchaseItem: &quot;,
  *       new UtilTimerStack.ProfilingBlock<String>() {
  *            public String doProfiling() {
  *               // do some code
- *               return "Ok";
+ *               return &quot;Ok&quot;;
  *            }
  *       });
  *
  * <!-- END SNIPPET: method2 -->
  * </pre>
- * <p/>
- * <p/>
+ *
+ *
  * <!-- START SNIPPET: profileLogFile -->
- * <p/>
+ * <p>
  * Profiled result is logged using commons-logging under the logger named
  * 'com.opensymphony.xwork2.util.profiling.UtilTimerStack'. Depending on the underlying logging implementation
  * say if it is Log4j, one could direct the log to appear in a different file, being emailed to someone or have
  * it stored in the db.
- * <p/>
- * <!-- END SNIPPET: profileLogFile -->
+ * </p>
  *
- * @version $Date$ $Id$
+ * <!-- END SNIPPET: profileLogFile -->
  */
 public class UtilTimerStack {
 
@@ -270,8 +272,8 @@ public class UtilTimerStack {
     protected static ThreadLocal<ProfilingTimerBean> current = new ThreadLocal<>();
 
     /**
-     * System property that controls whether this timer should be used or not.  Set to "true" activates
-     * the timer.  Set to "false" to disactivate.
+     * System property that controls whether this timer should be used or not.  Set to &quot;true&quot; activates
+     * the timer.  Set to &quot;false&quot; to deactivate.
      */
     public static final String ACTIVATE_PROPERTY = "xwork.profile.activate";
 
@@ -400,13 +402,16 @@ public class UtilTimerStack {
 
 
     /**
+     * <p>
      * A convenience method that allows <code>block</code> of code subjected to profiling to be executed
      * and avoid the need of coding boiler code that does pushing (UtilTimeBean.push(...)) and
      * poping (UtilTimerBean.pop(...)) in a try ... finally ... block.
-     * <p/>
-     * <p/>
-     * <p/>
+     * </p>
+     *
+     * <p>
      * Example of usage:
+     * </p>
+     *
      * <pre>
      * 	 // we need a returning result
      *   String result = UtilTimerStack.profile("purchaseItem: ",
@@ -417,7 +422,9 @@ public class UtilTimerStack {
      *            }
      *       });
      * </pre>
+     *
      * or
+     *
      * <pre>
      *   // we don't need a returning result
      *   UtilTimerStack.profile("purchaseItem: ",

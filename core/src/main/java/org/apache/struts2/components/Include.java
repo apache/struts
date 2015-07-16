@@ -60,7 +60,7 @@ import java.util.*;
  * <!-- END SNIPPET: params -->
  *
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;-- One: --&gt;
@@ -313,15 +313,19 @@ public class Include extends Component {
 
 
     /**
+     * <p>
      * Simple wrapper to HTTPServletResponse that will allow getWriter()
      * and getResponse() to be called as many times as needed without
      * causing conflicts.
-     * <p/>
+     * </p>
+     * <p>
      * The underlying outputStream is a wrapper around
      * {@link PageOutputStream} which will store
      * the written content to a buffer.
-     * <p/>
+     * </p>
+     * <p>
      * This buffer can later be retrieved by calling {@link #getContent}.
+     * </p>
      *
      * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
      * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>

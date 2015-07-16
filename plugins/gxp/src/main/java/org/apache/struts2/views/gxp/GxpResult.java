@@ -29,19 +29,21 @@ import com.opensymphony.xwork2.inject.Inject;
 import java.io.IOException;
 
 /**
+ * <p>
  * Struts 2 GXP result type implementation. Outputs GXP. Pulls GXP parameters
  * from Struts 2's value stack.
- * <p/>
+ * </p>
+ *
  * <p>Declare the GXP result type for your package in the xwork.xml file:</p>
- * <p/>
+ *
  * <pre>
  *     &lt;result-types>
  *       &lt;result-type name="gxp" class="org.apache.struts2.views.gxp.GxpResult"/>
  *     &lt;/result-types>
  * </pre>
- * <p/>
+ *
  * <p>Or if you want to output XML instead of HTML:</p>
- * <p/>
+ *
  * <pre>
  *     &lt;result-types>
  *       &lt;result-type name="gxp" class="org.apache.struts2.views.gxp.GxpResult">
@@ -49,13 +51,13 @@ import java.io.IOException;
  *       &lt;/result-type>
  *     &lt;/result-types>
  * </pre>
- * <p/>
+ *
  * <p>Outputting XML changes the content type from text/html to application/xml
  * and configures the {@link GxpContext} to output XML. This is useful in
  * situations like specifying the doctype of your GXP to be 'mobile'.</p>
- * <p/>
+ *
  * <p>Use the GXP result type for the result of an action. For example:</p>
- * <p/>
+ *
  * <pre>
  *   &lt;result name="success" type="gxp">/myPackage/MyGxp.gxp&lt;/result>
  * </pre>

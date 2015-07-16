@@ -20,8 +20,11 @@ import java.io.Serializable;
 
 /**
  * All results (except for <code>Action.NONE</code>) of an {@link Action} are mapped to a View implementation.
- * <p/>
+ *
+ * <p>
  * Examples of Views might be:
+ * </p>
+ *
  * <ul>
  * <li>SwingPanelView - pops up a new Swing panel</li>
  * <li>ActionChainView - executes another action</li>

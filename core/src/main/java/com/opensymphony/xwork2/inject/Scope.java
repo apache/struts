@@ -64,17 +64,21 @@ public enum Scope {
     },
 
     /**
+     * <p>
      * One instance per thread.
-     * <p/>
-     * <p><b>Note:</b> if a thread local object strongly references its {@link
+     * </p>
+     *
+     * <p>
+     * <b>Note:</b> if a thread local object strongly references its {@link
      * Container}, neither the {@code Container} nor the object will be
      * eligible for garbage collection, i.e. memory leak.
+     * </p>
      */
     THREAD {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(Class<T> type, String name, final InternalFactory<? extends T> factory) {
             return new InternalFactory<T>() {
-                final ThreadLocal<T> threadLocal = new ThreadLocal<T>();
+                final ThreadLocal<T> threadLocal = new ThreadLocal<>();
 
                 public T create(final InternalContext context) {
                     T t = threadLocal.get();

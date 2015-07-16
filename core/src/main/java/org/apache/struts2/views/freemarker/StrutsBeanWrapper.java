@@ -36,17 +36,18 @@ import freemarker.template.TemplateModel;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * The StrutsBeanWrapper extends the default FreeMarker BeansWrapper and provides almost no change in functionality,
  * <b>except</b> for how it handles maps. Normally, FreeMarker has two modes of operation: either support for friendly
  * map built-ins (?keys, ?values, etc) but only support for String keys; OR no special built-in support (ie: ?keys
  * returns the methods on the map instead of the keys) but support for String and non-String keys alike. Struts
  * provides an alternative implementation that gives us the best of both worlds.
+ * </p>
  *
- * <p/> It is possible that this special behavior may be confusing or can cause problems. Therefore, you can set the
+ * <p> It is possible that this special behavior may be confusing or can cause problems. Therefore, you can set the
  * <b>struts.freemarker.wrapper.altMap</b> property in struts.properties to false, allowing the normal BeansWrapper
  * logic to take place instead.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  */
 public class StrutsBeanWrapper extends BeansWrapper {

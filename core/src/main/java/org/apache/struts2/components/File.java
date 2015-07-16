@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * Renders an HTML file input element.
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

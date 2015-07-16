@@ -21,8 +21,7 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * <!-- START SNIPPET: javadoc -->
  * A Non-Field Level validator that validates based on regular expression supplied.
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * 
+ *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * 	 <li>expression - the Ognl expression to be evaluated against the stack (Must evaluate to a Boolean)</li>

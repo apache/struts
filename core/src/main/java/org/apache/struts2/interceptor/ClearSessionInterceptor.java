@@ -31,19 +31,18 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * This interceptor clears the HttpSession.
- * <p/>
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
- *
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
  * <ul>
- *  <li>none</li>
+ *  <li>None</li>
  * </ul>
  *
  * <!-- END SNIPPET: extending -->
@@ -52,14 +51,12 @@ import java.util.Map;
  * <!-- START SNIPPET: parameters -->
  *
  * <ul>
- *
  * <li>None</li>
- *
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <b>Example:</b>
+ * <p><b>Example:</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

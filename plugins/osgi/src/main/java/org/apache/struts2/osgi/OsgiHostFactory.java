@@ -25,12 +25,17 @@ import org.apache.struts2.osgi.host.GlassfishOSGiHost;
 import org.apache.struts2.osgi.host.OsgiHost;
 
 /**
+ * <p>
  * OsgiHostFactory that creates proper OsgiHost implementation according to
  * context param from web.xml
- * <p/>
+ * </p>
+ *
+ * <p>
  * Two implementations are supported right now:
- * - Apache Felix
- * - Glassfish (which contains Apache Felix already)
+ * </p>
+ *
+ * - Apache Felix <br>
+ * - Glassfish (which contains Apache Felix already)<br>
  */
 public class OsgiHostFactory {
 

@@ -30,12 +30,12 @@ import java.util.Map;
  *
  * An interceptor that enables scoped model-driven actions.
  *
- * <p/>This interceptor only activates on actions that implement the {@link ScopedModelDriven} interface.  If
- * detected, it will retrieve the model class from the configured scope, then provide it to the Action.
+ * <p>This interceptor only activates on actions that implement the {@link ScopedModelDriven} interface.  If
+ * detected, it will retrieve the model class from the configured scope, then provide it to the Action.</p>
  *  
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -51,9 +51,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
@@ -61,7 +59,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

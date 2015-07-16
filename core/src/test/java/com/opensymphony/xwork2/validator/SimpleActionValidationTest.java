@@ -26,10 +26,6 @@ import java.util.*;
 
 
 /**
- * SimpleActionValidationTest
- * <p/>
- * Created : Jan 20, 2003 11:04:25 PM
- *
  * @author Jason Carreira
  */
 public class SimpleActionValidationTest extends XWorkTestCase {

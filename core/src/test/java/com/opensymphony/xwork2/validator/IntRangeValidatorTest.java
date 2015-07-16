@@ -28,10 +28,6 @@ import java.util.Map;
 
 
 /**
- * IntRangeValidatorTest
- * <p/>
- * Created : Jan 21, 2003 12:16:01 AM
- *
  * @author Jason Carreira
  */
 public class IntRangeValidatorTest extends XWorkTestCase {

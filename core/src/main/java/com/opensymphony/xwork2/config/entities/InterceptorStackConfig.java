@@ -27,8 +27,10 @@ import java.util.List;
 
 /**
  * Configuration for InterceptorStack.
- * <p/>
+ *
+ * <p>
  * In the xml configuration file this is defined as the <code>interceptor-stack</code> tag.
+ * </p>
  *
  * @author Mike
  * @author Rainer Hermanns

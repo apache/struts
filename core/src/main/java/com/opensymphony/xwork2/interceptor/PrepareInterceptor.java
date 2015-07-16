@@ -31,7 +31,8 @@ import java.lang.reflect.InvocationTargetException;
  * {@link Preparable}. This interceptor is very useful for any situation where
  * you need to ensure some logic runs before the actual execute method runs.
  *
- * <p/> A typical use of this is to run some logic to load an object from the
+ * <p>
+ * A typical use of this is to run some logic to load an object from the
  * database so that when parameters are set they can be set on this object. For
  * example, suppose you have a User object with two properties: <i>id</i> and
  * <i>name</i>. Provided that the params interceptor is called twice (once
@@ -39,21 +40,24 @@ import java.lang.reflect.InvocationTargetException;
  * the id property, and then when the second params interceptor is called the
  * parameter <i>user.name</i> will be set, as desired, on the actual object
  * loaded from the database. See the example for more info.
- *
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> Since XWork 2.0.2, this interceptor extends {@link MethodFilterInterceptor}, therefore being
  * able to deal with excludeMethods / includeMethods parameters. See [Workflow Interceptor]
  * (class {@link DefaultWorkflowInterceptor}) for documentation and examples on how to use this feature.
+ * </p>
  *
- * <p/><b>Update</b>: Added logic to execute a prepare{MethodName} and conditionally
+ * <p>
+ * <b>Update</b>: Added logic to execute a prepare{MethodName} and conditionally
  * the a general prepare() Method, depending on the 'alwaysInvokePrepare' parameter/property
  * which is by default true. This allows us to run some logic based on the method
  * name we specify in the {@link com.opensymphony.xwork2.ActionProxy}. For example, you can specify a
  * prepareInput() method that will be run before the invocation of the input method.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -66,9 +70,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
@@ -76,7 +78,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p> <u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -107,9 +109,10 @@ public class PrepareInterceptor extends MethodFilterInterceptor {
     private boolean firstCallPrepareDo = false;
 
     /**
-     * Sets if the <code>preapare</code> method should always be executed.
-     * <p/>
+     * Sets if the <code>prepare</code> method should always be executed.
+     * <p>
      * Default is <tt>true</tt>.
+     * </p>
      *
      * @param alwaysInvokePrepare if <code>prepare</code> should always be executed or not.
      */
@@ -119,9 +122,9 @@ public class PrepareInterceptor extends MethodFilterInterceptor {
 
     /**
      * Sets if the <code>prepareDoXXX</code> method should be called first
-     * <p/>
+     * <p>
      * Default is <tt>false</tt> for backward compatibility
-     *
+     * </p>
      * @param firstCallPrepareDo if <code>prepareDoXXX</code> should be called first
      */
     public void setFirstCallPrepareDo(String firstCallPrepareDo) {

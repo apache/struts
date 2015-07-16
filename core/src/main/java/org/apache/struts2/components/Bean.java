@@ -36,10 +36,10 @@ import java.io.Writer;
  * <!-- START SNIPPET: javadoc -->
  * <p>Instantiates a class that conforms to the JavaBeans specification. This tag has a body which can contain
  * a number of {@link Param} elements to set any mutator methods on that class.</p>
- * <p/>
+ *
  * <p>If the var attribute is set on the BeanTag, it will place the instantiated bean into the
  * stack's Context.</p>
- * <p/>
+ *
  * <!-- END SNIPPET: javadoc -->
  *
  *
@@ -52,7 +52,7 @@ import java.io.Writer;
  *
  *
  * <p>Examples:</p>
- * <p/>
+ *
  * <pre>
  * <!-- START SNIPPET: examples -->
  * &lt;-- in freemarker form --&gt;
@@ -68,16 +68,16 @@ import java.io.Writer;
  * &lt;/s:bean&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
- * <p/>
+ *
  *
  * <!-- START SNIPPET: examplesdescription -->
  * <p>This example instantiates a bean called SimpleCounter and sets the foo property (setFoo('BAR')). The
  * SimpleCounter object is then pushed onto the Valuestack, which means that we can call its accessor methods (getFoo())
  * with the Property tag and get their values.</p>
- * <p/>
+ *
  * <p>In the above example, the id has been set to a value of <i>counter</i>. This means that the SimpleCounter class
  * will be placed into the stack's context. You can access the SimpleCounter class using a Struts tag:</p>
- * <p/>
+ *
  * <pre>
  * &lt;-- jsp form --&gt;
  * &lt;s:property value="#counter" /&gt;
@@ -85,7 +85,7 @@ import java.io.Writer;
  * &lt;-- freemarker form --&gt;
  * [s:property value="#counter.foo"/]
  * </pre>
- * <p/>
+ *
  * <p>In the property tag example, the <i>#</i> tells Ognl to search the context for the SimpleCounter class which has
  * an id(key) of <i>counter</i></p>
  * <!-- END SNIPPET: examplesdescription -->

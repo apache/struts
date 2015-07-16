@@ -35,14 +35,12 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Create a Select component with buttons to move the elements in the select component
  * up and down. When the containing form is submited, its elements will be submitted in
  * the order they are arranged (top to bottom).
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
- *
- * <p/>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -71,8 +69,6 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
- *
- * @version $Date$ $Id$
  *
  * @s.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.UpDownSelectTag"
  * description="Render a up down select element"

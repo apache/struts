@@ -14,18 +14,24 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * Prefix based factory should be used with {@link org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper}
  * to use appropriate {@link com.opensymphony.xwork2.ActionProxyFactory} connected with given
  * {@link org.apache.struts2.dispatcher.mapper.ActionMapper}
+ * </p>
  *
+ * <p>
  * Add below entry to struts.xml to enable the factory:
- * <p/>
+ * </p>
+ *
  * <pre>
  * &lt;constant name="struts.actionProxyFactory" value="prefix"/&gt;
  * </pre>
  *
+ * <p>
  * The factory will use the same set of patterns as defined with:
- * <p/>
+ * </p>
+ *
  * <pre>
  * &lt;constant name="struts.mapper.prefixMapping" value="..."/&gt;
  * </pre>

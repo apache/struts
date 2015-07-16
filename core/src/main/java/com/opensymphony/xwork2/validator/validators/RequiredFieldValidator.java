@@ -22,16 +22,13 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * <!-- START SNIPPET: javadoc -->
  * RequiredFieldValidator checks if the specified field is not null.
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * 
- * 
+ *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * 		<li>fieldName - field name if plain-validator syntax is used, not needed if field-validator syntax is used</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
- * 
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  * 	   &lt;validators&gt;
@@ -57,7 +54,6 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * 
  *
  * @author rainerh
- * @version $Revision$
  */
 public class RequiredFieldValidator extends FieldValidatorSupport {
 

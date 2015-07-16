@@ -37,40 +37,41 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>
+ * <p>
  * A custom Result type for setting HTTP headers and status by optionally evaluating against the ValueStack.
  * This result can also be used to send and error to the client. All the parameters can be evaluated against the ValueStack.
- * <p/>
+ * </p>
+ *
  * <!-- END SNIPPET: description -->
- * <p/>
+ * <p>
  * <b>This result type takes the following parameters:</b>
- * <p/>
+ * </p>
  * <!-- START SNIPPET: params -->
- * <p/>
+ *
  * <ul>
- * <p/>
+ *
  * <li><b>status</b> - the http servlet response status code that should be set on a response.</li>
- * <p/>
+ *
  * <li><b>parse</b> - true by default. If set to false, the headers param will not be parsed for Ognl expressions.</li>
- * <p/>
+ *
  * <li><b>headers</b> - header values.</li>
- * <p/>
+ *
  * <li><b>error</b> - the http servlet response error code that should be set on a response.</li>
- * <p/>
+ *
  * <li><b>errorMessage</b> - error message to be set on response if 'error' is set.</li>
  * </ul>
- * <p/>
+ *
  * <!-- END SNIPPET: params -->
- * <p/>
+ * <p>
  * <b>Example:</b>
- * <p/>
+ * </p>
  * <pre><!-- START SNIPPET: example -->
  * &lt;result name="success" type="httpheader"&gt;
  *   &lt;param name="status"&gt;204&lt;/param&gt;
  *   &lt;param name="headers.a"&gt;a custom header value&lt;/param&gt;
  *   &lt;param name="headers.b"&gt;another custom header value&lt;/param&gt;
  * &lt;/result&gt;
- * <p/>
+ *
  * &lt;result name="proxyRequired" type="httpheader"&gt;
  *   &lt;param name="error"&gt;305&lt;/param&gt;
  *   &lt;param name="errorMessage"&gt;this action must be accessed through a prozy&lt;/param&gt;

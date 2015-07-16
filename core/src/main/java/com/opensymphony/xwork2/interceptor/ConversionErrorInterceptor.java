@@ -29,32 +29,28 @@ import java.util.Map;
  * <!-- START SNIPPET: description -->
  * ConversionErrorInterceptor adds conversion errors from the ActionContext to the Action's field errors.
  *
- * <p/>
+ * <p>
  * This interceptor adds any error found in the {@link ActionContext}'s conversionErrors map as a field error (provided
  * that the action implements {@link ValidationAware}). In addition, any field that contains a validation error has its
  * original value saved such that any subsequent requests for that value return the original value rather than the value
  * in the action. This is important because if the value "abc" is submitted and can't be converted to an int, we want to
  * display the original string ("abc") again rather than the int value (likely 0, which would make very little sense to
  * the user).
- *
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
  * <ul>
- *
- * <li>None</li>
- *
+ *  <li>None</li>
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p> <u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
@@ -65,7 +61,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p> <u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

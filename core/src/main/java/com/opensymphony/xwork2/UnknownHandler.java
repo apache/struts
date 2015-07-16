@@ -19,8 +19,10 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 /**
  * Handles cases when the result or action is unknown.
- * <p/>
+ *
+ * <p>
  * This allows other classes like Struts plugins to provide intelligent defaults easier.
+ * </p>
  */
 public interface UnknownHandler {
     

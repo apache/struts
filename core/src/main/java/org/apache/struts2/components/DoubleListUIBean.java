@@ -29,15 +29,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
+ * <p>
  * DoubleListUIBean is the standard superclass of all Struts double list handling components.
- *
- * <p/>
+ * </p>
  *
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Note that the doublelistkey and doublelistvalue attribute will default to "key" and "value"
  * respectively only when the doublelist attribute is evaluated to a Map or its decendant.
  * Other thing else, will result in doublelistkey and doublelistvalue to be null and not used.
+ * </p>
  *
  * <!-- END SNIPPET: javadoc -->
  *

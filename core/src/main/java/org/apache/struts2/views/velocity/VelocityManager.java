@@ -118,9 +118,11 @@ public class VelocityManager {
     }
 
     /**
+     * <p>
      * This method is responsible for creating the standard VelocityContext used by all WW2 velocity views.  The
      * following context parameters are defined:
-     * <p/>
+     * </p>
+     *
      * <ul>
      * <li><strong>request</strong> - the current HttpServletRequest</li>
      * <li><strong>response</strong> - the current HttpServletResponse</li>
@@ -394,22 +396,24 @@ public class VelocityManager {
 
 
     /**
-     * <p/>
+     * <p>
      * Instantiates a new VelocityEngine.
      * </p>
-     * <p/>
+     * <p>
      * The following is the default Velocity configuration
      * </p>
+     *
      * <pre>
      *  resource.loader = file, class
      *  file.resource.loader.path = real path of webapp
      *  class.resource.loader.description = Velocity Classpath Resource Loader
      *  class.resource.loader.class = org.apache.struts2.views.velocity.StrutsResourceLoader
      * </pre>
-     * <p/>
+     * <p>
      * this default configuration can be overridden by specifying a struts.velocity.configfile property in the
      * struts.properties file.  the specified config file will be searched for in the following order:
      * </p>
+     *
      * <ul>
      * <li>relative to the servlet context path</li>
      * <li>relative to the WEB-INF directory</li>

@@ -27,13 +27,13 @@ import java.lang.annotation.Target;
  * is no longer necessary.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- *  <p/>The Validation annotation must be applied at Type level.
+ * <p>The Validation annotation must be applied at Type level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -52,7 +52,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <u>An Annotated Interface</u>
  * <pre>
@@ -73,7 +73,7 @@ import java.lang.annotation.Target;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <u>An Annotated Class</u>
  * <pre>
@@ -124,7 +124,6 @@ import java.lang.annotation.Target;
  *
  * @author Rainer Hermanns
  * @deprecated Since Struts 2.1 because it isn't necessary anymore
- * @version $Id$
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -26,13 +26,13 @@ import java.lang.annotation.Target;
  * This validator checks that a String field is not empty (i.e. non-null with a length > 0).
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The annotation must be applied at method level.
+ * <p>The annotation must be applied at method level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -87,7 +87,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

@@ -4,8 +4,10 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * Action with no public constructor taking no args.
- * <p/>
+ *
+ * <p>
  * Used for unit test of {@link com.opensymphony.xwork2.config.providers.XmlConfigurationProvider}.
+ * </p>
  *
  * @author Claus Ibsen
  */

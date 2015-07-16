@@ -26,13 +26,13 @@ import java.lang.annotation.Target;
  * The ValidationParameter annotation is used as a parameter for CustomValidators.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The annotation must embedded into CustomValidator annotations as a parameter.
+ * <p>The annotation must embedded into CustomValidator annotations as a parameter.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -57,7 +57,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

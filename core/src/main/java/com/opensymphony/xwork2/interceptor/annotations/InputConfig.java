@@ -27,14 +27,14 @@ import com.opensymphony.xwork2.Action;
  * Marks a action method that if it's not validated by ValidationInterceptor then execute input method or input result.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
  * The InputConfig annotation can be applied at method level.
  *
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -59,7 +59,7 @@ import com.opensymphony.xwork2.Action;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

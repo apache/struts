@@ -36,39 +36,42 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * An interceptor to store a {@link ValidationAware} action's messages / errors and field errors into
  * HTTP Session, such that it will be retrievable at a later stage. This allows the action's message /
  * errors and field errors to be available longer that just the particular HTTP request.
+ * </p>
  *
+ * <p>
  * If no session exists, nothing will be stored and can be retrieved later. In other terms,
  * the application is responsible to open the session.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * In the 'STORE' mode, the interceptor will store the {@link ValidationAware} action's message / errors
  * and field errors into HTTP session.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * In the 'RETRIEVE' mode, the interceptor will retrieve the stored action's message / errors  and field
  * errors and put them back into the {@link ValidationAware} action.
- * 
- * <p/>
+ * </p>
  *
+ * <p>
  * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors 
  * and field errors and put them back into the {@link ValidationAware} action, and after Action execution, 
  * if the {@link com.opensymphony.xwork2.Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
  * and field errors into automatically be stored in the HTTP session..
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * The interceptor does nothing in the 'NONE' mode, which is the default.
+ * </p>
  *
- * <p/>
- *
- * The operation mode could be switched using :- <p/>
- * 1] Setting the iterceptor parameter eg.
+ * <p>
+ * The operation mode could be switched using:<br>
+ * 1] Setting the interceptor parameter eg.
+ * </p>
  * <pre>
  *   &lt;action name="submitApplication" ...&gt;
  *      &lt;interceptor-ref name="store"&gt;
@@ -79,7 +82,10 @@ import java.util.Map;
  *   &lt;/action&gt;
  * </pre>
  *
+ * <p>
  * 2] Through request parameter (allowRequestParameterSwitch must be 'true' which is the default)
+ * </p>
+ *
  * <pre>
  *   // the request will have the operation mode in 'STORE'
  *   http://localhost:8080/context/submitApplication.action?operationMode=STORE
@@ -101,11 +107,12 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/>
  *
  * <!-- START SNIPPET: extending -->
+ * <p>
+ * The following method could be overridden:
+ * </p>
  *
- * The following method could be overriden :-
  * <ul>
  *  <li>getRequestOperationMode - get the operation mode of this interceptor based on the request parameters</li>
  *  <li>mergeCollection - merge two collections</li>
@@ -137,15 +144,13 @@ import java.util.Map;
  * </pre>
  *
  * <!-- START SNIPPET: exampleDescription -->
- *
+ * <p>
  * With the example above, 'submitApplication.action' will have the action messages / errors / field errors stored
  * in the HTTP Session. Later when needed, (in this case, when 'applicationFailed.action' is fired, it
  * will get the action messages / errors / field errors stored in the HTTP Session and put them back into
  * the action.
- *
+ * </p>
  * <!-- END SNIPPET: exampleDescription -->
- *
- * @version $Date$ $Id$
  */
 public class MessageStoreInterceptor extends AbstractInterceptor {
 

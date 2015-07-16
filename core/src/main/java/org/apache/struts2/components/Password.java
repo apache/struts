@@ -31,14 +31,16 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Render an HTML input tag of type password.</p>
+ * <p>Render an HTML input tag of type password.</p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
- * <p/>
+ * <p><b>Examples</b></p>
+ *
  * <!-- START SNIPPET: exdescription -->
+ * <p>
  * In this example, a password control is displayed. For the label, we are calling ActionSupport's getText() to
- * retrieve password label from a resource bundle.<p/>
+ * retrieve password label from a resource bundle.
+ * </p>
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->

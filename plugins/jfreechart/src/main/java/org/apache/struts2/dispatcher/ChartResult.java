@@ -35,33 +35,34 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>
+ * <p>
  * A custom Result type for chart data. Built on top of
  * <a href="http://www.jfree.org/jfreechart/" target="_blank">JFreeChart</a>. When executed
  * this Result will write the given chart as a PNG or JPG to the servlet output stream.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: description -->
- * <p/>
+ * <p>
  * <b>This result type takes the following parameters:</b>
- * <p/>
+ * </p>
  * <!-- START SNIPPET: params -->
- * <p/>
+ *
  * <ul>
- * <p/>
+ *
  * <li><b>value</b> - the name of the JFreeChart object on the ValueStack, defaults to 'chart'.</li>
- * <p/>
+ *
  * <li><b>type</b> - the render type for this chart. Can be jpg (or jpeg) or png. Defaults to png.</li>
- * <p/>
+ *
  * <li><b>width (required)</b> - the width (in pixels) of the rendered chart.</li>
- * <p/>
+ *
  * <li><b>height (required)</b> - the height (in pixels) of the rendered chart.</li>
- * <p/>
+ *
  * </ul>
  * <!-- END SNIPPET: params -->
- * <p/>
+ * <p>
  * <b>Example:</b>
- * <p/>
- * <pre><!-- START SNIPPET: example -->
+ * </p>
+ * <pre>
+ * <!-- START SNIPPET: example -->
  * public class ExampleChartAction extends ActionSupport {
  *
  *	    private JFreeChart chart;
@@ -99,7 +100,8 @@ import javax.servlet.http.HttpServletResponse;
  *   &lt;param name="width"&gt;640&lt;/param&gt;
  *   &lt;param name="height"&gt;480&lt;/param&gt;
  * &lt;/result&gt;
- * <!-- END SNIPPET: example --></pre>
+ * <!-- END SNIPPET: example -->
+ * </pre>
  */
 public class ChartResult extends StrutsResultSupport {
 

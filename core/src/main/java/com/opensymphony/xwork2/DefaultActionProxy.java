@@ -68,8 +68,11 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     /**
      * This constructor is private so the builder methods (create*) should be used to create an DefaultActionProxy.
-     * <p/>
+     *
+     * <p>
      * The reason for the builder methods is so that you can use a subclass to create your own DefaultActionProxy instance
+     * </p>
+     *
      * (like a RMIActionProxy).
      */
     protected DefaultActionProxy(ActionInvocation inv, String namespace, String actionName, String methodName, boolean executeResult, boolean cleanupContext) {

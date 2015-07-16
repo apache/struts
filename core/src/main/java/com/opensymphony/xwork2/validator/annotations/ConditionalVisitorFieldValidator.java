@@ -7,23 +7,28 @@ import java.lang.annotation.Target;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * The validator allows you to forward validator to object properties of your action
  * using the objects own validator files. This allows you to use the ModelDriven development
  * pattern and manage your validations for your models in one place, where they belong, next to
  * your model classes.
+ * </p>
  *
+ * <p>
  * The ConditionalVisitorFieldValidator can handle either simple Object properties, Collections of Objects, or Arrays.
  * The error message for the ConditionalVisitorFieldValidator will be appended in front of validator messages added
  * by the validations for the Object message.
+ * </p>
+ *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The annotation must be applied at method level.
+ * <p>The annotation must be applied at method level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -84,7 +89,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -100,7 +105,7 @@ public @interface ConditionalVisitorFieldValidator {
 
     /**
      * Determines the context to use for validating the Object property.
-     * If not defined, the context of the Action validator is propogated to the Object property validator.
+     * If not defined, the context of the Action validator is propagated to the Object property validator.
      * In the case of Action validator, this context is the Action alias.
      */
     String context() default "";
@@ -108,10 +113,10 @@ public @interface ConditionalVisitorFieldValidator {
     /**
      * Determines whether the field name of this field validator should be prepended to the field name of
      * the visited field to determine the full field name when an error occurs. For example, suppose that
-     * the bean being validated has a "name" property.
+     * the bean being validated has a 'name' property.
      *
-     * If appendPrefix is true, then the field error will be stored under the field "bean.name".
-     * If appendPrefix is false, then the field error will be stored under the field "name".
+     * If appendPrefix is true, then the field error will be stored under the field 'bean.name'.
+     * If appendPrefix is false, then the field error will be stored under the field 'name'.
      *
      * If you are using the ConditionalVisitorFieldValidator to validate the model from a ModelDriven Action,
      * you should set appendPrefix to false unless you are using "model.name" to reference the properties
@@ -148,7 +153,7 @@ public @interface ConditionalVisitorFieldValidator {
     /**
      * If this is activated, the validator will be used as short-circuit.
      *
-     * Adds the short-circuit="true" attribute value if <tt>true</tt>.
+     * Adds the short-circuit='true' attribute value if <tt>true</tt>.
      *
      */
     boolean shortCircuit() default false;

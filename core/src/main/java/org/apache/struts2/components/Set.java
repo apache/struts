@@ -37,7 +37,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>If the tag is used with body content, the evaluation of the value parameter is omitted. Instead, the String to
  * which the body evaluates is set as value for the scoped variable.</p>
  *
- * The scopes available are as follows :-
+ * <p>The scopes available are as follows:</p>
  * <ul>
  *   <li>application - the value will be set in application scope according to servlet spec. using the name as its key</li>
  *   <li>session - the value will be set in session scope according to servlet spec. using the name as key </li>
@@ -46,12 +46,13 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   <li>action - the value will be set in the request scope and Struts' action context using the name as key</li>
  * </ul>
  *
- * NOTE:<p/>
+ * <p>
+ * NOTE:<br>
  * If no scope is specified, it will default to action scope.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Parameters</b>
+ * <p><b>Parameters</b></p>
  *
  * <!-- START SNIPPET: params -->
  *
@@ -68,7 +69,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: params -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

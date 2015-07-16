@@ -22,10 +22,11 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * This interceptor logs the start and end of the execution an action (in English-only, not internationalized).
  * <br/>
  * <b>Note:</b>: This interceptor will log at <tt>INFO</tt> level.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: description -->
  *
  * <!-- START SNIPPET: parameters -->
@@ -39,17 +40,17 @@ import org.apache.logging.log4j.Logger;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;!-- prints out a message before and after the immediate action execution --&gt;
- * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="completeStack"/&gt;
- *     &lt;interceptor-ref name="logger"/&gt;
- *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
+ * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;completeStack&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;logger&quot;/&gt;
+ *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
  *
  * &lt;!-- prints out a message before any more interceptors continue and after they have finished --&gt;
- * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="logger"/&gt;
- *     &lt;interceptor-ref name="completeStack"/&gt;
- *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
+ * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;logger&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;completeStack&quot;/&gt;
+ *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
  * <!-- END SNIPPET: example -->
  * </pre>

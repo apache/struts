@@ -34,20 +34,27 @@ import java.util.*;
 
 
 /**
+ * <p>
  * Parse a multipart request and provide a wrapper around the request. The parsing implementation used
  * depends on the <tt>struts.multipart.parser</tt> setting. It should be set to a class which
- * extends {@link org.apache.struts2.dispatcher.multipart.MultiPartRequest}. 
- * <p/>
+ * extends {@link org.apache.struts2.dispatcher.multipart.MultiPartRequest}.
+ * </p>
+ *
+ * <p>
  * The <tt>struts.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
  * Jakarta implementation, <tt>pell</tt> for the Pell implementation and <tt>cos</tt> for the Jason Hunter
  * implementation.
- * <p/>
+ * </p>
+ *
+ * <p>
  * The files are uploaded when the object is instantiated. If there are any errors they are logged using
  * {@link #addError(String)}. An action handling a multipart form should first check {@link #hasErrors()}
  * before doing any other processing.
- * <p/>
- * An alternate implementation, PellMultiPartRequest, is provided as a plugin.
+ * </p>
  *
+ * <p>
+ * An alternate implementation, PellMultiPartRequest, is provided as a plugin.
+ * </p>
  */
 public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 

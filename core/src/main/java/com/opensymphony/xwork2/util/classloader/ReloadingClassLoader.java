@@ -33,12 +33,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * <p>
  * The ReloadingClassLoader uses a delegation mechanism to allow
  * classes to be reloaded. That means that loadClass calls may
  * return different results if the class was changed in the underlying
  * ResourceStore.
- * <p/>
+ * </p>
+ *
+ * <p>
  * class taken from Apache JCI
+ * </p>
  */
 public class ReloadingClassLoader extends ClassLoader {
     private static final Logger LOG = LogManager.getLogger(ReloadingClassLoader.class);

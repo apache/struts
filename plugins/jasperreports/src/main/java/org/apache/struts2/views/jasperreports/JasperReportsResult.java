@@ -50,18 +50,18 @@ import java.util.TimeZone;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>
+ * <p>
  * Generates a JasperReports report using the specified format or PDF if no
  * format is specified.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: description -->
- * <p />
+ * <p>
  * <b>This result type takes the following parameters:</b>
- * <p/>
+ * </p>
  * <!-- START SNIPPET: params -->
- * <p/>
+ *
  * <ul>
- * <p/>
+ *
  * <li><b>location (default)</b> - the location where the compiled jasper report
  * definition is (foo.jasper), relative from current URL.</li>
  * <li><b>dataSource (required)</b> - the EL expression used to retrieve the
@@ -105,21 +105,27 @@ import java.util.TimeZone;
  * is not set to false.
  * </p>
  * <!-- END SNIPPET: params -->
- * <b>Example:</b>
- * <pre><!-- START SNIPPET: example1 -->
+ * <p><b>Example:</b></p>
+ * <pre>
+ * <!-- START SNIPPET: example1 -->
  * &lt;result name="success" type="jasper"&gt;
  *   &lt;param name="location"&gt;foo.jasper&lt;/param&gt;
  *   &lt;param name="dataSource"&gt;mySource&lt;/param&gt;
  *   &lt;param name="format"&gt;CSV&lt;/param&gt;
  * &lt;/result&gt;
- * <!-- END SNIPPET: example1 --></pre>
+ * <!-- END SNIPPET: example1 -->
+ * </pre>
+ *
  * or for pdf
- * <pre><!-- START SNIPPET: example2 -->
+ *
+ * <pre>
+ * <!-- START SNIPPET: example2 -->
  * &lt;result name="success" type="jasper"&gt;
  *   &lt;param name="location"&gt;foo.jasper&lt;/param&gt;
  *   &lt;param name="dataSource"&gt;mySource&lt;/param&gt;
  * &lt;/result&gt;
- * <!-- END SNIPPET: example2 --></pre>
+ * <!-- END SNIPPET: example2 -->
+ * </pre>
  */
 public class JasperReportsResult extends StrutsResultSupport implements JasperReportConstants {
 

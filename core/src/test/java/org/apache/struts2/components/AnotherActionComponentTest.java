@@ -4,13 +4,6 @@ import org.apache.struts2.views.jsp.AbstractTagTest;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.StrutsException;
 
-/**
- * Describe your class here
- *
- * @author $Author$
- *         <p/>
- *         $Id$
- */
 public class AnotherActionComponentTest extends AbstractTagTest  {
 
     public void testRethrowException() throws Exception {

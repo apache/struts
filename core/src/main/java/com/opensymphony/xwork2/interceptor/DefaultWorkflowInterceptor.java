@@ -26,22 +26,24 @@ import java.lang.reflect.Method;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>
+ * <p>
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
  * <b>This interceptor does not perform any validation</b>.
- * <p/>
+ * </p>
+ * <p>
  * This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
  * parameter. <b>excludeMethods</b> accepts a comma-delimited list of method names. For example, requests to
  * <b>foo!input.action</b> and <b>foo!back.action</b> will be skipped by this interceptor if you set the
  * <b>excludeMethods</b> parameter to "input, back".
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> As this method extends off MethodFilterInterceptor, it is capable of
  * deciding if it is applicable only to selective methods in the action class. This is done by adding param tags
  * for the interceptor element, naming either a list of excluded method names and/or a list of included method
  * names, whereby includeMethods overrides excludedMethods. A single * sign is interpreted as wildcard matching
  * all methods for both parameters.
  * See {@link MethodFilterInterceptor} for more info.
- * <p/>
+ * </p>
  * This interceptor also supports the following interfaces which can implemented by actions:
  * <ul>
  *     <li>ValidationAware - implemented by ActionSupport class</li>

@@ -34,16 +34,17 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ * <p>
  * DoubleListUIBean is the standard superclass of all Struts list handling components.
- * <p/>
- * <p/>
- * <p/>
+ * </p>
+ *
+ *
  * <!-- START SNIPPET: javadoc -->
- * <p/>
+ * <p>
  * Note that the listkey and listvalue attribute will default to "key" and "value"
  * respectively only when the list attribute is evaluated to a Map or its decendant.
  * Everything else will result in listkey and listvalue to be null and not used.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  */
 public abstract class ListUIBean extends UIBean {

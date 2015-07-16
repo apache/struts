@@ -35,27 +35,22 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Create a input transfer select component which is basically an text input
  * and  &lt;select ...&gt; tag with buttons in the middle of them allowing text
  * to be added to the transfer select. Will auto-select all its
  * elements upon its containing form submission.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/>
- *
- *
  * <!-- START SNIPPET: notice -->
- *
+ * <p>
  * NOTE: The id and doubleId need not be supplied as they will generated provided
  * that the inputtransferselect tag is being used in a form tag. The generated id
  * and doubleId will be &lt;form_id&gt;_&lt;inputtransferselect_doubleName&gt; and
  * &lt;form_id&gt;_&lt;inputtransferselect_doubleName&gt; respectively.
- *
+ * </p>
  * <!-- END SNIPPET: notice -->
- *
- * <p/>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

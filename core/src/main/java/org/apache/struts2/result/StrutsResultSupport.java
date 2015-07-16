@@ -36,11 +36,15 @@ import java.util.Collection;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * A base class for all Struts action execution results.
  * The "location" param is the default parameter, meaning the most common usage of this result would be:
- * <p/>
+ * </p>
+ *
+ * <p>
  * This class provides two common parameters for any subclass:
+ * </p>
+ *
  * <ul>
  * <li>location - the location to go to after execution (could be a jsp page or another action).
  * It can be parsed as per the rules definied in the
@@ -50,54 +54,64 @@ import java.util.Collection;
  * <li>encode - false by default. If set to false, the location param will not be url encoded. This only have effect when parse is true</li>
  * </ul>
  *
+ * <p>
  * <b>NOTE:</b>
  * The encode param will only have effect when parse is true
+ * </p>
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/>
- *
  * <!-- START SNIPPET: example -->
  *
- * <p/>
+ * <p>
  * In the struts.xml configuration file, these would be included as:
- * <p/>
+ * </p>
+ *
  * <pre>
  *  &lt;result name="success" type="redirect"&gt;
  *      &lt;param name="<b>location</b>"&gt;foo.jsp&lt;/param&gt;
  *  &lt;/result&gt;</pre>
- * <p/>
+ *
  * or
- * <p/>
+ *
  * <pre>
  *  &lt;result name="success" type="redirect" &gt;
  *      &lt;param name="<b>location</b>"&gt;foo.jsp?url=${myUrl}&lt;/param&gt;
  *      &lt;param name="<b>parse</b>"&gt;true&lt;/param&gt;
  *      &lt;param name="<b>encode</b>"&gt;true&lt;/param&gt;
- *  &lt;/result&gt;</pre>
- * <p/>
- * In the above case, myUrl will be parsed against Ognl Value Stack and then
- * URL encoded.
- * <p/>
+ *  &lt;/result&gt;
+ * </pre>
+ *
+ * <p>In the above case, myUrl will be parsed against Ognl Value Stack and then
+ * URL encoded.1
+ * </p>
+ * <p>
  * or when using the default parameter feature
- * <p/>
+ * </p>
+ *
  * <pre>
- *  &lt;result name="success" type="redirect"&gt;<b>foo.jsp</b>&lt;/result&gt;</pre>
- * <p/>
+ *  &lt;result name="success" type="redirect"&gt;<b>foo.jsp</b>&lt;/result&gt;
+ * </pre>
+ * <p>
  * You should subclass this class if you're interested in adding more parameters or functionality
  * to your Result. If you do subclass this class you will need to
- * override {@link #doExecute(String, ActionInvocation)}.<p>
- * <p/>
+ * override {@link #doExecute(String, ActionInvocation)}.
+ * </p>
+ *
+ * <p>
  * Any custom result can be defined in struts.xml as:
- * <p/>
+ * </p>
+ *
  * <pre>
  *  &lt;result-types&gt;
  *      ...
  *      &lt;result-type name="myresult" class="com.foo.MyResult" /&gt;
- *  &lt;/result-types&gt;</pre>
- * <p/>
- * Please see the {@link com.opensymphony.xwork2.Result} class for more info on Results in general.
+ *  &lt;/result-types&gt;
+ * </pre>
  *
+ * <p>
+ * Please see the {@link com.opensymphony.xwork2.Result} class for more info on Results in general.
+ * </p>
  * <!-- END SNIPPET: example -->
  *
  * @see com.opensymphony.xwork2.Result

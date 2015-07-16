@@ -29,9 +29,12 @@ import java.io.Writer;
 import java.util.Locale;
 
 /**
+ * <p>
  * The abstract base class for our Struts 2 GXP result type implementation. It
  * outputs GXP, and pulls GXP parameters from Struts 2's value stack. Implementing
  * classes have to:
+ * </p>
+ *
  * <ol>
  * <li>Implement <code>execute(ActionInvocation)</code>, which must instruct the
  * GXP to write itself to the output stream. See {@link GxpResult} for a
@@ -40,10 +43,12 @@ import java.util.Locale;
  * the value 'gxpName'. Struts 2 needs this to set the name of your
  * template into this object.</li>
  * </ol>
- * <p/>
+ *
  * <p>If you want to use instantiated GXPs (using the nested
  * {@code Interface}), you can set the use{@code useInstances} parameter to
  * {@code true}:
+ * </p>
+ *
  * <pre>
  *     &lt;result-types>
  *       &lt;result-type name="gxp" class="org.apache.struts2.views.gxp.GxpResult">
@@ -51,12 +56,15 @@ import java.util.Locale;
  *       &lt;/result-type>
  *     &lt;/result-types>
  * </pre>
+ *
+ * <p>
  * This means that Struts 2 will attempt to instantiate the {@code Interface}
  * using the {@link com.opensymphony.xwork2.ObjectFactory}. If
  * {@link com.google.webwork.GuiceWebWorkIntegrationModule} is installed, or
  * {@link com.google.webwork.ContainerObjectFactory} is set as the static
  * {@code ObjectFactory} instance, then Guice will be used to instantiate the
  * GXP instance; otherwise, only GXPs with no constructor parameters will work.
+ * </p>
  *
  * @author Bob Lee
  */

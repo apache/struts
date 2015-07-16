@@ -38,24 +38,31 @@ import java.net.URLDecoder;
 import java.util.*;
 
 /**
+ * <p>
  * <b>Default implementation to server static content</b>
- * <p/>
+ * </p>
+ *
+ * <p>
  * This class is used to serve common static content needed when using various parts of Struts, such as JavaScript
  * files, CSS files, etc. It works by looking for requests to /struts/* (or /static/*), and then mapping the value after "/struts/"
  * to common packages in Struts and, optionally, in your class path. By default, the following packages are
  * automatically searched:
+ * </p>
+ *
  * <ul>
  * <li>org.apache.struts2.static</li>
  * <li>template</li>
  * <li>static</li>
  * </ul>
- * <p/> This means that you can simply request /struts/xhtml/styles.css and the XHTML UI theme's default stylesheet
+ *
+ * <p>
+ * This means that you can simply request /struts/xhtml/styles.css and the XHTML UI theme's default stylesheet
  * will be returned. Likewise, many of the AJAX UI components require various JavaScript files, which are found in the
  * org.apache.struts2.static package. If you wish to add additional packages to be searched, you can add a comma
  * separated (space, tab and new line will do as well) list in the filter init parameter named "packages". <b>Be
  * careful</b>, however, to expose any packages that may have sensitive information, such as properties file with
  * database access credentials.
- * <p/>
+ * </p>
  */
 public class DefaultStaticContentLoader implements StaticContentLoader {
 

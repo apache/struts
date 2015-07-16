@@ -81,7 +81,7 @@ import java.io.Writer;
  *
  * <!-- END SNIPPET: params -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  * <pre>
  * <!-- START SNIPPET: example -->
  *

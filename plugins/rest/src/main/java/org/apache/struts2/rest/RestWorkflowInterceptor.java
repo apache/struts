@@ -39,29 +39,32 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
  * <b>This interceptor does not perform any validation</b>.
- * 
+ * </p>
+ *
  * <p>Copied from the {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support for error handling of Restful
  * operations.  For example, if an validation error is discovered, a map of errors is created and processed to be
  * returned, using the appropriate content handler for rendering the body.</p>
  *
- * <p/>This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
+ * <p>This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
  * parameter. <b>excludeMethods</b> accepts a comma-delimited list of method names. For example, requests to
  * <b>foo!input.action</b> and <b>foo!back.action</b> will be skipped by this interceptor if you set the
  * <b>excludeMethods</b> parameter to "input, back".
+ * </p>
  *
+ * <p>
  * <b>Note:</b> As this method extends off MethodFilterInterceptor, it is capable of
  * deciding if it is applicable only to selective methods in the action class. This is done by adding param tags
  * for the interceptor element, naming either a list of excluded method names and/or a list of included method
  * names, whereby includeMethods overrides excludedMethods. A single * sign is interpreted as wildcard matching
  * all methods for both parameters.
  * See {@link MethodFilterInterceptor} for more info.
- *
+ * </p>
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -74,17 +77,15 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
- *
+ * <p>
  * There are no known extension points for this interceptor.
- *
+ * </p>
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

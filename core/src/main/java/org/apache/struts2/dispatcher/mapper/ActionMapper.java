@@ -27,21 +27,27 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * The ActionMapper interface provides a mapping between HTTP requests and action invocation requests and vice-versa.
- * <p/>
+ * </p>
+ *
+ * <p>
  * When given an HttpServletRequest, the ActionMapper may return null if no action invocation request matches,
  * or it may return an {@link ActionMapping} that describes an action invocation for the framework to try.
- * <p/>
+ * </p>
+ *
+ * <p>
  * The ActionMapper is not required to guarantee that the {@link ActionMapping} returned be a real action or otherwise
  * ensure a valid request.
  * Accordingly, most ActionMappers do not need to consult the Struts configuration
  * just to determine if a request should be mapped.
- * <p/>
+ * </p>
+ *
+ * <p>
  * Just as requests can be mapped from HTTP to an action invocation, the opposite is true as well.
  * However, because HTTP requests (when shown in HTTP responses) must be in String form,
  * a String is returned rather than an actual request object.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  */
 public interface ActionMapper {

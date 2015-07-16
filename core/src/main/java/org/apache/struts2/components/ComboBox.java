@@ -34,21 +34,27 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
+ * <p>
  * The combo box is basically an HTML INPUT of type text and HTML SELECT grouped together to give you a combo box
  * functionality. You can place text in the INPUT control by using the SELECT control or type it in directly in
- * the text field.<p/>
+ * the text field.
+ * </p>
  *
+ * <p>
  * In this example, the SELECT will be populated from id=year attribute. Counter is itself an Iterator. It will
  * span from first to last. The population is done via javascript, and requires that this tag be surrounded by a
- * &lt;form&gt;.<p/>
+ * &lt;form&gt;.
+ * </p>
  *
+ * <p>
  * Note that unlike the &lt;s:select/&gt; tag, there is no ability to define the individual &lt;option&gt; tags' id attribute
  * or content separately. Each of these is simply populated from the toString() method of the list item. Presumably
  * this is because the select box isn't intended to actually submit useful data, but to assist the user in filling
- * out the text field.<p/>
+ * out the text field.
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

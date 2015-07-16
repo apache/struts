@@ -30,17 +30,21 @@ import java.io.*;
 
 /**
  * <!-- START SNIPPET: javadocs-intro -->
+ * <p>
  * SiteGraph is a tool that renders out GraphViz-generated images depicting your
  * Struts-powered web application's flow. SiteGraph requires GraphViz be installed
  * and that the "dot" executable be in your command path. You can find GraphViz
  * at http://www.graphviz.org.
+ * </p>
  * <!-- END SNIPPET: javadocs-intro -->
- * <p/>
+ *
  * <!-- START SNIPPET: javadocs-api -->
+ * <p>
  * If you wish to use SiteGraph through its API rather than through the command line,
  * you can do that as well. All you need to do is create a new SiteGraph instance,
  * optionally specify a {@link Writer} to output the dot content to, and then call
  * {@link #prepare()}.
+ * </p>
  * <!-- END SNIPPET: javadocs-api -->
  */
 public class SiteGraph {

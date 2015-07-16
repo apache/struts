@@ -33,38 +33,39 @@ import javax.servlet.http.HttpSession;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * Ensures that only one request per token is processed. This interceptor can make sure that back buttons and double
  * clicks don't cause un-intended side affects. For example, you can use this to prevent careless users who might double
  * click on a "checkout" button at an online store. This interceptor uses a fairly primitive technique for when an
  * invalid token is found: it returns the result <b>invalid.token</b>, which can be mapped in your action configuration.
  * A more complex implementation, {@link TokenSessionStoreInterceptor}, can provide much better logic for when invalid
  * tokens are found.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * <b>Note:</b> To set a token in your form, you should use the <b>token tag</b>. This tag is required and must be used
  * in the forms that submit to actions protected by this interceptor. Any request that does not provide a token (using
  * the token tag) will be processed as a request with an invalid token.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * <b>Internationalization Note:</b> The following key could be used to internationalized the action errors generated
  * by this token interceptor
+ * </p>
  *
  * <ul>
  *    <li>struts.messages.invalid.token</li>
  * </ul>
  *
- * <p/>
- *
+ * <p>
  * <b>NOTE:</b> As this method extends off MethodFilterInterceptor, it is capable of
  * deciding if it is applicable only to selective methods in the action class. See
  * <code>MethodFilterInterceptor</code> for more info.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -76,19 +77,17 @@ import javax.servlet.http.HttpSession;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
- *
+ * <p>
  * While not very common for users to extend, this interceptor is extended by the {@link TokenSessionStoreInterceptor}.
  * The {@link #handleInvalidToken}  and {@link #handleValidToken} methods are protected and available for more
  * interesting logic, such as done with the token session interceptor.
- *
+ * </p>
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

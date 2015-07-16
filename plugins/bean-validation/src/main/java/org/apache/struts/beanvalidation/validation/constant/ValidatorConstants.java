@@ -23,7 +23,7 @@ package org.apache.struts.beanvalidation.validation.constant;
 /**
  * <p>Class consisting of various constant values being used within
  * bean validation plugin </p>
- * <p/>
+ *
  * <p>
  * These values can be overridden using struts.xml file by providing custom values.
  * </p>

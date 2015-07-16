@@ -28,13 +28,13 @@ import java.lang.annotation.Target;
  * false when it is evaluated against the value stack.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The annotation must be applied at method level.
+ * <p>The annotation must be applied at method level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -83,7 +83,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -92,7 +92,6 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Rainer Hermanns
- * @version $Id$
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -127,7 +126,7 @@ public @interface FieldExpressionValidator {
     /**
      * If this is activated, the validator will be used as short-circuit.
      *
-     * Adds the short-circuit="true" attribute value if <tt>true</tt>.
+     * Adds the short-circuit='true' attribute value if <tt>true</tt>.
      *
      */
     boolean shortCircuit() default false;

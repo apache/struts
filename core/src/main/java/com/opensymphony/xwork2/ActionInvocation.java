@@ -83,23 +83,31 @@ public interface ActionInvocation extends Serializable {
     /**
      * Sets the result code, possibly overriding the one returned by the
      * action.
-     * <p/>
+     *
+     * <p>
      * The "intended" purpose of this method is to allow PreResultListeners to
      * override the result code returned by the Action.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If this method is used before the Action executes, the Action's returned
      * result code will override what was set. However the Action could (if
      * specifically coded to do so) inspect the ActionInvocation to see that
      * someone "upstream" (e.g. an Interceptor) had suggested a value as the
      * result, and it could therefore return the same value itself.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If this method is called between the Action execution and the Result
      * execution, then the value set here will override the result code the
      * action had returned.  Creating an Interceptor that implements
-     * {@link PreResultListener} will give you this oportunity.
-     * <p/>
+     * {@link PreResultListener} will give you this opportunity.
+     * </p>
+     *
+     * <p>
      * If this method is called after the Result has been executed, it will
      * have the effect of raising an IllegalStateException.
+     * </p>
      *
      * @param resultCode  the result code.
      * @throws IllegalStateException if called after the Result has been executed.
@@ -117,11 +125,15 @@ public interface ActionInvocation extends Serializable {
     /**
      * Register a {@link PreResultListener} to be notified after the Action is executed and
      * before the Result is executed.
-     * <p/>
+     *
+     * <p>
      * The ActionInvocation implementation must guarantee that listeners will be called in
      * the order in which they are registered.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * Listener registration and execution does not need to be thread-safe.
+     * </p>
      *
      * @param listener the listener to add.
      */
@@ -129,11 +141,13 @@ public interface ActionInvocation extends Serializable {
 
     /**
      * Invokes the next step in processing this ActionInvocation.
-     * <p/>
+     *
+     * <p>
      * If there are more Interceptors, this will call the next one. If Interceptors choose not to short-circuit
      * ActionInvocation processing and return their own return code, they will call invoke() to allow the next Interceptor
      * to execute. If there are no more Interceptors to be applied, the Action is executed.
      * If the {@link ActionProxy#getExecuteResult()} method returns <tt>true</tt>, the Result is also executed.
+     * </p>
      *
      * @throws Exception can be thrown.
      * @return the return code.
@@ -142,9 +156,11 @@ public interface ActionInvocation extends Serializable {
 
     /**
      * Invokes only the Action (not Interceptors or Results).
-     * <p/>
+     *
+     * <p>
      * This is useful in rare situations where advanced usage with the interceptor/action/result workflow is
      * being manipulated for certain functionality.
+     * </p>
      *
      * @return the return code.
      * @throws Exception can be thrown.

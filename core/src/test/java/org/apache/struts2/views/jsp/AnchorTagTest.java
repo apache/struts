@@ -78,40 +78,40 @@ public class AnchorTagTest extends AbstractUITagTest {
      * - current request url
      * - tag's value attribute
      * - tag's nested param tag
-     * <p/>
+     * <br>
      * id1
      * ===
      * - found in current request url
      * - found in tag's value attribute
      * - found in tag's param tag
      * CONCLUSION: tag's param tag takes precedence (paramId1)
-     * <p/>
+     * <br>
      * id2
      * ===
      * - found in current request url
      * - found in tag's value attribute
      * CONCLUSION: tag's value attribute take precedence (tagId2)
-     * <p/>
+     * <br>
      * urlParam1
      * =========
      * - found in current request url
      * CONCLUSION: param in current request url will be used (urlValue1)
-     * <p/>
+     * <br>
      * urlParam2
      * =========
      * - found in current request url
      * CONCLUSION: param in current request url will be used. (urlValue2)
-     * <p/>
+     * <br>
      * tagId
      * =====
      * - found in tag's value attribute
      * CONCLUSION: param in tag's value attribute wil; be used. (tagValue)
-     * <p/>
+     * <br>
      * param1
      * ======
      * - found in nested param tag
      * CONCLUSION: param in nested param tag will be used. (param1value)
-     * <p/>
+     * <br>
      * param2
      * ======
      * - found in nested param tag
@@ -208,16 +208,20 @@ public class AnchorTagTest extends AbstractUITagTest {
     }
 
     /**
+     * <p>
      * To test priority of parameter passed in to url component though
      * various way, with includeParams="NONE"
-     * - current request url
-     * - tag's value attribute
-     * - tag's nested param tag
-     * <p/>
+     * </p>
+     *
+     * - current request url<br>
+     * - tag's value attribute<br>
+     * - tag's nested param tag<br>
+     *
+     * <p>
      * In this case only parameters from the tag itself is taken into account.
      * Those from request will not count, only those in tag's value attribute
      * and nested param tag.
-     *
+     * </p>
      * @throws Exception
      */
     public void testParametersPriorityWithIncludeParamsAsNONE() throws Exception {

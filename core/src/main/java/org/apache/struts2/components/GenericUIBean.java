@@ -31,41 +31,50 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Renders an custom UI widget using the specified templates. Additional objects can be passed in to the template
- * using the param tags.<p/>
+ * using the param tags.
+ * </p>
  *
- * <b>Freemarker:</b><p/>
- * Objects provided can be retrieve from within the template via $parameters._paramname_.<p/>
+ * <p><b>Freemarker:</b></p>
+ * <pre>Objects provided can be retrieve from within the template via $parameters._paramname_.</pre>
  *
- * <b>Jsp:</b><p/>
- * Objects provided can be retrieve from within the template via &lt;s:property value="%{parameters._paramname_}" /&gt;<p/>
+ * <p><b>JSP:</b></p>
+ * <pre>Objects provided can be retrieve from within the template via &lt;s:property value="%{parameters._paramname_}" /&gt;</pre>
  *
- *
+ * <p>
  * In the bottom JSP and Velocity samples, two parameters are being passed in to the component. From within the
- * component, they can be accessed as:- <p/>
+ * component, they can be accessed as:
+ * </p>
  *
- * <b>Freemarker:</b><p/>
- * $parameters.get('key1') and $parameters.get('key2') or $parameters.key1 and $parameters.key2<p/>
+ * <p><b>Freemarker:</b></p>
+ * <pre>$parameters.get('key1') and $parameters.get('key2') or $parameters.key1 and $parameters.key2</pre>
  *
- * <b>Jsp:</b><p/>
+ * <p><b>JSP:</b></p>
+ * <pre>
  * &lt;s:property value="%{parameters.key1}" /&gt; and &lt;s:property value="%{'parameters.key2'}" /&gt; or
- * &lt;s:property value="%{parameters.get('key1')}" /&gt; and &lt;s:property value="%{parameters.get('key2')}" /&gt;<p/>
+ * &lt;s:property value="%{parameters.get('key1')}" /&gt; and &lt;s:property value="%{parameters.get('key2')}" /&gt;
+ * </pre>
  *
+ * <p>
  * Currently, your custom UI components can be written in Velocity, JSP, or Freemarker, and the correct rendering
- * engine will be found based on file extension.<p/>
+ * engine will be found based on file extension.
+ * </p>
  *
+ * <p>
  * <b>Remember:</b> the value params will always be resolved against the ValueStack so if you mean to pass a
  * string literal to your component, make sure to wrap it in single quotes i.e. value="'value1'" (note the opening "' and closing '" otherwise, the the value
- * stack will search for an Object on the stack with a method of getValue1().<p/>
- *
+ * stack will search for an Object on the stack with a method of getValue1().
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
- * <pre>
  * <!-- START SNIPPET: example -->
+ * <p>
  * JSP
+ * </p>
+ * <pre>
  *     &lt;s:component template="/my/custom/component.vm"/&gt;
  *
  *       or
@@ -74,8 +83,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *       &lt;s:param name="key1" value="value1"/&gt;
  *       &lt;s:param name="key2" value="value2"/&gt;
  *     &lt;/s:component&gt;
+ * </pre>
  *
+ * <p>
  * Velocity
+ * </p>
+ * <pre>
  *     #s-component( "template=/my/custom/component.vm" )
  *
  *       or
@@ -84,8 +97,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *       #s-param( "name=key1" "value=value1" )
  *       #s-param( "name=key2" "value=value2" )
  *     #end
+ * </pre>
  *
+ * <p>
  * Freemarker
+ * </p>
+ * <pre>
  *    &lt;@s..component template="/my/custom/component.ftl" />
  *
  *      or
@@ -96,10 +113,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;/@s..component&gt;
  *
  * <!-- END SNIPPET: example -->
- * </pre>
  *
- * <p/>
- *
+ * <p>
  * <b>NOTE:</b>
  * <!-- START SNIPPET: note -->
  *
@@ -108,7 +123,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * could not be picked up from the classpath.
  *
  * <!-- END SNIPPET: note -->
- *
+ * </p>
  */
 @StrutsTag(name="component", tldTagClass="org.apache.struts2.views.jsp.ui.ComponentTag", description="Render a custom ui widget")
 public class GenericUIBean extends UIBean {

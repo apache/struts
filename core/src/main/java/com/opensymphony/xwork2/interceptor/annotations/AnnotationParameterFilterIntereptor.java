@@ -17,13 +17,16 @@ import java.util.Map;
 
 /**
  * Annotation based version of {@link ParameterFilterInterceptor}.
- * <p/>
+ *
+ * <p>
  * This {@link Interceptor} must be placed in the stack before the {@link ParametersInterceptor}
  * When a parameter matches a field that is marked {@link Blocked} then it is removed from
  * the parameter map.
- * <p/>
+ * </p>
+ * <p>
  * If an {@link Action} class is marked with {@link BlockByDefault} then all parameters are
  * removed unless a field on the Action exists and is marked with {@link Allowed}
+ * </p>
  *
  * @author martin.gilday
  */

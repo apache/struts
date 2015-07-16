@@ -25,7 +25,7 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 /**
  * Unit test for {@link HeadTag}.
- * <p/>
+ * <br>
  * Note: If unit test fails with encoding difference check the src/test/struts.properties
  * and adjust the .txt files accordingly
  *

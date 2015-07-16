@@ -32,12 +32,16 @@ import java.util.*;
 
 
 /**
+ * <p>
  * This is the entry point into XWork's rule-based validation framework.
- * <p/>
+ * </p>
+ *
+ * <p>
  * Validation rules are specified in XML configuration files named <code>className-contextName-validation.xml</code> where
  * className is the name of the class the configuration is for and -contextName is optional
  * (contextName is an arbitrary key that is used to look up additional validation rules for a
  * specific context).
+ * </p>
  *
  * @author Jason Carreira
  * @author Mark Woon
@@ -127,10 +131,10 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         Set<String> shortcircuitedFields = null;
 
         for (final Validator validator : validators) {
-        try {
+            try {
                 validator.setValidatorContext(validatorContext);
 
-            LOG.debug("Running validator: {} for object {} and method {}", validator, object, method);
+                LOG.debug("Running validator: {} for object {} and method {}", validator, object, method);
 
                 FieldValidator fValidator = null;
                 String fullFieldName = null;
@@ -234,7 +238,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      * and directly implemented interface of the current action, as well as adding validators for
      * any alias of this invocation. Nifty!</p>
      *
-     * <p>Given the following class structure:
+     * <p>Given the following class structure:</p>
      * <pre>
      *   interface Thing;
      *   interface Animal extends Thing;
@@ -242,9 +246,9 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      *   class AnimalImpl implements Animal;
      *   class QuadrapedImpl extends AnimalImpl implements Quadraped;
      *   class Dog extends QuadrapedImpl;
-     * </pre></p>
+     * </pre>
      *
-     * <p>This method will look for the following config files for Dog:
+     * <p>This method will look for the following config files for Dog:</p>
      * <pre>
      *   Animal
      *   Animal-context
@@ -256,7 +260,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      *   QuadrapedImpl-context
      *   Dog
      *   Dog-context
-     * </pre></p>
+     * </pre>
      *
      * <p>Note that the validation rules for Thing is never looked for because no class in the
      * hierarchy directly implements Thing.</p>

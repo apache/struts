@@ -27,12 +27,13 @@ import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * 
+ *
+ * <p>
  * MethodFilterInterceptor is an abstract <code>Interceptor</code> used as
  * a base class for interceptors that will filter execution based on method 
  * names according to specified included/excluded method lists.
  * 
- * <p/>
+ * </p>
  * 
  * Settable parameters are as follows:
  * 
@@ -41,13 +42,13 @@ import java.util.Set;
  * 		<li>includeMethods - method names to be included in interceptor processing</li>
  * </ul>
  * 
- * <p/>
+ * <p>
  * 
  * <b>NOTE:</b> If method name are available in both includeMethods and 
  * excludeMethods, it will be considered as an included method: 
  * includeMethods takes precedence over excludeMethods.
  * 
- * <p/>
+ * </p>
  * 
  * Interceptors that extends this capability include:
  * 

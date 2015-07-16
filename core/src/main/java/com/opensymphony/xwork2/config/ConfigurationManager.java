@@ -85,12 +85,15 @@ public class ConfigurationManager {
     }
 
     /**
+     * <p>
      * Get the current list of ConfigurationProviders. If no custom ConfigurationProviders have been added, this method
-     * will return a list containing only the default ConfigurationProvider, XMLConfigurationProvider.  if a custom
+     * will return a list containing only the default ConfigurationProvider, XMLConfigurationProvider. If a custom
      * ConfigurationProvider has been added, then the XmlConfigurationProvider must be added by hand.
      * </p>
-     * <p/>
-     * TODO: the lazy instantiation of XmlConfigurationProvider should be refactored to be elsewhere.  the behavior described above seems unintuitive.
+     *
+     * <p>
+     * TODO: The lazy instantiation of XmlConfigurationProvider should be refactored to be elsewhere. The behavior described above seems unintuitive.
+     * </p>
      *
      * @return the list of registered ConfigurationProvider objects
      * @see ConfigurationProvider

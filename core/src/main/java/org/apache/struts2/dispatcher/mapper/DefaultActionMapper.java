@@ -42,39 +42,43 @@ import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * <p/>
+ * <p>
  * Default action mapper implementation, using the standard *.[ext] (where ext
  * usually "action") pattern. The extension is looked up from the Struts
  * configuration key <b>struts.action.extension</b>.
- * <p/>
- * <p/> To help with dealing with buttons and other related requirements, this
+ * </p>
+ *
+ * <p>
+ * To help with dealing with buttons and other related requirements, this
  * mapper (and other {@link ActionMapper}s, we hope) has the ability to name a
  * button with some predefined prefix and have that button name alter the
  * execution behaviour. The four prefixes are:
- * <p/>
+ * </p>
+ *
  * <ul>
  * <li>Method prefix - <i>method:default</i></li>
  * <li>Action prefix - <i>action:dashboard</i></li>
  * </ul>
- * <p/>
+ *
+ * <p>
  * In addition to these four prefixes, this mapper also understands the
  * action naming pattern of <i>foo!bar</i> in either the extension form (eg:
  * foo!bar.action) or in the prefix form (eg: action:foo!bar). This syntax tells
  * this mapper to map to the action named <i>foo</i> and the method <i>bar</i>.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  * <b>Method Prefix</b>
  * <!-- START SNIPPET: method -->
- * <p/>
+ * <p>
  * With method-prefix, instead of calling baz action's execute() method (by
  * default if it isn't overriden in struts.xml to be something else), the baz
  * action's anotherMethod() will be called. A very elegant way determine which
  * button is clicked. Alternatively, one would have submit button set a
  * particular value on the action when clicked, and the execute() method decides
  * on what to do with the setted value depending on which button is clicked.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: method -->
- * <p/>
+ *
  * <pre>
  *  &lt;!-- START SNIPPET: method-example --&gt;
  *  &lt;s:form action=&quot;baz&quot;&gt;
@@ -86,14 +90,14 @@ import java.util.regex.Pattern;
  * </pre>
  * <b>Action prefix</b>
  * <!-- START SNIPPET: action -->
- * <p/>
+ * <p>
  * With action-prefix, instead of executing baz action's execute() method (by
- * default if it isn't overriden in struts.xml to be something else), the
- * anotherAction action's execute() method (assuming again if it isn't overriden
+ * default if it isn't overridden in struts.xml to be something else), the
+ * anotherAction action's execute() method (assuming again if it isn't overridden
  * with something else in struts.xml) will be executed.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: action -->
- * <p/>
+ *
  * <pre>
  *  &lt;!-- START SNIPPET: action-example --&gt;
  *  &lt;s:form action=&quot;baz&quot;&gt;

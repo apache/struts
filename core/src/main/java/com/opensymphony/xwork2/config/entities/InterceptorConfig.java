@@ -25,8 +25,10 @@ import java.util.Map;
 
 /**
  * Configuration for Interceptors.
- * <p/>
+ *
+ * <p>
  * In the xml configuration file this is defined as the <code>interceptors</code> tag.
+ * </p>
  *
  * @author Mike
  */

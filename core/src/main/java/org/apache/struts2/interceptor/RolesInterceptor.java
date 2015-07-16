@@ -35,10 +35,12 @@ import java.util.List;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * This interceptor ensures that the action will only be executed if the user has the correct role.
+ * </p>
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -60,7 +62,10 @@ import java.util.List;
  * <!-- END SNIPPET: parameters -->
  *
  * <!-- START SNIPPET: extending -->
+ * <p>
  * There are three extensions to the existing interceptor:
+ * </p>
+ *
  * <ul>
  *   <li>isAllowed(HttpServletRequest,Object) - whether or not to allow
  *       the passed action execution with this request</li>

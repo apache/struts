@@ -42,10 +42,10 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Provides support for localization in XWork.
- * <p/>
+ *
  * <!-- START SNIPPET: searchorder -->
- * Resource bundles are searched in the following order:<p/>
- * <p/>
+ * <p>Resource bundles are searched in the following order:</p>
+ *
  * <ol>
  * <li>ActionClass.properties</li>
  * <li>Interface.properties (every interface and sub-interface)</li>
@@ -55,11 +55,11 @@ import java.util.concurrent.ConcurrentMap;
  * <li>search up the i18n message key hierarchy itself</li>
  * <li>global resource properties</li>
  * </ol>
- * <p/>
+ *
  * <!-- END SNIPPET: searchorder -->
- * <p/>
+ *
  * <!-- START SNIPPET: packagenote -->
- * To clarify #5, while traversing the package hierarchy, Struts 2 will look for a file package.properties:<p/>
+ * <p>To clarify #5, while traversing the package hierarchy, Struts 2 will look for a file package.properties:</p>
  * com/<br/>
  * &nbsp; acme/<br/>
  * &nbsp; &nbsp; package.properties<br/>
@@ -67,22 +67,22 @@ import java.util.concurrent.ConcurrentMap;
  * &nbsp; &nbsp; &nbsp; package.properties<br/>
  * &nbsp; &nbsp; &nbsp; FooAction.java<br/>
  * &nbsp; &nbsp; &nbsp; FooAction.properties<br/>
- * <p/>
+ * <p>
  * If FooAction.properties does not exist, com/acme/action/package.properties will be searched for, if
  * not found com/acme/package.properties, if not found com/package.properties, etc.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: packagenote -->
- * <p/>
+ *
  * <!-- START SNIPPET: globalresource -->
- * A global resource bundle could be specified programatically, as well as the locale.
- * <p/>
+ * <p>
+ * A global resource bundle could be specified programmatically, as well as the locale.
+ * </p>
  * <!-- END SNIPPET: globalresource -->
  *
  * @author Jason Carreira
  * @author Mark Woon
  * @author Rainer Hermanns
  * @author tm_jee
- * @version $Date$ $Id$
  */
 public class LocalizedTextUtil {
 
@@ -132,8 +132,9 @@ public class LocalizedTextUtil {
 
     /**
      * Add's the bundle to the internal list of default bundles.
-     * <p/>
+     * <p>
      * If the bundle already exists in the list it will be readded.
+     * </p>
      *
      * @param resourceBundleName the name of the bundle to add.
      */
@@ -250,9 +251,10 @@ public class LocalizedTextUtil {
     }
 
     /**
-     * Finds the given resorce bundle by it's name.
-     * <p/>
+     * Finds the given resource bundle by it's name.
+     * <p>
      * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
+     * </p>
      *
      * @param aBundleName the name of the bundle (usually it's FQN classname).
      * @param locale      the locale.
@@ -328,10 +330,12 @@ public class LocalizedTextUtil {
     }
 
     /**
+     * <p>
      * Finds a localized text message for the given key, aTextName. Both the key and the message
      * itself is evaluated as required.  The following algorithm is used to find the requested
      * message:
-     * <p/>
+     * </p>
+     *
      * <ol>
      * <li>Look for message in aClass' class hierarchy.
      * <ol>
@@ -350,18 +354,24 @@ public class LocalizedTextUtil {
      * <li>If still not found, look for the message in the default resource bundles.</li>
      * <li>Return defaultMessage</li>
      * </ol>
-     * <p/>
+     *
+     * <p>
      * When looking for the message, if the key indexes a collection (e.g. user.phone[0]) and a
      * message for that specific key cannot be found, the general form will also be looked up
      * (i.e. user.phone[*]).
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
+     * </p>
      *
      * @param aClass         the class whose name to use as the start point for the search
      * @param aTextName      the key to find the text message for
      * @param locale         the locale the message should be for
      * @param defaultMessage the message to be returned if no text message can be found in any
+     *                       resource bundle
+     * @param args           arguments
      *                       resource bundle
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
@@ -372,10 +382,12 @@ public class LocalizedTextUtil {
     }
 
     /**
+     * <p>
      * Finds a localized text message for the given key, aTextName. Both the key and the message
      * itself is evaluated as required.  The following algorithm is used to find the requested
      * message:
-     * <p/>
+     * </p>
+     *
      * <ol>
      * <li>Look for message in aClass' class hierarchy.
      * <ol>
@@ -394,21 +406,28 @@ public class LocalizedTextUtil {
      * <li>If still not found, look for the message in the default resource bundles.</li>
      * <li>Return defaultMessage</li>
      * </ol>
-     * <p/>
+     *
+     * <p>
      * When looking for the message, if the key indexes a collection (e.g. user.phone[0]) and a
      * message for that specific key cannot be found, the general form will also be looked up
      * (i.e. user.phone[*]).
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is <b>not</b> found a WARN log will be logged.
+     * </p>
      *
      * @param aClass         the class whose name to use as the start point for the search
      * @param aTextName      the key to find the text message for
      * @param locale         the locale the message should be for
      * @param defaultMessage the message to be returned if no text message can be found in any
      *                       resource bundle
+     * @param args           arguments
      * @param valueStack     the value stack to use to evaluate expressions instead of the
      *                       one in the ActionContext ThreadLocal
      * @return the localized text, or null if none can be found and no defaultMessage is provided
@@ -581,11 +600,15 @@ public class LocalizedTextUtil {
     }
 
     /**
+     * <p>
      * Finds a localized text message for the given key, aTextName, in the specified resource bundle
      * with aTextName as the default message.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
+     * </p>
      *
      * @see #findText(java.util.ResourceBundle, String, java.util.Locale, String, Object[])
      */
@@ -594,13 +617,19 @@ public class LocalizedTextUtil {
     }
 
     /**
+     * <p>
      * Finds a localized text message for the given key, aTextName, in the specified resource
      * bundle.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is <b>not</b> found a WARN log will be logged.
+     * </p>
      *
      * @param bundle         the bundle
      * @param aTextName      the key
@@ -614,13 +643,19 @@ public class LocalizedTextUtil {
     }
 
     /**
+     * <p>
      * Finds a localized text message for the given key, aTextName, in the specified resource
      * bundle.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * If a message is <b>not</b> found a WARN log will be logged.
+     * </p>
      *
      * @param bundle         the bundle
      * @param aTextName      the key

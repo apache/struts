@@ -33,21 +33,24 @@ import javax.servlet.http.HttpSession;
 /**
  * <!-- START SNIPPET: description -->
  *
+ * <p>
  * This interceptor creates the HttpSession if it doesn't exist, also SessionMap is recreated and put in ServletActionContext.
- * <p/>
+ * </p>
+ *
+ * <p>
  * This is particular useful when using the &lt;@s.token&gt; tag in freemarker templates.
  * The tag <b>do</b> require that a HttpSession is already created since freemarker commits
  * the response to the client immediately.
- *
+ * </p>
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  *
  * <!-- START SNIPPET: extending -->
  *
  * <ul>
- *  <li>none</li>
+ *  <li>None</li>
  * </ul>
  *
  * <!-- END SNIPPET: extending -->
@@ -56,14 +59,12 @@ import javax.servlet.http.HttpSession;
  * <!-- START SNIPPET: parameters -->
  *
  * <ul>
- *
  * <li>None</li>
- *
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <b>Example:</b>
+ * <p><b>Example:</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -76,8 +77,6 @@ import javax.servlet.http.HttpSession;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
- *
- * @version $Date$ $Id$
  */
 public class CreateSessionInterceptor extends AbstractInterceptor {
 

@@ -42,25 +42,37 @@ import java.util.Set;
 /**
  * <!-- START SNIPPET: description -->
  *
- * The aim of this intercepter is to set values in the stack/action based on cookie name/value
- * of interest. <p/>
+ * <p>
+ * The aim of this interceptor is to set values in the stack/action based on cookie name/value
+ * of interest.
+ * </p>
  *
+ * <p>
  * If an asterisk is present in cookiesName parameter, it will be assume that
  * all cookies name are to be injected into struts' action, even though
- * cookiesName is comma-separated by other values, e.g. (cookie1,*,cookie2). <p/>
+ * cookiesName is comma-separated by other values, e.g. (cookie1,*,cookie2).
+ * </p>
  *
+ * <p>
  * If cookiesName is left empty it will assume that no cookie will be injected
- * into Struts' action. <p/>
+ * into Struts' action.
+ * </p>
  *
+ * <p>
  * If an asterisk is present in cookiesValue parameter, it will assume that all
  * cookies name irrespective of its value will be injected into Struts' action so
- * long as the cookie name matches those specified in cookiesName parameter.<p/>
+ * long as the cookie name matches those specified in cookiesName parameter.
+ * </p>
  *
+ * <p>
  * If cookiesValue is left empty it will assume that all cookie that match the cookieName
- * parameter will be injected into Struts' action.<p/>
+ * parameter will be injected into Struts' action.
+ * </p>
  *
+ * <p>
  * The action could implement {@link CookiesAware} in order to have a {@link Map}
- * of filtered cookies set into it. <p/>
+ * of filtered cookies set into it.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *

@@ -28,31 +28,35 @@ import org.apache.logging.log4j.Logger;
 /**
  * <!-- START SNIPPET: description -->
  *
+ * <p>
  * This interceptor runs the action through the standard validation framework, which in turn checks the action against
  * any validation rules (found in files such as <i>ActionClass-validation.xml</i>) and adds field-level and action-level
  * error messages (provided that the action implements {@link ValidationAware}). This interceptor
  * is often one of the last (or second to last) interceptors applied in a stack, as it assumes that all values have
  * already been set on the action.
+ * </p>
  *
- * <p/>This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
+ * <p>
+ * This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
  * parameter. <b>excludeMethods</b> accepts a comma-delimited list of method names. For example, requests to
  * <b>foo!input.action</b> and <b>foo!back.action</b> will be skipped by this interceptor if you set the
  * <b>excludeMethods</b> parameter to "input, back".
- * 
- * </ol>
- * 
- * <p/> The workflow of the action request does not change due to this interceptor. Rather,
- * this interceptor is often used in conjuction with the <b>workflow</b> interceptor.
+ * </p>
  *
- * <p/>
- * 
+ * <p>
+ * The workflow of the action request does not change due to this interceptor. Rather,
+ * this interceptor is often used in conjunction with the <b>workflow</b> interceptor.
+ * </p>
+ *
+ * <p>
  * <b>NOTE:</b> As this method extends off MethodFilterInterceptor, it is capable of
  * deciding if it is applicable only to selective methods in the action class. See
  * <code>MethodFilterInterceptor</code> for more info.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -71,9 +75,7 @@ import org.apache.logging.log4j.Logger;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
@@ -81,38 +83,38 @@ import org.apache.logging.log4j.Logger;
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="params"/&gt;
- *     &lt;interceptor-ref name="validation"/&gt;
- *     &lt;interceptor-ref name="workflow"/&gt;
- *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
+ * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;params&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;validation&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;workflow&quot;/&gt;
+ *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
  * 
  * &lt;-- in the following case myMethod of the action class will not
  *        get validated --&gt;
- * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="params"/&gt;
- *     &lt;interceptor-ref name="validation"&gt;
- *         &lt;param name="excludeMethods"&gt;myMethod&lt;/param&gt;
+ * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;params&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;validation&quot;&gt;
+ *         &lt;param name=&quot;excludeMethods&quot;&gt;myMethod&lt;/param&gt;
  *     &lt;/interceptor-ref&gt;
- *     &lt;interceptor-ref name="workflow"/&gt;
- *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
+ *     &lt;interceptor-ref name=&quot;workflow&quot;/&gt;
+ *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
  * 
  * &lt;-- in the following case only annotated methods of the action class will
  *        be validated --&gt;
- * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="params"/&gt;
- *     &lt;interceptor-ref name="validation"&gt;
- *         &lt;param name="validateAnnotatedMethodOnly"&gt;true&lt;/param&gt;
+ * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;params&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;validation&quot;&gt;
+ *         &lt;param name=&quot;validateAnnotatedMethodOnly&quot;&gt;true&lt;/param&gt;
  *     &lt;/interceptor-ref&gt;
- *     &lt;interceptor-ref name="workflow"/&gt;
- *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
+ *     &lt;interceptor-ref name=&quot;workflow&quot;/&gt;
+ *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
  *
  *

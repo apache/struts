@@ -24,16 +24,16 @@ import java.lang.annotation.Target;
 /**
  * <!-- START SNIPPET: description -->
  * This validator checks if there are any conversion errors for a field and applies them if they exist.
- * See <a href="http://wiki.opensymphony.com/display/XW/Type+Conversion+Error+Handling">Type Conversion Error Handling</a> for details.
+ * See <a href="https://struts.apache.org/docs/type-conversion.html#TypeConversion-TypeConversionErrorHandling">Type Conversion Error Handling</a> for details.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The ConversionErrorFieldValidator annotation must be applied at method level.
+ * <p>The ConversionErrorFieldValidator annotation must be applied at method level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -82,7 +82,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -91,7 +91,6 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Rainer Hermanns
- * @version $Id$
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

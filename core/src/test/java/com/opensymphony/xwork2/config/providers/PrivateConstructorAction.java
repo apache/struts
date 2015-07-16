@@ -18,9 +18,11 @@ package com.opensymphony.xwork2.config.providers;
 import com.opensymphony.xwork2.Action;
 
 /**
- * Action with nu public constructor.
- * <p/>
+ * Action with no public constructor.
+ *
+ * <p>
  * Used for unit test of {@link XmlConfigurationProvider}.
+ * </p>
  *
  * @author Claus Ibsen
  */

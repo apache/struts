@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  * Renders two HTML select elements with second one changing displayed values depending on selected entry of first one.
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

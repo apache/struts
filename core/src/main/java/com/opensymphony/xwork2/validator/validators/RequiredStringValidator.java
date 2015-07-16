@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * (i.e. it isn't "").  The "trim" parameter determines whether it will {@link String#trim() trim}
  * the String before performing the length check.  If unspecified, the String will be trimmed.
  * <!-- END SNIPPET: javadoc -->
- * <p/>
  *
  * <!-- START SNIPPET: parameters -->
  * <ul>
@@ -68,7 +67,6 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * </pre>
  * 
  * @author rainerh
- * @version $Date$ $Id$
  */
 public class RequiredStringValidator extends FieldValidatorSupport {
 

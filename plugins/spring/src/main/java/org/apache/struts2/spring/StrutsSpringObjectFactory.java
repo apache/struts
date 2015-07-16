@@ -38,11 +38,14 @@ import javax.servlet.ServletContext;
 
 
 /**
+ * <p>
  * Struts object factory that integrates with Spring.
- * <p/>
+ * </p>
+ *
+ * <p>
  * Spring should be loaded using a web context listener
  * <code>org.springframework.web.context.ContextLoaderListener</code> defined in <code>web.xml</code>.
- *
+ * </p>
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
     private static final Logger LOG = LogManager.getLogger(StrutsSpringObjectFactory.class);

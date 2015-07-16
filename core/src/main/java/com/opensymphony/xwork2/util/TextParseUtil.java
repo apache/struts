@@ -56,7 +56,7 @@ public class TextParseUtil {
      * could be null, if it is it will just be skipped as if it is just calling
      * {@link #translateVariables(char, String, ValueStack)}.
      *
-     * <p/>
+     * <br>
      *
      * A typical use-case would be when we need to URL Encode the parsed value. To do so
      * we could just supply a URLEncodingEvaluator for example.
@@ -266,24 +266,24 @@ public class TextParseUtil {
 
 
     /**
+     * <p>
      * A parsed value evaluator for {@link TextParseUtil}. It could be supplied by
      * calling {@link TextParseUtil#translateVariables(char, String, ValueStack, Class, ParsedValueEvaluator)}.
+     * </p>
      *
-     * <p/>
-     *
+     * <p>
      * By supplying this <code>ParsedValueEvaluator</code>, the parsed value
      * (parsed against the value stack) value will be
      * given to <code>ParsedValueEvaluator</code> to be evaluated before the
      * translateVariable process goes on.
+     * </p>
      *
-     * <p/>
-     *
+     * <p>
      * A typical use-case would be to have a custom <code>ParseValueEvaluator</code>
      * to URL Encode the parsed value.
+     * </p>
      *
      * @author tm_jee
-     *
-     * @version $Date$ $Id$
      */
     public static interface ParsedValueEvaluator {
 

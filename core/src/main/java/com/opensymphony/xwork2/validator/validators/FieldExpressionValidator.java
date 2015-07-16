@@ -22,8 +22,7 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * <!-- START SNIPPET: javadoc -->
  * Validates a field using an OGNL expression.
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * 
+ *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  *    <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
@@ -53,10 +52,6 @@ import com.opensymphony.xwork2.validator.ValidationException;
  *    &lt;/vaidators&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
- *
- * @author $Author$
- * @version $Revision$
  */
 public class FieldExpressionValidator extends FieldValidatorSupport {
 

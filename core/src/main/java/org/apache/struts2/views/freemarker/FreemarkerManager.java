@@ -55,11 +55,13 @@ import java.util.*;
 
 
 /**
+ * <p>
  * Static Configuration Manager for the FreemarkerResult's configuration
+ * </p>
  *
- * <p/>
+ * <p>
+ * Possible extension points are:
  *
- * Possible extension points are :-
  * <ul>
  *   <li>createConfiguration method</li>
  *   <li>loadSettings method</li>
@@ -67,27 +69,31 @@ import java.util.*;
  *   <li>populateContext method</li>
  * </ul>
  *
- * <p/>
+ * <p>
  * <b> createConfiguration method </b><br/>
  * Create a freemarker Configuration.
- * <p/>
+ * </p>
  *
+ * <p>
  * <b> loadSettings method </b><br/>
  * Load freemarker settings, default to freemarker.properties (if found in classpath)
- * <p/>
+ * </p>
  *
+ * <p>
  * <b> createTemplateLoader method</b><br/>
- * create a freemarker TemplateLoader that loads freemarker template in the following order :-
+ * create a freemarker TemplateLoader that loads freemarker template in the following order:
+ * </p>
+ *
  * <ol>
  *   <li>path defined in ServletContext init parameter named 'templatePath' or 'TemplatePath' (must be an absolute path)</li>
  *   <li>webapp classpath</li>
  *   <li>struts's static folder (under [STRUT2_SOURCE]/org/apache/struts2/static/</li>
  * </ol>
- * <p/>
  *
+ * <p>
  * <b> populateContext method</b><br/>
  * populate the created model.
- *
+ * </p>
  */
 public class FreemarkerManager {
 
@@ -289,8 +295,10 @@ public class FreemarkerManager {
     
     /**
      * Create the instance of the freemarker Configuration object.
-     * <p/>
+     * <p>
      * this implementation
+     * </p>
+     *
      * <ul>
      * <li>obtains the default configuration from Configuration.getDefaultConfiguration()
      * <li>sets up template loading from a ClassTemplateLoader and a WebappTemplateLoader

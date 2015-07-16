@@ -29,22 +29,29 @@ import java.util.ResourceBundle;
  * bundle associated with each superclass as well. It will stop once a bundle is
  * found that contains the given text. This gives a cascading style that allow
  * global texts to be defined for an application base class.
- * <p/>
+ *
+ * <p>
  * You can override {@link LocaleProvider#getLocale()} to change the behaviour of how
  * to choose locale for the bundles that are returned. Typically you would
  * use the {@link LocaleProvider} interface to get the users configured locale.
- * <p/>
+ * </p>
+ *
+ * <p>
  * When you want to use your own implementation for Struts 2 project you have to define following
  * bean and constant in struts.xml:
  * &lt;bean class=&quot;org.demo.MyTextProvider&quot; name=&quot;myTextProvider&quot; type=&quot;com.opensymphony.xwork2.TextProvider&quot; /&gt;
  * &lt;constant name=&quot;struts.xworkTextProvider&quot; value=&quot;myTextProvider&quot; /&gt;
- * <p/>
+ * </p>
+ *
+ * <p>
  * if you want to also use your implementation for framework's messages define another constant (remember to put
  * into it all framework messages)
  * &lt;constant name=&quot;system&quot; value=&quot;myTextProvider&quot; /&gt;
- * <p/>
- * Take a look on {@link com.opensymphony.xwork2.ActionSupport} for example TextProvider implemntation.
+ * </p>
  *
+ * <p>
+ * Take a look on {@link com.opensymphony.xwork2.ActionSupport} for example TextProvider implementation.
+ * </p>
  * @author Jason Carreira
  * @author Rainer Hermanns
  * @see LocaleProvider

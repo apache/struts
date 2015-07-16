@@ -27,10 +27,6 @@ import java.util.List;
 
 
 /**
- * DefaultValidatorFileParserTest
- * <p/>
- * Created : Jan 20, 2003 3:41:26 PM
- *
  * @author Jason Carreira
  * @author James House
  * @author tm_jee ( tm_jee (at) yahoo.co.uk )

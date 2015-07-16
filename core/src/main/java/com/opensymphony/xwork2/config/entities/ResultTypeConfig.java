@@ -26,8 +26,10 @@ import java.util.Map;
 
 /**
  * Configuration class for result types.
- * <p/>
+ *
+ * <p>
  * In the xml configuration file this is defined as the <code>result-type</code> tag.
+ * </p>
  *
  * @author Mike
  * @author Rainer Hermanns

@@ -23,10 +23,14 @@ import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 import java.util.List;
 
 /**
+ * <p>
  * Unit test for RegexFieldValidator.
- * <p/>
+ * </p>
+ *
+ * <p>
  * This unit test is only to test that the regex field validator works, not to
  * unit test the build in reg.exp from JDK. That is why the expressions are so simple.
+ * </p>
  *
  * @author Claus Ibsen
  */

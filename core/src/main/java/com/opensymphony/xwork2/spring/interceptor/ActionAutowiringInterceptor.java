@@ -77,16 +77,20 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
     }
 
     /**
+     * <p>
      * Looks for the <code>ApplicationContext</code> under the attribute that the Spring listener sets in
      * the servlet context.  The configuration is done the first time here instead of in init() since the
      * <code>ActionContext</code> is not available during <code>Interceptor</code> initialization.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * Autowires the action to Spring beans and places the <code>ApplicationContext</code>
      * on the <code>ActionContext</code>
-     * <p/>
-     * TODO Should this check to see if the <code>SpringObjectFactory</code> has already been configured
-     * instead of instantiating a new one?  Or is there a good reason for the interceptor to have it's own
-     * factory?
+     * </p>
+     *
+     * <p>
+     * TODO: Should this check to see if the <code>SpringObjectFactory</code> has already been configured instead of instantiating a new one?  Or is there a good reason for the interceptor to have it's own factory?
+     * </p>
      *
      * @param invocation
      * @throws Exception

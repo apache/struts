@@ -36,14 +36,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Validation annotation to validate that two fields are equal.
  * An array of fields and their matching confirmation fields can be supplied.
- * <p/>
+ * <p>
  * Example, compare 1 pair of fields:
+ * </p>
  * <pre>
  *
  * @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match")
  * </pre>
- * <p/>
+ *
+ * <p>
  * Example, compare more than 1 pair of fields:
+ * </p>
  * <pre>
  * @FieldMatch.List({
  *      @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match"),

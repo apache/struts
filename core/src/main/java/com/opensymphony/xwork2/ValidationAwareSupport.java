@@ -121,8 +121,10 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     /**
      * Clears field errors map.
-     * <p/>
+     *
+     * <p>
      * Will clear the map that contains field errors.
+     * </p>
      */
     public synchronized void clearFieldErrors() {
         internalGetFieldErrors().clear();
@@ -130,8 +132,10 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     /**
      * Clears action errors list.
-     * <p/>
+     *
+     * <p>
      * Will clear the list that contains action errors.
+     * </p>
      */
     public synchronized void clearActionErrors() {
         internalGetActionErrors().clear();
@@ -139,8 +143,10 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     /**
      * Clears messages list.
-     * <p/>
+     *
+     * <p>
      * Will clear the list that contains action messages.
+     * </p>
      */
     public synchronized void clearMessages() {
         internalGetActionMessages().clear();
@@ -148,9 +154,11 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     /**
      * Clears all error list/maps.
-     * <p/>
+     *
+     * <p>
      * Will clear the map and list that contain
      * field errors and action errors.
+     * </p>
      */
     public synchronized void clearErrors() {
         internalGetFieldErrors().clear();
@@ -159,9 +167,11 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     /**
      * Clears all error and messages list/maps.
-     * <p/>
+     *
+     * <p>
      * Will clear the maps/lists that contain
      * field errors, action errors and action messages.
+     * </p>
      */
     public synchronized void clearErrorsAndMessages() {
         internalGetFieldErrors().clear();

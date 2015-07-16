@@ -25,12 +25,14 @@ import java.util.Map;
 
 
 /**
+ * <p>
  * Actions that want to be aware of the application Map object should implement this interface.
  * This will give them access to a Map where they can put objects that should be available
- * to other parts of the application. <p>
- * <p/>
+ * to other parts of the application.
+ * </p>
+ * <p>
  * Typical uses are configuration objects and caches.
- *
+ * </p>
  */
 public interface ApplicationAware {
 

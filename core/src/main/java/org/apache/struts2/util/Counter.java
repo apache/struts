@@ -26,9 +26,9 @@ import java.io.Serializable;
 
 /**
  * A bean that can be used to keep track of a counter.
- * <p/>
+ * <p>
  * Since it is an Iterator it can be used by the iterator tag
- *
+ * </p>
  */
 public class Counter implements java.util.Iterator, Serializable {
 

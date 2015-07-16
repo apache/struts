@@ -36,12 +36,15 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * A result that renders the current request parameters as a form which
  * immediately submits a <a href="http://en.wikipedia.org/wiki/Postback">postback</a>
  * to the specified destination.
+ * </p>
  * <!-- END SNIPPET: description -->
- * <p/>
+ * <p>
  * <b>Parameters:</b>
+ * </p>
  * <!-- START SNIPPET: params -->
  * <ul>
  *     <li>location - http location to post the form</li>
@@ -53,8 +56,9 @@ import java.util.Map;
  *     <li>parse (true|false) - when set to true actionName, namespace and method are parsed, default "true"</li>
  * </ul>
  * <!-- END SNIPPET: params -->
- * <p/>
+ * <p>
  * <b>Examples:</b>
+ * </p>
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;action name="registerThirdParty" &gt;

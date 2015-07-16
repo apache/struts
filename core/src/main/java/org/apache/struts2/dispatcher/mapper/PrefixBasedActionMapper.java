@@ -16,24 +16,24 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- *
- * A prefix based action mapper that is capable of delegating to other {@link ActionMapper}s based on the request's prefix
- *
- * It is configured through struts.xml
- *
+ * <p>
+ * A prefix based action mapper that is capable of delegating to other {@link ActionMapper}s based on the request's prefix.<br>
+ * It is configured through struts.xml<br>
  * For example, with the following entries in struts.properties
+ * </p>
  *
  * <pre>
  * &lt;constant name="struts.mapper.class" value="org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper"/&gt;
  * &lt;constant name="struts.mapper.prefixMapping" value="/communities:pseudoRestful,/communityTags:pseudoRestful,/events:pseudoRestful,/mediaList:pseudoRestful,/users:pseudoRestful,/community:struts,/communityTag:struts,/event:struts,/media:struts,/user:struts,:struts"/&gt;
  * </pre>
- * <p/>
+ *
+ * <p>
  * When {@link PrefixBasedActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} or
  * {@link PrefixBasedActionMapper#getUriFromActionMapping(ActionMapping)} is invoked,
  * {@link PrefixBasedActionMapper} will check each possible prefix (url prefix terminating just before a /) to find the most specific ActionMapper that returns a mapping when asked to map the request.  If none are found, null is returned for both
  * {@link PrefixBasedActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} and
  * {@link PrefixBasedActionMapper#getUriFromActionMapping(ActionMapping)} methods.
- * <p/>
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *

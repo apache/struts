@@ -37,10 +37,15 @@ import java.lang.reflect.Proxy;
 public class ObjectProfiler {
 
     /**
+     * <p>
      * Given a class, and an interface that it implements, return a proxied version of the class that implements
      * the interface.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * The usual use of this is to profile methods from Factory objects:
+     * </p>
+     *
      * <pre>
      * public PersistenceManager getPersistenceManager()
      * {
@@ -53,8 +58,10 @@ public class ObjectProfiler {
      *   return ObjectProfiler.getProfiledObject(PersistenceManager.class, new DefaultPersistenceManager());
      * }
      * </pre>
-     * <p/>
+     *
+     * <p>
      * A side effect of this is that you will no longer be able to downcast to DefaultPersistenceManager.  This is probably a *good* thing.
+     * </p>
      *
      * @param interfaceClazz The interface to implement.
      * @param o              The object to proxy

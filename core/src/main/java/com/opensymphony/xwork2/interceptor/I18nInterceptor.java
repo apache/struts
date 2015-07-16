@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>
+ * <p>
  * An interceptor that handles setting the locale specified in a session as the locale for the current action request.
  * In addition, this interceptor will look for a specific HTTP request parameter and set the locale to whatever value is
  * provided. This means that this interceptor can be used to allow for your application to dynamically change the locale
@@ -35,45 +35,38 @@ import java.util.Map;
  * be able to set his or her language preference at any point. The locale parameter is removed during the execution of
  * this interceptor, ensuring that properties aren't set on an action (such as request_locale) that have no typical
  * corresponding setter in your action.
- * <p/>
- * <p/>For example, using the default parameter name, a request to <b>foo.action?request_locale=en_US</b>, then the
+ * </p>
+ *
+ * <p>
+ * For example, using the default parameter name, a request to <b>foo.action?request_locale=en_US</b>, then the
  * locale for US English is saved in the user's session and will be used for all future requests.
- * <p/>
- if there is no locale set (for example with the first visit), the interceptor uses the browser locale.
- * <p/>
+ * If there is no locale set (for example with the first visit), the interceptor uses the browser locale.
+ * </p>
+ *
  * <!-- END SNIPPET: description -->
- * <p/>
- * <p/> <u>Interceptor parameters:</u>
- * <p/>
+ * <p><u>Interceptor parameters:</u></p>
  * <!-- START SNIPPET: parameters -->
- * <p/>
+ *
  * <ul>
- * <p/>
  * <li>parameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to and save
  * in the session. By default this is <b>request_locale</b></li>
- * <p/>
  * <li>requestOnlyParameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to
  * for the current request only, without saving it in the session. By default this is <b>request_only_locale</b></li>
- * <p/>
  * <li>attributeName (optional) - the name of the session key to store the selected locale. By default this is
  * <b>WW_TRANS_I18N_LOCALE</b></li>
- * <p/>
  * </ul>
- * <p/>
  * <!-- END SNIPPET: parameters -->
- * <p/>
- * <p/> <u>Extending the interceptor:</u>
- * <p/>
- * <p/>
- * <p/>
+ *
+ * <p><u>Extending the interceptor:</u></p>
+ *
  * <!-- START SNIPPET: extending -->
- * <p/>
+ * <p>
  * There are no known extensions points for this interceptor.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: extending -->
- * <p/>
- * <p/> <u>Example code:</u>
- * <p/>
+ *
+ * <p><u>Example code:</u></p>
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;

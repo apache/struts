@@ -127,11 +127,15 @@ public class Dispatcher {
     private static final String DEFAULT_CONFIGURATION_PATHS = "struts-default.xml,struts-plugin.xml,struts.xml";
 
     /**
+     * <p>
      * Store state of STRUTS_DISPATCHER_PARAMETERSWORKAROUND.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * The workaround is for WebLogic.
-     * We try to autodect WebLogic on Dispatcher init.
+     * We try to autodetect WebLogic on Dispatcher init.
      * The workaround can also be enabled manually.
+     * </p>
      */
     private boolean paramsWorkaroundEnabled = false;
 
@@ -490,14 +494,18 @@ public class Dispatcher {
     }
 
     /**
+     * <p>
      * Load Action class for mapping and invoke the appropriate Action method, or go directly to the Result.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * This method first creates the action context from the given parameters,
      * and then loads an <tt>ActionProxy</tt> from the given action name and namespace.
      * After that, the Action method is executed and output channels through the response object.
      * Actions not found are sent back to the user via the {@link Dispatcher#sendError} method,
      * using the 404 return code.
      * All other errors are reported by throwing a ServletException.
+     * </p>
      *
      * @param request  the HttpServletRequest object
      * @param response the HttpServletResponse object

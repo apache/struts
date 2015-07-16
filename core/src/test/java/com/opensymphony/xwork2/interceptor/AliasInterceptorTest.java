@@ -28,16 +28,18 @@ import java.util.Map;
 /**
  * AliasInterceptorTest
  *
+ * <p>
  * Test of aliasInterceptor specifically depends on actionTest test defined in /test/xwork.xml
  * stack.getContext().putAll(params);
- * <p/>
+ * </p>
  * e.g.
+ * <pre>
  * <action name="aliasTest" class="com.opensymphony.xwork2.SimpleAction">
  *    <param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz" }</param>
  *    <interceptor-ref name="defaultStack"/>
  *    <interceptor-ref name="alias"/>
  * </action>
- *
+ * </pre>
  * @author Matthew Payne
  */
 public class AliasInterceptorTest extends XWorkTestCase {

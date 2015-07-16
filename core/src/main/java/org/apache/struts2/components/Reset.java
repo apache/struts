@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
  * text shown on the button face, but has issues with Microsoft Internet Explorer at least up to 6.0
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

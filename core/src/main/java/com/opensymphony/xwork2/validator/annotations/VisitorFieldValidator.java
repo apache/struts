@@ -33,13 +33,13 @@ import java.lang.annotation.Target;
  * by the validations for the Object message.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The annotation must be applied at method level.
+ * <p>The annotation must be applied at method level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -94,7 +94,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -103,7 +103,6 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Rainer Hermanns
- * @version $Id$
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -111,7 +110,7 @@ public @interface VisitorFieldValidator {
 
     /**
      * Determines the context to use for validating the Object property.
-     * If not defined, the context of the Action validator is propogated to the Object property validator.
+     * If not defined, the context of the Action validator is propagated to the Object property validator.
      * In the case of Action validator, this context is the Action alias.
      */
     String context() default "";

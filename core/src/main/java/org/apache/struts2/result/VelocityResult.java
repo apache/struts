@@ -53,9 +53,9 @@ import java.io.Writer;
  * streamed directly to the servlet output.
  *
  * <!-- END SNIPPET: description -->
- * <p/>
+ * <p>
  * <b>This result type takes the following parameters:</b>
- *
+ * </p>
  * <!-- START SNIPPET: params -->
  *
  * <ul>
@@ -71,14 +71,16 @@ import java.io.Writer;
  * </p>
  *
  * <!-- END SNIPPET: params -->
- *
+ * <p>
  * <b>Example:</b>
- *
- * <pre><!-- START SNIPPET: example -->
+ * </p>
+ * <pre>
+ * <!-- START SNIPPET: example -->
  * &lt;result name="success" type="velocity"&gt;
  *   &lt;param name="location"&gt;foo.vm&lt;/param&gt;
  * &lt;/result&gt;
- * <!-- END SNIPPET: example --></pre>
+ * <!-- END SNIPPET: example -->
+ * </pre>
  *
  */
 public class VelocityResult extends StrutsResultSupport {
@@ -170,8 +172,9 @@ public class VelocityResult extends StrutsResultSupport {
 
     /**
      * Retrieve the content type for this template.
-     * <p/>
+     * <p>
      * People can override this method if they want to provide specific content types for specific templates (eg text/xml).
+     * </p>
      *
      * @return The content type associated with this template (default "text/html")
      */
@@ -181,8 +184,9 @@ public class VelocityResult extends StrutsResultSupport {
 
     /**
      * Retrieve the encoding for this template.
-     * <p/>
+     * <p>
      * People can override this method if they want to provide specific encodings for specific templates.
+     * </p>
      *
      * @return The encoding associated with this template (defaults to the value of 'struts.i18n.encoding' property)
      */

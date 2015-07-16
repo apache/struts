@@ -20,9 +20,11 @@ import java.util.Map;
 
 /**
  * The {@link ActionProxyFactory} is used to create {@link ActionProxy}s to be executed.
- * <p/>
+ *
+ * <p>
  * It is the entry point to XWork that is used by a dispatcher to create an {@link ActionProxy} to execute
  * for a particular namespace and action name.
+ * </p>
  *
  * @author Jason Carreira
  * @see DefaultActionProxyFactory
@@ -32,8 +34,10 @@ public interface ActionProxyFactory {
     /**
      * Creates an {@link ActionProxy} for the given namespace and action name by looking up the configuration.The ActionProxy
      * should be fully initialized when it is returned, including having an {@link ActionInvocation} instance associated.
-     * <p/>
-     * <b>Note:</b> This is the most used create method.
+     *
+     * <p>
+     *  <b>Note:</b> This is the most used create method.
+     * </p>
      *
      * @param namespace    the namespace of the action, can be <tt>null</tt>
      * @param actionName   the name of the action

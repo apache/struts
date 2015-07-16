@@ -49,11 +49,15 @@ import java.util.*;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * Provides several different debugging screens to provide insight into the
  * data behind the page.
+ * </p>
  * <!-- END SNIPPET: description -->
+ * <p>
  * The value of the 'debug' request parameter determines
  * the screen:
+ * </p>
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * <li> <code>xml</code> - Dumps the parameters, context, session, and value
@@ -69,18 +73,20 @@ import java.util.*;
  * debug=browser&object=%23parameters</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
- * <p/>
- *  Example:
+ * <p>
+ * Example:
+ * </p>
  * <!-- START SNIPPET: example -->
  *  http://localhost:8080/Welcome.action?debug=xml
  * <!-- END SNIPPET: example -->
- * <p/>
+ * <p>
  * <!-- START SNIPPET: remarks -->
  * This interceptor only is activated when devMode is enabled in
  * struts.properties. The 'debug' parameter is removed from the parameter list
  * before the action is executed. All operations occur before the natural
  * Result has a chance to execute.
  * <!-- END SNIPPET: remarks -->
+ * </p>
  */
 public class DebuggingInterceptor extends AbstractInterceptor {
 

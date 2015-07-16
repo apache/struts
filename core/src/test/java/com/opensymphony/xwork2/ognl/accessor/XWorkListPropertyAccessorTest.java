@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * XWorkListPropertyAccessorTest
- * <p/>
- * Created : Nov 7, 2005 3:54:44 PM
- *
  * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class XWorkListPropertyAccessorTest extends XWorkTestCase {

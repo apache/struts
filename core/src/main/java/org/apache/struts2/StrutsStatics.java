@@ -23,19 +23,22 @@ package org.apache.struts2;
 
 
 /**
+ * <p>
  * Constants used by Struts. The constants can be used to get or set objects
  * out of the action context or other collections.
+ * </p>
  *
- * <p/>
- *
+ * <p>
  * Example:
- * <ul><code>ActionContext.getContext().put(HTTP_REQUEST, request);</code></ul>
- * <p/>
+ *
+ * <code>ActionContext.getContext().put(HTTP_REQUEST, request);</code>
+ *
  * or
- * <p/>
- * <ul><code>
+ *
+ * <code>
  * ActionContext context = ActionContext.getContext();<br>
- * HttpServletRequest request = (HttpServletRequest)context.get(HTTP_REQUEST);</code></ul>
+ * HttpServletRequest request = (HttpServletRequest)context.get(HTTP_REQUEST);</code>
+ * </p>
  */
 public interface StrutsStatics {
 

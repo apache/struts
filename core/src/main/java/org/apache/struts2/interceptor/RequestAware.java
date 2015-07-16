@@ -24,9 +24,13 @@ package org.apache.struts2.interceptor;
 import java.util.Map;
 
 /**
- * Actions that want access to the current serlvet request attributes should implement this interface.<p />
+ * <p>
+ * Actions that want access to the current servlet request attributes should implement this interface.
+ * </p>
  *
- * This interface is only relevant if the Action is used in a servlet environment.<p/>
+ * <p>
+ * This interface is only relevant if the Action is used in a servlet environment.
+ * </p>
  */
 public interface RequestAware {
 

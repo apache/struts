@@ -391,11 +391,16 @@ public class FormTagTest extends AbstractUITagTest {
 
 
     /**
-     * Testing that this: <p>
+     * <p>
+     * Testing that this:
+     * </p>
+     * <pre>
      * &lt;a:form name=&quot;'myForm'&quot; namespace=&quot;'/testNamespace'&quot; action=&quot;'testNamespaceAction'&quot; method=&quot;'post'&quot;&gt;
-     * <p/>
+     * </pre>
+     * <p>
      * doesn't create an action of &quot;/testNamespace/testNamespaceAction.action&quot; when the &quot;struts.action.extension&quot;
      * config property is set to &quot;jspa&quot;.
+     * </p>
      */
     public void testFormTagWithDifferentActionExtension() throws Exception {
         initDispatcher(new HashMap<String,String>(){{ 
@@ -419,9 +424,9 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     /**
-     * Testing that this: <p>
+     * Testing that this: <br>
      * &lt;a:form name=&quot;'myForm'&quot; action=&quot;'/testNamespace/testNamespaceAction.jspa'&quot; method=&quot;'post'&quot;&gt;
-     * <p/>
+     * <br>
      * doesn't create an action of &quot;/testNamespace/testNamespaceAction.action&quot;
      */
     public void testFormTagWithDifferentActionExtensionHardcoded() throws Exception {

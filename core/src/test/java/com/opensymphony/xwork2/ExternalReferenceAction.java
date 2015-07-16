@@ -21,13 +21,6 @@
  */
 package com.opensymphony.xwork2;
 
-
-/**
- * @author Mike
- *         <p/>
- *         To change the template for this generated type comment go to Window -
- *         Preferences - Java - Code Generation - Code and Comments
- */
 public class ExternalReferenceAction implements Action {
 
     private Foo foo;

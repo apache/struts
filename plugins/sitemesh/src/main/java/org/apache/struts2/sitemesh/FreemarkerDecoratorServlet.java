@@ -47,7 +47,7 @@ import java.util.Locale;
 
 /**
  * <p>This is a SiteMesh FreeMarker view servlet.</p>
- * <p/>
+ *
  * <p>It overrides the SiteMesh servlet to rely on the
  * Freemarker Manager in Struts instead of creating it's
  * own manager</p>
@@ -228,9 +228,14 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
 
 
     /**
+     * <p>
      * Create the instance of the freemarker Configuration object.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * this implementation
+     * </p>
+     *
      * <ul>
      * <li>obtains the default configuration from Configuration.getDefaultConfiguration()
      * <li>sets up template loading from a ClassTemplateLoader and a WebappTemplateLoader
@@ -243,14 +248,17 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
     }
 
     /**
+     * <p>
      * Called before the execution is passed to template.process().
      * This is a generic hook you might use in subclasses to perform a specific
      * action before the template is processed. By default does nothing.
      * A typical action to perform here is to inject application-specific
      * objects into the model root
-     * <p/>
+     * </p>
+     *
      * <p>Example: Expose the Serlvet context path as "baseDir" for all templates:
-     * <p/>
+     * </p>
+     *
      * <pre>
      *    ((SimpleHash) data).put("baseDir", request.getContextPath() + "/");
      *    return true;

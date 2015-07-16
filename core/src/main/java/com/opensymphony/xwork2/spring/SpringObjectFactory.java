@@ -32,10 +32,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <p>
  * Simple implementation of the ObjectFactory that makes use of Spring's application context if one has been configured,
- * before falling back on the default mechanism of instantiating a new class using the class name. <p/> In order to use
- * this class in your application, you will need to instantiate a copy of this class and set it as XWork's ObjectFactory
+ * before falling back on the default mechanism of instantiating a new class using the class name.
+ * </p>
+ * <p>
+ * In order to use this class in your application, you will need to instantiate a copy of this class and set it as XWork's ObjectFactory
  * before the xwork.xml file is parsed. In a servlet environment, this could be done using a ServletContextListener.
+ * </p>
  *
  * @author Simon Stewart (sms@lateral.net)
  */

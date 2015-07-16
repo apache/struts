@@ -51,8 +51,8 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Base class to extend for UI components.
- * <p/>
- * This class is a good extension point when building reuseable UI components.
+ * <br>
+ * This class is a good extension point when building reusable UI components.
  *
  */
 public class Component {
@@ -116,8 +116,8 @@ public class Component {
         this.urlHelper = urlHelper;
     }
     /**
-     * Gets the OGNL value stack assoicated with this component.
-     * @return the OGNL value stack assoicated with this component.
+     * Gets the OGNL value stack associated with this component.
+     * @return the OGNL value stack associated with this component.
      */
     public ValueStack getStack() {
         return stack;
@@ -150,7 +150,7 @@ public class Component {
     /**
      * Callback for the end tag of this component.
      * Should the body be evaluated again?
-     * <p/>
+     * <br>
      * <b>NOTE:</b> will pop component stack.
      * @param writer  the output writer.
      * @param body    the rendered body.
@@ -163,7 +163,7 @@ public class Component {
     /**
      * Callback for the start tag of this component.
      * Should the body be evaluated again?
-     * <p/>
+     * <br>
      * <b>NOTE:</b> has a parameter to determine to pop the component stack.
      * @param writer  the output writer.
      * @param body    the rendered body.
@@ -225,7 +225,7 @@ public class Component {
 
     /**
      * Evaluates the OGNL stack to find a String value.
-     * <p/>
+     * <br>
      * If the given expression is <tt>null</tt/> a error is logged and a <code>RuntimeException</code> is thrown
      * constructed with a messaged based on the given field and errorMsg parameter.
      *
@@ -245,7 +245,7 @@ public class Component {
 
     /**
      * Constructs a <code>RuntimeException</code> based on the given information.
-     * <p/>
+     * <br>
      * A message is constructed and logged at ERROR level before being returned
      * as a <code>RuntimeException</code>.
      * @param field   field name used when throwing <code>RuntimeException</code>.
@@ -290,7 +290,7 @@ public class Component {
 
     /**
      * Is the altSyntax enabled? [TRUE]
-     * <p/>
+     * <br>
      * See <code>struts.properties</code> where the altSyntax flag is defined.
      */
     public boolean altSyntax() {
@@ -324,12 +324,16 @@ public class Component {
 	}
 
     /**
+     * <p>
      * Evaluates the OGNL stack to find an Object value.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * Function just like <code>findValue(String)</code> except that if the
      * given expression is <tt>null</tt/> a error is logged and
      * a <code>RuntimeException</code> is thrown constructed with a
-     * messaged based on the given field and errorMsg paramter.
+     * messaged based on the given field and errorMsg parameter.
+     * </p>
      *
      * @param expr  OGNL expression.
      * @param field   field name used when throwing <code>RuntimeException</code>.
@@ -362,7 +366,7 @@ public class Component {
      * <code>expr</code> the portion wrapped with altSyntax (%{...})
      * against stack when altSyntax is on, else the whole <code>expr</code>
      * is evaluated against the stack.
-     * <p/>
+     * <br>
      * This method only supports the altSyntax. So this should be set to true.
      * @param expr  OGNL expression.
      * @param toType  the type expected to find.
@@ -490,7 +494,7 @@ public class Component {
 
     /**
      * Adds the given key and value to this component's own parameter.
-     * <p/>
+     * <br>
      * If the provided key is <tt>null</tt> nothing happens.
      * If the provided value is <tt>null</tt> any existing parameter with
      * the given key name is removed.

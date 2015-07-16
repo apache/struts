@@ -10,12 +10,12 @@ public interface OValValidationManager {
     /**
      * <p>This method 'collects' all the validator configurations for a given
      * action invocation.</p>
-     * <p/>
+     *
      * <p>It will traverse up the class hierarchy looking for validators for every super class
      * and directly implemented interface of the current action, as well as adding validators for
      * any alias of this invocation. Nifty!</p>
-     * <p/>
-     * <p>Given the following class structure:
+     *
+     * <p>Given the following class structure: </p>
      * <pre>
      *   interface Thing;
      *   interface Animal extends Thing;
@@ -23,9 +23,9 @@ public interface OValValidationManager {
      *   class AnimalImpl implements Animal;
      *   class QuadrapedImpl extends AnimalImpl implements Quadraped;
      *   class Dog extends QuadrapedImpl;
-     * </pre></p>
-     * <p/>
-     * <p>This method will look for the following config files for Dog:
+     * </pre>
+     *
+     * <p>This method will look for the following config files for Dog:</p>
      * <pre>
      *   Animal
      *   Animal-context
@@ -37,8 +37,8 @@ public interface OValValidationManager {
      *   QuadrapedImpl-context
      *   Dog
      *   Dog-context
-     * </pre></p>
-     * <p/>
+     * </pre>
+     *
      * <p>Note that the validation rules for Thing is never looked for because no class in the
      * hierarchy directly implements Thing.</p>
      *

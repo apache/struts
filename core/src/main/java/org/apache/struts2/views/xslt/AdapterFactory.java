@@ -156,16 +156,22 @@ public class AdapterFactory {
     }
 
     /**
+     * <p>
      * Construct a proxy adapter for a value that is an existing DOM Node.
      * This allows arbitrary DOM Node trees to be mixed in with our results.
      * The proxied nodes are read-only and currently support only
      * limited types of Nodes including Element, Text, and Attributes.  (Other
      * Node types may be ignored by the proxy and not appear in the result tree).
-     * <p/>
+     * </p>
+     *
+     * <p>
      * // TODO:
      * NameSpaces are not yet supported.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * This method is primarily for use by the adapter node classes.
+     * </p>
      */
     public Node proxyNode(AdapterNode parent, Node node) {
         // If the property is a Document, "unwrap" it to the root element

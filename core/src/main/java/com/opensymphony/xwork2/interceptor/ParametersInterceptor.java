@@ -241,9 +241,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      *
      * @param ac        The action context
      * @param newParams The parameter map to apply
-     *                  <p/>
+     *                  <p>
      *                  In this class this is a no-op, since the parameters were fetched from the same location.
      *                  In subclasses both retrieveParameters() and addParametersToContext() should be overridden.
+     *                  </p>
      */
     protected void addParametersToContext(ActionContext ac, Map<String, Object> newParams) {
     }
@@ -468,9 +469,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     /**
      * Sets a comma-delimited list of regular expressions to match
      * parameters that are allowed in the parameter map (aka whitelist).
-     * <p/>
+     * <p>
      * Don't change the default unless you know what you are doing in terms
      * of security implications.
+     * </p>
      *
      * @param commaDelim A comma-delimited list of regular expressions
      */

@@ -27,7 +27,7 @@ import java.util.Map;
  * <!-- START SNIPPET: javadoc -->
  * Field Validator that checks if a conversion error occurred for this field.
  * <!-- END SNIPPET: javadoc -->
- * <p/>
+ *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  *     <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
@@ -53,8 +53,6 @@ import java.util.Map;
  *
  * @author Jason Carreira
  * @author tm_jee
- * 
- * @version $Date $Id$
  */
 public class ConversionErrorFieldValidator extends RepopulateConversionErrorFieldValidatorSupport {
 

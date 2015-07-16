@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A template.
- * <p/>
+ * <p>
  * A template is used as a model for rendering output.
  * This object contains basic common template information
+ * </p>
  */
 public class Template implements Cloneable {
     String dir;

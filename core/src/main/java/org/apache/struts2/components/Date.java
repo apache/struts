@@ -61,12 +61,12 @@ import java.util.TimeZone;
  *    <li>format</li>
  * </ul>
  *
- * <p/>
+ * <br>
  *
  * Following how the date component will work, depending on the value of nice attribute
  * (which by default is false) and the format attribute.
  *
- * <p/>
+ * <br>
  *
  * <b><u>Condition 1: With nice attribute as true</u></b>
  * <table border="1">
@@ -104,12 +104,12 @@ import java.util.TimeZone;
  *   </tr>
  * </table>
  *
- * <p/>
+ * <br>
  *
  * <b><u>Condition 2: With nice attribute as false and format attribute is specified eg. dd/MM/yyyyy </u></b>
  * <p>In this case the format attribute will be used.</p>
  *
- * <p/>
+ * <br>
  *
  * <b><u>Condition 3: With nice attribute as false and no format attribute is specified </u></b>
  * <table border="1">
@@ -126,7 +126,7 @@ import java.util.TimeZone;
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p><b>Examples</b></p>
  * <pre>
  *  <!-- START SNIPPET: example -->
  *  &lt;s:date name="person.birthday" format="dd/MM/yyyy" /&gt;
@@ -208,8 +208,8 @@ public class Date extends ContextBean {
     }
 
     /**
-     * Calculates the difference in time from now to the given date, and outputs it nicely. <p/> An example: <br/>Now =
-     * 2006/03/12 13:38:00, date = 2006/03/12 15:50:00 will output "in 1 hour, 12 minutes".
+     * Calculates the difference in time from now to the given date, and outputs it nicely. <br> An example: <br>
+     * Now = 2006/03/12 13:38:00, date = 2006/03/12 15:50:00 will output "in 1 hour, 12 minutes".
      *
      * @param tp   text provider
      * @param date the date

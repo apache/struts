@@ -46,7 +46,7 @@ import java.io.StringWriter;
 
 /**
  * <p>This is a SiteMesh Velocity view servlet.</p>
- * <p/>
+ *
  * <p>It overrides the SiteMesh servlet to rely on the
  * Velocity Manager in Struts instead of creating it's
  * own manager</p>
@@ -59,14 +59,14 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
     /**
      * <p>Initializes servlet, toolbox and Velocity template engine.
      * Called by the servlet container on loading.</p>
-     * <p/>
+     *
      * <p>NOTE: If no charset is specified in the default.contentType
      * property (in your velocity.properties) and you have specified
      * an output.encoding property, then that will be used as the
      * charset for the default content-type of pages served by this
      * servlet.</p>
      *
-     * @param config servlet configuation
+     * @param config servlet configuration
      */
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -160,15 +160,17 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
     }
 
     /**
+     * <p>
      * Sets the content type of the response.  This is available to be overridden
      * by a derived class.
-     * <p/>
-     * <p>The default implementation is :
+     * </p>
+     * <p>The default implementation is:</p>
      * <pre>
-     * <p/>
+     *
      *    response.setContentType(defaultContentType);
-     * <p/>
+     *
      * </pre>
+     * <p>
      * where defaultContentType is set to the value of the default.contentType
      * property, or "text/html" if that is not set.</p>
      *

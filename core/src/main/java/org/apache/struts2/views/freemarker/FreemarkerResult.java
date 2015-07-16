@@ -148,12 +148,14 @@ public class FreemarkerResult extends StrutsResultSupport {
 
     /**
      * Execute this result, using the specified template locationArg.
-     * <p/>
-     * The template locationArg has already been interoplated for any variable substitutions
-     * <p/>
+     * <p>
+     * The template locationArg has already been interpolated for any variable substitutions
+     * </p>
+     * <p>
      * this method obtains the freemarker configuration and the object wrapper from the provided hooks.
      * It them implements the template processing workflow by calling the hooks for
      * preTemplateProcess and postTemplateProcess
+     * </p>
      */
     public void doExecute(String locationArg, ActionInvocation invocation) throws IOException, TemplateException {
         this.location = locationArg;
@@ -230,27 +232,35 @@ public class FreemarkerResult extends StrutsResultSupport {
     }
 
     /**
+     * <p>
      * This method is called from {@link #doExecute(String, ActionInvocation)} to obtain the
      * FreeMarker configuration object that this result will use for template loading. This is a
      * hook that allows you to custom-configure the configuration object in a subclass, or to fetch
      * it from an IoC container.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * <b>
      * The default implementation obtains the configuration from the ConfigurationManager instance.
      * </b>
+     * </p>
      */
     protected Configuration getConfiguration() throws TemplateException {
         return freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
     }
 
     /**
+     * <p>
      * This method is called from {@link #doExecute(String, ActionInvocation)}  to obtain the
      * FreeMarker object wrapper object that this result will use for adapting objects into template
      * models. This is a hook that allows you to custom-configure the wrapper object in a subclass.
-     * <p/>
+     * </p>
+     *
+     * <p>
      * <b>
      * The default implementation returns {@link Configuration#getObjectWrapper()}
      * </b>
+     * </p>
      */
     protected ObjectWrapper getObjectWrapper() {
         return configuration.getObjectWrapper();
@@ -273,9 +283,10 @@ public class FreemarkerResult extends StrutsResultSupport {
 
     /**
      * Build the instance of the ScopesHashModel, including JspTagLib support
-     * <p/>
+     * <p>
      * Objects added to the model are
-     * <p/>
+     * </p>
+     *
      * <ul>
      * <li>Application - servlet context attributes hash model
      * <li>JspTaglibs - jsp tag lib factory model

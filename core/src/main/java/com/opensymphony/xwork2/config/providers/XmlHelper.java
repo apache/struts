@@ -80,15 +80,20 @@ public class XmlHelper {
     }
 
     /**
+     * <p>
      * This method will return the content of this particular <code>element</code>.
      * For example,
-     * <p/>
+     * </p>
+     *
      * <pre>
      *    <result>something_1</result>
      * </pre>
+     *
+     * <p>
      * When the {@link org.w3c.dom.Element} <code>&lt;result&gt;</code> is passed in as
      * argument (<code>element</code> to this method, it returns the content of it,
      * namely, <code>something_1</code> in the example above.
+     * </p>
      *
      * @return
      */

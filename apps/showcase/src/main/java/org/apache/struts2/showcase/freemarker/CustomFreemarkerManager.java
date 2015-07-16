@@ -28,18 +28,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * <p>
  * This is an example of a custom FreemarkerManager, mean to be
  * instantiated through Spring.
- * <p/>
- * <p/>
+ * </p>
+ *
+ * <p>
  * It will add into Freemarker's model
  * an utility class called {@link CustomFreemarkerManagerUtil} as a simple
  * example demonstrating how to extends FreemarkerManager.
- * <p/>
- * <p/>
+ * </p>
+ * <p>
  * The {@link CustomFreemarkerManagerUtil} will be created by Spring and
  * injected through constructor injection.
- * <p/>
+ * </p>
  */
 public class CustomFreemarkerManager extends FreemarkerManager {
 

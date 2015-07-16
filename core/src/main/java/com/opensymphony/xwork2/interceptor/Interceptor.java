@@ -22,124 +22,128 @@ import java.io.Serializable;
 
 /**
  * <!-- START SNIPPET: introduction -->
- * <p/>
+ *
+ * <p>
  * An interceptor is a stateless class that follows the interceptor pattern, as
  * found in {@link  javax.servlet.Filter} and in AOP languages.
- * <p/>
- * <p/>
- * <p/>
+ * </p>
+ *
+ * <p>
  * Interceptors are objects that dynamically intercept Action invocations.
  * They provide the developer with the opportunity to define code that can be executed
  * before and/or after the execution of an action. They also have the ability
  * to prevent an action from executing. Interceptors provide developers a way to
- * encapulate common functionality in a re-usable form that can be applied to
+ * encapsulate common functionality in a re-usable form that can be applied to
  * one or more Actions.
- * <p/>
- * <p/>
- * <p/>
+ * </p>
+ *
+ * <p>
  * Interceptors <b>must</b> be stateless and not assume that a new instance will be created for each request or Action.
  * Interceptors may choose to either short-circuit the {@link ActionInvocation} execution and return a return code
  * (such as {@link com.opensymphony.xwork2.Action#SUCCESS}), or it may choose to do some processing before
  * and/or after delegating the rest of the procesing using {@link ActionInvocation#invoke()}.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: introduction -->
- * <p/>
- * <p/>
- * <p/>
+ *
  * <!-- START SNIPPET: parameterOverriding -->
- * <p/>
- * Interceptor's parameter could be overriden through the following ways :-
- * <p/>
- * <p/>
- * <p/>
+ * <p>
+ * Interceptor's parameter could be overridden through the following ways :-
+ * </p>
+
  * <b>Method 1:</b>
  * <pre>
- * &lt;action name="myAction" class="myActionClass"&gt;
- *     &lt;interceptor-ref name="exception"/&gt;
- *     &lt;interceptor-ref name="alias"/&gt;
- *     &lt;interceptor-ref name="params"/&gt;
- *     &lt;interceptor-ref name="servletConfig"/&gt;
- *     &lt;interceptor-ref name="prepare"/&gt;
- *     &lt;interceptor-ref name="i18n"/&gt;
- *     &lt;interceptor-ref name="chain"/&gt;
- *     &lt;interceptor-ref name="modelDriven"/&gt;
- *     &lt;interceptor-ref name="fileUpload"/&gt;
- *     &lt;interceptor-ref name="staticParams"/&gt;
- *     &lt;interceptor-ref name="params"/&gt;
- *     &lt;interceptor-ref name="conversionError"/&gt;
- *     &lt;interceptor-ref name="validation"&gt;
- *     &lt;param name="excludeMethods"&gt;myValidationExcudeMethod&lt;/param&gt;
+ * &lt;action name=&quot;myAction&quot; class=&quot;myActionClass&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;exception&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;alias&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;params&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;servletConfig&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;prepare&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;i18n&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;chain&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;modelDriven&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;fileUpload&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;staticParams&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;params&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;conversionError&quot;/&gt;
+ *     &lt;interceptor-ref name=&quot;validation&quot;&gt;
+ *     &lt;param name=&quot;excludeMethods&quot;&gt;myValidationExcudeMethod&lt;/param&gt;
  *     &lt;/interceptor-ref&gt;
- *     &lt;interceptor-ref name="workflow"&gt;
- *     &lt;param name="excludeMethods"&gt;myWorkflowExcludeMethod&lt;/param&gt;
+ *     &lt;interceptor-ref name=&quot;workflow&quot;&gt;
+ *     &lt;param name=&quot;excludeMethods&quot;&gt;myWorkflowExcludeMethod&lt;/param&gt;
  *     &lt;/interceptor-ref&gt;
  * &lt;/action&gt;
  * </pre>
- * <p/>
+ *
  * <b>Method 2:</b>
  * <pre>
- * &lt;action name="myAction" class="myActionClass"&gt;
- *   &lt;interceptor-ref name="defaultStack"&gt;
- *     &lt;param name="validation.excludeMethods"&gt;myValidationExcludeMethod&lt;/param&gt;
- *     &lt;param name="workflow.excludeMethods"&gt;myWorkflowExcludeMethod&lt;/param&gt;
+ * &lt;action name=&quot;myAction&quot; class=&quot;myActionClass&quot;&gt;
+ *   &lt;interceptor-ref name=&quot;defaultStack&quot;&gt;
+ *     &lt;param name=&quot;validation.excludeMethods&quot;&gt;myValidationExcludeMethod&lt;/param&gt;
+ *     &lt;param name=&quot;workflow.excludeMethods&quot;&gt;myWorkflowExcludeMethod&lt;/param&gt;
  *   &lt;/interceptor-ref&gt;
  * &lt;/action&gt;
  * </pre>
- * <p/>
- * <p/>
- * <p/>
+ *
+ * <p>
  * In the first method, the whole default stack is copied and the parameter then
  * changed accordingly.
- * <p/>
- * <p/>
- * <p/>
+ * </p>
+ *
+ * <p>
  * In the second method, the 'interceptor-ref' refer to an existing
  * interceptor-stack, namely defaultStack in this example, and override the validator
  * and workflow interceptor excludeMethods typically in this case. Note that in the
  * 'param' tag, the name attribute contains a dot (.) the word before the dot(.)
  * specifies the interceptor name whose parameter is to be overridden and the word after
  * the dot (.) specifies the parameter itself. Essetially it is as follows :-
- * <p/>
+ * </p>
+ *
  * <pre>
  *    &lt;interceptor-name&gt;.&lt;parameter-name&gt;
  * </pre>
- * <p/>
+ * <p>
  * <b>Note</b> also that in this case the 'interceptor-ref' name attribute
  * is used to indicate an interceptor stack which makes sense as if it is referring
  * to the interceptor itself it would be just using Method 1 describe above.
- * <p/>
+ * </p>
  * <!-- END SNIPPET: parameterOverriding -->
- * <p/>
- * <p/>
+ *
+ * <p>
  * <b>Nested Interceptor param overriding</b>
- * <p/>
+ * </p>
+ *
  * <!-- START SNIPPET: nestedParameterOverriding -->
- * <p/>
+ * <p>
  * Interceptor stack parameter overriding could be nested into as many level as possible, though it would
  * be advisable not to nest it too deep as to avoid confusion, For example,
+ * </p>
  * <pre>
- * &lt;interceptor name="interceptor1" class="foo.bar.Interceptor1" /&gt;
- * &lt;interceptor name="interceptor2" class="foo.bar.Interceptor2" /&gt;
- * &lt;interceptor name="interceptor3" class="foo.bar.Interceptor3" /&gt;
- * &lt;interceptor name="interceptor4" class="foo.bar.Interceptor4" /&gt;
- * &lt;interceptor-stack name="stack1"&gt;
- *     &lt;interceptor-ref name="interceptor1" /&gt;
+ * &lt;interceptor name=&quot;interceptor1&quot; class=&quot;foo.bar.Interceptor1&quot; /&gt;
+ * &lt;interceptor name=&quot;interceptor2&quot; class=&quot;foo.bar.Interceptor2&quot; /&gt;
+ * &lt;interceptor name=&quot;interceptor3&quot; class=&quot;foo.bar.Interceptor3&quot; /&gt;
+ * &lt;interceptor name=&quot;interceptor4&quot; class=&quot;foo.bar.Interceptor4&quot; /&gt;
+ * &lt;interceptor-stack name=&quot;stack1&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;interceptor1&quot; /&gt;
  * &lt;/interceptor-stack&gt;
- * &lt;interceptor-stack name="stack2"&gt;
- *     &lt;interceptor-ref name="intercetor2" /&gt;
- *     &lt;interceptor-ref name="stack1" /&gt;
+ * &lt;interceptor-stack name=&quot;stack2&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;intercetor2&quot; /&gt;
+ *     &lt;interceptor-ref name=&quot;stack1&quot; /&gt;
  * &lt;/interceptor-stack&gt;
- * &lt;interceptor-stack name="stack3"&gt;
- *     &lt;interceptor-ref name="interceptor3" /&gt;
- *     &lt;interceptor-ref name="stack2" /&gt;
+ * &lt;interceptor-stack name=&quot;stack3&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;interceptor3&quot; /&gt;
+ *     &lt;interceptor-ref name=&quot;stack2&quot; /&gt;
  * &lt;/interceptor-stack&gt;
- * &lt;interceptor-stack name="stack4"&gt;
- *     &lt;interceptor-ref name="interceptor4" /&gt;
- *     &lt;interceptor-ref name="stack3" /&gt;
+ * &lt;interceptor-stack name=&quot;stack4&quot;&gt;
+ *     &lt;interceptor-ref name=&quot;interceptor4&quot; /&gt;
+ *     &lt;interceptor-ref name=&quot;stack3&quot; /&gt;
  *  &lt;/interceptor-stack&gt;
  * </pre>
+ *
+ * <p>
  * Assuming the interceptor has the following properties
- * <table border="1" width="100%">
+ * </p>
+ *
+ * <table border=&quot;1&quot; width=&quot;100%&quot;>
  * <tr>
  * <td>Interceptor</td>
  * <td>property</td>
@@ -161,30 +165,33 @@ import java.io.Serializable;
  * <td>param4</td>
  * </tr>
  * </table>
- * We could override them as follows :-
+ *
+ * <p>
+ * We could override them as follows :
+ * </p>
+ *
  * <pre>
  *    &lt;action ... &gt;
  *        &lt;!-- to override parameters of interceptor located directly in the stack  --&gt;
- *        &lt;interceptor-ref name="stack4"&gt;
- *           &lt;param name="interceptor4.param4"&gt; ... &lt;/param&gt;
+ *        &lt;interceptor-ref name=&quot;stack4&quot;&gt;
+ *           &lt;param name=&quot;interceptor4.param4&quot;&gt; ... &lt;/param&gt;
  *        &lt;/interceptor-ref&gt;
  *    &lt;/action&gt;
- * <p/>
+ *
  *    &lt;action ... &gt;
  *        &lt;!-- to override parameters of interceptor located under nested stack --&gt;
- *        &lt;interceptor-ref name="stack4"&gt;
- *            &lt;param name="stack3.interceptor3.param3"&gt; ... &lt;/param&gt;
- *            &lt;param name="stack3.stack2.interceptor2.param2"&gt; ... &lt;/param&gt;
- *            &lt;param name="stack3.stack2.stack1.interceptor1.param1"&gt; ... &lt;/param&gt;
+ *        &lt;interceptor-ref name=&quot;stack4&quot;&gt;
+ *            &lt;param name=&quot;stack3.interceptor3.param3&quot;&gt; ... &lt;/param&gt;
+ *            &lt;param name=&quot;stack3.stack2.interceptor2.param2&quot;&gt; ... &lt;/param&gt;
+ *            &lt;param name=&quot;stack3.stack2.stack1.interceptor1.param1&quot;&gt; ... &lt;/param&gt;
  *        &lt;/interceptor-ref&gt;
  *    &lt;/action&gt;
  *  </pre>
- * <p/>
+ *
  * <!-- END SNIPPET: nestedParameterOverriding -->
  *
  * @author Jason Carreira
  * @author tmjee
- * @version $Date$ $Id$
  */
 public interface Interceptor extends Serializable {
 

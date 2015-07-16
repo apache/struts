@@ -291,12 +291,14 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
 
     /**
      * Get the named bundle.
-     * <p/>
+     *
+     * <p>
      * You can override the getLocale() methodName to change the behaviour of how
      * to choose locale for the bundles that are returned. Typically you would
      * use the TextProvider interface to get the users configured locale, or use
      * your own methodName to allow the user to select the locale and store it in
      * the session (by using the SessionAware interface).
+     * </p>
      *
      * @param aBundleName bundle name
      * @return a resource bundle

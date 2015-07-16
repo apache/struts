@@ -26,20 +26,23 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * This interceptor forms the core functionality of the exception handling feature. Exception handling allows you to map
  * an exception to a result code, just as if the action returned a result code instead of throwing an unexpected
  * exception. When an exception is encountered, it is wrapped with an {@link ExceptionHolder} and pushed on the stack,
  * providing easy access to the exception from within your result.
+ * </p>
  *
+ * <p>
  * <b>Note:</b> While you can configure exception mapping in your configuration file at any point, the configuration
  * will not have any effect if this interceptor is not in the interceptor stack for your actions. It is recommended that
  * you make this interceptor the first interceptor on the stack, ensuring that it has full access to catch any
  * exception, even those caused by other interceptors.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -54,24 +57,24 @@ import java.util.Map;
  *
  * </ul>
  *
+ * <p>
  * The parameters above enables us to log all thrown exceptions with stacktace in our own logfile,
  * and present a friendly webpage (with no stacktrace) to the end user.
+ * </p>
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
- *
+ * <p>
  * If you want to add custom handling for publishing the Exception, you may override
  * {@link #publishException(com.opensymphony.xwork2.ActionInvocation, ExceptionHolder)}. The default implementation
  * pushes the given ExceptionHolder on value stack. A custom implementation could add additional logging etc.
- *
+ * </p>
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -97,10 +100,11 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
- * <p/>
+ * <p>
  * This second example will also log the exceptions using our own category
  * <code>com.mycompany.app.unhandled<code> at WARN level. 
- * 
+ * </p>
+ *
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * &lt;xwork&gt;

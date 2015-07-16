@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * <p>
  * When a portlet is targetted for an <code>event</code>, the portlet will receive two
  * portlet requests, one for the <code>event</code> phase, and then followed by a <code>render</code>
  * operation. When in the <code>event</code> phase, the action that is executed can't render
@@ -35,11 +36,14 @@ import java.util.Map;
  * phase, and the action is set up with a result that should render something, the result can't
  * immediately be executed. The portlet needs to "wait" to the render phase to do the
  * rendering.
- * <p/>
+ * </p>
+ *
+ * <p>
  * When the {@link org.apache.struts2.portlet.result.PortletResult} detects such a
  * scenario, instead of executing the actual view, it prepares a couple of render parameters
  * specifying this action and the location of the view, which then will be executed in the
  * following render request.
+ * </p>
  */
 public class DirectRenderFromEventAction implements SessionAware, Action, Serializable {
 

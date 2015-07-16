@@ -33,19 +33,21 @@ import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
+ * <p>
  * Looks for a hidden identification field that specifies the original value of the checkbox.
  * If the checkbox isn't submitted, insert it into the parameters as if it was with the value
  * of 'false'.
+ * </p>
  * <!-- END SNIPPET: description -->
- * <p/>
+ *
  * <!-- START SNIPPET: parameters -->
- * <ul><li>setUncheckedValue -
- * The default value of an unchecked box can be overridden by setting the 'uncheckedValue' property.
- * </li></ul>
+ * <ul>
+ * <li>setUncheckedValue - The default value of an unchecked box can be overridden by setting the 'uncheckedValue' property.</li>
+ * </ul>
  * <!-- END SNIPPET: parameters -->
- * <p/>
+ *
  * <!-- START SNIPPET: extending -->
- * <p/>
+ *
  * <!-- END SNIPPET: extending -->
  */
 public class CheckboxInterceptor extends AbstractInterceptor {

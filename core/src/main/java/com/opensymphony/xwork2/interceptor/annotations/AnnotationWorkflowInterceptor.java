@@ -30,50 +30,49 @@ import java.util.List;
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>Invokes any annotated methods on the action. Specifically, it supports the following
- * annotations:
+ * annotations:</p>
  * <ul>
  * <li> &#64;{@link Before} - will be invoked before the action method. If the returned value is not null, it is
  * returned as the action result code</li>
  * <li> &#64;{@link BeforeResult} - will be invoked after the action method but before the result execution</li>
  * <li> &#64;{@link After} - will be invoked after the action method and result execution</li>
  * </ul>
- * </p>
- * <p/>
+ *
  * <p>There can be multiple methods marked with the same annotations, but the order of their execution
  * is not guaranteed. However, the annotated methods on the superclass chain are guaranteed to be invoked before the
  * annotated method in the current class in the case of a {@link Before} annotations and after, if the annotations is
  * {@link After}.</p>
  * <!-- END SNIPPET: javadoc -->
- * <p/>
+ *
  * <pre>
  * <!-- START SNIPPET: javacode -->
  *  public class BaseAnnotatedAction {
  *  	protected String log = "";
- * <p/>
+ *
  *  	&#64;Before
  *  	public String baseBefore() {
  *  		log = log + "baseBefore-";
  *  		return null;
  *  	}
  *  }
- * <p/>
+ *
  *  public class AnnotatedAction extends BaseAnnotatedAction {
  *  	&#64;Before
  *  	public String before() {
  *  		log = log + "before";
  *  		return null;
  *  	}
- * <p/>
+ *
  *  	public String execute() {
  *  		log = log + "-execute";
  *  		return Action.SUCCESS;
  *  	}
- * <p/>
+ *
  *  	&#64;BeforeResult
  *  	public void beforeResult() throws Exception {
  *  		log = log +"-beforeResult";
  *  	}
- * <p/>
+ *
  *  	&#64;After
  *  	public void after() {
  *  		log = log + "-after";
@@ -81,13 +80,13 @@ import java.util.List;
  *  }
  * <!-- END SNIPPET: javacode -->
  *  </pre>
- * <p/>
+ *
  * <!-- START SNIPPET: example -->
  * <p>With the interceptor applied and the action executed on <code>AnnotatedAction</code> the log
  * instance variable will contain <code>baseBefore-before-execute-beforeResult-after</code>.</p>
  * <!-- END SNIPPET: example -->
- * <p/>
- * <p/>Configure a stack in xwork.xml that replaces the PrepareInterceptor with the AnnotationWorkflowInterceptor:
+ *
+ * <p>Configure a stack in xwork.xml that replaces the PrepareInterceptor with the AnnotationWorkflowInterceptor:</p>
  * <pre>
  * <!-- START SNIPPET: stack -->
  * &lt;interceptor-stack name="annotatedStack"&gt;

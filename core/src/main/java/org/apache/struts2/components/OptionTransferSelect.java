@@ -35,27 +35,23 @@ import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Create a option transfer select component which is basically two &lt;select ...&gt;
  * tag with buttons in the middle of them allowing options in each of the
  * &lt;select ...&gt; to be moved between themselves. Will auto-select all its
  * elements upon its containing form submision.
- *
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/>
- *
- *
  * <!-- START SNIPPET: notice -->
- *
+ * <p>
  * NOTE: The id and doubleId need not be supplied as they will generated provided
  * that the optiontransferselect tag is being used in a form tag. The generated id
  * and doubleId will be &lt;form_id&gt;_&lt;optiontransferselect_nameame&gt; and
  * &lt;form_id&gt;_&lt;optiontransferselect_doubleName&gt; respectively.
+ * </p>
  *
  * <!-- END SNIPPET: notice -->
- *
- * <p/>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

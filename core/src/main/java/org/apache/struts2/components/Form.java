@@ -46,14 +46,19 @@ import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * <p/>
- * Renders HTML an input form.<p/>
- * <p/>
+ * <p>
+ * Renders HTML an input form.
+ * </p>
+ *
+ * <p>
  * The remote form allows the form to be submitted without the page being refreshed. The results from the form
- * can be inserted into any HTML element on the page.<p/>
- * <p/>
- * NOTE:<p/>
- * The order / logic in determining the posting url of the generated HTML form is as follows:-
+ * can be inserted into any HTML element on the page.
+ * </p>
+ * <p>
+ * NOTE:<br>
+ * The order / logic in determining the posting url of the generated HTML form is as follows:
+ * </p>
+ *
  * <ol>
  * <li>
  * If the action attribute is not specified, then the current request will be used to
@@ -61,7 +66,7 @@ import java.util.Set;
  * </li>
  * <li>
  * If the action is given, Struts will try to obtain an ActionConfig. This will be
- * successfull if the action attribute is a valid action alias defined struts.xml.
+ * successful if the action attribute is a valid action alias defined struts.xml.
  * </li>
  * <li>
  * If the action is given and is not an action alias defined in struts.xml, Struts
@@ -69,16 +74,16 @@ import java.util.Set;
  * from it and using UrlHelper to generate the final url.
  * </li>
  * </ol>
- * <p/>
+ *
  * <!-- END SNIPPET: javadoc -->
- * <p/>
- * <p/> <b>Examples</b>
- * <p/>
+ *
+ * <p><b>Examples</b></p>
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
- * <p/>
+ *
  * &lt;s:form ... /&gt;
- * <p/>
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  *

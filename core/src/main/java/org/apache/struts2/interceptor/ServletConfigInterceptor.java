@@ -38,12 +38,14 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * An interceptor which sets action properties based on the interfaces an action implements. For example, if the action
  * implements {@link ParameterAware} then the action context's parameter map will be set on it.
+ * </p>
  *
- * <p/> This interceptor is designed to set all properties an action needs if it's aware of servlet parameters, the
+ * <p>This interceptor is designed to set all properties an action needs if it's aware of servlet parameters, the
  * servlet context, the session, etc. Interfaces that it supports are:
+ * </p>
  *
  * <ul>
  *
@@ -67,7 +69,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  *
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  *
@@ -79,17 +81,15 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  *
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Extending the interceptor:</u>
- *
- * <p/>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
- * There are no known extension points for this interceptor.
+ * <p>There are no known extension points for this interceptor.</p>
  *
  * <!-- END SNIPPET: extending -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

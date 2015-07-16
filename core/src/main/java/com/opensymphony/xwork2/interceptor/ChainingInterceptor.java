@@ -31,21 +31,24 @@ import java.util.*;
 
 /**
  * <!-- START SNIPPET: description -->
- * <p/>
+ * <p>
  * An interceptor that copies all the properties of every object in the value stack to the currently executing object,
  * except for any object that implements {@link Unchainable}. A collection of optional <i>includes</i> and
  * <i>excludes</i> may be provided to control how and which parameters are copied. Only includes or excludes may be
  * specified. Specifying both results in undefined behavior. See the javadocs for {@link ReflectionProvider#copy(Object, Object,
  * java.util.Map, java.util.Collection, java.util.Collection)} for more information.
- * <p/>
- * <p/>
+ * </p>
+ *
+ * <p>
  * <b>Note:</b> It is important to remember that this interceptor does nothing if there are no objects already on the stack.
  * <br/>This means two things:
  * <br/><b>One</b>, you can safely apply it to all your actions without any worry of adverse affects.
  * <br/><b/>Two</b>, it is up to you to ensure an object exists in the stack prior to invoking this action. The most typical way this is done
  * is through the use of the <b>chain</b> result type, which combines with this interceptor to make up the action
  * chaining feature.
- * <p/>
+ * </p>
+ *
+ * <p>
  * <b>Note:</b> By default Errors, Field errors and Message aren't copied during chaining, to change the behaviour you can specify
  * the below three constants in struts.properties or struts.xml:
  * <ul>
@@ -53,13 +56,16 @@ import java.util.*;
  * <li>struts.xwork.chaining.copyFieldErrors - set to true to copy Field Errors</li>
  * <li>struts.xwork.chaining.copyMessages - set to true to copy Action Messages</li>
  * </ul>
- * <p>
+ * </p>
+ *
  * <p>
  * <u>Example:</u>
  * <pre>
  * &lt;constant name="struts.xwork.chaining.copyErrors" value="true"/&gt;
  * </pre>
  * </p>
+ *
+ * <p>
  * <b>Note:</b> By default actionErrors and actionMessages are excluded when copping object's properties.
  * </p>
  * <!-- END SNIPPET: description -->
@@ -77,22 +83,24 @@ import java.util.*;
  * </p>
  * <!-- END SNIPPET: extending -->
  * <u>Example code:</u>
- * <pre>
+ *
  * <!-- START SNIPPET: example -->
- * <p/>
+ * <pre>
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success" type="chain"&gt;otherAction&lt;/result&gt;
  * &lt;/action&gt;
- * <p/>
+ * </pre>
+ *
+ * <pre>
  * &lt;action name="otherAction" class="com.examples.OtherAction"&gt;
  *     &lt;interceptor-ref name="chain"/&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * <p/>
- * <!-- END SNIPPET: example -->
  * </pre>
+ * <!-- END SNIPPET: example -->
+ *
  *
  * @author mrdon
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )

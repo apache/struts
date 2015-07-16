@@ -21,13 +21,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>
  * This class is used to read properties lines. These lines do
  * not terminate with new-line chars but rather when there is no
  * backslash sign a the end of the line.  This is used to
  * concatenate multiple lines for readability.
- * <p/>
+ * </p>
+ *
+ * <p>
  * This class was pulled out of Jakarta Commons Configuration and
  * Jakarta Commons Lang trunk revision 476093
+ * </p>
  */
 public class PropertiesReader extends LineNumberReader {
     /**
@@ -403,7 +407,7 @@ public class PropertiesReader extends LineNumberReader {
 
     /**
      * <p>Checks if the object is in the given array.</p>
-     * <p/>
+     *
      * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
      *
      * @param array        the array to search through
@@ -449,11 +453,11 @@ public class PropertiesReader extends LineNumberReader {
     /**
      * <p>Unescapes any Java literals found in the <code>String</code> to a
      * <code>Writer</code>.</p>
-     * <p/>
+     *
      * <p>For example, it will turn a sequence of <code>'\'</code> and
      * <code>'n'</code> into a newline character, unless the <code>'\'</code>
      * is preceded by another <code>'\'</code>.</p>
-     * <p/>
+     *
      * <p>A <code>null</code> string input has no effect.</p>
      *
      * @param out the <code>Writer</code> used to output unescaped characters

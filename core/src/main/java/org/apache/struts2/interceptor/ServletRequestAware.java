@@ -25,13 +25,18 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * All Actions that want to have access to the servlet request object must implement this interface.<p>
- * <p/>
- * This interface is only relevant if the Action is used in a servlet environment. <p>
- * <p/>
+ * <p>
+ * All Actions that want to have access to the servlet request object must implement this interface.
+ * </p>
+ *
+ * <p>
+ * This interface is only relevant if the Action is used in a servlet environment.
+ * </p>
+ *
+ * <p>
  * Note that using this interface makes the Action tied to a servlet environment, so it should be
  * avoided if possible since things like unit testing will become more difficult.
- *
+ * </p>
  */
 public interface ServletRequestAware {
 

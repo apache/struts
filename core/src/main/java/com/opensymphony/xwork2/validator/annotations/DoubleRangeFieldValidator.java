@@ -27,13 +27,13 @@ import java.lang.annotation.Target;
  * If neither min nor max is set, nothing will be done.
  * <!-- END SNIPPET: description -->
  *
- * <p/> <u>Annotation usage:</u>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p/>The annotation must be applied at method level.
+ * <p>The annotation must be applied at method level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p/> <u>Annotation parameters:</u>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable'>
@@ -134,7 +134,7 @@ import java.lang.annotation.Target;
  * <p>The values for min and max must be inserted as String values so that "0" can be handled as a possible value.</p>
  * <!-- END SNIPPET: parameters -->
  *
- * <p/> <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -143,7 +143,6 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id$
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

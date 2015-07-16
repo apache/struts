@@ -41,11 +41,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Plexus integartion. You need three optional files: plexus-request.xml, plexus-session.xml, and
+ * <p>
+ * Plexus integration. You need three optional files: plexus-request.xml, plexus-session.xml, and
  * plexus-application.xml.
- * <p/>
+ * </p>
+ * <p>
  * The syntax of these files is:
- * <p/>
+ * </p>
  * <pre>
  * &lt;plexus&gt;
  * &lt;components&gt;

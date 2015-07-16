@@ -47,7 +47,7 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
 
 /**
  * <!-- START SNIPPET: description -->
- * 
+ * <p>
  * Calls the {@link HttpServletResponse#sendRedirect(String) sendRedirect}
  * method to the location specified. The response is told to redirect the
  * browser to the specified location (a new request from the client). The
@@ -56,11 +56,11 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * available. This is because actions are built on a single-thread model. The
  * only way to pass data is through the session or with web parameters
  * (url?name=value) which can be OGNL expressions.
- * 
+ * </p>
  * <!-- END SNIPPET: description -->
- * <p/>
+ * <p>
  * <b>This result type takes the following parameters:</b>
- * 
+ * </p>
  * <!-- START SNIPPET: params -->
  * 
  * <ul>
@@ -79,9 +79,10 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * </p>
  * 
  * <!-- END SNIPPET: params -->
- * 
+ * <p>
  * <b>Example:</b>
- * 
+ * </p>
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;!--

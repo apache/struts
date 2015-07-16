@@ -138,9 +138,10 @@ public class PellMultiPartRequest implements MultiPartRequest {
     /**
      * Sets the encoding for the uploaded params.  This needs to be set if you are using character sets other than
      * ASCII.
-     * <p/>
+     * <p>
      * The encoding is looked up from the configuration setting 'struts.i18n.encoding'.  This is usually set in
      * default.properties & struts.properties.
+     * </p>
      */
     private void setEncoding() {
         String encoding = null;

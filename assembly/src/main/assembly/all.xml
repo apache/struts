@@ -258,14 +258,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../apps/blank</directory>
-      <outputDirectory>src/apps/blank</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>../apps/portlet</directory>
       <outputDirectory>src/apps/portlet</outputDirectory>
       <includes>
@@ -284,14 +276,6 @@
     <fileSet>
       <directory>../apps/rest-showcase</directory>
       <outputDirectory>src/apps/rest-showcase</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../apps/mailreader</directory>
-      <outputDirectory>src/apps/mailreader</outputDirectory>
       <includes>
         <include>pom.xml</include>
         <include>src/</include>

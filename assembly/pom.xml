@@ -37,18 +37,6 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.apache.struts</groupId>
-                                    <artifactId>struts2-blank</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>war</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.struts</groupId>
-                                    <artifactId>struts2-mailreader</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>war</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.struts</groupId>
                                     <artifactId>struts2-portlet</artifactId>
                                     <version>${project.version}</version>
                                     <type>war</type>
@@ -62,12 +50,6 @@
                                 <artifactItem>
                                     <groupId>org.apache.struts</groupId>
                                     <artifactId>struts2-rest-showcase</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>war</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.struts</groupId>
-                                    <artifactId>struts2-mailreader</artifactId>
                                     <version>${project.version}</version>
                                     <type>war</type>
                                 </artifactItem>

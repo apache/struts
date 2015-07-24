@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table>
+ * <table summary="">
  * <thead>
  * <tr>
  * <th>Parameter</th>
@@ -59,10 +59,10 @@ import java.lang.annotation.Target;
  * <!-- START SNIPPET: example -->
  * // The key property for User objects within the users collection is the <code>userName</code> attribute.
  * &#64;Element( value = com.acme.User )
- * private Map<Long, User> userMap;
+ * private Map&lt;Long, User&gt; userMap;
  *
  * &#64;Element( value = com.acme.User )
- * public List<User> userList;
+ * public List&lt;User&gt; userList;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -73,8 +73,7 @@ import java.lang.annotation.Target;
 public @interface Element {
 
     /**
-     * The Element value.
-     * Defaults to <tt>java.lang.Object.class</tt>.
+     * @return The Element value. Defaults to <tt>java.lang.Object.class</tt>.
      */
     Class value() default java.lang.Object.class;
 }

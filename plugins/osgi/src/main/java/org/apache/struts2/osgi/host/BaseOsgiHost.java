@@ -71,6 +71,8 @@ public abstract class BaseOsgiHost implements OsgiHost {
     /**
      * This bundle map will not change, but the status of the bundles can change over time.
      * Use getActiveBundles() for active bundles
+     *
+     * @return map with bundles
      */
     public abstract Map<String, Bundle> getBundles();
 
@@ -85,7 +87,7 @@ public abstract class BaseOsgiHost implements OsgiHost {
      *
      * @param paramName    the name of the param to get from the ServletContext
      * @param defaultValue value to return if the param is not set
-     * @return
+     * @return param from the ServletContext, returning the default value if the param is not set
      */
     protected String getServletContextParam(String paramName, String defaultValue) {
         return StringUtils.defaultString(this.servletContext.getInitParameter(paramName), defaultValue);
@@ -119,7 +121,8 @@ public abstract class BaseOsgiHost implements OsgiHost {
     }
 
     /**
-     * Return a list of directories under a directory whose name is a number
+     * @param dir directory
+     * @return  a list of directories under a directory whose name is a number
      */
     protected Map<String, String> getRunLevelDirs(String dir) {
         Map<String, String> dirs = new HashMap<String, String>();
@@ -261,7 +264,8 @@ public abstract class BaseOsgiHost implements OsgiHost {
     }
 
     /**
-     * Gets the version used to export the packages. it tries to get it from MANIFEST.MF, or the file name
+     * @param url URL for package
+     * @return  the version used to export the packages. it tries to get it from MANIFEST.MF, or the file name
      */
     protected String getVersion(URL url) {
         if ("jar".equals(url.getProtocol())) {
@@ -286,7 +290,8 @@ public abstract class BaseOsgiHost implements OsgiHost {
     }
 
     /**
-     * Extracts numbers followed by "." or "-" from the string and joins them with "."
+     * @param str string for extract version
+     * @return Extracts numbers followed by "." or "-" from the string and joins them with "."
      */
     protected String getVersionFromString(String str) {
         Matcher matcher = versionPattern.matcher(str);

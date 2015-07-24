@@ -27,7 +27,10 @@ import java.net.URL;
 import java.util.*;
 
 /**
+ * <p>
  * Use with ClassFinder to filter the Urls to be scanned, example:
+ * </p>
+ *
  * <pre>
  * UrlSet urlSet = new UrlSet(classLoader);
  * urlSet = urlSet.exclude(ClassLoader.getSystemClassLoader().getParent());
@@ -38,8 +41,8 @@ import java.util.*;
  * urlSet = urlSet.exclude(".*?/JavaVM.framework/.*");
  * urlSet = urlSet.exclude(".*?/activemq-(core|ra)-[\\d.]+.jar(!/)?");
  * </pre>
+ *
  * @author David Blevins
- * @version $Rev$ $Date$
  */
 public class UrlSet {
 
@@ -68,7 +71,7 @@ public class UrlSet {
     }
     /**
      * Ignores all URLs that are not "jar" or "file"
-     * @param urls
+     * @param urls collection of URLs
      */
     public UrlSet(Collection<URL> urls){
         this();
@@ -118,8 +121,8 @@ public class UrlSet {
 
     /**
      * Calls excludePaths(System.getProperty("java.ext.dirs"))
-     * @return
-     * @throws MalformedURLException
+     * @return url set
+     * @throws MalformedURLException in case if incorrect URL
      */
     public UrlSet excludeJavaExtDirs() throws MalformedURLException {
         return excludePaths(System.getProperty("java.ext.dirs", ""));
@@ -128,8 +131,8 @@ public class UrlSet {
     /**
      * Calls excludePaths(System.getProperty("java.endorsed.dirs"))
      *
-     * @return
-     * @throws MalformedURLException
+     * @return url set
+     * @throws MalformedURLException in case if incorrect URL
      */
     public UrlSet excludeJavaEndorsedDirs() throws MalformedURLException {
         return excludePaths(System.getProperty("java.endorsed.dirs", ""));
@@ -173,6 +176,12 @@ public class UrlSet {
 
     /**
      * Try to find a classes directory inside a war file add its normalized url to this set
+     *
+     * @param classLoaderInterface  class loader interface
+     * @param normalizer file protocol normalizer
+     *
+     * @return url set
+     * @throws IOException in case of IO errors
      */
     public UrlSet includeClassesUrl(ClassLoaderInterface classLoaderInterface, FileProtocolNormalizer normalizer) throws IOException {
         Enumeration<URL> rootUrlEnumeration = classLoaderInterface.getResources("");

@@ -29,13 +29,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>
  * ProxyElementAdapter is a pass-through adapter for objects which already
  * implement the Element interface.  All methods are proxied to the underlying
  * Node except getParent(), getNextSibling() and getPreviousSibling(), which
  * are implemented by the abstract adapter node to work with the parent adapter.
+ * </p>
  *
+ * <p>
  * Note: this class wants to be (extend) both an AbstractElementAdapter
  * and ProxyElementAdapter, but its proxy-ness is winning right now.
+ * </p>
  */
 public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
 
@@ -46,7 +50,7 @@ public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
     }
 
     /**
-     * Get the proxied Element
+     * @return the proxied Element
      */
     protected Element element() {
         return (Element) getPropertyValue();

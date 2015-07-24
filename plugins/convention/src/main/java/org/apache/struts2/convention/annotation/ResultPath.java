@@ -54,7 +54,7 @@ import java.lang.annotation.Target;
  * </p>
  *
  * <pre>
- * /WEB-INF/jsps/foo/do-something-&lt;resultCode>.ext
+ * /WEB-INF/jsps/foo/do-something-&lt;resultCode&gt;.ext
  * </pre>
  *  <!-- END SNIPPET: javadoc -->
  */

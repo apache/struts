@@ -78,7 +78,8 @@ public class SpringProxyableObjectFactory extends SpringObjectFactory {
      * <code>autoWiringFactory</code>, so the application context should be either
      * the original or a child context of the original.
      *
-     * @param context  provided context.
+     * @param context provided context.
+     * @return the application context
      */
     protected ApplicationContext getApplicationContext(Map<String, Object> context) {
         return appContext;

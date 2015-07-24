@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Render HTML textarea tag.</p>
+ * <p>Render HTML textarea tag.</p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>

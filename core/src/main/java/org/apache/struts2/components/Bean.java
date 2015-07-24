@@ -58,7 +58,7 @@ import java.io.Writer;
  * &lt;-- in freemarker form --&gt;
  * [@s.bean name="org.apache.struts2.example.counter.SimpleCounter" var="counter"]
  *   [s:param name="foo" value="BAR"/]
- *   The value of foo is : [s:property value="foo"/], when inside the bean tag.<br />
+ *   The value of foo is : [s:property value="foo"/], when inside the bean tag.
  * [/s:bean]
  *
  * &lt;-- in jsp form --&gt;

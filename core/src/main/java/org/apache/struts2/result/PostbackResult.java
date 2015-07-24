@@ -174,8 +174,7 @@ public class PostbackResult extends StrutsResultSupport {
     /**
      * Stores the option to cache the rendered intermediate page. The default
      * is {@code true}.
-     *
-     * @return {@code true} to cache; otherwise {@code false}
+     * @param cache enable/disable cache
      */
     public final void setCache(boolean cache) {
         this.cache = cache;

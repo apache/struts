@@ -34,8 +34,15 @@ public class OsgiUtil {
     private static final Logger LOG = LogManager.getLogger(OsgiUtil.class);
 
     /**
-     * A bundle is a jar, and a bunble URL will be useless to clients, this method translates
+     * A bundle is a jar, and a bundle URL will be useless to clients, this method translates
      * a URL to a resource inside a bundle from "bundle:something/path" to "jar:file:bundlelocation!/path"
+     *
+     * @param bundleUrl URL to translate
+     * @param bundle the bundle
+     *
+     * @return translated URL
+     *
+     * @throws MalformedURLException if url is malformed
      */
     public static URL translateBundleURLToJarURL(URL bundleUrl, Bundle bundle) throws MalformedURLException {
         if (bundleUrl != null && "bundle".equalsIgnoreCase(bundleUrl.getProtocol())) {
@@ -52,6 +59,11 @@ public class OsgiUtil {
     /**
      * Calls getBean() on the passed object using refelection. Used on Spring context
      * because they are loaded from bundles (in anothe class loader)
+     *
+     * @param beanFactory bean factory
+     * @param beanId id of bean
+     *
+     * @return the object found
      */
     public static Object getBean(Object beanFactory, String beanId) {
         try {
@@ -67,6 +79,11 @@ public class OsgiUtil {
     /**
      * Calls containsBean on the passed object using refelection. Used on Spring context
      * because they are loaded from bundles (in anothe class loader)
+     *
+     * @param beanFactory bean factory
+     * @param beanId id of bean
+     *
+     * @return true if bean factory contains bean with bean id
      */
     public static boolean containsBean(Object beanFactory, String beanId) {
         try {

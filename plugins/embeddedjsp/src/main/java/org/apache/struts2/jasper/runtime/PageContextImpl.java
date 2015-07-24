@@ -900,7 +900,12 @@ public class PageContextImpl extends PageContext {
 	 *            The page context
 	 * @param functionMap
 	 *            Maps prefix and name to Method
+	 * @param escape
+	 *            enable escaping
+	 *
 	 * @return The result of the evaluation
+     *
+     * @throws ELException in case of errors
 	 */
 	public static Object proprietaryEvaluate(final String expression,
 			final Class expectedType, final PageContext pageContext,

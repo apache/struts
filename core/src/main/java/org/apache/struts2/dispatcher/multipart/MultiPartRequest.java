@@ -29,8 +29,7 @@ import java.util.List;
 
 
 /**
- * Abstract wrapper class HTTP requests to handle multi-part data. <p>
- *
+ * <p>Abstract wrapper class HTTP requests to handle multi-part data. </p>
  */
 public interface MultiPartRequest {
 

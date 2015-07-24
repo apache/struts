@@ -28,8 +28,9 @@ import java.util.regex.Pattern;
 
 /**
  * <code>AnnotationUtils</code>
- *
+ * <p>
  * Various utility methods dealing with annotations
+ * </p>
  *
  * @author Rainer Hermanns
  * @author Zsolt Szasz, zsolt at lorecraft dot com
@@ -46,9 +47,9 @@ public class AnnotationUtils {
     /**
      * Adds all fields with the specified Annotation of class clazz and its superclasses to allFields
      *
-     * @param annotationClass
-     * @param clazz
-     * @param allFields
+     * @param annotationClass the {@link Annotation}s to find
+     * @param clazz The {@link Class} to inspect
+     * @param allFields list of all fields
      */
     public static void addAllFields(Class<? extends Annotation> annotationClass, Class clazz, List<Field> allFields) {
 
@@ -70,9 +71,9 @@ public class AnnotationUtils {
     /**
      * Adds all methods with the specified Annotation of class clazz and its superclasses to allFields
      *
-     * @param annotationClass
-     * @param clazz
-     * @param allMethods
+     * @param annotationClass the {@link Annotation}s to find
+     * @param clazz The {@link Class} to inspect
+     * @param allMethods list of all methods
      */
     public static void addAllMethods(Class<? extends Annotation> annotationClass, Class clazz, List<Method> allMethods) {
 
@@ -93,8 +94,8 @@ public class AnnotationUtils {
 
     /**
      *
-     * @param clazz
-     * @param allInterfaces
+     * @param clazz The {@link Class} to inspect
+     * @param allInterfaces list of all interfaces
      */
     public static void addAllInterfaces(Class clazz, List<Class> allInterfaces) {
         if (clazz == null) {
@@ -133,6 +134,9 @@ public class AnnotationUtils {
 
 	/**
 	 * Varargs version of <code>AnnotatedElement.isAnnotationPresent()</code>
+     * @param annotatedElement element to check
+     * @param annotation the {@link Annotation}s to find
+     * @return true is element is annotated by one of the annotation
 	 * @see AnnotatedElement
 	 */
 	public static boolean isAnnotatedBy(AnnotatedElement annotatedElement, Class<? extends Annotation>... annotation) {
@@ -175,6 +179,7 @@ public class AnnotationUtils {
      * Returns the annotation on the given class or the package of the class. This searchs up the
      * class hierarchy and the package hierarchy for the closest match.
      *
+     * @param   <T> class type
      * @param   clazz The class to search for the annotation.
      * @param   annotationClass The Class of the annotation.
      * @return  The annotation or null.

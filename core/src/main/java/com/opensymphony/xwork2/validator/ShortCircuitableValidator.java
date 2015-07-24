@@ -31,7 +31,7 @@ public interface ShortCircuitableValidator {
      * @param shortcircuit <tt>true</tt> if this field validator should short circuit on
      *                     failure, <tt>false</tt> otherwise
      */
-    public void setShortCircuit(boolean shortcircuit);
+    void setShortCircuit(boolean shortcircuit);
 
     /**
      * Gets whether this field validator should short circuit the validator queue
@@ -40,5 +40,5 @@ public interface ShortCircuitableValidator {
      * @return <tt>true</tt> if this field validator should short circuit on failure,
      *         <tt>false</tt> otherwise
      */
-    public boolean isShortCircuit();
+    boolean isShortCircuit();
 }

@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public interface ScopedModelDriven<T> extends ModelDriven<T> {
 
     /**
-     * Sets the model
+     * @param model sets the model
      */
     void setModel(T model);
     
@@ -34,7 +34,7 @@ public interface ScopedModelDriven<T> extends ModelDriven<T> {
     void setScopeKey(String key);
     
     /**
-     * Gets the key under which the model is stored
+     * @return the key under which the model is stored
      */
     String getScopeKey();
 }

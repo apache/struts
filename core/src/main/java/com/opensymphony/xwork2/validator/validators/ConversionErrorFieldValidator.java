@@ -60,8 +60,8 @@ public class ConversionErrorFieldValidator extends RepopulateConversionErrorFiel
      * The validation implementation must guarantee that setValidatorContext will
      * be called with a non-null ValidatorContext before validate is called.
      *
-     * @param object
-     * @throws ValidationException
+     * @param object the object to be validated
+     * @throws ValidationException in case of validation problems
      */
     @Override
     public void doValidate(Object object) throws ValidationException {

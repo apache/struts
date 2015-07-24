@@ -84,7 +84,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  *
  * @see org.apache.struts2.util.SortIteratorFilter
  *
- * @s.tag name="sort" tld-body-content="JSP"
+ * {@literal @}s.tag name="sort" tld-body-content="JSP"
  * description="Sort a List using a Comparator both passed in as the tag attribute."
  */
 @StrutsTag(name="sort", tldTagClass="org.apache.struts2.views.jsp.iterator.SortIteratorTag", 

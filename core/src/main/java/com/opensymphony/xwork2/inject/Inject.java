@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
 /**
  * <p>Annotates members and parameters which should have their value[s]
  * injected.
+ * </p>
  *
  * @author crazybob@google.com (Bob Lee)
  */
@@ -34,12 +35,12 @@ import java.lang.annotation.Target;
 public @interface Inject {
 
   /**
-   * Dependency name. Defaults to {@link Container#DEFAULT_NAME}.
+   * @return Dependency name. Defaults to {@link Container#DEFAULT_NAME}.
    */
   String value() default DEFAULT_NAME;
 
   /**
-   * Whether or not injection is required. Applicable only to methods and
+   * @return Whether or not injection is required. Applicable only to methods and
    * fields (not constructors or parameters).
    */
   boolean required() default true;

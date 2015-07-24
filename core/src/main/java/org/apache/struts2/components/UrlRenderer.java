@@ -34,7 +34,7 @@ public interface UrlRenderer {
 	
 	/**
 	 * Preprocessing step
-	 * @param provider
+	 * @param provider The {@link UrlProvider} component that "owns" this renderer.
 	 */
 	void beforeRenderUrl(UrlProvider provider);
 	

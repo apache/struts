@@ -53,8 +53,8 @@ public class DefaultBundleAccessor implements BundleAccessor {
     private static final Logger LOG = LogManager.getLogger(DefaultBundleAccessor.class);
 
     private BundleContext bundleContext;
-    private Map<String, String> packageToBundle = new HashMap<String, String>();
-    private Map<Bundle, Set<String>> packagesByBundle = new HashMap<Bundle, Set<String>>();
+    private Map<String, String> packageToBundle = new HashMap<>();
+    private Map<Bundle, Set<String>> packagesByBundle = new HashMap<>();
     private OsgiHost osgiHost;
 
     public DefaultBundleAccessor() {
@@ -79,8 +79,9 @@ public class DefaultBundleAccessor implements BundleAccessor {
                 return bundleContext.getServiceReferences(className, null);
             } catch (InvalidSyntaxException e) {
                 //cannot happen we are passing null as the param
-                if (LOG.isErrorEnabled())
+                if (LOG.isErrorEnabled()) {
                     LOG.error("Invalid syntax for service lookup", e);
+                }
             }
         }
 
@@ -92,7 +93,7 @@ public class DefaultBundleAccessor implements BundleAccessor {
     }
 
     /**
-     *  Add as Bundle -> Package mapping 
+     *  Add as Bundle -&gt; Package mapping
      * @param bundle the bundle where the package was loaded from
      * @param packageName the anme of the loaded package
      */
@@ -100,7 +101,7 @@ public class DefaultBundleAccessor implements BundleAccessor {
         this.packageToBundle.put(packageName, bundle.getSymbolicName());
         Set<String> pkgs = packagesByBundle.get(bundle);
         if (pkgs == null) {
-            pkgs = new HashSet<String>();
+            pkgs = new HashSet<>();
             packagesByBundle.put(bundle, pkgs);
         }
         pkgs.add(packageName);
@@ -139,7 +140,7 @@ public class DefaultBundleAccessor implements BundleAccessor {
     public List<URL> loadResources(String name, boolean translate) throws IOException {
         Bundle bundle = getCurrentBundle();
         if (bundle != null) {
-            List<URL> resources = new ArrayList<URL>();
+            List<URL> resources = new ArrayList<>();
             Enumeration e = bundle.getResources(name);
             if (e != null) {
                 while (e.hasMoreElements()) {

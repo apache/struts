@@ -20,8 +20,8 @@ import com.opensymphony.xwork2.validator.ValidationException;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * RequiredStringValidator checks that a String field is non-null and has a length > 0.
- * (i.e. it isn't "").  The "trim" parameter determines whether it will {@link String#trim() trim}
+ * RequiredStringValidator checks that a String field is non-null and has a length &gt; 0.
+ * (i.e. it isn't ""). The "trim" parameter determines whether it will {@link String#trim() trim}
  * the String before performing the length check.  If unspecified, the String will be trimmed.
  * <!-- END SNIPPET: javadoc -->
  *

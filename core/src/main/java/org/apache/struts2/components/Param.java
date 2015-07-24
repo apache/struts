@@ -58,11 +58,11 @@ import java.io.Writer;
  * When you declare the param tag, the value can be defined in either a <tt>value</tt> attribute or
  * as text between the start and end tag. Struts behaves a bit different according to these two situations.
  * This is best illustrated using an example:
- * <br/>&lt;param name="color"&gt;blue&lt;/param&gt; &lt;-- (A) --&gt;
- * <br/>&lt;param name="color" value="blue"/&gt; &lt;-- (B) --&gt;
- * <br/>In the first situation (A) the value would be evaluated to the stack as a <tt>java.lang.String</tt> object.
+ * <br>&lt;param name="color"&gt;blue&lt;/param&gt; &lt;-- (A) --&gt;
+ * <br>&lt;param name="color" value="blue"/&gt; &lt;-- (B) --&gt;
+ * <br>In the first situation (A) the value would be evaluated to the stack as a <tt>java.lang.String</tt> object.
  * And in situation (B) the value would be evaluated to the stack as a <tt>java.lang.Object</tt> object.
- * <br/>For more information see <a href="https://issues.apache.org/jira/browse/WW-808">WW-808</a>.
+ * <br>For more information see <a href="https://issues.apache.org/jira/browse/WW-808">WW-808</a>.
  * </p>
  * <!-- END SNIPPET: javadoc -->
  *

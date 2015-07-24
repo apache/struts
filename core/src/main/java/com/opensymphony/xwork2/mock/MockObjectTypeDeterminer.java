@@ -37,10 +37,10 @@ public class MockObjectTypeDeterminer implements ObjectTypeDeterminer {
 
 
     /**
-     * @param keyClass
-     * @param elementClass
-     * @param keyProperty
-     * @param shouldCreateIfNew
+     * @param keyClass key class
+     * @param elementClass element class
+     * @param keyProperty key property
+     * @param shouldCreateIfNew create if new
      */
     public MockObjectTypeDeterminer(Class keyClass, Class elementClass,
                                     String keyProperty, boolean shouldCreateIfNew) {

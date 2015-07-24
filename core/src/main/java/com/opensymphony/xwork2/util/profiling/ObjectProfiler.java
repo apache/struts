@@ -86,6 +86,15 @@ public class ObjectProfiler {
     /**
      * A profiled call {@link Method#invoke(java.lang.Object, java.lang.Object[])}. If {@link UtilTimerStack#isActive() }
      * returns false, then no profiling is performed.
+     *
+     * @param target target method
+     * @param value value
+     * @param args arguments
+     *
+     * @return target object
+     *
+     * @throws IllegalAccessException in case of access errors
+     * @throws InvocationTargetException in case of invocation errors
      */
     public static Object profiledInvoke(Method target, Object value, Object[] args) throws IllegalAccessException, InvocationTargetException {
         //if we are not active - then do nothing
@@ -93,7 +102,7 @@ public class ObjectProfiler {
             return target.invoke(value, args);
         }
 
-        String logLine = new String(getTrimmedClassName(target) + "." + target.getName() + "()");
+        String logLine = getTrimmedClassName(target) + "." + target.getName() + "()";
 
         UtilTimerStack.push(logLine);
         try {
@@ -114,6 +123,10 @@ public class ObjectProfiler {
 
     /**
      * Given a method, get the Method name, with no package information.
+     *
+     * @param method method
+     *
+     * @return method name, with no package information
      */
     public static String getTrimmedClassName(Method method) {
         String classname = method.getDeclaringClass().getName();

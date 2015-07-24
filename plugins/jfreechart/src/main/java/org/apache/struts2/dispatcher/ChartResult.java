@@ -70,7 +70,7 @@ import javax.servlet.http.HttpServletResponse;
  *	    public String execute() throws Exception {
  *		    // chart creation logic...
  *		    XYSeries dataSeries = new XYSeries(new Integer(1)); // pass a key for this serie
- *		    for (int i = 0; i <= 100; i++) {
+ *		    for (int i = 0; i &lt;= 100; i++) {
  *			    dataSeries.add(i, RandomUtils.nextInt());
  *		    }
  *		    XYSeriesCollection xyDataset = new XYSeriesCollection(dataSeries);

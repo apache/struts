@@ -207,6 +207,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
      * Builds a key for validators - used when caching validators.
      *
      * @param clazz the action.
+     * @param context context
      * @return a validator key which is the class name plus context.
      */
     protected static String buildValidatorKey(Class clazz, String context) {

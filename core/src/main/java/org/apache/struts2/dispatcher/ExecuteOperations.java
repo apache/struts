@@ -41,9 +41,12 @@ public class ExecuteOperations {
 
     /**
      * Tries to execute a request for a static resource
+     *
+     * @param request servlet request
+     * @param response servlet response
      * @return True if it was handled, false if the filter should fall through
-     * @throws IOException
-     * @throws ServletException
+     * @throws IOException on any io error
+     * @throws ServletException on any servlet related error
      */
     public boolean executeStaticResourceRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         // there is no action in this request, should we look for a static resource?
@@ -67,7 +70,12 @@ public class ExecuteOperations {
 
     /**
      * Executes an action
-     * @throws ServletException
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @param mapping action mapping
+     *
+     * @throws ServletException  on any servlet related error
      */
     public void executeAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) throws ServletException {
         dispatcher.serviceAction(request, response, mapping);

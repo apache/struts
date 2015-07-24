@@ -55,7 +55,10 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
      * @param autoWire The type of autowiring to use
      * @param alwaysAutoWire Whether to always respect the autowiring or not
      * @param useClassCacheStr Whether to use the class cache or not
+     * @param enableAopSupport enable AOP support
      * @param servletContext The servlet context
+     * @param devMode development mode
+     * @param container container
      * @since 2.1.3
      */
     @Inject

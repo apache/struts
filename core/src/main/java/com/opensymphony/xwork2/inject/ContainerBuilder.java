@@ -100,6 +100,8 @@ public final class ContainerBuilder {
 
     /**
      * Ensures a key isn't already mapped.
+     *
+     * @param key the key to check
      */
     private void checkKey(Key<?> key) {
         if (factories.containsKey(key) && !allowDuplicates) {
@@ -110,6 +112,7 @@ public final class ContainerBuilder {
     /**
      * Maps a factory to a given dependency type and name.
      *
+     * @param <T>     type
      * @param type    of dependency
      * @param name    of dependency
      * @param factory creates objects to inject
@@ -146,6 +149,11 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type,
      * Container.DEFAULT_NAME, factory, scope)}.
      *
+     * @param <T> type
+     * @param type of dependency
+     * @param factory of dependency
+     * @param scope scope of injected instances
+     * @return a container builder
      * @see #factory(Class, String, Factory, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, Factory<? extends T> factory, Scope scope) {
@@ -156,6 +164,11 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type, name, factory,
      * Scope.PROTOTYPE)}.
      *
+     * @param <T> type
+     * @param type of dependency
+     * @param name of dependency
+     * @param factory of dependency
+     * @return a container builder
      * @see #factory(Class, String, Factory, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, String name, Factory<? extends T> factory) {
@@ -166,6 +179,10 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type,
      * Container.DEFAULT_NAME, factory, Scope.PROTOTYPE)}.
      *
+     * @param <T> type
+     * @param type of dependency
+     * @param factory of dependency
+     * @return a container builder
      * @see #factory(Class, String, Factory, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, Factory<? extends T> factory) {
@@ -176,6 +193,7 @@ public final class ContainerBuilder {
      * Maps an implementation class to a given dependency type and name. Creates
      * instances using the container, recursively injecting dependencies.
      *
+     * @param <T>            type
      * @param type           of dependency
      * @param name           of dependency
      * @param implementation class
@@ -225,6 +243,7 @@ public final class ContainerBuilder {
      * is found.
      * </p>
      *
+     * @param <T>            type
      * @param type           of dependency
      * @param name           of dependency
      * @param implementation class
@@ -241,6 +260,10 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type,
      * Container.DEFAULT_NAME, implementation)}.
      *
+     * @param <T>            type
+     * @param type           of dependency
+     * @param implementation class
+     * @return this builder
      * @see #factory(Class, String, Class)
      */
     public <T> ContainerBuilder factory(Class<T> type, Class<? extends T> implementation) {
@@ -251,6 +274,9 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type,
      * Container.DEFAULT_NAME, type)}.
      *
+     * @param <T>            type
+     * @param type           of dependency
+     * @return this builder
      * @see #factory(Class, String, Class)
      */
     public <T> ContainerBuilder factory(Class<T> type) {
@@ -260,6 +286,10 @@ public final class ContainerBuilder {
     /**
      * Convenience method.&nbsp;Equivalent to {@code factory(type, name, type)}.
      *
+     * @param <T>            type
+     * @param type           of dependency
+     * @param name           of dependency
+     * @return this builder
      * @see #factory(Class, String, Class)
      */
     public <T> ContainerBuilder factory(Class<T> type, String name) {
@@ -270,6 +300,11 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type,
      * Container.DEFAULT_NAME, implementation, scope)}.
      *
+     * @param <T>            type
+     * @param type           of dependency
+     * @param implementation class
+     * @param scope          the scope
+     * @return this builder
      * @see #factory(Class, String, Class, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, Class<? extends T> implementation, Scope scope) {
@@ -280,6 +315,10 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type,
      * Container.DEFAULT_NAME, type, scope)}.
      *
+     * @param <T>            type
+     * @param type           of dependency
+     * @param scope          the scope
+     * @return this builder
      * @see #factory(Class, String, Class, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, Scope scope) {
@@ -290,6 +329,11 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code factory(type, name, type,
      * scope)}.
      *
+     * @param <T>            type
+     * @param type           of dependency
+     * @param name           of dependency
+     * @param scope          the scope
+     * @return this builder
      * @see #factory(Class, String, Class, Scope)
      */
     public <T> ContainerBuilder factory(Class<T> type, String name, Scope scope) {
@@ -300,6 +344,10 @@ public final class ContainerBuilder {
      * Convenience method.&nbsp;Equivalent to {@code alias(type, Container.DEFAULT_NAME,
      * type)}.
      *
+     * @param <T>            type
+     * @param type           of dependency
+     * @param alias          of dependency
+     * @return this builder
      * @see #alias(Class, String, String)
      */
     public <T> ContainerBuilder alias(Class<T> type, String alias) {
@@ -309,6 +357,7 @@ public final class ContainerBuilder {
     /**
      * Maps an existing factory to a new name.
      *
+     * @param <T>   type
      * @param type  of dependency
      * @param name  of dependency
      * @param alias of to the dependency
@@ -321,6 +370,10 @@ public final class ContainerBuilder {
     /**
      * Maps an existing dependency. All methods in this class ultimately funnel through
      * here.
+     * @param <T>           type of key and alias
+     * @param key           name of key
+     * @param aliasKey      name of alias key
+     * @return this builder
      */
     private <T> ContainerBuilder alias(final Key<T> key,
                                        final Key<T> aliasKey) {
@@ -337,6 +390,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, String value) {
         return constant(String.class, name, value);
@@ -344,6 +400,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, int value) {
         return constant(int.class, name, value);
@@ -351,6 +410,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, long value) {
         return constant(long.class, name, value);
@@ -358,6 +420,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, boolean value) {
         return constant(boolean.class, name, value);
@@ -365,6 +430,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          constant value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, double value) {
         return constant(double.class, name, value);
@@ -372,6 +440,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, float value) {
         return constant(float.class, name, value);
@@ -379,6 +450,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, short value) {
         return constant(short.class, name, value);
@@ -386,6 +460,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, char value) {
         return constant(char.class, name, value);
@@ -393,6 +470,9 @@ public final class ContainerBuilder {
 
     /**
      * Maps a class to the given name.
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     public ContainerBuilder constant(String name, Class value) {
         return constant(Class.class, name, value);
@@ -400,6 +480,10 @@ public final class ContainerBuilder {
 
     /**
      * Maps an enum to the given name.
+     * @param name           name
+     * @param <E>            value type
+     * @param value          value
+     * @return this builder
      */
     public <E extends Enum<E>> ContainerBuilder constant(String name, E value) {
         return constant(value.getDeclaringClass(), name, value);
@@ -407,6 +491,10 @@ public final class ContainerBuilder {
 
     /**
      * Maps a constant value to the given type and name.
+     * @param type           type of class
+     * @param name           name
+     * @param value          value
+     * @return this builder
      */
     private <T> ContainerBuilder constant(final Class<T> type, final String name, final T value) {
         InternalFactory<T> factory = new InternalFactory<T>() {
@@ -434,6 +522,7 @@ public final class ContainerBuilder {
      * into the given classes.
      *
      * @param types for which static members will be injected
+     * @return this builder
      */
     public ContainerBuilder injectStatics(Class<?>... types) {
         staticInjections.addAll(Arrays.asList(types));
@@ -441,7 +530,9 @@ public final class ContainerBuilder {
     }
 
     /**
-     * Returns true if this builder contains a mapping for the given type and
+     * @param type           type of class
+     * @param name           name of class
+     * @return true if this builder contains a mapping for the given type and
      * name.
      */
     public boolean contains(Class<?> type, String name) {
@@ -451,6 +542,8 @@ public final class ContainerBuilder {
     /**
      * Convenience method.&nbsp;Equivalent to {@code contains(type,
      * Container.DEFAULT_NAME)}.
+     * @param type           type of class
+     * @return true if this builder contains a mapping for the given type.
      */
     public boolean contains(Class<?> type) {
         return contains(type, Container.DEFAULT_NAME);
@@ -464,6 +557,7 @@ public final class ContainerBuilder {
      *  now. If false, the container will lazily load singletons. Eager loading
      *  is appropriate for production use while lazy loading can speed
      *  development.
+     * @return this builder
      * @throws IllegalStateException if called more than once
      */
     public Container create(boolean loadSingletons) {
@@ -510,7 +604,7 @@ public final class ContainerBuilder {
         /**
          * Contributes factories to the given builder.
          *
-         * @param builder
+         * @param builder the container builder
          */
         void build(ContainerBuilder builder);
     }

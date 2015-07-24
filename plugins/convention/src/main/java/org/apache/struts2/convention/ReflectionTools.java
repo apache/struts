@@ -51,6 +51,7 @@ public class ReflectionTools {
     /**
      * Retrieves the annotation from the given method in the given class.
      *
+     * @param   <T> type of annotated class
      * @param   clazz The class.
      * @param   methodName The method.
      * @param   annotationClass The annotation to get.

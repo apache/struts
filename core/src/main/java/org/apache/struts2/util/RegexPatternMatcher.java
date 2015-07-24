@@ -29,16 +29,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * <p>
  * Allows regular expressions to be used in action names. The regular expressions
  * can be in the form {FIELD_NAME} or {FIELD_NAME:REGULAR_EXPRESSION}. For example:
- * <br/>
+ * </p>
+ *
  * <pre>
  *  &lt;action name="/{bio:.+}/test/{name}" class="org.apache.struts2.showcase.UITagExample"&gt;
- *       &lt;result>/tags/ui/example.jsp&lt;/result&gt;
+ *       &lt;result&gt;/tags/ui/example.jsp&lt;/result&gt;
  *  &lt;/action&gt;
  * </pre>
  *
+ * <p>
  * For this to work it is important to set the following:
+ * </p>
+ *
  * <pre>
  * &lt;constant name="struts.enable.SlashesInActionNames" value="true"/&gt;
  * &lt;constant name="struts.mapper.alwaysSelectFullNamespace" value="false"/&gt;

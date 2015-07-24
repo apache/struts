@@ -69,6 +69,9 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
 
     /**
      * Writes GXP. Pulls GXP parameters from Struts2's value stack.
+     *
+     * @param out Appendable
+     * @param gxpContext GXP content
      */
     public void write(Appendable out, GxpContext gxpContext) {
         write(out, gxpContext, null);
@@ -77,6 +80,8 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
     /**
      * Writes GXP. Pulls GXP parameters from Struts2's value stack.
      *
+     * @param out Appendable
+     * @param gxpContext GXP content
      * @param overrides parameter map pushed onto the value stack
      */
     protected void write(Appendable out, GxpContext gxpContext, Map overrides) {
@@ -110,14 +115,14 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
     }
 
     /**
-     * Creates GXP closure. Pulls GXP parameters from Struts 2 value stack.
+     * @return Creates GXP closure. Pulls GXP parameters from Struts 2 value stack.
      */
     public T getGxpClosure() {
         return getGxpClosure(null, null);
     }
 
     /**
-     * Creates GXP closure. Pulls GXP parameters from Struts 2 value stack.
+     * @return  Creates GXP closure. Pulls GXP parameters from Struts 2 value stack.
      *
      * @param body   is pushed onto the stack if this GXP has a
      *               {@link MarkupClosure} (or subclass) parameter named "body".
@@ -157,6 +162,8 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
      * be passed to a method on a GXP.
      *
      * @param overrides parameter map pushed onto the value stack
+     *
+     * @return list of arguments
      */
     List getArgListFromValueStack(Map overrides) {
 
@@ -185,6 +192,8 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
 
     /**
      * Combines parameter names and types into <code>Param</code> objects.
+     *
+     * @return parameter list
      */
     List<Param> lookupParams() {
         List<Param> params = new ArrayList<Param>();
@@ -220,7 +229,7 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
     }
 
     /**
-     * Gets list of parameter types.
+     * @return  list of parameter types.
      */
     List<Class<?>> lookupParameterTypes() {
         List<Class<?>> parameterTypes = Arrays.asList(writeMethod.getParameterTypes());
@@ -229,7 +238,7 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
     }
 
     /**
-     * Gets list of parameter names.
+     * @return  list of parameter names.
      */
     List<String> lookupParameterNames() {
         try {
@@ -240,7 +249,10 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
     }
 
     /**
-     * Returns first method with the given name. Should not be used if the
+     * @param clazz class
+     * @param name method name for lookup
+     *
+     * @return  first method with the given name. Should not be used if the
      * method is overloaded.
      */
     protected static Method lookupMethodByName(Class clazz, String name) {
@@ -259,14 +271,16 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
     }
 
     /**
-     * Returns list of parameters requested by GXP.
+     * @return  list of parameters requested by GXP.
      */
     public List<Param> getParams() {
         return params;
     }
 
     /**
-     * Returns generated GXP class given an absolute path to a GXP file.
+     * @param gxpPath Gxp path
+     *
+     * @return  generated GXP class given an absolute path to a GXP file.
      * The current implementation assumes that the GXP and generated Java source
      * file share the same name with different extensions.
      */
@@ -287,7 +301,10 @@ public abstract class AbstractGxp<T extends MarkupClosure> {
     }
 
     /**
-     * Creates debug String which can be tacked onto an exception.
+     * @param args arguments
+     * @param exception Exception
+     *
+     * @return debug String which can be tacked onto an exception.
      */
     String createDebugString(Object[] args, Exception exception) {
         StringBuffer buffer = new StringBuffer();

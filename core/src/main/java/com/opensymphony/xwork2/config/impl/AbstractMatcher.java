@@ -142,11 +142,12 @@ public abstract class AbstractMatcher<E> implements Serializable {
     protected abstract E convert(String path, E orig, Map<String, String> vars);
 
     /**
-     * <p> Replaces parameter values
-     * </p>
+     * <p>Replaces parameter values</p>
      *
      * @param orig  The original parameters with placeholder values
      * @param vars  A Map of wildcard-matched strings
+     *
+     * @return map with replaced parameters
      */
     protected Map<String,String> replaceParameters(Map<String, String> orig, Map<String,String> vars) {
         Map<String, String> map = new LinkedHashMap<>();

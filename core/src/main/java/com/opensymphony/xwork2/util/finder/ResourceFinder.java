@@ -100,6 +100,8 @@ public class ResourceFinder {
      * </p>
      *
      * This method is not thread safe.
+     *
+     * @return not loaded resources
      */
     public List<String> getResourcesNotLoaded() {
         return Collections.unmodifiableList(resourcesNotLoaded);
@@ -139,7 +141,7 @@ public class ResourceFinder {
     /**
      * Reads the contents of the URL as a {@link String}'s and returns it.
      *
-     * @param uri
+     * @param uri URL
      * @return a stringified content of a resource
      * @throws IOException if a resource pointed out by the uri param could not be find
      * @see ClassLoader#getResource(String)
@@ -149,7 +151,7 @@ public class ResourceFinder {
 
         URL resource = getResource(fullUri);
         if (resource == null) {
-            throw new IOException("Could not find a resource in : " + fullUri);
+            throw new IOException("Could not find a resource in: " + fullUri);
         }
 
         return readContents(resource);
@@ -158,7 +160,7 @@ public class ResourceFinder {
     /**
      * Reads the contents of the found URLs as a list of {@link String}'s and returns them.
      *
-     * @param uri
+     * @param uri URL
      * @return a list of the content of each resource URL found
      * @throws IOException if any of the found URLs are unable to be read.
      */
@@ -181,7 +183,7 @@ public class ResourceFinder {
      * Individual URLs that cannot be read are skipped and added to the
      * list of 'resourcesNotLoaded'
      *
-     * @param uri
+     * @param uri URL
      * @return a list of the content of each resource URL found
      * @throws IOException if classLoader.getResources throws an exception
      */
@@ -234,7 +236,7 @@ public class ResourceFinder {
      * map.contains("four");  // false
      * </pre>
      *
-     * @param uri
+     * @param uri URL
      * @return a list of the content of each resource URL found
      * @throws IOException if any of the urls cannot be read
      */
@@ -281,7 +283,7 @@ public class ResourceFinder {
      * map.contains("four");  // false
      * </pre>
      *
-     * @param uri
+     * @param uri URL
      * @return a list of the content of each resource URL found
      * @throws IOException if classLoader.getResources throws an exception
      */
@@ -312,10 +314,10 @@ public class ResourceFinder {
      * Executes {@link #findString(String)} assuming the contents URL found is the name of
      * a class that should be loaded and returned.
      *
-     * @param uri
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param uri URL
+     * @return class that should be loaded
+     * @throws IOException in case of IO errors
+     * @throws ClassNotFoundException when class is not found
      */
     public Class findClass(String uri) throws IOException, ClassNotFoundException {
         String className = findString(uri);
@@ -332,10 +334,10 @@ public class ResourceFinder {
      * Any URL or class that cannot be loaded will cause an exception to be thrown.
      * </p>
      *
-     * @param uri
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param uri URL
+     * @return classes that should be loaded
+     * @throws IOException in case of IO errors
+     * @throws ClassNotFoundException when class is not found
      */
     public List<Class> findAllClasses(String uri) throws IOException, ClassNotFoundException {
         List<Class> classes = new ArrayList<>();
@@ -358,8 +360,8 @@ public class ResourceFinder {
      * 'resourcesNotLoaded' collection.
      * </p>
      *
-     * @param uri
-     * @return
+     * @param uri URL
+     * @return list of available classes
      * @throws IOException if classLoader.getResources throws an exception
      */
     public List<Class> findAvailableClasses(String uri) throws IOException {
@@ -403,10 +405,10 @@ public class ResourceFinder {
      * Class crimsonClass = map.get("crimson");
      * </pre>
      *
-     * @param uri
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param uri URL
+     * @return map of all classes
+     * @throws IOException in case of IO errors
+     * @throws ClassNotFoundException when class is not found
      */
     public Map<String, Class> mapAllClasses(String uri) throws IOException, ClassNotFoundException {
         Map<String, Class> classes = new HashMap<>();
@@ -445,10 +447,10 @@ public class ResourceFinder {
      * map.contains("crimson");  // true
      * Class xercesClass = map.get("xerces");
      * Class crimsonClass = map.get("crimson");
-     * </p>
+     * </pre>
      *
-     * @param uri
-     * @return
+     * @param uri URL
+     * @return map of available classes
      * @throws IOException if classLoader.getResources throws an exception
      */
     public Map<String, Class> mapAvailableClasses(String uri) throws IOException {
@@ -497,8 +499,9 @@ public class ResourceFinder {
      * Class clazz = finder.findImplementation(java.io.InputStream.class);
      * clazz.getName();  // returns "org.acme.AcmeInputStream"
      * </pre>
+     *
      * @param interfase a superclass or interface
-     * @return
+     * @return implementation class
      * @throws IOException            if the URL cannot be read
      * @throws ClassNotFoundException if the class found is not loadable
      * @throws ClassCastException     if the class found is not assignable to the specified superclass or interface
@@ -542,7 +545,7 @@ public class ResourceFinder {
      * </pre>
      *
      * @param interfase a superclass or interface
-     * @return
+     * @return list of implementation classes
      * @throws IOException            if the URL cannot be read
      * @throws ClassNotFoundException if the class found is not loadable
      * @throws ClassCastException     if the class found is not assignable to the specified superclass or interface
@@ -589,7 +592,7 @@ public class ResourceFinder {
      * classes.contains("com.foo.BarInputStream");  // true
      * </pre>
      * @param interfase a superclass or interface
-     * @return
+     * @return list of implementation classes
      * @throws IOException if classLoader.getResources throws an exception
      */
     public List<Class> findAvailableImplementations(Class interfase) throws IOException {
@@ -641,7 +644,7 @@ public class ResourceFinder {
      * </pre>
      *
      * @param interfase a superclass or interface
-     * @return
+     * @return map of implementation classes
      * @throws IOException            if the URL cannot be read
      * @throws ClassNotFoundException if the class found is not loadable
      * @throws ClassCastException     if the class found is not assignable to the specified superclass or interface
@@ -691,7 +694,7 @@ public class ResourceFinder {
      * </pre>
      *
      * @param interfase a superclass or interface
-     * @return
+     * @return list of available implementation classes
      * @throws IOException if classLoader.getResources throws an exception
      */
     public Map<String, Class> mapAvailableImplementations(Class interfase) throws IOException {
@@ -730,7 +733,7 @@ public class ResourceFinder {
      * Example classpath:
      * </p>
      *
-     * <pre>>
+     * <pre>
      * META-INF/widget.properties
      * </pre>
      *
@@ -739,8 +742,8 @@ public class ResourceFinder {
      * Properties widgetProps = finder.findProperties("widget.properties");
      * </pre>
      *
-     * @param uri
-     * @return
+     * @param uri URL
+     * @return corresponding resource as properties
      * @throws IOException if the URL cannot be read or is not in properties file format
      */
     public Properties findProperties(String uri) throws IOException {
@@ -775,11 +778,11 @@ public class ResourceFinder {
      *
      * <pre>
      * ResourceFinder finder = new ResourceFinder("META-INF/");
-     * List<Properties> appProps = finder.findAllProperties("app.properties");
+     * List&lt;Properties&gt; appProps = finder.findAllProperties("app.properties");
      * </pre>
      *
-     * @param uri
-     * @return
+     * @param uri URL
+     * @return corresponding resource as list of properties
      * @throws IOException if the URL cannot be read or is not in properties file format
      */
     public List<Properties> findAllProperties(String uri) throws IOException {
@@ -818,11 +821,11 @@ public class ResourceFinder {
      *
      * <pre>
      * ResourceFinder finder = new ResourceFinder("META-INF/");
-     * List<Properties> appProps = finder.findAvailableProperties("app.properties");
+     * List&lt;Properties&gt; appProps = finder.findAvailableProperties("app.properties");
      * </pre>
      *
-     * @param uri
-     * @return
+     * @param uri URL
+     * @return corresponding resource as list of properties
      * @throws IOException if classLoader.getResources throws an exception
      */
     public List<Properties> findAvailableProperties(String uri) throws IOException {
@@ -865,14 +868,14 @@ public class ResourceFinder {
      *
      * <pre>
      * ResourceFinder finder = new ResourceFinder("META-INF/");
-     * List<Properties> driversList = finder.findAvailableProperties("jdbcDrivers");
+     * List&lt;Properties&gt; driversList = finder.findAvailableProperties("jdbcDrivers");
      * Properties oracleProps = driversList.get("oracle.properties");
      * Properties mysqlProps = driversList.get("mysql.props");
      * Properties derbyProps = driversList.get("derby");
      * </pre>
      *
-     * @param uri
-     * @return
+     * @param uri URL
+     * @return corresponding resource as map of properties
      * @throws IOException if the URL cannot be read or is not in properties file format
      */
     public Map<String, Properties> mapAllProperties(String uri) throws IOException {
@@ -909,14 +912,14 @@ public class ResourceFinder {
      *
      * <pre>
      * ResourceFinder finder = new ResourceFinder("META-INF/");
-     * List<Properties> driversList = finder.findAvailableProperties("jdbcDrivers");
+     * List&lt;Properties&gt; driversList = finder.findAvailableProperties("jdbcDrivers");
      * Properties oracleProps = driversList.get("oracle.properties");
      * Properties mysqlProps = driversList.get("mysql.props");
      * Properties derbyProps = driversList.get("derby");
-     * </p>
+     * </pre>
      *
-     * @param uri
-     * @return
+     * @param uri URL
+     * @return corresponding resource as map of available properties
      * @throws IOException if classLoader.getResources throws an exception
      */
     public Map<String, Properties> mapAvailableProperties(String uri) throws IOException {
@@ -969,7 +972,10 @@ public class ResourceFinder {
     }
 
     /**
-     * Gets a list of subpackages from jars or dirs
+     * @param uri URL
+     * @return set of subpackages from jars or dirs
+     *
+     * @throws IOException in case of IO errors
      */
     public Set<String> findPackages(String uri) throws IOException {
         String basePath = path + uri;
@@ -998,7 +1004,10 @@ public class ResourceFinder {
     }
 
     /**
-     * Gets a list of subpackages from jars or dirs
+     * @param uri URL
+     * @return a map of subpackages from jars or dirs
+     *
+     * @throws IOException in case of IO errors
      */
     public Map<URL, Set<String>> findPackagesMap(String uri) throws IOException {
         String basePath = path + uri;
@@ -1146,7 +1155,7 @@ public class ResourceFinder {
         if (urls == null) {
             return classLoaderInterface.getResources(fulluri);
         }
-        Vector<URL> resources = new Vector();
+        Vector<URL> resources = new Vector<>();
         for (URL url : urls) {
             URL resource = findResource(fulluri, url);
             if (resource != null){

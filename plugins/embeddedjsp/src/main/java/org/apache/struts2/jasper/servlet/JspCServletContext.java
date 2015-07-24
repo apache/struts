@@ -78,7 +78,7 @@ public class JspCServletContext implements ServletContext {
      * Create a new instance of this ServletContext implementation.
      *
      * @param aLogWriter PrintWriter which is used for <code>log()</code> calls
-     * @param aResourceBaseURL Resource base URL
+     * @param classLoaderInterface classloader interface
      */
     public JspCServletContext(PrintWriter aLogWriter, ClassLoaderInterface classLoaderInterface) {
 
@@ -92,7 +92,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the specified context attribute, if any.
+     * @return  the specified context attribute, if any.
      *
      * @param name Name of the requested attribute
      */
@@ -104,7 +104,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return an enumeration of context attribute names.
+     * @return  an enumeration of context attribute names.
      */
     public Enumeration getAttributeNames() {
 
@@ -114,7 +114,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the servlet context for the specified path.
+     * @return  the servlet context for the specified path.
      *
      * @param uripath Server-relative path starting with '/'
      */
@@ -126,7 +126,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the context path.
+     * @return  the context path.
      */
     public String getContextPath() {
 
@@ -136,7 +136,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the specified context initialization parameter.
+     * @return  the specified context initialization parameter.
      *
      * @param name Name of the requested parameter
      */
@@ -148,7 +148,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return an enumeration of the names of context initialization
+     * @return  an enumeration of the names of context initialization
      * parameters.
      */
     public Enumeration getInitParameterNames() {
@@ -159,7 +159,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the Servlet API major version number.
+     * @return  the Servlet API major version number.
      */
     public int getMajorVersion() {
 
@@ -169,7 +169,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the MIME type for the specified filename.
+     * @return  the MIME type for the specified filename.
      *
      * @param file Filename whose MIME type is requested
      */
@@ -181,7 +181,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the Servlet API minor version number.
+     * @return  the Servlet API minor version number.
      */
     public int getMinorVersion() {
 
@@ -191,7 +191,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return a request dispatcher for the specified servlet name.
+     * @return  a request dispatcher for the specified servlet name.
      *
      * @param name Name of the requested servlet
      */
@@ -203,7 +203,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the real path for the specified context-relative
+     * @return  the real path for the specified context-relative
      * virtual path.
      *
      * @param path The context-relative virtual path to resolve
@@ -219,7 +219,7 @@ public class JspCServletContext implements ServletContext {
             
             
     /**
-     * Return a request dispatcher for the specified context-relative path.
+     * @return  a request dispatcher for the specified context-relative path.
      *
      * @param path Context-relative path for which to acquire a dispatcher
      */
@@ -231,7 +231,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return a URL object of a resource that is mapped to the
+     * @return  a URL object of a resource that is mapped to the
      * specified context-relative path.
      *
      * @param path Context-relative path of the desired resource
@@ -253,7 +253,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return an InputStream allowing access to the resource at the
+     * @return  an InputStream allowing access to the resource at the
      * specified context-relative path.
      *
      * @param path Context-relative path of the desired resource
@@ -268,7 +268,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the set of resource paths for the "directory" at the
+     * @return  the set of resource paths for the "directory" at the
      * specified context path.
      *
      * @param path Context-relative base path
@@ -298,7 +298,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return descriptive information about this server.
+     * @return  descriptive information about this server.
      */
     public String getServerInfo() {
 
@@ -308,7 +308,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return a null reference for the specified servlet name.
+     * @return  a null reference for the specified servlet name.
      *
      * @param name Name of the requested servlet
      *
@@ -322,7 +322,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return the name of this servlet context.
+     * @return  the name of this servlet context.
      */
     public String getServletContextName() {
 
@@ -332,7 +332,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return an empty enumeration of servlet names.
+     * @return  an empty enumeration of servlet names.
      *
      * @deprecated This method has been deprecated with no replacement
      */
@@ -344,7 +344,7 @@ public class JspCServletContext implements ServletContext {
 
 
     /**
-     * Return an empty enumeration of servlets.
+     * @return  an empty enumeration of servlets.
      *
      * @deprecated This method has been deprecated with no replacement
      */

@@ -93,10 +93,10 @@ public abstract class AbstractAdapterNode implements AdapterNode {
 
     /**
      *
-     * @param adapterFactory
-     * @param parent
-     * @param propertyName
-     * @param value
+     * @param adapterFactory the adapter factory
+     * @param parent the parent adapter node
+     * @param propertyName the property name
+     * @param value value
      */
     protected void setContext(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
         setAdapterFactory(adapterFactory);
@@ -116,6 +116,8 @@ public abstract class AbstractAdapterNode implements AdapterNode {
 
     /**
      * Lazily initialize child childAdapters
+     *
+     * @return node list
      */
     protected List<Node> getChildAdapters() {
         if (childAdapters == null) {

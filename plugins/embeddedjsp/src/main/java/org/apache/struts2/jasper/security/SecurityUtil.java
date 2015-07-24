@@ -30,7 +30,7 @@ public final class SecurityUtil{
          System.getProperty("package.definition") == null ? false : true;
     
     /**
-     * Return the <code>SecurityManager</code> only if Security is enabled AND
+     * @return  the <code>SecurityManager</code> only if Security is enabled AND
      * package protection mechanism is enabled.
      */
     public static boolean isPackageProtectionEnabled(){
@@ -47,6 +47,7 @@ public final class SecurityUtil{
      * codes in the request URL that is often reported in error messages.
      *
      * @param message The message string to be filtered
+     * @return filtered message
      */
     public static String filter(String message) {
 

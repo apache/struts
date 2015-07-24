@@ -51,6 +51,8 @@ public abstract class ContextBean extends Component {
     /**
      * To keep backward compatibility 
      * TODO remove after 2.1
+     *
+     * @param id the given id
      */
     @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
     public void setId(String id) {

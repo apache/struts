@@ -40,6 +40,8 @@ public class ELFunctionMapper {
      *
      * @param compiler Current compiler, mainly for accessing error dispatcher.
      * @param page The current compilation unit.
+     *
+     * @throws JasperException in case of Jasper errors
      */
     public static void map(Compiler compiler, Node.Nodes page) 
                 throws JasperException {

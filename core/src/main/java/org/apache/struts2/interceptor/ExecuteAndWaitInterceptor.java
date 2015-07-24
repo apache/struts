@@ -73,7 +73,7 @@ import java.util.Map;
  * server wait before the wait page is shown to the user. During the wait this interceptor will wake every 100 millis
  * to check if the background process is done premature, thus if the job for some reason doesn't take to long the wait
  * page is not shown to the user.
- * <br/> This is useful for e.g. search actions that have a wide span of execution time. Using a delay time of 2000
+ * <br> This is useful for e.g. search actions that have a wide span of execution time. Using a delay time of 2000
  * millis we ensure the user is presented fast search results immediately and for the slow results a wait page is used.
  * </p>
  *
@@ -131,7 +131,7 @@ import java.util.Map;
  *   &lt;/head&gt;
  *   &lt;body&gt;
  *     Please wait while we process your request.
- *     Click &lt;a href="&lt;s:url includeParams="all" /&gt;">&lt;/a&gt; if this page does not reload automatically.
+ *     Click &lt;a href="&lt;s:url includeParams="all" /&gt;"&gt;&lt;/a&gt; if this page does not reload automatically.
  *   &lt;/body&gt;
  * &lt;/html&gt;
  * </pre>
@@ -217,6 +217,8 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     /**
      * Returns the name to associate the background process.  Override to change the way background processes
      * are mapped to requests.
+     *
+     * @param proxy action proxy
      *
      * @return the name of the background thread
      */
@@ -319,7 +321,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
      * <p>
      * When this interceptor is executed for the first time this methods handles any provided initial delay.
      * An initial delay is a time in milliseconds we let the server wait before we continue.
-     * <br/> During the wait this interceptor will wake every 100 millis to check if the background
+     * <br> During the wait this interceptor will wake every 100 millis to check if the background
      * process is done premature, thus if the job for some reason doesn't take to long the wait
      * page is not shown to the user.
      * </p>

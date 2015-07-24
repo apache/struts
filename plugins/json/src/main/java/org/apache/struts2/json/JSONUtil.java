@@ -67,7 +67,7 @@ public class JSONUtil {
      * @param cacheBeanInfo
      * 			  Specifies whether to cache bean info in the JSONWriter
      * @return JSON string
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public static String serialize(Object object, boolean cacheBeanInfo) throws JSONException {
         JSONWriter writer = new JSONWriter();
@@ -83,11 +83,15 @@ public class JSONUtil {
      *            to be serialized
      * @param excludeProperties
      *            Patterns matching properties to exclude
+     * @param includeProperties
+     *            Patterns matching properties to include
      * @param ignoreHierarchy
      *            whether to ignore properties defined on base classes of the
      *            root object
+     * @param excludeNullProperties
+     *            enable/disable excluding of null properties
      * @return JSON string
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public static String serialize(Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean excludeNullProperties)
@@ -104,13 +108,17 @@ public class JSONUtil {
      *            to be serialized
      * @param excludeProperties
      *            Patterns matching properties to exclude
+     * @param includeProperties
+     *            Patterns matching properties to include
      * @param ignoreHierarchy
      *            whether to ignore properties defined on base classes of the
      *            root object
+     * @param excludeNullProperties
+     *            enable/disable excluding of null properties
      * @param cacheBeanInfo
      * 			  Specifies whether to cache bean info in the JSONWriter
      * @return JSON string
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public static String serialize(Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean excludeNullProperties,
@@ -130,15 +138,19 @@ public class JSONUtil {
      *            to be serialized
      * @param excludeProperties
      *            Patterns matching properties to exclude
+     * @param includeProperties
+     *            Patterns matching properties to include
      * @param ignoreHierarchy
      *            whether to ignore properties defined on base classes of the
      *            root object
      * @param enumAsBean
      *            whether to serialized enums a Bean or name=value pair
+     * @param excludeNullProperties
+     *            enable/disable excluding of null properties
      * @param defaultDateFormat
      *            date format used to serialize dates
      * @return JSON string
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public static String serialize(Object object, Collection<Pattern> excludeProperties,
                                    Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
@@ -155,17 +167,21 @@ public class JSONUtil {
      *            to be serialized
      * @param excludeProperties
      *            Patterns matching properties to exclude
+     * @param includeProperties
+     *            Patterns matching properties to include
      * @param ignoreHierarchy
      *            whether to ignore properties defined on base classes of the
      *            root object
      * @param enumAsBean
      *            whether to serialized enums a Bean or name=value pair
+     * @param excludeNullProperties
+     *            enable/disable excluding of null properties
      * @param defaultDateFormat
      *            date format used to serialize dates
      * @param cacheBeanInfo
      * 			  Specifies whether to cache bean info in the JSONWriter
      * @return JSON string
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public static String serialize(Object object, Collection<Pattern> excludeProperties,
                                    Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
@@ -185,8 +201,8 @@ public class JSONUtil {
      *            Writer to serialize the object to
      * @param object
      *            object to be serialized
-     * @throws IOException
-     * @throws JSONException
+     * @throws IOException  in case of IO errors
+     * @throws JSONException in case of error during serialize
      */
     public static void serialize(Writer writer, Object object) throws IOException, JSONException {
         serialize(writer, object, CACHE_BEAN_INFO_DEFAULT);
@@ -201,8 +217,8 @@ public class JSONUtil {
      *            object to be serialized
      * @param cacheBeanInfo
      * 			  Specifies whether to cache bean info in the JSONWriter
-     * @throws IOException
-     * @throws JSONException
+     * @throws IOException  in case of IO errors
+     * @throws JSONException in case of error during serialize
      */
     public static void serialize(Writer writer, Object object, boolean cacheBeanInfo) throws IOException, JSONException {
         writer.write(serialize(object, cacheBeanInfo));
@@ -219,8 +235,12 @@ public class JSONUtil {
      *            object to be serialized
      * @param excludeProperties
      *            Patterns matching properties to ignore
-     * @throws IOException
-     * @throws JSONException
+     * @param includeProperties
+     *            Patterns matching properties to include
+     * @param excludeNullProperties
+     *            enable/disable excluding of null properties
+     * @throws IOException  in case of IO errors
+     * @throws JSONException in case of error during serialize
      */
     public static void serialize(Writer writer, Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean excludeNullProperties) throws IOException,
@@ -239,10 +259,14 @@ public class JSONUtil {
      *            object to be serialized
      * @param excludeProperties
      *            Patterns matching properties to ignore
+     * @param includeProperties
+     *            Patterns matching properties to include
+     * @param excludeNullProperties
+     *            enable/disable excluding of null properties
      * @param cacheBeanInfo
      * 			  Specifies whether to cache bean info in the JSONWriter        
-     * @throws IOException
-     * @throws JSONException
+     * @throws IOException  in case of IO errors
+     * @throws JSONException in case of error during serialize
      */
     public static void serialize(Writer writer, Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean excludeNullProperties, boolean cacheBeanInfo) 
@@ -256,7 +280,7 @@ public class JSONUtil {
      * @param json
      *            string in JSON
      * @return desrialized object
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public static Object deserialize(String json) throws JSONException {
         JSONReader reader = new JSONReader();
@@ -364,11 +388,14 @@ public class JSONUtil {
     /**
      * List visible methods carrying the
      *
-     * @SMDMethod annotation
+     * {@literal @}SMDMethod annotation
      *
+     * @param clazz
+     *            class
      * @param ignoreInterfaces
      *            if true, only the methods of the class are examined. If false,
      *            annotations on every interfaces' methods are examined.
+     * @return array of SMD methods
      */
     @SuppressWarnings("unchecked")
     public static Method[] listSMDMethods(Class clazz, boolean ignoreInterfaces) {
@@ -440,7 +467,7 @@ public class JSONUtil {
         return visitUniqueInterfaces(aClass, visitor, classesVisited);
     }
 
-    /**
+    /*
      * Recursive method to visit all the interfaces of a class (and its
      * superclasses and super-interfaces) if they haven't already been visited.
      * <br> Always visits itself if it hasn't already been visited
@@ -564,7 +591,7 @@ public class JSONUtil {
         return patternExpr;
     }
 
-    /**
+    /*
      * Add a pattern that does not have the indexed property matching (ie. list\[\d+\] becomes list).
      */
     private static boolean isIndexedProperty(String patternPiece, String type, Map<String, Map<String, String>> includePatternData) {

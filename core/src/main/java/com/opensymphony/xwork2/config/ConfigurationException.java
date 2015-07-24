@@ -46,6 +46,7 @@ public class ConfigurationException extends XWorkException {
      * detail message.
      *
      * @param s the detail message.
+     * @param target the target object
      */
     public ConfigurationException(String s, Object target) {
         super(s, target);
@@ -53,6 +54,8 @@ public class ConfigurationException extends XWorkException {
 
     /**
      * Constructs a <code>ConfigurationException</code> with no detail message.
+     *
+     * @param cause the cause of the exception
      */
     public ConfigurationException(Throwable cause) {
         super(cause);
@@ -60,6 +63,8 @@ public class ConfigurationException extends XWorkException {
     
     /**
      * Constructs a <code>ConfigurationException</code> with no detail message.
+     * @param cause the cause of the exception
+     * @param target the target object
      */
     public ConfigurationException(Throwable cause, Object target) {
         super(cause, target);
@@ -70,6 +75,7 @@ public class ConfigurationException extends XWorkException {
      * detail message.
      *
      * @param s the detail message.
+     * @param cause the cause of the exception
      */
     public ConfigurationException(String s, Throwable cause) {
         super(s, cause);
@@ -80,6 +86,8 @@ public class ConfigurationException extends XWorkException {
      * detail message.
      *
      * @param s the detail message.
+     * @param cause the cause of the exception
+     * @param target the target object
      */
     public ConfigurationException(String s, Throwable cause, Object target) {
         super(s, cause, target);

@@ -226,14 +226,14 @@ public class Component {
     /**
      * Evaluates the OGNL stack to find a String value.
      * <br>
-     * If the given expression is <tt>null</tt/> a error is logged and a <code>RuntimeException</code> is thrown
+     * If the given expression is <tt>null</tt> a error is logged and a <code>RuntimeException</code> is thrown
      * constructed with a messaged based on the given field and errorMsg parameter.
      *
      * @param expr  OGNL expression.
      * @param field   field name used when throwing <code>RuntimeException</code>.
      * @param errorMsg  error message used when throwing <code>RuntimeException</code>.
      * @return  the String value found.
-     * @throws StrutsException is thrown in case of expression is <tt>null</tt>.
+     * @throws StrutsException is thrown in case of expression is null.
      */
     protected String findString(String expr, String field, String errorMsg) {
         if (expr == null) {
@@ -289,16 +289,15 @@ public class Component {
 	}
 
     /**
-     * Is the altSyntax enabled? [TRUE]
-     * <br>
      * See <code>struts.properties</code> where the altSyntax flag is defined.
+     * @return if the altSyntax enabled? [TRUE]
      */
     public boolean altSyntax() {
         return ComponentUtils.altSyntax(stack);
     }
 
     /**
-     * Adds the sorrounding %{ } to the expression for proper processing.
+     * Adds the surrounding %{ } to the expression for proper processing.
      * @param expr the expression.
      * @return the modified expression if altSyntax is enabled, or the parameter 
      * expression otherwise.
@@ -330,7 +329,7 @@ public class Component {
      *
      * <p>
      * Function just like <code>findValue(String)</code> except that if the
-     * given expression is <tt>null</tt/> a error is logged and
+     * given expression is <tt>null</tt> a error is logged and
      * a <code>RuntimeException</code> is thrown constructed with a
      * messaged based on the given field and errorMsg parameter.
      * </p>
@@ -394,7 +393,7 @@ public class Component {
      * @param includeContext  should the context path be included or not
      * @param encodeResult    should the url be encoded
      * @param forceAddSchemeHostAndPort    should the scheme host and port be forced
-     * @param escapeAmp    should ampersand (&) be escaped to &amp;
+     * @param escapeAmp    should ampersand (&amp;) be escaped to &amp;amp;
      * @return the action url.
      */
     protected String determineActionURL(String action, String namespace, String method,
@@ -533,6 +532,8 @@ public class Component {
 
     /**
      * If needed caches all methods annotated by given annotation to avoid further scans
+     *
+     * @return list of attributes
      */
     protected Collection<String> getStandardAttributes() {
         Class clz = getClass();

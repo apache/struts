@@ -43,7 +43,7 @@ import java.util.Properties;
 /**
  * Apache felix implementation of an OsgiHost
  * See http://felix.apache.org/site/apache-felix-framework-launching-and-embedding.html
- * <br/>
+ * <br>
  * Servlet config params:
  * <p>struts.osgi.clearBundleCache: Defaults to "true" delete installed bundles when the comntainer starts</p>
  * <p>struts.osgi.logLevel: Defaults to "1". Felix log level. 1 = error, 2 = warning, 3 = information, and 4 = debug </p>

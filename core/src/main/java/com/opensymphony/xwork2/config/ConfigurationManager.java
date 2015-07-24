@@ -56,7 +56,7 @@ public class ConfigurationManager {
     }
 
     /**
-     * Get the current XWork configuration object.  By default an instance of DefaultConfiguration will be returned
+     * @return the current XWork configuration object. By default an instance of DefaultConfiguration will be returned
      *
      * @see com.opensymphony.xwork2.config.impl.DefaultConfiguration
      */

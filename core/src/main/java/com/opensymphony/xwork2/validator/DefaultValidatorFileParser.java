@@ -68,12 +68,12 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
     }
 
     public List<ValidatorConfig> parseActionValidatorConfigs(ValidatorFactory validatorFactory, InputStream is, final String resourceName) {
-        List<ValidatorConfig> validatorCfgs = new ArrayList<ValidatorConfig>();
+        List<ValidatorConfig> validatorCfgs = new ArrayList<>();
 
         InputSource in = new InputSource(is);
         in.setSystemId(resourceName);
 
-        Map<String, String> dtdMappings = new HashMap<String, String>();
+        Map<String, String> dtdMappings = new HashMap<>();
         dtdMappings.put("-//Apache Struts//XWork Validator 1.0//EN", "xwork-validator-1.0.dtd");
         dtdMappings.put("-//Apache Struts//XWork Validator 1.0.2//EN", "xwork-validator-1.0.2.dtd");
         dtdMappings.put("-//Apache Struts//XWork Validator 1.0.3//EN", "xwork-validator-1.0.3.dtd");
@@ -112,7 +112,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
         InputSource in = new InputSource(is);
         in.setSystemId(resourceName);
 
-        Map<String, String> dtdMappings = new HashMap<String, String>();
+        Map<String, String> dtdMappings = new HashMap<>();
         dtdMappings.put("-//Apache Struts//XWork Validator Config 1.0//EN", "xwork-validator-config-1.0.dtd");
         dtdMappings.put("-//Apache Struts//XWork Validator Definition 1.0//EN", "xwork-validator-definition-1.0.dtd");
 
@@ -141,6 +141,9 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
      * Extract trimmed text value from the given DOM element, ignoring XML comments. Appends all CharacterData nodes
      * and EntityReference nodes into a single String value, excluding Comment nodes.
      * This method is based on a method originally found in DomUtils class of Springframework.
+     *
+     * @param valueEle the given DOM element
+     * @return the text value
      *
      * @see org.w3c.dom.CharacterData
      * @see org.w3c.dom.EntityReference
@@ -185,7 +188,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
             ValidatorConfig.Builder vCfg = new ValidatorConfig.Builder(validatorType)
                     .addParams(params)
                     .location(DomHelper.getLocationObject(validatorElement))
-                    .shortCircuit(Boolean.valueOf(validatorElement.getAttribute("short-circuit")).booleanValue());
+                    .shortCircuit(Boolean.valueOf(validatorElement.getAttribute("short-circuit")));
 
             NodeList messageNodes = validatorElement.getElementsByTagName("message");
             Element messageElement = (Element) messageNodes.item(0);
@@ -213,7 +216,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
                 // </message>
 
                 if (messageParams.containsKey("defaultMessage")) {
-                    vCfg.defaultMessage(messageParams.get("defaultMessage").toString());
+                    vCfg.defaultMessage(messageParams.get("defaultMessage"));
                 }
 
                 // Sort the message param. those with keys as '1', '2', '3' etc. (numeric values)
@@ -223,7 +226,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
 
                     try {
                         int _order = Integer.parseInt(messageParamEntry.getKey());
-                        sortedMessageParameters.put(Integer.valueOf(_order), messageParamEntry.getValue().toString());
+                        sortedMessageParameters.put(_order, messageParamEntry.getValue());
                     }
                     catch (NumberFormatException e) {
                         // ignore if its not numeric.

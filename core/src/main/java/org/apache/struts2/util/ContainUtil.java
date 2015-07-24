@@ -28,15 +28,13 @@ import java.util.Map;
 /**
  * <code>ContainUtil</code> will check if object 1 contains object 2.
  * Object 1 may be an Object, array, Collection, or a Map
- *
- * @version $Date$ $Id$
  */
 public class ContainUtil {
 
     /**
      * Determine if <code>obj2</code> exists in <code>obj1</code>.
      *
-     * <table borer="1">
+     * <table border="1" summary="">
      *  <tr>
      *      <td>Type Of obj1</td>
      *      <td>Comparison type</td>
@@ -64,19 +62,17 @@ public class ContainUtil {
      * </table>
      *
      *
-     * @param obj1
-     * @param obj2
-     * @return
+     * @param obj1 first object
+     * @param obj2 second object
+     * @return true if first object contains second object or if the  are equals, otherwise false
      */
     public static boolean contains(Object obj1, Object obj2) {
         if ((obj1 == null) || (obj2 == null)) {
-            //log.debug("obj1 or obj2 are null.");
             return false;
         }
 
         if (obj1 instanceof Map) {
             if (((Map) obj1).containsKey(obj2)) {
-                //log.debug("obj1 is a map and contains obj2");
                 return true;
             }
         } if (obj1 instanceof Iterable) {
@@ -90,19 +86,15 @@ public class ContainUtil {
                 Object value = Array.get(obj1, i);
 
                 if (obj2.equals(value)) {
-                    //log.debug("obj1 is an array and contains obj2");
                     return true;
                 }
             }
         } else if (obj1.toString().equals(obj2.toString())) {
-            //log.debug("obj1 is an object and it's String representation equals obj2's String representation.");
             return true;
         } else if (obj1.equals(obj2)) {
-            //log.debug("obj1 is an object and equals obj2");
             return true;
         }
 
-        //log.debug("obj1 does not contain obj2: " + obj1 + ", " + obj2);
         return false;
     }
 }

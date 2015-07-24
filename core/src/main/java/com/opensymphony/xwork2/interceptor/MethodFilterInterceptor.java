@@ -68,8 +68,6 @@ import java.util.Set;
  * @see org.apache.struts2.interceptor.TokenSessionStoreInterceptor
  * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
  * @see com.opensymphony.xwork2.validator.ValidationInterceptor
- * 
- * @version $Date$ $Id$
  */
 public abstract class MethodFilterInterceptor extends AbstractInterceptor {
     protected transient Logger log = LogManager.getLogger(getClass());
@@ -116,7 +114,7 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
      * 
      * @param invocation the action invocation
      * @return the result of invocation
-     * @throws Exception
+     * @throws Exception in case of any errors
      */
     protected abstract String doIntercept(ActionInvocation invocation) throws Exception;
     

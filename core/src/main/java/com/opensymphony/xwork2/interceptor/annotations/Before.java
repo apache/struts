@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table class='confluenceTable'>
+ * <table class='confluenceTable' summary=''>
  * <tr>
  * <th class='confluenceTh'> Parameter </th>
  * <th class='confluenceTh'> Required </th>
@@ -51,7 +51,7 @@ import java.lang.annotation.Target;
  * </table>
  * <!-- END SNIPPET: parameters -->
  *
- * <p<u>Example code:</u></p>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

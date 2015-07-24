@@ -26,12 +26,12 @@ import java.lang.reflect.Member;
 public interface Context {
 
   /**
-   * Gets the {@link Container}.
+   * @return  the {@link Container}.
    */
   Container getContainer();
 
   /**
-   * Gets the current scope strategy. See {@link
+   *  @return the current scope strategy. See {@link
    * Container#setScopeStrategy(Scope.Strategy)}.
    *
    * @throws IllegalStateException if no strategy has been set
@@ -39,19 +39,19 @@ public interface Context {
   Scope.Strategy getScopeStrategy();
 
   /**
-   * Gets the field, method or constructor which is being injected. Returns
+   *  @return the field, method or constructor which is being injected. Returns
    * {@code null} if the object currently being constructed is pre-loaded as
    * a singleton or requested from {@link Container#getInstance(Class)}.
    */
   Member getMember();
 
   /**
-   * Gets the type of the field or parameter which is being injected.
+   *  @return  the type of the field or parameter which is being injected.
    */
   Class<?> getType();
 
   /**
-   * Gets the name of the injection specified by {@link Inject#value()}.
+   *  @return  the name of the injection specified by {@link Inject#value()}.
    */
   String getName();
 }

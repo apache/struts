@@ -17,6 +17,18 @@
 
 package org.apache.struts2.jasper.compiler;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.struts2.jasper.Constants;
+import org.apache.struts2.jasper.JspCompilationContext;
+import org.apache.struts2.jasper.Options;
+import org.apache.struts2.jasper.runtime.JspFactoryImpl;
+import org.apache.struts2.jasper.security.SecurityClassLoad;
+import org.apache.struts2.jasper.servlet.JspCServletContext;
+import org.apache.struts2.jasper.servlet.JspServletWrapper;
+
+import javax.servlet.ServletContext;
+import javax.servlet.jsp.JspFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilePermission;
@@ -26,32 +38,24 @@ import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.cert.Certificate;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.JspFactory;
-
-import org.apache.struts2.jasper.Constants;
-import org.apache.struts2.jasper.JspCompilationContext;
-import org.apache.struts2.jasper.Options;
-import org.apache.struts2.jasper.runtime.JspFactoryImpl;
-import org.apache.struts2.jasper.security.SecurityClassLoad;
-import org.apache.struts2.jasper.servlet.JspServletWrapper;
-import org.apache.struts2.jasper.servlet.JspCServletContext;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-
 /**
+ * <p>
  * Class for tracking JSP compile time file dependencies when the
- * &060;%@include file="..."%&062; directive is used.
+ * &#060;%{@literal @}include file="..."%&#062; directive is used.
+ * </p>
  *
+ * <p>
  * A background thread periodically checks the files a JSP page
- * is dependent upon.  If a dpendent file changes the JSP page
+ * is dependent upon.  If a dependent file changes the JSP page
  * which included it is recompiled.
+ * </p>
  *
+ * <p>
  * Only used if a web application context is a directory.
+ * </p>
  *
  * @author Glenn L. Nielsen
  * @version $Revision: 505593 $
@@ -73,21 +77,21 @@ public final class JspRuntimeContext {
     static {
         JspFactoryImpl factory = new JspFactoryImpl();
         SecurityClassLoad.securityClassLoad(factory.getClass().getClassLoader());
-        if( System.getSecurityManager() != null ) {
+        if (System.getSecurityManager() != null) {
             String basePackage = "org.apache.struts2.jasper.";
             try {
-                factory.getClass().getClassLoader().loadClass( basePackage +
-                                                               "runtime.JspFactoryImpl$PrivilegedGetPageContext");
-                factory.getClass().getClassLoader().loadClass( basePackage +
-                                                               "runtime.JspFactoryImpl$PrivilegedReleasePageContext");
-                factory.getClass().getClassLoader().loadClass( basePackage +
-                                                               "runtime.JspRuntimeLibrary");
-                factory.getClass().getClassLoader().loadClass( basePackage +
-                                                               "runtime.JspRuntimeLibrary$PrivilegedIntrospectHelper");
-                factory.getClass().getClassLoader().loadClass( basePackage +
-                                                               "runtime.ServletResponseWrapperInclude");
-                factory.getClass().getClassLoader().loadClass( basePackage +
-                                                               "servlet.JspServletWrapper");
+                factory.getClass().getClassLoader().loadClass(basePackage +
+                        "runtime.JspFactoryImpl$PrivilegedGetPageContext");
+                factory.getClass().getClassLoader().loadClass(basePackage +
+                        "runtime.JspFactoryImpl$PrivilegedReleasePageContext");
+                factory.getClass().getClassLoader().loadClass(basePackage +
+                        "runtime.JspRuntimeLibrary");
+                factory.getClass().getClassLoader().loadClass(basePackage +
+                        "runtime.JspRuntimeLibrary$PrivilegedIntrospectHelper");
+                factory.getClass().getClassLoader().loadClass(basePackage +
+                        "runtime.ServletResponseWrapperInclude");
+                factory.getClass().getClassLoader().loadClass(basePackage +
+                        "servlet.JspServletWrapper");
             } catch (ClassNotFoundException ex) {
                 throw new IllegalStateException(ex);
             }
@@ -99,11 +103,16 @@ public final class JspRuntimeContext {
     // ----------------------------------------------------------- Constructors
 
     /**
+     * <p>
      * Create a JspRuntimeContext for a web application context.
+     * </p>
      *
+     * <p>
      * Loads in any previously generated dependencies from file.
+     * </p>
      *
      * @param context ServletContext for web application
+     * @param options options
      */
     public JspRuntimeContext(ServletContext context, Options options) {
 
@@ -112,27 +121,27 @@ public final class JspRuntimeContext {
 
         // Get the parent class loader
         parentClassLoader =
-            (URLClassLoader) Thread.currentThread().getContextClassLoader();
+                (URLClassLoader) Thread.currentThread().getContextClassLoader();
         if (parentClassLoader == null) {
             parentClassLoader =
-                (URLClassLoader)this.getClass().getClassLoader();
+                    (URLClassLoader) this.getClass().getClassLoader();
         }
 
-	if (log.isDebugEnabled()) {
-	    if (parentClassLoader != null) {
-		log.debug(Localizer.getMessage("jsp.message.parent_class_loader_is",
-					       parentClassLoader.toString()));
-	    } else {
-		log.debug(Localizer.getMessage("jsp.message.parent_class_loader_is",
-					       "<none>"));
-	    }
+        if (log.isDebugEnabled()) {
+            if (parentClassLoader != null) {
+                log.debug(Localizer.getMessage("jsp.message.parent_class_loader_is",
+                        parentClassLoader.toString()));
+            } else {
+                log.debug(Localizer.getMessage("jsp.message.parent_class_loader_is",
+                        "<none>"));
+            }
         }
 
         initClassPath();
 
-	if (context instanceof JspCServletContext) {
-	    return;
-	}
+        if (context instanceof JspCServletContext) {
+            return;
+        }
 
         if (Constants.IS_SECURITY_ENABLED) {
             initSecurity();
@@ -140,12 +149,12 @@ public final class JspRuntimeContext {
 
         // If this web application context is running from a
         // directory, start the background compilation thread
-        String appBase = context.getRealPath("/");         
+        String appBase = context.getRealPath("/");
         if (!options.getDevelopment()
                 && appBase != null
                 && options.getCheckInterval() > 0) {
             lastCheck = System.currentTimeMillis();
-        }                                            
+        }
     }
 
     // ----------------------------------------------------- Instance Variables
@@ -157,15 +166,15 @@ public final class JspRuntimeContext {
     private Options options;
     private URLClassLoader parentClassLoader;
     private PermissionCollection permissionCollection;
-    private CodeSource codeSource;                    
+    private CodeSource codeSource;
     private String classpath;
     private long lastCheck = -1L;
 
     /**
      * Maps JSP pages to their JspServletWrapper's
      */
-    private Map<String, JspServletWrapper> jsps = new ConcurrentHashMap<String, JspServletWrapper>();
- 
+    private Map<String, JspServletWrapper> jsps = new ConcurrentHashMap<>();
+
 
     // ------------------------------------------------------ Public Methods
 
@@ -173,7 +182,7 @@ public final class JspRuntimeContext {
      * Add a new JspServletWrapper.
      *
      * @param jspUri JSP URI
-     * @param jsw Servlet wrapper for JSP
+     * @param jsw    Servlet wrapper for JSP
      */
     public void addWrapper(String jspUri, JspServletWrapper jsw) {
         jsps.put(jspUri, jsw);
@@ -238,12 +247,11 @@ public final class JspRuntimeContext {
     }
 
     /**
-     * Process a "destory" event for this web application context.
-     */                                                        
+     * Process a "destroy" event for this web application context.
+     */
     public void destroy() {
-        Iterator servlets = jsps.values().iterator();
-        while (servlets.hasNext()) {
-            ((JspServletWrapper) servlets.next()).destroy();
+        for (Object o : jsps.values()) {
+            ((JspServletWrapper) o).destroy();
         }
     }
 
@@ -289,21 +297,21 @@ public final class JspRuntimeContext {
         } else {
             return;
         }
-        
-        Object [] wrappers = jsps.values().toArray();
-        for (int i = 0; i < wrappers.length; i++ ) {
-            JspServletWrapper jsw = (JspServletWrapper)wrappers[i];
+
+        Object[] wrappers = jsps.values().toArray();
+        for (Object wrapper : wrappers) {
+            JspServletWrapper jsw = (JspServletWrapper) wrapper;
             JspCompilationContext ctxt = jsw.getJspEngineContext();
             // JspServletWrapper also synchronizes on this when
             // it detects it has to do a reload
-            synchronized(jsw) {
+            synchronized (jsw) {
                 try {
                     ctxt.compile();
                 } catch (FileNotFoundException ex) {
                     ctxt.incrementRemoved();
                 } catch (Throwable t) {
                     jsw.getServletContext().log("Background compile failed",
-						t);
+                            t);
                 }
             }
         }
@@ -311,7 +319,7 @@ public final class JspRuntimeContext {
     }
 
     /**
-     * The classpath that is passed off to the Java compiler.
+     * @return The classpath that is passed off to the Java compiler.
      */
     public String getClassPath() {
         return classpath;
@@ -326,22 +334,22 @@ public final class JspRuntimeContext {
      */
     private void initClassPath() {
 
-        URL [] urls = parentClassLoader.getURLs();
+        URL[] urls = parentClassLoader.getURLs();
         StringBuffer cpath = new StringBuffer();
         String sep = System.getProperty("path.separator");
 
-        for(int i = 0; i < urls.length; i++) {
+        for (int i = 0; i < urls.length; i++) {
             // Tomcat 4 can use URL's other than file URL's,
             // a protocol other than file: will generate a
             // bad file system path, so only add file:
             // protocol URL's to the classpath.
-            
-            if( urls[i].getProtocol().equals("file") ) {
-                cpath.append((String)urls[i].getFile()+sep);
-            }
-        }    
 
-	cpath.append(options.getScratchDir() + sep);
+            if (urls[i].getProtocol().equals("file")) {
+                cpath.append((String) urls[i].getFile() + sep);
+            }
+        }
+
+        cpath.append(options.getScratchDir() + sep);
 
         String cp = (String) context.getAttribute(Constants.SERVLET_CLASSPATH);
         if (cp == null || cp.equals("")) {
@@ -350,7 +358,7 @@ public final class JspRuntimeContext {
 
         classpath = cpath.toString() + cp;
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Compilation classpath initialized: " + getClassPath());
         }
     }
@@ -365,80 +373,80 @@ public final class JspRuntimeContext {
         // web app context directory, then add a file read permission
         // for that directory.
         Policy policy = Policy.getPolicy();
-        if( policy != null ) {
-            try {          
+        if (policy != null) {
+            try {
                 // Get the permissions for the web app context
                 String docBase = context.getRealPath("/");
-                if( docBase == null ) {
+                if (docBase == null) {
                     docBase = options.getScratchDir().toString();
                 }
                 String codeBase = docBase;
-                if (!codeBase.endsWith(File.separator)){
+                if (!codeBase.endsWith(File.separator)) {
                     codeBase = codeBase + File.separator;
                 }
                 File contextDir = new File(codeBase);
                 URL url = contextDir.getCanonicalFile().toURL();
-                codeSource = new CodeSource(url,(Certificate[])null);
+                codeSource = new CodeSource(url, (Certificate[]) null);
                 permissionCollection = policy.getPermissions(codeSource);
 
                 // Create a file read permission for web app context directory
-                if (!docBase.endsWith(File.separator)){
+                if (!docBase.endsWith(File.separator)) {
                     permissionCollection.add
-                        (new FilePermission(docBase,"read"));
+                            (new FilePermission(docBase, "read"));
                     docBase = docBase + File.separator;
                 } else {
                     permissionCollection.add
-                        (new FilePermission
-                            (docBase.substring(0,docBase.length() - 1),"read"));
+                            (new FilePermission
+                                    (docBase.substring(0, docBase.length() - 1), "read"));
                 }
                 docBase = docBase + "-";
-                permissionCollection.add(new FilePermission(docBase,"read"));
+                permissionCollection.add(new FilePermission(docBase, "read"));
 
                 // Create a file read permission for web app tempdir (work)
                 // directory
                 String workDir = options.getScratchDir().toString();
-                if (!workDir.endsWith(File.separator)){
+                if (!workDir.endsWith(File.separator)) {
                     permissionCollection.add
-                        (new FilePermission(workDir,"read"));
+                            (new FilePermission(workDir, "read"));
                     workDir = workDir + File.separator;
                 }
                 workDir = workDir + "-";
-                permissionCollection.add(new FilePermission(workDir,"read"));
+                permissionCollection.add(new FilePermission(workDir, "read"));
 
                 // Allow the JSP to access org.apache.struts2.jasper.runtime.HttpJspBase
-                permissionCollection.add( new RuntimePermission(
-                    "accessClassInPackage.org.apache.struts2.jasper.runtime") );
+                permissionCollection.add(new RuntimePermission(
+                        "accessClassInPackage.org.apache.struts2.jasper.runtime"));
 
                 if (parentClassLoader instanceof URLClassLoader) {
-                    URL [] urls = parentClassLoader.getURLs();
+                    URL[] urls = parentClassLoader.getURLs();
                     String jarUrl = null;
                     String jndiUrl = null;
-                    for (int i=0; i<urls.length; i++) {
+                    for (int i = 0; i < urls.length; i++) {
                         if (jndiUrl == null
-                                && urls[i].toString().startsWith("jndi:") ) {
+                                && urls[i].toString().startsWith("jndi:")) {
                             jndiUrl = urls[i].toString() + "-";
                         }
                         if (jarUrl == null
                                 && urls[i].toString().startsWith("jar:jndi:")
                                 ) {
                             jarUrl = urls[i].toString();
-                            jarUrl = jarUrl.substring(0,jarUrl.length() - 2);
+                            jarUrl = jarUrl.substring(0, jarUrl.length() - 2);
                             jarUrl = jarUrl.substring(0,
-                                     jarUrl.lastIndexOf('/')) + "/-";
+                                    jarUrl.lastIndexOf('/')) + "/-";
                         }
                     }
                     if (jarUrl != null) {
                         permissionCollection.add(
-                                new FilePermission(jarUrl,"read"));
+                                new FilePermission(jarUrl, "read"));
                         permissionCollection.add(
-                                new FilePermission(jarUrl.substring(4),"read"));
+                                new FilePermission(jarUrl.substring(4), "read"));
                     }
                     if (jndiUrl != null)
                         permissionCollection.add(
-                                new FilePermission(jndiUrl,"read") );
+                                new FilePermission(jndiUrl, "read"));
                 }
-            } catch(Exception e) {
-                context.log("Security Init for context failed",e);
+            } catch (Exception e) {
+                context.log("Security Init for context failed", e);
             }
         }
     }

@@ -37,6 +37,13 @@ public class AnnotationHelper {
     /**
      * Call postConstruct method on the specified instance. Note: In Jasper, this
      * calls naming resources injection as well.
+     *
+     * @param processor annotation processor
+     * @param instance object instance
+     *
+     * @throws IllegalAccessException on error
+     * @throws InvocationTargetException on error
+     * @throws NamingException on error
      */
     public static void postConstruct(AnnotationProcessor processor, Object instance)
         throws IllegalAccessException, InvocationTargetException, NamingException {
@@ -49,6 +56,12 @@ public class AnnotationHelper {
     
     /**
      * Call preDestroy method on the specified instance.
+     *
+     * @param processor annotation processor
+     * @param instance object instance
+     *
+     * @throws IllegalAccessException  on error
+     * @throws InvocationTargetException on error
      */
     public static void preDestroy(AnnotationProcessor processor, Object instance)
         throws IllegalAccessException, InvocationTargetException {

@@ -82,7 +82,8 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
     /**
      * HTTP status that will be set in the response if validation fails
-     * @param validationFailedStatus
+     *
+     * @param validationFailedStatus validation failed status
      */
     public void setValidationFailedStatus(int validationFailedStatus) {
         this.validationFailedStatus = validationFailedStatus;
@@ -153,6 +154,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
     }
 
     /**
+     * @param validationAware the validation aware object
      * @return JSON string that contains the errors and field errors
      */
     @SuppressWarnings("unchecked")

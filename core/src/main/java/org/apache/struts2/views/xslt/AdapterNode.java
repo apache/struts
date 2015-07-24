@@ -29,51 +29,68 @@ public interface AdapterNode extends Node {
 
     /**
      * The adapter factory that created this node.
+     *
+     * @return the adapter factory
      */
     AdapterFactory getAdapterFactory();
 
     /**
-     * The adapter factory that created this node.
+     * @param factory the adapter factory that created this node.
+     *
      */
     void setAdapterFactory(AdapterFactory factory);
 
     /**
      * The parent adapter node of this node. Note that our parent must be another adapter node, but our children may be any
      * kind of Node.
+     *
+     * @return the parent adapter node
      */
     AdapterNode getParent();
 
     /**
-     * The parent adapter node of this node. Note that our parent must be another adapter node, but our children may be any
+     * @param parent the parent adapter node of this node. Note that our parent must be another adapter node, but our children may be any
      * kind of Node.
      */
     void setParent(AdapterNode parent);
 
     /**
      * The child node before the specified sibling
+     *
+     * @param thisNode this node
+     * @return the child node before
      */
     Node getChildBefore(Node thisNode);
 
     /**
      * The child node after the specified sibling
+     *
+     * @param thisNode this node
+     * @return the child node after
      */
     Node getChildAfter(Node thisNode);
 
     /**
      * The name of the Java object (property) that we are adapting
+     *
+     * @return the property name
      */
     String getPropertyName();
 
     /**
-     * The name of the Java object (property) that we are adapting
+     * @param name the name of the Java object (property) that we are adapting
      */
     void setPropertyName(String name);
 
     /**
      * The Java object (property) that we are adapting
+     *
+     * @return the property object
      */
     Object getPropertyValue();
 
-    /** The Java object (property) that we are adapting */
+    /**
+     * @param prop the Java object (property) that we are adapting
+     */
     void setPropertyValue(Object prop );
 }

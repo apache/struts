@@ -39,7 +39,7 @@ package com.opensymphony.xwork2.validator;
  *
  * <p><b>Note:</b>
  * <!-- START SNIPPET: turningOnValidators -->
- * The default validationWorkflowStack already includes this.<br/>
+ * The default validationWorkflowStack already includes this.<br>
  * All that is required to enable validation for an Action is to put the
  * ValidationInterceptor in the interceptor refs of the action (see xwork.xml) like so:
  * <!-- END SNIPPET: turningOnValidators -->
@@ -81,9 +81,9 @@ package com.opensymphony.xwork2.validator;
  * <!-- END SNIPPET: validatorsNote -->
  * </p>
  *
- * <p><b>VALIDATION RULES:</b>
+ * <p><b>VALIDATION RULES:</b></p>
  * <!-- START SNIPPET: validationRules1 -->
- * Validation rules can be specified:
+ * <p>Validation rules can be specified:</p>
  * <ol>
  *  <li> Per Action class: in a file named ActionName-validation.xml</li>
  *  <li> Per Action alias: in a file named ActionName-alias-validation.xml</li>
@@ -91,9 +91,8 @@ package com.opensymphony.xwork2.validator;
  *  XWork searches up the inheritance tree of the action to find default
  *  validations for parent classes of the Action and interfaces implemented</li>
  * </ol>
- * Here is an example for SimpleAction-validation.xml:
+ * <p>Here is an example for SimpleAction-validation.xml:</p>
  * <!-- END SNIPPET: validationRules1 -->
- * <p>
  *
  * <pre>
  * <!-- START SNIPPET: exValidationRules1 -->
@@ -105,7 +104,7 @@ package com.opensymphony.xwork2.validator;
  *           &lt;message&gt;You must enter a value for bar.&lt;/message&gt;
  *       &lt;/field-validator&gt;
  *       &lt;field-validator type="int"&gt;
- *           &lt;param name="min">6&lt;/param&gt;
+ *           &lt;param name="min"&gt;6&lt;/param&gt;
  *           &lt;param name="max"&gt;10&lt;/param&gt;
  *           &lt;message&gt;bar must be between ${min} and ${max}, current value is ${bar}.&lt;/message&gt;
  *       &lt;/field-validator&gt;
@@ -201,11 +200,10 @@ package com.opensymphony.xwork2.validator;
  *
  * <pre>
  * <!-- START SNIPPET: exValidationRules4 -->
- *    <message>${getText("validation.failednotice")}! ${getText("reason")}: ${getText("validation.inputrequired")}</message>
+ *    &lt;message&gt;${getText("validation.failednotice")}! ${getText("reason")}: ${getText("validation.inputrequired")}&lt;/message&gt;
  * <!-- END SNIPPET: exValidationRules4 -->
  * </pre>
  *
- * @version $Date$ $Id$
  * @author Jason Carreira
  * @author James House
  */

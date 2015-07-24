@@ -71,8 +71,9 @@ public class JspWriterImpl extends JspWriter {
      *
      * @param  response A Servlet Response
      * @param  sz   	Output-buffer size, a positive integer
+     * @param autoFlush enable auto flush
      *
-     * @exception  IllegalArgumentException  If sz is <= 0
+     * @exception  IllegalArgumentException  If sz is &lt;= 0
      */
     public JspWriterImpl(ServletResponse response, int sz, 
             boolean autoFlush) {
@@ -107,6 +108,8 @@ public class JspWriterImpl extends JspWriter {
      * Flush the output buffer to the underlying character stream, without
      * flushing the stream itself.  This method is non-private only so that it
      * may be invoked by PrintStream.
+     *
+     * @throws IOException in case of IO errors
      */
     protected final void flushBuffer() throws IOException {
         if (bufferSize == 0)
@@ -168,6 +171,7 @@ public class JspWriterImpl extends JspWriter {
     /**
      * Flush the stream.
      *
+     * @throws IOException in case of IO errors
      */
     public void flush()  throws IOException {
         flushBuffer();
@@ -179,6 +183,7 @@ public class JspWriterImpl extends JspWriter {
     /**
      * Close the stream.
      *
+     * @throws IOException in case of IO errors
      */
     public void close() throws IOException {
         if (response == null || closed)
@@ -198,7 +203,10 @@ public class JspWriterImpl extends JspWriter {
         return bufferSize - nextChar;
     }
     
-    /** check to make sure that the stream has not been closed */
+    /** check to make sure that the stream has not been closed
+     *
+     * @throws IOException in case of IO errors
+     */
     private void ensureOpen() throws IOException {
         if (response == null || closed)
             throw new IOException("Stream closed");
@@ -207,6 +215,7 @@ public class JspWriterImpl extends JspWriter {
     
     /**
      * Write a single character.
+     * @throws IOException in case of IO errors
      */
     public void write(int c) throws IOException {
         ensureOpen();
@@ -246,6 +255,8 @@ public class JspWriterImpl extends JspWriter {
      * @param  cbuf  A character array
      * @param  off   Offset from which to start reading characters
      * @param  len   Number of characters to write
+     *
+     * @throws IOException in case of IO errors
      */
     public void write(char cbuf[], int off, int len) 
     throws IOException 
@@ -296,6 +307,7 @@ public class JspWriterImpl extends JspWriter {
     /**
      * Write an array of characters.  This method cannot be inherited from the
      * Writer class because it must suppress I/O exceptions.
+     * @throws IOException in case of IO errors
      */
     public void write(char buf[]) throws IOException {
         write(buf, 0, buf.length);
@@ -307,6 +319,8 @@ public class JspWriterImpl extends JspWriter {
      * @param  s     String to be written
      * @param  off   Offset from which to start reading characters
      * @param  len   Number of characters to be written
+     *
+     * @throws IOException in case of IO errors
      */
     public void write(String s, int off, int len) throws IOException {
         ensureOpen();
@@ -332,6 +346,8 @@ public class JspWriterImpl extends JspWriter {
     /**
      * Write a string.  This method cannot be inherited from the Writer class
      * because it must suppress I/O exceptions.
+     *
+     * @throws IOException in case of IO errors
      */
     public void write(String s) throws IOException {
         // Simple fix for Bugzilla 35410
@@ -351,7 +367,7 @@ public class JspWriterImpl extends JspWriter {
      * system property <tt>line.separator</tt>, and is not necessarily a single
      * newline ('\n') character.
      *
-     * @exception  IOException  If an I/O error occurs
+     * @throws IOException in case of IO errors
      */
     
     public void newLine() throws IOException {
@@ -369,6 +385,8 @@ public class JspWriterImpl extends JspWriter {
      * #write(int)}</code> method.
      *
      * @param      b   The <code>boolean</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(boolean b) throws IOException {
         write(b ? "true" : "false");
@@ -381,6 +399,8 @@ public class JspWriterImpl extends JspWriter {
      * #write(int)}</code> method.
      *
      * @param      c   The <code>char</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(char c) throws IOException {
         write(String.valueOf(c));
@@ -394,6 +414,8 @@ public class JspWriterImpl extends JspWriter {
      * method.
      *
      * @param      i   The <code>int</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(int i) throws IOException {
         write(String.valueOf(i));
@@ -407,6 +429,8 @@ public class JspWriterImpl extends JspWriter {
      * method.
      *
      * @param      l   The <code>long</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(long l) throws IOException {
         write(String.valueOf(l));
@@ -420,6 +444,8 @@ public class JspWriterImpl extends JspWriter {
      * method.
      *
      * @param      f   The <code>float</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(float f) throws IOException {
         write(String.valueOf(f));
@@ -433,6 +459,8 @@ public class JspWriterImpl extends JspWriter {
      * #write(int)}</code> method.
      *
      * @param      d   The <code>double</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(double d) throws IOException {
         write(String.valueOf(d));
@@ -447,6 +475,7 @@ public class JspWriterImpl extends JspWriter {
      * @param      s   The array of chars to be printed
      *
      * @throws  NullPointerException  If <code>s</code> is <code>null</code>
+     * @throws IOException in case of IO errors
      */
     public void print(char s[]) throws IOException {
         write(s);
@@ -460,6 +489,8 @@ public class JspWriterImpl extends JspWriter {
      * <code>{@link #write(int)}</code> method.
      *
      * @param      s   The <code>String</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(String s) throws IOException {
         if (s == null) {
@@ -476,6 +507,8 @@ public class JspWriterImpl extends JspWriter {
      * method.
      *
      * @param      obj   The <code>Object</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void print(Object obj) throws IOException {
         write(String.valueOf(obj));
@@ -491,7 +524,9 @@ public class JspWriterImpl extends JspWriter {
      *
      * Need to change this from PrintWriter because the default
      * println() writes  to the sink directly instead of through the
-     * write method...  
+     * write method...
+     *
+     * @throws IOException in case of IO errors
      */
     public void println() throws IOException {
         newLine();
@@ -501,6 +536,10 @@ public class JspWriterImpl extends JspWriter {
      * Print a boolean value and then terminate the line.  This method behaves
      * as though it invokes <code>{@link #print(boolean)}</code> and then
      * <code>{@link #println()}</code>.
+     *
+     * @param      x   The <code>boolean</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(boolean x) throws IOException {
         print(x);
@@ -511,6 +550,10 @@ public class JspWriterImpl extends JspWriter {
      * Print a character and then terminate the line.  This method behaves as
      * though it invokes <code>{@link #print(char)}</code> and then <code>{@link
      * #println()}</code>.
+     *
+     * @param      x   The <code>char</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(char x) throws IOException {
         print(x);
@@ -521,6 +564,10 @@ public class JspWriterImpl extends JspWriter {
      * Print an integer and then terminate the line.  This method behaves as
      * though it invokes <code>{@link #print(int)}</code> and then <code>{@link
      * #println()}</code>.
+     *
+     * @param      x   The <code>int</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(int x) throws IOException {
         print(x);
@@ -531,6 +578,10 @@ public class JspWriterImpl extends JspWriter {
      * Print a long integer and then terminate the line.  This method behaves
      * as though it invokes <code>{@link #print(long)}</code> and then
      * <code>{@link #println()}</code>.
+     *
+     * @param      x   The <code>long</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(long x) throws IOException {
         print(x);
@@ -541,6 +592,10 @@ public class JspWriterImpl extends JspWriter {
      * Print a floating-point number and then terminate the line.  This method
      * behaves as though it invokes <code>{@link #print(float)}</code> and then
      * <code>{@link #println()}</code>.
+     *
+     * @param      x   The <code>float</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(float x) throws IOException {
         print(x);
@@ -551,6 +606,10 @@ public class JspWriterImpl extends JspWriter {
      * Print a double-precision floating-point number and then terminate the
      * line.  This method behaves as though it invokes <code>{@link
      * #print(double)}</code> and then <code>{@link #println()}</code>.
+     *
+     * @param      x   The <code>double</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(double x) throws IOException {
         print(x);
@@ -561,6 +620,10 @@ public class JspWriterImpl extends JspWriter {
      * Print an array of characters and then terminate the line.  This method
      * behaves as though it invokes <code>{@link #print(char[])}</code> and then
      * <code>{@link #println()}</code>.
+     *
+     * @param      x   The <code>char[]</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(char x[]) throws IOException {
         print(x);
@@ -571,6 +634,10 @@ public class JspWriterImpl extends JspWriter {
      * Print a String and then terminate the line.  This method behaves as
      * though it invokes <code>{@link #print(String)}</code> and then
      * <code>{@link #println()}</code>.
+     *
+     * @param      x   The <code>String</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(String x) throws IOException {
         print(x);
@@ -581,6 +648,10 @@ public class JspWriterImpl extends JspWriter {
      * Print an Object and then terminate the line.  This method behaves as
      * though it invokes <code>{@link #print(Object)}</code> and then
      * <code>{@link #println()}</code>.
+     *
+     * @param      x   The <code>Object</code> to be printed
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(Object x) throws IOException {
         print(x);

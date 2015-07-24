@@ -42,7 +42,7 @@ import java.util.Map;
  * <!-- START SNIPPET: description -->
  * 
  * This result uses the {@link ActionMapper} provided by the
- * {@link ActionMapperFactory} to instruct the render phase to invoke the
+ * <code>ActionMapperFactory</code> to instruct the render phase to invoke the
  * specified action and (optional) namespace. This is better than the
  * {@link PortletResult} because it does not require you to encode the URL
  * patterns processed by the {@link ActionMapper} in to your struts.xml
@@ -247,6 +247,8 @@ public class PortletActionRedirectResult extends PortletResult {
 	 * 
 	 * @param key The parameter name
 	 * @param value The parameter value
+	 *
+	 * @return the portlet action redirect result
 	 */
 	public PortletActionRedirectResult addParameter(String key, Object value) {
 		requestParameters.put(key, String.valueOf(value));

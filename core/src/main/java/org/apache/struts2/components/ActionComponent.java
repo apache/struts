@@ -84,33 +84,33 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: strutsxml -->
- *   <xwork>
+ *   &lt;xwork&gt;
  *      ....
- *     <action name="actionTagAction1" class="tmjee.testing.ActionTagAction">
- *         <result name="done">success.jsp</result>
- *     </action>
- *      <action name="actionTagAction2" class="tmjee.testing.ActionTagAction" method="default">
- *         <result name="done">success.jsp</result>
- *     </action>
+ *     &lt;action name=&quot;actionTagAction1&quot; class=&quot;tmjee.testing.ActionTagAction&quot;&gt;
+ *         &lt;result name=&quot;done&quot;&gt;success.jsp&lt;/result&gt;
+ *     &lt;/action&gt;
+ *      &lt;action name=&quot;actionTagAction2&quot; class=&quot;tmjee.testing.ActionTagAction&quot; method=&quot;default&quot;&gt;
+ *         &lt;result name=&quot;done&quot;&gt;success.jsp&lt;/result&gt;
+ *     &lt;/action&gt;
  *      ....
- *   </xwork>
+ *   &lt;/xwork&gt;
  * <!-- END SNIPPET: strutsxml -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *  <div>The following action tag will execute result and include it in this page</div>
- *  <br />
- *  <s:action name="actionTagAction" executeResult="true" />
- *  <br />
- *  <div>The following action tag will do the same as above, but invokes method specialMethod in action</div>
- *  <br />
- *  <s:action name="actionTagAction!specialMethod" executeResult="true" />
- *  <br />
- *  <div>The following action tag will not execute result, but put a String in request scope
- *       under an id "stringByAction" which will be retrieved using property tag</div>
- *  <s:action name="actionTagAction!default" executeResult="false" />
- *  <s:property value="#attr.stringByAction" />
+ *  <span>The following action tag will execute result and include it in this page</span>
+ *  <br>
+ *  &lt;s:action name=&quot;actionTagAction&quot; executeResult=&quot;true&quot; /&gt;
+ *  <br>
+ *  <span>The following action tag will do the same as above, but invokes method specialMethod in action</span>
+ *  <br>
+ *  &lt;s:action name=&quot;actionTagAction!specialMethod&quot; executeResult=&quot;true&quot; /&gt;
+ *  <br>
+ *  <span>The following action tag will not execute result, but put a String in request scope
+ *       under an id "stringByAction" which will be retrieved using property tag</span>
+ *  &lt;s:action name=&quot;actionTagAction!default&quot; executeResult=&quot;false&quot; /&gt;
+ *  &lt;s:property value=&quot;#attr.stringByAction&quot; /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

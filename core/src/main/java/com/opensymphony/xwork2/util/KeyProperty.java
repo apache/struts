@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table>
+ * <table summary="">
  * <thead>
  * <tr>
  * <th>Parameter</th>
@@ -60,7 +60,7 @@ import java.lang.annotation.Target;
  * <!-- START SNIPPET: example -->
  * // The key property for User objects within the users collection is the <code>userName</code> attribute.
  * &#64;KeyProperty( value = "userName" )
- * protected List<User> users = null;
+ * protected List&lt;User&gt; users = null;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -72,8 +72,7 @@ import java.lang.annotation.Target;
 public @interface KeyProperty {
 
     /**
-     * The KeyProperty value.
-     * Defaults to the <tt>id</tt> attribute. 
+     * @return The KeyProperty value. Defaults to the <tt>id</tt> attribute.
      */
     String value() default "id";
 }

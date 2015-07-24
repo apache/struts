@@ -43,7 +43,7 @@ public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
      * If expression evaluates to true, invoke visitor validation.
      *
      * @param object the object being validated
-     * @throws ValidationException
+     * @throws ValidationException in case of validation problems
      */
     @Override
     public void validate(Object object) throws ValidationException {

@@ -41,16 +41,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * </p>
  * <pre>
  *
- * @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match")
+ * {@literal @}FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match")
  * </pre>
  *
  * <p>
  * Example, compare more than 1 pair of fields:
  * </p>
  * <pre>
- * @FieldMatch.List({
- *      @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match"),
- *      @FieldMatch(first = "email", second = "confirmEmail", message = "The email fields must match")
+ * {@literal @}FieldMatch.List({
+ *      {@literal @}FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match"),
+ *      {@literal @}FieldMatch(first = "email", second = "confirmEmail", message = "The email fields must match")
  * })
  * </pre>
  */

@@ -32,8 +32,6 @@ import java.util.Vector;
  * for files whose names match the given pattern. The filename is tested
  * using the given implementation of {@link com.opensymphony.xwork2.util.PatternMatcher} by default it 
  * uses {@link com.opensymphony.xwork2.util.WildcardHelper}
- *
- * @version $Rev$ $Date$
  */
 public class ClassPathFinder {
 	
@@ -52,15 +50,14 @@ public class ClassPathFinder {
 	private Vector<String> compared = new Vector<>();
 	
 	/**
-	 * retrieves the pattern in use
+	 * @return the pattern in use
 	 */
 	public String getPattern() {
 		return pattern;
 	}
 
 	/**
-	 * sets the String pattern for comparing filenames
-	 * @param pattern
+	 * @param pattern the String pattern for comparing filenames
 	 */
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
@@ -71,7 +68,7 @@ public class ClassPathFinder {
      * who's name matches the pattern set by setPattern(String). The classpath is 
      * searched recursively, so use with caution.
      *
-     * @return Vector<String> containing matching filenames
+     * @return Vector&lt;String&gt; containing matching filenames
      */
 	public Vector<String> findMatches() {
 		Vector<String> matches = new Vector<>();
@@ -151,8 +148,7 @@ public class ClassPathFinder {
 	}
 
 	/**
-	 * sets the PatternMatcher implementation to use when comparing filenames
-	 * @param patternMatcher
+	 * @param patternMatcher the PatternMatcher implementation to use when comparing filenames
 	 */
 	public void setPatternMatcher(PatternMatcher<int[]> patternMatcher) {
 		this.patternMatcher = patternMatcher;

@@ -33,7 +33,7 @@ public interface PortletPreferencesAware {
     /**
      * Sets the HTTP request object in implementing classes.
      *
-     * @param request the HTTP request.
+     * @param prefs the portlet preferences.
      */
     public void setPortletPreferences(PortletPreferences prefs);
 }

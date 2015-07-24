@@ -50,6 +50,7 @@ public class InvocationSessionStore {
      * ActionContext and the ActionInvocation is returned.
      *
      * @param key the name the DefaultActionInvocation and ActionContext were saved as
+     * @param token token for check
      * @return the DefaultActionInvocation saved using the key, or null if none was found
      */
     public static ActionInvocation loadInvocation(String key, String token) {
@@ -69,8 +70,9 @@ public class InvocationSessionStore {
      * Stores the DefaultActionInvocation and ActionContext into the Session using the provided key for loading later using
      * {@link #loadInvocation}
      *
-     * @param key
-     * @param invocation
+     * @param key the name the DefaultActionInvocation and ActionContext were saved as
+     * @param token token for check
+     * @param invocation the action invocation
      */
     public static void storeInvocation(String key, String token, ActionInvocation invocation) {
         InvocationContext invocationContext = new InvocationContext(invocation.serialize(), token);

@@ -112,7 +112,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
      * Overwrites already existing parameters from other sources.
      * Static parameters are the successor over previously set parameters, if true.
      *
-     * @param value
+     * @param value enable overwrites of already existing parameters from other sources
      */
     public void setOverwrite(String value) {
         this.overwrite = BooleanUtils.toBoolean(value);

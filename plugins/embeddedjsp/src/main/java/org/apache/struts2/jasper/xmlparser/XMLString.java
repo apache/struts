@@ -26,15 +26,20 @@
 package org.apache.struts2.jasper.xmlparser;
 
 /**
+ * <p>
  * This class is used as a structure to pass text contained in the underlying
  * character buffer of the scanner. The offset and length fields allow the
  * buffer to be re-used without creating new character arrays.
+ * </p>
+ *
  * <p>
  * <strong>Note:</strong> Methods that are passed an XMLString structure
  * should consider the contents read-only and not make any modifications
  * to the contents of the buffer. The method receiving this structure
  * should also not modify the offset and length if this structure (or
  * the values of this structure) are passed to another method.
+ * </p>
+ *
  * <p>
  * <strong>Note:</strong> Methods that are passed an XMLString structure
  * are required to copy the information out of the buffer if it is to be
@@ -43,6 +48,7 @@ package org.apache.struts2.jasper.xmlparser;
  * be assured once the method that is passed this structure returns.
  * Therefore, methods passed this structure should not save any reference
  * to the structure or the character array contained in the structure.
+ * </p>
  *
  * @author Eric Ye, IBM
  * @author Andy Clark, IBM
@@ -121,8 +127,9 @@ public class XMLString {
      * <p>
      * <strong>Note:</strong> This does not copy the character array;
      * only the reference to the array is copied.
-     * 
-     * @param s
+     *  </p>
+     *
+     * @param s xml string
      */
     public void setValues(XMLString s) {
         setValues(s.ch, s.offset, s.length);
@@ -136,7 +143,7 @@ public class XMLString {
     } // clear()
 
     /**
-     * Returns true if the contents of this XMLString structure and
+     * @return  true if the contents of this XMLString structure and
      * the specified array are equal.
      * 
      * @param ch     The character array.
@@ -160,7 +167,7 @@ public class XMLString {
     } // equals(char[],int,int):boolean
 
     /**
-     * Returns true if the contents of this XMLString structure and
+     * @return  true if the contents of this XMLString structure and
      * the specified string are equal.
      * 
      * @param s The string to compare.
@@ -189,7 +196,7 @@ public class XMLString {
     // Object methods
     //
 
-    /** Returns a string representation of this object. */
+    /** @return  a string representation of this object. */
     public String toString() {
         return length > 0 ? new String(ch, offset, length) : "";
     } // toString():String

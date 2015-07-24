@@ -30,7 +30,7 @@ import javax.servlet.jsp.HttpJspPage;
 import java.util.Map;
 
 /**
- * Maintains a cache of jsp locations -> servlet instances for those jsps. When a jsp is requested
+ * Maintains a cache of jsp locations -&gt; servlet instances for those jsps. When a jsp is requested
  * from the cache, the cache will block if the jsp was not compiled already, and wait for the compilation
  */
 public abstract class JSPRuntime {

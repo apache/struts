@@ -88,7 +88,9 @@ public class Util {
     }
     
     /**
-     * Returns <tt>true</tt> if our current URL is absolute,
+     * @param url the URL
+     *
+     * @return  <tt>true</tt> if our current URL is absolute,
      * <tt>false</tt> otherwise.
      * taken from org.apache.taglibs.standard.tag.common.core.ImportSupport
      */
@@ -112,7 +114,11 @@ public class Util {
     }
     
     /**
-     * Get the value associated with a content-type attribute.
+     *
+     * @param input input string
+     * @param name name of attribute
+     *
+     * @return the value associated with a content-type attribute.
      * Syntax defined in RFC 2045, section 5.1.
      * taken from org.apache.taglibs.standard.tag.common.core.Util
      */
@@ -148,6 +154,9 @@ public class Util {
      * and either EOS or a subsequent ';' (exclusive).
      * 
      * taken from org.apache.taglibs.standard.tag.common.core.ImportSupport
+     *
+     * @param url the URL
+     * @return servlet session ID from URL
      */
     public static String stripSession(String url) {
         StringBuffer u = new StringBuffer(url);
@@ -165,18 +174,25 @@ public class Util {
     
     
     /**
+     * <p>
      * Performs the following substring replacements
      * (to facilitate output to XML/HTML pages):
+     * </p>
      *
-     *    & -> &amp;
-     *    < -> &lt;
-     *    > -> &gt;
-     *    " -> &#034;
-     *    ' -> &#039;
+     * <pre>
+     *    &amp; -&gt; &amp;amp;
+     *    &lt; -&gt; &amp;lt;
+     *    &gt; -&gt; &amp;gt;
+     *    " -&gt; &amp;#034;
+     *    ' -&gt; &amp;#039;
+     * </pre>
      *
      * See also OutSupport.writeEscapedXml().
      * 
      * taken from org.apache.taglibs.standard.tag.common.core.Util
+     *
+     * @param buffer string
+     * @return escaped string
      */
     public static String escapeXml(String buffer) {
         int start = 0;
@@ -214,8 +230,16 @@ public class Util {
         return escapedBuffer.toString();
     }
     
-    /** Utility methods
+    /**
+     * Utility methods
      * taken from org.apache.taglibs.standard.tag.common.core.UrlSupport
+     *
+     * @param url URL
+     * @param context context
+     * @param pageContext page context
+     *
+     * @return the URL
+     * @throws JspException in case of errors
      */
     public static String resolveUrl(
             String url, String context, PageContext pageContext)
@@ -271,27 +295,35 @@ public class Util {
         }
         
         public PrintWriter getWriter() {
-            if (isStreamUsed)
-                throw new IllegalStateException("Unexpected internal error during &lt;import&gt: " +
-                "Target servlet called getWriter(), then getOutputStream()");
+            if (isStreamUsed) {
+                throw new IllegalStateException("Unexpected internal error during &lt;import&gt: Target servlet called getWriter(), then getOutputStream()");
+            }
             isWriterUsed = true;
             return new PrintWriter(sw);
         }
         
         public ServletOutputStream getOutputStream() {
-            if (isWriterUsed)
-                throw new IllegalStateException("Unexpected internal error during &lt;import&gt: " +
-                "Target servlet called getOutputStream(), then getWriter()");
+            if (isWriterUsed) {
+                throw new IllegalStateException("Unexpected internal error during &lt;import&gt: Target servlet called getOutputStream(), then getWriter()");
+            }
             isStreamUsed = true;
             return sos;
         }
         
-        /** Has no effect. */
+        /**
+         * Has no effect.
+         *
+         * @param x content type
+         */
         public void setContentType(String x) {
             // ignore
         }
         
-        /** Has no effect. */
+        /**
+         * Has no effect.
+         *
+         * @param x locale
+         */
         public void setLocale(Locale x) {
             // ignore
         }

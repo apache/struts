@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table class='confluenceTable'>
+ * <table class='confluenceTable' summary=''>
  * <tr>
  * <th class='confluenceTh'> Parameter </th>
  * <th class='confluenceTh'> Required </th>
@@ -130,53 +130,59 @@ import java.lang.annotation.Target;
 public @interface StringLengthFieldValidator {
 
     /**
-     *  Boolean property. Determines whether the String is trimmed before performing the length check.
+     *  Boolean property.
+     *
+     *  @return Determines whether the String is trimmed before performing the length check.
      */
     boolean trim() default true;
 
     /**
-     * Determines whether the String is trimmed before performing the length check but defined as an expression
+     * @return Determines whether the String is trimmed before performing the length check but defined as an expression
      */
     String trimExpression() default "";
 
     /**
-     *  Integer property. The minimum length the String must be.
+     *  Integer property.
+     *
+     *  @return The minimum length the String must be.
      */
     String minLength() default "";
 
     /**
-     * The minimum length the String must be defined as an expression
+     * @return The minimum length the String must be defined as an expression
      */
     String minLengthExpression() default "";
 
     /**
-     *  Integer property. The maximum length the String can be.
+     *  Integer property.
+     *
+     *  @return The maximum length the String can be.
      */
     String maxLength() default "";
 
     /**
-     * The maximum length the String can be defined as an expression
+     * @return The maximum length the String can be defined as an expression
      */
     String maxLengthExpression() default "";
 
     /**
-     * The default error message for this validator.
+     * @return The default error message for this validator.
      * NOTE: It is required to set a message, if you are not using the message key for 18n lookup!
      */
     String message() default "";
 
     /**
-     * The message key to lookup for i18n.
+     * @return The message key to lookup for i18n.
      */
     String key() default "";
 
     /**
-     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     * @return Additional params to be used to customize message - will be evaluated against the Value Stack
      */
     String[] messageParams() default {};
 
     /**
-     * The optional fieldName for SIMPLE validator types.
+     * @return The optional fieldName for SIMPLE validator types.
      */
     String fieldName() default "";
 
@@ -185,11 +191,12 @@ public @interface StringLengthFieldValidator {
      *
      * Adds the short-circuit="true" attribute value if <tt>true</tt>.
      *
+     * @return true if validator will be used as short-circuit. Default is false.
      */
     boolean shortCircuit() default false;
 
     /**
-     * The validation type for this field/method.
+     * @return The validation type for this field/method.
      */
     ValidatorType[] type() default {ValidatorType.FIELD};
 

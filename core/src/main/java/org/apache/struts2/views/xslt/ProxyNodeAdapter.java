@@ -46,16 +46,15 @@ public abstract class ProxyNodeAdapter extends AbstractAdapterNode {
     }
 
     /**
-     * Get the proxied Node value
+     * @return the proxied Node value
      */
     protected Node node() {
         return (Node) getPropertyValue();
     }
 
     /**
-     * Get and adapter to wrap the proxied node.
-     *
-     * @param node
+     * @param node the node
+     * @return adapter to wrap the proxied node.
      */
     protected Node wrap(Node node) {
         return getAdapterFactory().proxyNode(this, node);

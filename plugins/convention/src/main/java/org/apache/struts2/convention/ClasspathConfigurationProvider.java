@@ -70,6 +70,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
 
     /**
      * Not used.
+     *
+     * @param configuration configuration
      */
     public void init(Configuration configuration) {
         if (devMode && reload && !listeningToDispatcher) {
@@ -82,6 +84,11 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
 
     /**
      * Does nothing.
+     *
+     * @param containerBuilder container builder
+     * @param locatableProperties locatable properties
+     *
+     * @throws ConfigurationException in case of configuration errors
      */
     public void register(ContainerBuilder containerBuilder, LocatableProperties locatableProperties)
             throws ConfigurationException {
@@ -90,14 +97,13 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
     /**
      * Loads the packages using the {@link ActionConfigBuilder}.
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException in case of configuration errors
      */
     public void loadPackages() throws ConfigurationException {
     }
 
     /**
-     * Depends on devMode, relead and actionConfigBuilder.needsReload()
-     * @return Always false.
+     * @return true if devMode, reload and actionConfigBuilder.needsReload()
      */
     public boolean needsReload() {
         return devMode && reload && actionConfigBuilder.needsReload();

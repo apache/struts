@@ -63,7 +63,8 @@ import java.util.TreeMap;
  * <li>allowed: person.address</li>
  * <li>defaultBlock: false</li>
  * </ul>
- * <br>
+ *
+ * <p>
  * The parameters person.name, person.phoneNum etc would be blocked 
  * because 'person' is in the blocked list. However, person.address.street
  * and person.address.city would be allowed because person.address is

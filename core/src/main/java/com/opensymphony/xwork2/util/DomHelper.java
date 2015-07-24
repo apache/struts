@@ -59,6 +59,8 @@ public class DomHelper {
      * using the {@link #getLocationObject(Element)} method.
      *
      * @param inputSource the inputSource to read the document from
+     *
+     * @return the W3C Document
      */
     public static Document parse(InputSource inputSource) {
         return parse(inputSource, null);
@@ -72,6 +74,8 @@ public class DomHelper {
      *
      * @param inputSource the inputSource to read the document from
      * @param dtdMappings a map of DTD names and public ids
+     *
+     * @return the W3C Document
      */
     public static Document parse(InputSource inputSource, Map<String, String> dtdMappings) {
                 
@@ -164,6 +168,7 @@ public class DomHelper {
     
         /**
          * Construct a new instance of this DOMBuilder.
+         * @param factory the SAX transformer factory
          */
         public DOMBuilder(SAXTransformerFactory factory) {
             this(factory, null);
@@ -171,6 +176,8 @@ public class DomHelper {
     
         /**
          * Constructs a new instance that appends nodes to the given parent node.
+         *
+         * @param parentNode the parent node
          */
         public DOMBuilder(Node parentNode) {
             this(null, parentNode);
@@ -178,6 +185,9 @@ public class DomHelper {
     
         /**
          * Construct a new instance of this DOMBuilder.
+         *
+         * @param factory the SAX transformer factory
+         * @param parentNode the parent node
          */
         public DOMBuilder(SAXTransformerFactory factory, Node parentNode) {
             this.factory = factory == null? FACTORY: factory;
@@ -205,6 +215,8 @@ public class DomHelper {
     
         /**
          * Return the newly built Document.
+         *
+         * @return the W3C Document
          */
         public Document getDocument() {
             if (this.result == null || this.result.getNode() == null) {
@@ -269,6 +281,7 @@ public class DomHelper {
         /**
          * Create a filter that is chained to another handler.
          * @param next the next handler in the chain.
+         * @param dtdMappings map of DTD mappings
          */
         public StartHandler(ContentHandler next, Map<String, String> dtdMappings) {
             nextHandler = next;

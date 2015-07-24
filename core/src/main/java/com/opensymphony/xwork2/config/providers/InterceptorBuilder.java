@@ -38,7 +38,6 @@ import java.util.Map;
  * @author Mike
  * @author Rainer Hermanns
  * @author tmjee
- * @version $Date$ $Id$
  */
 public class InterceptorBuilder {
 
@@ -48,11 +47,13 @@ public class InterceptorBuilder {
     /**
      * Builds a list of interceptors referenced by the refName in the supplied PackageConfig (InterceptorMapping object).
      *
-     * @param interceptorLocator
-     * @param refName
-     * @param refParams
+     * @param interceptorLocator interceptor locator
+     * @param refName reference name
+     * @param refParams reference parameters
+     * @param location location
+     * @param objectFactory object factory
      * @return list of interceptors referenced by the refName in the supplied PackageConfig (InterceptorMapping object).
-     * @throws ConfigurationException
+     * @throws ConfigurationException in case of any configuration errors
      */
     public static List<InterceptorMapping> constructInterceptorReference(InterceptorLocator interceptorLocator,
                                                                          String refName, Map<String,String> refParams, Location location, ObjectFactory objectFactory) throws ConfigurationException {
@@ -96,9 +97,9 @@ public class InterceptorBuilder {
      * Builds a list of interceptors referenced by the refName in the supplied PackageConfig overriding the properties
      * of the referenced interceptor with refParams.
      *
-     * @param interceptorLocator
-     * @param stackConfig
-     * @param refParams          The overridden interceptor properies
+     * @param interceptorLocator interceptor locator
+     * @param stackConfig interceptor stack configuration
+     * @param refParams The overridden interceptor properties
      * @return list of interceptors referenced by the refName in the supplied PackageConfig overridden with refParams.
      */
     private static List<InterceptorMapping> constructParameterizedInterceptorReferences(

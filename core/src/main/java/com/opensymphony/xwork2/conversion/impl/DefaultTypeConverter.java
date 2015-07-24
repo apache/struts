@@ -312,6 +312,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * 
      * @param value
      *            an object to interpret as a String
+     * @param trim
+     *            trims the result if true
      * @return the String value implied by the given object as returned by the
      *         toString() method, or "null" if the object is null.
      */

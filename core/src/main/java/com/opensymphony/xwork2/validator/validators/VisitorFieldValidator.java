@@ -70,7 +70,7 @@ import java.util.Collection;
  * </pre>
  *
  * <!-- START SNIPPET: explanation -->
- * <p>In the example above, if the acion's getUser() method return User object, XWork
+ * <p>In the example above, if the action's getUser() method return User object, XWork
  * will look for User-myContext-validation.xml for the validators. Since appednPrefix is true,
  * every field name will be prefixed with 'user' such that if the actual field name for 'name' is
  * 'user.name' </p>
@@ -92,7 +92,7 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
     }
 
     /**
-     * Sets whether the field name of this field validator should be prepended to the field name of
+     * @param appendPrefix whether the field name of this field validator should be prepended to the field name of
      * the visited field to determine the full field name when an error occurs.  The default is
      * true.
      */
@@ -101,7 +101,7 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
     }
 
     /**
-     * Flags whether the field name of this field validator should be prepended to the field name of
+     * @return whether the field name of this field validator should be prepended to the field name of
      * the visited field to determine the full field name when an error occurs.  The default is
      * true.
      */

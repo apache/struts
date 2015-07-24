@@ -125,7 +125,7 @@ public class JspCompilationContext {
         }
 
         this.rctxt = rctxt;
-        this.tagFileJarUrls = new HashMap<String, URL>();
+        this.tagFileJarUrls = new HashMap<>();
         this.basePackageName = Constants.JSP_PACKAGE_NAME;
         this.classLoaderInterface = classLoaderInterface;
     }
@@ -151,7 +151,7 @@ public class JspCompilationContext {
     /** ---------- Class path and loader ---------- */
 
     /**
-     * The classpath that is passed off to the Java compiler. 
+     * @return The classpath that is passed off to the Java compiler.
      */
     public String getClassPath() {
         if( classPath != null )
@@ -160,14 +160,14 @@ public class JspCompilationContext {
     }
 
     /**
-     * The classpath that is passed off to the Java compiler. 
+     * @param classPath The classpath that is passed off to the Java compiler.
      */
     public void setClassPath(String classPath) {
         this.classPath = classPath;
     }
 
     /**
-     * What class loader to use for loading classes while compiling
+     * @return What class loader to use for loading classes while compiling
      * this JSP?
      */
     public ClassLoader getClassLoader() {
@@ -194,7 +194,7 @@ public class JspCompilationContext {
     /** ---------- Input/Output  ---------- */
     
     /**
-     * The output directory to generate code into.  The output directory
+     * @return The output directory to generate code into.  The output directory
      * is make up of the scratch directory, which is provide in Options,
      * plus the directory derived from the package name.
      */
@@ -207,9 +207,11 @@ public class JspCompilationContext {
     }
 
     /**
-     * Create a "Compiler" object based on some init param data. This
+     * @return  Create a "Compiler" object based on some init param data. This
      * is not done yet. Right now we're just hardcoding the actual
-     * compilers that are created. 
+     * compilers that are created.
+     *
+     * @throws JasperException in case of Jasper errors
      */
     public Compiler createCompiler() throws JasperException {
         jspCompiler = new CustomCompiler();
@@ -246,6 +248,9 @@ public class JspCompilationContext {
     /** 
      * Get the full value of a URI relative to this compilations context
      * uses current file as the base.
+     *
+     * @param uri the URL
+     * @return full URL
      */
     public String resolveRelativeUri(String uri) {
         // sometimes we get uri's massaged from File(String), so check for
@@ -260,6 +265,8 @@ public class JspCompilationContext {
     /**
      * Gets a resource as a stream, relative to the meanings of this
      * context's implementation.
+     *
+     * @param res resource
      * @return a null if the resource cannot be found or represented 
      *         as an InputStream.
      */
@@ -282,8 +289,10 @@ public class JspCompilationContext {
         return context.getResourcePaths(canonicalURI(path));
     }
 
-    /** 
-     * Gets the actual path of a URI relative to the context of
+    /**
+     * @param path the path
+     *
+     * @return  the actual path of a URI relative to the context of
      * the compilation.
      */
     public String getRealPath(String path) {
@@ -294,11 +303,11 @@ public class JspCompilationContext {
     }
 
     /**
-     * Returns the tag-file-name-to-JAR-file map of this compilation unit,
+     * @return  the tag-file-name-to-JAR-file map of this compilation unit,
      * which maps tag file names to the JAR files in which the tag files are
      * packaged.
      *
-     * The map is populated when parsing the tag-file elements of the TLDs
+     * @param tagFile The map is populated when parsing the tag-file elements of the TLDs
      * of any imported taglibs. 
      */
     public URL getTagFileJarUrl(String tagFile) {
@@ -310,7 +319,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Returns the JAR file in which the tag file for which this
+     * @return  the JAR file in which the tag file for which this
      * JspCompilationContext was created is packaged, or null if this
      * JspCompilationContext does not correspond to a tag file, or if the
      * corresponding tag file is not packaged in a JAR.
@@ -322,7 +331,7 @@ public class JspCompilationContext {
     /* ==================== Common implementation ==================== */
 
     /**
-     * Just the class name (does not include package name) of the
+     * @return Just the class name (does not include package name) of the
      * generated class. 
      */
     public String getServletClassName() {
@@ -349,7 +358,7 @@ public class JspCompilationContext {
     }
     
     /**
-     * Path of the JSP URI. Note that this is not a file name. This is
+     * @return Path of the JSP URI. Note that this is not a file name. This is
      * the context rooted URI of the JSP file. 
      */
     public String getJspFile() {
@@ -357,7 +366,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Are we processing something that has been declared as an
+     * @return Are we processing something that has been declared as an
      * errorpage? 
      */
     public boolean isErrorPage() {
@@ -381,7 +390,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * True if we are compiling a tag file in prototype mode.
+     * @return True if we are compiling a tag file in prototype mode.
      * ie we only generate codes with class for the tag handler with empty
      * method bodies.
      */
@@ -394,7 +403,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Package name for the generated class is make up of the base package
+     * @return Package name for the generated class is make up of the base package
      * name, which is user settable, and the derived package name.  The
      * derived package name directly mirrors the file heirachy of the JSP page.
      */
@@ -426,14 +435,14 @@ public class JspCompilationContext {
     }
 	    
     /**
-     * The package name into which the servlet class is generated.
+     * @param servletPackageName The package name into which the servlet class is generated.
      */
     public void setServletPackageName(String servletPackageName) {
         this.basePackageName = servletPackageName;
     }
 
     /**
-     * Full path name of the Java file into which the servlet is being
+     * @return Full path name of the Java file into which the servlet is being
      * generated. 
      */
     public String getServletJavaFileName() {
@@ -444,7 +453,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Get hold of the Options object for this context. 
+     * @return  Get hold of the Options object for this context.
      */
     public Options getOptions() {
         return options;
@@ -459,7 +468,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Path of the Java file relative to the work directory.
+     * @return Path of the Java file relative to the work directory.
      */
     public String getJavaPath() {
 
@@ -485,7 +494,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Get the content type of this JSP.
+     * @return Get the content type of this JSP.
      *
      * Content type includes content type and encoding.
      */
@@ -498,7 +507,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Where is the servlet being generated?
+     * @return  Where is the servlet being generated?
      */
     public ServletWriter getWriter() {
         return writer;
@@ -510,12 +519,16 @@ public class JspCompilationContext {
 
     /**
      * Gets the 'location' of the TLD associated with the given taglib 'uri'.
-     * 
+     *
+     * @param uri the URL
+     *
      * @return An array of two Strings: The first element denotes the real
      * path to the TLD. If the path to the TLD points to a jar file, then the
      * second element denotes the name of the TLD entry in the jar file.
      * Returns null if the given uri is not associated with any tag library
      * 'exposed' in the web application.
+     *
+     * @throws JasperException in case of Jasper errors
      */
     public String[] getTldLocation(String uri) throws JasperException {
         String[] location = 
@@ -524,7 +537,7 @@ public class JspCompilationContext {
     }
 
     /**
-     * Are we keeping generated code around?
+     * @return  Are we keeping generated code around?
      */
     public boolean keepGenerated() {
         return getOptions().getKeepGenerated();

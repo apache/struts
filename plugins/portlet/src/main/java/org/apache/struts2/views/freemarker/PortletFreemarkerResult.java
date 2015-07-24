@@ -46,8 +46,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 
-/**
- */
 public class PortletFreemarkerResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -5570612389289887543L;
@@ -87,6 +85,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
 
     /**
      * allow parameterization of the contentType the default being text/html
+     *
+     * @return content type
      */
     public String getContentType() {
         return pContentType;
@@ -94,13 +94,20 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
 
     /**
      * <p>
-     * Execute this result, using the specified template location. <p/>The
+     * Execute this result, using the specified template location. <br>The
      * template location has already been interpolated for any variable
      * substitutions <br>this method obtains the freemarker configuration and
      * the object wrapper from the provided hooks. It them implements the
      * template processing workflow by calling the hooks for preTemplateProcess
      * and postTemplateProcess
      * </p>
+     *
+     * @param location template location
+     * @param invocation the action invocation
+     *
+     * @throws IOException in case of I/O related errors
+     * @throws TemplateException in case of freemarker templates related errors
+     * @throws PortletException in case of portlet related errors
      */
     public void doExecute(String location, ActionInvocation invocation)
             throws IOException, TemplateException, PortletException {
@@ -190,6 +197,10 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * the configuration object in a subclass, or to fetch it from an IoC
      * container. <br><b>The default implementation obtains the configuration
      * from the ConfigurationManager instance. </b>
+     *
+     * @return configuration
+     *
+     * @throws TemplateException in case of freemarker templates related errors
      */
     protected Configuration getConfiguration() throws TemplateException {
         return freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
@@ -201,6 +212,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * for adapting objects into template models. This is a hook that allows you
      * to custom-configure the wrapper object in a subclass. <br><b>The default
      * implementation returns {@link Configuration#getObjectWrapper()}</b>
+     *
+     * @return object wrapper
      */
     protected ObjectWrapper getObjectWrapper() {
         return configuration.getObjectWrapper();
@@ -208,6 +221,10 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
 
     /**
      * The default writer writes directly to the response writer.
+     *
+     * @return response writer
+     *
+     * @throws IOException in case of I/O related errors
      */
     protected Writer getWriter() throws IOException {
         return PortletActionContext.getRenderResponse().getWriter();
@@ -234,6 +251,10 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * servlet spec (for JSP Exception pages)
      * <li>struts - instance of the StrutsUtil class
      * </ul>
+     *
+     * @return freemarker template model
+     *
+     * @throws TemplateModelException in case of template model errors
      */
     protected TemplateModel createModel() throws TemplateModelException {
         ServletContext servletContext = ServletActionContext
@@ -245,7 +266,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     }
 
     /**
-     * Returns the locale used for the
+     * @return  the locale used for the
      * {@link Configuration#getTemplate(String, Locale)}call. The base
      * implementation simply returns the locale setting of the configuration.
      * Override this method to provide different behaviour,
@@ -257,6 +278,11 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     /**
      * the default implementation of postTemplateProcess applies the contentType
      * parameter
+     *
+     * @param template freemarker template
+     * @param data model data
+     *
+     * @throws IOException in case of I/O related errors
      */
     protected void postTemplateProcess(Template template, TemplateModel data) throws IOException {
     }
@@ -268,8 +294,13 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * action to perform here is to inject application-specific objects into the
      * model root
      *
+     * @param template freemarker template
+     * @param model model data
+     *
      * @return true to process the template, false to suppress template
      *         processing.
+     *
+     * @throws IOException in case of I/O related errors
      */
     protected boolean preTemplateProcess(Template template, TemplateModel model) throws IOException {
         Object attrContentType = template.getCustomAttribute("content_type");

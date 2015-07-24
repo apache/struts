@@ -143,7 +143,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     /**
      * Set the optional anchor value.
      * 
-     * @param anchor
+     * @param anchor the anchor value
      */
     public void setAnchor(String anchor) {
         this.anchor = anchor;
@@ -250,7 +250,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      * 
      * @param response The response
      * @param finalLocation The location URI
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException {
         if (SC_FOUND == statusCode) {
@@ -308,6 +308,8 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      * 
      * @param key The parameter name
      * @param value The parameter value
+     *
+     * @return the servlet redirect result
      */
     public ServletRedirectResult addParameter(String key, Object value) {
         requestParameters.put(key, String.valueOf(value));

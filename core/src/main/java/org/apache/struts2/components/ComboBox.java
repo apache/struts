@@ -68,24 +68,24 @@ import java.util.Map;
  * &lt;/s:bean&gt;
  *
  * &lt;-- Example Two --&gt;
- * <s:combobox
+ * &lt;s:combobox
  *     label="My Favourite Fruit"
  *     name="myFavouriteFruit"
  *     list="{'apple','banana','grape','pear'}"
  *     headerKey="-1"
  *     headerValue="--- Please Select ---"
  *     emptyOption="true"
- *     value="banana" />
+ *     value="banana" /&gt;
  *
  * &lt;-- Example Two --&gt;
- * <s:combobox
+ * &lt;s:combobox
  *    label="My Favourite Color"
  *    name="myFavouriteColor"
  *    list="#{'red':'red','green':'green','blue':'blue'}"
  *    headerKey="-1"
  *    headerValue="--- Please Select ---"
  *    emptyOption="true"
- *    value="green" />
+ *    value="green" /&gt;
  *
  * Velocity:
  * #tag( ComboBox "label=Birth year" "size=6" "maxlength=4" "name=birthYear" "list=#year" )

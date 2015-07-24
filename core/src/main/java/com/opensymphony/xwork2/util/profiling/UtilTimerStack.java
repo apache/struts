@@ -83,10 +83,10 @@ import org.apache.logging.log4j.Logger;
  *  <li>creation of DefaultActionProxy
  *      <ul>
  *          <li>creation of DefaultActionInvocation</li>
- *      <ul>
+ *      </ul>
  *  </li>
  *  <li>creation of Action</li>
- *  <li>execution of DefaultActionProxy</li>
+ *  <li>execution of DefaultActionProxy
  *      <ul>
  *          <li>invocation of DefaultActionInvocation
  *              <ul>
@@ -97,6 +97,7 @@ import org.apache.logging.log4j.Logger;
  *              </ul>
  *          </li>
  *      </ul>
+ *  </li>
  * </ul>
  *
  * <!-- END SNIPPET: profilingAspect_xwork -->
@@ -245,7 +246,7 @@ import org.apache.logging.log4j.Logger;
  * <!-- START SNIPPET: method2 -->
  *
  *   String result = UtilTimerStack.profile(&quot;purchaseItem: &quot;,
- *       new UtilTimerStack.ProfilingBlock<String>() {
+ *       new UtilTimerStack.ProfilingBlock&lt;String&gt;() {
  *            public String doProfiling() {
  *               // do some code
  *               return &quot;Ok&quot;;
@@ -320,7 +321,7 @@ public class UtilTimerStack {
     }
 
     /**
-     * End a preformance profiling with the <code>name</code> given. Deal with
+     * End a performance profiling with the <code>name</code> given. Deal with
      * profile hierarchy automatically, so caller don't have to be concern about it.
      *
      * @param name profile name
@@ -366,7 +367,7 @@ public class UtilTimerStack {
      * Get the min time for this profiling, it searches for a System property
      * 'xwork.profile.mintime' and default to 0.
      *
-     * @return long
+     * @return min time for this profiling
      */
     private static long getMinTime() {
         try {
@@ -387,9 +388,7 @@ public class UtilTimerStack {
     }
 
     /**
-     * Turn profiling on or off.
-     *
-     * @param active
+     * @param active Turn profiling on or off.
      */
     public static void setActive(boolean active) {
         if (active) {
@@ -415,7 +414,7 @@ public class UtilTimerStack {
      * <pre>
      * 	 // we need a returning result
      *   String result = UtilTimerStack.profile("purchaseItem: ",
-     *       new UtilTimerStack.ProfilingBlock<String>() {
+     *       new UtilTimerStack.ProfilingBlock&lt;String&gt;() {
      *            public String doProfiling() {
      *               getMyService().purchaseItem(....)
      *               return "Ok";
@@ -428,7 +427,7 @@ public class UtilTimerStack {
      * <pre>
      *   // we don't need a returning result
      *   UtilTimerStack.profile("purchaseItem: ",
-     *       new UtilTimerStack.ProfilingBlock<String>() {
+     *       new UtilTimerStack.ProfilingBlock&lt;String&gt;() {
      *            public String doProfiling() {
      *               getMyService().purchaseItem(....)
      *               return null;
@@ -440,7 +439,7 @@ public class UtilTimerStack {
      * @param name  profile name
      * @param block code block subjected to profiling
      * @return T
-     * @throws Exception
+     * @throws Exception in case of any errors
      */
     public static <T> T profile(String name, ProfilingBlock<T> block) throws Exception {
         UtilTimerStack.push(name);
@@ -456,8 +455,7 @@ public class UtilTimerStack {
      * of coding boiler code that does pushing (UtilTimerBean.push(...)) and poping (UtilTimerBean.pop(...))
      * in a try ... finally ... block.
      *
-     * @param <T>
-     * @version $Date$ $Id$
+     * @param <T> type
      */
     public static interface ProfilingBlock<T> {
 
@@ -465,7 +463,7 @@ public class UtilTimerStack {
          * Method that execute the code subjected to profiling.
          *
          * @return profiles Type
-         * @throws Exception
+         * @throws Exception in case of any errors
          */
         T doProfiling() throws Exception;
     }

@@ -47,29 +47,36 @@ import java.util.TimeZone;
  * You can specify a <b>custom format</b> (eg. "dd/MM/yyyy hh:mm"), you can generate
  * <b>easy readable notations</b> (like "in 2 hours, 14 minutes"), or you can just fall back
  * on a <b>predefined format</b> with key 'struts.date.format' in your properties file.
+ * </p>
  *
+ * <p>
  * If that key is not defined, it will finally fall back to the default DateFormat.MEDIUM
  * formatting.
+ * </p>
  *
+ * <p>
  * <b>Note</b>: If the requested Date object isn't found on the stack, a blank will be returned.
  * </p>
  *
- * Configurable attributes are :-
+ * <p>
+ * Configurable attributes are:
+ * </p>
+ *
  * <ul>
  *    <li>name</li>
  *    <li>nice</li>
  *    <li>format</li>
  * </ul>
  *
- * <br>
- *
+ * <p>
  * Following how the date component will work, depending on the value of nice attribute
  * (which by default is false) and the format attribute.
+ * </p>
  *
- * <br>
- *
+ * <p>
  * <b><u>Condition 1: With nice attribute as true</u></b>
- * <table border="1">
+ * </p>
+ * <table border="1" summary="">
  *   <tr>
  *      <td>i18n key</td>
  *      <td>default</td>
@@ -88,31 +95,32 @@ import java.util.TimeZone;
  *   </tr>
  *   <tr>
  *      <td>struts.date.format.minutes</td>
- *      <td>{0,choice,1#one minute|1<{0} minutes}</td>
+ *      <td>{0,choice,1#one minute|1&lt;{0} minutes}</td>
  *   </tr>
  *   <tr>
  *      <td>struts.date.format.hours</td>
- *      <td>{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}</td>
+ *      <td>{0,choice,1#one hour|1&lt;{0} hours}{1,choice,0#|1#, one minute|1&lt;, {1} minutes}</td>
  *   </tr>
  *   <tr>
  *      <td>struts.date.format.days</td>
- *      <td>{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}</td>
+ *      <td>{0,choice,1#one day|1&lt;{0} days}{1,choice,0#|1#, one hour|1&lt;, {1} hours}</td>
  *   </tr>
  *   <tr>
  *      <td>struts.date.format.years</td>
- *      <td>{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}</td>
+ *      <td>{0,choice,1#one year|1&lt;{0} years}{1,choice,0#|1#, one day|1&lt;, {1} days}</td>
  *   </tr>
  * </table>
  *
- * <br>
- *
+ * <p>
  * <b><u>Condition 2: With nice attribute as false and format attribute is specified eg. dd/MM/yyyyy </u></b>
+ * </p>
+ *
  * <p>In this case the format attribute will be used.</p>
  *
- * <br>
- *
+ * <p>
  * <b><u>Condition 3: With nice attribute as false and no format attribute is specified </u></b>
- * <table border="1">
+ * </p>
+ * <table border="1" summary="">
  *    <tr>
  *      <td>i18n key</td>
  *      <td>default</td>
@@ -163,25 +171,25 @@ public class Date extends ContextBean {
     public static final String DATETAG_PROPERTY_SECONDS = "struts.date.format.seconds";
     private static final String DATETAG_DEFAULT_SECONDS = "an instant";
     /**
-     * Property name that defines the minutes notation (default: {0,choice,1#one minute|1<{0} minutes})
+     * Property name that defines the minutes notation (default: {0,choice,1#one minute|1&lt;{0} minutes})
      */
     public static final String DATETAG_PROPERTY_MINUTES = "struts.date.format.minutes";
     private static final String DATETAG_DEFAULT_MINUTES = "{0,choice,1#one minute|1<{0} minutes}";
     /**
-     * Property name that defines the hours notation (default: {0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one
-     * minute|1<, {1} minutes})
+     * Property name that defines the hours notation (default: {0,choice,1#one hour|1&lt;{0} hours}{1,choice,0#|1#, one
+     * minute|1&gt;, {1} minutes})
      */
     public static final String DATETAG_PROPERTY_HOURS = "struts.date.format.hours";
     private static final String DATETAG_DEFAULT_HOURS = "{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}";
     /**
-     * Property name that defines the days notation (default: {0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<,
+     * Property name that defines the days notation (default: {0,choice,1#one day|1&lt;{0} days}{1,choice,0#|1#, one hour|1&lt;,
      * {1} hours})
      */
     public static final String DATETAG_PROPERTY_DAYS = "struts.date.format.days";
     private static final String DATETAG_DEFAULT_DAYS = "{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}";
     /**
-     * Property name that defines the years notation (default: {0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one
-     * day|1<, {1} days})
+     * Property name that defines the years notation (default: {0,choice,1#one year|1&lt;{0} years}{1,choice,0#|1#, one
+     * day|1&gt;, {1} days})
      */
     public static final String DATETAG_PROPERTY_YEARS = "struts.date.format.years";
     private static final String DATETAG_DEFAULT_YEARS = "{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}";
@@ -275,7 +283,7 @@ public class Date extends ContextBean {
         java.util.Date date = null;
         // find the name on the valueStack
         try {
-            //suport Calendar also
+            //support Calendar also
             Object dateObject = findValue(name);
             if (dateObject instanceof java.util.Date) {
                 date = (java.util.Date) dateObject;
@@ -374,8 +382,13 @@ public class Date extends ContextBean {
         this.nice = nice;
     }
 
+    @StrutsTagAttribute(description = "The specific timezone in which to format the date", required = false)
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
     /**
-     * @return Returns the name.
+     * @return the name.
      */
     public String getName() {
         return name;
@@ -387,29 +400,24 @@ public class Date extends ContextBean {
     }
 
     /**
-     * @return Returns the format.
+     * @return the format.
      */
     public String getFormat() {
         return format;
     }
 
     /**
-     * @return Returns the nice.
+     * @return the nice.
      */
     public boolean isNice() {
         return nice;
     }
 
     /**
-     * @return Returns the name.
+     * @return the timezone.
      */
     public String getTimezone() {
         return timezone;
-    }
-
-    @StrutsTagAttribute(description = "The specific timezone in which to format the date", required = false)
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
     }
 
 }

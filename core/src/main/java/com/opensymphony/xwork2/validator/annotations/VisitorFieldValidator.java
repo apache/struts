@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table class='confluenceTable'>
+ * <table class='confluenceTable' summary=''>
  * <tr>
  * <th class='confluenceTh'> Parameter </th>
  * <th class='confluenceTh'> Required </th>
@@ -89,7 +89,7 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> appendPrefix </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'> true </td>
- * <td class='confluenceTd'> Determines whether the field name of this field validator should be prepended to the field name of the visited field to determine the full field name when an error occurs.  For example, suppose that the bean being validated has a "name" property.  If <em>appendPrefix</em> is true, then the field error will be stored under the field "bean.name".  If <em>appendPrefix</em> is false, then the field error will be stored under the field "name".  <br clear="all" /> <img class="emoticon" src="/images/icons/emoticons/warning.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> If you are using the VisitorFieldValidator to validate the model from a ModelDriven Action, you should set <em>appendPrefix</em> to false unless you are using "model.name" to reference the properties on your model. </td>
+ * <td class='confluenceTd'> Determines whether the field name of this field validator should be prepended to the field name of the visited field to determine the full field name when an error occurs.  For example, suppose that the bean being validated has a "name" property.  If <em>appendPrefix</em> is true, then the field error will be stored under the field "bean.name".  If <em>appendPrefix</em> is false, then the field error will be stored under the field "name".  <br> <img class="emoticon" src="/images/icons/emoticons/warning.gif" height="16" width="16" alt="" style="border: 0px; align: middle;"> If you are using the VisitorFieldValidator to validate the model from a ModelDriven Action, you should set <em>appendPrefix</em> to false unless you are using "model.name" to reference the properties on your model. </td>
  * </tr>
  * </table>
  * <!-- END SNIPPET: parameters -->
@@ -112,6 +112,8 @@ public @interface VisitorFieldValidator {
      * Determines the context to use for validating the Object property.
      * If not defined, the context of the Action validator is propagated to the Object property validator.
      * In the case of Action validator, this context is the Action alias.
+     *
+     * @return context
      */
     String context() default "";
 
@@ -126,27 +128,29 @@ public @interface VisitorFieldValidator {
      * If you are using the VisitorFieldValidator to validate the model from a ModelDriven Action,
      * you should set appendPrefix to false unless you are using "model.name" to reference the properties
      * on your model.
+     *
+     * @return true if append prefix
      */
     boolean appendPrefix() default true;
 
     /**
-     * The default error message for this validator.
+     * @return The default error message for this validator.
      * NOTE: It is required to set a message, if you are not using the message key for 18n lookup!
      */
     String message() default "";
 
     /**
-     * The message key to lookup for i18n.
+     * @return The message key to lookup for i18n.
      */
     String key() default "";
 
     /**
-     * The optional fieldName for SIMPLE validator types.
+     * @return The optional fieldName for SIMPLE validator types.
      */
     String fieldName() default "";
 
     /**
-     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     * @return Additional params to be used to customize message - will be evaluated against the Value Stack
      */
     String[] messageParams() default {};
 
@@ -155,6 +159,7 @@ public @interface VisitorFieldValidator {
      *
      * Adds the short-circuit="true" attribute value if <tt>true</tt>.
      *
+     * @return true if validator will be used as short-circuit. Default is false.
      */
     boolean shortCircuit() default false;
 }

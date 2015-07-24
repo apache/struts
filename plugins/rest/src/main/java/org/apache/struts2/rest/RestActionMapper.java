@@ -80,14 +80,14 @@ import java.util.HashMap;
  * The following URL's will invoke its methods:
  * </p>
  * <ul> 
- *  <li><code>GET:    /movies                => method="index"</code></li>
- *  <li><code>GET:    /movies/Thrillers      => method="show", id="Thrillers"</code></li>
- *  <li><code>GET:    /movies/Thrillers;edit => method="edit", id="Thrillers"</code></li>
- *  <li><code>GET:    /movies/Thrillers/edit => method="edit", id="Thrillers"</code></li>
- *  <li><code>GET:    /movies/new            => method="editNew"</code></li>
- *  <li><code>POST:   /movies                => method="create"</code></li>
- *  <li><code>PUT:    /movies/Thrillers      => method="update", id="Thrillers"</code></li>
- *  <li><code>DELETE: /movies/Thrillers      => method="destroy", id="Thrillers"</code></li>
+ *  <li><code>GET:    /movies                =&gt; method="index"</code></li>
+ *  <li><code>GET:    /movies/Thrillers      =&gt; method="show", id="Thrillers"</code></li>
+ *  <li><code>GET:    /movies/Thrillers;edit =&gt; method="edit", id="Thrillers"</code></li>
+ *  <li><code>GET:    /movies/Thrillers/edit =&gt; method="edit", id="Thrillers"</code></li>
+ *  <li><code>GET:    /movies/new            =&gt; method="editNew"</code></li>
+ *  <li><code>POST:   /movies                =&gt; method="create"</code></li>
+ *  <li><code>PUT:    /movies/Thrillers      =&gt; method="update", id="Thrillers"</code></li>
+ *  <li><code>DELETE: /movies/Thrillers      =&gt; method="destroy", id="Thrillers"</code></li>
  * </ul>
  * <p>
  * To simulate the HTTP methods PUT and DELETE, since they aren't supported by HTML,

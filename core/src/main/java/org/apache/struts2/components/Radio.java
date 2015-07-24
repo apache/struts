@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: example_fmt -->
  * &lt;@s.radio name="car" list={"ford": "Ford Motor Co", "toyota": "Toyota"} listKey="key" listValue="value" /&gt;
  * <!-- END SNIPPET: example_fmt -->
- *
+ * </pre>
  */
 @StrutsTag(name="radio",
         tldTagClass="org.apache.struts2.views.jsp.ui.RadioTag",

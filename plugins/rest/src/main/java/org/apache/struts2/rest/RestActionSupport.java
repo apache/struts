@@ -48,7 +48,7 @@ public class RestActionSupport extends ActionSupport {
 	/**
 	 * Default execution.
 	 * @return object because it can return string, result or httpHeader.
-	 * @throws Exception
+	 * @throws Exception in case of any error
 	 */
     public Object index() throws Exception {
         return execute();

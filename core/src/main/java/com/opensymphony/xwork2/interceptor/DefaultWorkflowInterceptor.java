@@ -30,12 +30,14 @@ import java.lang.reflect.Method;
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
  * <b>This interceptor does not perform any validation</b>.
  * </p>
+ *
  * <p>
  * This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
  * parameter. <b>excludeMethods</b> accepts a comma-delimited list of method names. For example, requests to
  * <b>foo!input.action</b> and <b>foo!back.action</b> will be skipped by this interceptor if you set the
  * <b>excludeMethods</b> parameter to "input, back".
  * </p>
+ *
  * <p>
  * <b>Note:</b> As this method extends off MethodFilterInterceptor, it is capable of
  * deciding if it is applicable only to selective methods in the action class. This is done by adding param tags
@@ -44,18 +46,24 @@ import java.lang.reflect.Method;
  * all methods for both parameters.
  * See {@link MethodFilterInterceptor} for more info.
  * </p>
+ *
+ * <p>
  * This interceptor also supports the following interfaces which can implemented by actions:
+ * </p>
+ *
  * <ul>
  *     <li>ValidationAware - implemented by ActionSupport class</li>
  *     <li>ValidationWorkflowAware - allows changing result name programmatically</li>
  *     <li>ValidationErrorAware - notifies action about errors and also allow change result name</li>
  * </ul>
  *
+ * <p>
  * You can also use InputConfig annotation to change result name returned when validation errors occurred.
+ * </p>
  *
  * <!-- END SNIPPET: description -->
  *
- * <u>Interceptor parameters:</u>
+ * <p><u>Interceptor parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
  * <ul>
@@ -64,15 +72,15 @@ import java.lang.reflect.Method;
  * </ul>
  * <!-- END SNIPPET: parameters -->
  *
- * <u>Extending the interceptor:</u>
+ * <p><u>Extending the interceptor:</u></p>
  *
  * <!-- START SNIPPET: extending -->
  *
- * There are no known extension points for this interceptor.
+ * <p>There are no known extension points for this interceptor.</p>
  *
  * <!-- END SNIPPET: extending -->
  *
- * <u>Example code:</u>
+ * <p><u>Example code:</u></p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -143,6 +151,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
      * Intercept {@link ActionInvocation} and returns a <code>inputResultName</code>
      * when action / field errors is found registered.
      *
+     * @param invocation the action invocation
      * @return String result name
      */
     @Override
@@ -169,6 +178,11 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
     /**
      * Process {@link ValidationWorkflowAware} interface
+     *
+     * @param action action object
+     * @param currentResultName current result name
+     *
+     * @return result name
      */
     private String processValidationWorkflowAware(final Object action, final String currentResultName) {
         String resultName = currentResultName;
@@ -182,6 +196,13 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
     /**
      * Process {@link InputConfig} annotation applied to method
+     * @param action action object
+     * @param method method
+     * @param currentResultName current result name
+     *
+     * @return result name
+     *
+     * @throws Exception in case of any errors
      */
     protected String processInputConfig(final Object action, final String method, final String currentResultName) throws Exception {
         String resultName = currentResultName;
@@ -200,7 +221,13 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Notify action if it implements {@see ValidationErrorAware} interface
+     * Notify action if it implements {@link ValidationErrorAware} interface
+     *
+     * @param action action object
+     * @param currentResultName current result name
+     *
+     * @return result name
+     * @see ValidationErrorAware
      */
     protected String processValidationErrorAware(final Object action, final String currentResultName) {
         String resultName = currentResultName;

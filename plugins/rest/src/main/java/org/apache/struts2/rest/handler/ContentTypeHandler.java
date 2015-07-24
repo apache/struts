@@ -34,6 +34,7 @@ public interface ContentTypeHandler {
      * Populates an object using data from the input stream
      * @param in The input stream, usually the body of the request
      * @param target The target, usually the action class
+     * @throws IOException If unable to write to the output stream
      */
     void toObject(Reader in, Object target) throws IOException;
     

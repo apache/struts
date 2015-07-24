@@ -161,10 +161,12 @@ public class PrefixMethodInvocationUtil {
 	}
 	
 	/**
+     * <p>
 	 * This method capitalized the first character of <code>methodName</code>.
-	 * <br/>
+	 * <br>
 	 * eg. <code>capitalizeMethodName("someMethod");</code> will return <code>"SomeMethod"</code>.
-	 * 
+	 * </p>
+     *
 	 * @param methodName the method name
 	 * @return capitalized method name
 	 */

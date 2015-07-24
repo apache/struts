@@ -57,7 +57,7 @@ import java.util.*;
  *
  * <p>You can get access to these files by merely providing setters in your action that correspond to any of the three
  * patterns above, such as setDocument(File document), setDocumentContentType(String contentType), etc.
- * <br/>See the example code section.
+ * <br>See the example code section.
  * </p>
  *
  * <p> This interceptor will add several field errors, assuming that the action implements {@link ValidationAware}.
@@ -322,6 +322,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      *
      * @param action      - uploading action for message retrieval.
      * @param file        - proposed upload file.
+     * @param filename    - name of the file.
      * @param contentType - contentType of the file.
      * @param inputName   - inputName of the file.
      * @param validation  - Non-null ValidationAware if the action implements ValidationAware, allowing for better

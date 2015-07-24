@@ -62,7 +62,9 @@ public class LocationUtils {
      * "<code><em>descripton</em> - <em>uri</em>:<em>line</em>:<em>column</em></code>"
      * format (e.g. "<code>foo - file://path/to/file.xml:3:40</code>"). For {@link Location#UNKNOWN an unknown location}, returns
      * {@link #UNKNOWN_STRING}.
-     * 
+     *
+     * @param location location object
+     *
      * @return the string representation
      */
     public static String toString(Location location) {

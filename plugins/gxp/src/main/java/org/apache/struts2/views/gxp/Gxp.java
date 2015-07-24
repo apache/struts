@@ -57,6 +57,10 @@ public class Gxp extends AbstractGxp<HtmlClosure> {
 
     /**
      * Looks up Gxp instance for GXP with given path.
+     *
+     * @param gxpPath Gxp path
+     *
+     * @return Gxp instance
      */
     public static Gxp getInstance(String gxpPath) {
         try {
@@ -74,6 +78,10 @@ public class Gxp extends AbstractGxp<HtmlClosure> {
 
     /**
      * Looks up Gxp instance for the given GXP class.
+     *
+     * @param gxpClass Gxp class
+     *
+     * @return Gxp instance
      */
     public static Gxp getInstance(Class gxpClass) {
         return classToGxp.get(gxpClass);

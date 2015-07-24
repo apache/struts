@@ -201,10 +201,8 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Set the <code>cookiesName</code> which if matched will allow the cookie
+     * @param cookiesName the <code>cookiesName</code> which if matched will allow the cookie
      * to be injected into action, could be comma-separated string.
-     *
-     * @param cookiesName
      */
     public void setCookiesName(String cookiesName) {
         if (cookiesName != null) {
@@ -213,11 +211,9 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Set the <code>cookiesValue</code> which if matched (together with matching
+     * @param cookiesValue the <code>cookiesValue</code> which if matched (together with matching
      * cookiesName) will caused the cookie to be injected into action, could be
      * comma-separated string.
-     *
-     * @param cookiesValue
      */
     public void setCookiesValue(String cookiesValue) {
         if (cookiesValue != null) {
@@ -332,10 +328,10 @@ public class CookieInterceptor extends AbstractInterceptor {
      * Hook that populate cookie value into value stack (hence the action)
      * if the criteria is satisfied (if the cookie value matches with those configured).
      *
-     * @param cookieName
-     * @param cookieValue
-     * @param cookiesMap
-     * @param stack
+     * @param cookieName cookie name
+     * @param cookieValue cookie value
+     * @param cookiesMap map of cookies
+     * @param stack value stack
      */
     protected void populateCookieValueIntoStack(String cookieName, String cookieValue, Map<String, String> cookiesMap, ValueStack stack) {
         if (cookiesValueSet.isEmpty() || cookiesValueSet.contains("*")) {
@@ -368,8 +364,8 @@ public class CookieInterceptor extends AbstractInterceptor {
      * Hook that set the <code>cookiesMap</code> into action that implements
      * {@link CookiesAware}.
      *
-     * @param action
-     * @param cookiesMap
+     * @param action action object
+     * @param cookiesMap map of cookies
      */
     protected void injectIntoCookiesAwareAction(Object action, Map<String, String> cookiesMap) {
         if (action instanceof CookiesAware) {

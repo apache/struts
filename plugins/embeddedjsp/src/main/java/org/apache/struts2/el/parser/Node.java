@@ -19,10 +19,10 @@
 
 package org.apache.struts2.el.parser;
 
+import org.apache.struts2.el.lang.EvaluationContext;
+
 import javax.el.ELException;
 import javax.el.MethodInfo;
-
-import org.apache.struts2.el.lang.EvaluationContext;
 
 
 /* All AST nodes must implement this interface.  It provides basic
@@ -35,37 +35,65 @@ import org.apache.struts2.el.lang.EvaluationContext;
  */
 public interface Node {
 
-  /** This method is called after the node has been made the current
-    node.  It indicates that child nodes can now be added to it. */
-  public void jjtOpen();
+    /**
+     * This method is called after the node has been made the current
+     * node.  It indicates that child nodes can now be added to it.
+     */
+    public void jjtOpen();
 
-  /** This method is called after all the child nodes have been
-    added. */
-  public void jjtClose();
+    /**
+     * This method is called after all the child nodes have been
+     * added.
+     */
+    public void jjtClose();
 
-  /** This pair of methods are used to inform the node of its
-    parent. */
-  public void jjtSetParent(Node n);
-  public Node jjtGetParent();
+    /**
+     * This pair of methods are used to inform the node of its
+     * parent.
+     *
+     * @param n the node
+     */
+    public void jjtSetParent(Node n);
 
-  /** This method tells the node to add its argument to the node's
-    list of children.  */
-  public void jjtAddChild(Node n, int i);
+    public Node jjtGetParent();
 
-  /** This method returns a child node.  The children are numbered
-     from zero, left to right. */
-  public Node jjtGetChild(int i);
+    /**
+     * This method tells the node to add its argument to the node's
+     * list of children.
+     *
+     * @param n the node
+     * @param i i
+     */
+    public void jjtAddChild(Node n, int i);
 
-  /** Return the number of children the node has. */
-  public int jjtGetNumChildren();
-  
-  public String getImage();
-  
-  public Object getValue(EvaluationContext ctx) throws ELException;
-  public void setValue(EvaluationContext ctx, Object value) throws ELException;
-  public Class getType(EvaluationContext ctx) throws ELException;
-  public boolean isReadOnly(EvaluationContext ctx) throws ELException;
-  public void accept(NodeVisitor visitor) throws Exception;
-  public MethodInfo getMethodInfo(EvaluationContext ctx, Class[] paramTypes) throws ELException;
-  public Object invoke(EvaluationContext ctx, Class[] paramTypes, Object[] paramValues) throws ELException;
+    /**
+     * This method returns a child node.  The children are numbered
+     * from zero, left to right.
+     *
+     * @param i i
+     *
+     * @return child node
+     */
+    public Node jjtGetChild(int i);
+
+    /**
+     * @return the number of children the node has.
+     */
+    public int jjtGetNumChildren();
+
+    public String getImage();
+
+    public Object getValue(EvaluationContext ctx) throws ELException;
+
+    public void setValue(EvaluationContext ctx, Object value) throws ELException;
+
+    public Class getType(EvaluationContext ctx) throws ELException;
+
+    public boolean isReadOnly(EvaluationContext ctx) throws ELException;
+
+    public void accept(NodeVisitor visitor) throws Exception;
+
+    public MethodInfo getMethodInfo(EvaluationContext ctx, Class[] paramTypes) throws ELException;
+
+    public Object invoke(EvaluationContext ctx, Class[] paramTypes, Object[] paramValues) throws ELException;
 }

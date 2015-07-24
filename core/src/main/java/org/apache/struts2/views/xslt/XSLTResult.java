@@ -115,7 +115,7 @@ import java.util.Map;
  *
  * <p>
  * <b>Note:</b> In your .xsl file the root match must be named <tt>result</tt>.
- * <br/>This example will output the username by using <tt>getUsername</tt> on your
+ * <br>This example will output the username by using <tt>getUsername</tt> on your
  * action class:
  * <pre>
  * &lt;xsl:template match="result"&gt;
@@ -191,12 +191,15 @@ import java.util.Map;
  * </ul>
  *
  * <!-- END SNIPPET: params -->
- *
+ * <p>
  * <b>Example:</b>
+ * </p>
  *
- * <pre><!-- START SNIPPET: example -->
+ * <pre>
+ * <!-- START SNIPPET: example -->
  * &lt;result name="success" type="xslt"&gt;foo.xslt&lt;/result&gt;
- * <!-- END SNIPPET: example --></pre>
+ * <!-- END SNIPPET: example -->
+ * </pre>
  *
  */
 public class XSLTResult implements Result {
@@ -295,9 +298,7 @@ public class XSLTResult implements Result {
     }
 
     /**
-     * If true, parse the stylesheet location for OGNL expressions.
-     *
-     * @param parse
+     * @param parse if true, parse the stylesheet location for OGNL expressions.
      */
     public void setParse(boolean parse) {
         this.parse = parse;
@@ -395,7 +396,7 @@ public class XSLTResult implements Result {
     }
 
     /**
-     * Get the URI Resolver to be called by the processor when it encounters an xsl:include, xsl:import, or document()
+     * @return the URI Resolver to be called by the processor when it encounters an xsl:include, xsl:import, or document()
      * function. The default is an instance of ServletURIResolver, which operates relative to the servlet context.
      */
     protected URIResolver getURIResolver() {

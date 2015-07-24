@@ -99,7 +99,8 @@ public class ReflectionContextState {
 	 * return myProp.myMap.myKey.
      * </p>
 	 *
-	 * @param context
+	 * @param context context map
+	 * @return  current property path
 	 */
 	public static String getCurrentPropertyPath(Map<String, Object> context) {
 		return (String)context.get(CURRENT_PROPERTY_PATH);
@@ -156,7 +157,7 @@ public class ReflectionContextState {
 	}
 
 	/**
-	 *
+	 *@param context the context map
 	 */
 	public static void clearCurrentPropertyPath(Map<String, Object> context) {
 		context.put(CURRENT_PROPERTY_PATH, null);

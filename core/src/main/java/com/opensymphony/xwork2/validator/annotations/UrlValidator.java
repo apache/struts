@@ -32,23 +32,23 @@ import java.lang.annotation.Target;
 public @interface UrlValidator {
 
     /**
-     * The default error message for this validator.
+     * @return The default error message for this validator.
      * NOTE: It is required to set a message, if you are not using the message key for 18n lookup!
      */
     String message() default "";
 
     /**
-     * The message key to lookup for i18n.
+     * @return The message key to lookup for i18n.
      */
     String key() default "";
 
     /**
-     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     * @return Additional params to be used to customize message - will be evaluated against the Value Stack
      */
     String[] messageParams() default {};
 
     /**
-     * The optional fieldName for SIMPLE validator types.
+     * @return The optional fieldName for SIMPLE validator types.
      */
     String fieldName() default "";
 
@@ -56,21 +56,23 @@ public @interface UrlValidator {
      * If this is activated, the validator will be used as short-circuit.
      *
      * Adds the short-circuit="true" attribute value if <tt>true</tt>.
+     *
+     * @return true if validator will be used as short-circuit. Default is false.
      */
     boolean shortCircuit() default false;
 
     /**
-     * The validation type for this field/method.
+     * @return The validation type for this field/method.
      */
     ValidatorType type() default ValidatorType.FIELD;
 
     /**
-     * Defines regex to use to validate url
+     * @return Defines regex to use to validate url
      */
     String urlRegex() default "";
 
     /**
-     * Defines regex as an expression which will be evaluated to string and used to validate url
+     * @return Defines regex as an expression which will be evaluated to string and used to validate url
      */
     String urlRegexExpression() default "";
 

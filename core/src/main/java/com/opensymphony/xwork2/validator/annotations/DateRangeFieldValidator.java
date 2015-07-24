@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table class='confluenceTable'>
+ * <table class='confluenceTable' summary=''>
  * <tr>
  * <th class='confluenceTh'> Parameter </th>
  * <th class='confluenceTh'> Required </th>
@@ -134,48 +134,52 @@ import java.lang.annotation.Target;
 public @interface DateRangeFieldValidator {
 
     /**
-     *  Date property. The minimum the date must be.
+     *  Date property.
+     *
+     *  @return The minimum the date must be.
      */
     String min() default "";
 
     /**
-     * An expression which will be evaluated against the Value Stack to get the min value
+     * @return An expression which will be evaluated against the Value Stack to get the min value
      */
     String minExpression() default "";
 
     /**
-     *  Date property. The maximum date can be.
+     *  Date property.
+     *
+     *  @return The maximum date can be.
      */
     String max() default "";
 
     /**
-     * An expression which will be evaluated against the Value Stack to get the max value
+     * @return An expression which will be evaluated against the Value Stack to get the max value
      */
     String maxExpression() default "";
 
     /**
-     * Date format used to parse min and max value
+     * @return Date format used to parse min and max value
      */
     String dateFormat() default "";
 
     /**
-     * The default error message for this validator.
+     * @return The default error message for this validator.
      * NOTE: It is required to set a message, if you are not using the message key for 18n lookup!
      */
     String message() default "";
 
     /**
-     * The message key to lookup for i18n.
+     * @return The message key to lookup for i18n.
      */
     String key() default "";
 
     /**
-     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     * @return Additional params to be used to customize message - will be evaluated against the Value Stack
      */
     String[] messageParams() default {};
 
     /**
-     * The optional fieldName for SIMPLE validator types.
+     * @return The optional fieldName for SIMPLE validator types.
      */
     String fieldName() default "";
 
@@ -183,12 +187,12 @@ public @interface DateRangeFieldValidator {
      * If this is activated, the validator will be used as short-circuit.
      *
      * Adds the short-circuit="true" attribute value if <tt>true</tt>.
-     *
+     * @return true if validator will be used as short-circuit. Default is false.
      */
     boolean shortCircuit() default false;
 
     /**
-     * The validation type for this field/method.
+     * @return The validation type for this field/method.
      */
     ValidatorType type() default ValidatorType.FIELD;
 

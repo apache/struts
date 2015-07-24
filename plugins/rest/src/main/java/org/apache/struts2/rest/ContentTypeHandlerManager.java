@@ -46,6 +46,7 @@ public interface ContentTypeHandlerManager {
     /**
      * Gets the handler for the response by looking at the extension of the request
      * @param req The request
+     * @param res The servlet response
      * @return The appropriate handler
      */
     ContentTypeHandler getHandlerForResponse(HttpServletRequest req, HttpServletResponse res);

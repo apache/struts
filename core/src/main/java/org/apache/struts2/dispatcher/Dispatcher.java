@@ -761,12 +761,16 @@ public class Dispatcher {
     }
 
     /**
+     * <p>
      * Wrap and return the given request or return the original request object.
      * </p>
+     *
+     * <p>
      * This method transparently handles multipart data as a wrapped class around the given request.
      * Override this method to handle multipart requests in a special way or to handle other types of requests.
      * Note, {@link org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper} is
      * flexible - look first to that object before overriding this method to handle multipart data.
+     * </p>
      *
      * @param request the HttpServletRequest object.
      * @return a wrapped request or original request.
@@ -797,7 +801,7 @@ public class Dispatcher {
      * On each request it must return a new instance as implementation could be not thread safe
      * and thus ensure of resource clean up
      *
-     * @return
+     * @return a multi part request object
      */
     protected MultiPartRequest getMultiPartRequest() {
         MultiPartRequest mpr = null;

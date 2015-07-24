@@ -14,7 +14,10 @@ public interface ConverterFactory {
      *
      * @param converterClass to instantiate
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
+     *
      * @return instance of converterClass with inject dependencies
+     *
+     * @throws Exception in case of any errors
      */
     TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception;
 

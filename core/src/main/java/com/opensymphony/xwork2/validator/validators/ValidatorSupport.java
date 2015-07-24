@@ -174,7 +174,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
      * @param name name of the field
      * @param object to search field name on
      * @return Object as field value
-     * @throws ValidationException
+     * @throws ValidationException in case of validation problems
      */
     protected Object getFieldValue(String name, Object object) throws ValidationException {
 

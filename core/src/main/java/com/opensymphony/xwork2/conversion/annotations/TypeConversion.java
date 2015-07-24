@@ -25,29 +25,29 @@ import java.lang.annotation.Target;
  * <p>This annotation is used for class and application wide conversion rules.</p>
  *
  * <p>
- * Class wide conversion:<br/>
+ * Class wide conversion:<br>
  * The conversion rules will be assembled in a file called <code>XXXAction-conversion.properties</code>
  * within the same package as the related action class.
  * Set type to: <code>type = ConversionType.CLASS</code>
  * </p>
  *
  * <p>
- * Application wide conversion:<br/>
+ * Application wide conversion:<br>
  * The conversion rules will be assembled within the <code>xwork-conversion.properties</code> file within the classpath root.
  * Set type to: <code>type = ConversionType.APPLICATION</code>
  * </p>
  * <!-- END SNIPPET: description -->
  *
- * <p> <u>Annotation usage:</u></p>
+ * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * The TypeConversion annotation can be applied at property and method level.
+ * <p>The TypeConversion annotation can be applied at property and method level.</p>
  * <!-- END SNIPPET: usage -->
  *
- * <p> <u>Annotation parameters:</u></p>
+ * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table>
+ * <table summary="">
  * <thead>
  * <tr>
  * <th>Parameter</th>
@@ -144,6 +144,8 @@ public @interface TypeConversion {
     /**
      * The optional key name used within TYPE level annotations.
      * Defaults to the property name.
+     *
+     * @return key
      */
     String key() default "";
 
@@ -152,6 +154,8 @@ public @interface TypeConversion {
      * Defaults to CLASS.
      *
      * Note: If you use ConversionType.APPLICATION, you can not set a value!
+     *
+     * @return the conversion type
      */
     ConversionType type() default ConversionType.CLASS;
 
@@ -160,13 +164,17 @@ public @interface TypeConversion {
      * Note: Collection and Map conversion rules can be determined via com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer.
      *
      * @see com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer
+     *
+     * @return the conversion rule
      */
     ConversionRule rule() default ConversionRule.PROPERTY;
 
     /**
      * The class of the TypeConverter to be used as converter.
      *
-     * Note: This can not be used with ConversionRule.KEY_PROPERTY! 
+     * Note: This can not be used with ConversionRule.KEY_PROPERTY!
+     *
+     * @return class of the TypeConverter to be used as converter
      */
     String converter() default "";
 
@@ -174,6 +182,8 @@ public @interface TypeConversion {
      * If used with ConversionRule.KEY_PROPERTY specify a value here!
      *
      * Note: If you use ConversionType.APPLICATION, you can not set a value!
+     *
+     * @return value
      */
     String value() default "";
 

@@ -44,11 +44,13 @@ import javax.validation.ValidatorFactory;
  * almost always use the default Validator anyway. You need to pass provider class in order for this plugin to hook
  * itself to underlying validation Factory. Any of following Validation provider can be provided using
  * <code>struts.beanValidation.providerClass</code>
+ * </p>
+ *
  * <ul>
  * <li>Hibernate Validator - <code>org.hibernate.validator.HibernateValidator</code></li>
  * <li>Apache Bval - <code>org.apache.bval.jsr303.ApacheValidationProvider</code></li>
  * </ul>
- * </p>
+ *
  */
 public class DefaultBeanValidationManager implements BeanValidationManager {
 
@@ -107,10 +109,14 @@ public class DefaultBeanValidationManager implements BeanValidationManager {
      * <p>
      * In this case, the default validation provider resolver will be used to locate available providers. The chosen
      * provider is defined as followed:
+     * </p>
+     * <ul>
      * <li>if the XML configuration defines a provider, this provider is used</li>
      * <li>if the XML configuration does not define a provider or if no XML configuration is present the first provider
      * returned by the ValidationProviderResolver instance is used.</li>
-     * </p>
+     * </ul>
+     *
+     * @return validator instance
      */
     public Validator getValidator() {
         return this.validationFactory.getValidator();

@@ -135,6 +135,9 @@ public final class ProtectedFunctionMapper extends javax.el.FunctionMapper
      *            The name of the Java method
      * @param args
      *            The arguments of the Java method
+     *
+     * @return function mapper
+     *
      * @throws RuntimeException
      *             if no method with the given signature could be found.
      */

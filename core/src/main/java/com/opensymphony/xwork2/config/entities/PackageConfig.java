@@ -217,14 +217,14 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     }
 
     /**
-     * Returns the default result type for this package.
+     * @return the default result type for this package.
      */
     public String getDefaultResultType() {
         return defaultResultType;
     }
 
     /**
-     * gets the default interceptor-ref name. If this is not set on this PackageConfig, it searches the parent
+     * @return the default interceptor-ref name. If this is not set on this PackageConfig, it searches the parent
      * PackageConfigs in order until it finds one.
      */
     public String getFullDefaultInterceptorRef() {
@@ -242,7 +242,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     }
 
     /**
-     * gets the default action-ref name. If this is not set on this PackageConfig, it searches the parent
+     * @return the default action-ref name. If this is not set on this PackageConfig, it searches the parent
      * PackageConfigs in order until it finds one.
      */
     public String getFullDefaultActionRef() {
@@ -267,6 +267,8 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      * If there is no default result type, but this package has parents - we will try to
      * look up the default result type of a parent.
      * </p>
+     *
+     * @return the default result type for this package.
      */
     public String getFullDefaultResultType() {
         if ((defaultResultType == null) && !parents.isEmpty()) {
@@ -481,7 +483,9 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         /**
          * sets the default Result type for this package
          *
-         * @param defaultResultType
+         * @param defaultResultType set the default result type
+         *
+         * @return this builder
          */
         public Builder defaultResultType(String defaultResultType) {
             target.defaultResultType = defaultResultType;

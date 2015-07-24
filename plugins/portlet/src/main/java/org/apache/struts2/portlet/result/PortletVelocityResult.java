@@ -204,6 +204,8 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * this method if they want to provide specific content types for specific
      * templates (eg text/xml).
      *
+     * @param templateLocation location of templates
+     *
      * @return The content type associated with this template (default
      *         "text/html")
      */
@@ -214,6 +216,8 @@ public class PortletVelocityResult extends StrutsResultSupport {
     /**
      * Retrieve the encoding for this template. <br>People can override this
      * method if they want to provide specific encodings for specific templates.
+     *
+     * @param templateLocation location of templates
      *
      * @return The encoding associated with this template (defaults to the value
      *         of 'struts.i18n.encoding' property)
@@ -256,6 +260,8 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * @param velocityManager a reference to the velocityManager to use
      * @param stack the value stack to resolve the location against (when parse
      *        equals true)
+     * @param request servlet request
+     * @param response servlet response
      * @param location the name of the template that is being used
      * @return the a minted Velocity context.
      */

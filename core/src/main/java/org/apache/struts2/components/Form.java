@@ -391,9 +391,10 @@ public class Form extends ClosingUIBean {
 
     /**
      * Return type of visited object.
-     * @param actionClass
-     * @param visitorFieldName
-     * @return
+     *
+     * @param actionClass action class
+     * @param visitorFieldName field name
+     * @return type of visited object
      */
     @SuppressWarnings("unchecked")
     protected Class getVisitorReturnType(Class actionClass, String visitorFieldName) {

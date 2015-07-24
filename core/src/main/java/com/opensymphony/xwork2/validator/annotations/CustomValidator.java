@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table class='confluenceTable'>
+ * <table class='confluenceTable' summary=''>
  * <tr>
  * <th class='confluenceTh'> Parameter </th>
  * <th class='confluenceTh'> Required </th>
@@ -99,12 +99,12 @@ public @interface CustomValidator {
     String type();
 
     /**
-     * The optional fieldName for SIMPLE validator types.
+     * @return The optional fieldName for SIMPLE validator types.
      */
     String fieldName() default "";
 
     /**
-     * The default error message for this validator.
+     * @return The default error message for this validator.
      * NOTE: It is required to set a message, if you are not using the message key for 18n lookup!
      */
     String message() default "";
@@ -112,7 +112,7 @@ public @interface CustomValidator {
     String key() default "";
 
     /**
-     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     * @return Additional params to be used to customize message - will be evaluated against the Value Stack
      */
     String[] messageParams() default {};
 

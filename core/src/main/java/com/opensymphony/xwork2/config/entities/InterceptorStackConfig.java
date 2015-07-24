@@ -49,13 +49,13 @@ public class InterceptorStackConfig extends Located implements Serializable {
      * Creates an InterceptorStackConfig object.
      */
     protected InterceptorStackConfig() {
-        this.interceptors = new ArrayList<InterceptorMapping>();
+        this.interceptors = new ArrayList<>();
     }
 
     /**
      * Creates an InterceptorStackConfig object with a particular <code>name</code>.
      *
-     * @param name
+     * @param orig interceptor stack configuration
      */
     protected InterceptorStackConfig(InterceptorStackConfig orig) {
         this.name = orig.name;
@@ -67,7 +67,7 @@ public class InterceptorStackConfig extends Located implements Serializable {
     /**
      * Returns a <code>Collection</code> of InterceptorMapping objects.
      *
-     * @return
+     * @return collection of interceptor mappings
      */
     public Collection<InterceptorMapping> getInterceptors() {
         return interceptors;
@@ -89,6 +89,9 @@ public class InterceptorStackConfig extends Located implements Serializable {
      * <li>both names are equals</li>
      * <li>all of their <code>InterceptorMapping</code>s are equals</li>
      * </ul>
+     *
+     * @param o the given object to check
+     * @return true if object match the rules
      */
     @Override
     public boolean equals(Object o) {
@@ -114,7 +117,7 @@ public class InterceptorStackConfig extends Located implements Serializable {
     }
 
     /**
-     * Generate hashcode based on <code>InterceptorStackConfig</code>'s name and its
+     * @return generated hashcode based on <code>InterceptorStackConfig</code>'s name and its
      * <code>InterceptorMapping</code>s.
      */
     @Override
@@ -151,6 +154,10 @@ public class InterceptorStackConfig extends Located implements Serializable {
 
         /**
          * Add an <code>InterceptorMapping</code> object.
+         *
+         * @param interceptor interceptor mapping
+         *
+         * @return this builder
          */
         public Builder addInterceptor(InterceptorMapping interceptor) {
             target.interceptors.add(interceptor);
@@ -159,6 +166,10 @@ public class InterceptorStackConfig extends Located implements Serializable {
 
         /**
          * Add a List of <code>InterceptorMapping</code> objects.
+         *
+         * @param interceptors list of interceptor mappings
+         *
+         * @return this builder
          */
         public Builder addInterceptors(List<InterceptorMapping> interceptors) {
             target.interceptors.addAll(interceptors);

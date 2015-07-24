@@ -28,10 +28,13 @@ package org.apache.struts2.jasper.xmlparser;
 import java.util.Arrays;
 
 /**
+ * <p>
  * This class defines the basic XML character properties. The data
  * in this class can be used to verify that a character is a valid
  * XML character or if the character is a space, name start, or name
  * character.
+ * </p>
+ *
  * <p>
  * A series of convenience methods are supplied to ease the burden
  * of the developer. Because inlining the checks can improve per
@@ -41,6 +44,7 @@ import java.util.Arrays;
  * <code>MASK_VALID</code>), yields the same results as calling the
  * convenience methods. There is one exception: check the comments
  * for the <code>isValid</code> method for details.
+ * </p>
  *
  * @author Glenn Marcy, IBM
  * @author Andy Clark, IBM
@@ -75,13 +79,16 @@ public class XMLChar {
     /** Pubid character mask. */
     public static final int MASK_PUBID = 0x10;
     
-    /** 
+    /**
+     * <p>
      * Content character mask. Special characters are those that can
      * be considered the start of markup, such as '&lt;' and '&amp;'. 
      * The various newline characters are considered special as well.
      * All other valid XML characters can be considered content.
+     * </p>
      * <p>
      * This is an optimization for the inner loop of character scanning.
+     * </p>
      */
     public static final int MASK_CONTENT = 0x20;
 
@@ -727,7 +734,7 @@ public class XMLChar {
     //
 
     /**
-     * Returns true if the specified character is a supplemental character.
+     * @return  true if the specified character is a supplemental character.
      *
      * @param c The character to check.
      */
@@ -736,7 +743,7 @@ public class XMLChar {
     }
 
     /**
-     * Returns true the supplemental character corresponding to the given
+     * @return  true the supplemental character corresponding to the given
      * surrogates.
      *
      * @param h The high surrogate.
@@ -747,7 +754,7 @@ public class XMLChar {
     }
 
     /**
-     * Returns the high surrogate of a supplemental character
+     * @return  the high surrogate of a supplemental character
      *
      * @param c The supplemental character to "split".
      */
@@ -756,7 +763,7 @@ public class XMLChar {
     }
 
     /**
-     * Returns the low surrogate of a supplemental character
+     * @return  the low surrogate of a supplemental character
      *
      * @param c The supplemental character to "split".
      */
@@ -765,7 +772,7 @@ public class XMLChar {
     }
 
     /**
-     * Returns whether the given character is a high surrogate
+     * @return  whether the given character is a high surrogate
      *
      * @param c The character to check.
      */
@@ -774,7 +781,7 @@ public class XMLChar {
     }
 
     /**
-     * Returns whether the given character is a low surrogate
+     * @return  whether the given character is a low surrogate
      *
      * @param c The character to check.
      */
@@ -784,7 +791,7 @@ public class XMLChar {
 
 
     /**
-     * Returns true if the specified character is valid. This method
+     * @return  true if the specified character is valid. This method
      * also checks the surrogate character range from 0x10000 to 0x10FFFF.
      * <p>
      * If the program chooses to apply the mask directly to the
@@ -799,7 +806,7 @@ public class XMLChar {
     } // isValid(int):boolean
 
     /**
-     * Returns true if the specified character is invalid.
+     * @return  true if the specified character is invalid.
      *
      * @param c The character to check.
      */
@@ -808,7 +815,7 @@ public class XMLChar {
     } // isInvalid(int):boolean
 
     /**
-     * Returns true if the specified character can be considered content.
+     * @return  true if the specified character can be considered content.
      *
      * @param c The character to check.
      */
@@ -818,7 +825,7 @@ public class XMLChar {
     } // isContent(int):boolean
 
     /**
-     * Returns true if the specified character can be considered markup.
+     * @return  true if the specified character can be considered markup.
      * Markup characters include '&lt;', '&amp;', and '%'.
      *
      * @param c The character to check.
@@ -828,7 +835,7 @@ public class XMLChar {
     } // isMarkup(int):boolean
 
     /**
-     * Returns true if the specified character is a space character
+     * @return  true if the specified character is a space character
      * as defined by production [3] in the XML 1.0 specification.
      *
      * @param c The character to check.
@@ -838,7 +845,7 @@ public class XMLChar {
     } // isSpace(int):boolean
 
     /**
-     * Returns true if the specified character is a valid name start
+     * @return  true if the specified character is a valid name start
      * character as defined by production [5] in the XML 1.0
      * specification.
      *
@@ -849,7 +856,7 @@ public class XMLChar {
     } // isNameStart(int):boolean
 
     /**
-     * Returns true if the specified character is a valid name
+     * @return  true if the specified character is a valid name
      * character as defined by production [4] in the XML 1.0
      * specification.
      *
@@ -860,7 +867,7 @@ public class XMLChar {
     } // isName(int):boolean
 
     /**
-     * Returns true if the specified character is a valid NCName start
+     * @return  true if the specified character is a valid NCName start
      * character as defined by production [4] in Namespaces in XML
      * recommendation.
      *
@@ -871,7 +878,7 @@ public class XMLChar {
     } // isNCNameStart(int):boolean
 
     /**
-     * Returns true if the specified character is a valid NCName
+     * @return  true if the specified character is a valid NCName
      * character as defined by production [5] in Namespaces in XML
      * recommendation.
      *
@@ -882,7 +889,7 @@ public class XMLChar {
     } // isNCName(int):boolean
 
     /**
-     * Returns true if the specified character is a valid Pubid
+     * @return  true if the specified character is a valid Pubid
      * character as defined by production [13] in the XML 1.0
      * specification.
      *
@@ -973,7 +980,7 @@ public class XMLChar {
     // encodings
 
     /**
-     * Returns true if the encoding name is a valid IANA encoding.
+     * @return  true if the encoding name is a valid IANA encoding.
      * This method does not verify that there is a decoder available
      * for this encoding, only that the characters are valid for an
      * IANA encoding name.
@@ -1002,7 +1009,7 @@ public class XMLChar {
     } // isValidIANAEncoding(String):boolean
 
     /**
-     * Returns true if the encoding name is a valid Java encoding.
+     * @return  true if the encoding name is a valid Java encoding.
      * This method does not verify that there is a decoder available
      * for this encoding, only that the characters are valid for an
      * Java encoding name.

@@ -22,8 +22,11 @@ import java.util.*;
 
 
 /**
+ * <p>
  * This class is extremely useful for loading resources and classes in a fault tolerant manner
  * that works across different applications servers.
+ * </p>
+ *
  * <p>
  * It has come out of many months of frustrating use of multiple application servers at Atlassian,
  * please don't change things unless you're sure they're not going to break in one server or another!
@@ -32,11 +35,16 @@ import java.util.*;
 public class ClassLoaderUtil {
 
     /**
+     * <p>
      * Load all resources with a given name, potentially aggregating all results 
      * from the searched classloaders.  If no results are found, the resource name
      * is prepended by '/' and tried again.
+     * </p>
      *
+     * <p>
      * This method will try to load the resources using the following methods (in order):
+     * </p>
+     *
      * <ul>
      *  <li>From Thread.currentThread().getContextClassLoader()
      *  <li>From ClassLoaderUtil.class.getClassLoader()
@@ -45,6 +53,11 @@ public class ClassLoaderUtil {
      *
      * @param resourceName The name of the resources to load
      * @param callingClass The Class object of the calling object
+     * @param aggregate aggregate
+     *
+     * @return all resources found
+     *
+     * @throws IOException in case of IO errors
      */
      public static Iterator<URL> getResources(String resourceName, Class callingClass, boolean aggregate) throws IOException {
 
@@ -85,6 +98,8 @@ public class ClassLoaderUtil {
      *
      * @param resourceName The name of the resource to load
      * @param callingClass The Class object of the calling object
+     *
+     * @return the resource
      */
     public static URL getResource(String resourceName, Class callingClass) {
         URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
@@ -115,6 +130,7 @@ public class ClassLoaderUtil {
     *
     * @param resourceName The name of the resource to load
     * @param callingClass The Class object of the calling object
+    * @return resource as a stream
     */
     public static InputStream getResourceAsStream(String resourceName, Class callingClass) {
         URL url = getResource(resourceName, callingClass);
@@ -144,6 +160,7 @@ public class ClassLoaderUtil {
      *
      * @param className    The name of the class to load
      * @param callingClass The Class object of the calling object
+     * @return class with for the given name
      * @throws ClassNotFoundException If the class cannot be found anywhere.
      */
     public static Class loadClass(String className, Class callingClass) throws ClassNotFoundException {
@@ -172,6 +189,8 @@ public class ClassLoaderUtil {
 
     /**
      * Prints the classloader hierarchy from a given classloader - useful for debugging.
+     *
+     * @param cl the class loader
      */
     public static void printClassLoader(ClassLoader cl) {
         System.out.println("ClassLoaderUtils.printClassLoader(cl = " + cl + ")");

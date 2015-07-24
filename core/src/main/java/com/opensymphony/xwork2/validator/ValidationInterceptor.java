@@ -261,20 +261,29 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
     }
     
     /**
+     * <p>
      * Returns the context that will be used by the
      * {@link ActionValidatorManager} to associate the action invocation with
      * the appropriate {@link ValidatorConfig ValidatorConfigs}.
+     * </p>
+     *
      * <p>
      * The context returned is used in the pattern
      * <i>ActionClass-context-validation.xml</i>
+     * </p>
+     *
      * <p>
      * The default context is the action name from the URL, but the method can
      * be overridden to implement custom contexts.
+     * </p>
+     *
      * <p>
      * This can be useful in cases in which a single action and a single model
      * require vastly different validation based on some condition.
-     * 
-     * @return the Context
+     * </p>
+     *
+     * @param proxy action proxy
+     * @return the context (action name)
      */
     protected String getValidationContext(ActionProxy proxy) {
         // This method created for WW-3753

@@ -53,23 +53,21 @@ import java.io.Writer;
  * <pre>
  * <!-- START SNIPPET: example -->
  *
- * <s:push value="myBean">
+ * &lt;s:push value="myBean"&gt;
  *     <!-- Example 1: -->
- *     <s:property value="myBeanProperty" />
+ *     &lt;s:property value="myBeanProperty" /&gt;
  *
  *     <!-- Example 2: -->TextUtils
- *     <s:property value="myBeanProperty" default="a default value" />
- * </s:push>
+ *     &lt;s:property value="myBeanProperty" default="a default value" /&gt;
+ * &lt;/s:push&gt;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: exampledescription -->
- * <p>
  * Example 1 prints the result of myBean's getMyBeanProperty() method.
  * Example 2 prints the result of myBean's getMyBeanProperty() method and if it is null, print 'a default value' instead.
- * </p>
  * <!-- END SNIPPET: exampledescription -->
  * </pre>
  *

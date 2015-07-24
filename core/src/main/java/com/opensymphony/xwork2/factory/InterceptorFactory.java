@@ -22,6 +22,10 @@ public interface InterceptorFactory {
      * @param interceptorConfig    the InterceptorConfig from the configuration
      * @param interceptorRefParams a Map of params provided in the Interceptor reference in the
      *                             Action mapping or InterceptorStack definition
+     *
+     * @return interceptor
+     *
+     * @throws ConfigurationException in case of any configuration errors
      */
     Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map<String, String> interceptorRefParams) throws ConfigurationException;
 

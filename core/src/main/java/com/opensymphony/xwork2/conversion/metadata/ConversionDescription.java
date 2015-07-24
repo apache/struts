@@ -61,7 +61,7 @@ public class ConversionDescription {
     /**
      * Creates an ConversionDescription with the specified property name.
      *
-     * @param property
+     * @param property property
      */
     public ConversionDescription(String property) {
         this.property = property;
@@ -90,10 +90,7 @@ public class ConversionDescription {
     }
 
     /**
-     * Sets the rule prefix for COLLECTION_PREFIX or MAP_PREFIX key.
-     * Defaults to en empty String.
-     *
-     * @param rule
+     * @param rule the rule prefix for COLLECTION_PREFIX or MAP_PREFIX key. Defaults to en empty String.
      */
     public void setRule(String rule) {
         if (rule != null && rule.length() > 0) {
@@ -167,7 +164,7 @@ public class ConversionDescription {
     /**
      * Returns the fullQualifiedClassName attribute is used to create the special <code>conversion.properties</code> file name.
      *
-     * @return fullQualifiedClassName
+     * @return full qualified class name
      */
     public String getFullQualifiedClassName() {
         return fullQualifiedClassName;
@@ -176,7 +173,7 @@ public class ConversionDescription {
     /**
      * The fullQualifiedClassName attribute is used to create the special <code>conversion.properties</code> file name.
      *
-     * @param fullQualifiedClassName
+     * @param fullQualifiedClassName a full qualified class name
      */
     public void setFullQualifiedClassName(String fullQualifiedClassName) {
         this.fullQualifiedClassName = fullQualifiedClassName;

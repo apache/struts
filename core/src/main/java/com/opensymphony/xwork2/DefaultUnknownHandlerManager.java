@@ -51,6 +51,8 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
     /**
      * Builds a list of UnknownHandlers in the order specified by the configured "unknown-handler-stack".
      * If "unknown-handler-stack" was not configured, all UnknownHandlers will be returned, in no specific order
+     *
+     * @throws Exception in case of any error
      */
     protected void build() throws Exception {
         Configuration configuration = container.getInstance(Configuration.class);
@@ -79,6 +81,11 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
 
     /**
      * Iterate over UnknownHandlers and return the result of the first one that can handle it
+     *
+     * @param actionContext the action context
+     * @param actionName the action name
+     * @param actionConfig  the action config
+     * @param resultCode the result code
      */
     public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) {
         for (UnknownHandler unknownHandler : unknownHandlers) {
@@ -95,7 +102,9 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
      * Iterate over UnknownHandlers and return the result of the first one that can handle it.
      * Must throw an exception if method cannot be handled.
      *
-     * @throws NoSuchMethodException
+     * @param action the action
+     * @param methodName the method name
+     * @throws NoSuchMethodException if method con not be handled
      */
     public Object handleUnknownMethod(Object action, String methodName) throws NoSuchMethodException {
         for (UnknownHandler unknownHandler : unknownHandlers) {
@@ -114,6 +123,9 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
 
     /**
      * Iterate over UnknownHandlers and return the result of the first one that can handle it
+     *
+     * @param namespace the namespace
+     * @param actionName the action name
      */
     public ActionConfig handleUnknownAction(String namespace, String actionName) {
         for (UnknownHandler unknownHandler : unknownHandlers) {

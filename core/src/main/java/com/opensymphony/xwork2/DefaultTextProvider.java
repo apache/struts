@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
  * DefaultTextProvider gets texts from only the default resource bundles associated with the
  * LocalizedTextUtil.
  *
- * @author Jason Carreira <jcarreira@gmail.com>
+ * @author Jason Carreira jcarreira@gmail.com
  * @author Rainer Hermanns
  * @see LocalizedTextUtil#addDefaultResourceBundle(String)
  */

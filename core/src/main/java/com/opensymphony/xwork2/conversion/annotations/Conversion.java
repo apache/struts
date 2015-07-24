@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * <p> <u>Annotation parameters:</u> </p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table>
+ * <table summary="">
  * <thead>
  * <tr>
  * <th>Parameter</th>
@@ -92,6 +92,8 @@ public @interface Conversion {
 
     /**
      * Allow Type Conversions being applied at Type level.
+     *
+     * @return type conversion
      */
     TypeConversion[] conversions() default {};
 }

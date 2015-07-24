@@ -183,6 +183,12 @@ public enum Scope {
 
     /**
      * Wraps factory with scoping logic.
+     *
+     * @param type type of object
+     * @param name name of object
+     * @param factory factory
+     *
+     * @return the factory for the given type and name
      */
     abstract <T> InternalFactory<? extends T> scopeFactory(
             Class<T> type, String name, InternalFactory<? extends T> factory);
@@ -198,6 +204,15 @@ public enum Scope {
         /**
          * Finds an object for the given type and name in the request scope.
          * Creates a new object if necessary using the given factory.
+         *
+         * @param <T> generic type
+         * @param type type of object
+         * @param name name of object
+         * @param factory factory
+         *
+         * @return the object for the given type and name in the request scope
+         *
+         * @throws Exception in case of any error
          */
         <T> T findInRequest(Class<T> type, String name,
                             Callable<? extends T> factory) throws Exception;
@@ -205,6 +220,15 @@ public enum Scope {
         /**
          * Finds an object for the given type and name in the session scope.
          * Creates a new object if necessary using the given factory.
+         *
+         * @param <T> generic type
+         * @param type type of object
+         * @param name name of object
+         * @param factory factory
+         *
+         * @return the object for the given type and name in the session scope
+         *
+         * @throws Exception in case of any error
          */
         <T> T findInSession(Class<T> type, String name,
                             Callable<? extends T> factory) throws Exception;
@@ -212,6 +236,15 @@ public enum Scope {
         /**
          * Finds an object for the given type and name in the wizard scope.
          * Creates a new object if necessary using the given factory.
+         *
+         * @param <T> generic type
+         * @param type type of object
+         * @param name name of object
+         * @param factory factory
+         *
+         * @return the object for the given type and name in the wizard scope
+         *
+         * @throws Exception in case of any error
          */
         <T> T findInWizard(Class<T> type, String name,
                            Callable<? extends T> factory) throws Exception;

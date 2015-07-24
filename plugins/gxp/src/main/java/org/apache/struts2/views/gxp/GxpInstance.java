@@ -67,7 +67,9 @@ public class GxpInstance extends Gxp {
      * instance of the {@code Interface} class that is nested within the GXP
      * class. If that doesn't work, it falls back to trying to use the
      * {@code ObjectFactory} to create an instance of the nested {@code Instance}
-     * class, in case there is no binding for the {@code Interface}.
+     * class, in case there is no binding for the {@code Interface}.</p>
+     *
+     * @return Gxp instance
      */
     @Override
     protected Object getGxpInstance() {
@@ -108,6 +110,10 @@ public class GxpInstance extends Gxp {
 
     /**
      * Looks up Gxp instance for GXP with given path.
+     *
+     * @param gxpPath Gxp path
+     *
+     * @return Gxp instance
      */
     public static GxpInstance getInstance(String gxpPath) {
         try {
@@ -125,6 +131,10 @@ public class GxpInstance extends Gxp {
 
     /**
      * Looks up {@code GxpInstance} instance for the given GXP class.
+     *
+     * @param gxpClass Gxp class
+     *
+     * @return Gxp instance
      */
     public static GxpInstance getInstance(Class gxpClass) {
         return classToGxpInstance.get(gxpClass);

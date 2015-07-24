@@ -44,14 +44,16 @@ public class SmapStratum {
         private int outputLineIncrement = 1;
         private boolean lineFileIDSet = false;
 
-        /** Sets InputStartLine. */
+        /**
+         * @param inputStartLine  Sets InputStartLine.
+         */
         public void setInputStartLine(int inputStartLine) {
             if (inputStartLine < 0)
                 throw new IllegalArgumentException("" + inputStartLine);
             this.inputStartLine = inputStartLine;
         }
 
-        /** Sets OutputStartLine. */
+        /** @param outputStartLine Sets OutputStartLine. */
         public void setOutputStartLine(int outputStartLine) {
             if (outputStartLine < 0)
                 throw new IllegalArgumentException("" + outputStartLine);
@@ -59,7 +61,7 @@ public class SmapStratum {
         }
 
         /**
-             * Sets lineFileID.  Should be called only when different from
+             * @param lineFileID  Sets lineFileID.  Should be called only when different from
              * that of prior LineInfo object (in any given context) or 0
              * if the current LineInfo has no (logical) predecessor.
              * <tt>LineInfo</tt> will print this file number no matter what.
@@ -71,14 +73,14 @@ public class SmapStratum {
             this.lineFileIDSet = true;
         }
 
-        /** Sets InputLineCount. */
+        /** @param inputLineCount  Sets InputLineCount. */
         public void setInputLineCount(int inputLineCount) {
             if (inputLineCount < 0)
                 throw new IllegalArgumentException("" + inputLineCount);
             this.inputLineCount = inputLineCount;
         }
 
-        /** Sets OutputLineIncrement. */
+        /** @param outputLineIncrement Sets OutputLineIncrement. */
         public void setOutputLineIncrement(int outputLineIncrement) {
             if (outputLineIncrement < 0)
                 throw new IllegalArgumentException("" + outputLineIncrement);
@@ -86,7 +88,7 @@ public class SmapStratum {
         }
 
         /**
-         * Retrieves the current LineInfo as a String, print all values
+         * @return Retrieves the current LineInfo as a String, print all values
          * only when appropriate (but LineInfoID if and only if it's been
          * specified, as its necessity is sensitive to context).
          */
@@ -170,13 +172,7 @@ public class SmapStratum {
      */
     public void optimizeLineSection() {
 
-/* Some debugging code
-        for (int i = 0; i < lineData.size(); i++) {
-            LineInfo li = (LineInfo)lineData.get(i);
-            System.out.print(li.toString());
-        }
-*/
-        //Incorporate each LineInfo into the previous LineInfo's 
+        //Incorporate each LineInfo into the previous LineInfo's
         //outputLineIncrement, if possible
         int i = 0;
         while (i < lineData.size() - 1) {
@@ -280,14 +276,14 @@ public class SmapStratum {
     // Methods to retrieve information
 
     /**
-     * Returns the name of the stratum.
+     * @return  the name of the stratum.
      */
     public String getStratumName() {
         return stratumName;
     }
 
     /**
-     * Returns the given stratum as a String:  a StratumSection,
+     * @return  the given stratum as a String:  a StratumSection,
      * followed by at least one FileSection and at least one LineSection.
      */
     public String getString() {

@@ -126,7 +126,7 @@ public class DefaultActionInvocation implements ActionInvocation {
      * the result params.
      *
      * @return a Result instance
-     * @throws Exception
+     * @throws Exception in case of any error
      */
     public Result getResult() throws Exception {
         Result returnResult = result;

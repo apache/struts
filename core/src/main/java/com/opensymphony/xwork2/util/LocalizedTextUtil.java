@@ -60,13 +60,13 @@ import java.util.concurrent.ConcurrentMap;
  *
  * <!-- START SNIPPET: packagenote -->
  * <p>To clarify #5, while traversing the package hierarchy, Struts 2 will look for a file package.properties:</p>
- * com/<br/>
- * &nbsp; acme/<br/>
- * &nbsp; &nbsp; package.properties<br/>
- * &nbsp; &nbsp; actions/<br/>
- * &nbsp; &nbsp; &nbsp; package.properties<br/>
- * &nbsp; &nbsp; &nbsp; FooAction.java<br/>
- * &nbsp; &nbsp; &nbsp; FooAction.properties<br/>
+ * com/<br>
+ * &nbsp; acme/<br>
+ * &nbsp; &nbsp; package.properties<br>
+ * &nbsp; &nbsp; actions/<br>
+ * &nbsp; &nbsp; &nbsp; package.properties<br>
+ * &nbsp; &nbsp; &nbsp; FooAction.java<br>
+ * &nbsp; &nbsp; &nbsp; FooAction.properties<br>
  * <p>
  * If FooAction.properties does not exist, com/acme/action/package.properties will be searched for, if
  * not found com/acme/package.properties, if not found com/package.properties, etc.
@@ -291,7 +291,7 @@ public class LocalizedTextUtil {
     }
 
     /**
-     * Sets a {@link ClassLoader} to look up the bundle from if none can be found on the current thread's classloader
+     * @param classLoader a {@link ClassLoader} to look up the bundle from if none can be found on the current thread's classloader
      */
     public static void setDelegatedClassLoader(final ClassLoader classLoader) {
         synchronized (bundlesMap) {
@@ -300,7 +300,7 @@ public class LocalizedTextUtil {
     }
 
     /**
-     * Removes the bundle from any cached "misses"
+     * @param bundleName Removes the bundle from any cached "misses"
      */
     public static void clearBundle(final String bundleName) {
         bundlesMap.remove(getCurrentThreadContextClassLoader().hashCode() + bundleName);
@@ -323,6 +323,11 @@ public class LocalizedTextUtil {
      * Calls {@link #findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args)}
      * with aTextName as the default message.
      *
+     * @param aClass class name
+     * @param aTextName  text name
+     * @param locale the locale
+     *
+     * @return the localized text, or null if none can be found and no defaultMessage is provided
      * @see #findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args)
      */
     public static String findText(Class aClass, String aTextName, Locale locale) {
@@ -610,6 +615,11 @@ public class LocalizedTextUtil {
      * will be treated as an OGNL expression and evaluated as such.
      * </p>
      *
+     * @param bundle a resource bundle name
+     * @param aTextName  text name
+     * @param locale the locale
+     *
+     * @return the localized text, or null if none can be found and no defaultMessage is provided
      * @see #findText(java.util.ResourceBundle, String, java.util.Locale, String, Object[])
      */
     public static String findText(ResourceBundle bundle, String aTextName, Locale locale) {
@@ -636,6 +646,7 @@ public class LocalizedTextUtil {
      * @param locale         the locale
      * @param defaultMessage the default message to use if no message was found in the bundle
      * @param args           arguments for the message formatter.
+     * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
     public static String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args) {
         ValueStack valueStack = ActionContext.getContext().getValueStack();
@@ -663,6 +674,7 @@ public class LocalizedTextUtil {
      * @param defaultMessage the default message to use if no message was found in the bundle
      * @param args           arguments for the message formatter.
      * @param valueStack     the OGNL value stack.
+     * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
     public static String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args,
                                   ValueStack valueStack) {
@@ -689,7 +701,7 @@ public class LocalizedTextUtil {
     }
 
     /**
-     * Gets the default message.
+     * @return the default message.
      */
     private static GetDefaultMessageReturnArg getDefaultMessage(String key, Locale locale, ValueStack valueStack, Object[] args,
                                                                 String defaultMessage) {
@@ -717,7 +729,7 @@ public class LocalizedTextUtil {
     }
 
     /**
-     * Gets the message from the named resource bundle.
+     * @return the message from the named resource bundle.
      */
     private static String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
         ResourceBundle bundle = findResourceBundle(bundleName, locale);
@@ -764,6 +776,8 @@ public class LocalizedTextUtil {
     /**
      * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
      * before going up hierarchy.
+     *
+     * @return the message
      */
     private static String findMessage(Class clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
                                       ValueStack valueStack) {

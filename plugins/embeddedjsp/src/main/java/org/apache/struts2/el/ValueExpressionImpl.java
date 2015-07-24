@@ -57,7 +57,7 @@ import org.apache.struts2.el.util.ReflectionUtil;
  * </p>
  * 
  * <p>
- * <code>The {@link ExpressionFactory#createValueExpression} method
+ * The {@link ExpressionFactory#createValueExpression} method
  * can be used to parse an expression string and return a concrete instance
  * of <code>ValueExpression</code> that encapsulates the parsed expression.
  * The {@link FunctionMapper} is used at parse time, not evaluation time, 
@@ -107,7 +107,11 @@ public final class ValueExpressionImpl extends ValueExpression implements
     }
 
     /**
-     * 
+     * @param expr expression
+     * @param node node
+     * @param fnMapper function mapper
+     * @param varMapper variable mapper
+     * @param expectedType expected type
      */
     public ValueExpressionImpl(String expr, Node node, FunctionMapper fnMapper,
             VariableMapper varMapper, Class expectedType) {

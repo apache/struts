@@ -29,60 +29,77 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <p>
  * AdapterFactory produces Node adapters for Java object types.
  * Adapter classes are generally instantiated dynamically via a no-args constructor
  * and populated with their context information via the AdapterNode interface.
+ * </p>
  *
+ * <p>
  * This factory supports proxying of generic DOM Node trees, allowing arbitrary
  * Node types to be mixed together.  You may simply return a Document or Node
  * type as an object property and it will appear as a sub-tree in the XML as
  * you'd expect. See #proxyNode().
+ * </p>
  *
+ * <p>
  * Customization of the result XML can be accomplished by providing
  * alternate adapters for Java types.  Adapters are associated with Java
  * types through the registerAdapterType() method.
+ * </p>
  *
+ * <p>
  * For example, since there is no default Date adapter, Date objects will be
  * rendered with the generic Bean introspecting adapter, producing output
  * like:
+ * </p>
+ *
  * <pre>
-     <date>
-        <date>19</date>
-        <day>1</day>
-        <hours>0</hours>
-        <minutes>7</minutes>
-        <month>8</month>
-        <seconds>4</seconds>
-        <time>1127106424531</time>
-        <timezoneOffset>300</timezoneOffset>
-        <year>105</year>
-    </date>
+ *     &lt;date&gt;
+ *      &lt;date&gt;19&lt;/date&gt;
+ *      &lt;day&gt;1&lt;/day&gt;
+ *      &lt;hours&gt;0&lt;/hours&gt;
+ *      &lt;minutes&gt;7&lt;/minutes&gt;
+ *      &lt;month&gt;8&lt;/month&gt;
+ *      &lt;seconds&gt;4&lt;/seconds&gt;
+ *      &lt;time&gt;1127106424531&lt;/time&gt;
+ *      &lt;timezoneOffset&gt;300&lt;/timezoneOffset&gt;
+ *      &lt;year&gt;105&lt;/year&gt;
+ *     &lt;/date&gt;
  * </pre>
  *
+ * <p>
  * By extending the StringAdapter and overriding its normal behavior we can
  * create a custom Date formatter:
+ * </p>
  *
  * <pre>
-      public static class CustomDateAdapter extends StringAdapter {
-        protected String getStringValue() {
-            Date date = (Date)getPropertyValue();
-            return DateFormat.getTimeInstance( DateFormat.FULL ).format( date );
-        }
-    }
+ *     public static class CustomDateAdapter extends StringAdapter {
+ *       protected String getStringValue() {
+ *           Date date = (Date)getPropertyValue();
+ *           return DateFormat.getTimeInstance( DateFormat.FULL ).format( date );
+ *       }
+ *   }
  * </pre>
  *
+ * <p>
  * Producing output like:
+ * </p>
  *
-<pre>
-     <date>12:02:54 AM CDT</date>
- </pre>
+ * <pre>
+ *    &lt;date&gt;12:02:54 AM CDT&lt;/date&gt;
+ * </pre>
  *
+ * <p>
  * The StringAdapter (which is normally invoked only to adapt String values)
  * is a useful base for these kinds of customizations and can produce
  * structured XML output as well as plain text by setting its parseStringAsXML()
  * property to true.
+ * </p>
  *
+ * <p>
  * See provided examples.
+ * </p>
  */
 public class AdapterFactory {
 
@@ -103,10 +120,13 @@ public class AdapterFactory {
      * The document will have a root element with the specified property name
      * and contain the specified Java object content.
      *
-     * @param propertyName The name of the root document element
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @param propertyName the name of the root document element
+     * @param propertyValue the property value
+     *
+     * @return the document object
+     *
+     * @throws IllegalAccessException in case of illegal access
+     * @throws InstantiationException in case of instantiation errors
      */
     public Document adaptDocument(String propertyName, Object propertyValue)
             throws IllegalAccessException, InstantiationException {
@@ -120,6 +140,12 @@ public class AdapterFactory {
      * the child node itself may be any type of Node.
      *
      * @see #adaptDocument( String, Object )
+     *
+     * @param parent the parent adapter node
+     * @param propertyName the name of th property
+     * @param value the value
+     *
+     * @return a node
      */
     public Node adaptNode(AdapterNode parent, String propertyName, Object value) {
         Class adapterClass = getAdapterForValue(value);
@@ -172,6 +198,11 @@ public class AdapterFactory {
      * <p>
      * This method is primarily for use by the adapter node classes.
      * </p>
+     *
+     * @param parent parent adapter node
+     * @param node node
+     *
+     * @return proxy node
      */
     public Node proxyNode(AdapterNode parent, Node node) {
         // If the property is a Document, "unwrap" it to the root element
@@ -202,6 +233,13 @@ public class AdapterFactory {
     /**
      * Create an instance of an adapter dynamically and set its context via
      * the AdapterNode interface.
+     *
+     * @param adapterClass  adapter class
+     * @param parent parent adapter node
+     * @param propertyName the property name
+     * @param propertyValue the property value
+     *
+     * @return the new node
      */
     private Node constructAdapterInstance(Class adapterClass, AdapterNode parent, String propertyName, Object propertyValue) {
         // Check to see if the class has a no-args constructor
@@ -228,8 +266,10 @@ public class AdapterFactory {
     /**
      * Create an appropriate adapter for a null value.
      *
-     * @param parent
-     * @param propertyName
+     * @param parent parent adapter node
+     * @param propertyName the property name
+     *
+     * @return the new node
      */
     public Node adaptNullValue(AdapterNode parent, String propertyName) {
         return new StringAdapter(this, parent, propertyName, "null");

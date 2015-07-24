@@ -27,7 +27,7 @@ import org.apache.struts2.el.lang.EvaluationContext;
  */
 public class BooleanNode extends SimpleNode {
     /**
-     * @param i
+     * @param i i
      */
     public BooleanNode(int i) {
         super(i);

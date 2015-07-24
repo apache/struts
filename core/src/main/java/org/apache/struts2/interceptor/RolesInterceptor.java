@@ -55,8 +55,8 @@ import java.util.List;
  * <p>
  * When both allowedRoles and disallowedRoles are configured, then disallowedRoles
  * takes precedence, applying the following logic: 
- *  (if ((inRole(role1) || inRole(role2) || ... inRole(roleN)) && 
- *       !inRole(roleA) && !inRole(roleB) && ... !inRole(roleZ))
+ *  (if ((inRole(role1) || inRole(role2) || ... inRole(roleN)) &amp;&amp;
+ *       !inRole(roleA) &amp;&amp; !inRole(roleB) &amp;&amp; ... !inRole(roleZ))
  *  { //permit ...
  * </p>
  * <!-- END SNIPPET: parameters -->
@@ -71,7 +71,7 @@ import java.util.List;
  *       the passed action execution with this request</li>
  *   <li>handleRejection(ActionInvocation) - handles an unauthorized
  *       request.</li>
- *   <li>areRolesValid(List<String> roles) - allows subclasses to lookup roles
+ *   <li>areRolesValid(List&lt;String&gt; roles) - allows subclasses to lookup roles
  *   to ensure they are valid.  If not valid, RolesInterceptor will log the error and 
  *   cease to function.  This helps prevent security misconfiguration flaws.
  *   
@@ -135,6 +135,8 @@ public class RolesInterceptor extends AbstractInterceptor {
 
     /**
      * Splits a string into a List
+     * @param val the string to split
+     * @return the string list
      */
     protected List<String> stringToList(String val) {
         if (val != null) {
@@ -179,8 +181,9 @@ public class RolesInterceptor extends AbstractInterceptor {
      * Handles a rejection by sending a 403 HTTP error
      *
      * @param invocation The invocation
+     * @param response the servlet response object
      * @return The result code
-     * @throws Exception
+     * @throws Exception in case of any error
      */
     protected String handleRejection(ActionInvocation invocation, HttpServletResponse response) throws Exception {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);

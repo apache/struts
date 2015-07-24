@@ -120,6 +120,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     /**
      * Returns an unmodifiable map of DTD mappings
+     *
+     * @return map of DTD mappings
      */
     public Map<String, String> getDtdMappings() {
         return dtdMappings;
@@ -484,6 +486,10 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     /**
      * Create a PackageConfig from an XML element representing it.
+     *
+     * @param packageElement the given XML element
+     * @return the package config
+     * @throws ConfigurationException in case of configuration errors
      */
     protected PackageConfig addPackage(Element packageElement) throws ConfigurationException {
         String packageName = packageElement.getAttribute("name");
@@ -602,9 +608,14 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
      * <p>
      * This method builds a package context by looking for the parents of this new package.
      * </p>
+     *
      * <p>
      * If no parents are found, it will return a root package.
      * </p>
+     *
+     * @param packageElement the package element
+     *
+     * @return the package config builder
      */
     protected PackageConfig.Builder buildPackageContext(Element packageElement) {
         String parent = packageElement.getAttribute("extends");
@@ -654,6 +665,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     /**
      * Build a map of ResultConfig objects from below a given XML element.
+     *
+     * @param element the given XML element
+     * @param packageContext the package context
+     *
+     * @return map of result config objects
      */
     protected Map<String, ResultConfig> buildResults(Element element, PackageConfig.Builder packageContext) {
         NodeList resultEls = element.getElementsByTagName("result");
@@ -769,7 +785,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
-     * Build a map of ResultConfig objects from below a given XML element.
+     * Build a list of exception mapping objects from below a given XML element.
+     *
+     * @param element the given XML element
+     * @param packageContext the package context
+     *
+     * @return list of exception mapping config objects
      */
     protected List<ExceptionMappingConfig> buildExceptionMappings(Element element, PackageConfig.Builder packageContext) {
         NodeList exceptionMappingEls = element.getElementsByTagName("exception-mapping");
@@ -842,6 +863,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     /**
      * Load all of the global results for this package from the XML element.
+     *
+     * @param packageContext the package context
+     * @param packageElement the given XML element
      */
     protected void loadGlobalResults(PackageConfig.Builder packageContext, Element packageElement) {
         NodeList globalResultList = packageElement.getElementsByTagName("global-results");
@@ -863,6 +887,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
     /**
      * Load all of the global results for this package from the XML element.
+     *
+     * @param packageContext the package context
+     * @param packageElement the given XML element
      */
     protected void loadGobalExceptionMappings(PackageConfig.Builder packageContext, Element packageElement) {
         NodeList globalExceptionMappingList = packageElement.getElementsByTagName("global-exception-mappings");
@@ -922,14 +949,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         loadInterceptorStacks(element, context);
     }
 
-    //    protected void loadPackages(Element rootElement) throws ConfigurationException {
-    //        NodeList packageList = rootElement.getElementsByTagName("package");
-    //
-    //        for (int i = 0; i < packageList.getLength(); i++) {
-    //            Element packageElement = (Element) packageList.item(i);
-    //            addPackage(packageElement);
-    //        }
-    //    }
     private List<Document> loadConfigurationFiles(String fileName, Element includeElement) {
         List<Document> docs = new ArrayList<>();
         List<Document> finalDocs = new ArrayList<>();
@@ -1049,9 +1068,10 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
      * Looks up the Interceptor Class from the interceptor-ref name and creates an instance, which is added to the
      * provided List, or, if this is a ref to a stack, it adds the Interceptor instances from the List to this stack.
      *
-     * @param interceptorRefElement Element to pull interceptor ref data from
      * @param context               The PackageConfig to lookup the interceptor from
+     * @param interceptorRefElement Element to pull interceptor ref data from
      * @return A list of Interceptor objects
+     * @throws ConfigurationException in case of configuration errors
      */
     private List<InterceptorMapping> lookupInterceptorReference(PackageConfig.Builder context, Element interceptorRefElement) throws ConfigurationException {
         String refName = interceptorRefElement.getAttribute("name");

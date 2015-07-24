@@ -71,9 +71,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     private Locale defaultLocale = Locale.ENGLISH;
 
     /**
-     * Injects the Struts multiple part maximum size.
-     *
-     * @param maxSize
+     * @param maxSize Injects the Struts multiple part maximum size.
      */
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
     public void setMaxSize(String maxSize) {
@@ -81,9 +79,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     }
 
     /**
-     * Sets the buffer size to be used.
-     *
-     * @param bufferSize
+     * @param bufferSize Sets the buffer size to be used.
      */
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, required = false)
     public void setBufferSize(String bufferSize) {
@@ -91,9 +87,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     }
 
     /**
-     * Injects the Struts locale provider.
-     *
-     * @param provider
+     * @param provider Injects the Struts locale provider.
      */
     @Inject
     public void setLocaleProvider(LocaleProvider provider) {
@@ -143,7 +137,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Allows interceptor to fetch non-critical messages that can be passed to the action.
      *
-     * @return
+     * @return list of string messages
      */
     public List<String> getMesssages() {
         return messages;
@@ -253,10 +247,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     }
 
     /**
-     * Inspect the servlet request and set the locale if one wasn't provided by
+      * @param request Inspect the servlet request and set the locale if one wasn't provided by
      * the Struts2 framework.
-     *
-     * @param request
      */
     protected void setLocale(HttpServletRequest request) {
         if (defaultLocale == null) {
@@ -267,8 +259,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Processes the upload.
      *
-     * @param request
-     * @param saveDir
+     * @param request the servlet request
+     * @param saveDir location of the save dir
      * @throws Exception
      */
     private void processUpload(HttpServletRequest request, String saveDir) throws Exception {
@@ -321,8 +313,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Defines whether the request allowed based on content length.
      *
-     * @param request
-     * @return
+     * @param request the servlet request
+     * @return true if request size is permitted
      */
     private boolean isRequestSizePermitted(HttpServletRequest request) {
         // if maxSize is specified as -1, there is no sanity check and it's
@@ -336,10 +328,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     }
 
     /**
-     * Get the request content length.
-     *
-     * @param request
-     * @return
+     * @param request the servlet request
+     * @return the request content length.
      */
     private long getRequestSize(HttpServletRequest request) {
         long requestSize = 0;
@@ -353,8 +343,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Add a file skipped message notification for action messages.
      *
-     * @param fileName
-     * @param request
+     * @param fileName file name
+     * @param request the servlet request
      */
     private void addFileSkippedError(String fileName, HttpServletRequest request) {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
@@ -368,7 +358,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Processes the FileItemStream as a Form Field.
      *
-     * @param itemStream
+     * @param itemStream file item stream
      */
     private void processFileItemStreamAsFormField(FileItemStream itemStream) {
         String fieldName = itemStream.getFieldName();
@@ -390,8 +380,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Processes the FileItemStream as a file field.
      *
-     * @param itemStream
-     * @param location
+     * @param itemStream file item stream
+     * @param location location
      */
     private void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
         File file = null;
@@ -416,10 +406,10 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Creates a temporary file based on the given filename and location.
      *
-     * @param fileName
-     * @param location
-     * @return
-     * @throws IOException
+     * @param fileName file name
+     * @param location location
+     * @return temporary file based on the given filename and location
+     * @throws IOException in case of IO errors
      */
     private File createTemporaryFile(String fileName, String location) throws IOException {
         String name = fileName
@@ -442,10 +432,10 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Streams the file upload stream to the specified file.
      *
-     * @param itemStream
-     * @param file
-     * @return
-     * @throws IOException
+     * @param itemStream file item stream
+     * @param file the file
+     * @return true if stream was successfully
+     * @throws IOException in case of IO errors
      */
     private boolean streamFileToDisk(FileItemStream itemStream, File file) throws IOException {
         boolean result = false;
@@ -466,8 +456,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      * to the <code>FileUploadInterceptor</code> during the interceptor stack
      * invocation process.
      *
-     * @param itemStream
-     * @param file
+     * @param itemStream file item stream
+     * @param file the file
      */
     private void createFileInfoFromItemStream(FileItemStream itemStream, File file) {
         // gather attributes from file upload stream.
@@ -486,10 +476,8 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     }
 
     /**
-     * Get the canonical name based on the supplied filename.
-     *
-     * @param fileName
-     * @return
+     * @param fileName file name
+     * @return the canonical name based on the supplied filename
      */
     private String getCanonicalName(String fileName) {
         int forwardSlash = fileName.lastIndexOf("/");
@@ -505,9 +493,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Build error message.
      *
-     * @param e
-     * @param args
-     * @return
+     * @param e the Throwable/Exception
+     * @param args arguments
+     * @return error message
      */
     private String buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.message.upload.error." + e.getClass().getSimpleName();
@@ -518,9 +506,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Build action message.
      *
-     * @param e
-     * @param args
-     * @return
+     * @param e the Throwable/Exception
+     * @param args arguments
+     * @return action message
      */
     private String buildMessage(Throwable e, Object[] args) {
         String messageKey = "struts.message.upload.message." + e.getClass().getSimpleName();
@@ -532,7 +520,6 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      * Internal data structure used to store a reference to information needed
      * to later pass post processing data to the <code>FileUploadInterceptor</code>.
      *
-     * @version $Revision$
      * @since 7.0.0
      */
     private static class FileInfo implements Serializable {
@@ -546,9 +533,9 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         /**
          * Default constructor.
          *
-         * @param file
-         * @param contentType
-         * @param originalName
+         * @param file the file
+         * @param contentType content type
+         * @param originalName original file name
          */
         public FileInfo(File file, String contentType, String originalName) {
             this.file = file;
@@ -557,21 +544,21 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         }
 
         /**
-         * @return
+         * @return the file
          */
         public File getFile() {
             return file;
         }
 
         /**
-         * @return
+         * @return content type
          */
         public String getContentType() {
             return contentType;
         }
 
         /**
-         * @return
+         * @return original file name
          */
         public String getOriginalName() {
             return originalName;

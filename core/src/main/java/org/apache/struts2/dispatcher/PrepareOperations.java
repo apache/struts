@@ -61,6 +61,11 @@ public class PrepareOperations {
 
     /**
      * Creates the action context and initializes the thread local
+     *
+     * @param request servlet request
+     * @param response servlet response
+     *
+     * @return the action context
      */
     public ActionContext createActionContext(HttpServletRequest request, HttpServletResponse response) {
         ActionContext ctx;
@@ -86,6 +91,8 @@ public class PrepareOperations {
 
     /**
      * Cleans up a request of thread locals
+     *
+     * @param request servlet request
      */
     public void cleanupRequest(HttpServletRequest request) {
         Integer counterVal = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
@@ -116,6 +123,9 @@ public class PrepareOperations {
 
     /**
      * Sets the request encoding and locale on the response
+     *
+     * @param request servlet request
+     * @param response servlet response
      */
     public void setEncodingAndLocale(HttpServletRequest request, HttpServletResponse response) {
         dispatcher.prepare(request, response);
@@ -123,8 +133,11 @@ public class PrepareOperations {
 
     /**
      * Wraps the request with the Struts wrapper that handles multipart requests better
+     *
+     * @param oldRequest servlet request
+     *
      * @return The new request, if there is one
-     * @throws ServletException
+     * @throws ServletException on any servlet related error
      */
     public HttpServletRequest wrapRequest(HttpServletRequest oldRequest) throws ServletException {
         HttpServletRequest request = oldRequest;
@@ -139,9 +152,14 @@ public class PrepareOperations {
     }
 
     /**
-     *   Finds and optionally creates an {@link ActionMapping}.  It first looks in the current request to see if one
+     * Finds and optionally creates an {@link ActionMapping}.  It first looks in the current request to see if one
      * has already been found, otherwise, it creates it and stores it in the request.  No mapping will be created in the
      * case of static resource requests or unidentifiable requests for other servlets, for example.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     *
+     * @return the action mapping
      */
     public ActionMapping findActionMapping(HttpServletRequest request, HttpServletResponse response) {
         return findActionMapping(request, response, false);
@@ -153,6 +171,11 @@ public class PrepareOperations {
      * case of static resource requests or unidentifiable requests for other servlets, for example.
      * @param forceLookup if true, the action mapping will be looked up from the ActionMapper instance, ignoring if there is one
      * in the request or not 
+     *
+     * @param request servlet request
+     * @param response servlet response
+     *
+     * @return the action mapping
      */
     public ActionMapping findActionMapping(HttpServletRequest request, HttpServletResponse response, boolean forceLookup) {
         ActionMapping mapping = (ActionMapping) request.getAttribute(STRUTS_ACTION_MAPPING_KEY);

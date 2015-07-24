@@ -24,14 +24,18 @@ import java.util.Iterator;
 
 
 /**
+ * <p>
  * Simplified implementation of a Node from a Document Object Model (DOM)
  * parse of an XML document.  This class is used to represent a DOM tree
  * so that the XML parser's implementation of <code>org.w3c.dom</code> need
  * not be visible to the remainder of Jasper.
+ * </p>
+ *
  * <p>
  * <strong>WARNING</strong> - Construction of a new tree, or modifications
  * to an existing one, are not thread-safe and such accesses must be
  * synchronized.
+ * </p>
  *
  * @author Craig R. McClanahan
  * @version $Revision: 467222 $ $Date: 2006-10-24 05:17:11 +0200 (Tue, 24 Oct 2006) $
@@ -140,7 +144,7 @@ public class TreeNode {
 
 
     /**
-     * Return the value of the specified node attribute if it exists, or
+     * @return  the value of the specified node attribute if it exists, or
      * <code>null</code> otherwise.
      *
      * @param name Name of the requested attribute
@@ -156,7 +160,7 @@ public class TreeNode {
 
 
     /**
-     * Return an Iterator of the attribute names of this node.  If there are
+     * @return an Iterator of the attribute names of this node.  If there are
      * no attributes, an empty Iterator is returned.
      */
     public Iterator findAttributes() {
@@ -170,7 +174,7 @@ public class TreeNode {
 
 
     /**
-     * Return the first child node of this node with the specified name,
+     * @return the first child node of this node with the specified name,
      * if there is one; otherwise, return <code>null</code>.
      *
      * @param name Name of the desired child element
@@ -191,7 +195,7 @@ public class TreeNode {
 
 
     /**
-     * Return an Iterator of all children of this node.  If there are no
+     * @return an Iterator of all children of this node.  If there are no
      * children, an empty Iterator is returned.
      */
     public Iterator findChildren() {
@@ -205,7 +209,7 @@ public class TreeNode {
 
 
     /**
-     * Return an Iterator over all children of this node that have the
+     * @return an Iterator over all children of this node that have the
      * specified name.  If there are no such children, an empty Iterator
      * is returned.
      *
@@ -229,7 +233,7 @@ public class TreeNode {
 
 
     /**
-     * Return the body text associated with this node (if any).
+     * @return the body text associated with this node (if any).
      */
     public String getBody() {
 
@@ -239,7 +243,7 @@ public class TreeNode {
 
 
     /**
-     * Return the name of this node.
+     * @return the name of this node.
      */
     public String getName() {
 
@@ -287,7 +291,7 @@ public class TreeNode {
 
 
     /**
-     * Return a String representation of this TreeNode.
+     * @return a String representation of this TreeNode.
      */
     public String toString() {
 

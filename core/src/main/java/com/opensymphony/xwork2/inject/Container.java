@@ -20,15 +20,18 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * <p>
  * Injects dependencies into constructors, methods and fields annotated with
  * {@link Inject}. Immutable.
+ * </p>
  *
  * <p>When injecting a method or constructor, you can additionally annotate
  * its parameters with {@link Inject} and specify a dependency name. When a
  * parameter has no annotation, the container uses the name from the method or
  * constructor's {@link Inject} annotation respectively.
+ * </p>
  *
- * <p>For example:
+ * <p>For example:</p>
  *
  * <pre>
  *  class Foo {
@@ -55,7 +58,7 @@ import java.util.Set;
  *  }
  * </pre>
  *
- * <p>To create and inject an instance of {@code Foo}:
+ * <p>To create and inject an instance of {@code Foo}:</p>
  *
  * <pre>
  *  Container c = ...;
@@ -74,23 +77,38 @@ public interface Container extends Serializable {
 
   /**
    * Injects dependencies into the fields and methods of an existing object.
+   *
+   * @param o object to inject
    */
   void inject(Object o);
 
   /**
    * Creates and injects a new instance of type {@code implementation}.
+   *
+   * @param <T> type
+   * @param implementation of dependency
+   * @return instance
    */
   <T> T inject(Class<T> implementation);
 
   /**
    * Gets an instance of the given dependency which was declared in
    * {@link com.opensymphony.xwork2.inject.ContainerBuilder}.
+   *
+   * @param <T> type
+   * @param type of dependency
+   * @param name of dependency
+   * @return instance
    */
   <T> T getInstance(Class<T> type, String name);
 
   /**
    * Convenience method.&nbsp;Equivalent to {@code getInstance(type,
    * DEFAULT_NAME)}.
+   *
+   * @param <T> type
+   * @param type of dependency
+   * @return instance
    */
   <T> T getInstance(Class<T> type);
   
@@ -103,6 +121,8 @@ public interface Container extends Serializable {
 
   /**
    * Sets the scope strategy for the current thread.
+   *
+   * @param scopeStrategy scope strategy
    */
   void setScopeStrategy(Scope.Strategy scopeStrategy);
 

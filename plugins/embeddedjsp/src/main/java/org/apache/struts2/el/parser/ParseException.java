@@ -23,7 +23,11 @@ public class ParseException extends Exception {
    * This constructor calls its super class with the empty string
    * to force the "toString" method of parent class "Throwable" to
    * print the error message in the form:
-   *     ParseException: <result of getMessage>
+   *     ParseException: &lt;result of getMessage&gt;
+   *
+   * @param currentTokenVal current token value
+   * @param expectedTokenSequencesVal  expected token sequence value
+   * @param tokenImageVal token image value
    */
   public ParseException(Token currentTokenVal,
                         int[][] expectedTokenSequencesVal,
@@ -52,7 +56,11 @@ public class ParseException extends Exception {
     specialConstructor = false;
   }
 
-  /** Constructor with message. */
+  /**
+   * Constructor with message.
+   *
+   * @param message exception message
+   */
   public ParseException(String message) {
     super(message);
     specialConstructor = false;
@@ -68,7 +76,7 @@ public class ParseException extends Exception {
   /**
    * This is the last token that has been consumed successfully.  If
    * this object has been created due to a parse error, the token
-   * followng this token will (therefore) be the first error token.
+   * following this token will (therefore) be the first error token.
    */
   public Token currentToken;
 
@@ -95,25 +103,27 @@ public class ParseException extends Exception {
    * from the parser), then this method is called during the printing
    * of the final stack trace, and hence the correct error message
    * gets displayed.
+   *
+   * @return the exception message
    */
   public String getMessage() {
     if (!specialConstructor) {
       return super.getMessage();
     }
-    StringBuffer expected = new StringBuffer();
+    StringBuilder expected = new StringBuilder();
     int maxSize = 0;
-    for (int i = 0; i < expectedTokenSequences.length; i++) {
-      if (maxSize < expectedTokenSequences[i].length) {
-        maxSize = expectedTokenSequences[i].length;
+      for (int[] expectedTokenSequence : expectedTokenSequences) {
+          if (maxSize < expectedTokenSequence.length) {
+              maxSize = expectedTokenSequence.length;
+          }
+          for (int anExpectedTokenSequence : expectedTokenSequence) {
+              expected.append(tokenImage[anExpectedTokenSequence]).append(' ');
+          }
+          if (expectedTokenSequence[expectedTokenSequence.length - 1] != 0) {
+              expected.append("...");
+          }
+          expected.append(eol).append("    ");
       }
-      for (int j = 0; j < expectedTokenSequences[i].length; j++) {
-        expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
-      }
-      if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
-        expected.append("...");
-      }
-      expected.append(eol).append("    ");
-    }
     String retval = "Encountered \"";
     Token tok = currentToken.next;
     for (int i = 0; i < maxSize; i++) {
@@ -148,9 +158,12 @@ public class ParseException extends Exception {
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII
    * string literal.
+   *
+   * @param str string to escape
+   * @return string with escapes
    */
   protected String add_escapes(String str) {
-      StringBuffer retval = new StringBuffer();
+      StringBuilder retval = new StringBuilder();
       char ch;
       for (int i = 0; i < str.length(); i++) {
         switch (str.charAt(i))
@@ -184,11 +197,10 @@ public class ParseException extends Exception {
            default:
               if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
                  String s = "0000" + Integer.toString(ch, 16);
-                 retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+                 retval.append("\\u").append(s.substring(s.length() - 4, s.length()));
               } else {
                  retval.append(ch);
               }
-              continue;
         }
       }
       return retval.toString();

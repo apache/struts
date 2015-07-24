@@ -238,8 +238,8 @@ public class Include extends Component {
      * @param encoding     the file encoding to use for including the resource; if <tt>null</tt>, it will default to the
      *                     platform encoding
      *
-     * @throws ServletException
-     * @throws IOException
+     * @throws ServletException in case of servlet processing errors
+     * @throws IOException in case of IO errors
      */
     public static void include( String relativePath, Writer writer, ServletRequest request,
                                 HttpServletResponse response, String encoding ) throws ServletException, IOException {

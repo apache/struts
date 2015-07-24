@@ -41,7 +41,6 @@ import java.util.Locale;
  * @author Rainer Hermanns
  * @author Revised by <a href="mailto:hu_pengfei@yahoo.com.cn">Henry Hu</a>
  * @author tmjee
- * @version $Date$ $Id$
  * @since 2005-8-6
  */
 public class DefaultActionProxy implements ActionProxy, Serializable {
@@ -74,6 +73,13 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
      * </p>
      *
      * (like a RMIActionProxy).
+     *
+     * @param inv the action invocation
+     * @param namespace the namespace
+     * @param actionName the action name
+     * @param methodName the method name
+     * @param executeResult execute result
+     * @param cleanupContext cleanup context
      */
     protected DefaultActionProxy(ActionInvocation inv, String namespace, String actionName, String methodName, boolean executeResult, boolean cleanupContext) {
 

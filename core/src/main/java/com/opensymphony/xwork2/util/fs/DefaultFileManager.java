@@ -102,8 +102,8 @@ public class DefaultFileManager implements FileManager {
     /**
      * Check if given URL is matching Jar pattern for different servers
      *
-     * @param fileUrl
-     * @return
+     * @param fileUrl jar file URL
+     * @return if given URL is matching Jar pattern for different servers
      */
     protected boolean isJarURL(URL fileUrl) {
         Matcher jarMatcher = JAR_PATTERN.matcher(fileUrl.getPath());

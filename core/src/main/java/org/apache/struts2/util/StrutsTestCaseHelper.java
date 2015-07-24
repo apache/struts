@@ -43,6 +43,8 @@ public class StrutsTestCaseHelper {
     /**
      * Sets up the configuration settings, XWork configuration, and
      * message resources
+     *
+     * @throws Exception in case of any error
      */
     public static void setUp() throws Exception {
         LocalizedTextUtil.clearDefaultResourceBundles();

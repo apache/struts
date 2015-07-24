@@ -39,10 +39,8 @@ import org.apache.struts2.jasper.Constants;
  */
 public class BodyContentImpl extends BodyContent {
     
-    private static final String LINE_SEPARATOR = 
-        System.getProperty("line.separator");
-    private static final boolean LIMIT_BUFFER = 
-        Boolean.valueOf(System.getProperty("org.apache.struts2.jasper.runtime.BodyContentImpl.LIMIT_BUFFER", "false")).booleanValue();
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final boolean LIMIT_BUFFER = Boolean.valueOf(System.getProperty("org.apache.struts2.jasper.runtime.BodyContentImpl.LIMIT_BUFFER", "false"));
     
     private char[] cb;
     private int nextChar;
@@ -53,6 +51,8 @@ public class BodyContentImpl extends BodyContent {
     
     /**
      * Constructor.
+     *
+     * @param enclosingWriter jsp writer
      */
     public BodyContentImpl(JspWriter enclosingWriter) {
         super(enclosingWriter);
@@ -87,10 +87,13 @@ public class BodyContentImpl extends BodyContent {
      * directly to the underlying stream.  Thus redundant
      * <code>DiscardableBufferedWriter</code>s will not copy data
      * unnecessarily.
+     * </p>
      *
      * @param cbuf A character array
      * @param off Offset from which to start reading characters
      * @param len Number of characters to write
+     *
+     * @throws IOException in case of IO errors
      */
     public void write(char[] cbuf, int off, int len) throws IOException {
         if (writer != null) {
@@ -116,6 +119,10 @@ public class BodyContentImpl extends BodyContent {
     /**
      * Write an array of characters.  This method cannot be inherited from the
      * Writer class because it must suppress I/O exceptions.
+     *
+     * @param buf array of characters
+     *
+     * @throws IOException in case of IO errors
      */
     public void write(char[] buf) throws IOException {
         if (writer != null) {
@@ -131,6 +138,8 @@ public class BodyContentImpl extends BodyContent {
      * @param s String to be written
      * @param off Offset from which to start reading characters
      * @param len Number of characters to be written
+     *
+     * @throws IOException in case of IO errors
      */
     public void write(String s, int off, int len) throws IOException {
         if (writer != null) {
@@ -148,6 +157,10 @@ public class BodyContentImpl extends BodyContent {
     /**
      * Write a string.  This method cannot be inherited from the Writer class
      * because it must suppress I/O exceptions.
+     *
+     * @param s string to write
+     *
+     * @throws IOException in case of IO errors
      */
     public void write(String s) throws IOException {
         if (writer != null) {
@@ -180,7 +193,7 @@ public class BodyContentImpl extends BodyContent {
      * #write(int)}</code> method.
      *
      * @param b The <code>boolean</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(boolean b) throws IOException {
         if (writer != null) {
@@ -197,7 +210,7 @@ public class BodyContentImpl extends BodyContent {
      * #write(int)}</code> method.
      *
      * @param c The <code>char</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(char c) throws IOException {
         if (writer != null) {
@@ -215,7 +228,7 @@ public class BodyContentImpl extends BodyContent {
      * method.
      *
      * @param i The <code>int</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(int i) throws IOException {
         if (writer != null) {
@@ -233,7 +246,7 @@ public class BodyContentImpl extends BodyContent {
      * <code>{@link #write(int)}</code> method.
      *
      * @param l The <code>long</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(long l) throws IOException {
         if (writer != null) {
@@ -251,7 +264,7 @@ public class BodyContentImpl extends BodyContent {
      * <code>{@link #write(int)}</code> method.
      *
      * @param f The <code>float</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(float f) throws IOException {
         if (writer != null) {
@@ -269,7 +282,7 @@ public class BodyContentImpl extends BodyContent {
      * #write(int)}</code> method.
      *
      * @param d The <code>double</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(double d) throws IOException {
         if (writer != null) {
@@ -288,7 +301,7 @@ public class BodyContentImpl extends BodyContent {
      * @param s The array of chars to be printed
      *
      * @throws NullPointerException If <code>s</code> is <code>null</code>
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(char[] s) throws IOException {
         if (writer != null) {
@@ -306,7 +319,7 @@ public class BodyContentImpl extends BodyContent {
      * <code>{@link #write(int)}</code> method.
      *
      * @param s The <code>String</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(String s) throws IOException {
         if (s == null) s = "null";
@@ -325,7 +338,7 @@ public class BodyContentImpl extends BodyContent {
      * <code>{@link #write(int)}</code> method.
      *
      * @param obj The <code>Object</code> to be printed
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void print(Object obj) throws IOException {
         if (writer != null) {
@@ -341,7 +354,7 @@ public class BodyContentImpl extends BodyContent {
      * <code>line.separator</code>, and is not necessarily a single newline
      * character (<code>'\n'</code>).
      *
-     * @throws IOException
+     * @throws IOException in case of IO errors
      */
     public void println() throws IOException {
         newLine();
@@ -352,7 +365,9 @@ public class BodyContentImpl extends BodyContent {
      * as though it invokes <code>{@link #print(boolean)}</code> and then
      * <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write boolean
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(boolean x) throws IOException {
         print(x);
@@ -364,7 +379,9 @@ public class BodyContentImpl extends BodyContent {
      * though it invokes <code>{@link #print(char)}</code> and then
      * <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write char
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(char x) throws IOException {
         print(x);
@@ -376,7 +393,9 @@ public class BodyContentImpl extends BodyContent {
      * though it invokes <code>{@link #print(int)}</code> and then
      * <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write int
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(int x) throws IOException {
         print(x);
@@ -388,7 +407,8 @@ public class BodyContentImpl extends BodyContent {
      * as though it invokes <code>{@link #print(long)}</code> and then
      * <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write long
+     * @throws IOException in case of IO errors
      */
     public void println(long x) throws IOException {
         print(x);
@@ -400,7 +420,9 @@ public class BodyContentImpl extends BodyContent {
      * behaves as though it invokes <code>{@link #print(float)}</code> and then
      * <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write float
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(float x) throws IOException {
         print(x);
@@ -412,7 +434,9 @@ public class BodyContentImpl extends BodyContent {
      * line.  This method behaves as though it invokes <code>{@link
      * #print(double)}</code> and then <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write double
+     *
+     * @throws IOException in case of IO errors
      */
     public void println(double x) throws IOException{
         print(x);
@@ -424,7 +448,8 @@ public class BodyContentImpl extends BodyContent {
      * behaves as though it invokes <code>{@link #print(char[])}</code> and
      * then <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write char array
+     * @throws IOException in case of IO errors
      */
     public void println(char x[]) throws IOException {
         print(x);
@@ -436,7 +461,8 @@ public class BodyContentImpl extends BodyContent {
      * though it invokes <code>{@link #print(String)}</code> and then
      * <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write string
+     * @throws IOException in case of IO errors
      */
     public void println(String x) throws IOException {
         print(x);
@@ -448,7 +474,8 @@ public class BodyContentImpl extends BodyContent {
      * though it invokes <code>{@link #print(Object)}</code> and then
      * <code>{@link #println()}</code>.
      *
-     * @throws IOException
+     * @param x write object
+     * @throws IOException in case of IO errors
      */
     public void println(Object x) throws IOException {
         print(x);
@@ -563,7 +590,7 @@ public class BodyContentImpl extends BodyContent {
     }
     
     /**
-     * Sets the writer to which all output is written.
+     * @param writer Sets the writer to which all output is written.
      */
     void setWriter(Writer writer) {
         this.writer = writer;
@@ -577,7 +604,7 @@ public class BodyContentImpl extends BodyContent {
         if (closed) throw new IOException("Stream closed");
     }
     
-    /**
+    /*
      * Reallocates buffer since the spec requires it to be unbounded.
      */
     private void reAllocBuff(int len) {

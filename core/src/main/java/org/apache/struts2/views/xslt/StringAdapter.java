@@ -32,17 +32,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>
  * StringAdapter adapts a Java String value to a DOM Element with the specified
  * property name containing the String's text.
- * e.g. a property <pre>String getFoo() { return "My Text!"; }</pre>
+ * e.g. a property <code>String getFoo() { return "My Text!"; }</code>
  * will appear in the result DOM as:
- * <foo>MyText!</foo>
+ * &lt;foo&gt;MyText!&lt;/foo&gt;
+ * </p>
  *
+ * <p>
  * Subclasses may override the getStringValue() method in order to use StringAdapter
  * as a simplified custom XML adapter for Java types.  A subclass can enable XML
  * parsing of the value string via the setParseStringAsXML() method and then
  * override getStringValue() to return a String containing the custom formatted XML.
- *
+ * </p>
  */
 public class StringAdapter extends AbstractAdapterElement {
 
@@ -68,6 +71,8 @@ public class StringAdapter extends AbstractAdapterElement {
      * setParseStringAsXML() method and then override getStringValue() to return a
      * String containing the custom formatted XML.
      * </p>
+     *
+     * @return the string value
      */
     protected String getStringValue() {
         return getPropertyValue().toString();
@@ -92,7 +97,7 @@ public class StringAdapter extends AbstractAdapterElement {
     }
 
     /**
-     * Is this StringAdapter to interpret its string values as containing
+     * @return is this StringAdapter to interpret its string values as containing
      * XML Text?
      *
      * @see #setParseStringAsXML(boolean)
@@ -107,7 +112,7 @@ public class StringAdapter extends AbstractAdapterElement {
      * Element will be a child of this String element. (i.e. wrapped in an
      * element of the property name specified for this StringAdapter).
      *
-     * @param parseStringAsXML
+     * @param parseStringAsXML when set to true the StringAdapter will interpret its String value as containing XML text
      * @see #getParseStringAsXML()
      */
     public void setParseStringAsXML(boolean parseStringAsXML) {

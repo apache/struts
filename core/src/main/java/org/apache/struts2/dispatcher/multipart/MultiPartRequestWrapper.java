@@ -70,7 +70,8 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param multiPartRequest Our MultiPartRequest object
      * @param request Our HttpServletRequest object
      * @param saveDir Target directory for any files that we save
-     * @param provider
+     * @param provider locale provider
+     * @param disableRequestAttributeValueStackLookup disable the request attribute value stack lookup
      */
     public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request,
                                    String saveDir, LocaleProvider provider,

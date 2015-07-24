@@ -25,6 +25,8 @@ public interface PortletResultHelper {
      *
      * @param response    The response to set the portlet mode on.
      * @param portletMode The portlet mode to set.
+     *
+     * @throws PortletModeException in case of errors during setting of portlet mode
      */
     void setPortletMode( PortletResponse response, PortletMode portletMode ) throws PortletModeException;
 
@@ -35,6 +37,9 @@ public interface PortletResultHelper {
      * @param contentType The content type to set for the response.
      * @param request     The request to use for including
      * @param response    The response to use for including
+     *
+     * @throws IOException in case of any I/O errors
+     * @throws PortletException in case of any portlet errors
      */
     void include( PortletRequestDispatcher dispatcher, String contentType, PortletRequest request,
                   PortletResponse response ) throws IOException, PortletException;

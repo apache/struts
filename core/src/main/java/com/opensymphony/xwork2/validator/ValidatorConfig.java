@@ -41,7 +41,7 @@ public class ValidatorConfig extends Located {
     private String[] messageParams;
     
     /**
-     * @param validatorType
+     * @param validatorType validator type
      */
     protected ValidatorConfig(String validatorType) {
         this.type = validatorType;

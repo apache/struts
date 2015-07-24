@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.XWorkException;
 public class TypeConversionException extends XWorkException {
 
     /**
-     * Constructs a <code>XWorkException</code> with no detail  message.
+     * Constructs a <code>XWorkException</code> with no detail message.
      */
     public TypeConversionException() {
     }
@@ -44,6 +44,7 @@ public class TypeConversionException extends XWorkException {
 
     /**
      * Constructs a <code>XWorkException</code> with no detail  message.
+     * @param cause the cause
      */
     public TypeConversionException(Throwable cause) {
         super(cause);
@@ -54,6 +55,7 @@ public class TypeConversionException extends XWorkException {
      * detail message.
      *
      * @param s the detail message.
+     * @param cause the cause
      */
     public TypeConversionException(String s, Throwable cause) {
         super(s, cause);

@@ -50,7 +50,8 @@ public abstract class AbstractDirective extends Directive {
     public abstract String getBeanName();
 
     /**
-     * All components, unless otherwise stated, are LINE-level directives.
+     * @return All components, unless otherwise stated, are LINE-level directives.
+     *
      */
     public int getType() {
         return LINE;
@@ -82,12 +83,18 @@ public abstract class AbstractDirective extends Directive {
     }
 
     /**
-     * create a Map of properties that the user has passed in.  for example,
+     * <p>
+     * Create a Map of properties that the user has passed in. For example:
+     * </p>
+     *
      * <pre>
      * #xxx("name=hello" "value=world" "template=foo")
      * </pre>
-     * would yield a params that contains {["name", "hello"], ["value", "world"], ["template", "foo"]}
      *
+     * <p>
+     * would yield a params that contains {["name", "hello"], ["value", "world"], ["template", "foo"]}
+     * </p>
+     * @param contextAdapter the context adapter
      * @param node the Node passed in to the render method
      * @return a Map of the user specified properties
      * @throws org.apache.velocity.exception.ParseErrorException
@@ -132,7 +139,11 @@ public abstract class AbstractDirective extends Directive {
      * then the key, rows, would be added to the propertyMap with the String value, 20.
      *
      * @param propertyMap a params containing all the properties that we wish to set
+     * @param contextAdapter the context adapter
      * @param node        the parameter to set expressed in "name=value" format
+     *
+     * @throws ParseErrorException in case of parsing errors
+     * @throws MethodInvocationException in case of method invocation errors
      */
     protected void putProperty(Map propertyMap, InternalContextAdapter contextAdapter, Node node) throws ParseErrorException, MethodInvocationException {
         // node.value uses the StrutsValueStack to evaluate the directive's value parameter

@@ -103,7 +103,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Freemarker
  * </p>
  * <pre>
- *    &lt;@s..component template="/my/custom/component.ftl" />
+ *    &lt;@s..component template="/my/custom/component.ftl" /&gt;
  *
  *      or
  *
@@ -111,7 +111,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *       &lt;@s..param name="key1" value="%{'value1'}" /&gt;
  *       &lt;@s..param name="key2" value="%{'value2'}" /&gt;
  *    &lt;/@s..component&gt;
- *
+ * </pre>
  * <!-- END SNIPPET: example -->
  *
  * <p>

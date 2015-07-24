@@ -319,6 +319,7 @@ public class DefaultActionMapper implements ActionMapper {
      *
      * @param uri     The uri
      * @param mapping The action mapping to populate
+     * @param configManager configuration manager
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
         String namespace, name;
@@ -428,7 +429,7 @@ public class DefaultActionMapper implements ActionMapper {
     }
 
     /**
-     * Returns null if no extension is specified.
+     * @return  null if no extension is specified.
      */
     protected String getDefaultExtension() {
         if (extensions == null) {

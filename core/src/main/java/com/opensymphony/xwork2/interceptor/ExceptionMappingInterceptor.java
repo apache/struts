@@ -102,7 +102,7 @@ import java.util.Map;
  * 
  * <p>
  * This second example will also log the exceptions using our own category
- * <code>com.mycompany.app.unhandled<code> at WARN level. 
+ * <code>com.mycompany.app.unhandled</code> at WARN level.
  * </p>
  *
  * <pre>
@@ -214,7 +214,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     /**
      * Handles the logging of the exception.
      * 
-     * @param e  the exception to log.
+     * @param e the exception to log.
      */
     protected void handleLogging(Exception e) {
     	if (logCategory != null) {

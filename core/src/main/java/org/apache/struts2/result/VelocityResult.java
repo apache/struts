@@ -176,6 +176,7 @@ public class VelocityResult extends StrutsResultSupport {
      * People can override this method if they want to provide specific content types for specific templates (eg text/xml).
      * </p>
      *
+     * @param templateLocation location of template
      * @return The content type associated with this template (default "text/html")
      */
     protected String getContentType(String templateLocation) {
@@ -188,6 +189,7 @@ public class VelocityResult extends StrutsResultSupport {
      * People can override this method if they want to provide specific encodings for specific templates.
      * </p>
      *
+     * @param templateLocation location of template
      * @return The encoding associated with this template (defaults to the value of 'struts.i18n.encoding' property)
      */
     protected String getEncoding(String templateLocation) {
@@ -228,6 +230,8 @@ public class VelocityResult extends StrutsResultSupport {
      *
      * @param velocityManager a reference to the velocityManager to use
      * @param stack           the value stack to resolve the location against (when parse equals true)
+     * @param request         the servlet request
+     * @param response        the servlet response
      * @param location        the name of the template that is being used
      * @return the a minted Velocity context.
      */

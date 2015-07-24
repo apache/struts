@@ -58,9 +58,6 @@ public final class ExpressionBuilder implements NodeVisitor {
 
     private String expression;
 
-    /**
-     *
-     */
     public ExpressionBuilder(String expression, ELContext ctx)
             throws ELException {
         this.expression = expression;

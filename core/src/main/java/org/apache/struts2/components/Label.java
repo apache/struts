@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Renders an HTML LABEL that will allow you to output label:name combination that has the same format treatment as
+ * <p>Renders an HTML LABEL that will allow you to output label:name combination that has the same format treatment as
  * the rest of your UI controls.</p>
  * <!-- END SNIPPET: javadoc -->
  *

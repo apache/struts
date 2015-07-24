@@ -115,7 +115,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     /*
      * Struts results are constructed for each result execution
      *
-     * the current context is availible to subclasses via these protected fields
+     * the current context is available to subclasses via these protected fields
      */
     protected String location;
     private String pContentType = "text/html";
@@ -141,6 +141,8 @@ public class FreemarkerResult extends StrutsResultSupport {
     /**
      * allow parameterization of the contentType
      * the default being text/html
+     *
+     * @return the content type
      */
     public String getContentType() {
         return pContentType;
@@ -156,6 +158,12 @@ public class FreemarkerResult extends StrutsResultSupport {
      * It them implements the template processing workflow by calling the hooks for
      * preTemplateProcess and postTemplateProcess
      * </p>
+     *
+     * @param locationArg location argument
+     * @param invocation the action invocation
+     *
+     * @throws IOException in case of IO errors
+     * @throws TemplateException in case of freemarker template errors
      */
     public void doExecute(String locationArg, ActionInvocation invocation) throws IOException, TemplateException {
         this.location = locationArg;
@@ -244,6 +252,9 @@ public class FreemarkerResult extends StrutsResultSupport {
      * The default implementation obtains the configuration from the ConfigurationManager instance.
      * </b>
      * </p>
+     *
+     * @return the freemarker configuration object
+     * @throws TemplateException in case of freemarker configuration errors
      */
     protected Configuration getConfiguration() throws TemplateException {
         return freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
@@ -261,6 +272,8 @@ public class FreemarkerResult extends StrutsResultSupport {
      * The default implementation returns {@link Configuration#getObjectWrapper()}
      * </b>
      * </p>
+     *
+     * @return the object wrapper from configuration
      */
     protected ObjectWrapper getObjectWrapper() {
         return configuration.getObjectWrapper();
@@ -273,6 +286,9 @@ public class FreemarkerResult extends StrutsResultSupport {
 
     /**
      * The default writer writes directly to the response writer.
+     *
+     * @return Writer the response writer
+     * @throws IOException in case of IO errors
      */
     protected Writer getWriter() throws IOException {
         if(writer != null) {
@@ -300,6 +316,9 @@ public class FreemarkerResult extends StrutsResultSupport {
      * <li>exception - optional : the JSP or Servlet exception as per the servlet spec (for JSP Exception pages)
      * <li>struts - instance of the StrutsUtil class
      * </ul>
+     *
+     * @return TemplateModel returns the created template model
+     * @throws TemplateModelException in case of errors during creating the model
      */
     protected TemplateModel createModel() throws TemplateModelException {
         ServletContext servletContext = ServletActionContext.getServletContext();
@@ -316,6 +335,8 @@ public class FreemarkerResult extends StrutsResultSupport {
      * Returns the locale used for the {@link Configuration#getTemplate(String, Locale)} call. The base implementation
      * simply returns the locale setting of the action (assuming the action implements {@link LocaleProvider}) or, if
      * the action does not the configuration's locale is returned. Override this method to provide different behaviour,
+     *
+     * @return the locale from action if action implements the {@link LocaleProvider}) or local from configuration
      */
     protected Locale deduceLocale() {
         if (invocation.getAction() instanceof LocaleProvider) {
@@ -327,8 +348,13 @@ public class FreemarkerResult extends StrutsResultSupport {
 
     /**
      * the default implementation of postTemplateProcess applies the contentType parameter
+     *
+     * @param template the freemarker template
+     * @param model the template model
+     *
+     * @throws IOException in case of IO errors
      */
-    protected void postTemplateProcess(Template template, TemplateModel data) throws IOException {
+    protected void postTemplateProcess(Template template, TemplateModel model) throws IOException {
     }
 
     /**
@@ -338,7 +364,10 @@ public class FreemarkerResult extends StrutsResultSupport {
      * A typical action to perform here is to inject application-specific
      * objects into the model root
      *
+     * @param template the freemarker template
+     * @param model the template model
      * @return true to process the template, false to suppress template processing.
+     * @throws IOException in case of IO errors
      */
     protected boolean preTemplateProcess(Template template, TemplateModel model) throws IOException {
         Object attrContentType = template.getCustomAttribute("content_type");
@@ -383,7 +412,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     }
 
     /**
-     * Writes to the stream only when template processing completed successfully
+     * @param writeIfCompleted Writes to the stream only when template processing completed successfully
      */
     public void setWriteIfCompleted(boolean writeIfCompleted) {
         this.writeIfCompleted = writeIfCompleted;

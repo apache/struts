@@ -40,11 +40,16 @@ import java.util.regex.Pattern;
  *    <li>caseSensitiveExpression - String (Optional). Defines caseSensitive param as an OGNL expression - will be evaluated to Boolean.</li>
  *    <li>trimExpression - String (Optional). Defines trim param as an OGNL expression - will be evaluated to Boolean</li>
  * </ul>
+ *
+ * <p>
  * You can mix normal params with expression aware params but thus was not tested
+ * </p>
  * <!-- END SNIPPET: parameters -->
  *
  * <!-- START SNIPPET: parameters-warning -->
+ * <p>
  * Do not use ${regexExpression}, ${caseSensitiveExpression} and ${trimExpression} as an expression as this will turn into infinitive loop!
+ * </p>
  * <!-- END SNIPPET: parameters-warning -->
  *
  * <pre>
@@ -76,7 +81,6 @@ import java.util.regex.Pattern;
  * </pre>
  *
  * @author Quake Wang
- * @version $Date$ $Revision$
  */
 public class RegexFieldValidator extends FieldValidatorSupport {
 
@@ -145,14 +149,14 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     }
 
     /**
-     * Sets the regular expression to be matched
+     * @param regex the regular expression to be matched
      */
     public void setRegex(String regex) {
         this.regex = regex;
     }
 
     /**
-     * Sets the regular expression as an OGNL expression to be matched
+     * @param regexExpression the regular expression as an OGNL expression to be matched
      */
     public void setRegexExpression(String regexExpression) {
         this.regexExpression = regexExpression;
@@ -170,7 +174,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     }
 
     /**
-     * Sets whether the expression should be matched against in
+     * @param caseSensitive whether the expression should be matched against in
      * a case-sensitive way.  Default is <code>true</code>.
      */
     public void setCaseSensitive(Boolean caseSensitive) {
@@ -178,7 +182,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     }
 
     /**
-     * Allows specify caseSensitive param as an OGNL expression
+     * @param caseSensitiveExpression  Allows specify caseSensitive param as an OGNL expression
      */
     public void setCaseSensitiveExpression(String caseSensitiveExpression) {
         this.caseSensitiveExpression = caseSensitiveExpression;
@@ -196,7 +200,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     }
 
     /**
-     * Sets whether the expression should be trimed before matching.
+     * @param trim whether the expression should be trimed before matching.
      * Default is <code>true</code>.
      */
     public void setTrim(Boolean trim) {
@@ -205,6 +209,8 @@ public class RegexFieldValidator extends FieldValidatorSupport {
 
     /**
      * Allows specify trim param as an OGNL expression
+     *
+     * @param trimExpression trim param as an OGNL expression
      */
     public void setTrimExpression(String trimExpression) {
         this.trimExpression = trimExpression;

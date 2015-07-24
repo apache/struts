@@ -36,6 +36,7 @@ import java.util.Map;
  * Simple implementation of the ObjectFactory that makes use of Spring's application context if one has been configured,
  * before falling back on the default mechanism of instantiating a new class using the class name.
  * </p>
+ *
  * <p>
  * In order to use this class in your application, you will need to instantiate a copy of this class and set it as XWork's ObjectFactory
  * before the xwork.xml file is parsed. In a servlet environment, this could be done using a ServletContextListener.
@@ -83,7 +84,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     /**
      * Sets the autowiring strategy
      *
-     * @param autowireStrategy
+     * @param autowireStrategy the autowire strategy
      */
     public void setAutowireStrategy(int autowireStrategy) {
         switch (autowireStrategy) {
@@ -121,7 +122,9 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
      * If the given context is assignable to AutowireCapbleBeanFactory or contains a parent or a factory that is, then
      * set the autoWiringFactory appropriately.
      *
-     * @param context
+     * @param context the application context
+     *
+     * @return the bean factory
      */
     protected AutowireCapableBeanFactory findAutoWiringBeanFactory(ApplicationContext context) {
         if (context instanceof AutowireCapableBeanFactory) {
@@ -142,10 +145,10 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
      * ObjectFactory}.
      *
      * @param beanName     The name of the bean to look up in the application context
-     * @param extraContext
+     * @param extraContext additional context parameters
      * @return A bean from Spring or the result of calling the overridden
      *         method.
-     * @throws Exception
+     * @throws Exception in case of any errors
      */
     @Override
     public Object buildBean(String beanName, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
@@ -164,9 +167,10 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     }
 
     /**
-     * @param clazz
-     * @param extraContext
-     * @throws Exception
+     * @param clazz class of bean
+     * @param extraContext additional context parameters
+     * @return bean
+     * @throws Exception in case of any errors
      */
     @Override
     public Object buildBean(Class clazz, Map<String, Object> extraContext) throws Exception {
@@ -203,8 +207,10 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     }
 
     /**
-     * @param bean
-     * @param autoWiringFactory
+     * @param bean the bean to be autowired
+     * @param autoWiringFactory the autowiring factory
+     *
+     * @return bean
      */
     public Object autoWireBean(Object bean, AutowireCapableBeanFactory autoWiringFactory) {
         if (autoWiringFactory != null) {
@@ -264,7 +270,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     /**
      *  Enable / disable caching of classes loaded by Spring.
      *
-     * @param useClassCache
+     * @param useClassCache enable / disable class cache
      */
     public void setUseClassCache(boolean useClassCache) {
         this.useClassCache = useClassCache;

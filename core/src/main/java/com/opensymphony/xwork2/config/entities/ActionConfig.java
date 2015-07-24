@@ -30,8 +30,8 @@ import java.util.*;
  * Interface and the execute() method called</li>
  * <li>clazz - the class name for the action</li>
  * <li>params - the params to be set for this action just before execution</li>
- * <li>results - the result map {String -> View class}</li>
- * <li>resultParameters - params for results {String -> Map}</li>
+ * <li>results - the result map {String -&gt; View class}</li>
+ * <li>resultParameters - params for results {String -&gt; Map}</li>
  * <li>typeConverter - the Ognl TypeConverter to use when getting/setting properties</li>
  * </ul>
  *
@@ -68,7 +68,7 @@ public class ActionConfig extends Located implements Serializable {
     /**
      * Clones an ActionConfig, copying data into new maps and lists
      * @param orig The ActionConfig to clone
-     * @Since 2.1
+     * @since 2.1
      */
     protected ActionConfig(ActionConfig orig) {
         this.name = orig.name;

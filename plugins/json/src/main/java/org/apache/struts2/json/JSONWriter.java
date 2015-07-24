@@ -79,16 +79,23 @@ public class JSONWriter {
     /**
      * @param object Object to be serialized into JSON
      * @return JSON string for object
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public String write(Object object) throws JSONException {
         return this.write(object, null, null, false);
     }
 
     /**
-     * @param object Object to be serialized into JSON
+     * @param object
+     *            Object to be serialized into JSON
+     * @param excludeProperties
+     *            Patterns matching properties to ignore
+     * @param includeProperties
+     *            Patterns matching properties to include
+     * @param excludeNullProperties
+     *            enable/disable excluding of null properties
      * @return JSON string for object
-     * @throws JSONException
+     * @throws JSONException in case of error during serialize
      */
     public String write(Object object, Collection<Pattern> excludeProperties,
                         Collection<Pattern> includeProperties, boolean excludeNullProperties) throws JSONException {
@@ -107,6 +114,11 @@ public class JSONWriter {
 
     /**
      * Detect cyclic references
+     *
+     * @param object Object to be serialized into JSON
+     * @param method method
+     *
+     * @throws JSONException in case of error during serialize
      */
     protected void value(Object object, Method method) throws JSONException {
         if (object == null) {
@@ -133,6 +145,11 @@ public class JSONWriter {
 
     /**
      * Serialize object into json
+     *
+     * @param object Object to be serialized into JSON
+     * @param method method
+     *
+     * @throws JSONException  in case of error during serialize
      */
     protected void process(Object object, Method method) throws JSONException {
         this.stack.push(object);
@@ -170,6 +187,11 @@ public class JSONWriter {
 
     /**
      * Serialize custom object into json
+     *
+     * @param object object
+     * @param method method
+     *
+     * @throws JSONException  in case of error during serialize
      */
     protected void processCustom(Object object, Method method) throws JSONException {
         this.bean(object);
@@ -177,6 +199,10 @@ public class JSONWriter {
 
     /**
      * Instrospect bean and serialize its properties
+     *
+     * @param object object
+     *
+     * @throws JSONException  in case of error during serialize
      */
     protected void bean(Object object) throws JSONException {
         this.add("{");
@@ -322,6 +348,10 @@ public class JSONWriter {
     /**
      * Instrospect an Enum and serialize it as a name/value pair or as a bean
      * including all its own properties
+     *
+     * @param enumeration the enum
+     *
+     * @throws JSONException  in case of error during serialize
      */
     protected void enumeration(Enum enumeration) throws JSONException {
         if (enumAsBean) {
@@ -382,7 +412,7 @@ public class JSONWriter {
         return false;
     }
 
-    /**
+    /*
      * Add name/value pair to buffer
      */
     protected boolean add(String name, Object value, Method method, boolean hasData) throws JSONException {
@@ -399,7 +429,7 @@ public class JSONWriter {
         return true;
     }
 
-    /**
+    /*
      * Add map to buffer
      */
     protected void map(Map map, Method method) throws JSONException {
@@ -450,7 +480,7 @@ public class JSONWriter {
         this.add("}");
     }
 
-    /**
+    /*
      * Add date to buffer
      */
     protected void date(Date date, Method method) {
@@ -465,7 +495,7 @@ public class JSONWriter {
         this.string(formatter.format(date));
     }
 
-    /**
+    /*
      * Add array to buffer
      */
     protected void array(Iterator it, Method method) throws JSONException {
@@ -495,7 +525,7 @@ public class JSONWriter {
         this.add("]");
     }
 
-    /**
+    /*
      * Add array to buffer
      */
     protected void array(Object object, Method method) throws JSONException {
@@ -526,7 +556,7 @@ public class JSONWriter {
         this.add("]");
     }
 
-    /**
+    /*
      * Add boolean to buffer
      */
     protected void bool(boolean b) {
@@ -535,6 +565,8 @@ public class JSONWriter {
 
     /**
      * escape characters
+     *
+     * @param obj the object to escape
      */
     protected void string(Object obj) {
         this.add('"');
@@ -568,14 +600,14 @@ public class JSONWriter {
         this.add('"');
     }
 
-    /**
+    /*
      * Add object to buffer
      */
     protected void add(Object obj) {
         this.buf.append(obj);
     }
 
-    /**
+    /*
      * Add char to buffer
      */
     protected void add(char c) {
@@ -606,7 +638,7 @@ public class JSONWriter {
 
     /**
      * If true, an Enum is serialized as a bean with a special property
-     * _name=name() as all as all other properties defined within the enum.<br/>
+     * _name=name() as all as all other properties defined within the enum.<br>
      * If false, an Enum is serialized as a name=value pair (name=name())
      *
      * @param enumAsBean true to serialize an enum as a bean instead of as a name=value

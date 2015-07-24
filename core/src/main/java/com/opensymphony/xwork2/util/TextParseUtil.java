@@ -28,8 +28,6 @@ import java.util.*;
  * @author Jason Carreira
  * @author Rainer Hermanns
  * @author tm_jee
- *
- * @version $Date$ $Id$
  */
 public class TextParseUtil {
 
@@ -42,6 +40,7 @@ public class TextParseUtil {
      * displayed, just as if the item was on the stack but returned an empty string.
      *
      * @param expression an expression that hasn't yet been translated
+     * @param stack value stack
      * @return the parsed expression
      */
     public static String translateVariables(String expression, ValueStack stack) {
@@ -61,8 +60,8 @@ public class TextParseUtil {
      * A typical use-case would be when we need to URL Encode the parsed value. To do so
      * we could just supply a URLEncodingEvaluator for example.
      *
-     * @param expression
-     * @param stack
+     * @param expression expression string
+     * @param stack value stack
      * @param evaluator The parsed Value evaluator (could be null).
      * @return the parsed (and possibly evaluated) variable String.
      */
@@ -76,9 +75,9 @@ public class TextParseUtil {
      * be found on the stack (null is returned), then the entire variable ${...} is not
      * displayed, just as if the item was on the stack but returned an empty string.
      *
-     * @param open
-     * @param expression
-     * @param stack
+     * @param open open character
+     * @param expression expression string
+     * @param stack value stack
      * @return Translated variable String
      */
     public static String translateVariables(char open, String expression, ValueStack stack) {
@@ -88,10 +87,10 @@ public class TextParseUtil {
     /**
      * Converted object from variable translation.
      *
-     * @param open
-     * @param expression
-     * @param stack
-     * @param asType
+     * @param open open character
+     * @param expression expression string
+     * @param stack value stack
+     * @param asType as class type
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char open, String expression, ValueStack stack, Class asType) {
@@ -101,11 +100,11 @@ public class TextParseUtil {
     /**
      * Converted object from variable translation.
      *
-     * @param open
-     * @param expression
-     * @param stack
-     * @param asType
-     * @param evaluator
+     * @param open open character
+     * @param expression expression string
+     * @param stack value stack
+     * @param asType as class type
+     * @param evaluator value evaluator
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char open, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator) {
@@ -115,11 +114,11 @@ public class TextParseUtil {
     /**
      * Converted object from variable translation.
      *
-     * @param openChars
-     * @param expression
-     * @param stack
-     * @param asType
-     * @param evaluator
+     * @param openChars open character array
+     * @param expression expression string
+     * @param stack value stack
+     * @param asType as class type
+     * @param evaluator value evaluator
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char[] openChars, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator) {
@@ -129,11 +128,12 @@ public class TextParseUtil {
     /**
      * Converted object from variable translation.
      *
-     * @param open
-     * @param expression
-     * @param stack
-     * @param asType
-     * @param evaluator
+     * @param open open character
+     * @param expression expression string
+     * @param stack value stack
+     * @param asType as class type
+     * @param evaluator value evaluator
+     * @param maxLoopCount max loop count
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char open, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator, int maxLoopCount) {
@@ -143,11 +143,12 @@ public class TextParseUtil {
     /**
      * Converted object from variable translation.
      *
-     * @param openChars
-     * @param expression
-     * @param stack
-     * @param asType
-     * @param evaluator
+     * @param openChars open character array
+     * @param expression expression string
+     * @param stack value stack
+     * @param asType as class type
+     * @param evaluator value evaluator
+     * @param maxLoopCount max loop count
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char[] openChars, String expression, final ValueStack stack, final Class asType, final ParsedValueEvaluator evaluator, int maxLoopCount) {
@@ -170,11 +171,11 @@ public class TextParseUtil {
     /**
      * @see #translateVariablesCollection(char[], String, ValueStack, boolean, ParsedValueEvaluator, int)
      *
-     * @param expression
-     * @param stack
-     * @param excludeEmptyElements
-     * @param evaluator
-     * @return
+     * @param expression expression string
+     * @param stack value stack
+     * @param excludeEmptyElements Whether empty elements shall be excluded.
+     * @param evaluator value evaluator
+     * @return converted objects
      */
     public static Collection<String>  translateVariablesCollection(String expression, ValueStack stack, boolean excludeEmptyElements, ParsedValueEvaluator evaluator) {
         return translateVariablesCollection(new char[]{'$', '%'}, expression, stack, excludeEmptyElements, evaluator, MAX_RECURSION);
@@ -184,14 +185,14 @@ public class TextParseUtil {
      * Resolves given expression on given ValueStack. If found element is a
      * collection each element will be converted to String. If just a single
      * object is found it is converted to String and wrapped in a collection.
-     * 
-     * @param openChars
-     * @param expression
-     * @param stack
-     * @param excludeEmptyElements
-     * @param evaluator
-     * @param maxLoopCount
-     * @return
+     *
+     * @param openChars open character array
+     * @param expression expression string
+     * @param stack value stack
+     * @param evaluator value evaluator
+     * @param excludeEmptyElements Whether empty elements shall be excluded.
+     * @param maxLoopCount max loop count
+     * @return converted objects
      */
     public static Collection<String> translateVariablesCollection(
             char[] openChars, String expression, final ValueStack stack, boolean excludeEmptyElements,
@@ -249,9 +250,9 @@ public class TextParseUtil {
     }
 
     /**
-     * Returns a set from comma delimted Strings.
+     * Returns a set from comma delimited Strings.
      * @param s The String to parse.
-     * @return A set from comma delimted Strings.
+     * @return A set from comma delimited Strings.
      */
     public static Set<String> commaDelimitedStringToSet(String s) {
         Set<String> set = new HashSet<>();
@@ -291,7 +292,7 @@ public class TextParseUtil {
     	 * Evaluated the value parsed by Ognl value stack.
     	 *
     	 * @param parsedValue - value parsed by ognl value stack
-    	 * @return return the evaluted value.
+    	 * @return return the evaluated value.
     	 */
     	Object evaluate(String parsedValue);
     }

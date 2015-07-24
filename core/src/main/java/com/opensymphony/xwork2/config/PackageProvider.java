@@ -28,19 +28,19 @@ public interface PackageProvider {
      * @param configuration The configuration
      * @throws ConfigurationException If anything goes wrong
      */
-    public void init(Configuration configuration) throws ConfigurationException;
+    void init(Configuration configuration) throws ConfigurationException;
     
     /**
      * Tells whether the PackageProvider should reload its configuration
      *
      * @return <tt>true</tt>, whether the PackageProvider should reload its configuration, <tt>false</tt>otherwise.
      */
-    public boolean needsReload();
+    boolean needsReload();
 
     /**
      * Loads the packages for the configuration.
-     * @throws ConfigurationException
+     * @throws ConfigurationException in case of configuration errors
      */
-    public void loadPackages() throws ConfigurationException;
+    void loadPackages() throws ConfigurationException;
     
 }

@@ -36,7 +36,7 @@ import java.util.Map;
  * this is you don't need to worry about a user specific action context, you just get it:
  * </p>
  *
- * <ul><code>ActionContext context = ActionContext.getContext();</code></ul>
+ * <code>ActionContext context = ActionContext.getContext();</code>
  *
  * <p>
  * Finally, because of the thread local usage you don't need to worry about making your actions thread safe.

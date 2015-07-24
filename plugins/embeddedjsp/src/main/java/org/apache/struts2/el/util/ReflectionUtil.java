@@ -47,9 +47,6 @@ public class ReflectionUtil {
             byte.class, char.class, double.class, float.class, int.class,
             long.class, short.class, Void.TYPE };
 
-    /**
-     * 
-     */
     private ReflectionUtil() {
         super();
     }
@@ -83,9 +80,9 @@ public class ReflectionUtil {
 
     /**
      * Converts an array of Class names to Class types
-     * @param s
-     * @return
-     * @throws ClassNotFoundException
+     * @param s array of class names
+     * @return array of class types
+     * @throws ClassNotFoundException if class was not found
      */
     public static Class[] toTypeArray(String[] s) throws ClassNotFoundException {
         if (s == null)
@@ -99,8 +96,8 @@ public class ReflectionUtil {
 
     /**
      * Converts an array of Class types to Class names
-     * @param c
-     * @return
+     * @param c array of class types
+     * @return array of class names
      */
     public static String[] toTypeNameArray(Class[] c) {
         if (c == null)
@@ -118,7 +115,7 @@ public class ReflectionUtil {
      * @param property the name of the method
      * @param paramTypes the parameter types to use
      * @return the method specified
-     * @throws MethodNotFoundException
+     * @throws MethodNotFoundException if method was not found
      */
     public static Method getMethod(Object base, Object property,
             Class[] paramTypes) throws MethodNotFoundException {
@@ -157,11 +154,11 @@ public class ReflectionUtil {
     }
 
     /**
-     * @param base
-     * @param property
-     * @return
-     * @throws ELException
-     * @throws PropertyNotFoundException
+     * @param base object
+     * @param property property
+     * @return property descriptor
+     * @throws ELException in case of EL errors
+     * @throws PropertyNotFoundException if property was not found
      */
     public static PropertyDescriptor getPropertyDescriptor(Object base,
             Object property) throws ELException, PropertyNotFoundException {

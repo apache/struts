@@ -29,7 +29,7 @@ import org.apache.struts2.el.lang.EvaluationContext;
 public class ArithmeticNode extends SimpleNode {
 
     /**
-     * @param i
+     * @param i i
      */
     public ArithmeticNode(int i) {
         super(i);

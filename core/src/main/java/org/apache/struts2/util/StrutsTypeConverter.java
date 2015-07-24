@@ -65,9 +65,9 @@ public abstract class StrutsTypeConverter extends DefaultTypeConverter {
      * this will ask Ognl's DefaultTypeConverter (of which this class extends) to
      * perform the conversion.
      *
-     * @param context
-     * @param o
-     * @param toClass
+     * @param context the action context
+     * @param o object to be converted
+     * @param toClass the class to convert to
      * @return The fallback conversion
      */
     protected Object performFallbackConversion(Map context, Object o, Class toClass) {

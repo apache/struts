@@ -54,14 +54,12 @@ public class PortletResult extends StrutsResultSupport {
 
 	private static final long serialVersionUID = 434251393926178567L;
 
+	private static final Logger LOG = LogManager.getLogger(PortletResult.class);
+
 	private boolean useDispatcherServlet;
 
 	private String dispatcherServletName = PortletConstants.DEFAULT_DISPATCHER_SERVLET_NAME;
 
-	/**
-	 * Logger instance.
-	 */
-	private static final Logger LOG = LogManager.getLogger(PortletResult.class);
 
 	private String contentType = "text/html";
 
@@ -93,7 +91,12 @@ public class PortletResult extends StrutsResultSupport {
 	 * Execute the result. Obtains the
 	 * {@link javax.portlet.PortletRequestDispatcher}from the
 	 * {@link PortletActionContext}and includes the JSP.
+     *
+     * @param finalLocation the final location
+     * @param actionInvocation the action invocation
 	 *
+     * @throws Exception in case of any errors
+     *
 	 * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
 	 */
 	public void doExecute(String finalLocation, ActionInvocation actionInvocation) throws Exception {
@@ -110,6 +113,12 @@ public class PortletResult extends StrutsResultSupport {
 
 	/**
 	 * Executes the regular servlet result.
+     *
+     * @param finalLocation the final location
+     * @param actionInvocation the action invocation
+     *
+     * @throws ServletException in case of any Servlet errors
+     * @throws IOException in case of any IO errors
 	 */
 	private void executeRegularServletResult(String finalLocation, ActionInvocation actionInvocation)
 			throws ServletException, IOException {
@@ -130,17 +139,18 @@ public class PortletResult extends StrutsResultSupport {
 	/**
 	 * Executes the action result.
 	 *
-	 * @param finalLocation
-	 * @param invocation
+     * @param finalLocation the final location
+     * @param invocation the action invocation
+     *
+     * @throws Exception in case of any errors
 	 */
 	protected void executeActionResult(String finalLocation, ActionInvocation invocation) throws Exception {
         String location = finalLocation;
         String namespace = invocation.getProxy().getNamespace();
 		if (LOG.isDebugEnabled()) {
-			String phase = (PortletActionContext.getPhase().isEvent()) ? "Event" : "Action";
-			LOG.debug("Executing result in "+phase+" phase");
-			LOG.debug("Setting event render parameter location : " + location);
-			LOG.debug("Setting event render parameter namespace: " + namespace);
+			LOG.debug("Executing result in {} phase", (PortletActionContext.getPhase().isEvent()) ? "Event" : "Action");
+			LOG.debug("Setting event render parameter location : {}", location);
+			LOG.debug("Setting event render parameter namespace: {}", namespace);
 		}
 		Map<String, Object> sessionMap = invocation.getInvocationContext().getSession();
 		if (location.indexOf('?') != -1) {
@@ -171,7 +181,7 @@ public class PortletResult extends StrutsResultSupport {
 	/**
 	 * Converts the query params to render params.
 	 *
-	 * @param queryParams
+	 * @param queryParams query parameter
 	 */
 	protected void convertQueryParamsToRenderParams(String queryParams) {
 		StringTokenizer tok = new StringTokenizer(queryParams, "&");
@@ -186,9 +196,10 @@ public class PortletResult extends StrutsResultSupport {
     /**
      * Executes the render result.
      *
-     * @param finalLocation
-     * @throws PortletException
-     * @throws IOException
+     * @param finalLocation the final location
+     *
+     * @throws PortletException in case of any Portlet errors
+     * @throws IOException in case of any IO errors
      */
     protected void executeMimeResult(final String finalLocation) throws PortletException, IOException {
         if (LOG.isDebugEnabled()) LOG.debug("Executing mime result");

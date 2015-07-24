@@ -143,7 +143,9 @@ public class DefaultConfiguration implements Configuration {
      * Calls the ConfigurationProviderFactory.getConfig() to tell it to reload the configuration and then calls
      * buildRuntimeConfiguration().
      *
-     * @throws ConfigurationException
+     * @return list of package providers
+     *
+     * @throws ConfigurationException in case of any configuration errors
      */
     public synchronized List<PackageProvider> reloadContainer(List<ContainerProvider> providers) throws ConfigurationException {
         packageContexts.clear();
@@ -272,14 +274,20 @@ public class DefaultConfiguration implements Configuration {
     }
 
     /**
+     * <p>
      * This builds the internal runtime configuration used by Xwork for finding and configuring Actions from the
      * programmatic configuration data structures. All of the old runtime configuration will be discarded and rebuilt.
+     * </p>
      *
      * <p>
      * It basically flattens the data structures to make the information easier to access.  It will take
      * an {@link ActionConfig} and combine its data with all inherited dast.  For example, if the {@link ActionConfig}
      * is in a package that contains a global result and it also contains a result, the resulting {@link ActionConfig}
      * will have two results.
+     * </p>
+     *
+     * @return runtime configuration
+     * @throws ConfigurationException in case of any configuration errors
      */
     protected synchronized RuntimeConfiguration buildRuntimeConfiguration() throws ConfigurationException {
         Map<String, Map<String, ActionConfig>> namespaceActionConfigs = new LinkedHashMap<>();

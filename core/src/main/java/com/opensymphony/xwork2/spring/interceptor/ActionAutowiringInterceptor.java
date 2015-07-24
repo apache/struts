@@ -33,7 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
  * <!-- END SNIPPET: description -->
  *
  * <!-- START SNIPPET: parameters -->
- * TODO: Describe the paramters for this Interceptor.
+ * TODO: Describe the parameters for this Interceptor.
  * <!-- END SNIPPET: parameters -->
  *
  * <!-- START SNIPPET: extending -->
@@ -50,11 +50,13 @@ import org.springframework.web.context.WebApplicationContext;
  * &lt;/action&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
+ *
+ * <p>
  * Autowires action classes to Spring beans.  The strategy for autowiring the beans can be configured
  * by setting the parameter on the interceptor.  Actions that need access to the <code>ActionContext</code>
  * can implements the <code>ApplicationContextAware</code> interface.  The context will also be placed on
  * the action context under the APPLICATION_CONTEXT attribute.
+ * </p>
  *
  * @author Simon Stewart
  * @author Eric Hauser
@@ -70,7 +72,7 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
     private Integer autowireStrategy;
 
     /**
-     * @param autowireStrategy
+     * @param autowireStrategy the autowire strategy
      */
     public void setAutowireStrategy(Integer autowireStrategy) {
         this.autowireStrategy = autowireStrategy;
@@ -92,8 +94,8 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
      * TODO: Should this check to see if the <code>SpringObjectFactory</code> has already been configured instead of instantiating a new one?  Or is there a good reason for the interceptor to have it's own factory?
      * </p>
      *
-     * @param invocation
-     * @throws Exception
+     * @param invocation the action invocation
+     * @throws Exception in case of any errors
      */
     @Override public String intercept(ActionInvocation invocation) throws Exception {
         if (!initialized) {
@@ -107,7 +109,7 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
                 factory = new SpringObjectFactory();
                 factory.setApplicationContext(getApplicationContext());
                 if (autowireStrategy != null) {
-                    factory.setAutowireStrategy(autowireStrategy.intValue());
+                    factory.setAutowireStrategy(autowireStrategy);
                 }
             }
             initialized = true;
@@ -123,15 +125,15 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
     }
 
     /**
-     * @param applicationContext
-     * @throws BeansException
+     * @param applicationContext the application context
+     * @throws BeansException in case of errors
      */
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         context = applicationContext;
     }
 
     /**
-     * @return context
+     * @return the application context
      */
     protected ApplicationContext getApplicationContext() {
         return context;

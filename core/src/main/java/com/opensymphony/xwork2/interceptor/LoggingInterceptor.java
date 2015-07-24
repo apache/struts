@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
  * <!-- START SNIPPET: description -->
  * <p>
  * This interceptor logs the start and end of the execution an action (in English-only, not internationalized).
- * <br/>
+ * <br>
  * <b>Note:</b>: This interceptor will log at <tt>INFO</tt> level.
  * </p>
  * <!-- END SNIPPET: description -->

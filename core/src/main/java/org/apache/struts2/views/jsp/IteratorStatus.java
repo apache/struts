@@ -38,7 +38,7 @@ package org.apache.struts2.views.jsp;
  *   &lt;s:iterator status="status" value='{0, 1}'&gt;
  *      Index: &lt;s:property value="%{#status.index}" /&gt; &lt;br /&gt;
  *      Count: &lt;s:property value="%{#status.count}" /&gt; &lt;br /&gt;  
- *   &lt;/s:iterator>
+ *   &lt;/s:iterator&gt;
  * </pre>
  * 
  * <p>will print</p>

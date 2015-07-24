@@ -96,7 +96,7 @@ import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
  *
  * <p><b>Init parameters</b></p>
  * <!-- START SNIPPET: params -->
- * <table class="confluenceTable">
+ * <table class="confluenceTable" summary="">
  * <tr>
  *  <th class="confluenceTh">Name</th>
  * <th class="confluenceTh">Description</th>
@@ -188,12 +188,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
 
     /**
      * Initialize the portlet with the init parameters from <tt>portlet.xml</tt>
+     *
+     * @param cfg portlet configuration
+     * @throws PortletException in case of errors
      */
     public void init(PortletConfig cfg) throws PortletException {
         super.init(cfg);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Initializing portlet " + getPortletName());
-        }
+        LOG.debug("Initializing portlet {}", getPortletName());
 
         Map<String, String> params = new HashMap<String, String>();
         for (Enumeration e = cfg.getInitParameterNames(); e.hasMoreElements(); ) {
@@ -211,9 +212,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
             factory = dispatcherUtils.getContainer().getInstance(ActionProxyFactory.class);
         }
         portletNamespace = cfg.getInitParameter("portletNamespace");
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("PortletNamespace: " + portletNamespace);
-        }
+        LOG.debug("PortletNamespace: {}", portletNamespace);
+
         parseModeConfig(actionMap, cfg, PortletMode.VIEW, "viewNamespace",
                 "defaultViewAction");
         parseModeConfig(actionMap, cfg, PortletMode.EDIT, "editNamespace",
@@ -288,6 +288,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
     /**
      * Service an action from the <tt>event</tt> phase.
      *
+     * @param request action request
+     * @param response  action response
+     *
+     * @throws PortletException in case of errors
+     * @throws IOException in case of IO errors
+     *
      * @see javax.portlet.Portlet#processAction(javax.portlet.ActionRequest,
      *      javax.portlet.ActionResponse)
      */
@@ -309,6 +315,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
 
     /**
      * Service an action from the <tt>render</tt> phase.
+     *
+     * @param request render request
+     * @param response  render response
+     *
+     * @throws PortletException in case of errors
+     * @throws IOException in case of IO errors
      *
      * @see javax.portlet.Portlet#render(javax.portlet.RenderRequest,
      *      javax.portlet.RenderResponse)
@@ -351,10 +363,15 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * @param applicationMap a Map of all servlet context attributes.
      * @param request the PortletRequest object.
      * @param response the PortletResponse object.
+     * @param servletRequest the HttpServletRequest object.
+     * @param servletResponse the HttpServletResponse object.
+     * @param servletContext the ServletContext object.
      * @param portletConfig the PortletConfig object.
      * @param phase The portlet phase (render or action, see
      *        {@link PortletConstants})
      * @return a HashMap representing the <tt>Action</tt> context.
+     *
+     * @throws IOException in case of IO errors
      */
     public HashMap<String, Object> createContextMap(Map<String, Object> requestMap, Map<String, String[]> parameterMap,
                                                     Map<String, Object> sessionMap, Map<String, Object> applicationMap,
@@ -421,6 +438,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      * @param applicationMap a Map of all application attributes.
      * @param portletNamespace the namespace or context of the action.
      * @param phase The portlet phase (render or action, see {@link PortletConstants})
+     *
+     * @throws PortletException in case of errors
      */
     public void serviceAction(PortletRequest request, PortletResponse response, Map<String, Object> requestMap, Map<String, String[]> parameterMap,
                               Map<String, Object> sessionMap, Map<String, Object> applicationMap, String portletNamespace,
@@ -589,7 +608,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
 
     /**
      * Convenience method to ease testing.
-     * @param factory
+     * @param factory action proxy factory
      */
     protected void setActionProxyFactory(ActionProxyFactory factory) {
         this.factory = factory;

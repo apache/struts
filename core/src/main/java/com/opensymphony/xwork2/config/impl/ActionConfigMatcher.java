@@ -50,6 +50,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
      * last two characters didn't exist.  The goal is to support the 
      * legacy "*!*" syntax, where the "!*" is optional.</p> 
      *
+     * @param patternMatcher pattern matcher
      * @param configs An array of ActionConfig's to process
      * @param looseMatch To loosely match wildcards or not
      */

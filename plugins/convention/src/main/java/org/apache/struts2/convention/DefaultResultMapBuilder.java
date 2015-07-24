@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import com.opensymphony.xwork2.util.finder.Test;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -53,7 +54,7 @@ import java.util.*;
  * </p>
  *
  * <pre>
- * /resultPath/namespace/action-&lt;result>.jsp
+ * /resultPath/namespace/action-&lt;result&gt;.jsp
  * </pre>
  *
  * <p>
@@ -102,14 +103,14 @@ import java.util.*;
  * table below:
  * </p>
  *
- * <table>
+ * <table summary="">
  * <tr><th>Extension</th><th>Type</th></tr>
- * <tr><td>.jsp</td><td>dispatcher</td</tr>
- * <tr><td>.jspx</td><td>dispatcher</td</tr>
- * <tr><td>.html</td><td>dispatcher</td</tr>
- * <tr><td>.htm</td><td>dispatcher</td</tr>
- * <tr><td>.vm</td><td>velocity</td</tr>
- * <tr><td>.ftl</td><td>freemarker</td</tr>
+ * <tr><td>.jsp</td><td>dispatcher</td></tr>
+ * <tr><td>.jspx</td><td>dispatcher</td></tr>
+ * <tr><td>.html</td><td>dispatcher</td></tr>
+ * <tr><td>.htm</td><td>dispatcher</td></tr>
+ * <tr><td>.vm</td><td>velocity</td></tr>
+ * <tr><td>.ftl</td><td>freemarker</td></tr>
  * </table>
  */
 public class DefaultResultMapBuilder implements ResultMapBuilder {
@@ -142,7 +143,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
      */
     @Inject("struts.convention.result.flatLayout")
     public void setFlatResultLayout(String flatResultLayout) {
-        this.flatResultLayout = "true".equals(flatResultLayout);
+        this.flatResultLayout = BooleanUtils.toBoolean(flatResultLayout);
     }
 
     /**

@@ -50,7 +50,7 @@ import java.util.Date;
  *
  * <pre>
  * <!-- START SNIPPET: examples -->
- * &lt;validators>
+ * &lt;validators&gt;
  *     &lt;!-- Plain Validator syntax --&gt;
  *     &lt;validator type="date"&gt;
  *         &lt;param name="fieldName"&gt;birthday&lt;/param&gt;

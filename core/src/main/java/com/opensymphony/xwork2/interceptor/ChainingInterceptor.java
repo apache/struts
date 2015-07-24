@@ -41,9 +41,9 @@ import java.util.*;
  *
  * <p>
  * <b>Note:</b> It is important to remember that this interceptor does nothing if there are no objects already on the stack.
- * <br/>This means two things:
- * <br/><b>One</b>, you can safely apply it to all your actions without any worry of adverse affects.
- * <br/><b/>Two</b>, it is up to you to ensure an object exists in the stack prior to invoking this action. The most typical way this is done
+ * <br>This means two things:
+ * <br><b>One</b>, you can safely apply it to all your actions without any worry of adverse affects.
+ * <br><b>Two</b>, it is up to you to ensure an object exists in the stack prior to invoking this action. The most typical way this is done
  * is through the use of the <b>chain</b> result type, which combines with this interceptor to make up the action
  * chaining feature.
  * </p>
@@ -51,19 +51,21 @@ import java.util.*;
  * <p>
  * <b>Note:</b> By default Errors, Field errors and Message aren't copied during chaining, to change the behaviour you can specify
  * the below three constants in struts.properties or struts.xml:
+ * </p>
+ *
  * <ul>
  * <li>struts.xwork.chaining.copyErrors - set to true to copy Action Errors</li>
  * <li>struts.xwork.chaining.copyFieldErrors - set to true to copy Field Errors</li>
  * <li>struts.xwork.chaining.copyMessages - set to true to copy Action Messages</li>
  * </ul>
- * </p>
  *
  * <p>
  * <u>Example:</u>
+ * </p>
+ *
  * <pre>
  * &lt;constant name="struts.xwork.chaining.copyErrors" value="true"/&gt;
  * </pre>
- * </p>
  *
  * <p>
  * <b>Note:</b> By default actionErrors and actionMessages are excluded when copping object's properties.

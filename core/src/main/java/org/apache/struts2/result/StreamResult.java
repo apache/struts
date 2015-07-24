@@ -293,6 +293,7 @@ public class StreamResult extends StrutsResultSupport {
      * Tries to lookup the parameters on the stack.  Will override any existing parameters
      *
      * @param stack The current value stack
+     * @param invocation the action invocation
      */
     protected void resolveParamsFromStack(ValueStack stack, ActionInvocation invocation) {
         String disposition = stack.findString("contentDisposition");

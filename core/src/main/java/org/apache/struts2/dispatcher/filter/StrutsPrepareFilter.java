@@ -69,6 +69,9 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
     /**
      * Callback for post initialization
+     *
+     * @param dispatcher the dispatcher
+     * @param filterConfig the filter config
      */
     protected void postInit(Dispatcher dispatcher, FilterConfig filterConfig) {
     }

@@ -44,19 +44,24 @@ import java.util.HashSet;
 import java.util.regex.Pattern;
 
 /**
+ * <p>
  * This class can be used instead of XmlWebApplicationContext, and it will watch jar files and directories for changes
  * and reload then changed classes.
- * <br />
+ * </p>
+ *
+ * <p>
  * To use this class:
+ * </p>
  * <ul>
  * <li>Set "struts.devMode" to "true" </li>
- * <li>Set "struts.class.reloading.watchList" to a comma separated list of directories, or jar files (absolute paths)</p>
+ * <li>Set "struts.class.reloading.watchList" to a comma separated list of directories, or jar files (absolute paths)</li>
  * <li>Add this to web.xml:
- * <pre>
+ *  <pre>
  *  &lt;context-param&gt;
  *       &lt;param-name&gt;contextClass&lt;/param-name&gt;
  *       &lt;param-value&gt;org.apache.struts2.spring.ClassReloadingXMLWebApplicationContext&lt;/param-value&gt;
  *   &lt;/context-param&gt;
+ *   </pre>
  *  </li>
  * <li>Add Apache Commons JCI FAM to the classpath. If you are using maven, add this to pom.xml:
  *  <pre>
@@ -65,7 +70,7 @@ import java.util.regex.Pattern;
  *       &lt;artifactId&gt;commons-jci-fam&lt;/artifactId&gt;
  *       &lt;version&gt;1.0&lt;/version&gt;
  *       &lt;optional&gt;true&lt;/optional&gt;
- *  &lt;/dependency>
+ *  &lt;/dependency&gt;
  *  </pre>
  * </li>
  * </ul>

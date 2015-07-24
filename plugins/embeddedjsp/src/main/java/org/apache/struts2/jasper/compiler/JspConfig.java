@@ -267,6 +267,7 @@ public class JspConfig {
      * Find a property that best matches the supplied resource.
      * @param uri the resource supplied.
      * @return a JspProperty indicating the best match, or some default.
+     * @throws JasperException in case of Jasper errors
      */
     public JspProperty findJspProperty(String uri) throws JasperException {
 
@@ -400,6 +401,10 @@ public class JspConfig {
     /**
      * To find out if an uri matches an url pattern in jsp config.  If so,
      * then the uri is a JSP page.  This is used primarily for jspc.
+     *
+     * @param uri the uri
+     * @return true if uri is a JSP page
+     * @throws JasperException in case of Jasper errors
      */
     public boolean isJspPage(String uri) throws JasperException {
 
@@ -419,10 +424,9 @@ public class JspConfig {
             uriExtension = uri.substring(index+1);
         }
 
-        Iterator iter = jspProperties.iterator();
-        while (iter.hasNext()) {
+        for (Object jspProperty : jspProperties) {
 
-            JspPropertyGroup jpg = (JspPropertyGroup) iter.next();
+            JspPropertyGroup jpg = (JspPropertyGroup) jspProperty;
             JspProperty jp = jpg.getJspProperty();
 
             String extension = jpg.getExtension();

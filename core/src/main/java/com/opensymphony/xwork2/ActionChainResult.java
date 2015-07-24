@@ -181,6 +181,8 @@ public class ActionChainResult implements Result {
     /**
      * Get the XWork chain history.
      * The stack is a list of <code>namespace/action!method</code> keys.
+     *
+     * @return the chain history as string list
      */
     public static LinkedList<String> getChainHistory() {
         LinkedList<String> chainHistory = (LinkedList<String>) ActionContext.getContext().get(CHAIN_HISTORY);

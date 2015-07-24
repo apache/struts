@@ -50,8 +50,8 @@ import java.io.Writer;
  * <p>When includeParams is 'all' or 'get', the parameter defined in a &lt;param&gt;
  * tag will take precedence over any params included due to the includeParams attribute. For
  * example, in Example 3 below, if there is a id parameter in the url where the page this
- * tag is included like http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=3333&name=John
- * the generated url will be http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=22&name=John
+ * tag is included like http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=3333&amp;name=John
+ * the generated url will be http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=22&amp;name=John
  * because the parameter defined in the param tag will take precedence.</p>
  *
  * <!-- END SNIPPET: javadoc -->

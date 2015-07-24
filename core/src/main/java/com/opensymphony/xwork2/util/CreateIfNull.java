@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table>
+ * <table summary="">
  * <thead>
  * <tr>
  * <th>Parameter</th>
@@ -58,7 +58,7 @@ import java.lang.annotation.Target;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &#64;CreateIfNull( value = true )
- * private List<User> users;
+ * private List&lt;User&gt; users;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -69,8 +69,7 @@ import java.lang.annotation.Target;
 public @interface CreateIfNull {
 
     /**
-     * The CreateIfNull value.
-     * Defaults to <tt>true</tt>.
+     * @return The CreateIfNull value. Defaults to <tt>true</tt>.
      */
     boolean value() default true;
 }

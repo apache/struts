@@ -131,7 +131,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * Reload configuration when classes change. Defaults to "false" and should not be used
+     * @param reload Reload configuration when classes change. Defaults to "false" and should not be used
      * in production.
      */
     @Inject("struts.convention.classes.reload")
@@ -146,7 +146,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * Exclude URLs found by the parent class loader. Defaults to "true", set to true for JBoss
+     * @param exclude Exclude URLs found by the parent class loader. Defaults to "true", set to true for JBoss
      */
     @Inject("struts.convention.exclude.parentClassLoader")
     public void setExcludeParentClassLoader(String exclude) {
@@ -154,7 +154,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * If this constant is true, and there is an "execute" method(not annotated), a mapping will be added
+     * @param alwaysMapExecute  If this constant is true, and there is an "execute" method(not annotated), a mapping will be added
      * pointing to it, even if there are other mapping in the class
      */
     @Inject("struts.convention.action.alwaysMapExecute")
@@ -186,8 +186,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject(value = "struts.convention.action.includeJars", required = false)
     public void setIncludeJars(String includeJars) {
-        if (StringUtils.isNotEmpty(includeJars))
+        if (StringUtils.isNotEmpty(includeJars)) {
             this.includeJars = includeJars.split("\\s*[,]\\s*");
+        }
     }
 
     /**
@@ -1031,7 +1032,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * 1. Loop over all the namespaces such as /foo and see if it has an action named index
      * 2. If an action doesn't exists in the parent namespace of the same name, create an action
      * in the parent namespace of the same name as the namespace that points to the index
-     * action in the namespace. e.g. /foo -> /foo/index
+     * action in the namespace. e.g. /foo -&gt; /foo/index
      * 3. Create the action in the namespace for empty string if it doesn't exist. e.g. /foo/
      * the action is "" and the namespace is /foo
      *

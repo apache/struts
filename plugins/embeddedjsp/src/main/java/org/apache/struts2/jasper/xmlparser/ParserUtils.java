@@ -76,8 +76,9 @@ public class ParserUtils {
      * @param uri URI of the XML document being parsed
      * @param is Input source containing the deployment descriptor
      *
-     * @exception JasperException if an input/output error occurs
-     * @exception JasperException if a parsing error occurs
+     * @return the tree node
+     *
+     * @throws  JasperException if an input/output error occurs or parsing error occurs
      */
     public TreeNode parseXMLDocument(String uri, InputSource is)
         throws JasperException {
@@ -124,8 +125,9 @@ public class ParserUtils {
      * @param uri URI of the XML document being parsed
      * @param is Input stream containing the deployment descriptor
      *
-     * @exception JasperException if an input/output error occurs
-     * @exception JasperException if a parsing error occurs
+     * @return the tree node
+     *
+     * @throws  JasperException if an input/output error occurs or parsing error occurs
      */
     public TreeNode parseXMLDocument(String uri, InputStream is)
             throws JasperException {
@@ -143,6 +145,8 @@ public class ParserUtils {
      *
      * @param parent The parent TreeNode (if any) for the new TreeNode
      * @param node The XML document Node to be converted
+     *
+     * @return the tree node
      */
     protected TreeNode convert(TreeNode parent, Node node) {
 

@@ -126,10 +126,10 @@ import java.util.Map;
  *
  * &lt;action name="submitApplication" ....&gt;
  *    &lt;interceptor-ref name="store"&gt;
- *      &lt;param name="operationMode">STORE&lt;/param&gt;
+ *      &lt;param name="operationMode"&gt;aSTORE&lt;/param&gt;
  *    &lt;/interceptor-ref&gt;
  *    &lt;interceptor-ref name="defaultStack" /&gt;
- *    &lt;result name="input" type="redirect">applicationFailed.action&lt;/result&gt;
+ *    &lt;result name="input" type="redirect"&gt;aapplicationFailed.action&lt;/result&gt;
  *    &lt;result type="dispatcher"&gt;applicationSuccess.jsp&lt;/result&gt;
  * &lt;/action&gt;
  *
@@ -208,8 +208,8 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
      * Handle the retrieving of field errors / action messages / field errors, which is
      * done before action invocation, and the <code>operationMode</code> is 'RETRIEVE'.
      *
-     * @param invocation
-     * @throws Exception
+     * @param invocation the action invocation
+     * @throws Exception in case of any error
      */
     protected void before(ActionInvocation invocation) throws Exception {
         String reqOperationMode = getRequestOperationMode(invocation);
@@ -261,9 +261,9 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
      * Handle the storing of field errors / action messages / field errors, which is
      * done after action invocation, and the <code>operationMode</code> is in 'STORE'.
      *
-     * @param invocation
-     * @param result
-     * @throws Exception
+     * @param invocation the action invocation
+     * @param result the result
+     * @throws Exception in case of any error
      */
     protected void after(ActionInvocation invocation, String result) throws Exception {
 
@@ -297,11 +297,12 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
 
 
     /**
-     * Get the operationMode through request paramter, if <code>allowRequestParameterSwitch</code>
+     * Get the operationMode through request parameter, if <code>allowRequestParameterSwitch</code>
      * is 'true', else it simply returns 'NONE', meaning its neither in the 'STORE_MODE' nor
      * 'RETRIEVE_MODE'.
      *
-     * @return String
+     * @param invocation the action invocation
+     * @return the request operation mode
      */
     protected String getRequestOperationMode(ActionInvocation invocation) {
         String reqOperationMode = NONE;
@@ -322,9 +323,9 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
      * Merge <code>col1</code> and <code>col2</code> and return the composite
      * <code>Collection</code>.
      *
-     * @param col1
-     * @param col2
-     * @return Collection
+     * @param col1 first collection
+     * @param col2 second collection
+     * @return the merged collection
      */
     protected Collection mergeCollection(Collection col1, Collection col2) {
         Collection _col1 = (col1 == null ? new ArrayList() : col1);
@@ -337,9 +338,9 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
      * Merge <code>map1</code> and <code>map2</code> and return the composite
      * <code>Map</code>
      *
-     * @param map1
-     * @param map2
-     * @return Map
+     * @param map1 first map
+     * @param map2 second map
+     * @return the merged map
      */
     protected Map mergeMap(Map map1, Map map2) {
         Map _map1 = (map1 == null ? new LinkedHashMap() : map1);

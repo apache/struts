@@ -77,7 +77,7 @@ import java.util.Map;
  *
  * <li>application - a list of action properties to be bound to application scope</li>
  *
- * <li>key - a session/application attribute key prefix, can contain following values:</li>
+ * <li>key - a session/application attribute key prefix, can contain following values:
  *
  * <ul>
  *
@@ -88,8 +88,8 @@ import java.util.Map;
  * <li>any other value is taken literally as key prefix</li>
  *
  * </ul>
- *
- * <li>type - with one of the following</li>
+ * </li>
+ * <li>type - with one of the following
  *
  * <ul>
  *
@@ -101,6 +101,7 @@ import java.util.Map;
  * <li>any other value throws IllegalArgumentException</li>
  *
  * </ul>
+ * </li>
  *
  * <li>sessionReset - name of a parameter (defaults to 'session.reset') which if set, causes all session values to be reset to action's default values or application
  * scope values, note that it is similar to type="start" and in fact it does the same, but in our team it is sometimes

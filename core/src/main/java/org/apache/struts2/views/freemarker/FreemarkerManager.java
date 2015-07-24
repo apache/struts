@@ -70,17 +70,17 @@ import java.util.*;
  * </ul>
  *
  * <p>
- * <b> createConfiguration method </b><br/>
+ * <b> createConfiguration method </b><br>
  * Create a freemarker Configuration.
  * </p>
  *
  * <p>
- * <b> loadSettings method </b><br/>
+ * <b> loadSettings method </b><br>
  * Load freemarker settings, default to freemarker.properties (if found in classpath)
  * </p>
  *
  * <p>
- * <b> createTemplateLoader method</b><br/>
+ * <b> createTemplateLoader method</b><br>
  * create a freemarker TemplateLoader that loads freemarker template in the following order:
  * </p>
  *
@@ -91,13 +91,13 @@ import java.util.*;
  * </ol>
  *
  * <p>
- * <b> populateContext method</b><br/>
+ * <b> populateContext method</b><br>
  * populate the created model.
  * </p>
  */
 public class FreemarkerManager {
 
-    // coppied from freemarker servlet - so that there is no dependency on it
+    // copied from freemarker servlet - so that there is no dependency on it
      public static final String INITPARAM_TEMPLATE_PATH = "TemplatePath";
      public static final String INITPARAM_NOCACHE = "NoCache";
      public static final String INITPARAM_CONTENT_TYPE = "ContentType";
@@ -285,7 +285,9 @@ public class FreemarkerManager {
     /** 
      * Sets the Freemarker Configuration's template loader with the FreemarkerThemeTemplateLoader 
      * at the top.
-     * 
+     *
+     * @param templateLoader the template loader
+     *
      * @see org.apache.struts2.views.freemarker.FreemarkerThemeTemplateLoader
      */
     protected void configureTemplateLoader(TemplateLoader templateLoader) {
@@ -306,7 +308,9 @@ public class FreemarkerManager {
      * <li>loads settings from the classpath file /freemarker.properties
      * </ul>
      *
-     * @param servletContext
+     * @param servletContext the servlet context
+     * @return a instance of the freemarker configuration object
+     * @throws TemplateException in case of errors during creating the configuration
      */
     protected Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_0);
@@ -394,9 +398,10 @@ public class FreemarkerManager {
      * {@link ClassTemplateLoader} if the template path starts with "class://",
      * a {@link FileTemplateLoader} if the template path starts with "file://",
      * and a {@link WebappTemplateLoader} otherwise.
+     *
+     * @param servletContext the servlet path
      * @param templatePath the template path to create a loader for
      * @return a newly created template loader
-     * @throws IOException
      */
     protected TemplateLoader createTemplateLoader(ServletContext servletContext, String templatePath) {
         TemplateLoader templatePathLoader = null;
@@ -431,6 +436,8 @@ public class FreemarkerManager {
 
     /**
      * Load the settings from the /freemarker.properties file on the classpath
+     *
+     * @param servletContext the servlet context
      *
      * @see freemarker.template.Configuration#setSettings for the definition of valid settings
      */

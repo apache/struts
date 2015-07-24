@@ -50,8 +50,8 @@ public class PropertiesConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
-     * @param props
-     * @param settings
+     * @param props properties
+     * @param settings settings
      */
     protected void loadSettings(LocatableProperties props, final Settings settings) {
         for (Iterator i = settings.list(); i.hasNext(); ) {

@@ -166,6 +166,10 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
     /**
      * Decide if a violation should be added to the fieldErrors or actionErrors
+     *
+     * @param violation the violation
+     *
+     * @return true if violation should be added to the fieldErrors or actionErrors
      */
     protected boolean isActionError(ConstraintViolation<Object> violation) {
         return violation.getLeafBean() == violation.getInvalidValue();
@@ -173,6 +177,13 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
     /**
      * This is copied from DefaultActionInvocation
+     *
+     * @param actionClass the action class
+     * @param methodName the method name
+     *
+     * @return Method
+     *
+     * @throws NoSuchMethodException if no method with this name was found
      */
     protected Method getActionMethod(Class<?> actionClass, String methodName) throws NoSuchMethodException {
         Method method;

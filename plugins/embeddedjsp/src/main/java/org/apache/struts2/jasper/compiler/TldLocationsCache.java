@@ -45,18 +45,26 @@ import org.apache.juli.logging.LogFactory;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * <p>
  * A container for all tag libraries that are defined "globally"
  * for the web application.
- * 
- * Tag Libraries can be defined globally in one of two ways:
- *   1. Via <taglib> elements in web.xml:
- *      the uri and location of the tag-library are specified in
- *      the <taglib> element.
- *   2. Via packaged jar files that contain .tld files
- *      within the META-INF directory, or some subdirectory
- *      of it. The taglib is 'global' if it has the <uri>
- *      element defined.
+ * </p>
  *
+ * <p>
+ * Tag Libraries can be defined globally in one of two ways:
+ * </p>
+ *
+ * <ol>
+ *   <li>Via &lt;taglib&gt; elements in web.xml:
+ *      the uri and location of the tag-library are specified in
+ *      the &lt;taglib&gt; element.</li>
+ *   <li>Via packaged jar files that contain .tld files
+ *      within the META-INF directory, or some subdirectory
+ *      of it. The taglib is 'global' if it has the &lt;uri&gt;
+ *      element defined.</li>
+ * </ol>
+ *
+ * <p>
  * A mapping between the taglib URI and its associated TaglibraryInfoImpl
  * is maintained in this container.
  * Actually, that's what we'd like to do. However, because of the
@@ -65,13 +73,16 @@ import org.apache.commons.io.FileUtils;
  * across page invocations. A bug has been submitted to the spec lead.
  * In the mean time, all we do is save the 'location' where the
  * TLD associated with a taglib URI can be found.
+ * </p>
  *
+ * <p>
  * When a JSP page has a taglib directive, the mappings in this container
  * are first searched (see method getLocation()).
  * If a mapping is found, then the location of the TLD is returned.
  * If no mapping is found, then the uri specified
  * in the taglib directive is to be interpreted as the location for
  * the TLD of this tag library.
+ * </p>
  *
  * @author Pierre Delisle
  * @author Jan Luehe
@@ -116,7 +127,7 @@ public class TldLocationsCache {
      * Initializes the set of JARs that are known not to contain any TLDs
      */
     static {
-        noTldJars = new HashSet<String>();
+        noTldJars = new HashSet<>();
         // Bootstrap JARs
         noTldJars.add("bootstrap.jar");
         noTldJars.add("commons-daemon.jar");
@@ -215,6 +226,8 @@ public class TldLocationsCache {
      * second element denotes the name of the TLD entry in the jar file.
      * Returns null if the uri is not associated with any tag library 'exposed'
      * in the web application.
+     *
+     * @throws JasperException in case of Jasper errors
      */
     public String[] getLocation(String uri) throws JasperException {
         if (!initialized) {
@@ -223,8 +236,10 @@ public class TldLocationsCache {
         return (String[]) mappings.get(uri);
     }
 
-    /** 
-     * Returns the type of a URI:
+    /**
+     * @param uri the URI
+     *
+     * @return  the type of a URI:
      *     ABS_URI
      *     ROOT_REL_URI
      *     NOROOT_REL_URI
@@ -342,6 +357,7 @@ public class TldLocationsCache {
      * @param conn The JarURLConnection to the JAR file to scan
      * @param ignore true if any exceptions raised when processing the given
      * JAR should be ignored, false otherwise
+     * @throws JasperException in case of Jasper errors
      */
     private void scanJar(JarURLConnection conn, boolean ignore)
                 throws JasperException {
@@ -545,7 +561,7 @@ public class TldLocationsCache {
     }
 
     /**
-     * Returns a list of absolute paths of the locations in the cache
+     * @return  a list of absolute paths of the locations in the cache
      */
     public Set<String> getAbsolutePathsOfLocations() {
         Set<String> paths = new HashSet<String>(mappings.size());

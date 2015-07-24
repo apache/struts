@@ -33,8 +33,9 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Stop double-submission of forms.</p>
+ * <p>Stop double-submission of forms.</p>
  *
+ * <p>
  * The token tag is used to help with the "double click" submission problem. It is needed if you are using the
  * TokenInterceptor or the TokenSessionInterceptor. The s:token tag merely places a hidden element that contains
  * the unique token.</p>

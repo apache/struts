@@ -61,16 +61,21 @@ public interface TagPluginContext {
 
     /**
      * Generate Java source codes
+     *
+     * @param s string
      */
     void generateJavaSource(String s);
 
     /**
+     * @param attribute the attribute to check
      * @return true if the attribute is specified and its value is a
      *         translation-time constant.
      */
     boolean isConstantAttribute(String attribute);
 
     /**
+     * @param attribute The specified attribute
+     *
      * @return A string that is the value of a constant attribute.  Undefined
      *         if the attribute is not a (translation-time) constant.
      *         null if the attribute is not specified.
@@ -112,12 +117,16 @@ public interface TagPluginContext {
     /**
      * Associate the attribute with a value in the current tagplugin context.
      * The plugin attributes can be used for communication among tags that
-     * must work together as a group.  See <c:when> for an example.
+     * must work together as a group.  See &lt;c:when&gt; for an example.
+     *
+     * @param attr The specified attribute
+     * @param value the value
      */
     void setPluginAttribute(String attr, Object value);
 
     /**
-     * Get the value of an attribute in the current tagplugin context.
+     * @param attr The specified attribute
+     * @return  the value of an attribute in the current tagplugin context.
      */
     Object getPluginAttribute(String attr);
 }

@@ -32,8 +32,7 @@ import java.io.Reader;
  *
  * This handler is intended for requests only, not for responses
  *
- * {@link http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4}
- *
+ * @see <a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4">http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4</a>
  */
 public class MultipartFormDataHandler implements ContentTypeHandler {
 
@@ -43,13 +42,17 @@ public class MultipartFormDataHandler implements ContentTypeHandler {
         throw new IOException("Conversion from Object to '"+getContentType()+"' is not supported");
     }
 
-    /** No transformation is required as the framework handles this data */
+    /**
+     * No transformation is required as the framework handles this data
+     *
+     * @param in The input stream, usually the body of the request
+     * @param target The target, usually the action class
+     */
     public void toObject(Reader in, Object target) {
     }
 
     /**
-     * The extension is not used by this handler
-     * @return
+     * @return The extension is not used by this handler
      */
     public String getExtension() {
         return null;

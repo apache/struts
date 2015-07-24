@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table class='confluenceTable'>
+ * <table class='confluenceTable' summary=''>
  * <tr>
  * <th class='confluenceTh'> Parameter </th>
  * <th class='confluenceTh'> Required </th>
@@ -98,28 +98,28 @@ import java.lang.annotation.Target;
 public @interface FieldExpressionValidator {
 
     /**
-     *  An OGNL expression that returns a boolean value.
+     *  @return An OGNL expression that returns a boolean value.
      */
     String expression();
 
     /**
-     * The default error message for this validator.
+     * @return The default error message for this validator.
      * NOTE: It is required to set a message, if you are not using the message key for 18n lookup!
      */
     String message() default "";
 
     /**
-     * The message key to lookup for i18n.
+     * @return The message key to lookup for i18n.
      */
     String key() default "";
 
     /**
-     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     * @return Additional params to be used to customize message - will be evaluated against the Value Stack
      */
     String[] messageParams() default {};
 
     /**
-     * The optional fieldName for SIMPLE validator types.
+     * @return The optional fieldName for SIMPLE validator types.
      */
     String fieldName() default "";
 
@@ -128,6 +128,7 @@ public @interface FieldExpressionValidator {
      *
      * Adds the short-circuit='true' attribute value if <tt>true</tt>.
      *
+     * @return true if validator will be used as short-circuit. Default is false.
      */
     boolean shortCircuit() default false;
 }

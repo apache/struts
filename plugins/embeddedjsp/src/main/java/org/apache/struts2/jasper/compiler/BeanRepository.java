@@ -35,11 +35,14 @@ public class BeanRepository {
 
     /**
      * Constructor.
+     *
+     * @param loader class loader
+     * @param err the error dispatcher
      */    
     public BeanRepository(ClassLoader loader, ErrorDispatcher err) {
         this.loader = loader;
         this.errDispatcher = err;
-        beanTypes = new HashMap<String, String>();
+        beanTypes = new HashMap<>();
     }
 
     public void addBean(Node.UseBean n, String s, String type, String scope)

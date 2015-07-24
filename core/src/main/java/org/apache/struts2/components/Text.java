@@ -69,13 +69,9 @@ import java.util.List;
  * Example:
  * </p>
  *
- * <pre>
  * <!-- START SNIPPET: exdescription -->
- *
- * Accessing messages from a given bundle (the i18n Shop example bundle in the first example) and using bundle defined through the framework in the second example.</p>
- *
+ * <p>Accessing messages from a given bundle (the i18n Shop example bundle in the first example) and using bundle defined through the framework in the second example.</p>
  * <!-- END SNIPPET: exdescription -->
- * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example -->

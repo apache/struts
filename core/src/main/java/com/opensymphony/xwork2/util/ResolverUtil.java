@@ -59,8 +59,7 @@ import java.util.jar.JarInputStream;
  *Collection&lt;ActionBean&gt; beans = resolver.getClasses();
  *</pre> 
  *
- * <p>This class was copied from Stripes - http://stripes.mc4j.org/confluence/display/stripes/Home
- * </p>
+ * <p>This class was copied from Stripes - http://stripes.mc4j.org/confluence/display/stripes/Home</p>
  * 
  * @author Tim Fennell
  */
@@ -74,8 +73,10 @@ public class ResolverUtil<T> {
      */
     public static interface Test {
         /**
-         * Will be called repeatedly with candidate classes. Must return True if a class
-         * is to be included in the results, false otherwise.
+         * Will be called repeatedly with candidate classes.
+         *
+         * @param type class type
+         * @return True if a class is to be included in the results, false otherwise.
          */
         boolean matches(Class type);
         
@@ -118,10 +119,15 @@ public class ResolverUtil<T> {
     public static class IsA extends ClassTest {
         private Class parent;
 
-        /** Constructs an IsA test using the supplied Class as the parent class/interface. */
+        /** Constructs an IsA test using the supplied Class as the parent class/interface.
+         * @param parentType the parent type class
+         */
         public IsA(Class parentType) { this.parent = parentType; }
 
-        /** Returns true if type is assignable to the parent type supplied in the constructor. */
+        /**
+         * @param type class type
+         * @return true if type is assignable to the parent type supplied in the constructor.
+         */
         public boolean matches(Class type) {
             return type != null && parent.isAssignableFrom(type);
         }
@@ -137,10 +143,16 @@ public class ResolverUtil<T> {
     public static class NameEndsWith extends ClassTest {
         private String suffix;
 
-        /** Constructs a NameEndsWith test using the supplied suffix. */
+        /**
+         * Constructs a NameEndsWith test using the supplied suffix.
+         * @param suffix suffix
+         */
         public NameEndsWith(String suffix) { this.suffix = suffix; }
 
-        /** Returns true if type name ends with the suffix supplied in the constructor. */
+        /**
+         * @param type class type
+         * @return true if type name ends with the suffix supplied in the constructor.
+         */
         public boolean matches(Class type) {
             return type != null && type.getName().endsWith(suffix);
         }
@@ -157,10 +169,17 @@ public class ResolverUtil<T> {
     public static class AnnotatedWith extends ClassTest {
         private Class<? extends Annotation> annotation;
 
-        /** Construts an AnnotatedWith test for the specified annotation type. */
+        /**
+         * Constructs an AnnotatedWith test for the specified annotation type.
+         *
+         * @param annotation annotation
+         */
         public AnnotatedWith(Class<? extends Annotation> annotation) { this.annotation = annotation; }
 
-        /** Returns true if the type is annotated with the class provided to the constructor. */
+        /**
+         * @param type class type
+         * @return true if the type is annotated with the class provided to the constructor.
+         */
         public boolean matches(Class type) {
             return type != null && type.isAnnotationPresent(annotation);
         }
@@ -188,7 +207,7 @@ public class ResolverUtil<T> {
     private Set<Class<? extends T>> classMatches = new HashSet<Class<?extends T>>();
     
     /** The set of matches being accumulated. */
-    private Set<URL> resourceMatches = new HashSet<URL>();
+    private Set<URL> resourceMatches = new HashSet<>();
 
     /**
      * The ClassLoader to use when looking for classes. If null then the ClassLoader returned

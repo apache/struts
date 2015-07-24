@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Keeps a cache of class name -> MemoryJavaFileObject. If the requested class name is in the cache
+ * Keeps a cache of class name -&gt; MemoryJavaFileObject. If the requested class name is in the cache
  * a new class is defined for it, otherwise findClass delegates to the parent class loader
  */
 public class MemoryClassLoader extends ClassLoader {
-    private Map<String, MemoryJavaFileObject> cachedObjects = new ConcurrentHashMap<String, MemoryJavaFileObject>();
+    private Map<String, MemoryJavaFileObject> cachedObjects = new ConcurrentHashMap<>();
 
     public MemoryClassLoader() {
         //without this, the tests will not run, because the tests are loaded by a custom classloader

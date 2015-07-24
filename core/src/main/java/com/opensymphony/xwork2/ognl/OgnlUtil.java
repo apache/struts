@@ -168,8 +168,8 @@ public class OgnlUtil {
      * Sets the properties on the object using the default context, defaulting to not throwing
      * exceptions for problems setting the properties.
      *
-     * @param properties
-     * @param o
+     * @param properties map of properties
+     * @param o object
      */
     public void setProperties(Map<String, ?> properties, Object o) {
         setProperties(properties, o, false);
@@ -226,7 +226,12 @@ public class OgnlUtil {
      * Looks for the real target with the specified property given a root Object which may be a
      * CompoundRoot.
      *
+     * @param property  the property
+     * @param context context map
+     * @param root compound root
+     *
      * @return the real target or null if no object can be found with the specified property
+     * @throws OgnlException in case of ognl errors
      */
     public Object getRealTarget(String property, Map<String, Object> context, Object root) throws OgnlException {
         //special keyword, they must be cutting the stack
@@ -260,6 +265,13 @@ public class OgnlUtil {
     /**
      * Wrapper around Ognl.setValue() to handle type conversion for collection elements.
      * Ideally, this should be handled by OGNL directly.
+     *
+     * @param name  the name
+     * @param context context map
+     * @param root root
+     * @param value value
+     *
+     * @throws OgnlException in case of ognl errors
      */
     public void setValue(String name, Map<String, Object> context, Object root, Object value) throws OgnlException {
         setValue(name, context, root, value, true);

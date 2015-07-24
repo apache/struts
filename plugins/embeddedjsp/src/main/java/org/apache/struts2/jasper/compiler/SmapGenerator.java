@@ -55,7 +55,7 @@ public class SmapGenerator {
     // Methods for adding mapping data
 
     /**
-     * Sets the filename (without path information) for the generated
+     * @param x Sets the filename (without path information) for the generated
      * source file.  E.g., "foo$jsp.java".
      */
     public synchronized void setOutputFileName(String x) {

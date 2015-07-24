@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  * If a class implements BundleContextAware, this interceptor will call the setBundleContext(BundleContext)
- * method on it. If a class implements ServiceAware<T>, this interceptor will call setService(List<T>)
+ * method on it. If a class implements ServiceAware&lt;T&gt;, this interceptor will call setService(List&lt;T&gt;)
  */
 public class OsgiInterceptor extends AbstractInterceptor {
 

@@ -55,6 +55,10 @@ public abstract class ReferenceCache<K, V> extends ReferenceMap<K, V> {
      * #put(Object, Object)}. Invoked by getter if value isn't already cached.
      * Must not return {@code null}. This method will not be called again until
      * the garbage collector reclaims the returned value.
+     *
+     * @param key the key
+     *
+     * @return returned value
      */
     protected abstract V create(K key);
 
@@ -104,6 +108,9 @@ public abstract class ReferenceCache<K, V> extends ReferenceMap<K, V> {
      * #create(Object)} has been overridden, this method will create a new
      * value, put it in the map, and return it.
      * </p>
+     *
+     * @param key the key
+     * @return return new created value
      *
      * @throws NullPointerException                       if {@link #create(Object)} returns null.
      * @throws java.util.concurrent.CancellationException if the creation is
@@ -156,6 +163,14 @@ public abstract class ReferenceCache<K, V> extends ReferenceMap<K, V> {
     /**
      * Returns a {@code ReferenceCache} delegating to the specified {@code
      * function}. The specified function must not return {@code null}.
+     *
+     * @param <K> type of key
+     * @param <V> type of value
+     * @param function function
+     * @param keyReferenceType key reference type
+     * @param valueReferenceType  value reference type
+     *
+     * @return reference cache
      */
     public static <K, V> ReferenceCache<K, V> of(
             ReferenceType keyReferenceType,

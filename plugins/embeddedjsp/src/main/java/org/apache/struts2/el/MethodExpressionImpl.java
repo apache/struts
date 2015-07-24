@@ -44,7 +44,7 @@ import org.apache.struts2.el.util.ReflectionUtil;
  * An <code>Expression</code> that refers to a method on an object.
  * 
  * <p>
- * <code>The {@link ExpressionFactory#createMethodExpression} method
+ * The {@link ExpressionFactory#createMethodExpression} method
  * can be used to parse an expression string and return a concrete instance
  * of <code>MethodExpression</code> that encapsulates the parsed expression.
  * The {@link FunctionMapper} is used at parse time, not evaluation time, 
@@ -100,11 +100,12 @@ public final class MethodExpressionImpl extends MethodExpression implements
     }
 
     /**
-     * @param expr
-     * @param node
-     * @param fnMapper
-     * @param expectedType
-     * @param paramTypes
+     * @param expr expression
+     * @param node node
+     * @param fnMapper function mapper
+     * @param varMapper variable mapper
+     * @param expectedType expected type
+     * @param paramTypes parameter types array
      */
     public MethodExpressionImpl(String expr, Node node,
             FunctionMapper fnMapper, VariableMapper varMapper,

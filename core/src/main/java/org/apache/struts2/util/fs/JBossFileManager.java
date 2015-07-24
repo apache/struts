@@ -109,8 +109,9 @@ public class JBossFileManager extends DefaultFileManager {
 
     /**
      * Check if given URL is pointing to JBoss 5 VFS resource
-     * @param fileUrl
-     * @return
+     *
+     * @param fileUrl file URL to check
+     * @return if given URL is pointing to JBoss 5 VFS resource
      */
     protected boolean isJBossUrl(URL fileUrl) {
         final String protocol = fileUrl.getProtocol();

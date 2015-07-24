@@ -344,6 +344,7 @@ public class XWorkConverter extends DefaultTypeConverter {
      * Looks for a TypeConverter in the default mappings.
      *
      * @param className name of the class the TypeConverter must handle
+     * @param isPrimitive is primitive?
      * @return a TypeConverter to handle the specified class or null if none can be found
      */
     public TypeConverter lookup(String className, boolean isPrimitive) {
@@ -521,10 +522,11 @@ public class XWorkConverter extends DefaultTypeConverter {
     /**
      * Looks for converter mappings for the specified class, traversing up its class hierarchy and interfaces and adding
      * any additional mappings it may find.  Mappings lower in the hierarchy have priority over those higher in the
-     * hierarcy.
+     * hierarchy.
      *
      * @param clazz the class to look for converter mappings for
      * @return the converter mappings
+     * @throws Exception in case of any errors
      */
     protected Map<String, Object> buildConverterMapping(Class clazz) throws Exception {
         Map<String, Object> mapping = new HashMap<>();

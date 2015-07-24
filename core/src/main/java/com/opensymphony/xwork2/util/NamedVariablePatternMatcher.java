@@ -28,28 +28,28 @@ import java.util.regex.Pattern;
  * at least one character must match in order for the wildcard to be matched successfully.  Matched values will be
  * available in the variable map, indexed by the name they were given in the pattern.
  *
- * <p>For example, the following patterns will be processed as so:
- * </p>
- * <table>
+ * <p>For example, the following patterns will be processed as so:</p>
+ *
+ * <table summary="">
  * <tr>
  *  <th>Pattern</th>
  *  <th>Example</th>
  *  <th>Variable Map Contents</th>
  * </tr>
  * <tr>
- *  <td><code>/animals/{animal}</code</td>
+ *  <td><code>/animals/{animal}</code></td>
  *  <td><code>/animals/dog</code></td>
- *  <td>{animal -> dog}</td>
+ *  <td>{animal -&gt; dog}</td>
  * </tr>
  * <tr>
- *  <td><code>/animals/{animal}/tag/No{id}</code</td>
+ *  <td><code>/animals/{animal}/tag/No{id}</code></td>
  *  <td><code>/animals/dog/tag/No23</code></td>
- *  <td>{animal -> dog, id -> 23}</td>
+ *  <td>{animal -&gt; dog, id -&gt; 23}</td>
  * </tr>
  * <tr>
- *  <td><code>/{language}</code</td>
+ *  <td><code>/{language}</code></td>
  *  <td><code>/en</code></td>
- *  <td>{language -> en}</td>
+ *  <td>{language -&gt; en}</td>
  * </tr>
  * </table>
  *
@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
  * Excaping hasn't been implemented since the intended use of these patterns will be in matching URLs.
  * </p>
  *
- * @Since 2.1
+ * @since 2.1
  */
 public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariablePatternMatcher.CompiledPattern> {
 

@@ -26,9 +26,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * <p>
  * A class to handle location information stored in attributes.
  * These attributes are typically setup using {@link com.opensymphony.xwork2.util.location.LocationAttributes.Pipe}
  * which augments the SAX stream with additional attributes, e.g.:
+ * </p>
+ *
  * <pre>
  * &lt;root xmlns:loc="http://struts.apache.org/xwork/location"
  *       loc:src="file://path/to/file.xml"
@@ -39,7 +42,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @see com.opensymphony.xwork2.util.location.LocationAttributes.Pipe
  * @since 2.1.8
- * @version $Id$
  */
 public class LocationAttributes {
     /** Prefix for the location namespace */
@@ -178,6 +180,9 @@ public class LocationAttributes {
     
     /**
      * Same as <code>getLocation(elem, null)</code>.
+     *
+     * @param elem the element that holds the location information
+     * @return a {@link Location} object
      */
     public static Location getLocation(Element elem) {
         return getLocation(elem, null);

@@ -40,7 +40,8 @@ public class LocationImpl implements Location, Serializable {
 
     /**
      * Build a location for a given URI, with unknown line and column numbers.
-     * 
+     *
+     * @param description description for location
      * @param uri the resource URI
      */
     public LocationImpl(String description, String uri) {
@@ -49,7 +50,8 @@ public class LocationImpl implements Location, Serializable {
 
     /**
      * Build a location for a given URI and line and column numbers.
-     * 
+     *
+     * @param description description for location
      * @param uri the resource URI
      * @param line the line number (starts at 1)
      * @param column the column number (starts at 1)
@@ -78,6 +80,9 @@ public class LocationImpl implements Location, Serializable {
     
     /**
      * Create a location from an existing one, but with a different description
+     *
+     * @param description description for location
+     * @param location location object
      */
     public LocationImpl(String description, Location location) {
         this(description, location.getURI(), location.getLineNumber(), location.getColumnNumber());
@@ -140,9 +145,8 @@ public class LocationImpl implements Location, Serializable {
     }
     
     /**
-     * Gets a source code snippet with the default padding
-     *
      * @param padding The amount of lines before and after the error to include
+     * @return a source code snippet with the default padding
      */
     public List<String> getSnippet(int padding) {
         List<String> snippet = new ArrayList<>();
@@ -199,6 +203,8 @@ public class LocationImpl implements Location, Serializable {
     
     /**
      * Ensure serialized unknown location resolve to {@link Location#UNKNOWN}.
+     *
+     * @return resolved location as object
      */
     private Object readResolve() {
         return this.equals(Location.UNKNOWN) ? Location.UNKNOWN : this;

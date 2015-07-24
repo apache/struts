@@ -14,7 +14,10 @@ public interface UnknownHandlerFactory {
      *
      * @param unknownHandlerName name of unknown handler defined in struts.xml
      * @param extraContext extra params
+     *
      * @return instance of {@link com.opensymphony.xwork2.UnknownHandler} with injected dependencies
+     *
+     * @throws Exception in case of any errors
      */
     UnknownHandler buildUnknownHandler(String unknownHandlerName, Map<String, Object> extraContext) throws Exception;
 

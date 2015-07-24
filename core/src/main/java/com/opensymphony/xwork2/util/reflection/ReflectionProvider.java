@@ -40,14 +40,22 @@ public interface ReflectionProvider {
      * Sets the properties on the object using the default context, defaulting to not throwing
      * exceptions for problems setting the properties.
      *
-     * @param properties
-     * @param o
+     * @param properties property map
+     * @param o object
      */
     void setProperties(Map<String, ?> properties, Object o);
     
     /**
      *  This method returns a PropertyDescriptor for the given class and property name using
      * a Map lookup (using getPropertyDescriptorsMap()).
+     *
+     * @param targetClass target class of the property descriptor
+     * @param propertyName  property name
+     *
+     * @return PropertyDescriptor for the given class and property name
+     *
+     * @throws IntrospectionException in case of introspection error
+     * @throws ReflectionException in case of reflection problems
      */
     PropertyDescriptor getPropertyDescriptor(Class targetClass, String propertyName) throws IntrospectionException, ReflectionException;
 
@@ -69,7 +77,11 @@ public interface ReflectionProvider {
      * Looks for the real target with the specified property given a root Object which may be a
      * CompoundRoot.
      *
+     * @param property specified property
+     * @param context the context
+     * @param root the root object
      * @return the real target or null if no object can be found with the specified property
+     * @throws ReflectionException in case of reflection problems
      */
     Object getRealTarget(String property, Map<String, Object> context, Object root) throws ReflectionException;
     

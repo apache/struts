@@ -89,7 +89,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
             ActionContext.setContext(ctx);
         }
 
-        Set<String> bundleNames = new HashSet<String>();
+        Set<String> bundleNames = new HashSet<>();
 
         //iterate over the bundles and load packages from them
         for (Bundle bundle : osgiHost.getBundles().values()) {
@@ -112,6 +112,8 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
     /**
      * Loads XML config as well as Convention config from a bundle
      * Limitation: Constants and Beans are ignored on XML config
+     *
+     * @param bundle the bundle
      */
     protected void loadConfigFromBundle(Bundle bundle) {
         String bundleName = bundle.getSymbolicName();
@@ -141,7 +143,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
             //Convention
             //get the existing packages before reloading the provider (se we can figure out what are the new packages)
-            Set<String> packagesBeforeLoading = new HashSet<String>(configuration.getPackageConfigNames());
+            Set<String> packagesBeforeLoading = new HashSet<>(configuration.getPackageConfigNames());
 
             PackageProvider conventionPackageProvider = configuration.getContainer().getInstance(PackageProvider.class, "convention.packageProvider");
             if (conventionPackageProvider != null) {
@@ -170,6 +172,10 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
     /**
      * Checks for "Struts2-Enabled" header in the bundle
+     *
+     * @param bundle the bundle
+     *
+     * @return true is struts2 enabled
      */
     protected boolean shouldProcessBundle(Bundle bundle) {
         // Cast to String is required on JDK7
@@ -223,6 +229,8 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
     /**
      * Listens to bundle event to load/unload config
+     *
+     * @param bundleEvent the bundle event
      */
     public void bundleChanged(BundleEvent bundleEvent) {
         Bundle bundle = bundleEvent.getBundle();

@@ -143,7 +143,7 @@ import java.io.Serializable;
  * Assuming the interceptor has the following properties
  * </p>
  *
- * <table border=&quot;1&quot; width=&quot;100%&quot;>
+ * <table border="1" summary="">
  * <tr>
  * <td>Interceptor</td>
  * <td>property</td>

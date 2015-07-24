@@ -80,9 +80,9 @@ public class ProfilingTimerBean implements java.io.Serializable {
     }
 
     /**
-     * Get a formatted string representing all the methods that took longer than a specified time.
+     * @param minTime minimum time
+     * @return  a formatted string representing all the methods that took longer than a specified time.
      */
-
     public String getPrintable(long minTime) {
         return getPrintable("", minTime);
     }

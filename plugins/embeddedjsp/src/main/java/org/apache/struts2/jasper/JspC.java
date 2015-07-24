@@ -424,21 +424,21 @@ public class JspC implements Options {
         return classDebugInfo;
     }
 
-     /**
+     /*
       * @see Options#isCaching()
      */
     public boolean isCaching() {
         return caching;
     }
 
-    /**
+    /*
      * @see Options#isCaching()
      */
     public void setCaching(boolean caching) {
         this.caching = caching;
     }
 
-    /**
+    /*
      * @see Options#getCache()
      */
     public Map getCache() {
@@ -446,35 +446,35 @@ public class JspC implements Options {
     }
 
     /**
-     * Background compilation check intervals in seconds
+     * @return Background compilation check intervals in seconds
      */
     public int getCheckInterval() {
         return 0;
     }
 
     /**
-     * Modification test interval.
+     * @return Modification test interval.
      */
     public int getModificationTestInterval() {
         return 0;
     }
 
     /**
-     * Is Jasper being used in development mode?
+     * @return Is Jasper being used in development mode?
      */
     public boolean getDevelopment() {
         return false;
     }
 
     /**
-     * Is the generation of SMAP info for JSR45 debuggin suppressed?
+     * @return Is the generation of SMAP info for JSR45 debuggin suppressed?
      */
     public boolean isSmapSuppressed() {
         return smapSuppressed;
     }
 
     /**
-     * Set smapSuppressed flag.
+     * @param smapSuppressed Set smapSuppressed flag.
      */
     public void setSmapSuppressed(boolean smapSuppressed) {
         this.smapSuppressed = smapSuppressed;
@@ -482,14 +482,14 @@ public class JspC implements Options {
 
     
     /**
-     * Should SMAP info for JSR45 debugging be dumped to a file?
+     * @return  Should SMAP info for JSR45 debugging be dumped to a file?
      */
     public boolean isSmapDumped() {
         return smapDumped;
     }
 
     /**
-     * Set smapSuppressed flag.
+     * @param smapDumped  Set smapDumped flag.
      */
     public void setSmapDumped(boolean smapDumped) {
         this.smapDumped = smapDumped;
@@ -519,7 +519,7 @@ public class JspC implements Options {
 
     /**
      * Sets the class-id value to be sent to Internet Explorer when using
-     * <jsp:plugin> tags.
+     * &lt;jsp:plugin&gt; tags.
      *
      * @param ieClassId Class-id value
      */
@@ -529,7 +529,7 @@ public class JspC implements Options {
 
     /**
      * Gets the class-id value that is sent to Internet Explorer when using
-     * <jsp:plugin> tags.
+     * &lt;jsp:plugin&gt; tags.
      *
      * @return Class-id value
      */
@@ -552,7 +552,7 @@ public class JspC implements Options {
     }
 
     /**
-     * Compiler to use.
+     * @return Compiler to use.
      */
     public String getCompiler() {
         return compiler;
@@ -563,13 +563,13 @@ public class JspC implements Options {
     }
 
     /**
-     * Compiler class name to use.
+     * @return Compiler class name to use.
      */
     public String getCompilerClassName() {
         return null;
     }
     
-    /**
+    /*
      * @see Options#getCompilerTargetVM
      */
     public String getCompilerTargetVM() {
@@ -580,14 +580,14 @@ public class JspC implements Options {
         compilerTargetVM = vm;
     }
 
-    /**
+    /*
      * @see Options#getCompilerSourceVM()
      */
      public String getCompilerSourceVM() {
          return compilerSourceVM;
      }
         
-    /**
+    /*
      * @see Options#getCompilerSourceVM()
      */
     public void setCompilerSourceVM(String vm) {
@@ -716,7 +716,7 @@ public class JspC implements Options {
     }
 
     /**
-     * Class name of the generated file ( without package ).
+     * @param p Class name of the generated file ( without package ).
      * Can only be used if a single file is converted.
      * XXX Do we need this feature ?
      */
@@ -729,7 +729,7 @@ public class JspC implements Options {
     }
 
     /**
-     * Set the option that throws an exception in case of a compilation error.
+     * @param b Set the option that throws an exception in case of a compilation error.
      */
     public void setFailOnError(final boolean b) {
         failOnError = b;
@@ -740,7 +740,7 @@ public class JspC implements Options {
     }
 
     /**
-     * Obtain JSP configuration informantion specified in web.xml.
+     * @return Obtain JSP configuration information specified in web.xml.
      */
     public JspConfig getJspConfig() {
         return jspConfig;
@@ -787,6 +787,8 @@ public class JspC implements Options {
 
     /**
      * Include the generated web.xml inside the webapp's web.xml.
+     *
+     * @throws IOException in case of IO errors
      */
     protected void mergeIntoWebXml() throws IOException {
 
@@ -989,9 +991,12 @@ public class JspC implements Options {
     /**
      * Locate all jsp files in the webapp. Used if no explicit
      * jsps are specified.
+     *
+     * @param base base
+     * @throws JasperException in case of Jasper errors
      */
     public void scanFiles( File base ) throws JasperException {
-        Stack<String> dirs = new Stack<String>();
+        Stack<String> dirs = new Stack<>();
         dirs.push(base.toString());
 
         // Make sure default extensions are always included
@@ -1178,6 +1183,8 @@ public class JspC implements Options {
      * Find the WEB-INF dir by looking up in the directory tree.
      * This is used if no explicit docbase is set, but only files.
      * XXX Maybe we should require the docbase.
+     *
+     * @param f start file for lookup
      */
     protected void locateUriRoot( File f ) {
         String tUriBase = uriBase;

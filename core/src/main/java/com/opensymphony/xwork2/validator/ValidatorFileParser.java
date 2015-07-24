@@ -30,6 +30,7 @@ public interface ValidatorFileParser {
      * Parse resource for a list of ValidatorConfig objects (configuring which validator(s) are
      * being applied to a particular field etc.)
      *
+     * @param validatorFactory a validator factory
      * @param is input stream to the resource
      * @param resourceName file name of the resource
      * @return List list of ValidatorConfig
@@ -39,6 +40,7 @@ public interface ValidatorFileParser {
     /**
      * Parses validator definitions (register various validators with XWork).
      *
+     * @param validators map of validators
      * @param is The input stream
      * @param resourceName The location of the input stream
      */

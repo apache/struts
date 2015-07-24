@@ -33,7 +33,7 @@ public interface UnknownHandler {
      * @param namespace The namespace
      * @param actionName The action name
      * @return An generated ActionConfig, can return <tt>null</tt>
-     * @throws XWorkException
+     * @throws XWorkException in case of errors
      */
     ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException;
     
@@ -45,7 +45,7 @@ public interface UnknownHandler {
      * @param actionConfig The action config
      * @param resultCode The returned result code
      * @return A result to be executed, can return <tt>null</tt>
-     * @throws XWorkException
+     * @throws XWorkException in case of errors
      */
     Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException;
     

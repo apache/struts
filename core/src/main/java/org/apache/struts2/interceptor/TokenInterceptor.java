@@ -184,6 +184,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
      * interesting.
      *
      * @param invocation the action invocation
+     * @return invocation result
      * @throws Exception when any unexpected error occurs.
      */
     protected String handleValidToken(ActionInvocation invocation) throws Exception {

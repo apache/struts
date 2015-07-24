@@ -51,7 +51,7 @@ import java.util.Map;
  * }
  * </pre>
  *
- * would be rendered as: <myPerson> <firstName>...</firstName> <lastName>...</lastName> </myPerson>
+ * would be rendered as: &lt;myPerson&gt; &lt;firstName&gt;...&lt;/firstName&gt; &lt;lastName&gt;...&lt;/lastName&gt; &lt;/myPerson&gt;
  */
 public class BeanAdapter extends AbstractAdapterElement {
     //Static fields/initializer

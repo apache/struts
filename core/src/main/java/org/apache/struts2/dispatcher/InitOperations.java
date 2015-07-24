@@ -39,6 +39,7 @@ public class InitOperations {
     /**
      * Initializes the internal Struts logging
      *
+     * @param filterConfig host configuration
      * @deprecated since 2.5
      */
     @Deprecated
@@ -64,6 +65,10 @@ public class InitOperations {
 
     /**
      * Creates and initializes the dispatcher
+     *
+     * @param filterConfig host configuration
+     *
+     * @return the dispatcher
      */
     public Dispatcher initDispatcher( HostConfig filterConfig ) {
         Dispatcher dispatcher = createDispatcher(filterConfig);
@@ -73,6 +78,10 @@ public class InitOperations {
 
     /**
      * Initializes the static content loader with the filter configuration
+     *
+     * @param filterConfig host configuration
+     * @param dispatcher the dispatcher
+     * @return the static content loader
      */
     public StaticContentLoader initStaticContentLoader( HostConfig filterConfig, Dispatcher dispatcher ) {
         StaticContentLoader loader = dispatcher.getContainer().getInstance(StaticContentLoader.class);
@@ -95,6 +104,10 @@ public class InitOperations {
 
     /**
      * Create a {@link Dispatcher}
+     *
+     * @param filterConfig host configuration
+     *
+     * @return The dispatcher on the thread.
      */
     private Dispatcher createDispatcher( HostConfig filterConfig ) {
         Map<String, String> params = new HashMap<>();

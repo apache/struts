@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
- * <table class='confluenceTable'>
+ * <table class='confluenceTable' summary=''>
  * <tr>
  * <th class='confluenceTh'> Parameter </th>
  * <th class='confluenceTh'> Required </th>
@@ -132,43 +132,47 @@ import java.lang.annotation.Target;
 public @interface ShortRangeFieldValidator {
 
     /**
-     * Short property. The minimum the number must be.
+     * Short property.
+     *
+     * @return The minimum the number must be.
      */
     String min() default "";
 
     /**
-     * The minimum the number must be defined as an expression.
+     * @return The minimum the number must be defined as an expression.
      */
     String minExpression() default "";
 
     /**
-     *  Short property. The maximum number can be.
+     *  Short property.
+     *
+     *  @return The maximum number can be.
      */
     String max() default "";
 
     /**
-     * The maximum number can be defined as an expression
+     * @return The maximum number can be defined as an expression
      */
     String maxExpression() default "";
 
     /**
-     * The default error message for this validator.
+     * @return The default error message for this validator.
      * NOTE: It is required to set a message, if you are not using the message key for 18n lookup!
      */
     String message() default "";
 
     /**
-     * The message key to lookup for i18n.
+     * @return The message key to lookup for i18n.
      */
     String key() default "";
 
     /**
-     * Additional params to be used to customize message - will be evaluated against the Value Stack
+     * @return Additional params to be used to customize message - will be evaluated against the Value Stack
      */
     String[] messageParams() default {};
 
     /**
-     * The optional fieldName for SIMPLE validator types.
+     * @return The optional fieldName for SIMPLE validator types.
      */
     String fieldName() default "";
 
@@ -177,11 +181,12 @@ public @interface ShortRangeFieldValidator {
      *
      * Adds the short-circuit="true" attribute value if <tt>true</tt>.
      *
+     * @return true if validator will be used as short-circuit. Default is false.
      */
     boolean shortCircuit() default false;
 
     /**
-     * The validation type for this field/method.
+     * @return The validation type for this field/method.
      */
     ValidatorType type() default ValidatorType.FIELD;
 }

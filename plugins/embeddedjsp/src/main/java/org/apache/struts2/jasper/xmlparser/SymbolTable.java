@@ -26,13 +26,18 @@
 package org.apache.struts2.jasper.xmlparser;
 
 /**
+ * <p>
  * This class is a symbol table implementation that guarantees that
  * strings used as identifiers are unique references. Multiple calls
  * to <code>addSymbol</code> will always return the same string
  * reference.
+ * </p>
+ *
  * <p>
  * The symbol table performs the same task as <code>String.intern()</code>
  * with the following differences:
+ * </p>
+ *
  * <ul>
  *  <li>
  *   A new string object does not need to be created in order to
@@ -79,7 +84,9 @@ public class SymbolTable {
         this(TABLE_SIZE);
     }
 
-    /** Constructs a symbol table with a specified number of buckets. */
+    /** Constructs a symbol table with a specified number of buckets.
+     * @param tableSize the table size
+     */
     public SymbolTable(int tableSize) {
         fTableSize = tableSize;
         fBuckets = new Entry[fTableSize];
@@ -96,6 +103,7 @@ public class SymbolTable {
      * guarantee that symbol references remain unique.
      *
      * @param symbol The new symbol.
+     * @return reference to the unique symbol
      */
     public String addSymbol(String symbol) {
 
@@ -129,6 +137,7 @@ public class SymbolTable {
      * @param buffer The buffer containing the new symbol.
      * @param offset The offset into the buffer of the new symbol.
      * @param length The length of the new symbol in the buffer.
+     * @return reference to the unique symbol
      */
     public String addSymbol(char[] buffer, int offset, int length) {
 
@@ -153,7 +162,7 @@ public class SymbolTable {
     } // addSymbol(char[],int,int):String
 
     /**
-     * Returns a hashcode value for the specified symbol. The value
+     * @return a hashcode value for the specified symbol. The value
      * returned by this method must be identical to the value returned
      * by the <code>hash(char[],int,int)</code> method when called
      * with the character array that comprises the symbol string.
@@ -172,7 +181,7 @@ public class SymbolTable {
     } // hash(String):int
 
     /**
-     * Returns a hashcode value for the specified symbol information.
+     *  @return a hashcode value for the specified symbol information.
      * The value returned by this method must be identical to the value
      * returned by the <code>hash(String)</code> method when called
      * with the string object created from the symbol information.
@@ -193,7 +202,7 @@ public class SymbolTable {
     } // hash(char[],int,int):int
 
     /**
-     * Returns true if the symbol table already contains the specified
+     *  @return true if the symbol table already contains the specified
      * symbol.
      *
      * @param symbol The symbol to look for.
@@ -219,7 +228,7 @@ public class SymbolTable {
     } // containsSymbol(String):boolean
 
     /**
-     * Returns true if the symbol table already contains the specified
+     *  @return true if the symbol table already contains the specified
      * symbol.
      *
      * @param buffer The buffer containing the symbol to look for.
@@ -278,6 +287,9 @@ public class SymbolTable {
         /**
          * Constructs a new entry from the specified symbol and next entry
          * reference.
+         *
+         * @param symbol symbol
+         * @param next next entry
          */
         public Entry(String symbol, Entry next) {
             this.symbol = symbol.intern();
@@ -289,6 +301,11 @@ public class SymbolTable {
         /**
          * Constructs a new entry from the specified symbol information and
          * next entry reference.
+         *
+         * @param ch char array
+         * @param offset offset
+         * @param length length
+         * @param next next entry
          */
         public Entry(char[] ch, int offset, int length, Entry next) {
             characters = new char[length];

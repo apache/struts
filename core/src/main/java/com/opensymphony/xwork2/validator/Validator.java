@@ -32,20 +32,20 @@ import com.opensymphony.xwork2.util.ValueStack;
  * that are not inherently tied to a single specified field. When you declare a
  * plain Validator in your -validation.xml file you do not associate a fieldname
  * attribute with it. (You should avoid using plain Validators within the
- * <field-validator> syntax described below.)</p>
+ * &lt;field-validator&gt; syntax described below.)</p>
  *
  * <p>FieldValidators (such as the EmailValidator) are designed to perform
  * validation checks on a single field. They require that you specify a fieldname
  * attribute in your -validation.xml file. There are two different (but equivalent)
- * XML syntaxes you can use to declare FieldValidators (see "<validator> vs.
- * <field-Validator> syntax&quot; below).</p>
+ * XML syntaxes you can use to declare FieldValidators (see "&lt;validator&gt; vs.
+ * &lt;field-Validator&gt; syntax&quot; below).</p>
  *
  * <p>There are two places where the differences between the two validator flavors
  * are important to keep in mind:</p>
  *
  * <ol>
  * <li> when choosing the xml syntax used for declaring a validator
- * (either <validator> or <field-validator>)</li>
+ * (either &lt;validator&gt; or &lt;field-validator&gt;)</li>
  * <li> when using the short-circuit capability</li>
  * </ol>
  *
@@ -124,7 +124,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;!-- Declaring a plain Validator using the &lt;validator&gt; syntax: --&gt;
  *
  *    &lt;validator type=&quot;expression&gt;
- *          &lt;param name=&quot;expression&quot;>foo gt bar&lt;/param&gt;
+ *          &lt;param name=&quot;expression&quot;&gt;foo gt bar&lt;/param&gt;
  *          &lt;message&gt;foo must be great than bar.&lt;/message&gt;
  *    &lt;/validator&gt;
  * <!-- END SNIPPET: nonFieldValidatorUsingValidatorSyntax -->
@@ -137,7 +137,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;validator type=&quot;required&quot;&gt;
  *         &lt;param name=&quot;fieldName&quot;&gt;bar&lt;/param&gt;
  *         &lt;message&gt;You must enter a value for bar.&lt;/message&gt;
- *    &lt/validator&gt;
+ *    &lt;/validator&gt;
  * <!-- END SNIPPET: fieldValidatorUsingValidatorSyntax -->
  * </pre>
  *
@@ -158,7 +158,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p><b>NOTE:</b>
  * Note that you should only use FieldValidators (not plain Validators) within a
- * <field-validator> block. A plain Validator inside a &lt;field&gt; will not be
+ * &lt;field-validator&gt; block. A plain Validator inside a &lt;field&gt; will not be
  * allowed and would generate error when parsing the xml, as it is not allowed in
  * the defined dtd (xwork-validator-1.0.2.dtd)</p>
  * <!-- END SNIPPET: validatorVsFieldValidators2 -->
@@ -180,13 +180,13 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  *
  * <!-- START SNIPPET: validatorVsFieldValidators3 -->
- * <p>The choice is yours. It's perfectly legal to only use <validator> elements
- * without the <field> elements and set the fieldName attribute for each of them.
+ * <p>The choice is yours. It's perfectly legal to only use &lt;validator&gt; elements
+ * without the &lt;field&gt; elements and set the fieldName attribute for each of them.
  * The following are effectively equal:</p>
  * <!-- END SNIPPET: validatorVsFieldValidators3 -->
  *
  * <pre>
- * <!-- START SNIPPET: similarVaidatorDeclaredInDiffSyntax -->
+ * <!-- START SNIPPET: similarValidatorDeclaredInDiffSyntax -->
  * &lt;field name=&quot;email_address&quot;&gt;
  *   &lt;field-validator type=&quot;required&quot;&gt;
  *       &lt;message&gt;You cannot leave the email address field empty.&lt;/message&gt;
@@ -205,7 +205,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   &lt;param name=&quot;fieldName&quot;&gt;email_address&lt;/param&gt;
  *   &lt;message&gt;The email address you entered is not valid.&lt;/message&gt;
  * &lt;/validator&gt;
- * <!-- END SNIPPET: similarVaidatorDeclaredInDiffSyntax -->
+ * <!-- END SNIPPET: similarValidatorDeclaredInDiffSyntax -->
  * </pre>
  *
  *
@@ -294,8 +294,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p><b>Short cuircuiting and validator flavours</b></p>
  * <p>A FieldValidator that gets short-circuited will only prevent other
  * FieldValidators for the same field from being evaluated. Note that this
- * &quot;same field&quot; behavior applies regardless of whether the <validator> or
- * <field-validator> syntax was used to declare the validation rule.
+ * &quot;same field&quot; behavior applies regardless of whether the &lt;validator&gt; or
+ * &lt;field-validator&gt; syntax was used to declare the validation rule.
  * By way of example, given this -validation.xml file:</p>
  * <!-- END SNIPPET: scAndValidatorFlavours1 -->
  *
@@ -307,7 +307,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/validator&gt;
  *
  * &lt;validator type=&quot;expression&quot;&gt;
- *   &lt;param name=&quot;expression&quot;>foo gt bar&lt;/param&gt;
+ *   &lt;param name=&quot;expression&quot;&gt;foo gt bar&lt;/param&gt;
  *   &lt;message&gt;foo must be great than bar.&lt;/message&gt;
  * &lt;/validator&gt;
  * <!-- END SNIPPET: exScAndValidatorFlavours -->

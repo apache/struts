@@ -31,9 +31,9 @@ import java.util.List;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * This result uses the {@link ActionMapper} provided by the
- * {@link ActionMapperFactory} to redirect the browser to a URL that invokes the
+ * ActionMapperFactory to redirect the browser to a URL that invokes the
  * specified action and (optional) namespace. This is better than the
  * {@link ServletRedirectResult} because it does not require you to encode the
  * URL patterns processed by the {@link ActionMapper} in to your struts.xml
@@ -41,39 +41,37 @@ import java.util.List;
  * and your application will still work. It is strongly recommended that if you
  * are redirecting to another action, you use this result rather than the
  * standard redirect result.
+ * </p>
  *
+ * <p>
  * See examples below for an example of how request parameters could be passed
  * in.
- *
+ * </p>
  * <!-- END SNIPPET: description -->
- *
+ * <p>
  * <b>This result type takes the following parameters:</b>
- *
+ * </p>
  * <!-- START SNIPPET: params -->
  *
  * <ul>
- *
  * <li><b>actionName (default)</b> - The name of the action that will be
  * redirected to.</li>
- *
  * <li><b>namespace</b> - Used to determine which namespace the action is in
  * that we're redirecting to.  If namespace is null, the default will be the
  * current namespace.</li>
- *
  * <li><b>suppressEmptyParameters</b> - Optional boolean (defaults to false) that
  * can prevent parameters with no values from being included in the redirect
  * URL.</li>
- *
  * <li><b>parse</b> - Boolean, true by default.  If set to false, the actionName
  * param will not be parsed for Ognl expressions.</li>
- *
  * <li><b>anchor</b> - Optional.  Also known as "fragment" or colloquially as
  * "hash".  You can specify an anchor for a result.</li>
  * </ul>
  *
  * <!-- END SNIPPET: params -->
- *
+ * <p>
  * <b>Example:</b>
+ * </p>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -103,7 +101,7 @@ import java.util.List;
  *    &lt;!-- Pass parameters (reportType, width and height) --&gt;
  *    &lt;!--
  *    The redirectAction url generated will be :
- *    /genReport/generateReport.action?reportType=pie&width=100&height=100#summary
+ *    /genReport/generateReport.action?reportType=pie&amp;width=100&amp;height=100#summary
  *    --&gt;
  *    &lt;action name="gatherReportInfo" class="..."&gt;
  *       &lt;result name="showReportResult" type="redirectAction"&gt;

@@ -50,10 +50,10 @@ public class ELSupport {
     }
 
     /**
-     * @param obj0
-     * @param obj1
-     * @return
-     * @throws EvaluationException
+     * @param obj0 first object
+     * @param obj1 second object
+     * @return 0 if objects are equals
+     * @throws ELException in case of errors
      */
     public final static int compare(final Object obj0, final Object obj1)
             throws ELException {
@@ -93,10 +93,10 @@ public class ELSupport {
     }
 
     /**
-     * @param obj0
-     * @param obj1
-     * @return
-     * @throws EvaluationException
+     * @param obj0 first object
+     * @param obj1 second object
+     * @return true if objects are equals
+     * @throws ELException in case of errors
      */
     public final static boolean equals(final Object obj0, final Object obj1)
             throws ELException {
@@ -139,9 +139,9 @@ public class ELSupport {
     }
 
     /**
-     * @param obj
-     * @param type
-     * @return
+     * @param obj object
+     * @param type class ytpe
+     * @return enum
      */
     public final static Enum coerceToEnum(final Object obj, Class type) {
         if (obj == null || "".equals(obj)) {
@@ -154,8 +154,8 @@ public class ELSupport {
     }
 
     /**
-     * @param obj
-     * @return
+     * @param obj object
+     * @return boolean
      */
     public final static Boolean coerceToBoolean(final Object obj)
             throws IllegalArgumentException {
@@ -304,8 +304,8 @@ public class ELSupport {
     }
 
     /**
-     * @param obj
-     * @return
+     * @param obj object
+     * @return String
      */
     public final static String coerceToString(final Object obj) {
         if (obj == null) {
@@ -377,8 +377,8 @@ public class ELSupport {
     }
 
     /**
-     * @param obj
-     * @return
+     * @param obj object array
+     * @return true if object array contains null values
      */
     public final static boolean containsNulls(final Object[] obj) {
         for (int i = 0; i < obj.length; i++) {
@@ -466,9 +466,6 @@ public class ELSupport {
         }
     }
 
-    /**
-     * 
-     */
     public ELSupport() {
         super();
     }

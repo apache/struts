@@ -111,7 +111,7 @@ import javax.servlet.jsp.JspException;
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
- * &lt;!--  C: List with start -->
+ * &lt;!--  C: List with start --&gt;
  *      &lt;s:subset source="myList" count="13" start="3"&gt;
  *         &lt;s:iterator&gt;
  *           &lt;s:property /&gt;
@@ -145,7 +145,7 @@ import javax.servlet.jsp.JspException;
  * </pre>
  *
  *
- * @s.tag name="subset" tld-body-content="JSP"
+ * {@literal @}s.tag name="subset" tld-body-content="JSP"
  * description="Takes an iterator and outputs a subset of it"
  */
 @StrutsTag(name="subset", tldTagClass="org.apache.struts2.views.jsp.iterator.SubsetIteratorTag",
@@ -175,8 +175,10 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @s.tagattribute required="false" type="Integer"
+     * {@literal @}s.tagattribute required="false" type="Integer"
      * description="Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator"
+     *
+     * @param start start
      */
     @StrutsTagAttribute(type="Integer",
             description="Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator")

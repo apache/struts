@@ -114,7 +114,7 @@ public class ObjectFactory implements Serializable {
      *
      * @param className The fully qualified name of the class to return
      * @return The class itself
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException if class not found in classpath
      */
     public Class getClassInstance(String className) throws ClassNotFoundException {
         if (ccl != null) {
@@ -131,7 +131,7 @@ public class ObjectFactory implements Serializable {
      * @param config the action configuration found in the config for the actionName / namespace
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      * @return instance of the action class to handle a web request
-     * @throws Exception
+     * @throws Exception in case of any error
      */
     public Object buildAction(String actionName, String namespace, ActionConfig config, Map<String, Object> extraContext) throws Exception {
         return actionFactory.buildAction(actionName, namespace, config, extraContext);
@@ -142,13 +142,16 @@ public class ObjectFactory implements Serializable {
      *
      * @param clazz the type of Object to build
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
+     * @return object for the given type
+     * @throws Exception in case of any error
      */
     public Object buildBean(Class clazz, Map<String, Object> extraContext) throws Exception {
         return clazz.newInstance();
     }
 
     /**
-     * @param obj
+     * @param obj object to inject internal
+     * @return the object
      */
     protected Object injectInternalBeans(Object obj) {
         if (obj != null && container != null) {
@@ -162,6 +165,8 @@ public class ObjectFactory implements Serializable {
      *
      * @param className the type of Object to build
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
+     * @return object for the given type
+     * @throws Exception in case of any error
      */
     public Object buildBean(String className, Map<String, Object> extraContext) throws Exception {
         return buildBean(className, extraContext, true);
@@ -172,6 +177,9 @@ public class ObjectFactory implements Serializable {
      *
      * @param className the type of Object to build
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
+     * @param injectInternal true if inject internal beans
+     * @return object for the given type
+     * @throws Exception in case of any error
      */
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
         Class clazz = getClassInstance(className);
@@ -185,7 +193,7 @@ public class ObjectFactory implements Serializable {
     /**
      * Builds an Interceptor from the InterceptorConfig and the Map of
      * parameters from the interceptor reference. Implementations of this method
-     * should ensure that the Interceptor is parameterized with both the
+     * should ensure that the Interceptor is parametrized with both the
      * parameters from the Interceptor config and the interceptor ref Map (the
      * interceptor ref params take precedence), and that the Interceptor.init()
      * method is called on the Interceptor instance before it is returned.
@@ -193,6 +201,7 @@ public class ObjectFactory implements Serializable {
      * @param interceptorConfig    the InterceptorConfig from the configuration
      * @param interceptorRefParams a Map of params provided in the Interceptor reference in the
      *                             Action mapping or InterceptorStack definition
+     * @return interceptor
      */
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map<String, String> interceptorRefParams) throws ConfigurationException {
         return interceptorFactory.buildInterceptor(interceptorConfig, interceptorRefParams);
@@ -203,6 +212,9 @@ public class ObjectFactory implements Serializable {
      *
      * @param resultConfig the ResultConfig found for the action with the result code returned
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
+     *
+     * @return result
+     * @throws Exception in case of any error
      */
     public Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception {
         return resultFactory.buildResult(resultConfig, extraContext);
@@ -212,8 +224,11 @@ public class ObjectFactory implements Serializable {
      * Build a Validator of the given type and set the parameters on it
      *
      * @param className the type of Validator to build
-     * @param params    property name -> value Map to set onto the Validator instance
+     * @param params    property name -&gt; value Map to set onto the Validator instance
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
+     *
+     * @return validator of the given type
+     * @throws Exception in case of any error
      */
     public Validator buildValidator(String className, Map<String, Object> params, Map<String, Object> extraContext) throws Exception {
         return validatorFactory.buildValidator(className, params, extraContext);
@@ -225,6 +240,7 @@ public class ObjectFactory implements Serializable {
      * @param converterClass to instantiate
      * @param extraContext a Map of extra context which uses the same keys as the {@link com.opensymphony.xwork2.ActionContext}
      * @return instance of converterClass with inject dependencies
+     * @throws Exception in case of any error
      */
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception {
         return converterFactory.buildConverter(converterClass, extraContext);
@@ -233,10 +249,10 @@ public class ObjectFactory implements Serializable {
     /**
      * Builds unknown handler
      *
-     * @param unknownHandlerName
-     * @param extraContext
-     * @return
-     * @throws Exception
+     * @param unknownHandlerName the unknown handler name
+     * @param extraContext extra context
+     * @return a unknown handler
+     * @throws Exception in case of any error
      */
     public UnknownHandler buildUnknownHandler(String unknownHandlerName, Map<String, Object> extraContext) throws Exception {
         return unknownHandlerFactory.buildUnknownHandler(unknownHandlerName, extraContext);

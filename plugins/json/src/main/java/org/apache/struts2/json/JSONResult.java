@@ -298,9 +298,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Wrap generated JSON with comments
-     *
-     * @param wrapWithComments
+     * @param wrapWithComments Wrap generated JSON with comments
      */
     public void setWrapWithComments(boolean wrapWithComments) {
         this.wrapWithComments = wrapWithComments;
@@ -314,9 +312,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Enable SMD generation for action, which can be used for JSON-RPC
-     *
-     * @param enableSMD
+     * @param enableSMD Enable SMD generation for action, which can be used for JSON-RPC
      */
     public void setEnableSMD(boolean enableSMD) {
         this.enableSMD = enableSMD;
@@ -327,7 +323,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Controls whether interfaces should be inspected for method annotations
+     * @param ignoreInterfaces  Controls whether interfaces should be inspected for method annotations
      * You may need to set to this true if your action is a proxy as annotations
      * on methods are not inherited
      */
@@ -336,11 +332,9 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Controls how Enum's are serialized : If true, an Enum is serialized as a
+     * @param enumAsBean Controls how Enum's are serialized : If true, an Enum is serialized as a
      * name=value pair (name=name()) (default) If false, an Enum is serialized
      * as a bean with a special property _name=name()
-     *
-     * @param enumAsBean
      */
     public void setEnumAsBean(boolean enumAsBean) {
         this.enumAsBean = enumAsBean;
@@ -363,9 +357,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Add headers to response to prevent the browser from caching the response
-     *
-     * @param noCache
+     * @param noCache Add headers to response to prevent the browser from caching the response
      */
     public void setNoCache(boolean noCache) {
         this.noCache = noCache;
@@ -380,27 +372,21 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Do not serialize properties with a null value
-     *
-     * @param excludeNullProperties
+     * @param excludeNullProperties Do not serialize properties with a null value
      */
     public void setExcludeNullProperties(boolean excludeNullProperties) {
         this.excludeNullProperties = excludeNullProperties;
     }
 
     /**
-     * Status code to be set in the response
-     *
-     * @param statusCode
+     * @param statusCode Status code to be set in the response
      */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 
     /**
-     * Error code to be set in the response
-     *
-     * @param errorCode
+     * @param errorCode Error code to be set in the response
      */
     public void setErrorCode(int errorCode) {
         this.errorCode = errorCode;
@@ -415,18 +401,14 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Prefix JSON with "{} &&"
-     *
-     * @param prefix
+     * @param prefix Prefix JSON with "{} &amp;&amp;"
      */
     public void setPrefix(boolean prefix) {
         this.prefix = prefix;
     }
 
     /**
-     * Content type to be set in the response
-     *
-     * @param contentType
+     * @param contentType Content type to be set in the response
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
@@ -437,7 +419,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Text to be inserted at the begining of the response
+     * @param wrapPrefix  Text to be inserted at the begining of the response
      */
     public void setWrapPrefix(String wrapPrefix) {
         this.wrapPrefix = wrapPrefix;
@@ -448,7 +430,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Text to be inserted at the end of the response
+     * @param wrapSuffix  Text to be inserted at the end of the response
      */
     public void setWrapSuffix(String wrapSuffix) {
         this.wrapSuffix = wrapSuffix;

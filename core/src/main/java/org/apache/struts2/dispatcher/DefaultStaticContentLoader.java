@@ -274,7 +274,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * @param name resource name
      * @param packagePrefix The package prefix to use to locate the resource
      * @return full path
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException If there is a encoding problem
      */
     protected String buildPath(String name, String packagePrefix) throws UnsupportedEncodingException {
         String resourcePath;

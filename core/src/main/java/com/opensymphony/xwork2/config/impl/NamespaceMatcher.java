@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Matches namespace strings against a wildcard pattern matcher
  *
- * @Since 2.1
+ * @since 2.1
  */
 public class NamespaceMatcher extends AbstractMatcher<NamespaceMatch> {
      public NamespaceMatcher(PatternMatcher<?> patternMatcher,

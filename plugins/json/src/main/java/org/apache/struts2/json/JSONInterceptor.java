@@ -320,6 +320,8 @@ public class JSONInterceptor extends AbstractInterceptor {
     /**
      * Ignore annotations on methods in interfaces You may need to set to this
      * true if your action is a proxy/enhanced as annotations are not inherited
+     *
+     * @param ignoreSMDMethodInterfaces set the flag for ignore SMD method interfaces
      */
     public void setIgnoreSMDMethodInterfaces(boolean ignoreSMDMethodInterfaces) {
         this.ignoreSMDMethodInterfaces = ignoreSMDMethodInterfaces;
@@ -328,7 +330,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     /**
      * Wrap generated JSON with comments. Only used if SMD is enabled.
      * 
-     * @param wrapWithComments
+     * @param wrapWithComments Wrap generated JSON with comments.
      */
     public void setWrapWithComments(boolean wrapWithComments) {
         this.wrapWithComments = wrapWithComments;
@@ -340,9 +342,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Ignore properties defined on base classes of the root object.
-     * 
-     * @param ignoreHierarchy
+     * @param ignoreHierarchy Ignore properties defined on base classes of the root object.
      */
     public void setIgnoreHierarchy(boolean ignoreHierarchy) {
         this.ignoreHierarchy = ignoreHierarchy;
@@ -467,13 +467,13 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Returns the appropriate set of includes, based on debug setting.
+     * @return  the appropriate set of includes, based on debug setting.
      * Derived classes can override if there are additional, custom
      * debug-only parameters.
      */
     protected List getIncludeProperties() {
         if (includeProperties != null && getDebug()) {
-            List<Pattern> list = new ArrayList<Pattern>(includeProperties);
+            List<Pattern> list = new ArrayList<>(includeProperties);
             list.add(Pattern.compile("debug"));
             list.add(WildcardUtil.compileWildcardPattern("error.*"));
             return list;
@@ -503,7 +503,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     /**
      * Add headers to response to prevent the browser from caching the response
      * 
-     * @param noCache
+     * @param noCache no cache
      */
     public void setNoCache(boolean noCache) {
         this.noCache = noCache;
@@ -514,9 +514,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Do not serialize properties with a null value
-     * 
-     * @param excludeNullProperties
+     * @param excludeNullProperties  Do not serialize properties with a null value
      */
     public void setExcludeNullProperties(boolean excludeNullProperties) {
         this.excludeNullProperties = excludeNullProperties;
@@ -531,9 +529,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Add "{} && " to generated JSON
-     * 
-     * @param prefix
+     * @param prefix Add "{} &amp;&amp; " to generated JSON
      */
     public void setPrefix(boolean prefix) {
         this.prefix = prefix;

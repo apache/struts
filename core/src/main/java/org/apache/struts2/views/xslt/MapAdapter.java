@@ -31,13 +31,13 @@ import java.util.Map;
  * MapAdapter adapters a java.util.Map type to an XML DOM with the following
  * structure:
  * <pre>
- *  <myMap>
- *      <entry>
- *          <key>...</key>
- *          <value>...</value>
- *      </entry>
+ *  &lt;myMap&gt;
+ *      &lt;entry&gt;
+ *          &lt;key&gt;...&lt;/key&gt;
+ *          &lt;value&gt;...&lt;/value&gt;
+ *      &lt;/entry&gt;
  *      ...
- *  </myMap>
+ *  &lt;/myMap&gt;
  * </pre>
  */
 public class MapAdapter extends AbstractAdapterElement {

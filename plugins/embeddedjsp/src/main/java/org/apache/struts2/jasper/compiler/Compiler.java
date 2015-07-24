@@ -76,6 +76,8 @@ public abstract class Compiler {
      * return null. Used in development mode for generating detailed error
      * messages. http://issues.apache.org/bugzilla/show_bug.cgi?id=37062.
      * </p>
+     *
+     * @return page nodes
      */
     public Node.Nodes getPageNodes() {
         return this.pageNodes;
@@ -86,6 +88,7 @@ public abstract class Compiler {
      * 
      * @return a smap for the current JSP page, if one is generated, null
      *         otherwise
+     * @throws Exception in case of any errors
      */
     protected String[] generateJava() throws Exception {
 
@@ -284,12 +287,20 @@ public abstract class Compiler {
 
     /**
      * Compile the servlet from .java file to .class file
+     *
+     * @param smap string array
+     * @throws FileNotFoundException is file was not found
+     * @throws JasperException in case of jasper errors
+     * @throws Exception in case of other errors
      */
     protected abstract void generateClass(String[] smap)
             throws FileNotFoundException, JasperException, Exception;
 
     /**
      * Compile the jsp file from the current engine context
+     * @throws FileNotFoundException is file was not found
+     * @throws JasperException in case of jasper errors
+     * @throws Exception in case of other errors
      */
     public void compile() throws FileNotFoundException, JasperException,
             Exception {
@@ -303,6 +314,9 @@ public abstract class Compiler {
      * @param compileClass
      *            If true, generate both .java and .class file If false,
      *            generate only .java file
+     * @throws FileNotFoundException is file was not found
+     * @throws JasperException in case of jasper errors
+     * @throws Exception in case of other errors
      */
     public void compile(boolean compileClass) throws FileNotFoundException,
             JasperException, Exception {
@@ -318,6 +332,9 @@ public abstract class Compiler {
      *            generate only .java file
      * @param jspcMode
      *            true if invoked from JspC, false otherwise
+     * @throws FileNotFoundException is file was not found
+     * @throws JasperException in case of jasper errors
+     * @throws Exception in case of other errors
      */
     public void compile(boolean compileClass, boolean jspcMode)
             throws FileNotFoundException, JasperException, Exception {
@@ -369,6 +386,8 @@ public abstract class Compiler {
     /**
      * This is a protected method intended to be overridden by subclasses of
      * Compiler. This is used by the compile method to do all the compilation.
+     *
+     * @return true if out dated
      */
     public boolean isOutDated() {
         return isOutDated(true);
@@ -377,12 +396,14 @@ public abstract class Compiler {
     /**
      * Determine if a compilation is necessary by checking the time stamp of the
      * JSP page with that of the corresponding .class or .java file. If the page
-     * has dependencies, the check is also extended to its dependeants, and so
-     * on. This method can by overidden by a subclasses of Compiler.
+     * has dependencies, the check is also extended to its dependants, and so
+     * on. This method can by overridden by a subclasses of Compiler.
      * 
      * @param checkClass
      *            If true, check against .class file, if false, check against
      *            .java file.
+     *
+     * @return true if out dated
      */
     public boolean isOutDated(boolean checkClass) {
 
@@ -455,9 +476,8 @@ public abstract class Compiler {
             return false;
         }
 
-        Iterator it = depends.iterator();
-        while (it.hasNext()) {
-            String include = (String) it.next();
+        for (Object depend : depends) {
+            String include = (String) depend;
             try {
                 URL includeUrl = ctxt.getResource(include);
                 if (includeUrl == null) {
@@ -468,7 +488,7 @@ public abstract class Compiler {
                 long includeLastModified = 0;
                 if (iuc instanceof JarURLConnection) {
                     includeLastModified =
-                        ((JarURLConnection) iuc).getJarEntry().getTime();
+                            ((JarURLConnection) iuc).getJarEntry().getTime();
                 } else {
                     includeLastModified = iuc.getLastModified();
                 }
@@ -487,14 +507,14 @@ public abstract class Compiler {
     }
 
     /**
-     * Gets the error dispatcher.
+     * @return  the error dispatcher.
      */
     public ErrorDispatcher getErrorDispatcher() {
         return errDispatcher;
     }
 
     /**
-     * Gets the info about the page under compilation
+     * @return  the info about the page under compilation
      */
     public PageInfo getPageInfo() {
         return pageInfo;

@@ -44,7 +44,7 @@ import java.lang.annotation.Target;
  * </p>
  *
  * <pre>
- * &lt;java-package>#&lt;parent-xwork-package>#&lt;namespace>
+ * &lt;java-package&gt;#&lt;parent-xwork-package&gt;#&lt;namespace&gt;
  * </pre>
  *
  * <p>

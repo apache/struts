@@ -68,9 +68,9 @@ import java.util.*;
  * <li> <code>command</code> - Tests an OGNL expression and returns the
  * string result. Only used by the OGNL console.</li>
  * <li><code>browser</code> Shows field values of an object specified in the 
- * <code>object<code> parameter (#context by default). When the <code>object<code>
+ * <code>object</code> parameter (#context by default). When the <code>object</code>
  * parameters is set, the '#' character needs to be escaped to '%23'. Like
- * debug=browser&object=%23parameters</li>
+ * debug=browser&amp;object=%23parameters</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
  * <p>

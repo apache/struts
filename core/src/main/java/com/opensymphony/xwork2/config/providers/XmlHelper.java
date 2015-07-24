@@ -34,24 +34,31 @@ public class XmlHelper {
 
 
     /**
+     * <p>
      * This method will find all the parameters under this <code>paramsElement</code> and return them as
-     * Map<String, String>. For example,
+     * Map&lt;String, String&gt;. For example,
+     * </p>
+     *
      * <pre>
-     *   <result ... >
-     *      <param name="param1">value1</param>
-     *      <param name="param2">value2</param>
-     *      <param name="param3">value3</param>
-     *   </result>
+     *   &lt;result ... &gt;
+     *      &lt;param name=&quot;param1&quot;&gt;value1&lt;/param&gt;
+     *      &lt;param name=&quot;param2&quot;&gt;value2&lt;/param&gt;
+     *      &lt;param name=&quot;param3&quot;&gt;value3&lt;/param&gt;
+     *   &lt;/result&gt;
      * </pre>
-     * will returns a Map<String, String> with the following key, value pairs :-
+     *
+     * <p>
+     * will returns a Map&lt;String, String&gt; with the following key, value pairs:
+     * </p>
+     *
      * <ul>
      * <li>param1 - value1</li>
      * <li>param2 - value2</li>
      * <li>param3 - value3</li>
      * </ul>
      *
-     * @param paramsElement
-     * @return
+     * @param paramsElement params element
+     * @return a map of key,value pairs
      */
     public static Map<String, String> getParams(Element paramsElement) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
@@ -86,7 +93,7 @@ public class XmlHelper {
      * </p>
      *
      * <pre>
-     *    <result>something_1</result>
+     *    &lt;result&gt;something_1&lt;/result&gt;
      * </pre>
      *
      * <p>
@@ -95,7 +102,8 @@ public class XmlHelper {
      * namely, <code>something_1</code> in the example above.
      * </p>
      *
-     * @return
+     * @param element the DOM element
+     * @return content as string
      */
     public static String getContent(Element element) {
         StringBuilder paramValue = new StringBuilder();
@@ -113,7 +121,8 @@ public class XmlHelper {
     }
 
     /**
-     * Return the value of the "order" attribute from the root element
+     * @param doc document
+     * @return the value of the "order" attribute from the root element
      */
      public static Integer getLoadOrder(Document doc) {
         Element rootElement = doc.getDocumentElement();

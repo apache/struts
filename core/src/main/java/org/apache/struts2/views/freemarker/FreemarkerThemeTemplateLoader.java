@@ -25,6 +25,8 @@ public class FreemarkerThemeTemplateLoader implements TemplateLoader{
 
     /**
      * Initialize the loader for the given parent.
+     *
+     * @param parent the parent template loader
      */
     public void init(TemplateLoader parent) {
         this.parentTemplateLoader = parent;

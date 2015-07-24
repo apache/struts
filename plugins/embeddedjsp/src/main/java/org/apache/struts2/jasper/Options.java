@@ -34,98 +34,98 @@ import org.apache.struts2.jasper.compiler.TldLocationsCache;
 public interface Options {
 
     /**
-     * Returns true if Jasper issues a compilation error instead of a runtime
+     * @return  true if Jasper issues a compilation error instead of a runtime
      * Instantiation error if the class attribute specified in useBean action
      * is invalid.
      */
     public boolean getErrorOnUseBeanInvalidClassAttribute();
 
     /**
-     * Are we keeping generated code around?
+     *  @return Are we keeping generated code around?
      */
     public boolean getKeepGenerated();
 
     /**
-     * Returns true if tag handler pooling is enabled, false otherwise.
+     *  @return  true if tag handler pooling is enabled, false otherwise.
      */
     public boolean isPoolingEnabled();
 
     /**
-     * Are we supporting HTML mapped servlets?
+     *  @return  Are we supporting HTML mapped servlets?
      */
     public boolean getMappedFile();
 
     /**
-     * Should we include debug information in compiled class?
+     *  @return  Should we include debug information in compiled class?
      */
     public boolean getClassDebugInfo();
 
     /**
-     * Background compile thread check interval in seconds
+     * @return Background compile thread check interval in seconds
      */
     public int getCheckInterval();
 
     /**
-     * Is Jasper being used in development mode?
+     *  @return Is Jasper being used in development mode?
      */
     public boolean getDevelopment();
 
     /**
-     * Should we include a source fragment in exception messages, which could be displayed
+     *  @return Should we include a source fragment in exception messages, which could be displayed
      * to the developer ?
      */
     public boolean getDisplaySourceFragment();
 
     /**
-     * Is the generation of SMAP info for JSR45 debugging suppressed?
+     *  @return Is the generation of SMAP info for JSR45 debugging suppressed?
      */
     public boolean isSmapSuppressed();
 
     /**
-     * Indicates whether SMAP info for JSR45 debugging should be dumped to a
+     *  @return Indicates whether SMAP info for JSR45 debugging should be dumped to a
      * file.
      * Ignored is suppressSmap() is true
      */
     public boolean isSmapDumped();
 
     /**
-     * Should white spaces between directives or actions be trimmed?
+     *  @return Should white spaces between directives or actions be trimmed?
      */
     public boolean getTrimSpaces();
 
     /**
-     * Class ID for use in the plugin tag when the browser is IE. 
+     *  @return Class ID for use in the plugin tag when the browser is IE.
      */
     public String getIeClassId();
 
     /**
-     * What is my scratch dir?
+     *  @return What is my scratch dir?
      */
     public File getScratchDir();
 
     /**
-     * What classpath should I use while compiling the servlets
+     *  @return What classpath should I use while compiling the servlets
      * generated from JSP files?
      */
     public String getClassPath();
 
     /**
-     * Compiler to use.
+     *  @return Compiler to use.
      */
     public String getCompiler();
 
     /**
-     * The compiler target VM, e.g. 1.1, 1.2, 1.3, 1.4, or 1.5.
+     *  @return The compiler target VM, e.g. 1.1, 1.2, 1.3, 1.4, or 1.5.
      */
     public String getCompilerTargetVM();
 
     /**
-     * Compiler source VM, e.g. 1.3, 1.4, or 1.5.
+     * @return  Compiler source VM, e.g. 1.3, 1.4, or 1.5.
      */
     public String getCompilerSourceVM();   
 
     /**
-     * Java compiler class to use.
+     *  @return Java compiler class to use.
      */
     public String getCompilerClassName();   
 
@@ -143,43 +143,43 @@ public interface Options {
     public TldLocationsCache getTldLocationsCache();
 
     /**
-     * Java platform encoding to generate the JSP
+     *  @return Java platform encoding to generate the JSP
      * page servlet.
      */
     public String getJavaEncoding();
 
     /**
-     * boolean flag to tell Ant whether to fork JSP page compilations.
+     *  @return boolean flag to tell Ant whether to fork JSP page compilations.
      */
     public boolean getFork();
 
     /**
-     * Obtain JSP configuration informantion specified in web.xml.  
+     *  @return Obtain JSP configuration information specified in web.xml.
      */
     public JspConfig getJspConfig();
 
     /**
-     * Is generation of X-Powered-By response header enabled/disabled?
+     *  @return Is generation of X-Powered-By response header enabled/disabled?
      */
     public boolean isXpoweredBy();
 
     /**
-     * Obtain a Tag Plugin Manager
+     *  @return Obtain a Tag Plugin Manager
      */
     public TagPluginManager getTagPluginManager();
 
     /**
-     * Are Text strings to be generated as char arrays?
+     *  @return Are Text strings to be generated as char arrays?
      */
     public boolean genStringAsCharArray();
     
     /**
-     * Modification test interval.
+     *  @return  Modification test interval.
      */
     public int getModificationTestInterval();
     
     /**
-     * Is caching enabled (used for precompilation).
+     *  @return Is caching enabled (used for precompilation).
      */
     public boolean isCaching();
     

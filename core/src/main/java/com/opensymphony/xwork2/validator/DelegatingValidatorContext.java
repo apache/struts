@@ -39,6 +39,10 @@ public class DelegatingValidatorContext implements ValidatorContext {
     /**
      * Creates a new validation context given a ValidationAware object, and a text and locale provider. These objects
      * are used internally to set errors and get and set error text.
+     *
+     * @param validationAware  a validation aware object
+     * @param textProvider  a text provider
+     * @param localeProvider a local provider
      */
     public DelegatingValidatorContext(ValidationAware validationAware, TextProvider textProvider,
                                       LocaleProvider localeProvider) {

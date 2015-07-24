@@ -84,7 +84,7 @@ import javax.servlet.jsp.JspException;
  * &lt;%
  *  Iterator i = (Iterator) pageContext.getAttribute("myAtt");
  *  while(i.hasNext()) {
- *      String s = (String) i.next(); %>
+ *      String s = (String) i.next(); %&gt;
  *      &lt;%=s%&gt; &lt;br/&gt;
  * &lt;%    }
  * %&gt;
@@ -148,8 +148,10 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @s.tagattribute required="true" type="String"
+     * {@literal @}s.tagattribute required="true" type="String"
      * description="the separator to be used in separating the <i>val</i> into entries of the iterator"
+     *
+     * @param separator the seperator
      */
     @StrutsTagAttribute(required=true, description="The separator to be used in separating the <i>val</i> into entries of the iterator")
     public void setSeparator(String separator) {
@@ -157,8 +159,10 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @s.tagattribute required="true"
+     * {@literal @}s.tagattribute required="true"
      * description="the source to be parsed into an iterator"
+     *
+     * @param val the value
      */
     @StrutsTagAttribute(required=true, description="The source to be parsed into an iterator")
     public void setVal(String val) {

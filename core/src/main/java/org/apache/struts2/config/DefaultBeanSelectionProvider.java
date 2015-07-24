@@ -84,7 +84,7 @@ import java.util.StringTokenizer;
  * The following is a list of the allowed extension points:
  *
  * <!-- START SNIPPET: extensionPoints -->
- * <table border="1">
+ * <table border="1" summary="">
  *   <tr>
  *     <th>Type</th>
  *     <th>Property</th>
@@ -289,7 +289,7 @@ import java.util.StringTokenizer;
  *     <td>com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor</td>
  *     <td>struts.converter.file.processor</td>
  *     <td>singleton</td>
- *     <td>Process <class>-conversion.properties file create converters</class></td>
+ *     <td>Process &lt;class&gt;-conversion.properties file create converters&lt;/class&gt;</td>
  *   </tr>
  *   <tr>
  *     <td>com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor</td>
@@ -337,19 +337,22 @@ import java.util.StringTokenizer;
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
- * </p>
+ *
  * <p>
  * Implementations are selected using the value of its associated property.  That property is
  * used to determine the implementation by:
  * </p>
+ *
  * <ol>
  *   <li>Trying to find an existing bean by that name in the container</li>
  *   <li>Trying to find a class by that name, then creating a new bean factory for it</li>
  *   <li>Creating a new delegation bean factory that delegates to the configured ObjectFactory at runtime</li>
  * </ol>
+ *
  * <p>
  * Finally, this class overrides certain properties if dev mode is enabled:
  * </p>
+ *
  * <ul>
  *   <li><code>struts.i18n.reload = true</code></li>
  *   <li><code>struts.configuration.xml.reload = true</code></li>

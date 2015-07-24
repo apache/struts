@@ -52,7 +52,7 @@ import java.util.Map;
  * </p>
  * <!-- START SNIPPET: templateRelatedAttributes -->
  *
- * <table border="1">
+ * <table border="1" summary="">
  *    <thead>
  *       <tr>
  *          <td>Attribute</td>
@@ -67,26 +67,26 @@ import java.util.Map;
  *          <td>n/a</td>
  *          <td>String</td>
  *          <td>define the template directory</td>
- *       </td>
+ *       </tr>
  *       <tr>
  *          <td>theme</td>
  *          <td>n/a</td>
  *          <td>String</td>
  *          <td>define the theme name</td>
- *       </td>
+ *       </tr>
  *       <tr>
  *          <td>template</td>
  *          <td>n/a</td>
  *          <td>String</td>
  *          <td>define the template name</td>
- *       </td>
+ *       </tr>
  *       <tr>
  *          <td>themeExpansionToken</td>
  *          <td>n/a</td>
  *          <td>String</td>
  *          <td>special token (defined with struts.ui.theme.expansion.token) used to search for template in parent theme
  *          (don't use it separately!)</td>
- *       </td>
+ *       </tr>
  *       <tr>
  *          <td>expandTheme</td>
  *          <td>n/a</td>
@@ -94,7 +94,7 @@ import java.util.Map;
  *          <td>concatenation of themeExpansionToken and theme which tells internal template loader mechanism
  *          to try load template from current theme and then from parent theme (and parent theme, and so on)
  *          when used with &lt;#include/&gt; directive</td>
- *       </td>
+ *       </tr>
  *    </tbody>
  * </table>
  *
@@ -102,7 +102,7 @@ import java.util.Map;
  *
  * <!-- START SNIPPET: generalAttributes -->
  *
- * <table border="1">
+ * <table border="1" summary="">
  *    <thead>
  *       <tr>
  *          <td>Attribute</td>
@@ -203,7 +203,7 @@ import java.util.Map;
  *
  * <!-- START SNIPPET: javascriptRelatedAttributes -->
  *
- * <table border="1">
+ * <table border="1" summary="">
  *    <thead>
  *       <tr>
  *          <td>Attribute</td>
@@ -298,7 +298,7 @@ import java.util.Map;
  *
  * <!-- START SNIPPET: tooltipattributes -->
  *
- * <table border="1">
+ * <table border="1" summary="">
  *  <tr>
  *     <td>Attribute</td>
  *     <td>Data Type</td>
@@ -366,10 +366,10 @@ import java.util.Map;
  * </p>
  *
  * <p>
- * Example 3, 4 and 5 show different ways of setting the tooltip configuration attribute.<br/>
- * <b>Example 3:</b> Set tooltip config through the body of the param tag<br/>
- * <b>Example 4:</b> Set tooltip config through the value attribute of the param tag<br/>
- * <b>Example 5:</b> Set tooltip config through the tooltip attributes of the component tag<br/>
+ * Example 3, 4 and 5 show different ways of setting the tooltip configuration attribute.<br>
+ * <b>Example 3:</b> Set tooltip config through the body of the param tag<br>
+ * <b>Example 4:</b> Set tooltip config through the value attribute of the param tag<br>
+ * <b>Example 5:</b> Set tooltip config through the tooltip attributes of the component tag<br>
  * </p>
  *
  * <!-- END SNIPPET: tooltipdescription -->

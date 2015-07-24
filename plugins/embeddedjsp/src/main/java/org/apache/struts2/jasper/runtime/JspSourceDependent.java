@@ -29,7 +29,7 @@ package org.apache.struts2.jasper.runtime;
 public interface JspSourceDependent {
 
    /**
-    * Returns a list of files names that the current page has a source
+    * @return a list of files names that the current page has a source
     * dependency on.
     */
     // FIXME: Type used is Object due to very weird behavior 

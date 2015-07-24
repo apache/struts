@@ -159,6 +159,8 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     
     /**
      * Gets the location it was created with, mainly for testing
+     *
+     * @return the location
      */
     public String getLocation() {
         return location;
@@ -166,6 +168,8 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
 
     /**
      * Returns the last parsed and encoded location value
+     *
+     * @return the last final location
      */
     public String getLastFinalLocation() {
         return lastFinalLocation;
@@ -209,7 +213,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      *
      * @param param The parameter value
      * @param invocation The action invocation instance
-     * @return The resulting string
+     * @return the resulting string
      */
     protected String conditionalParse(String param, ActionInvocation invocation) {
         if (parse && param != null && invocation != null) {
@@ -227,10 +231,10 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      * convert found object into String. If found object is a collection it is
      * returned if found object is not a collection it is wrapped in one.
      * 
-     * @param param
-     * @param invocation
-     * @param excludeEmptyElements
-     * @return
+     * @param param parameter
+     * @param invocation action invocation
+     * @param excludeEmptyElements 'true' for excluding empty elements
+     * @return the parsed collection of strings
      */
     protected Collection<String> conditionalParseCollection(String param, ActionInvocation invocation, boolean excludeEmptyElements) {
         if (parse && param != null && invocation != null) {

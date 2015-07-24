@@ -52,9 +52,9 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <pre>
  * <!-- START SNIPPET: examples -->
- * &lt;validators>
+ * &lt;validators&gt;
  *     &lt;!-- Plain Validator Syntax --&gt;
- *         &lt;validator type="double">
+ *         &lt;validator type="double"&gt;
  *         &lt;param name="fieldName"&gt;percentage&lt;/param&gt;
  *         &lt;param name="minInclusive"&gt;20.1&lt;/param&gt;
  *         &lt;param name="maxInclusive"&gt;50.1&lt;/param&gt;
@@ -84,8 +84,6 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Rainer Hermanns
  * @author Rene Gielen
- *
- * @version $Id$
  */
 public class DoubleRangeFieldValidator extends FieldValidatorSupport {
     

@@ -65,8 +65,9 @@ public interface Configuration extends Serializable {
 
     /**
      * @since 2.1
-     * @param containerProviders
-     * @throws ConfigurationException
+     * @param containerProviders list of container providers
+     * @return list of package providers
+     * @throws ConfigurationException in case of any configuration errors
      */
     List<PackageProvider> reloadContainer(List<ContainerProvider> containerProviders) throws ConfigurationException;
 
@@ -85,7 +86,7 @@ public interface Configuration extends Serializable {
 
     /**
      * @since 2.1
-     * @param unknownHandlerStack
+     * @param unknownHandlerStack list of unknown handlers
      */
     void setUnknownHandlerStack(List<UnknownHandlerConfig> unknownHandlerStack);
 }

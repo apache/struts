@@ -114,6 +114,51 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.4</version>
+                <executions>
+                    <execution>
+                        <id>external-minify</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <closureLanguage>ECMASCRIPT5_STRICT</closureLanguage>
+                            <skipMinify>true</skipMinify>
+                            <jsFinalFile>external.js</jsFinalFile>
+                            <jsSourceFiles>
+                                <jsSourceFile>lib/angular/angular.min.js</jsSourceFile>
+                                <jsSourceFile>lib/angular/angular-route.min.js</jsSourceFile>
+                            </jsSourceFiles>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>application-minify</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <closureLanguage>ECMASCRIPT5_STRICT</closureLanguage>
+                            <jsFinalFile>application.js</jsFinalFile>
+                            <jsSourceFiles>
+                                <jsSourceFile>app.js</jsSourceFile>
+                                <jsSourceFile>config.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>services/*.js</jsSourceInclude>
+                                <jsSourceInclude>controllers/*.js</jsSourceInclude>
+                            </jsSourceIncludes>
+
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.1.16.v20140903</version>

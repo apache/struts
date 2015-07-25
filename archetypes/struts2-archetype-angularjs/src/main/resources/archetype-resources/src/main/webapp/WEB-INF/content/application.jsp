@@ -20,13 +20,19 @@
     <div ng-view></div>
 </div>
 
-<script src="<s:url value="js/lib/angular/angular.min.js" />"></script>
-<script src="<s:url value="js/lib/angular/angular-route.min.js" />"></script>
-<script src="<s:url value="js/app.js" />"></script>
-<script src="<s:url value="js/config.js" />"></script>
-<script src="<s:url value="js/services/DataService.js" />"></script>
-<script src="<s:url value="js/controllers/AppController.js" />"></script>
-<script src="<s:url value="js/controllers/HomeController.js" />"></script>
-<script src="<s:url value="js/controllers/ApacheProjectsController.js" />"></script>
+<s:if test="useMinifiedResources">
+    <script src="<s:url value="js/external.js" />"></script>
+    <script src="<s:url value="js/application.js" />"></script>
+</s:if>
+<s:else>
+    <script src="<s:url value="js/lib/angular/angular.min.js" />"></script>
+    <script src="<s:url value="js/lib/angular/angular-route.min.js" />"></script>
+    <script src="<s:url value="js/app.js" />"></script>
+    <script src="<s:url value="js/config.js" />"></script>
+    <script src="<s:url value="js/services/DataService.js" />"></script>
+    <script src="<s:url value="js/controllers/AppController.js" />"></script>
+    <script src="<s:url value="js/controllers/HomeController.js" />"></script>
+    <script src="<s:url value="js/controllers/ApacheProjectsController.js" />"></script>
+</s:else>
 </body>
 </html>

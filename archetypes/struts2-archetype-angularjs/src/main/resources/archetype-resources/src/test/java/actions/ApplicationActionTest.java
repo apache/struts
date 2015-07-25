@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -29,6 +27,6 @@ public class ApplicationActionTest extends StrutsTestCase {
         ApplicationAction hello = new ApplicationAction();
         String result = hello.execute();
         assertTrue("Expected a success result!", ActionSupport.SUCCESS.equals(result));
-        assertTrue("Expected the default message!", hello.getText(ApplicationAction.MESSAGE).equals(hello.getMessage()));
+        assertFalse(hello.isUseMinifiedResources());
     }
 }

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -29,36 +27,18 @@ public class ApplicationAction extends ActionSupport {
 
     private static final long serialVersionUID = -3243216917801206214L;
 
+    private boolean useMinifiedResources = false;
+
     public String execute() throws Exception {
-        setMessage(getText(MESSAGE));
         return SUCCESS;
     }
 
-    /**
-     * Provide default valuie for Message property.
-     */
-    public static final String MESSAGE = "hello.message";
-
-    /**
-     * Field for Message property.
-     */
-    private String message;
-
-    /**
-     * Return Message property.
-     *
-     * @return Message property
-     */
-    public String getMessage() {
-        return message;
+    public boolean isUseMinifiedResources() {
+        return useMinifiedResources;
     }
 
-    /**
-     * Set Message property.
-     *
-     * @param message Text to display on HelloWorld page.
-     */
-    public void setMessage(String message) {
-        this.message = message;
+    public void setUseMinifiedResources(boolean useMinifiedResources) {
+        this.useMinifiedResources = useMinifiedResources;
     }
+
 }

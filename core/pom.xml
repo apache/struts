@@ -106,6 +106,29 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.cj.jshintmojo</groupId>
+                <artifactId>jshint-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configFile>src/main/resources/jshint.conf.js</configFile>
+                    <directories>
+                        <directory>src/main/resources/</directory>
+                    </directories>
+                    <excludes>
+                        <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
+                    </excludes>
+                    <reporter>jslint</reporter>
+                    <reportFile>target/jshint.xml</reportFile>
+                    <failOnError>true</failOnError>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

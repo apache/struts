@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -29,7 +27,7 @@ StrutsUtils.getValidationErrors = function(data) {
     }
     else {
         if (data.indexOf("/* {") === 0) {
-            return eval("( " + data.substring(2, data.length - 2) + " )");
+            return JSON.parse( data.substring(2, data.length - 2) + " )");
         } else {
             return null;
         }

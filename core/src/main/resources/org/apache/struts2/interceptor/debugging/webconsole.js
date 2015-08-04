@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,57 +17,58 @@
  * under the License.
  */
 
-function printResult(result_string) {
-  var result_div = document.getElementById('wc-result');
-  var result_array = result_string.split('\n');
+function printResult(resultString) {
+    var resultDiv = document.getElementById('wc-result');
+    var resultArray = resultString.split('\n');
 
-  var new_command = document.getElementById('wc-command').value;
-  result_div.appendChild(document.createTextNode(new_command));
-  result_div.appendChild(document.createElement('br'));
+    var newCommand = document.getElementById('wc-command').value;
+    resultDiv.appendChild(document.createTextNode(newCommand));
+    resultDiv.appendChild(document.createElement('br'));
 
-  for (var line_index in result_array) {
-    var result_wrap = document.createElement('pre')
-    line = document.createTextNode(result_array[line_index]);
-    result_wrap.appendChild(line);
-    result_div.appendChild(result_wrap);
-    result_div.appendChild(document.createElement('br'));
+    for (var lineIndex in resultArray) {
+        if (resultArray.hasOwnProperty(lineIndex)) {
+            var resultWrap = document.createElement('pre'),
+                line = document.createTextNode(resultArray[lineIndex]);
+            resultWrap.appendChild(line);
+            resultDiv.appendChild(resultWrap);
+            resultDiv.appendChild(document.createElement('br'));
+        }
+    }
+    resultDiv.appendChild(document.createTextNode(':-> '));
 
-  }
-  result_div.appendChild(document.createTextNode(':-> '));
-
-  result_div.scrollTop = result_div.scrollHeight;
-  document.getElementById('wc-command').value = '';
+    resultDiv.scrollTop = resultDiv.scrollHeight;
+    document.getElementById('wc-command').value = '';
 }
 
 function keyEvent(event, url) {
-  switch (event.keyCode) {
-    case 13:
-      var the_shell_command = document.getElementById('wc-command').value;
-      if (the_shell_command) {
-        commands_history[commands_history.length] = the_shell_command;
-        history_pointer = commands_history.length;
-        var the_url = url ? url : window.opener.location.pathname;
-        jQuery.post(the_url, jQuery("#wc-form").serialize(), function (data) {
-          printResult(data);
-        });
-      }
-      break;
-    case 38: // this is the arrow up
-      if (history_pointer > 0) {
-        history_pointer--;
-        document.getElementById('wc-command').value = commands_history[history_pointer];
-      }
-      break;
-    case 40: // this is the arrow down
-      if (history_pointer < commands_history.length - 1) {
-        history_pointer++;
-        document.getElementById('wc-command').value = commands_history[history_pointer];
-      }
-      break;
-    default:
-      break;
-  }
+    switch (event.keyCode) {
+        case 13:
+            var theShellCommand = document.getElementById('wc-command').value;
+            if (theShellCommand) {
+                commandsHistory[commandsHistory.length] = theShellCommand;
+                historyPointer = commandsHistory.length;
+                var theUrl = url ? url : window.opener.location.pathname;
+                jQuery.post(theUrl, jQuery("#wc-form").serialize(), function (data) {
+                    printResult(data);
+                });
+            }
+            break;
+        case 38: // this is the arrow up
+            if (historyPointer > 0) {
+                historyPointer--;
+                document.getElementById('wc-command').value = commandsHistory[historyPointer];
+            }
+            break;
+        case 40: // this is the arrow down
+            if (historyPointer < commandsHistory.length - 1) {
+                historyPointer++;
+                document.getElementById('wc-command').value = commandsHistory[historyPointer];
+            }
+            break;
+        default:
+            break;
+    }
 }
 
-var commands_history = [];
-var history_pointer;
+var commandsHistory = [];
+var historyPointer;

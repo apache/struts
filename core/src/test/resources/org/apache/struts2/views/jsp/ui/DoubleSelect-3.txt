@@ -10,8 +10,9 @@
 </select>
 <script type="text/javascript">
     var foo_barGroup = new Array(2 + 0);
-    for (i = 0; i < (2 + 0); i++)
-    foo_barGroup[i] = new Array();
+    for (var i = 0; i < (2 + 0); i++) {
+    foo_barGroup[i] = [];
+    }
 
     foo_barGroup[0][0] = new Option("Antwerp", "AN");
     foo_barGroup[0][1] = new Option("Gent", "GN");
@@ -24,11 +25,11 @@
 
     function foo_barRedirect(x) {
     	var selected = false;
-        for (m = foo_barTemp.options.length - 1; m >= 0; m--) {
+        for (var m = foo_barTemp.options.length - 1; m >= 0; m--) {
             foo_barTemp.remove(m);
         }
 
-        for (i = 0; i < foo_barGroup[x].length; i++) {
+        for (var i = 0; i < foo_barGroup[x].length; i++) {
             foo_barTemp.options[i] = new Option(foo_barGroup[x][i].text, foo_barGroup[x][i].value);
         }
 

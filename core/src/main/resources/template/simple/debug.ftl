@@ -42,12 +42,12 @@
     table.debugTable th, table.debugTable td {padding:2px;}
 -->
 </style>
-<p />
+<br>
 
 <a href="#" onclick="toggleDebug('<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>');return false;">[Debug]</a>
 <div style="display:none" id="<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>">
 <h2>Struts ValueStack Debug</h2>
-<p />
+<br>
 
 <h3>Value Stack Contents</h3>
 <table class="debugTable">
@@ -69,7 +69,7 @@
         </#list>
     </#list>
 </table>
-<p />
+<br>
 
 <h3>Stack Context</h3>
 <i>These items are available using the #key notation</i>

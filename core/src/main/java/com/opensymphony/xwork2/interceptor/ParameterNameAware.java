@@ -16,16 +16,10 @@
 package com.opensymphony.xwork2.interceptor;
 
 /**
- * <!-- START SNIPPET: javadoc -->
- * <p>
  * This interface is implemented by actions that want to declare acceptable parameters. Works in conjunction with {@link
  * ParametersInterceptor}. For example, actions may want to create a white list of parameters they will accept or a
  * blacklist of parameters they will reject to prevent clients from setting other unexpected (and possibly dangerous)
  * parameters.
- * </p>
- * <!-- END SNIPPET: javadoc -->
- *
- * @author Bob Lee (crazybob@google.com)
  */
 public interface ParameterNameAware {
 

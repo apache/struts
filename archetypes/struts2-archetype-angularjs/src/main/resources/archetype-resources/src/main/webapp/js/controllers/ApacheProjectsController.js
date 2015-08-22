@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -25,15 +23,18 @@
         .module('app')
         .controller('ApacheProjectsController', ApacheProjectsController);
 
-    function ApacheProjectsController($scope, $log, DataService) {
-        this.init = function() {
-            DataService.getProjects().then(function(data) {
-                $scope.projects = data.projectNames;
+    function ApacheProjectsController($log, DataService) {
+        var vm = this;
+
+        init();
+
+        function init() {
+            return DataService.getProjects().then(function(data) {
+                vm.projects = data.projectNames;
+                return vm.projects;
             }, function() {
                 $log.error('Could not receive project names.');
             });
-        };
-
-        this.init();
+        }
     }
 })();

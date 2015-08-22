@@ -30,10 +30,10 @@
 
                 $routeProvider.when('/projects', {
                     templateUrl: 'partials/projects.html',
-                    controller: 'ApacheProjectsController'
+                    controller: 'ApacheProjectsController as vm'
                 }).when('/home', {
                     templateUrl: 'partials/home.html',
-                    controller: 'HomeController'
+                    controller: 'HomeController as vm'
                 }).otherwise({ redirectTo: '/home' });
             }
         ]);

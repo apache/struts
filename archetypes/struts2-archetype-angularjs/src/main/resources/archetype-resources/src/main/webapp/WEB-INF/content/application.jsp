@@ -16,7 +16,7 @@
     <a href="/home">Home</a> - <a href="/projects">Projects</a>
 </div>
 
-<div ng-controller="AppController">
+<div ng-controller="AppController as app">
     <div ng-view></div>
 </div>
 

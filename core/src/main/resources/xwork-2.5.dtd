@@ -22,7 +22,6 @@
     extends CDATA #IMPLIED
     namespace CDATA #IMPLIED
     abstract CDATA #IMPLIED
-    strict-method-invocation CDATA #IMPLIED
 >
 
 <!ELEMENT result-types (result-type+)>

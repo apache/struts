@@ -37,7 +37,7 @@
     order CDATA #IMPLIED
 >
 
-<!ELEMENT package (result-types?, interceptors?, default-interceptor-ref?, default-action-ref?, default-class-ref?, global-results?, global-allowed-methods? global-exception-mappings?, action*)>
+<!ELEMENT package (result-types?, interceptors?, default-interceptor-ref?, default-action-ref?, default-class-ref?, global-results?, global-allowed-methods?, global-exception-mappings?, action*)>
 <!ATTLIST package
     name CDATA #REQUIRED
     extends CDATA #IMPLIED

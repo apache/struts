@@ -358,11 +358,12 @@
 
        </interceptors>
 
-       <global-allowed-methods>execute,input,back,cancel,browse</global-allowed-methods>
-
         <default-interceptor-ref name="defaultStack"/>
 
         <default-class-ref class="com.opensymphony.xwork2.ActionSupport" />
+
+        <global-allowed-methods>execute,input,back,cancel,browse</global-allowed-methods>
+
     </package>
 
 </struts>

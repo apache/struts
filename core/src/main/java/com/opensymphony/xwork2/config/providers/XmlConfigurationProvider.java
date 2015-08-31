@@ -548,7 +548,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         loadGlobalAllowedMethods(newPackage, packageElement);
 
         // load the global exception handler list for this package
-        loadGobalExceptionMappings(newPackage, packageElement);
+        loadGlobalExceptionMappings(newPackage, packageElement);
 
         // get actions
         NodeList actionList = packageElement.getElementsByTagName("action");
@@ -922,7 +922,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
      * @param packageContext the package context
      * @param packageElement the given XML element
      */
-    protected void loadGobalExceptionMappings(PackageConfig.Builder packageContext, Element packageElement) {
+    protected void loadGlobalExceptionMappings(PackageConfig.Builder packageContext, Element packageElement) {
         NodeList globalExceptionMappingList = packageElement.getElementsByTagName("global-exception-mappings");
 
         if (globalExceptionMappingList.getLength() > 0) {

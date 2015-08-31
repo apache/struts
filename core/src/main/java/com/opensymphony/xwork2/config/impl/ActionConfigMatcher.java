@@ -77,7 +77,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
         Map<String, String> vars) {
 
         String methodName = convertParam(orig.getMethodName(), vars);
-        if (!orig.isAllowedMethod(methodName)) {
+        if (methodName != null && !orig.isAllowedMethod(methodName)) {
             return null;
         }
 

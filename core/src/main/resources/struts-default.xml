@@ -358,7 +358,7 @@
 
        </interceptors>
 
-       <global-allowed-methods methods="execute,input,back,cancel,browse"/>
+       <global-allowed-methods>execute,input,back,cancel,browse</global-allowed-methods>
 
         <default-interceptor-ref name="defaultStack"/>
 

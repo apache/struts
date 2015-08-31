@@ -90,9 +90,6 @@
 <!ELEMENT global-results (result+)>
 
 <!ELEMENT global-allowed-methods (#PCDATA)>
-<!ATTLIST global-allowed-methods
-    methods CDATA #REQUIRED
->
 
 <!ELEMENT global-exception-mappings (exception-mapping+)>
 

@@ -893,12 +893,18 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     }
 
     protected void loadGlobalAllowedMethods(PackageConfig.Builder packageContext, Element packageElement) {
-        NodeList globalAllowedMethods = packageElement.getElementsByTagName("global-allowed-methods");
+        NodeList globalAllowedMethodsElms = packageElement.getElementsByTagName("global-allowed-methods");
 
-        if (globalAllowedMethods.getLength() > 0) {
-            Element globalAllowedMethodsElement = (Element) globalAllowedMethods.item(0);
-            Set<String> results = TextParseUtil.commaDelimitedStringToSet(globalAllowedMethodsElement.getAttribute("methods"));
-            packageContext.addGlobalAllowedMethods(results);
+        if (globalAllowedMethodsElms.getLength() > 0) {
+            Set<String> globalAllowedMethods = new HashSet<>();
+            Node n = globalAllowedMethodsElms.item(0).getFirstChild();
+            if (n != null) {
+                String s = n.getNodeValue().trim();
+                if (s.length() > 0) {
+                    globalAllowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+                }
+            }
+            packageContext.addGlobalAllowedMethods(globalAllowedMethods);
         }
     }
 

@@ -14,7 +14,7 @@
             </result>
         </global-results>
 
-        <global-allowed-methods methods="execute,input,back,cancel,browse"/>
+        <global-allowed-methods>execute,input,back,cancel,browse</global-allowed-methods>
 
         <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
             <param name="foo">17</param>

@@ -42,7 +42,6 @@ import java.util.*;
 public class ActionConfig extends Located implements Serializable {
 
     public static final String DEFAULT_METHOD = "execute";
-    public static final String WILDCARD = "*";
 
     protected List<InterceptorMapping> interceptors; // a list of interceptorMapping Objects eg. List<InterceptorMapping>
     protected Map<String,String> params;
@@ -58,11 +57,11 @@ public class ActionConfig extends Located implements Serializable {
         this.packageName = packageName;
         this.name = name;
         this.className = className;
-        params = new LinkedHashMap<String, String>();
-        results = new LinkedHashMap<String, ResultConfig>();
-        interceptors = new ArrayList<InterceptorMapping>();
-        exceptionMappings = new ArrayList<ExceptionMappingConfig>();
-        allowedMethods = new HashSet<String>();
+        params = new LinkedHashMap<>();
+        results = new LinkedHashMap<>();
+        interceptors = new ArrayList<>();
+        exceptionMappings = new ArrayList<>();
+        allowedMethods = new HashSet<>(Collections.singletonList(DEFAULT_METHOD));
     }
 
     /**
@@ -128,11 +127,7 @@ public class ActionConfig extends Located implements Serializable {
     }
 
     public boolean isAllowedMethod(String method) {
-        if (allowedMethods.size() == 1 && WILDCARD.equals(allowedMethods.iterator().next())) {
-            return true;
-        } else {
-            return method.equals(methodName != null ? methodName : DEFAULT_METHOD) || allowedMethods.contains(method);
-        }
+        return method.equals(methodName != null ? methodName : DEFAULT_METHOD) || allowedMethods.contains(method);
     }
 
     @Override public boolean equals(Object o) {
@@ -214,7 +209,6 @@ public class ActionConfig extends Located implements Serializable {
     public static class Builder implements InterceptorListHolder{
 
         protected ActionConfig target;
-        private boolean gotMethods;
 
         public Builder(ActionConfig toClone) {
             target = new ActionConfig(toClone);
@@ -249,6 +243,7 @@ public class ActionConfig extends Located implements Serializable {
 
         public Builder methodName(String method) {
             target.methodName = method;
+            addAllowedMethod(method);
             return this;
         }
 
@@ -317,10 +312,7 @@ public class ActionConfig extends Located implements Serializable {
         }
 
         public Builder addAllowedMethod(Collection<String> methods) {
-            if (methods != null) {
-                gotMethods = true;
-                target.allowedMethods.addAll(methods);
-            }
+            target.allowedMethods.addAll(methods);
             return this;
         }
 
@@ -330,22 +322,16 @@ public class ActionConfig extends Located implements Serializable {
         }
 
         public ActionConfig build() {
-            embalmTarget();
-            ActionConfig result = target;
-            target = new ActionConfig(target);
-            return result;
-        }
-
-        protected void embalmTarget() {
-            if (!gotMethods && target.allowedMethods.isEmpty()) {
-                target.allowedMethods.add(WILDCARD);
-            }
-
             target.params = Collections.unmodifiableMap(target.params);
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);
             target.exceptionMappings = Collections.unmodifiableList(target.exceptionMappings);
             target.allowedMethods = Collections.unmodifiableSet(target.allowedMethods);
+
+            ActionConfig result = target;
+            target = new ActionConfig(target);
+            return result;
         }
+
     }
 }

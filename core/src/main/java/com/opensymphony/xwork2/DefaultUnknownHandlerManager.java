@@ -145,4 +145,14 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
     public List<UnknownHandler> getUnknownHandlers() {
         return unknownHandlers;
     }
+
+    @Override
+    public boolean isAllowedMethod(String allowedMethod, ActionConfig config) {
+        for (UnknownHandler unknownHandler : unknownHandlers) {
+            if (unknownHandler.isAllowedMethod(allowedMethod, config)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.0//EN"
-    "http://struts.apache.org/dtds/xwork-2.0.dtd"
+    "-//Apache Struts//XWork 2.5//EN"
+    "http://struts.apache.org/dtds/xwork-2.5.dtd"
  >
  <!-- "file:///temp/ross/xwork/src/etc/xwork-1.0.dtd"  -->
 
@@ -13,6 +13,8 @@
                 <param name="actionName">login</param>
             </result>
         </global-results>
+
+        <global-allowed-methods methods="execute,input,back,cancel,browse"/>
 
         <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
             <param name="foo">17</param>

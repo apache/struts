@@ -38,6 +38,11 @@ public class SomeUnknownHandler implements UnknownHandler{
         return null;
     }
 
+    @Override
+    public boolean isAllowedMethod(String allowedMethod, ActionConfig actionConfig) {
+        return false;
+    }
+
     public void setActionConfig(ActionConfig actionConfig) {
         this.actionConfig = actionConfig;
     }

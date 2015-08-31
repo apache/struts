@@ -17,6 +17,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.mock.MockResult;
 
 import java.util.HashMap;
 
@@ -45,12 +46,12 @@ public class ActionInvocationTest extends XWorkTestCase {
 
     public void testCommandInvocationUnknownHandler() throws Exception {
 
-        DefaultActionProxy baseActionProxy = (DefaultActionProxy) actionProxyFactory.createActionProxy(
-                "baz", "unknownMethodTest", "unknownmethod", null);
         UnknownHandler unknownHandler = new UnknownHandler() {
-			public ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException { return null;}
+			public ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException {
+                return new ActionConfig.Builder("test", actionName, ActionSupport.class.getName()).build();
+            }
 			public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException {
-				return null;
+				return new MockResult();
 			}
 			public Object handleUnknownActionMethod(Object action, String methodName) {
 				if (methodName.equals("unknownmethod")) {
@@ -59,10 +60,19 @@ public class ActionInvocationTest extends XWorkTestCase {
 					return null;
 				}
 			}
+            public boolean isAllowedMethod(String allowedMethod, ActionConfig actionConfig) {
+                return "unknownmethod".equals(allowedMethod);
+            }
         };
 
         UnknownHandlerManagerMock uhm = new UnknownHandlerManagerMock();
         uhm.addUnknownHandler(unknownHandler);
+
+        loadButAdd(UnknownHandlerManager.class, uhm);
+
+        DefaultActionProxy baseActionProxy = (DefaultActionProxy) actionProxyFactory.createActionProxy(
+                "baz", "unknownMethodTest", "unknownmethod", null);
+
         ((DefaultActionInvocation)baseActionProxy.getInvocation()).setUnknownHandlerManager(uhm);
 
         assertEquals("found", baseActionProxy.execute());

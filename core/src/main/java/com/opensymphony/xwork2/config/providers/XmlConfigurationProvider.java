@@ -15,12 +15,24 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.ConfigurationUtil;
-import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
 import com.opensymphony.xwork2.config.impl.LocatableFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -47,7 +59,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 
 /**
@@ -90,6 +112,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         this.errorIfMissing = errorIfMissing;
 
         Map<String, String> mappings = new HashMap<>();
+        mappings.put("-//Apache Struts//XWork 2.5//EN", "xwork-2.5.dtd");
         mappings.put("-//Apache Struts//XWork 2.3//EN", "xwork-2.3.dtd");
         mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
         mappings.put("-//Apache Struts//XWork 2.1//EN", "xwork-2.1.dtd");
@@ -522,6 +545,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         // load the global result list for this package
         loadGlobalResults(newPackage, packageElement);
 
+        loadGlobalAllowedMethods(newPackage, packageElement);
+
         // load the global exception handler list for this package
         loadGobalExceptionMappings(newPackage, packageElement);
 
@@ -623,8 +648,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         boolean isAbstract = Boolean.parseBoolean(abstractVal);
         String name = StringUtils.defaultString(packageElement.getAttribute("name"));
         String namespace = StringUtils.defaultString(packageElement.getAttribute("namespace"));
-        String strictDMIVal = StringUtils.defaultString(packageElement.getAttribute("strict-method-invocation"));
-        boolean strictDMI = Boolean.parseBoolean(strictDMIVal);
 
         if (StringUtils.isNotEmpty(packageElement.getAttribute("externalReferenceResolver"))) {
             throw new ConfigurationException("The 'externalReferenceResolver' attribute has been removed.  Please use " +
@@ -634,7 +657,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
                 .namespace(namespace)
                 .isAbstract(isAbstract)
-                .strictMethodInvocation(strictDMI)
                 .location(DomHelper.getLocationObject(packageElement));
 
         if (StringUtils.isNotEmpty(StringUtils.defaultString(parent))) { // has parents, let's look it up
@@ -825,7 +847,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     protected Set<String> buildAllowedMethods(Element element, PackageConfig.Builder packageContext) {
         NodeList allowedMethodsEls = element.getElementsByTagName("allowed-methods");
 
-        Set<String> allowedMethods = null;
+        Set<String> allowedMethods = packageContext.getGlobalAllowedMethods();
 
         if (allowedMethodsEls.getLength() > 0) {
             allowedMethods = new HashSet<>();
@@ -836,8 +858,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     allowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
                 }
             }
-        } else if (packageContext.isStrictMethodInvocation()) {
-            allowedMethods = new HashSet<>();
         }
 
         return allowedMethods;
@@ -874,6 +894,16 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             Element globalResultElement = (Element) globalResultList.item(0);
             Map<String, ResultConfig> results = buildResults(globalResultElement, packageContext);
             packageContext.addGlobalResultConfigs(results);
+        }
+    }
+
+    protected void loadGlobalAllowedMethods(PackageConfig.Builder packageContext, Element packageElement) {
+        NodeList globalAllowedMethods = packageElement.getElementsByTagName("global-allowed-methods");
+
+        if (globalAllowedMethods.getLength() > 0) {
+            Element globalAllowedMethodsElement = (Element) globalAllowedMethods.item(0);
+            Set<String> results = TextParseUtil.commaDelimitedStringToSet(globalAllowedMethodsElement.getAttribute("methods"));
+            packageContext.addGlobalAllowedMethods(results);
         }
     }
 

@@ -42,6 +42,7 @@ import java.util.*;
 public class ActionConfig extends Located implements Serializable {
 
     public static final String DEFAULT_METHOD = "execute";
+    public static final String WILDCARD = "*";
 
     protected List<InterceptorMapping> interceptors; // a list of interceptorMapping Objects eg. List<InterceptorMapping>
     protected Map<String,String> params;

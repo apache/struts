@@ -25,7 +25,7 @@
         </action>
     </package>
 
-    <package name="strict" strict-method-invocation="true">
+    <package name="strict">
         <action name="Default">
         </action>
 

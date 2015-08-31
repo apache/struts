@@ -40,6 +40,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
     protected Map<String, ActionConfig> actionConfigs;
     protected Map<String, ResultConfig> globalResultConfigs;
+    protected Set<String> globalAllowedMethods;
     protected Map<String, Object> interceptorConfigs;
     protected Map<String, ResultTypeConfig> resultTypeConfigs;
     protected List<ExceptionMappingConfig> globalExceptionMappingConfigs;
@@ -57,6 +58,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         this.name = name;
         actionConfigs = new LinkedHashMap<>();
         globalResultConfigs = new LinkedHashMap<>();
+        globalAllowedMethods = new HashSet<>();
         interceptorConfigs = new LinkedHashMap<>();
         resultTypeConfigs = new LinkedHashMap<>();
         globalExceptionMappingConfigs = new ArrayList<>();
@@ -74,6 +76,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         this.needsRefresh = orig.needsRefresh;
         this.actionConfigs = new LinkedHashMap<>(orig.actionConfigs);
         this.globalResultConfigs = new LinkedHashMap<>(orig.globalResultConfigs);
+        this.globalAllowedMethods = new LinkedHashSet<>(orig.globalAllowedMethods);
         this.interceptorConfigs = new LinkedHashMap<>(orig.interceptorConfigs);
         this.resultTypeConfigs = new LinkedHashMap<>(orig.resultTypeConfigs);
         this.globalExceptionMappingConfigs = new ArrayList<>(orig.globalExceptionMappingConfigs);
@@ -445,7 +448,6 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     public static class Builder implements InterceptorLocator {
 
         protected PackageConfig target;
-        private boolean strictDMI;
 
         public Builder(String name) {
             target = new PackageConfig(name);
@@ -528,6 +530,15 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
             return this;
         }
 
+        public Set<String> getGlobalAllowedMethods() {
+            return target.globalAllowedMethods;
+        }
+
+        public Builder addGlobalAllowedMethods(Set<String> allowedMethods) {
+            target.globalAllowedMethods.addAll(allowedMethods);
+            return this;
+        }
+
         public Builder addExceptionMappingConfig(ExceptionMappingConfig exceptionMappingConfig) {
             target.globalExceptionMappingConfigs.add(exceptionMappingConfig);
             return this;
@@ -589,15 +600,6 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
         public Object getInterceptorConfig(String name) {
             return target.getAllInterceptorConfigs().get(name);
-        }
-
-        public Builder strictMethodInvocation(boolean strict) {
-            strictDMI = strict;
-            return this;
-        }
-
-        public boolean isStrictMethodInvocation() {
-            return strictDMI;
         }
 
         public PackageConfig build() {

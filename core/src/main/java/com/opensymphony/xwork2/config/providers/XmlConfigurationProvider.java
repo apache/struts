@@ -649,11 +649,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         String name = StringUtils.defaultString(packageElement.getAttribute("name"));
         String namespace = StringUtils.defaultString(packageElement.getAttribute("namespace"));
 
-        if (StringUtils.isNotEmpty(packageElement.getAttribute("externalReferenceResolver"))) {
-            throw new ConfigurationException("The 'externalReferenceResolver' attribute has been removed.  Please use " +
-                    "a custom ObjectFactory or Interceptor.", packageElement);
-        }
-
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
                 .namespace(namespace)
                 .isAbstract(isAbstract)

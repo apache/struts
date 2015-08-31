@@ -43,7 +43,6 @@
     extends CDATA #IMPLIED
     namespace CDATA #IMPLIED
     abstract CDATA #IMPLIED
-    externalReferenceResolver NMTOKEN #IMPLIED
 >
 
 <!ELEMENT result-types (result-type+)>

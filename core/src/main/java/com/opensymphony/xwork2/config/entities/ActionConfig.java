@@ -52,7 +52,7 @@ public class ActionConfig extends Located implements Serializable {
     protected String methodName;
     protected String packageName;
     protected String name;
-    protected Set<String> allowedMethods;
+    protected AllowedMethods allowedMethods;
 
     protected ActionConfig(String packageName, String name, String className) {
         this.packageName = packageName;
@@ -62,7 +62,7 @@ public class ActionConfig extends Located implements Serializable {
         results = new LinkedHashMap<>();
         interceptors = new ArrayList<>();
         exceptionMappings = new ArrayList<>();
-        allowedMethods = new HashSet<>(Collections.singletonList(DEFAULT_METHOD));
+        allowedMethods = new AllowedMethods(new HashSet<>(Collections.singletonList(DEFAULT_METHOD)));
     }
 
     /**
@@ -79,7 +79,7 @@ public class ActionConfig extends Located implements Serializable {
         this.interceptors = new ArrayList<>(orig.interceptors);
         this.results = new LinkedHashMap<>(orig.results);
         this.exceptionMappings = new ArrayList<>(orig.exceptionMappings);
-        this.allowedMethods = new HashSet<>(orig.allowedMethods);
+        this.allowedMethods = new AllowedMethods(orig.allowedMethods.list());
         this.location = orig.location;
     }
 
@@ -100,7 +100,7 @@ public class ActionConfig extends Located implements Serializable {
     }
 
     public Set<String> getAllowedMethods() {
-        return allowedMethods;
+        return allowedMethods.list();
     }
 
     /**
@@ -128,7 +128,7 @@ public class ActionConfig extends Located implements Serializable {
     }
 
     public boolean isAllowedMethod(String method) {
-        return method.equals(methodName != null ? methodName : DEFAULT_METHOD) || allowedMethods.contains(method);
+        return method.equals(methodName != null ? methodName : DEFAULT_METHOD) || allowedMethods.isAllowed(method);
     }
 
     @Override public boolean equals(Object o) {
@@ -210,14 +210,16 @@ public class ActionConfig extends Located implements Serializable {
     public static class Builder implements InterceptorListHolder{
 
         protected ActionConfig target;
+        protected Set<String> allowedMethods;
 
         public Builder(ActionConfig toClone) {
             target = new ActionConfig(toClone);
-            addAllowedMethod(toClone.getAllowedMethods());
+            allowedMethods = toClone.getAllowedMethods();
         }
 
         public Builder(String packageName, String name, String className) {
             target = new ActionConfig(packageName, name, className);
+            allowedMethods = new HashSet<>();
         }
 
         public Builder packageName(String name) {
@@ -308,12 +310,14 @@ public class ActionConfig extends Located implements Serializable {
         }
 
         public Builder addAllowedMethod(String methodName) {
-            target.allowedMethods.add(methodName);
+            if (methodName != null) {
+                allowedMethods.add(methodName);
+            }
             return this;
         }
 
         public Builder addAllowedMethod(Collection<String> methods) {
-            target.allowedMethods.addAll(methods);
+            allowedMethods.addAll(methods);
             return this;
         }
 
@@ -327,7 +331,7 @@ public class ActionConfig extends Located implements Serializable {
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);
             target.exceptionMappings = Collections.unmodifiableList(target.exceptionMappings);
-            target.allowedMethods = Collections.unmodifiableSet(target.allowedMethods);
+            target.allowedMethods = new AllowedMethods(allowedMethods);
 
             ActionConfig result = target;
             target = new ActionConfig(target);

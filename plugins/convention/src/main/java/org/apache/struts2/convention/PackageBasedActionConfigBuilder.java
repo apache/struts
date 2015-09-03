@@ -42,6 +42,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.convention.annotation.*;
+import org.apache.struts2.convention.annotation.AllowedMethods;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -652,6 +653,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             String actionPackage = actionClass.getPackage().getName();
             LOG.debug("Processing class [{}] in package [{}]", actionClass.getName(), actionPackage);
 
+            Set<String> allowedMethods = getAllowedMethods(actionClass);
+
             // Determine the default namespace and action name
             List<String> namespaces = determineActionNamespace(actionClass);
             for (String namespace : namespaces) {
@@ -692,7 +695,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
                     // Build the default
                     if (!found) {
-                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, DEFAULT_METHOD, null);
+                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, DEFAULT_METHOD, null, allowedMethods);
                     }
                 }
 
@@ -706,14 +709,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                                     actionClass, action);
                         }
 
-                        createActionConfig(pkgCfg, actionClass, defaultActionName, method, action);
+                        createActionConfig(pkgCfg, actionClass, defaultActionName, method, action, allowedMethods);
                     }
                 }
 
                 // some actions will not have any @Action or a default method, like the rest actions
                 // where the action mapper is the one that finds the right method at runtime
                 if (map.isEmpty() && mapAllMatches && actionAnnotation == null && actionsAnnotation == null) {
-                    createActionConfig(defaultPackageConfig, actionClass, defaultActionName, null, actionAnnotation);
+                    createActionConfig(defaultPackageConfig, actionClass, defaultActionName, null, actionAnnotation, allowedMethods);
                 }
 
                 //if there are @Actions or @Action at the class level, create the mappings for them
@@ -721,9 +724,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 if (actionsAnnotation != null) {
                     List<Action> actionAnnotations = checkActionsAnnotation(actionsAnnotation);
                     for (Action actionAnnotation2 : actionAnnotations)
-                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, methodName, actionAnnotation2);
+                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, methodName, actionAnnotation2, allowedMethods);
                 } else if (actionAnnotation != null)
-                    createActionConfig(defaultPackageConfig, actionClass, defaultActionName, methodName, actionAnnotation);
+                    createActionConfig(defaultPackageConfig, actionClass, defaultActionName, methodName, actionAnnotation, allowedMethods);
             }
         }
 
@@ -733,6 +736,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         Set<String> packageNames = packageConfigs.keySet();
         for (String packageName : packageNames) {
             configuration.addPackageConfig(packageName, packageConfigs.get(packageName).build());
+        }
+    }
+
+    private Set<String> getAllowedMethods(Class<?> actionClass) {
+        AllowedMethods annotation = AnnotationUtils.findAnnotation(actionClass, AllowedMethods.class);
+        if (annotation == null) {
+            return Collections.emptySet();
+        } else {
+            return TextParseUtil.commaDelimitedStringToSet(annotation.value());
         }
     }
 
@@ -896,7 +908,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param annotation   The ActionName annotation that might override the action name and possibly
      */
     protected void createActionConfig(PackageConfig.Builder pkgCfg, Class<?> actionClass, String actionName,
-                                      String actionMethod, Action annotation) {
+                                      String actionMethod, Action annotation, Set<String> allowedMethods) {
     	String className = actionClass.getName();
         if (annotation != null) {
             actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ? actionName : annotation.value();
@@ -908,6 +920,12 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
         ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(), actionName, className);
         actionConfig.methodName(actionMethod);
+
+        if (!allowedMethods.contains(actionMethod)) {
+            actionConfig.addAllowedMethod(actionMethod);
+        }
+        actionConfig.addAllowedMethod(allowedMethods);
+        actionConfig.addAllowedMethod(pkgCfg.getGlobalAllowedMethods());
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Creating action config for class [{}], name [{}] and package name [{}] in namespace [{}]",

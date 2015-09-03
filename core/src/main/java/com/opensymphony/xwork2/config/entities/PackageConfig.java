@@ -531,7 +531,18 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         }
 
         public Set<String> getGlobalAllowedMethods() {
-            return target.globalAllowedMethods;
+            Set <String> allowedMethods = target.globalAllowedMethods;
+            allowedMethods.addAll(getParentsAllowedMethods(target.parents));
+            return allowedMethods;
+        }
+
+        public Set<String> getParentsAllowedMethods(List<PackageConfig> parents) {
+            Set<String> allowedMethods = new HashSet<>();
+            for (PackageConfig parent : parents) {
+                allowedMethods.addAll(parent.globalAllowedMethods);
+                allowedMethods.addAll(getParentsAllowedMethods(parent.getParents()));
+            }
+            return allowedMethods;
         }
 
         public Builder addGlobalAllowedMethods(Set<String> allowedMethods) {

@@ -921,9 +921,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(), actionName, className);
         actionConfig.methodName(actionMethod);
 
-        if (!allowedMethods.contains(actionMethod)) {
-            actionConfig.addAllowedMethod(actionMethod);
-        }
+        actionConfig.addAllowedMethod(actionMethod);
         actionConfig.addAllowedMethod(allowedMethods);
         actionConfig.addAllowedMethod(pkgCfg.getGlobalAllowedMethods());
 

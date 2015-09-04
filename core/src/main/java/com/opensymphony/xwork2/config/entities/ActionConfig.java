@@ -63,7 +63,7 @@ public class ActionConfig extends Located implements Serializable {
         results = new LinkedHashMap<>();
         interceptors = new ArrayList<>();
         exceptionMappings = new ArrayList<>();
-        allowedMethods = new AllowedMethods(new HashSet<>(Collections.singletonList(DEFAULT_METHOD)));
+        allowedMethods = AllowedMethods.build(new HashSet<>(Collections.singletonList(DEFAULT_METHOD)));
     }
 
     /**
@@ -80,7 +80,7 @@ public class ActionConfig extends Located implements Serializable {
         this.interceptors = new ArrayList<>(orig.interceptors);
         this.results = new LinkedHashMap<>(orig.results);
         this.exceptionMappings = new ArrayList<>(orig.exceptionMappings);
-        this.allowedMethods = new AllowedMethods(orig.allowedMethods.list());
+        this.allowedMethods = AllowedMethods.build(orig.allowedMethods.list());
         this.location = orig.location;
     }
 
@@ -332,7 +332,7 @@ public class ActionConfig extends Located implements Serializable {
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);
             target.exceptionMappings = Collections.unmodifiableList(target.exceptionMappings);
-            target.allowedMethods = new AllowedMethods(allowedMethods);
+            target.allowedMethods = AllowedMethods.build(allowedMethods);
 
             ActionConfig result = target;
             target = new ActionConfig(target);

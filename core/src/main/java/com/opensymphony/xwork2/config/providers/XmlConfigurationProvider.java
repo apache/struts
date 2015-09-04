@@ -649,9 +649,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         String name = StringUtils.defaultString(packageElement.getAttribute("name"));
         String namespace = StringUtils.defaultString(packageElement.getAttribute("namespace"));
 
+        boolean strictDMI = Boolean.parseBoolean(packageElement.getAttribute("strict-method-invocation"));
+
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
                 .namespace(namespace)
                 .isAbstract(isAbstract)
+                .strictMethodInvocation(strictDMI)
                 .location(DomHelper.getLocationObject(packageElement));
 
         if (StringUtils.isNotEmpty(StringUtils.defaultString(parent))) { // has parents, let's look it up

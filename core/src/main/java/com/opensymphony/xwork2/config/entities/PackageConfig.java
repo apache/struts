@@ -448,6 +448,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     public static class Builder implements InterceptorLocator {
 
         protected PackageConfig target;
+        private boolean strictDMI;
 
         public Builder(String name) {
             target = new PackageConfig(name);
@@ -611,6 +612,15 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
         public Object getInterceptorConfig(String name) {
             return target.getAllInterceptorConfigs().get(name);
+        }
+
+        public Builder strictMethodInvocation(boolean strict) {
+            strictDMI = strict;
+            return this;
+        }
+
+        public boolean isStrictMethodInvocation() {
+            return strictDMI;
         }
 
         public PackageConfig build() {

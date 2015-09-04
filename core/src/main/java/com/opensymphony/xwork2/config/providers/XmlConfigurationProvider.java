@@ -845,17 +845,23 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     protected Set<String> buildAllowedMethods(Element element, PackageConfig.Builder packageContext) {
         NodeList allowedMethodsEls = element.getElementsByTagName("allowed-methods");
 
-        Set<String> allowedMethods = packageContext.getGlobalAllowedMethods();
+        Set<String> allowedMethods;
+        if (packageContext.isStrictMethodInvocation()) {
+            allowedMethods = packageContext.getGlobalAllowedMethods();
 
-        if (allowedMethodsEls.getLength() > 0) {
-            allowedMethods = new HashSet<>();
-            Node n = allowedMethodsEls.item(0).getFirstChild();
-            if (n != null) {
-                String s = n.getNodeValue().trim();
-                if (s.length() > 0) {
-                    allowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+            if (allowedMethodsEls.getLength() > 0) {
+                allowedMethods = new HashSet<>();
+                Node n = allowedMethodsEls.item(0).getFirstChild();
+                if (n != null) {
+                    String s = n.getNodeValue().trim();
+                    if (s.length() > 0) {
+                        allowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+                    }
                 }
             }
+        } else {
+            allowedMethods = new HashSet<>();
+            allowedMethods.add(ActionConfig.REGEX_WILDCARD);
         }
 
         return allowedMethods;

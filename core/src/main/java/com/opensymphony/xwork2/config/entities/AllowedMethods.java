@@ -32,8 +32,11 @@ public class AllowedMethods {
                 ret.append(c);
             }
         }
-        if (isPattern) {
+        if (isPattern && !method.startsWith("regex:")) {
             return new PatternAllowedMethod(ret.toString(), method);
+        } else if (method.startsWith("regex:")) {
+            String pattern = method.substring(method.indexOf(":") + 1);
+            return new PatternAllowedMethod(pattern, method);
         } else {
             return new LiteralAllowedMethod(ret.toString());
         }

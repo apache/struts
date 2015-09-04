@@ -117,6 +117,14 @@ public class AllowedMethods {
         public int hashCode() {
             return original.hashCode();
         }
+
+        @Override
+        public String toString() {
+            return "PatternAllowedMethod{" +
+                    "allowedMethodPattern=" + allowedMethodPattern +
+                    ", original='" + original + '\'' +
+                    '}';
+        }
     }
 
     private static class LiteralAllowedMethod implements AllowedMethod {
@@ -151,6 +159,13 @@ public class AllowedMethods {
         @Override
         public int hashCode() {
             return allowedMethod.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return "LiteralAllowedMethod{" +
+                    "allowedMethod='" + allowedMethod + '\'' +
+                    '}';
         }
     }
 

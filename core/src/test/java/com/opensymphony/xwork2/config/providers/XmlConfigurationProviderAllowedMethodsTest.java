@@ -27,12 +27,12 @@ public class XmlConfigurationProviderAllowedMethodsTest extends ConfigurationTes
         assertEquals(5, actionConfigs.size());
 
         ActionConfig action = (ActionConfig) actionConfigs.get("Default");
-        assertEquals(0, action.getAllowedMethods().size());
+        assertEquals(1, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
-        assertFalse(action.isAllowedMethod("foo"));
-        assertFalse(action.isAllowedMethod("bar"));
-        assertFalse(action.isAllowedMethod("baz"));
-        assertFalse(action.isAllowedMethod("xyz"));
+        assertTrue(action.isAllowedMethod("foo"));
+        assertTrue(action.isAllowedMethod("bar"));
+        assertTrue(action.isAllowedMethod("baz"));
+        assertTrue(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Boring");
         assertEquals(0, action.getAllowedMethods().size());

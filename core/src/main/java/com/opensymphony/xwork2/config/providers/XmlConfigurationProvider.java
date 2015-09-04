@@ -846,7 +846,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         NodeList allowedMethodsEls = element.getElementsByTagName("allowed-methods");
 
         Set<String> allowedMethods;
-        if (packageContext.isStrictMethodInvocation()) {
+        if (allowedMethodsEls.getLength() > 0) {
+            // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
             allowedMethods = packageContext.getGlobalAllowedMethods();
 
             if (allowedMethodsEls.getLength() > 0) {
@@ -859,7 +860,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     }
                 }
             }
+        } else if (packageContext.isStrictMethodInvocation()) {
+            // user enabled Strict DMI but didn't defined action specific 'allowed-methods' so we use 'global-allowed-methods' only
+            allowedMethods = packageContext.getGlobalAllowedMethods();
         } else {
+            // Strict DMI is disabled to any method can be called
             allowedMethods = new HashSet<>();
             allowedMethods.add(ActionConfig.REGEX_WILDCARD);
         }

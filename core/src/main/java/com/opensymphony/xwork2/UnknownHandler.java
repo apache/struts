@@ -60,14 +60,4 @@ public interface UnknownHandler {
      */
 	Object handleUnknownActionMethod(Object action, String methodName);
 
-    /**
-     * Handles the case when an action method is unknown and cannot be validated if it is allowed to be executed.
-     *
-     * @since 2.5
-     * @param allowedMethod The method's name
-     * @param actionConfig The config of actions
-     * @return true if allowedMethod can be executed, false otherwise
-     */
-    boolean isAllowedMethod(String allowedMethod, ActionConfig actionConfig);
-
 }

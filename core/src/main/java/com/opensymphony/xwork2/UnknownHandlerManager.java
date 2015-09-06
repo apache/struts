@@ -44,6 +44,4 @@ public interface UnknownHandlerManager {
 
     List<UnknownHandler> getUnknownHandlers();
 
-    boolean isAllowedMethod(String allowedMethod, ActionConfig actionConfig);
-
 }

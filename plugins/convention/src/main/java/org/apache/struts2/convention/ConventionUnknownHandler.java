@@ -404,8 +404,4 @@ public class ConventionUnknownHandler implements UnknownHandler {
         }
     }
 
-    @Override
-    public boolean isAllowedMethod(String allowedMethod, ActionConfig actionConfig) {
-        return false;
-    }
 }

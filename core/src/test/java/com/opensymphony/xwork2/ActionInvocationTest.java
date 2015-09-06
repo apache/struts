@@ -48,7 +48,9 @@ public class ActionInvocationTest extends XWorkTestCase {
 
         UnknownHandler unknownHandler = new UnknownHandler() {
 			public ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException {
-                return new ActionConfig.Builder("test", actionName, ActionSupport.class.getName()).build();
+                return new ActionConfig.Builder("test", actionName, ActionSupport.class.getName())
+                        .addAllowedMethod("unknownmethod")
+                        .build();
             }
 			public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException {
 				return new MockResult();
@@ -60,9 +62,6 @@ public class ActionInvocationTest extends XWorkTestCase {
 					return null;
 				}
 			}
-            public boolean isAllowedMethod(String allowedMethod, ActionConfig actionConfig) {
-                return "unknownmethod".equals(allowedMethod);
-            }
         };
 
         UnknownHandlerManagerMock uhm = new UnknownHandlerManagerMock();

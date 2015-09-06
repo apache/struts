@@ -194,9 +194,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
             resolveMethod();
 
-            if (config.isAllowedMethod(method) ||
-                    (unknownHandlerManager.hasUnknownHandlers() && unknownHandlerManager.isAllowedMethod(method, config))
-            ) {
+            if (config.isAllowedMethod(method)) {
                 invocation.init(this);
             } else {
                 throw new ConfigurationException("This method: " + method + " for action " + actionName + " is not allowed!");

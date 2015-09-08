@@ -614,19 +614,15 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         }
 
         public PackageConfig build() {
-            embalmTarget();
-            PackageConfig result = target;
-            target = new PackageConfig(result);
-            return result;
-        }
-
-        protected void embalmTarget() {
             target.actionConfigs = Collections.unmodifiableMap(target.actionConfigs);
             target.globalResultConfigs = Collections.unmodifiableMap(target.globalResultConfigs);
             target.interceptorConfigs = Collections.unmodifiableMap(target.interceptorConfigs);
             target.resultTypeConfigs = Collections.unmodifiableMap(target.resultTypeConfigs);
             target.globalExceptionMappingConfigs = Collections.unmodifiableList(target.globalExceptionMappingConfigs);
             target.parents = Collections.unmodifiableList(target.parents);
+            PackageConfig result = target;
+            target = new PackageConfig(result);
+            return result;
         }
 
         @Override

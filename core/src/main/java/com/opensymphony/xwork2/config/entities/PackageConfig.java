@@ -53,6 +53,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     protected String namespace = "";
     protected boolean isAbstract = false;
     protected boolean needsRefresh;
+    protected boolean strictMethodInvocation = true;
 
     protected PackageConfig(String name) {
         this.name = name;
@@ -82,6 +83,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         this.globalExceptionMappingConfigs = new ArrayList<>(orig.globalExceptionMappingConfigs);
         this.parents = new ArrayList<>(orig.parents);
         this.location = orig.location;
+        this.strictMethodInvocation = orig.strictMethodInvocation;
     }
 
     public boolean isAbstract() {
@@ -330,7 +332,6 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         return resultTypeConfigs;
     }
 
-
     public boolean isNeedsRefresh() {
         return needsRefresh;
     }
@@ -345,80 +346,64 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         return globalExceptionMappingConfigs;
     }
 
+    public boolean isStrictMethodInvocation() {
+        return strictMethodInvocation;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (!(o instanceof PackageConfig)) {
+        PackageConfig that = (PackageConfig) o;
+
+        if (isAbstract != that.isAbstract) return false;
+        if (needsRefresh != that.needsRefresh) return false;
+        if (strictMethodInvocation != that.strictMethodInvocation) return false;
+        if (actionConfigs != null ? !actionConfigs.equals(that.actionConfigs) : that.actionConfigs != null)
             return false;
-        }
-
-        final PackageConfig packageConfig = (PackageConfig) o;
-
-        if (isAbstract != packageConfig.isAbstract) {
+        if (globalResultConfigs != null ? !globalResultConfigs.equals(that.globalResultConfigs) : that.globalResultConfigs != null)
             return false;
-        }
-
-        if ((actionConfigs != null) ? (!actionConfigs.equals(packageConfig.actionConfigs)) : (packageConfig.actionConfigs != null)) {
+        if (globalAllowedMethods != null ? !globalAllowedMethods.equals(that.globalAllowedMethods) : that.globalAllowedMethods != null)
             return false;
-        }
-
-        if ((defaultResultType != null) ? (!defaultResultType.equals(packageConfig.defaultResultType)) : (packageConfig.defaultResultType != null)) {
+        if (interceptorConfigs != null ? !interceptorConfigs.equals(that.interceptorConfigs) : that.interceptorConfigs != null)
             return false;
-        }
-
-        if ((defaultClassRef != null) ? (!defaultClassRef.equals(packageConfig.defaultClassRef)) : (packageConfig.defaultClassRef != null)) {
+        if (resultTypeConfigs != null ? !resultTypeConfigs.equals(that.resultTypeConfigs) : that.resultTypeConfigs != null)
             return false;
-        }
-
-        if ((globalResultConfigs != null) ? (!globalResultConfigs.equals(packageConfig.globalResultConfigs)) : (packageConfig.globalResultConfigs != null)) {
+        if (globalExceptionMappingConfigs != null ? !globalExceptionMappingConfigs.equals(that.globalExceptionMappingConfigs) : that.globalExceptionMappingConfigs != null)
             return false;
-        }
-
-        if ((interceptorConfigs != null) ? (!interceptorConfigs.equals(packageConfig.interceptorConfigs)) : (packageConfig.interceptorConfigs != null)) {
+        if (parents != null ? !parents.equals(that.parents) : that.parents != null) return false;
+        if (defaultInterceptorRef != null ? !defaultInterceptorRef.equals(that.defaultInterceptorRef) : that.defaultInterceptorRef != null)
             return false;
-        }
-
-        if ((name != null) ? (!name.equals(packageConfig.name)) : (packageConfig.name != null)) {
+        if (defaultActionRef != null ? !defaultActionRef.equals(that.defaultActionRef) : that.defaultActionRef != null)
             return false;
-        }
-
-        if ((namespace != null) ? (!namespace.equals(packageConfig.namespace)) : (packageConfig.namespace != null)) {
+        if (defaultResultType != null ? !defaultResultType.equals(that.defaultResultType) : that.defaultResultType != null)
             return false;
-        }
-
-        if ((parents != null) ? (!parents.equals(packageConfig.parents)) : (packageConfig.parents != null)) {
+        if (defaultClassRef != null ? !defaultClassRef.equals(that.defaultClassRef) : that.defaultClassRef != null)
             return false;
-        }
+        if (!name.equals(that.name)) return false;
+        return !(namespace != null ? !namespace.equals(that.namespace) : that.namespace != null);
 
-        if ((resultTypeConfigs != null) ? (!resultTypeConfigs.equals(packageConfig.resultTypeConfigs)) : (packageConfig.resultTypeConfigs != null)) {
-            return false;
-        }
-
-        if ((globalExceptionMappingConfigs != null) ? (!globalExceptionMappingConfigs.equals(packageConfig.globalExceptionMappingConfigs)) : (packageConfig.globalExceptionMappingConfigs != null)) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        result = ((name != null) ? name.hashCode() : 0);
-        result = (29 * result) + ((parents != null) ? parents.hashCode() : 0);
-        result = (29 * result) + ((actionConfigs != null) ? actionConfigs.hashCode() : 0);
-        result = (29 * result) + ((globalResultConfigs != null) ? globalResultConfigs.hashCode() : 0);
-        result = (29 * result) + ((interceptorConfigs != null) ? interceptorConfigs.hashCode() : 0);
-        result = (29 * result) + ((resultTypeConfigs != null) ? resultTypeConfigs.hashCode() : 0);
-        result = (29 * result) + ((globalExceptionMappingConfigs != null) ? globalExceptionMappingConfigs.hashCode() : 0);
-        result = (29 * result) + ((defaultResultType != null) ? defaultResultType.hashCode() : 0);
-        result = (29 * result) + ((defaultClassRef != null) ? defaultClassRef.hashCode() : 0);
-        result = (29 * result) + ((namespace != null) ? namespace.hashCode() : 0);
-        result = (29 * result) + (isAbstract ? 1 : 0);
-
+        int result = actionConfigs != null ? actionConfigs.hashCode() : 0;
+        result = 31 * result + (globalResultConfigs != null ? globalResultConfigs.hashCode() : 0);
+        result = 31 * result + (globalAllowedMethods != null ? globalAllowedMethods.hashCode() : 0);
+        result = 31 * result + (interceptorConfigs != null ? interceptorConfigs.hashCode() : 0);
+        result = 31 * result + (resultTypeConfigs != null ? resultTypeConfigs.hashCode() : 0);
+        result = 31 * result + (globalExceptionMappingConfigs != null ? globalExceptionMappingConfigs.hashCode() : 0);
+        result = 31 * result + (parents != null ? parents.hashCode() : 0);
+        result = 31 * result + (defaultInterceptorRef != null ? defaultInterceptorRef.hashCode() : 0);
+        result = 31 * result + (defaultActionRef != null ? defaultActionRef.hashCode() : 0);
+        result = 31 * result + (defaultResultType != null ? defaultResultType.hashCode() : 0);
+        result = 31 * result + (defaultClassRef != null ? defaultClassRef.hashCode() : 0);
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
+        result = 31 * result + (isAbstract ? 1 : 0);
+        result = 31 * result + (needsRefresh ? 1 : 0);
+        result = 31 * result + (strictMethodInvocation ? 1 : 0);
         return result;
     }
 
@@ -620,6 +605,11 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         }
 
         public boolean isStrictMethodInvocation() {
+            for (PackageConfig parent : target.parents) {
+                if (parent.isStrictMethodInvocation()) {
+                    return true;
+                }
+            }
             return strictDMI;
         }
 

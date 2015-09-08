@@ -120,7 +120,6 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
         // this should inherit
         ActionConfig actionWithNoRef = new ActionConfig.Builder("", "ActionWithNoRef", SimpleAction.class.getName())
             .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         interceptors = new ArrayList<>();
@@ -128,7 +127,6 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         ActionConfig anotherActionWithOwnRef = new ActionConfig.Builder("", "AnotherActionWithOwnRef", SimpleAction.class.getName())
             .addInterceptor(new InterceptorMapping("logging", objectFactory.buildInterceptor(loggingInterceptor, new HashMap<String, String>())))
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         RuntimeConfiguration runtimeConfig = configurationManager.getConfiguration().getRuntimeConfiguration();

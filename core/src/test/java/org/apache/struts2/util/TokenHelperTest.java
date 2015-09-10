@@ -21,6 +21,7 @@
 
 package org.apache.struts2.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -47,14 +48,20 @@ public class TokenHelperTest extends TestCase {
     public void testSetToken() {
         String token = TokenHelper.setToken();
 		final String defaultSessionTokenName = TokenHelper.buildTokenSessionAttributeName(TokenHelper.DEFAULT_TOKEN_NAME);
-		assertEquals(token, session.get(defaultSessionTokenName));
+		Object sessionTokens = session.get(defaultSessionTokenName);
+		assertNotNull(sessionTokens);
+		ArrayList<String> sessionTokensList = (ArrayList<String>) sessionTokens;
+		assertTrue(sessionTokensList.contains(token));
     }
 
     public void testSetTokenWithName() {
         String tokenName = "myTestToken";
         String token = TokenHelper.setToken(tokenName);
 		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-		assertEquals(token, session.get(sessionTokenName));
+		Object sessionTokens = session.get(sessionTokenName);
+		assertNotNull(sessionTokens);
+		ArrayList<String> sessionTokensList = (ArrayList<String>) sessionTokens;
+		assertTrue(sessionTokensList.contains(token));
     }
 
 	public void testSetSessionToken() {
@@ -62,14 +69,20 @@ public class TokenHelperTest extends TestCase {
 		String token = "foobar";
 		TokenHelper.setSessionToken(tokenName, token);
 		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-		assertEquals(token, session.get(sessionTokenName));
+		Object sessionTokens = session.get(sessionTokenName);
+		assertNotNull(sessionTokens);
+		ArrayList<String> sessionTokensList = (ArrayList<String>) sessionTokens;
+		assertTrue(sessionTokensList.contains(token));
 	}
 
 	public void testValidToken() {
         String tokenName = "validTokenTest";
         String token = TokenHelper.setToken(tokenName);
 		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-		assertEquals(token, session.get(sessionTokenName));
+		Object sessionTokens = session.get(sessionTokenName);
+		assertNotNull(sessionTokens);
+		ArrayList<String> sessionTokensList = (ArrayList<String>) sessionTokens;
+		assertTrue(sessionTokensList.contains(token));
         ActionContext.getContext().getParameters().put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
         ActionContext.getContext().getParameters().put(tokenName, new String[]{token});
         assertTrue(TokenHelper.validToken());

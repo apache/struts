@@ -21,6 +21,8 @@
 
 package org.apache.struts2.views.jsp.ui;
 
+import java.util.ArrayList;
+
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.util.TokenHelper;
@@ -44,13 +46,16 @@ public class TokenTagTest extends AbstractUITagTest {
         TokenTag tag = new TokenTag();
         tag.setName(tokenName);
 
-        String token = doTokenTest(tokenName, tag);
+        ArrayList<String> tokens = doTokenTest(tokenName, tag);
 
         TokenTag anotherTag = new TokenTag();
         anotherTag.setName(tokenName);
 
-        String anotherToken = doTokenTest(tokenName, anotherTag);
-        assertEquals(token, anotherToken);
+        ArrayList<String> anotherTokens = doTokenTest(tokenName, anotherTag);
+        
+        assertEquals(tokens, anotherTokens);
+        assertEquals(2, tokens.size());
+        assertNotSame(tokens.get(0), tokens.get(1));
     }
 
     /**
@@ -77,24 +82,27 @@ public class TokenTagTest extends AbstractUITagTest {
         doTokenTest(tokenName, tag);
     }
 
-    private String doTokenTest(String tokenName, TokenTag tag) {
+    private ArrayList<String> doTokenTest(String tokenName, TokenTag tag) {
         tag.setPageContext(pageContext);
 
-        String token = null;
+        ArrayList<String> tokens = null;
 
         try {
             tag.doStartTag();
             tag.doEndTag();
 
-            token = (String) context.get(tokenName);
-			assertNotNull(token);
+            tokens = (ArrayList<String>) context.get(tokenName);
+			assertNotNull(tokens);
 			final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-			assertEquals(token, pageContext.getSession().getAttribute(sessionTokenName));
+			Object mySessionTokens = pageContext.getSession().getAttribute(sessionTokenName);
+			assertNotNull(mySessionTokens);
+			ArrayList<String> mySessionTokensList = (ArrayList<String>) mySessionTokens;
+			assertTrue(mySessionTokensList.containsAll(tokens));
         } catch (JspException e) {
             e.printStackTrace();
             fail();
         }
 
-        return token;
+        return tokens;
     }
 }

@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -54,6 +55,10 @@ public class TokenHelper {
     private static final Logger LOG = LogManager.getLogger(TokenHelper.class);
     private static final Random RANDOM = new SecureRandom();
 
+    /**
+     * The maximum count of supported async requests. This is to prevent DOS attack by filling JVM memory.
+     */
+    public static final Integer SESSION_TOKEN_LIST_MAX_SIZE = 255;
 
     /**
      * Sets a transaction token into the session using the default token name.
@@ -88,7 +93,16 @@ public class TokenHelper {
 	public static void setSessionToken( String tokenName, String token ) {
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		try {
-			session.put(buildTokenSessionAttributeName(tokenName), token);
+			String sessionTokenName = buildTokenSessionAttributeName(tokenName);
+			Object sessionTokens = session.get(sessionTokenName);
+			if(null == sessionTokens){
+				sessionTokens = new ArrayList<String>();
+				session.put(sessionTokenName, sessionTokens);
+			}
+			ArrayList<String> sessionTokensList = (ArrayList<String>)sessionTokens;
+			if(sessionTokensList.size() < SESSION_TOKEN_LIST_MAX_SIZE &&
+					!sessionTokensList.contains(token))
+				sessionTokensList.add(token);
 		} catch ( IllegalStateException e ) {
 			// WW-1182 explain to user what the problem is
             String msg = "Error creating HttpSession due response is committed to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: " + e.getMessage();
@@ -189,12 +203,12 @@ public class TokenHelper {
 
         Map session = ActionContext.getContext().getSession();
 		String tokenSessionName = buildTokenSessionAttributeName(tokenName);
-        String sessionToken = (String) session.get(tokenSessionName);
+		ArrayList<String> sessionTokens = (ArrayList<String>) session.get(tokenSessionName);
 
-        if (!token.equals(sessionToken)) {
+        if (null == sessionTokens || !sessionTokens.contains(token)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
-                        token, sessionToken
+                LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not exist in the session tokens {1}.", new Object[]{
+                        token, sessionTokens
                 }));
             }
 
@@ -202,7 +216,9 @@ public class TokenHelper {
         }
 
         // remove the token so it won't be used again
-        session.remove(tokenSessionName);
+        sessionTokens.remove(token);
+        if(0 == sessionTokens.size())
+        	session.remove(tokenSessionName);
 
         return true;
     }

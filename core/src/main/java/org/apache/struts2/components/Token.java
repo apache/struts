@@ -21,6 +21,7 @@
 
 package org.apache.struts2.components;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,13 +102,18 @@ public class Token extends UIBean {
 
     private String buildToken(String name) {
         Map context = stack.getContext();
-        Object myToken = context.get(name);
+        String myToken = TokenHelper.setToken(name);
+        Object myTokens = context.get(name);
 
-        if (myToken == null) {
-            myToken = TokenHelper.setToken(name);
-            context.put(name, myToken);
+        if (myTokens == null) {
+            myTokens = new ArrayList<String>();
+            context.put(name, myTokens);
         }
+        ArrayList<String> myTokensList = (ArrayList<String>) myTokens;
+        if(myTokensList.size() < TokenHelper.SESSION_TOKEN_LIST_MAX_SIZE &&
+        		!myTokensList.contains(myToken))
+        	myTokensList.add(myToken);
 
-        return myToken.toString();
+        return myToken;
     }
 }

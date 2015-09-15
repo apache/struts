@@ -362,7 +362,7 @@
 
         <default-class-ref class="com.opensymphony.xwork2.ActionSupport" />
 
-        <global-allowed-methods>execute,input,back,cancel,browse</global-allowed-methods>
+        <global-allowed-methods>execute,input,back,cancel,browse,save,delete,list,index</global-allowed-methods>
 
     </package>
 

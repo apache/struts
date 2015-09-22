@@ -110,11 +110,13 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, params);
 
         // then
-        assertEquals(1, action.getActionMessages().size());
+        assertEquals(2, action.getActionMessages().size());
 
         String msg1 = action.getActionMessage(0);
+        String msg2 = action.getActionMessage(1);
 
-        assertTrue(msg1.contains("Error setting expression 'top['name'](0)' with value 'true'"));
+        assertEquals("Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'", msg1);
+        assertEquals("Error setting expression 'top['name'](0)' with value 'true'", msg2);
         assertNull(action.getName());
     }
 

@@ -46,6 +46,11 @@ public class ContainUtilTest extends TestCase {
         assertTrue(ContainUtil.contains(new String[] {"a", null, "b"}, "b"));
     }
 
+    public void testArayContainsNull()throws Exception {
+        // null gives always false
+        assertFalse(ContainUtil.contains(new String[] {"a", null, "b"}, null));
+    }
+
     public void testSimpleList() throws Exception {
         List<String> l = new ArrayList<String>();
         l.add("one");
@@ -96,13 +101,28 @@ public class ContainUtilTest extends TestCase {
     }
 
     public void testIterableObject() throws Exception {
-    	MyIterableObject i = new MyIterableObject("one", "two");
+        MyIterableObject i = new MyIterableObject("one", "two");
 
         assertFalse(ContainUtil.contains(i, "thre"));
         assertTrue(ContainUtil.contains(i, "one"));
         assertTrue(ContainUtil.contains(i, "two"));
     }
-    
+
+    public void testNullInIterableObject() throws Exception {
+        MyIterableObject i = new MyIterableObject("one", null, "two");
+
+        assertFalse(ContainUtil.contains(i, "thre"));
+        assertTrue(ContainUtil.contains(i, "one"));
+        assertTrue(ContainUtil.contains(i, "two"));
+    }
+
+    public void testIterableObjectContainsNull() throws Exception {
+        MyIterableObject i = new MyIterableObject("one", null, "two");
+
+        // null gives always false
+        assertFalse(ContainUtil.contains(i, null));
+    }
+
     public static class MyIterableObject implements Iterable<String> {
     	private List<String> values;
     	
@@ -126,7 +146,11 @@ public class ContainUtilTest extends TestCase {
 
         @Override
         public int hashCode() {
-            return this.name.hashCode();
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((age == null) ? 0 : age.hashCode());
+            result = prime * result + ((name == null) ? 0 : name.hashCode());
+            return result;
         }
 
         @Override

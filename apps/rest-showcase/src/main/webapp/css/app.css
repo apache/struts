@@ -1,0 +1,5 @@
+.form-group .errorMessage {
+    list-style: none;
+    font-weight: bold;
+    color: red;
+}

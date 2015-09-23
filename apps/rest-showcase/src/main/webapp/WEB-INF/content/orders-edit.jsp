@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Orders</title>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/app.css" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -39,11 +41,17 @@
                     <div class="col-sm-4">
                         <s:textfield id="clientName" name="clientName" cssClass="form-control"/>
                     </div>
+                    <div class="col-sm-4">
+                        <s:fielderror fieldName="clientName" />
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="amount">Amount</label>
                     <div class="col-sm-4">
                         <s:textfield id="amount" name="amount" cssClass="form-control" />
+                    </div>
+                    <div class="col-sm-4">
+                        <s:fielderror fieldName="amount" />
                     </div>
                 </div>
                 <div class="form-group">

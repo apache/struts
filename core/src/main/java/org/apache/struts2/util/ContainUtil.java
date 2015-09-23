@@ -77,7 +77,7 @@ public class ContainUtil {
             }
         } if (obj1 instanceof Iterable) {
             for (Object value : ((Iterable) obj1)) {
-                if (obj2.equals(value) || obj2.toString().equals(value)) {
+                if (obj2.equals(value) || (value != null && obj2.toString().equals(value.toString()))) {
                     return true;
                 }
             }
@@ -85,7 +85,7 @@ public class ContainUtil {
             for (int i = 0; i < Array.getLength(obj1); i++) {
                 Object value = Array.get(obj1, i);
 
-                if (obj2.equals(value)) {
+                if (obj2.equals(value) || (value != null && obj2.toString().equals(value.toString()))) {
                     return true;
                 }
             }

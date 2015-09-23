@@ -47,26 +47,25 @@
 
         /** A generic helper method to execute a HTTP request to the backend */
         function _request(url, method, model){
+            var def = $q.defer(),
+                req = {
+                method: method,
+                url: url
+            };
+
             if(!method) {
-                method = 'GET';
+                req.method = 'GET';
             }
-            var def = $q.defer();
-            if(method === 'GET') {
-                $http.get(url).success(function(data) {
-                    def.resolve(data);
-                }).error(function(data, code) {
-                    def.reject(data);
-                    $log.error(data, code);
-                });
-            } else if(method === 'POST'){
-                $http.post(url, model).success(function(data) {
-                    DataService.data = data;
-                    def.resolve(data);
-                }).error(function(data, code) {
-                    def.reject(data);
-                    $log.error(data, code);
-                });
+
+            if(model) {
+                req.data = model;
             }
+            $http(req).success(function(data) {
+                def.resolve(data);
+            }).error(function(data, code) {
+                def.reject(data);
+                $log.error(data, code);
+            });
             return def.promise;
         }
 

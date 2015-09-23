@@ -21,7 +21,10 @@
 
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.XWorkJUnit4TestCase;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.After;
@@ -159,7 +162,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         // set the action context to the one used by the proxy
         ActionContext.setContext(invocationContext);
 
-        // this is normaly done in onSetUp(), but we are using Struts internal
+        // this is normally done in onSetUp(), but we are using Struts internal
         // objects (proxy and action invocation)
         // so we have to hack around so it works
         ServletActionContext.setServletContext(servletContext);

@@ -126,8 +126,12 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
      */
     public String handleResult(ActionConfig actionConfig, Object methodResult, Object target) throws IOException {
         String resultCode = readResultCode(methodResult);
+        Integer statusCode = readStatusCode(methodResult);
         HttpServletRequest req = ServletActionContext.getRequest();
         HttpServletResponse res = ServletActionContext.getResponse();
+        if(statusCode != null) {
+            res.setStatus(statusCode);
+        }
 
         ContentTypeHandler handler = getHandlerForResponse(req, res);
         if (handler != null) {
@@ -143,11 +147,20 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
                     res.setContentLength(data.length);
                     res.setContentType(handler.getContentType());
                     res.getOutputStream().write(data);
-                    res.getOutputStream().close();
+                    res.getOutputStream().flush();
                 }
             }
         }
         return resultCode;
+    }
+
+
+    protected Integer readStatusCode(Object methodResult) {
+        if (methodResult instanceof HttpHeaders) {
+            return ((HttpHeaders) methodResult).getStatus();
+        } else {
+            return null;
+        }
     }
 
     protected String readResultCode(Object methodResult) {

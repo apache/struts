@@ -92,9 +92,7 @@
                 <interceptor-ref name="fileUpload"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="staticParams"/>
-                <interceptor-ref name="params">
-                  <param name="excludeParams">dojo\..*</param>
-                </interceptor-ref>
+                <interceptor-ref name="params"/>
                 <interceptor-ref name="rest" />
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="validation">

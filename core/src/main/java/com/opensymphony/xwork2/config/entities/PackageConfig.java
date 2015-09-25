@@ -433,7 +433,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     public static class Builder implements InterceptorLocator {
 
         protected PackageConfig target;
-        private boolean strictDMI;
+        private boolean strictDMI = true;
 
         public Builder(String name) {
             target = new PackageConfig(name);
@@ -605,12 +605,17 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         }
 
         public boolean isStrictMethodInvocation() {
+            // if Strict DMI was disabled in this package,
+            // return without evaluating parent packages
+            if (!strictDMI) {
+                return false;
+            }
             for (PackageConfig parent : target.parents) {
                 if (parent.isStrictMethodInvocation()) {
                     return true;
                 }
             }
-            return strictDMI;
+            return true;
         }
 
         public PackageConfig build() {

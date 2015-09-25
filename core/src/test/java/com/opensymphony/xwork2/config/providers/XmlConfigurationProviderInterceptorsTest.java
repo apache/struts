@@ -108,12 +108,10 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         ActionConfig actionWithOwnRef = new ActionConfig.Builder("", "ActionWithOwnRef", SimpleAction.class.getName())
             .addInterceptors(interceptors)
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         ActionConfig actionWithDefaultRef = new ActionConfig.Builder("", "ActionWithDefaultRef", SimpleAction.class.getName())
             .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         // sub package
@@ -186,7 +184,6 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         ActionConfig intAction = new ActionConfig.Builder("", "TestInterceptorParam", SimpleAction.class.getName())
             .addInterceptors(interceptors)
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         // TestInterceptorParamOverride action tests that an interceptor with a param override worked
@@ -205,7 +202,6 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         ActionConfig intOverAction = new ActionConfig.Builder("", "TestInterceptorParamOverride", SimpleAction.class.getName())
             .addInterceptors(interceptors)
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         ConfigurationProvider provider = buildConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-params.xml");

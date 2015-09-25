@@ -649,7 +649,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         String name = StringUtils.defaultString(packageElement.getAttribute("name"));
         String namespace = StringUtils.defaultString(packageElement.getAttribute("namespace"));
 
-        boolean strictDMI = Boolean.parseBoolean(packageElement.getAttribute("strict-method-invocation"));
+        // Strict DMI is enabled by default, it can disabled by user
+        boolean strictDMI = true;
+        if (packageElement.hasAttribute("strict-method-invocation")) {
+            strictDMI = Boolean.parseBoolean(packageElement.getAttribute("strict-method-invocation"));
+        }
 
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
                 .namespace(namespace)

@@ -67,7 +67,6 @@ public class XmlConfigurationProviderResultsTest extends ConfigurationTestBase {
         ActionConfig expectedAction = new ActionConfig.Builder("default", "Bar", SimpleAction.class.getName())
             .addParams(parameters)
             .addResultConfigs(results)
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         // execute the configuration

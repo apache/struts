@@ -56,7 +56,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
 
 
         ActionConfig barAction = new ActionConfig.Builder("", "Bar", SimpleAction.class.getName())
-                .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                 .addParams(params).build();
 
         // foo action is a little more complex, two params, a result and an interceptor stack
@@ -73,7 +72,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
                 .addParams(params)
                 .addResultConfigs(results)
                 .addInterceptors(interceptors)
-                .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                 .build();
 
         // wildcard action is simple wildcard example
@@ -83,7 +81,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         ActionConfig wildcardAction = new ActionConfig.Builder("", "WildCard", SimpleAction.class.getName())
                 .addResultConfigs(results)
                 .addInterceptors(interceptors)
-                .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                 .build();
 
         // fooBar action is a little more complex, two params, a result and an interceptor stack
@@ -102,7 +99,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
                 .addResultConfigs(results)
                 .addInterceptors(interceptors)
                 .addExceptionMappings(exceptionMappings)
-                .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                 .build();
 
         // TestInterceptorParam action tests that an interceptor worked
@@ -116,7 +112,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
 
         ActionConfig intAction = new ActionConfig.Builder("", "TestInterceptorParam", SimpleAction.class.getName())
                 .addInterceptors(interceptors)
-                .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                 .build();
 
         // TestInterceptorParamOverride action tests that an interceptor with a param override worked
@@ -128,7 +123,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
 
         ActionConfig intOverAction = new ActionConfig.Builder("", "TestInterceptorParamOverride", SimpleAction.class.getName())
                 .addInterceptors(interceptors)
-                .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                 .build();
 
         // execute the configuration
@@ -172,7 +166,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         ActionConfig barWithPackageDefaultClassRefConfig =
                 new ActionConfig.Builder("", "Bar", "")
                         .addParams(params)
-                        .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                         .build();
 
         // execute the configuration
@@ -198,7 +191,6 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
 
         ActionConfig barWithoutClassNameConfig =
                 new ActionConfig.Builder("", "BarWithoutClassName", "")
-                        .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
                         .addParams(params)
                         .build();
 

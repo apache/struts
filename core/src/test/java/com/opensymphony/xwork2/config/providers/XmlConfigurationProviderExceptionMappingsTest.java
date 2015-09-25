@@ -46,7 +46,6 @@ public class XmlConfigurationProviderExceptionMappingsTest extends Configuration
             .addParams(parameters)
             .addResultConfigs(results)
             .addExceptionMappings(exceptionMappings)
-            .addAllowedMethod(ActionConfig.REGEX_WILDCARD)
             .build();
 
         // execute the configuration

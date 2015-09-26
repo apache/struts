@@ -600,22 +600,12 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         }
 
         public Builder strictMethodInvocation(boolean strict) {
-            strictDMI = strict;
+            target.strictMethodInvocation = strict;
             return this;
         }
 
         public boolean isStrictMethodInvocation() {
-            // if Strict DMI was disabled in this package,
-            // return without evaluating parent packages
-            if (!strictDMI) {
-                return false;
-            }
-            for (PackageConfig parent : target.parents) {
-                if (parent.isStrictMethodInvocation()) {
-                    return true;
-                }
-            }
-            return true;
+            return target.strictMethodInvocation;
         }
 
         public PackageConfig build() {

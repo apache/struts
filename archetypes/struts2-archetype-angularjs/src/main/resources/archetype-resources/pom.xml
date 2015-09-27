@@ -86,8 +86,8 @@
                 <version>3.3</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -159,18 +159,12 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.16.v20140903</version>
+                <version>9.3.3.v20150827</version>
                 <configuration>
                     <stopKey>CTRL+C</stopKey>
                     <stopPort>8999</stopPort>
-                    <systemProperties>
-                        <systemProperty>
-                            <name>xwork.loggerFactory</name>
-                            <value>com.opensymphony.xwork2.util.logging.log4j2.Log4j2LoggerFactory</value>
-                        </systemProperty>
-                    </systemProperties>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webAppSourceDirectory>\${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webAppConfig>

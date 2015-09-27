@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,27 +18,25 @@
  */
 package ${package}.actions;
 
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
 
-@Results({
-    @Result(name = Action.SUCCESS, location = "${redirectName}", type = "redirectAction")
-})
+/* Default action when enter the application */
 public class Index extends ActionSupport {
 
-    private static final long serialVersionUID = 6153177836211979662L;
+    private static final long serialVersionUID = -3243216917801206214L;
 
-    private String redirectName;
+    private boolean useMinifiedResources = false;
 
-    public String execute() {
-        redirectName = "application";
-        return Action.SUCCESS;
+    public String execute() throws Exception {
+        return SUCCESS;
     }
 
-    public String getRedirectName() {
-        return redirectName;
+    public boolean isUseMinifiedResources() {
+        return useMinifiedResources;
     }
 
+    public void setUseMinifiedResources(boolean useMinifiedResources) {
+        this.useMinifiedResources = useMinifiedResources;
+    }
 }
+

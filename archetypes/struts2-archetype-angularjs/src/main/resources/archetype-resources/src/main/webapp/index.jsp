@@ -1,1 +1,1 @@
-<% response.sendRedirect("application"); %>
+<% response.sendRedirect("index"); %>

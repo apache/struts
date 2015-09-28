@@ -8,7 +8,9 @@
   <constant name="struts.devMode" value="true"/>
 
   <constant name="struts.convention.default.parent.package" value="angularstruts"/>
-  <package name="angularstruts" extends="json-default"></package>
+  <package name="angularstruts" extends="json-default">
+    <default-action-ref name="index" />
+  </package>
   <package name="data" extends="angularstruts" namespace="/data"></package>
 
 </struts>

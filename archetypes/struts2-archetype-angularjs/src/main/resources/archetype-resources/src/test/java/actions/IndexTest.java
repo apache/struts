@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,14 +19,19 @@
 package ${package}.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsRestTestCase;
+import org.junit.Test;
 
-public class IndexTest extends StrutsTestCase {
+import static org.junit.Assert.*;
 
+public class IndexTest extends StrutsRestTestCase<Index> {
+
+    @Test
     public void testIndex() throws Exception {
         Index index = new Index();
         String result = index.execute();
         assertTrue("Expected a success result!", ActionSupport.SUCCESS.equals(result));
-        assertTrue("Expected the 'hello' action name!!", "application".equals(index.getRedirectName()));
+        assertFalse(index.isUseMinifiedResources());
     }
 }
+

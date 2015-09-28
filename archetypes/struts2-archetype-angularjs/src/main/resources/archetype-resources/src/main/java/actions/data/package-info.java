@@ -16,17 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ${package}.actions;
+@ParentPackage("data")
+@Namespace("/data")
+package ${package}.actions.data;
 
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.StrutsTestCase;
-
-public class ApplicationActionTest extends StrutsTestCase {
-
-    public void testApplicationAction() throws Exception {
-        ApplicationAction hello = new ApplicationAction();
-        String result = hello.execute();
-        assertTrue("Expected a success result!", ActionSupport.SUCCESS.equals(result));
-        assertFalse(hello.isUseMinifiedResources());
-    }
-}
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;

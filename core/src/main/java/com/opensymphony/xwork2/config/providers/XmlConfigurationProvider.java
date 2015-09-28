@@ -15,12 +15,24 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.ConfigurationUtil;
-import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
 import com.opensymphony.xwork2.config.impl.LocatableFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -47,7 +59,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 
 /**
@@ -90,6 +112,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         this.errorIfMissing = errorIfMissing;
 
         Map<String, String> mappings = new HashMap<>();
+        mappings.put("-//Apache Struts//XWork 2.5//EN", "xwork-2.5.dtd");
         mappings.put("-//Apache Struts//XWork 2.3//EN", "xwork-2.3.dtd");
         mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
         mappings.put("-//Apache Struts//XWork 2.1//EN", "xwork-2.1.dtd");
@@ -522,8 +545,10 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         // load the global result list for this package
         loadGlobalResults(newPackage, packageElement);
 
+        loadGlobalAllowedMethods(newPackage, packageElement);
+
         // load the global exception handler list for this package
-        loadGobalExceptionMappings(newPackage, packageElement);
+        loadGlobalExceptionMappings(newPackage, packageElement);
 
         // get actions
         NodeList actionList = packageElement.getElementsByTagName("action");
@@ -623,12 +648,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         boolean isAbstract = Boolean.parseBoolean(abstractVal);
         String name = StringUtils.defaultString(packageElement.getAttribute("name"));
         String namespace = StringUtils.defaultString(packageElement.getAttribute("namespace"));
-        String strictDMIVal = StringUtils.defaultString(packageElement.getAttribute("strict-method-invocation"));
-        boolean strictDMI = Boolean.parseBoolean(strictDMIVal);
 
-        if (StringUtils.isNotEmpty(packageElement.getAttribute("externalReferenceResolver"))) {
-            throw new ConfigurationException("The 'externalReferenceResolver' attribute has been removed.  Please use " +
-                    "a custom ObjectFactory or Interceptor.", packageElement);
+        // Strict DMI is enabled by default, it can disabled by user
+        boolean strictDMI = true;
+        if (packageElement.hasAttribute("strict-method-invocation")) {
+            strictDMI = Boolean.parseBoolean(packageElement.getAttribute("strict-method-invocation"));
         }
 
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
@@ -825,19 +849,28 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     protected Set<String> buildAllowedMethods(Element element, PackageConfig.Builder packageContext) {
         NodeList allowedMethodsEls = element.getElementsByTagName("allowed-methods");
 
-        Set<String> allowedMethods = null;
-
+        Set<String> allowedMethods;
         if (allowedMethodsEls.getLength() > 0) {
-            allowedMethods = new HashSet<>();
-            Node n = allowedMethodsEls.item(0).getFirstChild();
-            if (n != null) {
-                String s = n.getNodeValue().trim();
-                if (s.length() > 0) {
-                    allowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+            // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
+            allowedMethods = packageContext.getGlobalAllowedMethods();
+
+            if (allowedMethodsEls.getLength() > 0) {
+                allowedMethods = new HashSet<>();
+                Node n = allowedMethodsEls.item(0).getFirstChild();
+                if (n != null) {
+                    String s = n.getNodeValue().trim();
+                    if (s.length() > 0) {
+                        allowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+                    }
                 }
             }
         } else if (packageContext.isStrictMethodInvocation()) {
+            // user enabled Strict DMI but didn't defined action specific 'allowed-methods' so we use 'global-allowed-methods' only
+            allowedMethods = packageContext.getGlobalAllowedMethods();
+        } else {
+            // Strict DMI is disabled to any method can be called
             allowedMethods = new HashSet<>();
+            allowedMethods.add(ActionConfig.REGEX_WILDCARD);
         }
 
         return allowedMethods;
@@ -877,6 +910,22 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         }
     }
 
+    protected void loadGlobalAllowedMethods(PackageConfig.Builder packageContext, Element packageElement) {
+        NodeList globalAllowedMethodsElms = packageElement.getElementsByTagName("global-allowed-methods");
+
+        if (globalAllowedMethodsElms.getLength() > 0) {
+            Set<String> globalAllowedMethods = new HashSet<>();
+            Node n = globalAllowedMethodsElms.item(0).getFirstChild();
+            if (n != null) {
+                String s = n.getNodeValue().trim();
+                if (s.length() > 0) {
+                    globalAllowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+                }
+            }
+            packageContext.addGlobalAllowedMethods(globalAllowedMethods);
+        }
+    }
+
     protected void loadDefaultClassRef(PackageConfig.Builder packageContext, Element element) {
         NodeList defaultClassRefList = element.getElementsByTagName("default-class-ref");
         if (defaultClassRefList.getLength() > 0) {
@@ -891,7 +940,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
      * @param packageContext the package context
      * @param packageElement the given XML element
      */
-    protected void loadGobalExceptionMappings(PackageConfig.Builder packageContext, Element packageElement) {
+    protected void loadGlobalExceptionMappings(PackageConfig.Builder packageContext, Element packageElement) {
         NodeList globalExceptionMappingList = packageElement.getElementsByTagName("global-exception-mappings");
 
         if (globalExceptionMappingList.getLength() > 0) {

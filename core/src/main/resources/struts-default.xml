@@ -33,8 +33,8 @@
     and {@link com.opensymphony.xwork2.inject.Inject}
 -->
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
-    "http://struts.apache.org/dtds/struts-2.3.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
 
@@ -165,7 +165,7 @@
     <bean type="com.opensymphony.xwork2.security.ExcludedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker" scope="prototype" />
     <bean type="com.opensymphony.xwork2.security.AcceptedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker" scope="prototype" />
 
-    <package name="struts-default" abstract="true">
+    <package name="struts-default" abstract="true" strict-method-invocation="true">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>
             <result-type name="dispatcher" class="org.apache.struts2.result.ServletDispatcherResult" default="true"/>
@@ -361,6 +361,9 @@
         <default-interceptor-ref name="defaultStack"/>
 
         <default-class-ref class="com.opensymphony.xwork2.ActionSupport" />
+
+        <global-allowed-methods>execute,input,back,cancel,browse,save,delete,list,index</global-allowed-methods>
+
     </package>
 
 </struts>

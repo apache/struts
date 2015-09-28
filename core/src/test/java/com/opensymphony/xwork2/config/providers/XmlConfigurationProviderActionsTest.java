@@ -164,7 +164,9 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         params.put("bar", "23");
 
         ActionConfig barWithPackageDefaultClassRefConfig =
-                new ActionConfig.Builder("", "Bar", "").addParams(params).build();
+                new ActionConfig.Builder("", "Bar", "")
+                        .addParams(params)
+                        .build();
 
         // execute the configuration
         provider.init(configuration);
@@ -188,7 +190,9 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         params.put("bar", "23");
 
         ActionConfig barWithoutClassNameConfig =
-                new ActionConfig.Builder("", "BarWithoutClassName", "").addParams(params).build();
+                new ActionConfig.Builder("", "BarWithoutClassName", "")
+                        .addParams(params)
+                        .build();
 
         // execute the configuration
         provider.init(configuration);

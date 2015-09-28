@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.factory.DefaultResultFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
@@ -37,6 +38,9 @@ import org.apache.struts2.convention.actions.DefaultResultPathAction;
 import org.apache.struts2.convention.actions.NoAnnotationAction;
 import org.apache.struts2.convention.actions.Skip;
 import org.apache.struts2.convention.actions.action.*;
+import org.apache.struts2.convention.actions.allowedmethods.ClassLevelAllowedMethodsAction;
+import org.apache.struts2.convention.actions.allowedmethods.PackageLevelAllowedMethodsAction;
+import org.apache.struts2.convention.actions.allowedmethods.sub.PackageLevelAllowedMethodsChildAction;
 import org.apache.struts2.convention.actions.chain.ChainedAction;
 import org.apache.struts2.convention.actions.defaultinterceptor.SingleActionNameAction2;
 import org.apache.struts2.convention.actions.exception.ExceptionsActionLevelAction;
@@ -125,8 +129,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 new ResultTypeConfig.Builder("chain",
                         ActionChainResult.class.getName()).defaultResultParam("actionName").build()};
 
+        Set<String> globalAllowedMethods = TextParseUtil.commaDelimitedStringToSet("execute,browse,cancel,input");
+
         PackageConfig strutsDefault = makePackageConfig("struts-default", null, null, "dispatcher",
-                defaultResults, defaultInterceptors, defaultInterceptorStacks);
+                defaultResults, defaultInterceptors, defaultInterceptorStacks, globalAllowedMethods);
 
         PackageConfig packageLevelParentPkg = makePackageConfig("package-level", null, null, null);
         PackageConfig classLevelParentPkg = makePackageConfig("class-level", null, null, null);
@@ -151,6 +157,16 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
             "/parentpackage", packageLevelParentPkg, null);
         PackageConfig packageLevelSubPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#package-level#/parentpackage/sub",
             "/parentpackage/sub", packageLevelParentPkg, null);
+
+        // Unexpected method call build(class org.apache.struts2.convention.actions.allowedmethods.PackageLevelAllowedMethodsAction, null, "package-level-allowed-methods", PackageConfig: [org.apache.struts2.convention.actions.allowedmethods#struts-default#/allowedmethods] for namespace [/allowedmethods] with parents [[PackageConfig: [struts-default] for namespace [] with parents [[]]]]):
+        PackageConfig packageLevelAllowedMethodsPkg = makePackageConfig("org.apache.struts2.convention.actions.allowedmethods#struts-default#/allowedmethods",
+                "/allowedmethods", strutsDefault, null);
+        PackageConfig packageLevelAllowedMethodsSubPkg = makePackageConfig("org.apache.struts2.convention.actions.allowedmethods.sub#struts-default#/allowedmethods/sub",
+                "/allowedmethods/sub", strutsDefault, null);
+
+        PackageConfig classLevelAllowedMethodsPkg = makePackageConfig("org.apache.struts2.convention.actions.allowedmethods#struts-default#/allowedmethods",
+                "/allowedmethods", strutsDefault, null);
+
         PackageConfig differentPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage#class-level#/parentpackage",
             "/parentpackage", classLevelParentPkg, null);
         PackageConfig differentSubPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#class-level#/parentpackage/sub",
@@ -260,6 +276,11 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         expect(resultMapBuilder.build(PackageLevelParentPackageChildAction.class, null, "package-level-parent-package-child", packageLevelSubPkg)).andReturn(results);
         expect(resultMapBuilder.build(ClassLevelParentPackageAction.class, null, "class-level-parent-package", differentPkg)).andReturn(results);
         expect(resultMapBuilder.build(ClassLevelParentPackageChildAction.class, null, "class-level-parent-package-child", differentSubPkg)).andReturn(results);
+
+        /* org.apache.struts2.convention.actions.allowedmethods */
+        expect(resultMapBuilder.build(ClassLevelAllowedMethodsAction.class, null, "class-level-allowed-methods", classLevelAllowedMethodsPkg)).andReturn(results);
+        expect(resultMapBuilder.build(PackageLevelAllowedMethodsAction.class, null, "package-level-allowed-methods", packageLevelAllowedMethodsPkg)).andReturn(results);
+        expect(resultMapBuilder.build(PackageLevelAllowedMethodsChildAction.class, null, "package-level-allowed-methods-child", packageLevelAllowedMethodsSubPkg)).andReturn(results);
 
         /* org.apache.struts2.convention.actions.result */
         expect(resultMapBuilder.build(ClassLevelResultAction.class, null, "class-level-result", resultPkg)).andReturn(results);
@@ -450,7 +471,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         verifyActionConfig(pkgConfig, "", org.apache.struts2.convention.actions.idx.Index.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "index", org.apache.struts2.convention.actions.idx.Index.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "idx2", org.apache.struts2.convention.actions.idx.idx2.Index.class, "execute",
-            "org.apache.struts2.convention.actions.idx.idx2#struts-default#/idx/idx2");
+                "org.apache.struts2.convention.actions.idx.idx2#struts-default#/idx/idx2");
 
         /* org.apache.struts2.convention.actions.defaultinterceptor */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.defaultinterceptor#struts-default#/defaultinterceptor");
@@ -513,6 +534,33 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertEquals(1, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "package-level-parent-package-child", PackageLevelParentPackageChildAction.class, "execute", pkgConfig.getName());
         assertEquals("package-level", pkgConfig.getParents().get(0).getName());
+
+        /* org.apache.struts2.convention.actions.allowedmethods class level */
+        pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.allowedmethods#struts-default#/allowedmethods");
+        assertNotNull(pkgConfig);
+        assertEquals(2, pkgConfig.getActionConfigs().size());
+        verifyActionConfig(pkgConfig, "class-level-allowed-methods", ClassLevelAllowedMethodsAction.class, "execute", pkgConfig.getName());
+        assertEquals("struts-default", pkgConfig.getParents().get(0).getName());
+
+        ActionConfig actionConfig = pkgConfig.getActionConfigs().get("class-level-allowed-methods");
+        assertEquals(actionConfig.getAllowedMethods().size(), 5);
+        assertTrue(actionConfig.getAllowedMethods().contains("execute"));
+        assertTrue(actionConfig.getAllowedMethods().contains("end"));
+        assertTrue(actionConfig.getAllowedMethods().contains("input"));
+
+        /* org.apache.struts2.convention.actions.allowedmethods.sub package level */
+        pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.allowedmethods.sub#struts-default#/allowedmethods/sub");
+        assertNotNull(pkgConfig);
+        assertEquals(1, pkgConfig.getActionConfigs().size());
+        verifyActionConfig(pkgConfig, "package-level-allowed-methods-child", PackageLevelAllowedMethodsChildAction.class, "execute", pkgConfig.getName());
+        assertEquals("struts-default", pkgConfig.getParents().get(0).getName());
+
+        actionConfig = pkgConfig.getActionConfigs().get("package-level-allowed-methods-child");
+        assertEquals(actionConfig.getAllowedMethods().size(), 6);
+        assertTrue(actionConfig.getAllowedMethods().contains("execute"));
+        assertTrue(actionConfig.getAllowedMethods().contains("home"));
+        assertTrue(actionConfig.getAllowedMethods().contains("start"));
+        assertTrue(actionConfig.getAllowedMethods().contains("input"));
 
         /* org.apache.struts2.convention.actions.result */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.result#struts-default#/result");
@@ -631,12 +679,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
     private PackageConfig makePackageConfig(String name, String namespace, PackageConfig parent,
             String defaultResultType, ResultTypeConfig... results) {
-        return makePackageConfig(name, namespace, parent, defaultResultType, results, null, null);
+        return makePackageConfig(name, namespace, parent, defaultResultType, results, null, null, null);
     }
 
     private PackageConfig makePackageConfig(String name, String namespace, PackageConfig parent,
             String defaultResultType, ResultTypeConfig[] results, List<InterceptorConfig> interceptors,
-            List<InterceptorStackConfig> interceptorStacks) {
+            List<InterceptorStackConfig> interceptorStacks, Set<String> globalAllowedMethods) {
         PackageConfig.Builder builder = new PackageConfig.Builder(name);
         if (namespace != null) {
             builder.namespace(namespace);
@@ -661,6 +709,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
             for (InterceptorStackConfig ref : interceptorStacks) {
                 builder.addInterceptorStackConfig(ref);
             }
+        }
+
+        if (globalAllowedMethods != null) {
+            builder.addGlobalAllowedMethods(globalAllowedMethods);
         }
 
         return new MyPackageConfig(builder.build());

@@ -4,7 +4,7 @@
  >
 
 <xwork>
-    <package name="default">
+    <package name="default" strict-method-invocation="false">
         <action name="Default">
         </action>
 

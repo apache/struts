@@ -194,12 +194,11 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
             resolveMethod();
 
-            if (!config.isAllowedMethod(method)) {
-                throw new ConfigurationException("Invalid method: " + method + " for action " + actionName);
+            if (config.isAllowedMethod(method)) {
+                invocation.init(this);
+            } else {
+                throw new ConfigurationException("This method: " + method + " for action " + actionName + " is not allowed!");
             }
-
-            invocation.init(this);
-
         } finally {
             UtilTimerStack.pop(profileKey);
         }

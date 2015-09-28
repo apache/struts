@@ -30,5 +30,63 @@ public class PackageConfigTest extends XWorkTestCase {
         
         assertEquals("ref2", cfg.getFullDefaultInterceptorRef());
     }
-    
+
+    public void testStrictDMIInheritance() {
+        // given
+        PackageConfig parent = new PackageConfig.Builder("parent").build();
+
+        // when
+        PackageConfig child = new PackageConfig.Builder("child")
+                .addParent(parent)
+                .build();
+
+        // then
+        assertTrue(child.isStrictMethodInvocation());
+    }
+
+    public void testStrictDMIInheritanceDisabledInParentPackage() {
+        // given
+        PackageConfig parent = new PackageConfig.Builder("parent")
+                .strictMethodInvocation(false)
+                .build();
+
+        // when
+        PackageConfig child = new PackageConfig.Builder("child")
+                .addParent(parent)
+                .build();
+
+        // then
+        assertTrue(child.isStrictMethodInvocation());
+    }
+
+    public void testStrictDMIInheritanceDisabledInBothPackage() {
+        // given
+        PackageConfig parent = new PackageConfig.Builder("parent")
+                .strictMethodInvocation(false)
+                .build();
+
+        // when
+        PackageConfig child = new PackageConfig.Builder("child")
+                .addParent(parent)
+                .strictMethodInvocation(false)
+                .build();
+
+        // then
+        assertFalse(child.isStrictMethodInvocation());
+    }
+
+    public void testStrictDMIInheritanceDisabledInChildPackage() {
+        // given
+        PackageConfig parent = new PackageConfig.Builder("parent").build();
+
+        // when
+        PackageConfig child = new PackageConfig.Builder("child")
+                .addParent(parent)
+                .strictMethodInvocation(false)
+                .build();
+
+        // then
+        assertFalse(child.isStrictMethodInvocation());
+    }
+
 }

@@ -40,6 +40,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
 
     protected Map<String, ActionConfig> actionConfigs;
     protected Map<String, ResultConfig> globalResultConfigs;
+    protected Set<String> globalAllowedMethods;
     protected Map<String, Object> interceptorConfigs;
     protected Map<String, ResultTypeConfig> resultTypeConfigs;
     protected List<ExceptionMappingConfig> globalExceptionMappingConfigs;
@@ -52,11 +53,13 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     protected String namespace = "";
     protected boolean isAbstract = false;
     protected boolean needsRefresh;
+    protected boolean strictMethodInvocation = true;
 
     protected PackageConfig(String name) {
         this.name = name;
         actionConfigs = new LinkedHashMap<>();
         globalResultConfigs = new LinkedHashMap<>();
+        globalAllowedMethods = new HashSet<>();
         interceptorConfigs = new LinkedHashMap<>();
         resultTypeConfigs = new LinkedHashMap<>();
         globalExceptionMappingConfigs = new ArrayList<>();
@@ -74,11 +77,13 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         this.needsRefresh = orig.needsRefresh;
         this.actionConfigs = new LinkedHashMap<>(orig.actionConfigs);
         this.globalResultConfigs = new LinkedHashMap<>(orig.globalResultConfigs);
+        this.globalAllowedMethods = new LinkedHashSet<>(orig.globalAllowedMethods);
         this.interceptorConfigs = new LinkedHashMap<>(orig.interceptorConfigs);
         this.resultTypeConfigs = new LinkedHashMap<>(orig.resultTypeConfigs);
         this.globalExceptionMappingConfigs = new ArrayList<>(orig.globalExceptionMappingConfigs);
         this.parents = new ArrayList<>(orig.parents);
         this.location = orig.location;
+        this.strictMethodInvocation = orig.strictMethodInvocation;
     }
 
     public boolean isAbstract() {
@@ -327,7 +332,6 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         return resultTypeConfigs;
     }
 
-
     public boolean isNeedsRefresh() {
         return needsRefresh;
     }
@@ -342,80 +346,64 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         return globalExceptionMappingConfigs;
     }
 
+    public boolean isStrictMethodInvocation() {
+        return strictMethodInvocation;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (!(o instanceof PackageConfig)) {
+        PackageConfig that = (PackageConfig) o;
+
+        if (isAbstract != that.isAbstract) return false;
+        if (needsRefresh != that.needsRefresh) return false;
+        if (strictMethodInvocation != that.strictMethodInvocation) return false;
+        if (actionConfigs != null ? !actionConfigs.equals(that.actionConfigs) : that.actionConfigs != null)
             return false;
-        }
-
-        final PackageConfig packageConfig = (PackageConfig) o;
-
-        if (isAbstract != packageConfig.isAbstract) {
+        if (globalResultConfigs != null ? !globalResultConfigs.equals(that.globalResultConfigs) : that.globalResultConfigs != null)
             return false;
-        }
-
-        if ((actionConfigs != null) ? (!actionConfigs.equals(packageConfig.actionConfigs)) : (packageConfig.actionConfigs != null)) {
+        if (globalAllowedMethods != null ? !globalAllowedMethods.equals(that.globalAllowedMethods) : that.globalAllowedMethods != null)
             return false;
-        }
-
-        if ((defaultResultType != null) ? (!defaultResultType.equals(packageConfig.defaultResultType)) : (packageConfig.defaultResultType != null)) {
+        if (interceptorConfigs != null ? !interceptorConfigs.equals(that.interceptorConfigs) : that.interceptorConfigs != null)
             return false;
-        }
-
-        if ((defaultClassRef != null) ? (!defaultClassRef.equals(packageConfig.defaultClassRef)) : (packageConfig.defaultClassRef != null)) {
+        if (resultTypeConfigs != null ? !resultTypeConfigs.equals(that.resultTypeConfigs) : that.resultTypeConfigs != null)
             return false;
-        }
-
-        if ((globalResultConfigs != null) ? (!globalResultConfigs.equals(packageConfig.globalResultConfigs)) : (packageConfig.globalResultConfigs != null)) {
+        if (globalExceptionMappingConfigs != null ? !globalExceptionMappingConfigs.equals(that.globalExceptionMappingConfigs) : that.globalExceptionMappingConfigs != null)
             return false;
-        }
-
-        if ((interceptorConfigs != null) ? (!interceptorConfigs.equals(packageConfig.interceptorConfigs)) : (packageConfig.interceptorConfigs != null)) {
+        if (parents != null ? !parents.equals(that.parents) : that.parents != null) return false;
+        if (defaultInterceptorRef != null ? !defaultInterceptorRef.equals(that.defaultInterceptorRef) : that.defaultInterceptorRef != null)
             return false;
-        }
-
-        if ((name != null) ? (!name.equals(packageConfig.name)) : (packageConfig.name != null)) {
+        if (defaultActionRef != null ? !defaultActionRef.equals(that.defaultActionRef) : that.defaultActionRef != null)
             return false;
-        }
-
-        if ((namespace != null) ? (!namespace.equals(packageConfig.namespace)) : (packageConfig.namespace != null)) {
+        if (defaultResultType != null ? !defaultResultType.equals(that.defaultResultType) : that.defaultResultType != null)
             return false;
-        }
-
-        if ((parents != null) ? (!parents.equals(packageConfig.parents)) : (packageConfig.parents != null)) {
+        if (defaultClassRef != null ? !defaultClassRef.equals(that.defaultClassRef) : that.defaultClassRef != null)
             return false;
-        }
+        if (!name.equals(that.name)) return false;
+        return !(namespace != null ? !namespace.equals(that.namespace) : that.namespace != null);
 
-        if ((resultTypeConfigs != null) ? (!resultTypeConfigs.equals(packageConfig.resultTypeConfigs)) : (packageConfig.resultTypeConfigs != null)) {
-            return false;
-        }
-
-        if ((globalExceptionMappingConfigs != null) ? (!globalExceptionMappingConfigs.equals(packageConfig.globalExceptionMappingConfigs)) : (packageConfig.globalExceptionMappingConfigs != null)) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        result = ((name != null) ? name.hashCode() : 0);
-        result = (29 * result) + ((parents != null) ? parents.hashCode() : 0);
-        result = (29 * result) + ((actionConfigs != null) ? actionConfigs.hashCode() : 0);
-        result = (29 * result) + ((globalResultConfigs != null) ? globalResultConfigs.hashCode() : 0);
-        result = (29 * result) + ((interceptorConfigs != null) ? interceptorConfigs.hashCode() : 0);
-        result = (29 * result) + ((resultTypeConfigs != null) ? resultTypeConfigs.hashCode() : 0);
-        result = (29 * result) + ((globalExceptionMappingConfigs != null) ? globalExceptionMappingConfigs.hashCode() : 0);
-        result = (29 * result) + ((defaultResultType != null) ? defaultResultType.hashCode() : 0);
-        result = (29 * result) + ((defaultClassRef != null) ? defaultClassRef.hashCode() : 0);
-        result = (29 * result) + ((namespace != null) ? namespace.hashCode() : 0);
-        result = (29 * result) + (isAbstract ? 1 : 0);
-
+        int result = actionConfigs != null ? actionConfigs.hashCode() : 0;
+        result = 31 * result + (globalResultConfigs != null ? globalResultConfigs.hashCode() : 0);
+        result = 31 * result + (globalAllowedMethods != null ? globalAllowedMethods.hashCode() : 0);
+        result = 31 * result + (interceptorConfigs != null ? interceptorConfigs.hashCode() : 0);
+        result = 31 * result + (resultTypeConfigs != null ? resultTypeConfigs.hashCode() : 0);
+        result = 31 * result + (globalExceptionMappingConfigs != null ? globalExceptionMappingConfigs.hashCode() : 0);
+        result = 31 * result + (parents != null ? parents.hashCode() : 0);
+        result = 31 * result + (defaultInterceptorRef != null ? defaultInterceptorRef.hashCode() : 0);
+        result = 31 * result + (defaultActionRef != null ? defaultActionRef.hashCode() : 0);
+        result = 31 * result + (defaultResultType != null ? defaultResultType.hashCode() : 0);
+        result = 31 * result + (defaultClassRef != null ? defaultClassRef.hashCode() : 0);
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
+        result = 31 * result + (isAbstract ? 1 : 0);
+        result = 31 * result + (needsRefresh ? 1 : 0);
+        result = 31 * result + (strictMethodInvocation ? 1 : 0);
         return result;
     }
 
@@ -445,7 +433,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     public static class Builder implements InterceptorLocator {
 
         protected PackageConfig target;
-        private boolean strictDMI;
+        private boolean strictDMI = true;
 
         public Builder(String name) {
             target = new PackageConfig(name);
@@ -528,6 +516,26 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
             return this;
         }
 
+        public Set<String> getGlobalAllowedMethods() {
+            Set <String> allowedMethods = target.globalAllowedMethods;
+            allowedMethods.addAll(getParentsAllowedMethods(target.parents));
+            return allowedMethods;
+        }
+
+        public Set<String> getParentsAllowedMethods(List<PackageConfig> parents) {
+            Set<String> allowedMethods = new HashSet<>();
+            for (PackageConfig parent : parents) {
+                allowedMethods.addAll(parent.globalAllowedMethods);
+                allowedMethods.addAll(getParentsAllowedMethods(parent.getParents()));
+            }
+            return allowedMethods;
+        }
+
+        public Builder addGlobalAllowedMethods(Set<String> allowedMethods) {
+            target.globalAllowedMethods.addAll(allowedMethods);
+            return this;
+        }
+
         public Builder addExceptionMappingConfig(ExceptionMappingConfig exceptionMappingConfig) {
             target.globalExceptionMappingConfigs.add(exceptionMappingConfig);
             return this;
@@ -592,28 +600,24 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         }
 
         public Builder strictMethodInvocation(boolean strict) {
-            strictDMI = strict;
+            target.strictMethodInvocation = strict;
             return this;
         }
 
         public boolean isStrictMethodInvocation() {
-            return strictDMI;
+            return target.strictMethodInvocation;
         }
 
         public PackageConfig build() {
-            embalmTarget();
-            PackageConfig result = target;
-            target = new PackageConfig(result);
-            return result;
-        }
-
-        protected void embalmTarget() {
             target.actionConfigs = Collections.unmodifiableMap(target.actionConfigs);
             target.globalResultConfigs = Collections.unmodifiableMap(target.globalResultConfigs);
             target.interceptorConfigs = Collections.unmodifiableMap(target.interceptorConfigs);
             target.resultTypeConfigs = Collections.unmodifiableMap(target.resultTypeConfigs);
             target.globalExceptionMappingConfigs = Collections.unmodifiableList(target.globalExceptionMappingConfigs);
             target.parents = Collections.unmodifiableList(target.parents);
+            PackageConfig result = target;
+            target = new PackageConfig(result);
+            return result;
         }
 
         @Override

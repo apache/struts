@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +68,8 @@ public class ConventionUnknownHandler implements UnknownHandler {
     private ConventionsService conventionsService;
     private String nameSeparator;
 
+    protected Set<String> allowedMethods = new HashSet<>();
+
     /**
      * Constructs the unknown handler.
      *
@@ -102,6 +105,8 @@ public class ConventionUnknownHandler implements UnknownHandler {
         }
 
         this.redirectToSlash = Boolean.parseBoolean(redirectToSlash);
+
+        allowedMethods = TextParseUtil.commaDelimitedStringToSet("execute,input,back,cancel,browse");
     }
 
     public ActionConfig handleUnknownAction(String namespace, String actionName)
@@ -398,4 +403,5 @@ public class ConventionUnknownHandler implements UnknownHandler {
             this.ext = ext;
         }
     }
+
 }

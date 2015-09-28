@@ -127,6 +127,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
             .addActionConfig("testActionTagAction", new ActionConfig.Builder("", "", TestAction.class.getName())
                 .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, TestActionTagResult.class.getName()).build())
                 .addResultConfig(new ResultConfig.Builder(Action.INPUT, TestActionTagResult.class.getName()).build())
+                .addAllowedMethod("input")
                 .build())
             .build();
 

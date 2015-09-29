@@ -39,7 +39,7 @@ import java.util.Map;
  * <!-- START SNIPPET: description -->
  * <p>
  * A custom Result type for setting HTTP headers and status by optionally evaluating against the ValueStack.
- * This result can also be used to send and error to the client. All the parameters can be evaluated against the ValueStack.
+ * This result can also be used to send an error to the client. All the parameters can be evaluated against the ValueStack.
  * </p>
  *
  * <!-- END SNIPPET: description -->
@@ -74,7 +74,7 @@ import java.util.Map;
  *
  * &lt;result name="proxyRequired" type="httpheader"&gt;
  *   &lt;param name="error"&gt;305&lt;/param&gt;
- *   &lt;param name="errorMessage"&gt;this action must be accessed through a prozy&lt;/param&gt;
+ *   &lt;param name="errorMessage"&gt;this action must be accessed through a proxy&lt;/param&gt;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  */

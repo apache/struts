@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ModelDrivenValidationTest extends XWorkTestCase {
         params.put("count", new String[]{"11"});
 
         Map<String, Object> context = new HashMap<>();
-        context.put(ActionContext.PARAMETERS, params);
+        context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);

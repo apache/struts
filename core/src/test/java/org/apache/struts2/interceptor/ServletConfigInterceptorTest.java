@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.util.ServletContextAware;
 import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -89,7 +90,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         Map<String, Object> param = new HashMap<String, Object>();
-        mai.getInvocationContext().setParameters(param);
+        mai.getInvocationContext().setParameters(HttpParameters.createEmpty().build());
 
         mock.setParameters((Map)param);
         control.setVoidCallable();

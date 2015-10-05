@@ -57,15 +57,23 @@ public class HttpParameters implements Cloneable {
         return HttpParameters.createEmpty().withParent(this).withExtraParams(newParams).build();
     }
 
+    public Map<String, String[]> getHttpParameters() {
+        Map<String, String[]> result = new HashMap<>(parameters.size());
+        for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
+            result.put(entry.getKey(), entry.getValue().getMultipleValue());
+        }
+        return result;
+    }
+
     public static class Builder {
         private Map<String, String[]> requestParameterMap;
         private HttpParameters parent;
 
         protected Builder(Map<String, ?> requestParameterMap) {
-            this.requestParameterMap = toStringArrayMpa(requestParameterMap);
+            this.requestParameterMap = toStringArrayMap(requestParameterMap);
         }
 
-        private Map<String, String[]> toStringArrayMpa(Map<String, ?> map) {
+        private Map<String, String[]> toStringArrayMap(Map<String, ?> map) {
             Map<String, String[]> result = new TreeMap<>();
             for (Map.Entry<String, ?> entry : map.entrySet()) {
                 Object value = entry.getValue();
@@ -94,8 +102,13 @@ public class HttpParameters implements Cloneable {
 
         public Builder withExtraParams(Map<String, ?> params) {
             if (params != null) {
-                requestParameterMap.putAll(toStringArrayMpa(params));
+                requestParameterMap.putAll(toStringArrayMap(params));
             }
+            return this;
+        }
+
+        public Builder withComparator(Comparator<String> orderedComparator) {
+            requestParameterMap = new TreeMap<>(orderedComparator);
             return this;
         }
 
@@ -112,11 +125,6 @@ public class HttpParameters implements Cloneable {
 
             }
             return new HttpParameters(parameters);
-        }
-
-        public Builder withComparator(Comparator<String> orderedComparator) {
-            requestParameterMap = new TreeMap<>(orderedComparator);
-            return this;
         }
     }
 }

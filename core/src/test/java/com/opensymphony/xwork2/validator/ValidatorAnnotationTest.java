@@ -5,6 +5,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         params.put("bar", "7");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext);
         proxy.execute();
@@ -36,7 +37,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     public void testNotAnnotatedMethodSuccess2() throws Exception {
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, new HashMap<String, Object>());
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext);
         proxy.execute();
@@ -49,7 +50,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     public void testAnnotatedMethodFailure() throws Exception {
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, new HashMap<String, Object>());
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
         proxy.execute();
@@ -69,7 +70,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         params.put("param2", "key2");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
         proxy.execute();
@@ -83,7 +84,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         params.put("param2", "key2");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
         proxy.execute();
@@ -97,7 +98,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         params.put("param1", "key1");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
         proxy.execute();

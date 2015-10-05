@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import junit.framework.TestCase;
 
 import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 
 /**
@@ -70,8 +71,13 @@ public class TokenHelperTest extends TestCase {
         String token = TokenHelper.setToken(tokenName);
 		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
 		assertEquals(token, session.get(sessionTokenName));
-        ActionContext.getContext().getParameters().put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
-        ActionContext.getContext().getParameters().put(tokenName, new String[]{token});
+
+        Map<String, String[]> params = new HashMap<>();
+        params.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
+        params.put(tokenName, new String[]{token});
+
+        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
+
         assertTrue(TokenHelper.validToken());
     }
 
@@ -85,10 +91,9 @@ public class TokenHelperTest extends TestCase {
 
     protected void setUp() throws Exception {
         session = new HashMap();
-        Map params = new TreeMap();
         Map ctxMap = new TreeMap();
         ctxMap.put(ActionContext.SESSION, session);
-        ctxMap.put(ActionContext.PARAMETERS, params);
+        ctxMap.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
         ActionContext ctx = new ActionContext(ctxMap);
         ActionContext.setContext(ctx);
     }

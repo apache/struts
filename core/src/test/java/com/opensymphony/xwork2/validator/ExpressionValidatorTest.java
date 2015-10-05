@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.easymock.EasyMock;
 
 import java.util.Collection;
@@ -66,7 +67,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         params.put("bar", "7");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -89,7 +90,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         params.put("bar", "7");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
         proxy.execute();

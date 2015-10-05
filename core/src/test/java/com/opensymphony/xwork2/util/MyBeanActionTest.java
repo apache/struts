@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class MyBeanActionTest extends XWorkTestCase {
         params.put("beanList(1234567891).name", "This is the 2nd bla bean");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext);
@@ -64,7 +65,7 @@ public class MyBeanActionTest extends XWorkTestCase {
         params.put("beanMap[1234567891].name", "This is the 2nd bla bean");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext);

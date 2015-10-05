@@ -7,6 +7,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
  * @author jafl
  *
  */
-public class AnnotationParameterFilterUnitTest extends TestCase {
+public class AnnotationParameterFilterInterceptorTest extends TestCase {
 
 	ValueStack stack;
 
@@ -38,8 +39,8 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		
 		parameterMap.put("job", "Baker");
 		parameterMap.put("name", "Martin");
-		
-		contextMap.put(ActionContext.PARAMETERS, parameterMap);
+
+		contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(parameterMap).build());
 		
 		Action action = new BlockingByDefaultAction();
 		stack.push(action);
@@ -49,15 +50,18 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		mockInvocation.matchAndReturn("getAction", action);
 		mockInvocation.matchAndReturn("getStack", stack);
 		mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-		
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+
 		ActionInvocation invocation = (ActionInvocation) mockInvocation.proxy();
 		
-		AnnotationParameterFilterIntereptor intereptor = new AnnotationParameterFilterIntereptor();
-		intereptor.intercept(invocation);
+		AnnotationParameterFilterInterceptor interceptor = new AnnotationParameterFilterInterceptor();
+		interceptor.intercept(invocation);
 
-		assertEquals("Parameter map should contain one entry", 1, parameterMap.size());
-		assertNull(parameterMap.get("job"));
-		assertNotNull(parameterMap.get("name"));
+		HttpParameters parameters = invocation.getInvocationContext().getParameters();
+		assertEquals("Parameter map should contain one entry", 1, parameters.getNames().size());
+		assertFalse(parameters.get("job").isDefined());
+		assertTrue(parameters.get("name").isDefined());
 		
 	}
 
@@ -73,8 +77,8 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		
 		parameterMap.put("job", "Baker");
 		parameterMap.put("name", "Martin");
-		
-		contextMap.put(ActionContext.PARAMETERS, parameterMap);
+
+		contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(parameterMap).build());
 		
 		Action action = new AllowingByDefaultAction();
 		stack.push(action);
@@ -84,15 +88,18 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		mockInvocation.matchAndReturn("getAction", action);
 		mockInvocation.matchAndReturn("getStack", stack);
 		mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-		
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+
 		ActionInvocation invocation = (ActionInvocation) mockInvocation.proxy();
 		
-		AnnotationParameterFilterIntereptor intereptor = new AnnotationParameterFilterIntereptor();
-		intereptor.intercept(invocation);
-		
-		assertEquals("Paramter map should contain one entry", 1, parameterMap.size());
-		assertNotNull(parameterMap.get("job"));
-		assertNull(parameterMap.get("name"));
+		AnnotationParameterFilterInterceptor interceptor = new AnnotationParameterFilterInterceptor();
+		interceptor.intercept(invocation);
+
+		HttpParameters parameters = invocation.getInvocationContext().getParameters();
+		assertEquals("Paramwter map should contain one entry", 1, parameters.getNames().size());
+		assertTrue(parameters.get("job").isDefined());
+		assertFalse(parameters.get("name").isDefined());
 		
 	}
 
@@ -110,8 +117,8 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		parameterMap.put("name", "Martin");
 		parameterMap.put("m1", "s1");
 		parameterMap.put("m2", "s2");
-		
-		contextMap.put(ActionContext.PARAMETERS, parameterMap);
+
+		contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(parameterMap).build());
 		stack.push(new BlockingByDefaultModel());
 		
 		Mock mockInvocation = new Mock(ActionInvocation.class);
@@ -119,17 +126,20 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		mockInvocation.matchAndReturn("getAction", new BlockingByDefaultAction());
 		mockInvocation.matchAndReturn("getStack", stack);
 		mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-		
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+
 		ActionInvocation invocation = (ActionInvocation) mockInvocation.proxy();
 		
-		AnnotationParameterFilterIntereptor intereptor = new AnnotationParameterFilterIntereptor();
-		intereptor.intercept(invocation);
-		
-		assertEquals("Paramter map should contain two entries", 2, parameterMap.size());
-		assertNull(parameterMap.get("job"));
-		assertNotNull(parameterMap.get("name"));
-		assertNotNull(parameterMap.get("m1"));
-		assertNull(parameterMap.get("m2"));
+		AnnotationParameterFilterInterceptor interceptor = new AnnotationParameterFilterInterceptor();
+		interceptor.intercept(invocation);
+
+		HttpParameters parameters = invocation.getInvocationContext().getParameters();
+		assertEquals("Parameter map should contain two entries", 2, parameters.getNames().size());
+		assertFalse(parameters.get("job").isDefined());
+		assertTrue(parameters.get("name").isDefined());
+		assertTrue(parameters.get("m1").isDefined());
+		assertFalse(parameters.get("m2").isDefined());
 		
 	}
 
@@ -147,8 +157,8 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		parameterMap.put("name", "Martin");
 		parameterMap.put("m1", "s1");
 		parameterMap.put("m2", "s2");
-		
-		contextMap.put(ActionContext.PARAMETERS, parameterMap);
+
+		contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(parameterMap).build());
 		stack.push(new AllowingByDefaultModel());
 		
 		Mock mockInvocation = new Mock(ActionInvocation.class);
@@ -156,17 +166,20 @@ public class AnnotationParameterFilterUnitTest extends TestCase {
 		mockInvocation.matchAndReturn("getAction", new AllowingByDefaultAction());
 		mockInvocation.matchAndReturn("getStack", stack);
 		mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-		
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+		mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+
 		ActionInvocation invocation = (ActionInvocation) mockInvocation.proxy();
 		
-		AnnotationParameterFilterIntereptor intereptor = new AnnotationParameterFilterIntereptor();
-		intereptor.intercept(invocation);
-		
-		assertEquals("Paramter map should contain two entries", 2, parameterMap.size());
-		assertNotNull(parameterMap.get("job"));
-		assertNull(parameterMap.get("name"));
-		assertNull(parameterMap.get("m1"));
-		assertNotNull(parameterMap.get("m2"));
+		AnnotationParameterFilterInterceptor interceptor = new AnnotationParameterFilterInterceptor();
+		interceptor.intercept(invocation);
+
+		HttpParameters parameters = invocation.getInvocationContext().getParameters();
+		assertEquals("Parameter map should contain two entries", 2, parameters.getNames().size());
+		assertTrue(parameters.get("job").isDefined());
+		assertFalse(parameters.get("name").isDefined());
+		assertFalse(parameters.get("m1").isDefined());
+		assertTrue(parameters.get("m2").isDefined());
 		
 	}
 	

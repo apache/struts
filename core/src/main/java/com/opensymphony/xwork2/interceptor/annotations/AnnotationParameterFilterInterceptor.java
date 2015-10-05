@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author martin.gilday
  */
-public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
+public class AnnotationParameterFilterInterceptor extends AbstractInterceptor {
 
     /* (non-Javadoc)
       * @see com.opensymphony.xwork2.interceptor.AbstractInterceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
@@ -47,7 +47,6 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
 
         boolean blockByDefault = action.getClass().isAnnotationPresent(BlockByDefault.class);
         List<Field> annotatedFields = new ArrayList<>();
-        HashSet<String> paramsToRemove = new HashSet<>();
 
         if (blockByDefault) {
             AnnotationUtils.addAllFields(Allowed.class, action.getClass(), annotatedFields);
@@ -68,7 +67,7 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
                 }
 
                 if (!allowed) {
-                    paramsToRemove.add(paramName);
+                    parameters = parameters.remove(paramName);
                 }
             }
         } else {
@@ -82,13 +81,13 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
                     //TODO only matches exact field names.  need to change to it matches start of ognl expression
                     //i.e take param name up to first . (period) and match against that
                     if (field.getName().equals(paramName)) {
-                        paramsToRemove.add(paramName);
+                        parameters = parameters.remove(paramName);
                     }
                 }
             }
         }
 
-        parameters.remove(paramsToRemove);
+        invocation.getInvocationContext().setParameters(parameters);
 
         return invocation.invoke();
     }

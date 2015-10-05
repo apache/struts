@@ -17,6 +17,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -259,7 +260,7 @@ public class ActionContext implements Serializable {
      *
      * @param parameters the parameters for the current action.
      */
-    public void setParameters(Map<String, Object> parameters) {
+    public void setParameters(HttpParameters parameters) {
         put(PARAMETERS, parameters);
     }
 
@@ -270,8 +271,8 @@ public class ActionContext implements Serializable {
      * @return a Map of HttpServletRequest parameters or a multipart map when in a servlet environment, or a
      *         generic Map of parameters otherwise.
      */
-    public Map<String, Object> getParameters() {
-        return (Map<String, Object>) get(PARAMETERS);
+    public HttpParameters getParameters() {
+        return (HttpParameters) get(PARAMETERS);
     }
 
     /**

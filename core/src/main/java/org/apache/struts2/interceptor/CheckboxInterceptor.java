@@ -67,7 +67,7 @@ public class CheckboxInterceptor extends AbstractInterceptor {
             if (name.startsWith("__checkbox_")) {
                 String checkboxName = name.substring("__checkbox_".length());
 
-                Parameter value = parameters.get(checkboxName);
+                Parameter value = parameters.get(name);
                 parameters = parameters.remove(name);
                 if (value.isMultiple()) {
               	    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: {}", name);
@@ -75,9 +75,9 @@ public class CheckboxInterceptor extends AbstractInterceptor {
                 }
 
                 // is this checkbox checked/submitted?
-                if (!parameters.contains(name)) {
+                if (!parameters.contains(checkboxName)) {
                     // if not, let's be sure to default the value to false
-                    extraParams.put(name, new String[]{uncheckedValue});
+                    extraParams.put(checkboxName, new String[]{ uncheckedValue });
                 }
             }
         }

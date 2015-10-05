@@ -73,44 +73,4 @@
 
     </package>
 
-    <package name="struts-rest-bean-validation" extends="rest-default">
-        <interceptors>
-            <interceptor name="beanValidation" class="org.apache.struts.beanvalidation.validation.interceptor.BeanValidationInterceptor"/>
-
-            <interceptor-stack name="restBeanValidationStack">
-                <interceptor-ref name="exception"/>
-                <interceptor-ref name="alias"/>
-                <interceptor-ref name="servletConfig"/>
-                <interceptor-ref name="messages">
-                    <param name="operationMode">AUTOMATIC</param>
-                </interceptor-ref>
-                <interceptor-ref name="prepare"/>
-                <interceptor-ref name="i18n"/>
-                <interceptor-ref name="chain"/>
-                <interceptor-ref name="debugging"/>
-                <interceptor-ref name="profiling"/>
-                <interceptor-ref name="actionMappingParams"/>
-                <interceptor-ref name="scopedModelDriven"/>
-                <interceptor-ref name="modelDriven">
-                    <param name="refreshModelBeforeResult">true</param>
-                </interceptor-ref>
-                <interceptor-ref name="fileUpload"/>
-                <interceptor-ref name="checkbox"/>
-                <interceptor-ref name="staticParams"/>
-                <interceptor-ref name="params"/>
-                <interceptor-ref name="rest" />
-                <interceptor-ref name="conversionError"/>
-                <interceptor-ref name="beanValidation">
-                    <param name="excludeMethods">input,back,cancel,browse,index,show,edit,editNew</param>
-                </interceptor-ref>
-                <interceptor-ref name="restWorkflow">
-                    <param name="excludeMethods">input,back,cancel,browse,index,show,edit,editNew</param>
-                </interceptor-ref>
-            </interceptor-stack>
-
-        </interceptors>
-
-        <default-interceptor-ref name="beanValidationDefaultStack"/>
-
-    </package>
 </struts>

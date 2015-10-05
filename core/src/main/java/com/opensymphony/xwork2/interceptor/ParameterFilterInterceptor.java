@@ -109,7 +109,6 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
 
         HttpParameters parameters = invocation.getInvocationContext().getParameters();
-        HashSet<String> paramsToRemove = new HashSet<>();
 
         Map<String, Boolean> includesExcludesMap = getIncludesExcludesMap();
 
@@ -117,20 +116,19 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
             boolean currentAllowed = !isDefaultBlock();
 
             for (String currRule : includesExcludesMap.keySet()) {
-                if (param.startsWith(currRule)
-                        && (param.length() == currRule.length()
-                        || isPropertySeparator(param.charAt(currRule.length())))) {
-                    currentAllowed = includesExcludesMap.get(currRule).booleanValue();
+                if (param.startsWith(currRule) &&
+                    (param.length() == currRule.length() || isPropertySeparator(param.charAt(currRule.length())))
+                ) {
+                    currentAllowed = includesExcludesMap.get(currRule);
                 }
             }
             if (!currentAllowed) {
-                paramsToRemove.add(param);
+                LOG.debug("Removing param: {}", param);
+                parameters = parameters.remove(param);
             }
         }
 
-        LOG.debug("Params to remove: {}", paramsToRemove);
-
-        parameters.remove(paramsToRemove);
+        invocation.getInvocationContext().setParameters(parameters);
 
         return invocation.invoke();
     }
@@ -141,7 +139,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
      * @param c the char
      * @return <tt>true</tt>, if char is property separator, <tt>false</tt> otherwise.
      */
-    private static boolean isPropertySeparator(char c) {
+    private boolean isPropertySeparator(char c) {
         return c == '.' || c == '(' || c == '[';
     }
 

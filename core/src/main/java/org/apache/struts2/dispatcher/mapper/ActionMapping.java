@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.Result;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,7 +45,9 @@ public class ActionMapping {
     /**
      * Constructs an ActionMapping
      */
-    public ActionMapping() {}
+    public ActionMapping() {
+        params = new HashMap<>();
+    }
 
     /**
      * Constructs an ActionMapping with a default result

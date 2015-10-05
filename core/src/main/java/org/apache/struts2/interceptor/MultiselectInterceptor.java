@@ -22,11 +22,10 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Just as the CheckboxInterceptor checks that if only the hidden field is present, so too does this interceptor. If
@@ -41,36 +40,32 @@ public class MultiselectInterceptor extends AbstractInterceptor {
      * If the "__multiselect_" request parameter is present and its visible counterpart is not, set a new request parameter
      * to an empty Sting.
      *
-     * @param actionInvocation ActionInvocation
+     * @param ai ActionInvocation
      * @return the result of the action
      * @throws Exception if error
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
-    public String intercept(ActionInvocation actionInvocation) throws Exception {
-        Map<String, Object> parameters = actionInvocation.getInvocationContext().getParameters();
+    public String intercept(ActionInvocation ai) throws Exception {
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
         Map<String, Object> newParams = new HashMap<>();
-        Set<String> keys = parameters.keySet();
 
-        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
-            String key = iterator.next();
-
-            if (key.startsWith("__multiselect_")) {
-                String name = key.substring("__multiselect_".length());
-
-                iterator.remove();
+        for (String name : parameters.getNames()) {
+            if (name.startsWith("__multiselect_")) {
+                String key = name.substring("__multiselect_".length());
 
                 // is this multi-select box submitted?
-                if (!parameters.containsKey(name)) {
-
+                if (!parameters.contains(key)) {
                     // if not, let's be sure to default the value to an empty string array
-                    newParams.put(name, new String[0]);
+                    newParams.put(key, new String[0]);
                 }
+
+                parameters = parameters.remove(name);
             }
         }
 
-        parameters.putAll(newParams);
+        ai.getInvocationContext().setParameters(parameters.clone(newParams));
 
-        return actionInvocation.invoke();
+        return ai.invoke();
     }
 
 }

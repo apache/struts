@@ -21,15 +21,19 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.ClearableValueStack;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.TreeMap;
 
 
 /**
@@ -212,28 +216,24 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
      * @param newParams The parameter map to apply
      */
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
-        Map<String, Object> previousParams = ac.getParameters();
+        HttpParameters previousParams = ac.getParameters();
 
-        Map<String, Object> combinedParams;
-        if ( overwrite ) {
+        HttpParameters.Builder combinedParams = HttpParameters.createEmpty();
+        if (overwrite) {
             if (previousParams != null) {
-                combinedParams = new TreeMap<>(previousParams);
-            } else {
-                combinedParams = new TreeMap<>();
+                combinedParams = combinedParams.withParent(previousParams);
             }
-            if ( newParams != null) {
-                combinedParams.putAll(newParams);
+            if (newParams != null) {
+                combinedParams = combinedParams.withExtraParams(newParams);
             }
         } else {
             if (newParams != null) {
-                combinedParams = new TreeMap<>(newParams);
-            } else {
-                combinedParams = new TreeMap<>();
+                combinedParams = combinedParams.withExtraParams(newParams);
             }
-            if ( previousParams != null) {
-                combinedParams.putAll(previousParams);
+            if (previousParams != null) {
+                combinedParams = combinedParams.withParent(previousParams);
             }
         }
-        ac.setParameters(combinedParams);
+        ac.setParameters(combinedParams.build());
     }
 }

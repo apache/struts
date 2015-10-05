@@ -4,6 +4,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,33 +64,30 @@ public class DateTextFieldInterceptor implements Interceptor {
     }
 
     public String intercept(ActionInvocation ai) throws Exception {
-        Map<String, Object> parameters = ai.getInvocationContext().getParameters();
-        Set<Entry<String, Object>> entries = parameters.entrySet();
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
         Map<String, Map<String, String>> dates = new HashMap<>();
         
         DateWord[] dateWords = DateWord.getAll();
 
         // Get all the values of date type
-        for (Iterator<Entry<String, Object>> iterator = entries.iterator(); iterator.hasNext();) {
-            Entry<String, ?> entry = iterator.next();
-            String key = entry.getKey();
+        for (String name : parameters.getNames()) {
 
             for (DateWord dateWord : dateWords) {
             	String dateKey = "__" + dateWord.getDescription() + "_";
-            	if (key.startsWith(dateKey)) {
-                    String name = key.substring(dateKey.length());
+            	if (name.startsWith(dateKey)) {
+                    String key = name.substring(dateKey.length());
 
-                    if (entry.getValue() instanceof String[]) {
-                    	String[] values = (String[])entry.getValue();
-                    	if (values.length > 0 && !"".equals(values[0])) {
-                    		iterator.remove();
-                    		Map<String, String> map = dates.get(name);
-                    		if (map == null) {
-                                map = new HashMap<>();
-                                dates.put(name, map);
-                    		}
-                            map.put(dateWord.getDateType(), values[0]);
-                    	}
+                    Parameter param = parameters.get(key);
+
+                    if (param.isDefined()) {
+                        Map<String, String> map = dates.get(name);
+                        if (map == null) {
+                            map = new HashMap<>();
+                            dates.put(name, map);
+                        }
+                        map.put(dateWord.getDateType(), param.getValue());
+
+                        parameters = parameters.remove(name);
                     }
                     break;
                 }
@@ -115,7 +114,8 @@ public class DateTextFieldInterceptor implements Interceptor {
                 LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", dateEntry.getKey(), dateFormat, dateValue);
             }
         }
-        parameters.putAll(newParams);
+
+        ai.getInvocationContext().setParameters(parameters.clone(newParams));
 
         return ai.invoke();
     }

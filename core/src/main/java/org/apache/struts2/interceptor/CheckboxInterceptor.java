@@ -25,11 +25,11 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -60,33 +60,30 @@ public class CheckboxInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(CheckboxInterceptor.class);
 
     public String intercept(ActionInvocation ai) throws Exception {
-        Map<String, Object> parameters = ai.getInvocationContext().getParameters();
-        Map<String, String[]> newParams = new HashMap<>();
-        Set<Map.Entry<String, Object>> entries = parameters.entrySet();
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        Map<String, String[]> extraParams = new HashMap<>();
 
-        for (Iterator<Map.Entry<String, Object>> iterator = entries.iterator(); iterator.hasNext();) {
-            Map.Entry<String, Object> entry = iterator.next();
-            String key = entry.getKey();
+        for (String name : parameters.getNames()) {
+            if (name.startsWith("__checkbox_")) {
+                String checkboxName = name.substring("__checkbox_".length());
 
-            if (key.startsWith("__checkbox_")) {
-                String name = key.substring("__checkbox_".length());
-
-                Object values = entry.getValue();
-                iterator.remove();
-                if (values != null && values instanceof String[] && ((String[])values).length > 1) {
+                Parameter value = parameters.get(checkboxName);
+                parameters = parameters.remove(name);
+                if (value.isMultiple()) {
               	    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: {}", name);
                     continue;
                 }
 
                 // is this checkbox checked/submitted?
-                if (!parameters.containsKey(name)) {
+                if (!parameters.contains(name)) {
                     // if not, let's be sure to default the value to false
-                    newParams.put(name, new String[]{uncheckedValue});
+                    extraParams.put(name, new String[]{uncheckedValue});
                 }
             }
         }
 
-        parameters.putAll(newParams);
+
+        ai.getInvocationContext().setParameters(parameters.clone(extraParams));
 
         return ai.invoke();
     }

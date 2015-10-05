@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -87,7 +88,7 @@ public class I18nInterceptor extends com.opensymphony.xwork2.interceptor.I18nInt
         @Override
         protected void find() {
             //get requested locale
-            Map<String, Object> params = actionInvocation.getInvocationContext().getParameters();
+            HttpParameters params = actionInvocation.getInvocationContext().getParameters();
             storage = Storage.SESSION.toString();
 
             requestedLocale = findLocaleParameter(params, parameterName);

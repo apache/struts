@@ -294,11 +294,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         }
 
                         if (!acceptedFiles.isEmpty()) {
-                            Map<String, Object> params = ac.getParameters();
-
-                            params.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
-                            params.put(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
-                            params.put(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
+                            Map<String, Object> newParams = new HashMap<>();
+                            newParams.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
+                            newParams.put(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
+                            newParams.put(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
+                            ac.setParameters(ac.getParameters().clone(newParams));
                         }
                     }
                 } else {

@@ -35,6 +35,7 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
@@ -178,7 +179,7 @@ public class ActionComponent extends ContextBean {
     }
 
     protected Map createExtraContext() {
-        Map newParams = createParametersForContext();
+        HttpParameters newParams = createParametersForContext();
 
         ActionContext ctx = new ActionContext(stack.getContext());
         PageContext pageContext = (PageContext) ctx.get(ServletActionContext.PAGE_CONTEXT);
@@ -208,16 +209,17 @@ public class ActionComponent extends ContextBean {
      * 
      * @return A map of String[] parameters
      */
-    protected Map<String,String[]> createParametersForContext() {
-        Map parentParams = null;
+    protected HttpParameters createParametersForContext() {
+        HttpParameters parentParams = null;
 
         if (!ignoreContextParams) {
             parentParams = new ActionContext(getStack().getContext()).getParameters();
         }
 
-        Map<String, String[]> newParams = (parentParams != null)
-                ? new HashMap<String, String[]>(parentParams)
-                : new HashMap<String, String[]>();
+        HttpParameters.Builder builder = HttpParameters.createEmpty();
+        if (parentParams != null) {
+            builder = builder.withParent(parentParams);
+        }
 
         if (parameters != null) {
             Map<String, String[]> params = new HashMap<>();
@@ -231,9 +233,9 @@ public class ActionComponent extends ContextBean {
                     params.put(key, new String[]{val.toString()});
                 }
             }
-            newParams.putAll(params);
+            builder = builder.withExtraParams(params);
         }
-        return newParams;
+        return builder.build();
     }
 
     public ActionProxy getProxy() {

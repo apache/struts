@@ -18,8 +18,6 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
@@ -28,6 +26,8 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -108,7 +108,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         Object action = invocation.getAction();
         if (!(action instanceof NoParameters)) {
             ActionContext ac = invocation.getInvocationContext();
-            final Map<String, Object> parameters = retrieveParameters(ac);
+            HttpParameters parameters = retrieveParameters(ac);
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Setting params {}", getParameterLogMap(parameters));
@@ -139,7 +139,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param ac The action context
      * @return The parameter map to apply
      */
-    protected Map<String, Object> retrieveParameters(ActionContext ac) {
+    protected HttpParameters retrieveParameters(ActionContext ac) {
         return ac.getParameters();
     }
 
@@ -154,26 +154,24 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      *                  In subclasses both retrieveParameters() and addParametersToContext() should be overridden.
      *                  </p>
      */
-    protected void addParametersToContext(ActionContext ac, Map<String, Object> newParams) {
+    protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
     }
 
-    protected void setParameters(final Object action, ValueStack stack, final Map<String, Object> parameters) {
-        Map<String, Object> params;
-        Map<String, Object> acceptableParameters;
+    protected void setParameters(final Object action, ValueStack stack, HttpParameters parameters) {
+        HttpParameters params;
+        Map<String, Parameter> acceptableParameters;
         if (ordered) {
-            params = new TreeMap<>(getOrderedComparator());
+            params = HttpParameters.createEmpty().withComparator(getOrderedComparator()).withParent(parameters).build();
             acceptableParameters = new TreeMap<>(getOrderedComparator());
-            params.putAll(parameters);
         } else {
-            params = new TreeMap<>(parameters);
+            params = HttpParameters.createEmpty().withParent(parameters).build();
             acceptableParameters = new TreeMap<>();
         }
 
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            String name = entry.getKey();
-            Object value = entry.getValue();
-            if (isAcceptableParameter(name, action) && isAcceptableValue(value)) {
-                acceptableParameters.put(name, entry.getValue());
+        for (String name : params.getNames()) {
+            Parameter parameter = params.get(name);
+            if (isAcceptableParameter(name, action) && isAcceptableValue(parameter.getValue())) {
+                acceptableParameters.put(name, parameter);
             }
         }
 
@@ -201,11 +199,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             accessValueStack.setExcludeProperties(excludedPatterns.getExcludedPatterns());
         }
 
-        for (Map.Entry<String, Object> entry : acceptableParameters.entrySet()) {
+        for (Map.Entry<String, Parameter> entry : acceptableParameters.entrySet()) {
             String name = entry.getKey();
-            Object value = entry.getValue();
+            Parameter value = entry.getValue();
             try {
-                newStack.setParameter(name, value);
+                newStack.setParameter(name, value.getValue());
             } catch (RuntimeException e) {
                 if (devMode) {
                     notifyDeveloperParameterException(action, name, e.getMessage());
@@ -285,30 +283,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return rbCollator;
     }
 
-    protected String getParameterLogMap(Map<String, Object> parameters) {
+    protected String getParameterLogMap(HttpParameters parameters) {
         if (parameters == null) {
             return "NONE";
         }
 
         StringBuilder logEntry = new StringBuilder();
-        for (Map.Entry entry : parameters.entrySet()) {
-            logEntry.append(String.valueOf(entry.getKey()));
+        for (String name : parameters.getNames()) {
+            logEntry.append(String.valueOf(name));
             logEntry.append(" => ");
-            if (entry.getValue() instanceof Object[]) {
-                Object[] valueArray = (Object[]) entry.getValue();
-                logEntry.append("[ ");
-                if (valueArray.length > 0 ) {
-                    for (int indexA = 0; indexA < (valueArray.length - 1); indexA++) {
-                        Object valueAtIndex = valueArray[indexA];
-                        logEntry.append(String.valueOf(valueAtIndex));
-                        logEntry.append(", ");
-                    }
-                    logEntry.append(String.valueOf(valueArray[valueArray.length - 1]));
-                }
-                logEntry.append(" ] ");
-            } else {
-                logEntry.append(String.valueOf(entry.getValue()));
-            }
+            logEntry.append(parameters.get(name).getValue());
         }
 
         return logEntry.toString();

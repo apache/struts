@@ -30,6 +30,7 @@ import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -60,8 +61,11 @@ public class TagUtils {
                         "has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag.");
             }
             stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+
+            HttpParameters params = HttpParameters.create(req.getParameterMap()).build();
+
             Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
-                    req.getParameterMap(),
+                    params,
                     new SessionMap(req),
                     new ApplicationMap(pageContext.getServletContext()),
                     req,

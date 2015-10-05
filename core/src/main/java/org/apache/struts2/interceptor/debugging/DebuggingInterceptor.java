@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
@@ -269,11 +270,8 @@ public class DebuggingInterceptor extends AbstractInterceptor {
      * @return The parameter value
      */
     private String getParameter(String key) {
-        String[] arr = (String[]) ActionContext.getContext().getParameters().get(key);
-        if (arr != null && arr.length > 0) {
-            return arr[0];
-        }
-        return null;
+        Parameter parameter = ActionContext.getContext().getParameters().get(key);
+        return parameter.getValue();
     }
 
     /**

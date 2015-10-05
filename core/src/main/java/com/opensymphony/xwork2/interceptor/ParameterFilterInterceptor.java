@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -107,12 +108,12 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
 
-        Map<String, Object> parameters = invocation.getInvocationContext().getParameters();
+        HttpParameters parameters = invocation.getInvocationContext().getParameters();
         HashSet<String> paramsToRemove = new HashSet<>();
 
         Map<String, Boolean> includesExcludesMap = getIncludesExcludesMap();
 
-        for (String param : parameters.keySet()) {
+        for (String param : parameters.getNames()) {
             boolean currentAllowed = !isDefaultBlock();
 
             for (String currRule : includesExcludesMap.keySet()) {
@@ -129,9 +130,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
 
         LOG.debug("Params to remove: {}", paramsToRemove);
 
-        for (Object aParamsToRemove : paramsToRemove) {
-            parameters.remove(aParamsToRemove);
-        }
+        parameters.remove(paramsToRemove);
 
         return invocation.invoke();
     }

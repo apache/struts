@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.easymock.MockControl;
 
 import java.util.LinkedHashMap;
@@ -33,15 +34,14 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 	}
 	
 	public void testInterception1() throws Exception {
-		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap<String, Object>() {
-			private static final long serialVersionUID = 0L;
+		contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(new LinkedHashMap<String, Object>() {
 			{
-				put("param1", new String[] { "paramValue1" });
-				put("param2", new String[] { "paramValue2" });
-				put("param3", new String[] { "paramValue3" });
-				put("param", new String[] { "paramValue" });
+				put("param1", new String[]{"paramValue1"});
+				put("param2", new String[]{"paramValue2"});
+				put("param3", new String[]{"paramValue3"});
+				put("param", new String[]{"paramValue"});
 			}
-		});
+		}).build());
 		
 		actionInvocationControl.replay();
 		
@@ -50,25 +50,24 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		interceptor.setParamValues("paramValue1,paramValue2");
 		interceptor.intercept(actionInvocation);
 		
-		Map params = (Map) contextMap.get(ActionContext.PARAMETERS);
-		assertEquals(params.size(), 2);
-		assertTrue(params.containsKey("param3"));
-		assertTrue(params.containsKey("param"));
-		assertEquals(((String[])params.get("param3"))[0], "paramValue3");
-		assertEquals(((String[])params.get("param"))[0], "paramValue");
+		HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
+		assertEquals(params.getNames().size(), 2);
+		assertTrue(params.contains("param3"));
+		assertTrue(params.contains("param"));
+		assertEquals(params.get("param3").getValue(), "paramValue3");
+		assertEquals(params.get("param").getValue(), "paramValue");
 		
 		actionInvocationControl.verify();
 	}
 	
 	
 	public void testInterception2() throws Exception {
-		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap<String, Object>() {
-			private static final long serialVersionUID = 0L;
+		contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(new LinkedHashMap<String, Object>() {
 			{
 				put("param1", new String[] { "paramValue2" });
 				put("param2", new String[] { "paramValue1" });
 			}
-		});
+		}).build());
 		
 		actionInvocationControl.replay();
 		
@@ -77,21 +76,20 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		interceptor.setParamValues("paramValue1,paramValue2");
 		interceptor.intercept(actionInvocation);
 		
-		Map params = (Map) contextMap.get(ActionContext.PARAMETERS);
-		assertEquals(params.size(), 0);
+		HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
+		assertEquals(params.getNames().size(), 0);
 		
 		actionInvocationControl.verify();
 	}
 	
 	
 	public void testInterception3() throws Exception {
-		contextMap.put(ActionContext.PARAMETERS, new LinkedHashMap<String, Object>() {
-			private static final long serialVersionUID = 0L;
+		contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(new LinkedHashMap<String, Object>() {
 			{
 				put("param1", new String[] { "paramValueOne" });
 				put("param2", new String[] { "paramValueTwo" });
 			}
-		});
+		}).build());
 		
 		actionInvocationControl.replay();
 		
@@ -100,12 +98,12 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		interceptor.setParamValues("paramValue1,paramValue2");
 		interceptor.intercept(actionInvocation);
 		
-		Map params = (Map) contextMap.get(ActionContext.PARAMETERS);
-		assertEquals(params.size(), 2);
-		assertTrue(params.containsKey("param1"));
-		assertTrue(params.containsKey("param2"));
-		assertEquals(((String[])params.get("param1"))[0], "paramValueOne");
-		assertEquals(((String[])params.get("param2"))[0], "paramValueTwo");
+		HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
+		assertEquals(params.getNames().size(), 2);
+		assertTrue(params.contains("param1"));
+		assertTrue(params.contains("param2"));
+		assertEquals(params.get("param1").getValue(), "paramValueOne");
+		assertEquals(params.get("param2").getValue(), "paramValueTwo");
 		
 		actionInvocationControl.verify();
 	}

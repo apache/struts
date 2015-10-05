@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.interceptor;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
         contextMap = new HashMap<>();
         stack = ActionContext.getContext().getValueStack();
         mockInvocation = new Mock(ActionInvocation.class);
+        mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
         mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
@@ -85,9 +87,8 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
     public void testTreeBlocking() throws Exception {
         runFilterTest("blah.deblah","blah,blah.deblah.deblah",false,
                 new String[] {"blah", "blah.deblah", "blah.deblah.deblah"});
-        Collection paramNames=getParameterNames();
-        assertEquals(1, paramNames.size());
-        assertEquals(paramNames.iterator().next(),"blah.deblah");
+        assertEquals(1, getParameterNames().size());
+        assertEquals(getParameterNames().iterator().next(),"blah.deblah");
     }
     
     public void testEnsureOnlyPropsBlocked() throws Exception {
@@ -111,11 +112,11 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
             params.put(paramName, "irrelevant what this is");
 
         }
-        contextMap.put(ActionContext.PARAMETERS, params);
+        contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
     }
     
     private Collection getParameterNames() {
-        return ((Map)contextMap.get(ActionContext.PARAMETERS)).keySet();
+        return ((HttpParameters)contextMap.get(ActionContext.PARAMETERS)).getNames();
     }
     
     public void runAction() throws Exception  {

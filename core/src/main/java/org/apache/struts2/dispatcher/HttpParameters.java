@@ -12,7 +12,7 @@ public class HttpParameters implements Cloneable {
 
     private Map<String, Parameter> parameters;
 
-    public HttpParameters(Map<String, Parameter> parameters) {
+    private HttpParameters(Map<String, Parameter> parameters) {
         this.parameters = parameters;
     }
 
@@ -33,23 +33,19 @@ public class HttpParameters implements Cloneable {
     }
 
     public Set<String> getNames() {
-        return parameters.keySet();
+        return new TreeSet<>(parameters.keySet());
     }
 
     public HttpParameters remove(Set<String> paramsToRemove) {
         for (String paramName : paramsToRemove) {
-            for (String param : parameters.keySet()) {
-                if ((param + ".").startsWith(paramName + ".")) {
-                    parameters.remove(param);
-                }
-            }
+            parameters.remove(paramName);
         }
         return this;
     }
 
-    public HttpParameters remove(final String paramsToRemove) {
+    public HttpParameters remove(final String paramToRemove) {
         return remove(new HashSet<String>() {{
-            add(paramsToRemove);
+            add(paramToRemove);
         }});
     }
 
@@ -104,7 +100,7 @@ public class HttpParameters implements Cloneable {
         public HttpParameters build() {
             Map<String, Parameter> parameters = (parent == null)
                     ? new HashMap<String, Parameter>()
-                    : parent.parameters;
+                    : new HashMap<>(parent.parameters);
 
             for (Object o : requestParameterMap.entrySet()) {
                 Map.Entry entry = (Map.Entry) o;

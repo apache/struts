@@ -71,11 +71,13 @@ public class HttpParameters implements Cloneable {
                 Object value = entry.getValue();
                 if (value != null && value.getClass().isArray()) {
                     Object[] values = (Object[]) value;
-                    Set<String> strValues = new TreeSet<>();
+                    String[] strValues = new String[values.length];
+                    int i = 0;
                     for (Object v : values) {
-                        strValues.add(String.valueOf(v));
+                        strValues[i] = String.valueOf(v);
+                        i++;
                     }
-                    result.put(entry.getKey(), strValues.toArray(new String[strValues.size()]));
+                    result.put(entry.getKey(), strValues);
                 } else if (value != null) {
                     result.put(entry.getKey(), new String[]{String.valueOf(value)});
                 }

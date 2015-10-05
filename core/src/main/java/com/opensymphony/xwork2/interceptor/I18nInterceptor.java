@@ -184,12 +184,12 @@ public class I18nInterceptor extends AbstractInterceptor {
             storage = Storage.SESSION.toString();
 
             requestedLocale = findLocaleParameter(params, parameterName);
-            if (requestedLocale != null) {
+            if (requestedLocale.isDefined()) {
                 return;
             }
 
             requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
-            if (requestedLocale != null) {
+            if (requestedLocale.isDefined()) {
                 storage = Storage.NONE.toString();
             }
         }
@@ -198,8 +198,8 @@ public class I18nInterceptor extends AbstractInterceptor {
             return storage;
         }
 
-        public Object getRequestedLocale() {
-            return requestedLocale;
+        public String getRequestedLocale() {
+            return requestedLocale.getValue();
         }
     }
 

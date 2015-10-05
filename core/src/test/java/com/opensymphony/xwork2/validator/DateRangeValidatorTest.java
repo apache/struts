@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.*;
 
@@ -43,7 +44,7 @@ public class DateRangeValidatorTest extends XWorkTestCase {
         Map<String, Object> context = new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
         params.put("date", date.getTime());
-        context.put(ActionContext.PARAMETERS, params);
+        context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context);
         proxy.execute();

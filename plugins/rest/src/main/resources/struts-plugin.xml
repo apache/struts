@@ -22,8 +22,8 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
-	"http://struts.apache.org/dtds/struts-2.3.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
 
@@ -108,6 +108,8 @@
         <default-interceptor-ref name="restDefaultStack"/>
 
         <default-class-ref class="org.apache.struts2.rest.RestActionSupport"/>
+
+        <global-allowed-methods>execute,input,back,cancel,browse,save,delete,list,index,show,create,update,destroy,edit,editNew</global-allowed-methods>
 
     </package>
 

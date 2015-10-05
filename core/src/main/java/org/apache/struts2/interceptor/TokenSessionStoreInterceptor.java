@@ -26,13 +26,13 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 
 /**
@@ -126,7 +126,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         String token = TokenHelper.getToken(tokenName);
 
         if ((tokenName != null) && (token != null)) {
-            Map params = ac.getParameters();
+            HttpParameters params = ac.getParameters();
             params.remove(tokenName);
             params.remove(TokenHelper.TOKEN_NAME_FIELD);
 

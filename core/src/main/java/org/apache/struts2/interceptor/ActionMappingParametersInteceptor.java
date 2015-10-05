@@ -24,11 +24,10 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import java.util.Collections;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -82,12 +81,12 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
      * @return the parameters from the action mapping in the context.  If none found, returns an empty map.
      */
     @Override
-    protected Map<String, Object> retrieveParameters(ActionContext ac) {
+    protected HttpParameters retrieveParameters(ActionContext ac) {
         ActionMapping mapping = (ActionMapping) ac.get(ServletActionContext.ACTION_MAPPING);
         if (mapping != null) {
-            return mapping.getParams();
+            return HttpParameters.create(mapping.getParams()).build();
         } else {
-            return Collections.emptyMap();
+            return HttpParameters.createEmpty().build();
         }
     }
 
@@ -102,16 +101,10 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
      *                  </p>
      */
     @Override
-    protected void addParametersToContext(ActionContext ac, Map newParams) {
-        Map previousParams = ac.getParameters();
-        Map combinedParams;
-        if (previousParams != null) {
-            combinedParams = new TreeMap(previousParams);
-        } else {
-            combinedParams = new TreeMap();
-        }
-        combinedParams.putAll(newParams);
+    protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
+        HttpParameters previousParams = ac.getParameters();
+        HttpParameters.Builder combinedParams = HttpParameters.createEmpty().withParent(previousParams).withExtraParams(newParams);
 
-        ac.setParameters(combinedParams);
+        ac.setParameters(combinedParams.build());
     }
 }

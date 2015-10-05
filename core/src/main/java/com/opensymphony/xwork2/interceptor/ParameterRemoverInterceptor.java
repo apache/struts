@@ -20,9 +20,10 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -98,22 +99,17 @@ public class ParameterRemoverInterceptor extends AbstractInterceptor {
 		if (!(invocation.getAction() instanceof NoParameters)
 				&& (null != this.paramNames)) {
 			ActionContext ac = invocation.getInvocationContext();
-			final Map<String, Object> parameters = ac.getParameters();
+			HttpParameters parameters = ac.getParameters();
 
 			if (parameters != null) {
                 for (String removeName : paramNames) {
-                    // see if the field is in the parameter map
-                    if (parameters.containsKey(removeName)) {
-
-                        try {
-							String[] values = (String[]) parameters.get(removeName);
-							String value = values[0];
-							if (null != value && this.paramValues.contains(value)) {
-                                parameters.remove(removeName);
-                            }
-                        } catch (Exception e) {
-							LOG.error("Failed to convert parameter to string", e);
+					try {
+						Parameter parameter = parameters.get(removeName);
+						if (parameter.isDefined() && this.paramValues.contains(parameter.getValue())) {
+							parameters.remove(removeName);
 						}
+					} catch (Exception e) {
+						LOG.error("Failed to convert parameter to string", e);
 					}
                 }
 			}

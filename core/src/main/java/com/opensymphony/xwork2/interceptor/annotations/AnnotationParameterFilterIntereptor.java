@@ -8,12 +8,12 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.ParameterFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.util.AnnotationUtils;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Annotation based version of {@link ParameterFilterInterceptor}.
@@ -38,7 +38,7 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
     @Override public String intercept(ActionInvocation invocation) throws Exception {
 
         final Object action = invocation.getAction();
-        Map<String, Object> parameters = invocation.getInvocationContext().getParameters();
+        HttpParameters parameters = invocation.getInvocationContext().getParameters();
 
         Object model = invocation.getStack().peek();
         if (model == action) {
@@ -55,7 +55,7 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
                 AnnotationUtils.addAllFields(Allowed.class, model.getClass(), annotatedFields);
             }
 
-            for (String paramName : parameters.keySet()) {
+            for (String paramName : parameters.getNames()) {
                 boolean allowed = false;
 
                 for (Field field : annotatedFields) {
@@ -77,7 +77,7 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
                 AnnotationUtils.addAllFields(Blocked.class, model.getClass(), annotatedFields);
             }
 
-            for (String paramName : parameters.keySet()) {
+            for (String paramName : parameters.getNames()) {
                 for (Field field : annotatedFields) {
                     //TODO only matches exact field names.  need to change to it matches start of ognl expression
                     //i.e take param name up to first . (period) and match against that
@@ -88,9 +88,7 @@ public class AnnotationParameterFilterIntereptor extends AbstractInterceptor {
             }
         }
 
-        for (String aParamsToRemove : paramsToRemove) {
-            parameters.remove(aParamsToRemove);
-        }
+        parameters.remove(paramsToRemove);
 
         return invocation.invoke();
     }

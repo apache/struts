@@ -22,12 +22,14 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClearableValueStack;
+import com.opensymphony.xwork2.util.Evaluated;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Map;
 
@@ -157,18 +159,18 @@ public class AliasInterceptor extends AbstractInterceptor {
                     Map.Entry entry = (Map.Entry) o;
                     String name = entry.getKey().toString();
                     String alias = (String) entry.getValue();
-                    Object value = stack.findValue(name);
-                    if (null == value) {
+                    Evaluated value = new Evaluated(stack.findValue(name));
+                    if (!value.isDefined()) {
                         // workaround
-                        Map<String, Object> contextParameters = ActionContext.getContext().getParameters();
+                        HttpParameters contextParameters = ActionContext.getContext().getParameters();
 
                         if (null != contextParameters) {
-                            value = contextParameters.get(name);
+                            value = new Evaluated(contextParameters.get(name));
                         }
                     }
-                    if (null != value) {
+                    if (value.isDefined()) {
                         try {
-                            newStack.setValue(alias, value);
+                            newStack.setValue(alias, value.get());
                         } catch (RuntimeException e) {
                             if (devMode) {
                                 String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{

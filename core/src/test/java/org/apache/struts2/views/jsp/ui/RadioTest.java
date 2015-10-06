@@ -59,7 +59,7 @@ public class RadioTest extends AbstractUITagTest {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
 
-        HashMap map = new HashMap();
+        Map<String, String> map = new LinkedHashMap<>();
         map.put("1", "One");
         map.put("2", "Two");
         testAction.setMap(map);

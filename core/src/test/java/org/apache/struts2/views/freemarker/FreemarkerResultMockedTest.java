@@ -101,22 +101,22 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         dispatcher.serviceAction(request, response, mapping);
 
         // TODO lukaszlenart: remove expectedJDK15 and if() after switching to Java 1.6
-        String expectedJDK15 =
+        String expectedJDK17 =
                 "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
                         + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
                         + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>";
-        String expectedJDK16 =
-                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
+        String expectedJDK18 =
+                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
+                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
                         + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
                         + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
 
         String result = stringWriter.toString();
 
-        if (result.contains("foo=\"bar\" placeholder=\"input\"")) {
-            assertEquals(expectedJDK15, result);
+        if (result.contains("id=\"required\"")) {
+            assertEquals(expectedJDK18, result);
         } else {
-            assertEquals(expectedJDK16, result);
+            assertEquals(expectedJDK17, result);
         }
     }
 

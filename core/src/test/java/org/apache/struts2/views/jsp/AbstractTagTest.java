@@ -35,6 +35,7 @@ import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.MockDispatcher;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 
@@ -114,7 +115,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         Dispatcher.setInstance(du);
         session = new SessionMap(request);
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
-                request.getParameterMap(),
+                HttpParameters.create(request.getParameterMap()).build(),
                 session,
                 new ApplicationMap(pageContext.getServletContext()),
                 request,

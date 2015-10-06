@@ -22,9 +22,9 @@
 package org.apache.struts2.components;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -45,11 +45,11 @@ public class ActionComponentTest extends StrutsInternalTestCase {
         ActionComponent comp = new ActionComponent((ValueStack) mockValueStack.proxy(), req, res);
         comp.addParameter("foo", "bar");
         comp.addParameter("baz", new String[]{"jim", "sarah"});
-        Map params = comp.createParametersForContext();
+        HttpParameters params = comp.createParametersForContext();
         assertNotNull(params);
-        assertEquals(2, params.size());
-        assertEquals("bar", ((String[])params.get("foo"))[0]);
-        assertEquals(2, ((String[])params.get("baz")).length);
+        assertEquals(2, params.getNames().size());
+        assertEquals("bar", params.get("foo").getValue());
+        assertEquals(2, params.get("baz").getMultipleValue().length);
         mockValueStack.verify();
     }
 }

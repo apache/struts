@@ -77,13 +77,13 @@ public class DateTextFieldInterceptor implements Interceptor {
             	if (name.startsWith(dateKey)) {
                     String key = name.substring(dateKey.length());
 
-                    Parameter param = parameters.get(key);
+                    Parameter param = parameters.get(name);
 
                     if (param.isDefined()) {
-                        Map<String, String> map = dates.get(name);
+                        Map<String, String> map = dates.get(key);
                         if (map == null) {
                             map = new HashMap<>();
-                            dates.put(name, map);
+                            dates.put(key, map);
                         }
                         map.put(dateWord.getDateType(), param.getValue());
 
@@ -95,7 +95,7 @@ public class DateTextFieldInterceptor implements Interceptor {
         }
 
         // Create all the date objects
-        Map<String, Date> newParams = new HashMap<>();
+        Map<String, String> newParams = new HashMap<>();
         Set<Entry<String, Map<String, String>>> dateEntries = dates.entrySet();
         for (Entry<String, Map<String, String>> dateEntry : dateEntries) {
         	Set<Entry<String, String>> dateFormatEntries = dateEntry.getValue().entrySet();
@@ -109,7 +109,7 @@ public class DateTextFieldInterceptor implements Interceptor {
             	SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
             	formatter.setLenient(false);
                 Date value = formatter.parse(dateValue);
-                newParams.put(dateEntry.getKey(), value);
+                newParams.put(dateEntry.getKey(), formatter.format(value));
             } catch (ParseException e) {
                 LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", dateEntry.getKey(), dateFormat, dateValue);
             }

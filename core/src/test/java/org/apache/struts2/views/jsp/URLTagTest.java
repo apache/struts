@@ -31,6 +31,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.URL;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -551,7 +552,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         session = new SessionMap(request);
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
-                request.getParameterMap(),
+                HttpParameters.create(request.getParameterMap()).build(),
                 session,
                 new ApplicationMap(pageContext.getServletContext()),
                 request,

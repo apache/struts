@@ -31,6 +31,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -200,8 +201,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        Map param = new HashMap();
-        ActionContext.getContext().setParameters(param);
+        ActionContext.getContext().setParameters(HttpParameters.createEmpty().build());
         ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
@@ -222,8 +222,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        Map param = new HashMap();
-        ActionContext.getContext().setParameters(param);
+        ActionContext.getContext().setParameters(HttpParameters.createEmpty().build());
         ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
@@ -252,8 +251,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
-        Map<String, Object> param = new HashMap<String, Object>();
-        ActionContext.getContext().setParameters(param);
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext().setParameters(HttpParameters.create(param).build());
         ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
@@ -312,14 +311,15 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<String, Object>();
-        ActionContext.getContext().setParameters(param);
+        ActionContext.getContext().setParameters(HttpParameters.create(param).build());
         ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
 
-        assertEquals(3, param.size());
-        File[] files = (File[]) param.get("file");
+        HttpParameters parameters = mai.getInvocationContext().getParameters();
+        assertEquals(3, parameters.getNames().size());
+        File[] files = (File[]) parameters.get("file").getObject();
         String[] fileContentTypes = (String[]) param.get("fileContentType");
         String[] fileRealFilenames = (String[]) param.get("fileFileName");
 

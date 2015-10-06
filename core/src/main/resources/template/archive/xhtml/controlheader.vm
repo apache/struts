@@ -31,7 +31,7 @@
 ## if the label position is top,
 ## then give the label it's own row in the table
 <tr>
-#if ($parameters.labelposition && $parameters.labelposition == 'top')<td align="left" valign="top" colspan="2">#else<td align="right" valign="top">#end#if ($parameters.label)<label #if ($parameters.id) for="$!struts.htmlEncode($parameters.id)"#end#if ($hasFieldErrors) class="errorLabel"#else class="label"#end>#if ($parameters.required)<span class="required">*</span>#end$!struts.htmlEncode($parameters.label):</label>#end</td>
+#if ($parameters.labelposition && $parameters.labelposition == 'top')<td align="left" valign="top" colspan="2">#else<td align="right" valign="top">#end#if ($parameters.label)<label #if ($parameters.id) for="$!struts.htmlEncode($parameters.id)"#end#if ($hasFieldErrors) class="struts-errorLabel"#else class="label"#end>#if ($parameters.required)<span class="required">*</span>#end$!struts.htmlEncode($parameters.label):</label>#end</td>
 ## add the extra row
 #if ($parameters.labelposition && $parameters.labelposition == 'top')
 </tr>

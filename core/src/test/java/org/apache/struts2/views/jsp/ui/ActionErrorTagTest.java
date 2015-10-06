@@ -64,7 +64,7 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals(normalize("<ul class=\"errorMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
+        assertEquals(normalize("<ul class=\"struts-errorMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
                 normalize(writer.toString(), true));
     }
 
@@ -80,7 +80,7 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals(normalize("<ul class=\"errorMessage\"><li><span><p>hey</p></span></li></ul>", true),
+        assertEquals(normalize("<ul class=\"struts-errorMessage\"><li><span><p>hey</p></span></li></ul>", true),
                 normalize(writer.toString(), true));
     }
 

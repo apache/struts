@@ -1,6 +1,6 @@
 <tr>
-	<td class="tdLabel">
-		<label for="myFooValue" class="label">mylabel:</label>
+	<td class="struts-tdLabel">
+		<label for="myFooValue" class="struts-label">mylabel:</label>
 	</td>
 	<td>
 		<input type="text" name="myname" value="foo" id="myFooValue"/>

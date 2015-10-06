@@ -1,6 +1,6 @@
 <tr>
     <td colspan="2">
-        <label for="someId" class="checkboxLabel">mylabel:</label>
+        <label for="someId" class="struts-checkboxLabel">mylabel:</label>
     </td>
 </tr>
 <tr>

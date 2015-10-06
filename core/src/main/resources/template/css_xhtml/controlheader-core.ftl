@@ -35,7 +35,7 @@
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
     </#if>
-    class="errorMessage">
+    class="struts-errorMessage">
              ${error?html}
     </div><#t/>
 </#list>
@@ -60,13 +60,13 @@
         for="${parameters.id?html}" <#t/>
 </#if>
 <#if hasFieldErrors>
-        class="errorLabel"<#t/>
+        class="struts-errorLabel"<#t/>
 <#else>
-        class="label"<#t/>
+        class="struts-label"<#t/>
 </#if>
     ><#t/>
 <#if parameters.required?default(false)>
-        <span class="required">*</span><#t/>
+        <span class="struts-required">*</span><#t/>
 </#if>
         ${parameters.label?html}${parameters.labelseparator!":"?html}
 <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />

@@ -28,7 +28,7 @@
 <#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
 <#else>
- class="errorMessage"<#rt/>
+ class="struts-errorMessage"<#rt/>
 </#if>
 <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>

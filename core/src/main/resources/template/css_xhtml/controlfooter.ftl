@@ -41,7 +41,7 @@ ${parameters.after?if_exists}<#t/>
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
     </#if>
-    class="errorMessage">
+    class="struts-errorMessage">
              ${error?html}
     </div><#t/>
 </#list>

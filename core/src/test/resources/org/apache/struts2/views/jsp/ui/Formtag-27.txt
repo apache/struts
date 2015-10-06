@@ -1,7 +1,7 @@
 <form id="testAction" name="testAction" action="/testAction.action" method="post">
-<table class="wwFormTable">
+<table class="struts-wwFormTable">
     <tr>
-        <td class="tdLabelTop" colspan="2"><label class="label">label:</label></td>
+        <td class="struts-tdLabelTop" colspan="2"><label class="struts-label">label:</label></td>
     </tr>
     <tr>
         <td><input type="text" name=""/></td>

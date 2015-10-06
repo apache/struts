@@ -1,5 +1,5 @@
 <tr>
-    <td class="tdLabel"><label for="collection" class="label">mylabel:</label></td>
+    <td class="struts-tdLabel"><label for="collection" class="struts-label">mylabel:</label></td>
     <td><select name="collection" id="collection" title="mytitle" multiple="multiple" onmousedown="alert('onmousedown');" onmouseup="alert('onmouseup');" onmouseover="alert('onmouseover');" onmousemove="alert('onmousemove');" onmouseout="alert('onmouseout');">
     <option value="1" selected="selected">hello</option>
     <option value="2" selected="selected">foo</option>

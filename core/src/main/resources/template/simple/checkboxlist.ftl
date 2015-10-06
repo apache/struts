@@ -104,7 +104,7 @@
     <#else>
         for="${parameters.name?html}-${itemCount}"<#rt/>
     </#if>
-        class="checkboxLabel">${itemValue?html}</label>
+        class="struts-checkboxLabel">${itemValue?html}</label>
 </@s.iterator>
     <#else>
     &nbsp;

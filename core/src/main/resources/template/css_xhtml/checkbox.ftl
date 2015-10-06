@@ -35,7 +35,7 @@ lables
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
     </#if>
-    class="errorMessage">
+    class="struts-errorMessage">
              ${error?html}
     </div><#t/>
 </#list>
@@ -54,9 +54,9 @@ lables
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
- class="checkboxErrorLabel"<#rt/>
+ class="struts-checkboxErrorLabel"<#rt/>
 <#else>
- class="label"<#rt/>
+ class="struts-label"<#rt/>
 </#if>
 >${parameters.label?html}</label><#rt/>
 </span>
@@ -70,7 +70,7 @@ lables
 <#if parameters.id??>id="wwctrl_${parameters.id}"<#rt/></#if> class="wwctrl">
 
 <#if parameters.required?default(false)>
-        <span class="required">*</span><#t/>
+        <span class="struts-required">*</span><#t/>
 </#if>
 
 <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
@@ -92,9 +92,9 @@ lables
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
- class="checkboxErrorLabel"<#rt/>
+ class="struts-checkboxErrorLabel"<#rt/>
 <#else>
- class="checkboxLabel"<#rt/>
+ class="struts-checkboxLabel"<#rt/>
 </#if>
 >${parameters.label?html}</label><#rt/>
 </#if>

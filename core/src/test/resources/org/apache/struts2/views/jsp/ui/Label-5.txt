@@ -1,4 +1,4 @@
 <tr>
-    <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
+    <td class="struts-tdLabel"><label for="foo" class="struts-label">mylabel:</label></td>
     <td><label id="foo" for="for">baz</label></td>
 </tr>

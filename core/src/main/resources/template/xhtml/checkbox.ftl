@@ -28,8 +28,8 @@
  errorFor="${parameters.id}"<#rt/>
 </#if>
 >
-    <td class="tdCheckboxErrorMessage" colspan="2"><#rt/>
-        <span class="errorMessage">${error?html}</span><#t/>
+    <td class="struts-tdCheckboxErrorMessage" colspan="2"><#rt/>
+        <span class="struts-errorMessage">${error?html}</span><#t/>
     </td><#lt/>
 </tr>
 </#list>
@@ -47,17 +47,17 @@
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
- class="checkboxErrorLabel"<#rt/>
+ class="struts-checkboxErrorLabel"<#rt/>
 <#else>
- class="checkboxLabel"<#rt/>
+ class="struts-checkboxLabel"<#rt/>
 </#if>
 >
 <#if parameters.required?default(false) && parameters.requiredPosition?default("right") != 'right'>
-        <span class="required">*</span><#t/>
+        <span class="struts-required">*</span><#t/>
 </#if>
 ${parameters.label?html}<#t/>
 <#if parameters.required?default(false) && parameters.requiredPosition?default("right") == 'right'>
- <span class="required">*</span><#t/>
+ <span class="struts-required">*</span><#t/>
 </#if>
 :<#t/>
 <#if parameters.tooltip??>
@@ -72,24 +72,24 @@ ${parameters.label?html}<#t/>
         <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
 <#else>
 <tr>
-	<td class="tdCheckboxLabel">
+	<td class="struts-tdCheckboxLabel">
 <#if labelpos?default("") == 'left'>
 <#if parameters.label??> <label<#t/>
 <#if parameters.id??>
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
- class="checkboxErrorLabel"<#rt/>
+ class="struts-checkboxErrorLabel"<#rt/>
 <#else>
- class="checkboxLabel"<#rt/>
+ class="struts-checkboxLabel"<#rt/>
 </#if>
 >
 <#if parameters.required?default(false) && parameters.requiredPosition?default("right") != 'right'>
-        <span class="required">*</span><#t/>
+        <span class="struts-required">*</span><#t/>
 </#if>
 ${parameters.label?html}<#t/>
 <#if parameters.required?default(false) && parameters.requiredPosition?default("right") == 'right'>
- <span class="required">*</span><#t/>
+ <span class="struts-required">*</span><#t/>
 </#if>
 :<#t/>
 <#if parameters.tooltip??>
@@ -100,14 +100,14 @@ ${parameters.label?html}<#t/>
 </#if>
 <#if labelpos?default("") == 'right'>
     <#if parameters.required?default(false)>
-        <span class="required">*</span><#t/>
+        <span class="struts-required">*</span><#t/>
     </#if>
     <#if parameters.tooltip??>
         <#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
     </#if>
 </#if>
     </td>
-    <td class="tdCheckboxInput">
+    <td class="struts-tdCheckboxInput">
 
 <#if labelpos?default("") != 'top'>
                 	<#include "/${parameters.templateDir}/simple/checkbox.ftl" />
@@ -118,9 +118,9 @@ ${parameters.label?html}<#t/>
  for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
- class="checkboxErrorLabel"<#rt/>
+ class="struts-checkboxErrorLabel"<#rt/>
 <#else>
- class="checkboxLabel"<#rt/>
+ class="struts-checkboxLabel"<#rt/>
 </#if>
 >${parameters.label?html}</label><#rt/>
 </#if>

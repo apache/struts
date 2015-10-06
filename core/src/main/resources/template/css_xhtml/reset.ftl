@@ -30,7 +30,7 @@
 <#else>
 <span <#rt/>
 </#if>
-    class="formButton"<#t/>
+    class="struts-formButton"<#t/>
 <#if parameters.id??>
     id="wwctrl_${parameters.id}"<#rt/>
 </#if>

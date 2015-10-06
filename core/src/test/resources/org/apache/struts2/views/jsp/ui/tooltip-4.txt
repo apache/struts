@@ -1,8 +1,8 @@
 <form id="myFormId" name="myForm" action="/testAction.action" method="post">
-	<tableclass="wwFormTable">
+	<tableclass="struts-wwFormTable">
 		<tr>
-			<td class="tdLabel">
-				<labelfor="myId"class="label">
+			<td class="struts-tdLabel">
+				<labelfor="myId"class="struts-label">
 					MyLabel:<img
 								src='/struts/tooltip/myTooltip.gif'
 								title="myTooltip" alt="myTooltip" />

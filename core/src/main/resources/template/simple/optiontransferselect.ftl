@@ -47,7 +47,7 @@
 </#if>
 
 </td>
-<td class="tdTransferSelect">
+<td class="struts-tdTransferSelect">
 	<#if parameters.allowAddToLeft?default(true)><#t/>
 		<#assign addToLeftLabel = parameters.addToLeftLabel?default("<-")?html/><#t/>
 		<#if parameters.doubleHeaderKey??><#t/>

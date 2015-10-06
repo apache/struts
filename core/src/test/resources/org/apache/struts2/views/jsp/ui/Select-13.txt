@@ -1,5 +1,5 @@
 <tr>
-    <td class="tdLabel"><label for="status" class="label">mylabel:</label></td>
+    <td class="struts-tdLabel"><label for="status" class="struts-label">mylabel:</label></td>
     <td><select name="status" id="status">
     <option value="INIT">init</option>
     <option value="COMPLETED" selected="selected">completed</option>

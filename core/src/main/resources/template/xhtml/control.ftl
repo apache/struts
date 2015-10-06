@@ -20,7 +20,7 @@
  * under the License.
  */
 -->
-<table class="${parameters.cssClass?default('wwFormTable')?html}"<#rt/>
+<table class="${parameters.cssClass?default('struts-wwFormTable')?html}"<#rt/>
 <#if parameters.cssStyle??> style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 >

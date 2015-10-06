@@ -36,4 +36,4 @@
 #if ($parameters.cssStyle) style="$!struts.htmlEncode($parameters.cssStyle)" #end
 onSubmit="return false;"
 >
-<table class="wwFormTable">
+<table class="struts-wwFormTable">

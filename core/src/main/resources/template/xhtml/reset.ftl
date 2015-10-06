@@ -21,7 +21,7 @@
  */
 -->
 <tr>
-    <td colspan="2"><div class="formButton"><#t/>
+    <td colspan="2"><div class="struts-formButton"><#t/>
 <#include "/${parameters.templateDir}/simple/reset.ftl" />
 </div><#t/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />

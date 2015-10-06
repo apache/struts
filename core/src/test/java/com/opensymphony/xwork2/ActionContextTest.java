@@ -17,6 +17,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class ActionContextTest extends XWorkTestCase {
         params.put(PARAMETERS_KEY, PARAMETERS_KEY);
         extraContext.put(ActionContext.APPLICATION, application);
         extraContext.put(ActionContext.SESSION, session);
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
         extraContext.put(ActionContext.ACTION_NAME, ACTION_NAME);
         context = new ActionContext(extraContext);
         ActionContext.setContext(context);
@@ -59,7 +60,7 @@ public class ActionContextTest extends XWorkTestCase {
     public void testContextParams() {
         assertTrue(ActionContext.getContext().getApplication().containsKey(APPLICATION_KEY));
         assertTrue(ActionContext.getContext().getSession().containsKey(SESSION_KEY));
-        assertTrue(ActionContext.getContext().getParameters().containsKey(PARAMETERS_KEY));
+        assertTrue(ActionContext.getContext().getParameters().contains(PARAMETERS_KEY));
         assertEquals(ActionContext.getContext().getName(), ACTION_NAME);
     }
 
@@ -88,9 +89,8 @@ public class ActionContextTest extends XWorkTestCase {
     }
 
     public void testParameters() {
-        Map<String, Object> param = new HashMap<>();
-        context.setParameters(param);
-        assertEquals(param, context.getParameters());
+        context.setParameters(HttpParameters.createEmpty().build());
+        assertEquals(0, context.getParameters().getNames().size());
     }
 
     public void testConversionErrors() {

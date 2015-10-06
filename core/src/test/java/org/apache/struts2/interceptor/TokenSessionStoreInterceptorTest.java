@@ -33,8 +33,8 @@ import com.opensymphony.xwork2.ActionProxy;
 public class TokenSessionStoreInterceptorTest extends TokenInterceptorTest {
 
     public void testCAllExecute2Times() throws Exception {
-        ActionProxy proxy = buildProxy(getActionName());
         setToken(request);
+        ActionProxy proxy = buildProxy(getActionName());
         assertEquals(Action.SUCCESS, proxy.execute());
 
         ActionProxy proxy2 = buildProxy(getActionName());
@@ -45,8 +45,8 @@ public class TokenSessionStoreInterceptorTest extends TokenInterceptorTest {
     }
 
     public void testNullTokenName() throws Exception {
-        ActionProxy proxy = buildProxy(getActionName());
         setToken((String)null);
+        ActionProxy proxy = buildProxy(getActionName());
         proxy.execute();
     }
 

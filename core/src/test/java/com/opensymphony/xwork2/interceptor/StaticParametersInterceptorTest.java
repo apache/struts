@@ -23,9 +23,9 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Unit test of {@link StaticParametersInterceptor}.
@@ -126,14 +126,14 @@ public class StaticParametersInterceptorTest extends XWorkTestCase {
 
         User user = new User();
         ActionContext.getContext().getValueStack().push(user);
-        ActionContext.getContext().setParameters(new HashMap<String, Object>()); 
+        ActionContext.getContext().setParameters(HttpParameters.createEmpty().build());
         int before = ActionContext.getContext().getValueStack().size();
         interceptor.setMerge("false");
         interceptor.intercept(mai);
 
         assertEquals(before, ActionContext.getContext().getValueStack().size());
         assertEquals("${top.hero}", user.getName());
-        assertEquals(0, ActionContext.getContext().getParameters().size()); 
+        assertEquals(0, ActionContext.getContext().getParameters().getNames().size());
     }
 
     public void testFewParametersParse() throws Exception {

@@ -122,8 +122,8 @@ public class HttpParameters implements Cloneable {
                 String name = String.valueOf(entry.getKey());
                 String[] value = (String[]) entry.getValue();
                 parameters.put(name, new Parameter.Request(name, value));
-
             }
+
             return new HttpParameters(parameters);
         }
     }

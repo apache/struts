@@ -561,6 +561,7 @@ public class Dispatcher {
             logConfigurationException(request, e);
             sendError(request, response, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
+            e.printStackTrace();
             if (handleException || devMode) {
                 sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
             } else {

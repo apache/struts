@@ -17,6 +17,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 import com.opensymphony.xwork2.mock.MockResult;
 
 import java.util.HashMap;
@@ -89,7 +90,7 @@ public class ActionInvocationTest extends XWorkTestCase {
         params.put("blah", "this is blah");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy( "", "Foo", null, extraContext);

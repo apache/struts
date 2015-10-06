@@ -860,7 +860,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 if (n != null) {
                     String s = n.getNodeValue().trim();
                     if (s.length() > 0) {
-                        allowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+                        allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(s));
                     }
                 }
             }

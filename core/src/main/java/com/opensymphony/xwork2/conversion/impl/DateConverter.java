@@ -93,9 +93,10 @@ public class DateConverter extends DefaultTypeConverter {
         DateFormat d2 = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
         DateFormat d3 = DateFormat.getDateInstance(DateFormat.LONG, locale);
 
-        DateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateFormat rfc3339         = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateFormat rfc3339dateOnly = new SimpleDateFormat("yyyy-MM-dd");
 
-        return new DateFormat[]{dt1, dt2, dt3, rfc3339, d1, d2, d3};
+        return new DateFormat[]{dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly};
     }
 
 }

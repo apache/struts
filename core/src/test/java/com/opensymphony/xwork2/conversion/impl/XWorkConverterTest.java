@@ -109,6 +109,13 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(date, ts);
         java.sql.Time time1 = (java.sql.Time) converter.convertValue(context, null, null, null, datetStr, java.sql.Time.class);
         assertEquals(datet, time1);
+
+        Date dateWithTime = format.parse("01/10/2001 01:02:03");
+        Date dateRfc3339 = (Date) converter.convertValue(context, null, null, null, "2001-01-10T01:02:03", Date.class);
+        assertEquals(dateWithTime, dateRfc3339);
+
+        Date dateRfc3339DateOnly = (Date) converter.convertValue(context, null, null, null, "2001-01-10", Date.class);
+        assertEquals(date, dateRfc3339DateOnly);
     }
 
     public void testFieldErrorMessageAddedForComplexProperty() {

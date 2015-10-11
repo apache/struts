@@ -28,7 +28,6 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -253,8 +252,12 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         // wild card actions to keep the flexibility provided
         // by the original design (such as mapping different contexts
         // to the same action and method if desired)
+
+        // UPDATE:
+        // WW-4536 Using NameVariablePatternMatcher allows defines actions
+        // with patterns enclosed with '{}', it's similar case to WW-3753
         String configName = config.getName();
-        if (configName.contains(ActionConfig.WILDCARD)) {
+        if (configName.contains(ActionConfig.WILDCARD) || (configName.contains("{") && configName.contains("}"))) {
             sb.append(configName);
             sb.append("|");
             sb.append(proxy.getMethod());

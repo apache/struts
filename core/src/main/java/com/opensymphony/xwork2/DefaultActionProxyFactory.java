@@ -59,7 +59,7 @@ public class DefaultActionProxyFactory implements ActionProxyFactory {
     }
     
     protected ActionInvocation createActionInvocation(Map<String, Object> extraContext, boolean pushAction) {
-        return DefaultActionInvocation(extraContext, pushAction);
+        return new DefaultActionInvocation(extraContext, pushAction);
     }
     
     public ActionProxy createActionProxy(ActionInvocation inv, String namespace, String actionName, boolean executeResult, boolean cleanupContext) {

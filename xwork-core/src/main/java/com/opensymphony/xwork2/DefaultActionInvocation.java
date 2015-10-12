@@ -402,6 +402,10 @@ public class DefaultActionInvocation implements ActionInvocation {
         invocationContext = new ActionContext(contextMap);
         invocationContext.setName(proxy.getActionName());
 
+        createInterceptors(proxy);
+    }
+
+    protected void createInterceptors(ActionProxy proxy) {
         // get a new List so we don't get problems with the iterator if someone changes the list
         List<InterceptorMapping> interceptorList = new ArrayList<InterceptorMapping>(proxy.getConfig().getInterceptors());
         interceptors = interceptorList.iterator();

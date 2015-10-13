@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts-master</artifactId>
-        <version>9</version>
+        <version>10</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -111,39 +111,55 @@
                 <module>assembly</module>
             </modules>
         </profile>
+<!--
+        TODO: A lot of files is missing the license header :(
         <profile>
-            <id>struts-annotations</id>
-            <modules>
-                <module>../maven/struts-annotations</module>
-            </modules>
+            <id>apache-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.rat</groupId>
+                        <artifactId>apache-rat-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
+                                    <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>
+                                    <useDefaultExcludes>true</useDefaultExcludes>
+                                    <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
+                                    <licenseMatchers>
+                                        <classNames>
+                                            <className>org.apache.rat.analysis.license.ApacheSoftwareLicense20</className>
+                                        </classNames>
+                                    </licenseMatchers>
+                                    <includes>
+                                        <include>pom.xml</include>
+                                        <include>src/**</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
+-->
     </profiles>
-
 
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.3</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>2.7</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>rat-maven-plugin</artifactId>
-                    <version>1.0-alpha-2</version>
-                </plugin>
-                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
                         <source>1.7</source>
@@ -181,7 +197,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5</version>
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -204,33 +219,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>rat-maven-plugin</artifactId>
-                <version>1.0-alpha-2</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
-                            <licenseMatchers>
-                                <classNames>
-                                    <className>rat.analysis.license.ApacheSoftwareLicense20</className>
-                                </classNames>
-                            </licenseMatchers>
-                            <includes>
-                                <include>pom.xml</include>
-                                <include>src/**</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -243,43 +231,9 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Commenting out the license plugin, until it works like we want.
-            To use the "license:format" goal, remove the "core" module before running,
-            otherwise it will ignore the file exclusions.
-
-            <plugin>
-	            <groupId>com.google.code.maven-license-plugin</groupId>
-	            <artifactId>maven-license-plugin</artifactId>
-	            <version>1.2.7-SNAPSHOT</version>
-	            <configuration>
-	            	<header>src/etc/header.txt</header>
-	            	<includes>
-	            		<include>pom.xml</include>
-	            		<include>src/**</include>
-	            		<include>core/pom.xml</include>
-	            		<include>core/src/**</include>
-	            		<include>plugins/**/pom.xml</include>
-	            		<include>plugins/**/src/**</include>
-	            		<include>apps/**/pom.xml</include>
-	            	</includes>
-	            	<excludes>
-	            		<exclude>**/*.txt</exclude>
-                        <exclude>core/src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
-                        <exclude>core/src/main/resources/org/apache/struts2/static/domTT.js</exclude>
-                        <exclude>core/src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
-                        <exclude>core/src/site/resources/tags/**</exclude>
-                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/nls/**</exclude>
-                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/src/**</exclude>
-                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/*</exclude>
-                        <exclude>plugins/dojo/src/test/resources/org/apache/struts2/dojo/views/jsp/ui/**</exclude>
-	                    <exclude>apps/**/src/**</exclude>
-	            	</excludes>
-	            </configuration>
-	        </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-publish-plugin</artifactId>
-                <version>1.0-beta-2</version>
                 <configuration>
                     <checkoutDirectory>${scmCheckout.path}</checkoutDirectory>
                     <content>${siteContent.path}</content>
@@ -288,7 +242,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
                 <configuration>
                     <stagingSiteURL>${siteDeploy.url}</stagingSiteURL>
                     <relativizeDecorationLinks>false</relativizeDecorationLinks>
@@ -312,12 +265,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -327,8 +278,8 @@
                 </reportSets>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>rat-maven-plugin</artifactId>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
                     <includes>
                         <include>pom.xml</include>

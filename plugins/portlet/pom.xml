@@ -11,6 +11,8 @@
     <name>Struts 2 Portlet Plugin</name>
 
     <dependencies>
+        <!-- junit and related JARs are needed for 'compile'! -->
+        <!-- Due to StrutsPortletTestCase shall be distributed to applications. -->
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
@@ -20,6 +22,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- spring-core is required for javadoc of jdk8 -->
+        <!-- It is indirectly referenced by struts2-junit-plugin. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -99,11 +109,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc-portlet</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>

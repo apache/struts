@@ -4,7 +4,7 @@
 <#elseif parameters.labelposition??>
 <#assign labelpos = parameters.labelposition/>
 </#if>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 </div> <#t/>
 <#else>
 </span> <#t/>

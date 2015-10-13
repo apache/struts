@@ -72,21 +72,21 @@
     <#if parameters.disabled!false>
        disabled="disabled"<#rt/>
     </#if>
-    <#if itemCssClass! != "">
+    <#if itemCssClass??>
      class="${itemCssClass?html}"<#rt/>
     <#else>
         <#if parameters.cssClass?has_content>
      class="${parameters.cssClass?html}"<#rt/>
         </#if>
     </#if>
-    <#if itemCssStyle! != "">
+    <#if itemCssStyle??>
      style="${itemCssStyle?html}"<#rt/>
     <#else>
         <#if parameters.cssStyle?has_content>
      style="${parameters.cssStyle?html}"<#rt/>
         </#if>
     </#if>
-    <#if itemTitle! != "">
+    <#if itemTitle??>
      title="${itemTitle?html}"<#rt/>
     <#else>
         <#if parameters.title?has_content>

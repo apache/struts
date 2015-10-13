@@ -20,10 +20,10 @@
  * under the License.
  */
 -->
-${parameters.after?if_exists}<#t/>
+${parameters.after!}<#t/>
     </td><#lt/>
 </tr>
-<#if parameters.errorposition?default("top") == 'bottom'>
+<#if (parameters.errorposition!"top") == 'bottom'>
 <#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
 <#if hasFieldErrors>
 <#list fieldErrors[parameters.name] as error>

@@ -26,7 +26,7 @@
 <#elseif parameters.labelposition??>
 <#assign labelpos = parameters.labelposition/>
 </#if>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>

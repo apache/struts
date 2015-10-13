@@ -40,14 +40,14 @@
 <#if parameters.list??>
 <select onChange="autoPopulate_${parameters.escapedId?html}(this);"<#rt/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-    <#if parameters.disabled?default(false)>
+    <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
     </#if>
 >
 	<#if (parameters.headerKey?? && parameters.headerValue??)>
 		<option value="${parameters.headerKey?html}">${parameters.headerValue?html}</option>
 	</#if>
-	<#if parameters.emptyOption?default(false)>
+	<#if parameters.emptyOption!false>
 	    <option value=""></option>
 	</#if>
     <@s.iterator value="parameters.list">
@@ -86,13 +86,13 @@
         <#if (parameters.nameValue == tmpListKey)>
  selected="selected"<#rt/>
         </#if>
-        <#if itemCssClass?if_exists != "">
+        <#if itemCssClass??>
  class="${itemCssClass?html}"<#rt/>
         </#if>
-        <#if itemCssStyle?if_exists != "">
+        <#if itemCssStyle??>
  style="${itemCssStyle?html}"<#rt/>
         </#if>
-        <#if itemTitle?if_exists != "">
+        <#if itemTitle??>
  title="${itemTitle?html}"<#rt/>
         </#if>
     ><#t/>

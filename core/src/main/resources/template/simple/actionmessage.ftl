@@ -22,7 +22,7 @@
 -->
 <#if (actionMessages?? && actionMessages?size > 0 && !parameters.isEmptyList)>
 	<ul<#rt/>
-<#if parameters.id?if_exists != "">
+<#if parameters.id??>
  id="${parameters.id?html}"<#rt/>
 </#if>
 <#if parameters.cssClass??>
@@ -35,7 +35,7 @@
 </#if>
 >
 		<#list actionMessages as message>
-            <#if message?if_exists != "">
+            <#if message??>
                 <li><span><#if parameters.escape>${message!?html}<#else>${message!}</#if></span></li>
             </#if>
 		</#list>

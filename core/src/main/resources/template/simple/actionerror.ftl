@@ -22,7 +22,7 @@
 -->
 <#if (actionErrors?? && actionErrors?size > 0)>
 	<ul<#rt/>
-<#if parameters.id?if_exists != "">
+<#if parameters.id??>
  id="${parameters.id?html}"<#rt/>
 </#if>            
 <#if parameters.cssClass??>
@@ -35,7 +35,7 @@
 </#if>
 >
 	<#list actionErrors as error>
-		<#if error?if_exists != "">
+		<#if error??>
             <li><span><#if parameters.escape>${error!?html}<#else>${error!}</#if></span><#rt/></li><#rt/>
         </#if>
 	</#list>

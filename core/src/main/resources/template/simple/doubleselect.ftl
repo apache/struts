@@ -133,13 +133,13 @@
             </#if>
         </#if>
     ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue?js_string}", "${doubleItemKeyStr?js_string}");
-        <#if itemDoubleCssClass! != "">
+        <#if itemDoubleCssClass??>
     ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("class","${itemDoubleCssClass?html}");
         </#if>
-        <#if itemDoubleCssStyle! != "">
+        <#if itemDoubleCssStyle??>
         ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("style","${itemDoubleCssStyle?html}");
         </#if>
-        <#if itemDoubleTitle! != "">
+        <#if itemDoubleTitle??>
         ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("title","${itemDoubleTitle?html}");
         </#if>
 

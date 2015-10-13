@@ -31,7 +31,7 @@
 	<label for="leftTitle">${parameters.leftTitle}</label><br />
 </#if><#t/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
-<#if parameters.allowUpDownOnLeft?default(true)>
+<#if parameters.allowUpDownOnLeft!true>
 <input type="button"
 	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', <#if parameters.headerKey??>'${parameters.headerKey}'<#else>''</#if>);<#if parameters.upDownOnLeftOnclick?has_content>${parameters.upDownOnLeftOnclick};</#if>"
 <#if parameters.leftDownLabel??>
@@ -48,8 +48,8 @@
 
 </td>
 <td class="tdTransferSelect">
-	<#if parameters.allowAddToLeft?default(true)><#t/>
-		<#assign addToLeftLabel = parameters.addToLeftLabel?default("<-")?html/><#t/>
+	<#if parameters.allowAddToLeft!true><#t/>
+		<#assign addToLeftLabel = parameters.addToLeftLabel!"<-"?html/><#t/>
 		<#if parameters.doubleHeaderKey??><#t/>
 			<input type="button"
 			<#if parameters.buttonCssClass??><#t/>
@@ -70,8 +70,8 @@
 			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '');<#if parameters.addToLeftOnclick?has_content>${parameters.addToLeftOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowAddToRight?default(true)><#t/>
-		<#assign addToRightLabel=parameters.addToRightLabel?default("->")?html /><#t/>
+	<#if parameters.allowAddToRight!true><#t/>
+		<#assign addToRightLabel=parameters.addToRightLabel!"->"?html /><#t/>
 		<#if parameters.headerKey??><#t/>
 			<input type="button"
 			<#if parameters.buttonCssClass??><#t/>
@@ -92,8 +92,8 @@
 			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '');<#if parameters.addToRightOnclick?has_content>${parameters.addToRightOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowAddAllToLeft?default(true)><#t/>
-		<#assign addAllToLeftLabel=parameters.addAllToLeftLabel?default("<<--")?html /><#t/>
+	<#if parameters.allowAddAllToLeft!true><#t/>
+		<#assign addAllToLeftLabel=parameters.addAllToLeftLabel!"<<--"?html /><#t/>
 		<#if parameters.doubleHeaderKey??><#t/>
 			<input type="button"
 			<#if parameters.buttonCssClass??><#t/>
@@ -114,8 +114,8 @@
 			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '');<#if parameters.addAllToLeftOnclick?has_content>${parameters.addAllToLeftOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowAddAllToRight?default(true)><#t/>
-		<#assign addAllToRightLabel=parameters.addAllToRightLabel?default("-->>")?html /><#t/>
+	<#if parameters.allowAddAllToRight!true><#t/>
+		<#assign addAllToRightLabel=parameters.addAllToRightLabel!"-->>"?html /><#t/>
 		<#if parameters.headerKey??><#t/>
 			<input type="button"
 			<#if parameters.buttonCssClass??><#t/>
@@ -136,8 +136,8 @@
 			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '');<#if parameters.addAllToRightOnclick?has_content>${parameters.addAllToRightOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowSelectAll?default(true)><#t/>
-		<#assign selectAllLabel=parameters.selectAllLabel?default("<*>")?html /><#t/>
+	<#if parameters.allowSelectAll!true><#t/>
+		<#assign selectAllLabel=parameters.selectAllLabel!"<*>"?html /><#t/>
 		<#if parameters.headerKey?? && parameters.doubleHeaderKey??><#t/>
 			<input type="button"
 			<#if parameters.buttonCssClass??><#t/>
@@ -182,14 +182,14 @@
 	<label for="rightTitle">${parameters.rightTitle}</label><br />
 </#if><#t/>
 <select
-	name="${parameters.doubleName?default("")?html}"
+	name="${parameters.doubleName!""?html}"
 	<#if parameters.get("doubleSize")??><#t/>
 	size="${parameters.get("doubleSize")?html}"
 	</#if><#t/>
-	<#if parameters.doubleDisabled?default(false)><#t/>
+	<#if parameters.doubleDisabled!false><#t/>
 	disabled="disabled"
 	</#if><#t/>
-	<#if parameters.doubleMultiple?default(false)><#t/>
+	<#if parameters.doubleMultiple!false><#t/>
 	multiple="multiple"
 	</#if><#t/>
 	<#if parameters.doubleTabindex??><#t/>
@@ -253,7 +253,7 @@
 	<#if parameters.doubleHeaderKey?? && parameters.doubleHeaderValue??><#t/>
     <option value="${parameters.doubleHeaderKey?html}">${parameters.doubleHeaderValue?html}</option>
 	</#if><#t/>
-	<#if parameters.doubleEmptyOption?default(false)><#t/>
+	<#if parameters.doubleEmptyOption!false><#t/>
     <option value=""></option>
 	</#if><#t/>
 	<@s.iterator value="parameters.doubleList"><#t/>
@@ -275,14 +275,14 @@
     	>${doubleItemValue?html}</option><#lt/>
 	</@s.iterator><#t/>
 </select>
-<#if parameters.doubleMultiple?default(false)>
+<#if parameters.doubleMultiple!false>
 <input type="hidden" id="__multiselect_${parameters.doubleId?html}" name="__multiselect_${parameters.doubleName?default("")?html}" value=""<#rt/>
-<#if parameters.doubleDisabled?default(false)>
+<#if parameters.doubleDisabled!false>
  disabled="disabled"<#rt/>
 </#if>
  />
 </#if>
-<#if parameters.allowUpDownOnRight?default(true)>
+<#if parameters.allowUpDownOnRight!true>
 <input type="button"
 	onclick="moveOptionDown(document.getElementById('${parameters.doubleId}'), 'key', <#if parameters.doubleHeaderKey??>'${parameters.doubleHeaderKey}'<#else>''</#if>);<#if parameters.upDownOnRightOnclick?has_content>${parameters.upDownOnRightOnclick};</#if>"
 <#if parameters.rightDownLabel??>

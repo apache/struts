@@ -44,8 +44,8 @@
 </style>
 <br>
 
-<a href="#" onclick="toggleDebug('<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>');return false;">[Debug]</a>
-<div style="display:none" id="<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>">
+<a href="#" onclick="toggleDebug('<#if parameters.id??>${parameters.id?html}<#else>debug</#if>');return false;">[Debug]</a>
+<div style="display:none" id="<#if parameters.id??>${parameters.id?html}<#else>debug</#if>">
 <h2>Struts ValueStack Debug</h2>
 <br>
 

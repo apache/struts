@@ -46,7 +46,7 @@ lables
 <#elseif parameters.labelposition??>
 <#assign labelpos = parameters.labelposition/>
 </#if>
-<#if labelpos?default("") == 'left'>
+<#if labelpos!"" == 'left'>
 <span <#rt/>
 <#if parameters.id??>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
 <label<#t/>
@@ -62,26 +62,26 @@ lables
 </span>
 </#if>
 
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
 </#if>
 <#if parameters.id??>id="wwctrl_${parameters.id}"<#rt/></#if> class="wwctrl">
 
-<#if parameters.required?default(false)>
+<#if parameters.required!false>
         <span class="required">*</span><#t/>
 </#if>
 
 <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
-<#if labelpos?default("") != 'left'>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"") != 'left'>
+<#if (labelpos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span>  <#rt/>
 </#if>
 <#if parameters.label??>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -100,7 +100,7 @@ lables
 </#if>
 </#if>
 <#if parameters.label??>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span> <#rt/>

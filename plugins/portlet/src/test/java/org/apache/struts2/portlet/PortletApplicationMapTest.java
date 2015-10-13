@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.portlet.PortletContext;
@@ -131,23 +133,33 @@ public class PortletApplicationMapTest extends MockObjectTestCase {
                 .will(returnValue("value1"));
         mockPortletContext.stubs().method("getAttribute").with(eq("key2"))
                 .will(returnValue("value2"));
+        mockPortletContext.stubs().method("getAttribute").with(eq("key3"))
+                .will(returnValue(null));
         mockPortletContext.stubs().method("getInitParameter").with(eq("key3"))
                 .will(returnValue("value3"));
 
         PortletApplicationMap map = new PortletApplicationMap(portletContext);
-        Set entries = map.entrySet();
 
-        assertEquals(3, entries.size());
-        Iterator it = entries.iterator();
-        Map.Entry entry = (Map.Entry) it.next();
-        assertEquals("key2", entry.getKey());
-        assertEquals("value2", entry.getValue());
-        entry = (Map.Entry) it.next();
-        assertEquals("key1", entry.getKey());
-        assertEquals("value1", entry.getValue());
-        entry = (Map.Entry) it.next();
-        assertEquals("key3", entry.getKey());
-        assertEquals("value3", entry.getValue());
+        Set<String> keySet = map.keySet();
+        assertEquals(3, keySet.size());
+        assertTrue(keySet.contains("key1"));
+        assertTrue(keySet.contains("key2"));
+        assertTrue(keySet.contains("key3"));
+        assertEquals("value1", map.get("key1"));
+        assertEquals("value2", map.get("key2"));
+        assertEquals("value3", map.get("key3"));
+
+        // test iterator
+        Set<String> expectedKeys = new HashSet<String>();
+        expectedKeys.add("key1");
+        expectedKeys.add("key2");
+        expectedKeys.add("key3");
+
+        Set<Entry<String,Object>> entrySet = map.entrySet();
+        for (Entry<String,Object> entry : entrySet) {
+            String key = entry.getKey();
+            assertTrue(expectedKeys.contains(key));
+        }
 
     }
 

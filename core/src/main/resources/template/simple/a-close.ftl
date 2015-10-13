@@ -21,10 +21,10 @@
  */
 -->
 <a<#rt/>
-<#if parameters.id?if_exists != "">
+<#if parameters.id??>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.href?if_exists != "">
+<#if parameters.href??>
  href="${parameters.href}"<#rt/>
 </#if>
 <#if parameters.tabindex??>

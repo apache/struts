@@ -16,7 +16,7 @@
 			<p>Because this is a <strong>redirect-action</strong>, the text will be lost, due to a redirection
 			implies a new request being issued from the client.<p/>
 
-			The text you've enter is ${text?default('')?html}<p/>
+			The text you've enter is ${text!''?html}<p/>
 
 			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
 		</div>

@@ -20,19 +20,19 @@
  * under the License.
  */
 -->
-${parameters.after?if_exists}<#t/>
+${parameters.after!}<#t/>
     <#lt/>
 <#if !parameters.labelposition?? && (parameters.form.labelposition)??>
 <#assign labelpos = parameters.form.labelposition/>
 <#elseif parameters.labelposition??>
 <#assign labelpos = parameters.labelposition/>
 </#if>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span> <#rt/>
 </#if>
-<#if parameters.errorposition?default("top") == 'bottom'>
+<#if (parameters.errorposition!"top") == 'bottom'>
 <#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
 <#if hasFieldErrors>
 <div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">

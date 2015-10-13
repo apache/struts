@@ -27,7 +27,7 @@
 <#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
 <div <#rt/><#if parameters.id??>id="wwgrp_${parameters.id}"<#rt/></#if> class="wwgrp">
 	
-<#if parameters.errorposition?default("top") == 'top'>
+<#if (parameters.errorposition!"top") == 'top'>
 <#if hasFieldErrors>
 <div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
 <#list fieldErrors[parameters.name] as error>
@@ -49,7 +49,7 @@
 <#assign labelpos = parameters.labelposition/>
 </#if>
 <#if parameters.label??>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -65,13 +65,13 @@
         class="label"<#t/>
 </#if>
     ><#t/>
-<#if parameters.required?default(false)>
+<#if parameters.required!false>
         <span class="required">*</span><#t/>
 </#if>
         ${parameters.label?html}${parameters.labelseparator!":"?html}
 <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
 	</label><#t/>
-<#if labelpos?default("top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 </div> <br /><#rt/>
 <#else>
 </span> <#rt/>

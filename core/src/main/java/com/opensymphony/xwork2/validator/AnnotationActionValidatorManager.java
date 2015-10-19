@@ -210,7 +210,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
      * @param context context
      * @return a validator key which is the class name plus context.
      */
-    protected static String buildValidatorKey(Class clazz, String context) {
+    protected String buildValidatorKey(Class clazz, String context) {
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
         ActionProxy proxy = invocation.getProxy();
         ActionConfig config = proxy.getConfig();

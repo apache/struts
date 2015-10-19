@@ -86,7 +86,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
     }
 
     public void testBuildValidatorKey() {
-        String validatorKey = AnnotationActionValidatorManager.buildValidatorKey(SimpleAnnotationAction.class, "name");
+        String validatorKey = annotationActionValidatorManager.buildValidatorKey(SimpleAnnotationAction.class, "name");
         assertEquals(SimpleAnnotationAction.class.getName() + "/packageName/name", validatorKey);
     }
 

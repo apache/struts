@@ -80,11 +80,16 @@ public class DefaultUrlHelper implements UrlHelper {
     	return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, true);
     }
 
-    public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String scheme,
+    public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String urlScheme,
                            boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp) {
 
         StringBuilder link = new StringBuilder();
         boolean changedScheme = false;
+
+        String scheme = null;
+        if (isValidScheme(urlScheme)) {
+            scheme = urlScheme;
+        }
 
         // only append scheme if it is different to the current scheme *OR*
         // if we explicity want it to be appended by having forceAddSchemeHostAndPort = true
@@ -232,6 +237,10 @@ public class DefaultUrlHelper implements UrlHelper {
                 }
             }
         }
+    }
+
+    protected boolean isValidScheme(String scheme) {
+        return HTTP_PROTOCOL.equals(scheme) || HTTPS_PROTOCOL.equals(scheme);
     }
 
     private String buildParameterSubstring(String name, String value) {

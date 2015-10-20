@@ -23,6 +23,7 @@ package org.apache.struts2.interceptor;
 
 import java.io.Serializable;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 
 /**
@@ -78,6 +79,7 @@ public class BackgroundProcess implements Serializable {
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
     protected void beforeInvocation() throws Exception {
+        ActionContext.setContext(invocation.getInvocationContext());
     }
 
     /**
@@ -88,6 +90,7 @@ public class BackgroundProcess implements Serializable {
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
     protected void afterInvocation() throws Exception {
+        ActionContext.setContext(null);
     }
 
     /**

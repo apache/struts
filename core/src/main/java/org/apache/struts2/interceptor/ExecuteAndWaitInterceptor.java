@@ -196,12 +196,6 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         this.container = container;
     }
 
-    /* (non-Javadoc)
-    * @see com.opensymphony.xwork2.interceptor.Interceptor#init()
-    */
-    public void init() {
-    }
-
     /**
      * Creates a new background process
      *
@@ -304,13 +298,6 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 return actionInvocation.invoke();
             }
         }
-    }
-
-
-    /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#destroy()
-     */
-    public void destroy() {
     }
 
     /**

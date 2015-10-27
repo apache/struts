@@ -192,9 +192,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
                 return bean;
             } else {
                 bean = autoWiringFactory.autowire(clazz, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
-                bean = autoWiringFactory.applyBeanPostProcessorsBeforeInitialization(bean, bean.getClass().getName());
                 bean = autoWiringFactory.initializeBean(bean, bean.getClass().getName());
-                bean = autoWiringFactory.applyBeanPostProcessorsAfterInitialization(bean, bean.getClass().getName());
                 return autoWireBean(bean, autoWiringFactory);
             }
         } catch (UnsatisfiedDependencyException e) {

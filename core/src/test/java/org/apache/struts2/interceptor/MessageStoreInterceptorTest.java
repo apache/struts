@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.result.ServletActionRedirectResult;
@@ -37,6 +38,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * Test case for MessageStoreInterceptor.
@@ -44,6 +47,18 @@ import com.opensymphony.xwork2.ActionSupport;
  * @version $Date$ $Id$
  */
 public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        HttpServletResponse response = EasyMock.createNiceControl().createMock(HttpServletResponse.class);
+        response.isCommitted();
+        EasyMock.expectLastCall().andReturn(Boolean.FALSE);
+        EasyMock.replay(response);
+
+        ServletActionContext.setResponse(response);
+    }
 
     public void testStoreMessage() throws Exception {
         MessageStoreInterceptor interceptor = new MessageStoreInterceptor();

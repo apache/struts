@@ -27,6 +27,8 @@ import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.result.ServletRedirectResult;
 
 import java.util.ArrayList;
@@ -269,14 +271,16 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
 
         String reqOperationMode = getRequestOperationMode(invocation);
         boolean isRedirect = invocation.getResult() instanceof ServletRedirectResult;
+        boolean isCommitted = ServletActionContext.getResponse().isCommitted();
+
         if (STORE_MODE.equalsIgnoreCase(reqOperationMode) ||
                 STORE_MODE.equalsIgnoreCase(operationMode) ||
                 (AUTOMATIC_MODE.equalsIgnoreCase(operationMode) && isRedirect)) {
 
             Object action = invocation.getAction();
-            if (action instanceof ValidationAware) {
+            if (action instanceof ValidationAware && !isCommitted) {
                 // store error / messages into session
-                Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
+                Map<String, Object> session = invocation.getInvocationContext().getSession();
 
                 if (session == null) {
                     LOG.debug("Could not store action [{}] error/messages into session, because session hasn't been opened yet.", action);
@@ -289,12 +293,16 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
                 session.put(actionErrorsSessionKey, validationAwareAction.getActionErrors());
                 session.put(actionMessagesSessionKey, validationAwareAction.getActionMessages());
                 session.put(fieldErrorsSessionKey, validationAwareAction.getFieldErrors());
+
             } else {
-                LOG.debug("Action [{}] is not ValidationAware, no message / error that are storeable", action);
+                if (isCommitted) {
+                    LOG.debug("Response was already committed, cannot store messages!");
+                } else {
+                    LOG.debug("Action [{}] is not ValidationAware, no message / error that are storeable", action);
+                }
             }
         }
     }
-
 
     /**
      * Get the operationMode through request parameter, if <code>allowRequestParameterSwitch</code>

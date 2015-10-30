@@ -21,7 +21,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.PatternMatcher;
-import com.opensymphony.xwork2.util.WildcardHelper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,7 +77,12 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
         Map<String, String> vars) {
 
         String methodName = convertParam(orig.getMethodName(), vars);
-        if (methodName != null && !orig.isAllowedMethod(methodName)) {
+
+        if (StringUtils.isEmpty(methodName)) {
+            methodName = ActionConfig.DEFAULT_METHOD;
+        }
+
+        if (!orig.isAllowedMethod(methodName)) {
             return null;
         }
 

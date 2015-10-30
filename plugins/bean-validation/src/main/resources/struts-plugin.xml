@@ -64,7 +64,6 @@
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>
                 <interceptor-ref name="debugging"/>
-                <interceptor-ref name="deprecation"/>
             </interceptor-stack>
 
         </interceptors>

@@ -39,7 +39,7 @@ public class AppendIteratorTagTest extends AbstractTagTest {
     public void testAppendingIteratorUsingArrayAsSource() throws Exception {
         AppendIteratorTag tag = new AppendIteratorTag();
         tag.setPageContext(pageContext);
-        tag.setId("myAppendedIterator");
+        tag.setVar("myAppendedIterator");
 
         ParamTag iterator1ParamTag = new ParamTag();
         iterator1ParamTag.setPageContext(pageContext);
@@ -90,7 +90,7 @@ public class AppendIteratorTagTest extends AbstractTagTest {
     public void testAppendingIteratorsUsingListAsSource() throws Exception {
         AppendIteratorTag tag = new AppendIteratorTag();
         tag.setPageContext(pageContext);
-        tag.setId("myAppendedIterator");
+        tag.setVar("myAppendedIterator");
 
         ParamTag iterator1ParamTag = new ParamTag();
         iterator1ParamTag.setPageContext(pageContext);

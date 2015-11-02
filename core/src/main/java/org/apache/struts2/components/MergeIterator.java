@@ -61,7 +61,7 @@ import java.util.List;
  *
  * <!-- START SNIPPET: params -->
  * <ul>
- *          <li>id (String) - the id where the resultant merged iterator will be stored in the stack's context</li>
+ *          <li>var (String) - the name where the resultant merged iterator will be stored in the stack's context</li>
  * </ul>
  * <!-- END SNIPPET: params -->
  *

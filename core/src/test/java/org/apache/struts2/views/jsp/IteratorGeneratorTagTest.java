@@ -138,7 +138,7 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
         IteratorGeneratorTag tag = new IteratorGeneratorTag();
         tag.setPageContext(pageContext);
         tag.setVal("%{'aaa,bbb,ccc,ddd,eee'}");
-        tag.setId("myPageContextAttId");
+        tag.setVar("myPageContextAttId");
         tag.doStartTag();
         tag.doEndTag();
 

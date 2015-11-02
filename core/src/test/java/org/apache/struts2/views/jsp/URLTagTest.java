@@ -354,7 +354,7 @@ public class URLTagTest extends AbstractUITagTest {
     public void testPutId() throws Exception {
         tag.setValue("/public/about");
         assertEquals(null, stack.findString("myId")); // nothing in stack
-        tag.setId("myId");
+        tag.setVar("myId");
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("", writer.toString());

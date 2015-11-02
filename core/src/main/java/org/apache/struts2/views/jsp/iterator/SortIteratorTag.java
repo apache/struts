@@ -48,7 +48,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * <!-- START SNIPPET: params -->
  *
  * <ul>
- *      <li>id (String) - if specified, the sorted iterator will be place with this id under page context</li>
+ *      <li>var (String) - if specified, the sorted iterator will be place with this name under page context</li>
  *      <li>source (Object) - the source for the sort to take place (should be iteratable) else JspException will be thrown</li>
  *      <li>comparator* (Object) - the comparator used to do sorting (should be a type of Comparator or its decendent) else JspException will be thrown</li>
  * </ul>
@@ -107,11 +107,6 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
     @StrutsTagAttribute(description="The iterable source to sort")
     public void setSource(String source) {
         sourceAttr = source;
-    }
-    
-    @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
-    public void setId(String string) {
-        setVar(string);
     }
     
     @StrutsTagAttribute(description="The name to store the resultant iterator into page context, if such name is supplied")

@@ -39,7 +39,7 @@ public class MergeIteratorTagTest extends AbstractTagTest {
     public void testMergingIteratorWithArrayAsSource() throws Exception {
         MergeIteratorTag tag = new MergeIteratorTag();
         tag.setPageContext(pageContext);
-        tag.setId("myMergedIterator");
+        tag.setVar("myMergedIterator");
 
         ParamTag iterator1ParamTag = new ParamTag();
         iterator1ParamTag.setPageContext(pageContext);
@@ -91,7 +91,7 @@ public class MergeIteratorTagTest extends AbstractTagTest {
     public void testMergingIteratorsWithListAsSource() throws Exception {
         MergeIteratorTag tag = new MergeIteratorTag();
         tag.setPageContext(pageContext);
-        tag.setId("myMergedIterator");
+        tag.setVar("myMergedIterator");
 
         ParamTag iterator1ParamTag = new ParamTag();
         iterator1ParamTag.setPageContext(pageContext);

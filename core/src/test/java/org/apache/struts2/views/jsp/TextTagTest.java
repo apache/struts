@@ -298,7 +298,7 @@ public class TextTagTest extends AbstractTagTest {
 
     public void testPutId() throws Exception {
         assertEquals(null, stack.findString("myId")); // nothing in stack
-        tag.setId("myId");
+        tag.setVar("myId");
         tag.setName("bar.baz");
         tag.doStartTag();
         tag.doEndTag();

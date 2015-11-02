@@ -147,7 +147,7 @@ public class DateTagTest extends AbstractTagTest {
         tag.setName("myDate");
         tag.setNice(false);
         tag.setFormat(format);
-        tag.setId("myId");
+        tag.setVar("myId");
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, context.get("myId"));

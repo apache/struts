@@ -172,7 +172,7 @@ public class SubsetIteratorTagTest extends AbstractTagTest {
             SubsetIteratorTag tag = new SubsetIteratorTag();
             tag.setPageContext(pageContext);
             tag.setSource("myList");
-            tag.setId("myPageContextId1");
+            tag.setVar("myPageContextId1");
 
             tag.doStartTag();
             Iterator subsetIterator1 = (Iterator) stack.findValue("top");
@@ -194,7 +194,7 @@ public class SubsetIteratorTagTest extends AbstractTagTest {
             SubsetIteratorTag tag = new SubsetIteratorTag();
             tag.setPageContext(pageContext);
             tag.setSource("myArray");
-            tag.setId("myPageContextId2");
+            tag.setVar("myPageContextId2");
 
             tag.doStartTag();
             Iterator subsetIterator1 = (Iterator) stack.findValue("top");

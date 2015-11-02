@@ -58,7 +58,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         stack.push(foo);
 
         tag.setValue("list");
-        tag.setId("myId");
+        tag.setVar("myId");
 
         // one
         int result = tag.doStartTag();
@@ -116,7 +116,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         stack.push(foo);
 
         tag.setValue("list");
-        tag.setId("myId");
+        tag.setVar("myId");
 
         // one
         int result = tag.doStartTag();

@@ -58,7 +58,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <ul>
  *
- * <li>name* (String): The name of the new variable that is assigned the value of <i>value</i></li>
+ * <li>var* (String): The name of the new variable that is assigned the value of <i>value</i></li>
  *
  * <li>value (Object): The value that is assigned to the variable named <i>name</i></li>
  *
@@ -123,17 +123,9 @@ public class Set extends ContextBean {
         return super.end(writer, body);
     }
 
-    /*
-     * TODO: set required=true when 'id' is dropped after 2.1
-     */
-    @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack")
+    @StrutsTagAttribute(required=true, description="Name used to reference the value pushed into the Value Stack")
     public void setVar(String var) {
        super.setVar(var);
-    }
-
-    @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
-    public void setName(String name) {
-        setVar(name);
     }
 
     @StrutsTagAttribute(description="The scope in which to assign the variable. Can be <b>application</b>" +

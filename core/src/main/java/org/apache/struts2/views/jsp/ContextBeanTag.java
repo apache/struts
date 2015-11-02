@@ -37,12 +37,4 @@ public abstract class ContextBeanTag extends ComponentTagSupport {
     public void setVar(String var) {
         this.var = var;
     }
-
-    /**
-     * To keep backward compatibility 
-     * TODO remove after 2.1
-     */
-    public void setId(String id) {
-        setVar(id);
-    }
 }

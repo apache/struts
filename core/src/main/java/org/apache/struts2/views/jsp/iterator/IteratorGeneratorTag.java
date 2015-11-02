@@ -175,11 +175,6 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
         converterAttr = aConverter;
     }
 
-    @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
-    public void setId(String string) {
-        setVar(string);
-    }
-
     @StrutsTagAttribute(description="The name to store the resultant iterator into page context, if such name is supplied")
     public void setVar(String var) {
         this.var = var;

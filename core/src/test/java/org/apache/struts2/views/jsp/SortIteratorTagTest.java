@@ -76,7 +76,7 @@ public class SortIteratorTagTest extends AbstractTagTest {
 
         SortIteratorTag tag = new SortIteratorTag();
 
-        tag.setId("myId");
+        tag.setVar("myId");
         tag.setComparator("comparator");
         tag.setSource("source");
 
@@ -113,7 +113,7 @@ public class SortIteratorTagTest extends AbstractTagTest {
     public void testSortWithIdIteratorAvailableInPageContext() throws Exception {
         SortIteratorTag tag = new SortIteratorTag();
 
-        tag.setId("myId");
+        tag.setVar("myId");
         tag.setComparator("comparator");
         tag.setSource("source");
 

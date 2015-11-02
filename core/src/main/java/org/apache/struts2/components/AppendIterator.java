@@ -59,7 +59,7 @@ import java.util.List;
  *
  * <!-- START SNIPPET: params -->
  * <ul>
- *      <li>id (String) - the id of which if supplied will have the resultant
+ *      <li>var (String) - the name of which if supplied will have the resultant
  *                        appended iterator stored under in the stack's context</li>
  * </ul>
  * <!-- END SNIPPET: params -->

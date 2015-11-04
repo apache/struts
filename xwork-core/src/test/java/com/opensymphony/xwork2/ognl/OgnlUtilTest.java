@@ -496,12 +496,12 @@ public class OgnlUtilTest extends XWorkTestCase {
         Map context = ognlUtil.createDefaultContext(foo);
 
         Map props = new HashMap();
-        props.put("aLong", "123");
+        props.put("ALong", "123");
 
         ognlUtil.setProperties(props, foo, context);
         assertEquals(123, foo.getALong());
 
-        props.put("aLong", new String[]{"123"});
+        props.put("ALong", new String[]{"123"});
 
         foo.setALong(0);
         ognlUtil.setProperties(props, foo, context);
@@ -518,7 +518,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(88, foo.getALong());
 
         Map props = new HashMap();
-        props.put("aLong", "99");
+        props.put("ALong", "99");
         ognlUtil.setProperties(props, foo, context);
         assertEquals(99, foo.getALong());
     }

@@ -26,35 +26,76 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.easymock.EasyMock;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <code>FormTest</code>
  *
  */
 public class FormTest extends AbstractUITagTest {
-
+	private ValidationInterceptor validationInterceptor;
 
     public void testTestFormGetValidators() {
-        Form form = new Form(stack, request, response);
+        checkValidateAnnotatedMethodOnly(false, null, 1, 2, 1);
+    }
+    public void testAnnotatedFormGetValidators() {
+        checkValidateAnnotatedMethodOnly(true, null, 1, 2, 1);
+    }
+    public void testValidateAnnotatedMethodOnlyGetValidators1() {
+        checkValidateAnnotatedMethodOnly(true, "annotatedExecute1", 0, 1, 1);
+    }
+    public void testValidateAnnotatedMethodOnlyGetValidators2() {
+        checkValidateAnnotatedMethodOnly(true, "annotatedExecute2", 0, 1, 0);
+    }
+
+    private void checkValidateAnnotatedMethodOnly(boolean validateAnnotatedMethodOnly, String methodName,
+    		int expectedFooValidators, int expectedStatusValidators, int expectedResultValidators) {
+		Form form = new Form(stack, request, response);
         container.inject(form);
         form.getParameters().put("actionClass", TestAction.class);
-        form.setAction("actionName");
+
+        form.setAction("actionName" + (methodName != null ? "!" + methodName : ""));
+        validationInterceptor.setValidateAnnotatedMethodOnly(validateAnnotatedMethodOnly);
+
         List v = form.getValidators("foo");
-        assertEquals(1, v.size());
-        assertEquals(RequiredFieldValidator.class, v.get(0).getClass());
-    }
+        assertEquals(expectedFooValidators, v.size());
+        for (Object validator : v) {
+        	assertEquals(RequiredFieldValidator.class, validator.getClass());
+		}
+
+        v = form.getValidators("status");
+        assertEquals(expectedStatusValidators, v.size());
+        for (Object validator : v) {
+        	assertEquals(RequiredFieldValidator.class, validator.getClass());
+		}
+
+        v = form.getValidators("result");
+        assertEquals(expectedResultValidators, v.size());
+        for (Object validator : v) {
+        	assertEquals(RequiredStringValidator.class, validator.getClass());
+		}
+	}
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        validationInterceptor = new ValidationInterceptor();
+        validationInterceptor.setIncludeMethods("*");
 
-        ActionConfig config = new ActionConfig.Builder("", "name", "").build();
+        ActionConfig config = new ActionConfig.Builder("", "name", "")
+        	.addInterceptor(new InterceptorMapping("validationInterceptor", validationInterceptor))
+        	.build();
         ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
         ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
 
@@ -66,6 +107,11 @@ public class FormTest extends AbstractUITagTest {
         
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
+
+        Map<String, ActionConfig> defaultNamespace = configuration.getRuntimeConfiguration().getActionConfigs().get("");
+        defaultNamespace.put("actionName", config);
+
+        ((DefaultActionMapper) container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
         
         ActionContext.getContext().setActionInvocation(invocation);
     }

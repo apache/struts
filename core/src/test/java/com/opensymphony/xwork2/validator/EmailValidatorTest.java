@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.validator.validators.EmailValidator;
 public class EmailValidatorTest extends XWorkTestCase {
 
     public void testEmailValidity() throws Exception {
+        assertTrue(verifyEmailValidity("TmJee@Yahoo.com"));
         assertTrue(verifyEmailValidity("tmjee@yahoo.com"));
         assertTrue(verifyEmailValidityWithExpression("tmjee@yahoo.com", "\\b^[a-z]+@[a-z]+(\\.[a-z]+)*\\.com$\\b"));
         assertTrue(verifyEmailValidity("tm_jee@yahoo.co"));

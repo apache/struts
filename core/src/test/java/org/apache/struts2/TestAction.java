@@ -24,6 +24,10 @@ package org.apache.struts2;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 import org.apache.struts2.views.jsp.ui.User;
 
 import java.util.*;
@@ -175,6 +179,26 @@ public class TestAction extends ActionSupport {
         }
 
         return result;
+    }
+
+    @Validations(
+            requiredFields = {
+            		@RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = "status", message = "You must enter a value for field.")
+            },
+            requiredStrings = {
+            		@RequiredStringValidator(type = ValidatorType.SIMPLE, fieldName = "result", message = "You must enter a value for field.")
+            }
+    )
+    public String annotatedExecute1() throws Exception {
+        return Action.SUCCESS;
+    }
+    @Validations(
+            requiredFields = {
+            		@RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = "status", message = "You must enter a value for field.")
+            }
+    )
+    public String annotatedExecute2() throws Exception {
+        return Action.SUCCESS;
     }
 
     public String executeThrowsException() throws Exception {

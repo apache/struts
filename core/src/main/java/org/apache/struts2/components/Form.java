@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.jsp.TagUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -277,12 +278,34 @@ public class Form extends ClosingUIBean {
         ActionMapping mapping = actionMapper.getMappingFromActionName(formActionValue);
         String actionName = mapping.getName();
 
-        List<Validator> actionValidators = actionValidatorManager.getValidators(actionClass, actionName);
+        String methodName = null;
+        if (isValidateAnnotatedMethodOnly(actionName)) {
+            methodName = mapping.getMethod();
+        }
+        
+        List<Validator> actionValidators = actionValidatorManager.getValidators(actionClass, actionName, methodName);
         List<Validator> validators = new ArrayList<>();
 
         findFieldValidators(name, actionClass, actionName, actionValidators, validators, "");
 
         return validators;
+    }
+
+    private boolean isValidateAnnotatedMethodOnly(String actionName) {
+        RuntimeConfiguration runtimeConfiguration = configuration.getRuntimeConfiguration();
+        String actionNamespace = TagUtils.buildNamespace(actionMapper, stack, request);
+        ActionConfig actionConfig = runtimeConfiguration.getActionConfig(actionNamespace, actionName);
+
+        if (actionConfig != null) {
+            List<InterceptorMapping> interceptors = actionConfig.getInterceptors();
+            for (InterceptorMapping interceptorMapping : interceptors) {
+                if (ValidationInterceptor.class.isInstance(interceptorMapping.getInterceptor())) {
+                    ValidationInterceptor validationInterceptor = (ValidationInterceptor) interceptorMapping.getInterceptor();
+                    return validationInterceptor.isValidateAnnotatedMethodOnly();
+                }
+            }
+        }
+        return false;
     }
 
     private void findFieldValidators(String name, Class actionClass, String actionName,

@@ -337,15 +337,21 @@
         </dependency>
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>test</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j2.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -403,7 +409,7 @@
         </dependency>
 
         <!-- These jars have to be in the compile scope in order to work with apt plugin
-             (struts-annotations) and javadoc (the rest to process xwork sources). Marking 
+             (struts-annotations) and javadoc (the rest to process xwork sources). Marking
              them optional to exclude them from transitive dependency resolution -->
 
         <dependency>

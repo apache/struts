@@ -114,13 +114,13 @@ END SNIPPET: supported-validators
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
             <#elseif validator.validatorType = "email">
-            if (continueValidation && fieldValue != null && fieldValue.length > 0 && fieldValue.match("${validator.regex?js_string}")==null) {
+            if (continueValidation && fieldValue != null && fieldValue.length > 0 && fieldValue.match(/${validator.regex}/i)==null) {
                 addError(field, error);
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
             <#elseif validator.validatorType = "url">
-            if (continueValidation && fieldValue != null && fieldValue.length > 0 && fieldValue.match("/${validator.urlRegex?js_string}/i")==null) {
+            if (continueValidation && fieldValue != null && fieldValue.length > 0 && fieldValue.match(/${validator.urlRegex}/i)==null) {
                 addError(field, error);
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>

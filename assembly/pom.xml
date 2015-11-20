@@ -129,6 +129,7 @@
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
+                        <descriptor>src/main/assembly/min-lib.xml</descriptor>
                         <descriptor>src/main/assembly/apps.xml</descriptor>
                         <descriptor>src/main/assembly/src.xml</descriptor>
                         <descriptor>src/main/assembly/docs.xml</descriptor>
@@ -142,6 +143,16 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.apache.struts.xwork</groupId>
+            <artifactId>xwork-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
@@ -285,6 +296,21 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-demo-bundle</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
         </dependency>
 
     </dependencies>

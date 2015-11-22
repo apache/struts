@@ -39,9 +39,6 @@
         <include>org.apache.struts:struts2-core</include>
         <include>org.freemarker:freemarker</include>
         <include>org.apache.commons:commons-lang3</include>
-        <include>org.ow2.asm:asm</include>
-        <include>org.ow2.asm:asm-commons</include>
-        <include>org.ow2.asm:asm-tree</include>
         <include>ognl:ognl</include>
         <include>javassist:javassist</include>
         <include>commons-fileupload:commons-fileupload</include>

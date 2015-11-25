@@ -34,6 +34,6 @@ public class ExampleAction extends ActionSupport {
     }
 
     public Map getRenderParameters() {
-        return ActionContext.getContext().getParameters();
+        return ActionContext.getContext().getParameters().toMap();
     }
 }

@@ -49,7 +49,7 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
     ActionContext oldContext;
     HttpSession httpSession;
     Map<String, Object> extraContext;
-    Map<String, String> params;
+    Map<String, Object> params;
     Map<String, Object> session;
     StrutsMockHttpServletRequest request;
 
@@ -62,8 +62,8 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
     public void testNoTokenInSession() throws Exception {
         assertEquals(oldContext, ActionContext.getContext());
 
-        setToken(request);
         ActionProxy proxy = buildProxy(getActionName());
+        setToken(request);
         ActionContext.getContext().getSession().clear();
         assertEquals(TokenInterceptor.INVALID_TOKEN_CODE, proxy.execute());
     }
@@ -74,7 +74,7 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
         assertEquals(Action.SUCCESS, proxy.execute());
     }
 
-    public void testCallExecute2Times() throws Exception {
+    public void testCAllExecute2Times() throws Exception {
         setToken(request);
         ActionProxy proxy = buildProxy(getActionName());
         assertEquals(Action.SUCCESS, proxy.execute());
@@ -128,6 +128,6 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return actionProxyFactory.createActionProxy("", actionName, null, extraContext, true, true);
+        return actionProxyFactory.createActionProxy("", actionName, null, extraContext);
     }
 }

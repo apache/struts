@@ -616,6 +616,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.tiles</groupId>
+                <artifactId>tiles-portlet</artifactId>
+                <version>${tiles.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tiles</groupId>
                 <artifactId>tiles-jsp</artifactId>
                 <version>${tiles.version}</version>
                 <scope>runtime</scope>

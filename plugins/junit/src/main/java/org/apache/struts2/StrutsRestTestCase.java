@@ -4,7 +4,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
+import com.sun.net.httpserver.HttpsParameters;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -103,7 +105,7 @@ public class StrutsRestTestCase<T> extends StrutsJUnit4TestCase<T> {
 
         ActionContext invocationContext = proxy.getInvocation().getInvocationContext();
         invocationContext.getContextMap().put(ServletActionContext.ACTION_MAPPING, mapping);
-        invocationContext.setParameters(new HashMap<String, Object>(request.getParameterMap()));
+        invocationContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
         // set the action context to the one used by the proxy
         ActionContext.setContext(invocationContext);
 

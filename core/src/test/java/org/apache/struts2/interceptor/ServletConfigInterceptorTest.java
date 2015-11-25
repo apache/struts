@@ -89,10 +89,10 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        Map<String, Object> param = new HashMap<String, Object>();
-        mai.getInvocationContext().setParameters(HttpParameters.createEmpty().build());
+        HttpParameters param = HttpParameters.createEmpty().build();
+        mai.getInvocationContext().setParameters(param);
 
-        mock.setParameters((Map)param);
+        mock.setParameters(param);
         control.setVoidCallable();
 
         control.replay();

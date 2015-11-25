@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.StrutsTestCaseHelper;
@@ -152,7 +153,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
 
     protected void initActionContext(ActionContext actionContext) {
-        actionContext.setParameters(new HashMap<String, Object>(request.getParameterMap()));
+        actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
         initSession(actionContext);
         applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy

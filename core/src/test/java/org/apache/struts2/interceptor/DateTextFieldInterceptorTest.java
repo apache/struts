@@ -57,7 +57,7 @@ public class DateTextFieldInterceptorTest extends StrutsInternalTestCase {
 		assertTrue(parameters.contains("name"));
 		assertEquals(1, parameters.getNames().size());
 		Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2000-06-15"); 
-		assertEquals(date, parameters.get("name").getValue());
+		assertEquals(date, parameters.get("name").getObject());
 	}
 
 }

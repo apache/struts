@@ -31,8 +31,10 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
+import com.sun.net.httpserver.HttpsParameters;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 import org.easymock.EasyMock;
@@ -248,7 +250,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(request.getParameterMap()).andReturn(params).anyTimes();
         EasyMock.expect(request.getParameter("username")).andAnswer(new IAnswer<String>() {
             public String answer() throws Throwable {
-                return ((String[]) params.get("username"))[0];
+                return ActionContext.getContext().getParameters().get("username").getValue();
             }
         });
         EasyMock.expect(request.getAttribute("something")).andReturn("somethingelse").anyTimes();
@@ -257,7 +259,7 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         ActionContext actionContext = new ActionContext(new HashMap<String, Object>());
         ActionContext.setContext(actionContext);
-        actionContext.setParameters(params);
+        actionContext.setParameters(HttpParameters.create(params).build());
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
         ServletActionContext.setServletContext(context);

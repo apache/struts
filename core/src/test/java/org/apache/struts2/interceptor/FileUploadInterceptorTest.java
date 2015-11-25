@@ -259,10 +259,11 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         assertTrue(!action.hasErrors());
 
-        assertTrue(param.size() == 3);
-        File[] files = (File[]) param.get("file");
-        String[] fileContentTypes = (String[]) param.get("fileContentType");
-        String[] fileRealFilenames = (String[]) param.get("fileFileName");
+        HttpParameters parameters = mai.getInvocationContext().getParameters();
+        assertTrue(parameters.getNames().size() == 3);
+        File[] files = (File[]) parameters.get("file").getObject();
+        String[] fileContentTypes = parameters.get("fileContentType").getMultipleValue();
+        String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValue();
 
         assertNotNull(files);
         assertNotNull(fileContentTypes);
@@ -320,8 +321,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertEquals(3, parameters.getNames().size());
         File[] files = (File[]) parameters.get("file").getObject();
-        String[] fileContentTypes = (String[]) param.get("fileContentType");
-        String[] fileRealFilenames = (String[]) param.get("fileFileName");
+        String[] fileContentTypes = parameters.get("fileContentType").getMultipleValue();
+        String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValue();
 
         assertNotNull(files);
         assertNotNull(fileContentTypes);

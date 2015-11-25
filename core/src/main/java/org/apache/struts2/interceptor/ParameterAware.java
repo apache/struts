@@ -21,6 +21,8 @@
 
 package org.apache.struts2.interceptor;
 
+import org.apache.struts2.dispatcher.HttpParameters;
+
 import java.util.Map;
 
 
@@ -47,5 +49,5 @@ public interface ParameterAware {
      *
      * @param parameters a Map of parameters (name/value Strings).
      */
-    public void setParameters(Map<String, String[]> parameters);
+    public void setParameters(HttpParameters parameters);
 }

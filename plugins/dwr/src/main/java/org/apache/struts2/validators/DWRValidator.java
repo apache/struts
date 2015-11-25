@@ -28,8 +28,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 
@@ -72,18 +74,16 @@ public class DWRValidator {
         ServletContext servletContext = WebContextFactory.get().getServletContext();
         HttpServletResponse res = WebContextFactory.get().getHttpServletResponse();
 
-        Map<String, Object> requestParams = new HashMap<String, Object>(req.getParameterMap());
+        HttpParameters.Builder requestParams = HttpParameters.create(req.getParameterMap());
         if (params != null) {
-            requestParams.putAll(params);
-        } else {
-            params = requestParams;
+            requestParams = requestParams.withExtraParams(params);
         }
         Map requestMap = new RequestMap(req);
         Map session = new SessionMap(req);
         Map application = new ApplicationMap(servletContext);
         Dispatcher du = Dispatcher.getInstance();
         HashMap<String, Object> ctx = du.createContextMap(requestMap,
-                params,
+                requestParams.build(),
                 session,
                 application,
                 req,

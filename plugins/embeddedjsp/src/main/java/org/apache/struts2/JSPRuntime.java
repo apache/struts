@@ -21,6 +21,7 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.Servlet;
@@ -53,11 +54,13 @@ public abstract class JSPRuntime {
         int i = location.indexOf("?");
         if (i > 0) {
             //extract params from the url and add them to the request
-            Map<String, Object> parameters = ActionContext.getContext().getParameters();
+            HttpParameters parameters = ActionContext.getContext().getParameters();
             String query = location.substring(i + 1);
             Map<String, Object> queryParams = urlHelper.parseQueryString(query, true);
-            if (queryParams != null && !queryParams.isEmpty())
-                parameters.putAll(queryParams);
+            if (queryParams != null && !queryParams.isEmpty()) {
+                parameters = parameters.clone(queryParams);
+                ActionContext.getContext().setParameters(parameters);
+            }
             location = location.substring(0, i);
         }
 

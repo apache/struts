@@ -211,7 +211,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         // test
         {PropertyTag tag = new PropertyTag();
-        tag.setEscape(false);
+        tag.setEscapeHtml(false);
         tag.setEscapeJavaScript(true);    
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");
@@ -241,7 +241,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         // test
         {PropertyTag tag = new PropertyTag();
-        tag.setEscape(false);
+        tag.setEscapeHtml(false);
         tag.setEscapeXml(true);
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");
@@ -271,7 +271,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         // test
         {PropertyTag tag = new PropertyTag();
-        tag.setEscape(false);
+        tag.setEscapeHtml(false);
         tag.setEscapeCsv(true);
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");

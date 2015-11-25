@@ -28,9 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.tiles.TilesContainer;
-import org.apache.tiles.access.TilesAccess;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.tiles.servlet.context.ServletUtil;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -84,6 +84,7 @@ public class TilesResult extends ServletDispatcherResult {
     public TilesResult(String location) {
         super(location);
     }
+
     /**
      * Dispatches to the given location. Does its forward via a RequestDispatcher. If the
      * dispatch fails a 404 error will be sent back in the http response.
@@ -97,7 +98,8 @@ public class TilesResult extends ServletDispatcherResult {
         setLocation(location);
 
         ServletContext servletContext = ServletActionContext.getServletContext();
-        TilesContainer container = TilesAccess.getContainer(servletContext);
+
+        TilesContainer container = ServletUtil.getContainer(servletContext);
 
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();

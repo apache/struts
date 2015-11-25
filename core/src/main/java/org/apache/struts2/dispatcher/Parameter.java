@@ -1,5 +1,8 @@
 package org.apache.struts2.dispatcher;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public interface Parameter {
 
     String getName();
@@ -14,12 +17,16 @@ public interface Parameter {
 
     String[] getMultipleValue();
 
+    Object getObject();
+
     class Request implements Parameter {
 
-        private final String name;
-        private final String[] value;
+        private static final Logger LOG = LogManager.getLogger(Request.class);
 
-        public Request(String name, String[] value) {
+        private final String name;
+        private final Object value;
+
+        public Request(String name, Object value) {
             this.name = name;
             this.value = value;
         }
@@ -31,7 +38,29 @@ public interface Parameter {
 
         @Override
         public String getValue() {
-            return (value != null && value.length > 0) ? value[0] : null;
+            String[] values = toStringArray();
+            return (values != null && values.length > 0) ? values[0] : null;
+        }
+
+        private String[] toStringArray() {
+            if (value != null && value.getClass().isArray()) {
+                LOG.trace("Converting value {} to array of strings", value);
+
+                Object[] values = (Object[]) value;
+                String[] strValues = new String[values.length];
+                int i = 0;
+                for (Object v : values) {
+                    strValues[i] = String.valueOf(v);
+                    i++;
+                }
+                return strValues;
+            } else if (value != null) {
+                LOG.trace("Converting value {} to simple string", value);
+                return new String[]{ String.valueOf(value) };
+            } else {
+                LOG.trace("The value is null, empty array of string will be returned!");
+                return new String[]{};
+            }
         }
 
         @Override
@@ -41,16 +70,21 @@ public interface Parameter {
 
         @Override
         public boolean isDefined() {
-            return value != null && value.length > 0;
+            return value != null && toStringArray().length > 0;
         }
 
         @Override
         public boolean isMultiple() {
-            return isDefined() && value.length > 1;
+            return isDefined() && toStringArray().length > 1;
         }
 
         @Override
         public String[] getMultipleValue() {
+            return toStringArray();
+        }
+
+        @Override
+        public Object getObject() {
             return value;
         }
     }
@@ -91,6 +125,11 @@ public interface Parameter {
         @Override
         public String[] getMultipleValue() {
             return new String[0];
+        }
+
+        @Override
+        public Object getObject() {
+            return null;
         }
     }
 

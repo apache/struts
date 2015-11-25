@@ -21,7 +21,7 @@ public class HttpParameters implements Cloneable {
     }
 
     public static Builder createEmpty() {
-        return new Builder(new HashMap<String, String[]>());
+        return new Builder(new HashMap<String, Object>());
     }
 
     public Parameter get(String name) {
@@ -57,40 +57,21 @@ public class HttpParameters implements Cloneable {
         return HttpParameters.createEmpty().withParent(this).withExtraParams(newParams).build();
     }
 
-    public Map<String, String[]> getHttpParameters() {
-        Map<String, String[]> result = new HashMap<>(parameters.size());
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>(parameters.size());
         for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
-            result.put(entry.getKey(), entry.getValue().getMultipleValue());
+            result.put(entry.getKey(), entry.getValue().getObject());
         }
         return result;
     }
 
     public static class Builder {
-        private Map<String, String[]> requestParameterMap;
+        private Map<String, Object> requestParameterMap;
         private HttpParameters parent;
 
         protected Builder(Map<String, ?> requestParameterMap) {
-            this.requestParameterMap = toStringArrayMap(requestParameterMap);
-        }
-
-        private Map<String, String[]> toStringArrayMap(Map<String, ?> map) {
-            Map<String, String[]> result = new TreeMap<>();
-            for (Map.Entry<String, ?> entry : map.entrySet()) {
-                Object value = entry.getValue();
-                if (value != null && value.getClass().isArray()) {
-                    Object[] values = (Object[]) value;
-                    String[] strValues = new String[values.length];
-                    int i = 0;
-                    for (Object v : values) {
-                        strValues[i] = String.valueOf(v);
-                        i++;
-                    }
-                    result.put(entry.getKey(), strValues);
-                } else if (value != null) {
-                    result.put(entry.getKey(), new String[]{String.valueOf(value)});
-                }
-            }
-            return result;
+            this.requestParameterMap = new HashMap<>();
+            this.requestParameterMap.putAll(requestParameterMap);
         }
 
         public Builder withParent(HttpParameters parentParams) {
@@ -102,7 +83,7 @@ public class HttpParameters implements Cloneable {
 
         public Builder withExtraParams(Map<String, ?> params) {
             if (params != null) {
-                requestParameterMap.putAll(toStringArrayMap(params));
+                requestParameterMap.putAll(params);
             }
             return this;
         }
@@ -117,10 +98,9 @@ public class HttpParameters implements Cloneable {
                     ? new HashMap<String, Parameter>()
                     : new HashMap<>(parent.parameters);
 
-            for (Object o : requestParameterMap.entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
-                String name = String.valueOf(entry.getKey());
-                String[] value = (String[]) entry.getValue();
+            for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {
+                String name = entry.getKey();
+                Object value = entry.getValue();
                 parameters.put(name, new Parameter.Request(name, value));
             }
 

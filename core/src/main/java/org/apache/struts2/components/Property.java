@@ -43,7 +43,10 @@ import java.io.Writer;
  *
  * <ul>
  *      <li>default (String) - The default value to be used if <u>value</u> attribute is null</li>
- *      <li>escape (Boolean) - Escape HTML. Default to true</li>
+ *      <li>escapeCsv (Boolean) - Escape CSV. Defaults to false</li>
+ *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to true</li>
+ *      <li>escapeJavaScript (Boolean) - Escape JavaScript. Defaults to false</li>
+ *      <li>escapeXml (Boolean) - Escape XML. Defaults to false</li>
  *      <li>value (Object) - value to be displayed</li>
  * </ul>
  *
@@ -100,11 +103,6 @@ public class Property extends Component {
     @StrutsTagAttribute(description="The default value to be used if <u>value</u> attribute is null")
     public void setDefault(String defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    @StrutsTagAttribute(description="Deprecated. Use 'escapeHtml'. Whether to escape HTML", type="Boolean", defaultValue="true")
-    public void setEscape(boolean escape) {
-        this.escapeHtml = escape;
     }
 
     @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="true")

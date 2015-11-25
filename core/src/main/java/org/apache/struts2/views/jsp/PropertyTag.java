@@ -53,8 +53,8 @@ public class PropertyTag extends ComponentTagSupport {
 
         Property tag = (Property) component;
         tag.setDefault(defaultValue);
-        tag.setValue(value);
-        tag.setEscape(escapeHtml);
+        tag.setValue(value); 
+        tag.setEscapeHtml(escapeHtml);
         tag.setEscapeJavaScript(escapeJavaScript);
         tag.setEscapeXml(escapeXml);
         tag.setEscapeCsv(escapeCsv);
@@ -62,10 +62,6 @@ public class PropertyTag extends ComponentTagSupport {
 
     public void setDefault(String defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    public void setEscape(boolean escape) {
-        this.escapeHtml = escape;
     }
 
     public void setEscapeHtml(boolean escapeHtml) {

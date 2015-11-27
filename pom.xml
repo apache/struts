@@ -577,10 +577,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.el</groupId>
-                <artifactId>el-api</artifactId>
-                <version>1.0</version>
-                <scope>provided</scope>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.0</version>
             </dependency>
 
             <dependency>

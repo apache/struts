@@ -23,18 +23,25 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
+import freemarker.ext.beans.BeanModel;
+import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.JspSupportServlet;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
+import org.apache.struts2.views.freemarker.StrutsBeanWrapper;
 import org.apache.tiles.Attribute;
 import org.apache.tiles.context.TilesRequestContext;
+import org.apache.tiles.freemarker.template.TilesFMModelRepository;
 import org.apache.tiles.impl.InvalidTemplateException;
 import org.apache.tiles.renderer.impl.AbstractTypeDetectingAttributeRenderer;
 import org.apache.tiles.servlet.context.ServletTilesRequestContext;
 import org.apache.tiles.servlet.context.ServletUtil;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -55,7 +62,8 @@ public class StrutsFreeMarkerAttributeRenderer extends AbstractTypeDetectingAttr
                 if (ctx == null) {
                     throw new ConfigurationException("There is no ActionContext for current request!");
                 }
-                ActionInvocation invocation = ctx.getActionInvocation();
+
+                registerTilesBeanModel(ctx);
 
                 String include = (String) value;
                 FreemarkerResult result = new FreemarkerResult(include);
@@ -65,6 +73,7 @@ public class StrutsFreeMarkerAttributeRenderer extends AbstractTypeDetectingAttr
                 container.inject(result);
 
                 try {
+                    ActionInvocation invocation = ctx.getActionInvocation();
                     result.doExecute(include, invocation);
                 } catch (TemplateException e) {
                     LOG.error("Exception was thrown during rendering value {}: {}", value, e.getMessage());
@@ -86,6 +95,22 @@ public class StrutsFreeMarkerAttributeRenderer extends AbstractTypeDetectingAttr
             return string.startsWith("/") && string.endsWith(".ftl");
         }
         return false;
+    }
+
+    /**
+     * This register dedicated BeanModel to support tiles tags.
+     * It requires {@link org.apache.struts2.views.JspSupportServlet} to be registered in web.xml
+     */
+    protected void registerTilesBeanModel(ActionContext ctx) {
+        ServletContext servletContext = ServletActionContext.getServletContext();
+        Configuration configuration = ctx.getInstance(FreemarkerManager.class).getConfiguration(servletContext);
+
+        StrutsBeanWrapper wrapper = (StrutsBeanWrapper) ctx.getInstance(FreemarkerManager.class).getWrapper();
+
+        LOG.trace("Adding support for Tiles tags, please remember to register {} in web.xml!", JspSupportServlet.class.getName());
+
+        BeanModel tilesBeanModel = new BeanModel(new TilesFMModelRepository(), wrapper);
+        configuration.setSharedVariable("tiles", tilesBeanModel);
     }
 
 }

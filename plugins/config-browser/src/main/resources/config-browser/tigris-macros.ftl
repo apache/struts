@@ -92,7 +92,7 @@
 			<strong>${caption}</strong></p>
 			${message}
             <#if errors?exists>
-                <@s.iterator id="e" value="errors">
+                <@s.iterator var="e" value="errors">
                     <#assign e = stack.findString('top') />
                     <#call error(e)>
                 </@s.iterator>

@@ -1,11 +1,11 @@
 <#if hangman.gameEnded()>
-	<@s.set name="winImageName" value="%{'you-win.png'}" />
-	<@s.set name="looseImageName" value="%{'you-lose.png'}" />
-	<@s.set name="startImageName" value="%{'start.png'}" />
-	<@s.url id="winImageUrl" value="%{'/hangman/images/'+#winImageName}"  />
-	<@s.url id="looseImageUrl" value="%{'/hangman/images/'+#looseImageName}" />
-	<@s.url id="startImageUrl" value="%{'/hangman/images/'+#startImageName}" />
-	<@s.url id="startHref" action="hangmanAjax" namespace="/hangman" />
+	<@s.set var="winImageName" value="%{'you-win.png'}" />
+	<@s.set var="looseImageName" value="%{'you-lose.png'}" />
+	<@s.set var="startImageName" value="%{'start.png'}" />
+	<@s.url var="winImageUrl" value="%{'/hangman/images/'+#winImageName}"  />
+	<@s.url var="looseImageUrl" value="%{'/hangman/images/'+#looseImageName}" />
+	<@s.url var="startImageUrl" value="%{'/hangman/images/'+#startImageName}" />
+	<@s.url var="startHref" action="hangmanAjax" namespace="/hangman" />
 	
 	<#if hangman.isWin()>
 	<img src="<@s.property value="%{#winImageUrl}" />" width="341" height="44" />
@@ -16,11 +16,11 @@
 		<img src="<@s.property value="%{#startImageUrl}" />" width="250" height="43" />
 	</@s.a>
 <#else>
-<@s.iterator id="currentCharacter" value="%{hangman.charactersAvailable}" status="stat">
-      <@s.set name="chalkboardImageName" value="%{'Chalkboard_'+#currentCharacter+'.png'}" />
-      <@s.url id="chalkboardImageUrl" value="%{'/hangman/images/'+#chalkboardImageName}" />
-      <@s.url id="spacerUrl" value="/hangman/images/letter-spacer.png" />
-      <@s.url id="blankUrl" value="ajax/blank.action" includeContext="false" />
+<@s.iterator var="currentCharacter" value="%{hangman.charactersAvailable}" status="stat">
+      <@s.set var="chalkboardImageName" value="%{'Chalkboard_'+#currentCharacter+'.png'}" />
+      <@s.url var="chalkboardImageUrl" value="%{'/hangman/images/'+#chalkboardImageName}" />
+      <@s.url var="spacerUrl" value="/hangman/images/letter-spacer.png" />
+      <@s.url var="blankUrl" value="ajax/blank.action" includeContext="false" />
       
       <@sx.a  id="%{#currentCharacter}" 
       		  afterNotifyTopics="topicGuessMade"

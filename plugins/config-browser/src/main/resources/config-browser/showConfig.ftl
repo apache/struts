@@ -41,7 +41,7 @@
 </table>
 
 <!-- URLTag is faulty -->
-<@s.url id="url" action="showConfig" includeParams="none">
+<@s.url var="url" action="showConfig" includeParams="none">
     <@s.param name="namespace">${namespace}</@s.param>
     <@s.param name="actionName">${actionName}</@s.param>
 </@s.url>

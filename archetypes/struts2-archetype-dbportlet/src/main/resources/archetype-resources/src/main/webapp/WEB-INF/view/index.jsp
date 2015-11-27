@@ -8,7 +8,7 @@ This a simple table showing the database data:
   <th>Name</th>
   <th>Value</th>
  </tr>
- <s:iterator id="row" value="%{data}">
+ <s:iterator var="row" value="%{data}">
  <tr>
   <td><s:property value="%{STR_COL}" /></td>
   <td><s:property value="%{NUM_COL}" /></td>

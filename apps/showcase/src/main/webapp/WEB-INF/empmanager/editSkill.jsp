@@ -2,11 +2,11 @@
 <html>
 <head>
 	<s:if test="currentSkill!=null">
-		<s:set name="submitType" value="'update'"/>
-		<s:text id="title" name="item.edit"><s:param><s:text name="skill"/></s:param></s:text>
+		<s:set var="submitType" value="'update'"/>
+		<s:text var="title" name="item.edit"><s:param><s:text name="skill"/></s:param></s:text>
 	</s:if>
 	<s:else>
-		<s:set name="submitType" value="'create'"/>
+		<s:set var="submitType" value="'create'"/>
 		<s:text var="title" name="item.create"><s:param><s:text name="skill"/></s:param></s:text>
 	</s:else>
 	<title>Struts2 Showcase - CRUD Example - <s:property value="#title"/></title>

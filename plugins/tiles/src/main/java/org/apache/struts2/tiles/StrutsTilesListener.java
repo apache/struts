@@ -19,8 +19,8 @@
 
 package org.apache.struts2.tiles;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.tiles.startup.TilesInitializer;
 import org.apache.tiles.web.startup.AbstractTilesListener;
 

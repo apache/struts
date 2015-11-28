@@ -23,11 +23,11 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
@@ -47,7 +47,7 @@ import java.io.IOException;
 
 public class StrutsFreeMarkerAttributeRenderer extends AbstractTypeDetectingAttributeRenderer {
 
-    private static Logger LOG = LogManager.getLogger(StrutsFreeMarkerAttributeRenderer.class);
+    private static Logger LOG = LoggerFactory.getLogger(StrutsFreeMarkerAttributeRenderer.class);
 
     @Override
     public void write(Object value, Attribute attribute, TilesRequestContext request) throws IOException {

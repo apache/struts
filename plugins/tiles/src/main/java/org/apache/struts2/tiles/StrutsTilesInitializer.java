@@ -19,8 +19,8 @@
 
 package org.apache.struts2.tiles;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.tiles.TilesApplicationContext;
 import org.apache.tiles.factory.AbstractTilesContainerFactory;
 import org.apache.tiles.servlet.wildcard.WildcardServletTilesApplicationContext;
@@ -30,7 +30,7 @@ import javax.servlet.ServletContext;
 
 public class StrutsTilesInitializer extends AbstractTilesInitializer {
 
-    private static final Logger LOG = LogManager.getLogger(StrutsTilesInitializer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsTilesInitializer.class);
 
     @Override
     protected TilesApplicationContext createTilesApplicationContext(TilesApplicationContext preliminaryContext) {

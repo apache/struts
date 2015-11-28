@@ -181,7 +181,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         DefinitionPatternMatcherFactory wildcardFactory = new WildcardDefinitionPatternMatcherFactory();
         DefinitionPatternMatcherFactory regexpFactory = new RegexpDefinitionPatternMatcherFactory();
 
-        PrefixedPatternDefinitionResolver<T> resolver = new PrefixedPatternDefinitionResolver<>();
+        PrefixedPatternDefinitionResolver<T> resolver = new PrefixedPatternDefinitionResolver<T>();
         resolver.registerDefinitionPatternMatcherFactory(PATTERN_WILDCARD, wildcardFactory);
         resolver.registerDefinitionPatternMatcherFactory(PATTERN_REGEXP, regexpFactory);
 
@@ -192,7 +192,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     protected List<URL> getSourceURLs(TilesApplicationContext applicationContext,
                                       TilesRequestContextFactory contextFactory) {
         try {
-            Set<URL> finalSet = new HashSet<>();
+            Set<URL> finalSet = new HashSet<URL>();
             Set<URL> webINFSet = applicationContext.getResources("/WEB-INF/**/tiles*.xml");
             Set<URL> metaINFSet = applicationContext.getResources("classpath*:META-INF/**/tiles*.xml");
 
@@ -239,24 +239,24 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
             PropertyAccessor objectPropertyAccessor = OgnlRuntime.getPropertyAccessor(Object.class);
             PropertyAccessor mapPropertyAccessor = OgnlRuntime.getPropertyAccessor(Map.class);
             PropertyAccessor applicationContextPropertyAccessor =
-                    new NestedObjectDelegatePropertyAccessor<>(
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
                             new TilesApplicationContextNestedObjectExtractor(),
                             objectPropertyAccessor);
             PropertyAccessor requestScopePropertyAccessor =
-                    new NestedObjectDelegatePropertyAccessor<>(
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
                             new RequestScopeNestedObjectExtractor(), mapPropertyAccessor);
             PropertyAccessor sessionScopePropertyAccessor =
-                    new NestedObjectDelegatePropertyAccessor<>(
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
                             new SessionScopeNestedObjectExtractor(), mapPropertyAccessor);
             PropertyAccessor applicationScopePropertyAccessor =
-                    new NestedObjectDelegatePropertyAccessor<>(
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
                             new ApplicationScopeNestedObjectExtractor(), mapPropertyAccessor);
             PropertyAccessorDelegateFactory<TilesRequestContext> factory =
                     new TilesContextPropertyAccessorDelegateFactory(
                             objectPropertyAccessor, applicationContextPropertyAccessor,
                             requestScopePropertyAccessor, sessionScopePropertyAccessor,
                             applicationScopePropertyAccessor);
-            PropertyAccessor tilesRequestAccessor = new DelegatePropertyAccessor<>(factory);
+            PropertyAccessor tilesRequestAccessor = new DelegatePropertyAccessor<TilesRequestContext>(factory);
             OgnlRuntime.setPropertyAccessor(TilesRequestContext.class, tilesRequestAccessor);
             return new OGNLAttributeEvaluator();
         } catch (OgnlException e) {

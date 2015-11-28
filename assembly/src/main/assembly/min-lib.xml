@@ -35,7 +35,6 @@
       <useTransitiveDependencies>true</useTransitiveDependencies>
       <outputDirectory>lib</outputDirectory>
       <includes>
-        <include>org.apache.struts.xwork:xwork-core</include>
         <include>org.apache.struts:struts2-core</include>
         <include>org.freemarker:freemarker</include>
         <include>org.apache.commons:commons-lang3</include>

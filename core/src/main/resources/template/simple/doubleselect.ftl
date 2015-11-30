@@ -76,7 +76,7 @@
     <#assign itemCount = startCount/>
     var ${parameters.id}Group = new Array(${parameters.listSize} + ${startCount});
     for (i = 0; i < (${parameters.listSize} + ${startCount}); i++)
-        ${parameters.id}Group[i] = new Array();
+        ${parameters.id}Group[i] = [];
 
     <@s.iterator value="parameters.list">
         <#if parameters.listKey??>
@@ -91,7 +91,7 @@
         </#if>
         <#assign doubleItemCount = 0/>
         <#if parameters.doubleHeaderKey?? && parameters.doubleHeaderValue??>
-        ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleHeaderValue?js_string}", "${doubleHeaderKey?js_string}");
+        ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${parameters.doubleHeaderValue?js_string}", "${parameters.doubleHeaderKey?js_string}");
             <#assign doubleItemCount = doubleItemCount + 1/>
         </#if>
         <#if parameters.doubleEmptyOption??>
@@ -172,10 +172,7 @@
             ${parameters.id}Temp.options[i] = new Option(${parameters.id}Group[x][i].text, ${parameters.id}Group[x][i].value);
         <#if parameters.doubleNameValue??>
             <#if parameters.doubleMultiple??>
-                for (j = 0; j < ${parameters.doubleNameValue}.
-                length;
-                j++
-            )
+                for (j = 0; j < ${parameters.doubleNameValue}.length; j++)
                 {
                     if (${parameters.id}Temp.options[i].value == ${parameters.doubleNameValue?js_string}[j]) {
                         ${parameters.id}Temp.options[i].selected = true;

@@ -11,7 +11,7 @@
 <script type="text/javascript">
     var foo_barGroup = new Array(2 + 0);
     for (i = 0; i < (2 + 0); i++)
-    foo_barGroup[i] = new Array();
+    foo_barGroup[i] = [];
 
     foo_barGroup[0][0] = new Option("Antwerp", "AN");
     foo_barGroup[0][1] = new Option("Gent", "GN");

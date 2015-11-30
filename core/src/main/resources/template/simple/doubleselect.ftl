@@ -92,7 +92,7 @@
         </#if>
         <#assign doubleItemCount = 0/>
         <#if parameters.doubleHeaderKey?? && parameters.doubleHeaderValue??>
-        ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleHeaderValue?js_string}", "${doubleHeaderKey?js_string}");
+        ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${parameters.doubleHeaderValue?js_string}", "${parameters.doubleHeaderKey?js_string}");
             <#assign doubleItemCount = doubleItemCount + 1/>
         </#if>
         <#if parameters.doubleEmptyOption??>

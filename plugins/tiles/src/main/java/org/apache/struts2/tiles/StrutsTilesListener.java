@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,57 +19,23 @@
 
 package org.apache.struts2.tiles;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.apache.tiles.TilesContainer;
-import org.apache.tiles.TilesException;
-import org.apache.tiles.factory.TilesContainerFactory;
-import org.apache.tiles.web.startup.TilesListener;
-
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.tiles.startup.TilesInitializer;
+import org.apache.tiles.web.startup.AbstractTilesListener;
 
 /**
- * Listener used to automatically inject ServletContext
- * init parameters so that they don't need to be configured
- * explicitly for tiles integration.  This is provided
- * mainly for backwards compatibility with Struts 2.0.1
- * configuration.
+ * Listener used to automatically tie Tiles support into Struts
  *
  * @since Struts 2.0.2
- * @version $Rev$
- *
  */
-public class StrutsTilesListener extends TilesListener {
+public class StrutsTilesListener extends AbstractTilesListener {
 
     private static final Logger LOG = LogManager.getLogger(StrutsTilesListener.class);
 
-    private static final Map<String, String> INIT;
-
-    static {
-        INIT = new HashMap<String, String>();
-        INIT.put(TilesContainerFactory.CONTAINER_FACTORY_INIT_PARAM,
-                 StrutsTilesContainerFactory.class.getName());
+    @Override
+    protected TilesInitializer createTilesInitializer() {
+        LOG.info("Starting Struts Tiles 2 integration ...");
+        return new StrutsTilesInitializer();
     }
-
-    protected TilesContainer createContainer(ServletContext context)
-    throws TilesException {
-        if(context.getInitParameter(TilesContainerFactory.CONTEXT_FACTORY_INIT_PARAM) == null) {
-            context = decorate(context);
-        }
-        else {
-            if (LOG.isWarnEnabled()) {
-        	LOG.warn("Tiles container factory is explicitly set.  Not injecting struts configuration.");
-            }
-        }
-        return super.createContainer(context);
-    }
-
-    protected ServletContext decorate(ServletContext context) {
-        return new ConfiguredServletContext(context, INIT);
-    }
-
 }

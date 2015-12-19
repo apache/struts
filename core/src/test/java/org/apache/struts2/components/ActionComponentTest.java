@@ -49,7 +49,7 @@ public class ActionComponentTest extends StrutsInternalTestCase {
         assertNotNull(params);
         assertEquals(2, params.getNames().size());
         assertEquals("bar", params.get("foo").getValue());
-        assertEquals(2, params.get("baz").getMultipleValue().length);
+        assertEquals(2, params.get("baz").getMultipleValues().length);
         mockValueStack.verify();
     }
 }

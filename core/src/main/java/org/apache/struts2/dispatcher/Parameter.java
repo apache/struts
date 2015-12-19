@@ -15,7 +15,7 @@ public interface Parameter {
 
     boolean isMultiple();
 
-    String[] getMultipleValue();
+    String[] getMultipleValues();
 
     Object getObject();
 
@@ -79,7 +79,7 @@ public interface Parameter {
         }
 
         @Override
-        public String[] getMultipleValue() {
+        public String[] getMultipleValues() {
             return toStringArray();
         }
 
@@ -123,7 +123,7 @@ public interface Parameter {
         }
 
         @Override
-        public String[] getMultipleValue() {
+        public String[] getMultipleValues() {
             return new String[0];
         }
 

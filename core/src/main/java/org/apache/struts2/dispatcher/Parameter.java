@@ -9,8 +9,6 @@ public interface Parameter {
 
     String getValue();
 
-    boolean isExpression();
-
     boolean isDefined();
 
     boolean isMultiple();
@@ -64,11 +62,6 @@ public interface Parameter {
         }
 
         @Override
-        public boolean isExpression() {
-            return false;
-        }
-
-        @Override
         public boolean isDefined() {
             return value != null && toStringArray().length > 0;
         }
@@ -105,11 +98,6 @@ public interface Parameter {
         @Override
         public String getValue() {
             return null;
-        }
-
-        @Override
-        public boolean isExpression() {
-            return false;
         }
 
         @Override

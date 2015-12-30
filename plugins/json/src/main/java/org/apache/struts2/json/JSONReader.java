@@ -155,6 +155,7 @@ public class JSONReader {
         return new JSONException("Input string is not well formed JSON (invalid char " + this.c + ")");
     }
 
+    
     @SuppressWarnings("unchecked")
     protected List array() throws JSONException {
         List ret = new ArrayList();
@@ -174,7 +175,7 @@ public class JSONReader {
         return ret;
     }
 
-    protected Object number() {
+    protected Object number() throws JSONException {
         this.buf.setLength(0);
         boolean toDouble = false;
 
@@ -202,9 +203,17 @@ public class JSONReader {
         }
 
         if (toDouble) {
-            return Double.parseDouble(this.buf.toString());
+            try {
+                return Double.parseDouble(this.buf.toString());
+            } catch (NumberFormatException e) {
+                throw buildInvalidInputException();
+            }
         } else {
-            return Long.parseLong(this.buf.toString());
+            try {
+                return Long.parseLong(this.buf.toString());
+            } catch (NumberFormatException e) {
+                throw buildInvalidInputException();
+            }
         }
     }
 

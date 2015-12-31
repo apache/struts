@@ -96,6 +96,9 @@ public class PostbackResult extends StrutsResultSupport {
             response.setHeader("Pragma", "no-cache"); // HTTP 1.0
             response.setDateHeader("Expires", 0); // Proxies
         }
+        
+        //set contenttype @see ww-4564
+        response.setContentType("text/html");
 
         // Render
         PrintWriter pw = new PrintWriter(response.getOutputStream());

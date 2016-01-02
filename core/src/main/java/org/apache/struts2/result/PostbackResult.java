@@ -76,10 +76,8 @@ import java.util.Map;
  */
 public class PostbackResult extends StrutsResultSupport {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -2283504349296877429L;
+    
     private String actionName;
     private String namespace;
     private String method;

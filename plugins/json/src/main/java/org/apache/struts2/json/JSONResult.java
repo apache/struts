@@ -80,7 +80,7 @@ public class JSONResult implements Result {
     public static final String DEFAULT_PARAM = null;
 
     private String encoding;
-    private String defaultEncoding = "ISO-8859-1";
+    private String defaultEncoding = "UTF-8";
     private List<Pattern> includeProperties;
     private List<Pattern> excludeProperties;
     private String root;

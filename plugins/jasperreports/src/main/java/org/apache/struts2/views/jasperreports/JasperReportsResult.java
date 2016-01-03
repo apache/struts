@@ -65,7 +65,7 @@ import java.util.TimeZone;
  * format is specified.
  * <p/>
  * <!-- END SNIPPET: description -->
- * <p />
+ * <p>
  * <b>This result type takes the following parameters:</b>
  * <p/>
  * <!-- START SNIPPET: params -->
@@ -397,6 +397,12 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             String message = "Error producing " + format + " report for uri " + systemId;
             LOG.error(message, e);
             throw new ServletException(e.getMessage(), e);
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                LOG.warn("Could not close db connection properly", e);
+            }
         }
 
         response.setContentLength(output.length);

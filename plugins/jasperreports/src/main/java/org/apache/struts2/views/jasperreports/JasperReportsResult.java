@@ -385,6 +385,8 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         } catch (JRException e) {
             LOG.error("Error producing {} report for uri {}", format, systemId, e);
             throw new ServletException(e.getMessage(), e);
+        } finally {
+            conn.close();
         }
 
         response.setContentLength(output.size());

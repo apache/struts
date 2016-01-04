@@ -104,7 +104,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(smd, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("smd-1.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testSMDDefaultAnnotations() throws Exception {
@@ -121,7 +121,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(smd, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("smd-2.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testExcludeNullPropeties() throws Exception {
@@ -304,7 +304,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     @SuppressWarnings("unchecked")
@@ -321,7 +321,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-4.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     @SuppressWarnings("unchecked")
@@ -402,7 +402,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-3.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     private void executeTest2Action(JSONResult result) throws Exception {
@@ -442,7 +442,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-2.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testJSONP() throws Exception {
@@ -456,7 +456,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("jsonp-1.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testNoCache() throws Exception {
@@ -476,7 +476,7 @@ public class JSONResultTest extends StrutsTestCase {
 
         executeTest2Action(result);
 
-        assertEquals("some_super_content;charset=ISO-8859-1", response.getContentType());
+        assertEquals("some_super_content;charset=UTF-8", response.getContentType());
     }
 
     public void testStatusCode() throws Exception {
@@ -502,7 +502,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-2-enum.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     /**
@@ -523,7 +523,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-9.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testIncludePropertiesWithList() throws Exception {
@@ -547,7 +547,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-10.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testIncludePropertiesWithSetList() throws Exception {
@@ -588,7 +588,7 @@ public class JSONResultTest extends StrutsTestCase {
         String normalizedActual = TestUtils.normalize(json, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("json-11.txt"));
         assertEquals(normalizedExpected, normalizedActual);
-        assertEquals("application/json;charset=ISO-8859-1", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testDefaultEncoding() throws Exception {

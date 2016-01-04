@@ -15,8 +15,9 @@
  */
 package com.opensymphony.xwork2.util;
 
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -25,12 +26,14 @@ import java.util.List;
  * @author plightbo
  * @version $Revision$
  */
-public class CompoundRoot extends ArrayList {
+public class CompoundRoot extends CopyOnWriteArrayList<Object> {
+
+    private static final long serialVersionUID = 8563229069192473995L;
 
     public CompoundRoot() {
     }
 
-    public CompoundRoot(List list) {
+    public CompoundRoot(List<?> list) {
         super(list);
     }
 

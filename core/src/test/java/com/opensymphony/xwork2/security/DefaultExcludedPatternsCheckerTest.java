@@ -10,10 +10,7 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
 
     public void testHardcodedPatterns() throws Exception {
         // given
-        List<String> params = new ArrayList<String>() {
-
-            private static final long serialVersionUID = 5687184571054993717L;
-            
+        List<String> params = new ArrayList<String>() {           
             {
                 add("%{#application['test']}");
                 add("%{#application.test}");

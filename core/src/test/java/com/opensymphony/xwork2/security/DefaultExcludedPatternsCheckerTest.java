@@ -11,6 +11,9 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
     public void testHardcodedPatterns() throws Exception {
         // given
         List<String> params = new ArrayList<String>() {
+
+            private static final long serialVersionUID = 5687184571054993717L;
+            
             {
                 add("%{#application['test']}");
                 add("%{#application.test}");
@@ -73,7 +76,7 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
     public void testDefaultExcludePatterns() throws Exception {
         // given
         List<String> prefixes = Arrays.asList("#[0].%s", "[0].%s", "top.%s", "%{[0].%s}", "%{#[0].%s}", "%{top.%s}", "%{#top.%s}", "%{#%s}", "%{%s}", "#%s");
-        List<String> inners = Arrays.asList("servletRequest", "servletResponse", "servletContext", "application", "session", "struts", "request", "response", "dojo", "parameters");
+        List<String> inners = Arrays.asList("servletRequest", "servletResponse", "servletContext", "application", "session", "struts", "request", "response", "dojo", "parameters", "class");
         List<String> suffixes = Arrays.asList("['test']", "[\"test\"]", ".test");
 
         DefaultExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();

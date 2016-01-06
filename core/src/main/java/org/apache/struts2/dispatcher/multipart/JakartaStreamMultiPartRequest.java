@@ -384,6 +384,12 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      * @param location location
      */
     private void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
+        // Skip file uploads that don't have a file name - meaning that no file was selected.
+        if (itemStream.getName() == null || itemStream.getName().trim().length() < 1) {
+            LOG.debug("No file has been uploaded for the field: {}", itemStream.getFieldName());
+            return;
+        }
+
         File file = null;
         try {
             // Create the temporary upload file.
@@ -422,6 +428,10 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         if (name.contains(".")) {
             prefix = name.substring(0, name.lastIndexOf('.'));
             suffix = name.substring(name.lastIndexOf('.'));
+        }
+
+        if (prefix.length() < 3) {
+            prefix = UUID.randomUUID().toString();
         }
 
         File file = File.createTempFile(prefix + "_", suffix, new File(location));

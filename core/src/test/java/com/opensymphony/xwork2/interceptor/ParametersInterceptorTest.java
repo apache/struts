@@ -84,6 +84,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                         "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
                         "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
                 put("top['name'](0)", "true");
+                put("expression", "#f=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#f.setAccessible(true),#f.set(#_memberAccess,true),#req=@org.apache.struts2.ServletActionContext@getRequest(),#resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#resp.println(#req.getRealPath('/')),#resp.close()");
             }
         };
 
@@ -96,13 +97,15 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, HttpParameters.create(params).build());
 
         // then
-        assertEquals(2, action.getActionMessages().size());
+        assertEquals(3, action.getActionMessages().size());
 
         String msg1 = action.getActionMessage(0);
         String msg2 = action.getActionMessage(1);
+        String msg3 = action.getActionMessage(2);
 
-        assertEquals("Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'", msg1);
-        assertEquals("Error setting expression 'top['name'](0)' with value 'true'", msg2);
+        assertEquals("Error setting expression 'expression' with value '#f=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#f.setAccessible(true),#f.set(#_memberAccess,true),#req=@org.apache.struts2.ServletActionContext@getRequest(),#resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#resp.println(#req.getRealPath('/')),#resp.close()'", msg1);
+        assertEquals("Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'", msg2);
+        assertEquals("Error setting expression 'top['name'](0)' with value 'true'", msg3);
         assertNull(action.getName());
     }
 

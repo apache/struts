@@ -274,14 +274,10 @@ public class OgnlUtil {
      * Wrapper around Ognl.setValue() to handle type conversion for collection elements.
      * Ideally, this should be handled by OGNL directly.
      */
-    public void setValue(String name, Map<String, Object> context, Object root, Object value) throws OgnlException {
-        setValue(name, context, root, value, true);
-    }
-
-    protected void setValue(String name, final Map<String, Object> context, final Object root, final Object value, final boolean evalName) throws OgnlException {
+    public void setValue(final String name, final Map<String, Object> context, final Object root, final Object value) throws OgnlException {
         compileAndExecute(name, context, new OgnlTask<Void>() {
             public Void execute(Object tree) throws OgnlException {
-                if (!evalName && isEvalExpression(tree, context)) {
+                if (isEvalExpression(tree, context)) {
                     throw new OgnlException("Eval expression cannot be used as parameter name");
                 }
                 Ognl.setValue(tree, context, root, value);

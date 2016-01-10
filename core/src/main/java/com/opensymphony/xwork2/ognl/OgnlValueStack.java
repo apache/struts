@@ -148,7 +148,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      * @see com.opensymphony.xwork2.util.ValueStack#setParameter(String, Object)
      */
     public void setParameter(String expr, Object value) {
-        setValue(expr, value, devMode, false);
+        setValue(expr, value, devMode);
     }
 
     /**
@@ -164,13 +164,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object, boolean)
      */
     public void setValue(String expr, Object value, boolean throwExceptionOnFailure) {
-        setValue(expr, value, throwExceptionOnFailure, true);
-    }
-
-    private void setValue(String expr, Object value, boolean throwExceptionOnFailure, boolean evalExpression) {
         Map<String, Object> context = getContext();
         try {
-            trySetValue(expr, value, throwExceptionOnFailure, context, evalExpression);
+            trySetValue(expr, value, throwExceptionOnFailure, context);
         } catch (OgnlException e) {
             handleOgnlException(expr, value, throwExceptionOnFailure, e);
         } catch (RuntimeException re) { //XW-281
@@ -180,10 +176,10 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         }
     }
 
-    private void trySetValue(String expr, Object value, boolean throwExceptionOnFailure, Map<String, Object> context, boolean evalExpression) throws OgnlException {
+    private void trySetValue(String expr, Object value, boolean throwExceptionOnFailure, Map<String, Object> context) throws OgnlException {
         context.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, expr);
         context.put(REPORT_ERRORS_ON_NO_PROP, (throwExceptionOnFailure) ? Boolean.TRUE : Boolean.FALSE);
-        ognlUtil.setValue(expr, context, root, value, evalExpression);
+        ognlUtil.setValue(expr, context, root, value);
     }
 
     private void cleanUpContext(Map<String, Object> context) {

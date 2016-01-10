@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,73 +19,256 @@
 
 package org.apache.struts2.tiles;
 
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
 import org.apache.tiles.TilesApplicationContext;
-import org.apache.tiles.TilesException;
-import org.apache.tiles.context.TilesContextFactory;
+import org.apache.tiles.TilesContainer;
+import org.apache.tiles.context.ChainedTilesRequestContextFactory;
 import org.apache.tiles.context.TilesRequestContext;
+import org.apache.tiles.context.TilesRequestContextFactory;
 import org.apache.tiles.definition.DefinitionsFactory;
-import org.apache.tiles.factory.TilesContainerFactory;
+import org.apache.tiles.definition.DefinitionsFactoryException;
+import org.apache.tiles.definition.pattern.DefinitionPatternMatcherFactory;
+import org.apache.tiles.definition.pattern.PatternDefinitionResolver;
+import org.apache.tiles.definition.pattern.PrefixedPatternDefinitionResolver;
+import org.apache.tiles.definition.pattern.regexp.RegexpDefinitionPatternMatcherFactory;
+import org.apache.tiles.definition.pattern.wildcard.WildcardDefinitionPatternMatcherFactory;
+import org.apache.tiles.el.ELAttributeEvaluator;
+import org.apache.tiles.el.JspExpressionFactoryFactory;
+import org.apache.tiles.el.TilesContextBeanELResolver;
+import org.apache.tiles.el.TilesContextELResolver;
+import org.apache.tiles.evaluator.AttributeEvaluatorFactory;
+import org.apache.tiles.evaluator.BasicAttributeEvaluatorFactory;
+import org.apache.tiles.evaluator.impl.DirectAttributeEvaluator;
+import org.apache.tiles.factory.BasicTilesContainerFactory;
+import org.apache.tiles.factory.TilesContainerFactoryException;
+import org.apache.tiles.freemarker.context.FreeMarkerTilesRequestContextFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
-import org.apache.tiles.preparer.PreparerFactory;
+import org.apache.tiles.impl.mgmt.CachingTilesContainer;
+import org.apache.tiles.locale.LocaleResolver;
+import org.apache.tiles.ognl.ApplicationScopeNestedObjectExtractor;
+import org.apache.tiles.ognl.DelegatePropertyAccessor;
+import org.apache.tiles.ognl.NestedObjectDelegatePropertyAccessor;
+import org.apache.tiles.ognl.OGNLAttributeEvaluator;
+import org.apache.tiles.ognl.PropertyAccessorDelegateFactory;
+import org.apache.tiles.ognl.RequestScopeNestedObjectExtractor;
+import org.apache.tiles.ognl.SessionScopeNestedObjectExtractor;
+import org.apache.tiles.ognl.TilesApplicationContextNestedObjectExtractor;
+import org.apache.tiles.ognl.TilesContextPropertyAccessorDelegateFactory;
+import org.apache.tiles.renderer.AttributeRenderer;
+import org.apache.tiles.renderer.TypeDetectingAttributeRenderer;
+import org.apache.tiles.renderer.impl.BasicRendererFactory;
+import org.apache.tiles.renderer.impl.ChainedDelegateAttributeRenderer;
+import org.apache.tiles.servlet.context.ServletUtil;
+import org.apache.tiles.util.URLUtil;
 
+import javax.el.ArrayELResolver;
+import javax.el.BeanELResolver;
+import javax.el.CompositeELResolver;
+import javax.el.ELResolver;
+import javax.el.ListELResolver;
+import javax.el.MapELResolver;
+import javax.el.ResourceBundleELResolver;
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-
-public class StrutsTilesContainerFactory extends TilesContainerFactory {
-
-
-    @Override
-    protected void storeContainerDependencies(Object context, Map<String, String> initParameters, Map<String, String> configuration, BasicTilesContainer container) throws TilesException {
-        TilesContextFactory contextFactory =
-            (TilesContextFactory) createFactory(configuration,
-                CONTEXT_FACTORY_INIT_PARAM);
-
-        contextFactory = new StrutsTilesContextFactory(contextFactory);
-
-        DefinitionsFactory defsFactory =
-            (DefinitionsFactory) createFactory(configuration,
-                DEFINITIONS_FACTORY_INIT_PARAM);
-
-        PreparerFactory prepFactory =
-            (PreparerFactory) createFactory(configuration,
-                PREPARER_FACTORY_INIT_PARAM);
-
-        contextFactory.init(configuration);
-        TilesApplicationContext tilesContext =
-            contextFactory.createApplicationContext(context);
-
-        container.setDefinitionsFactory(defsFactory);
-        container.setContextFactory(contextFactory);
-        container.setPreparerFactory(prepFactory);
-        container.setApplicationContext(tilesContext);
-    }
+/**
+ * Dedicated Struts factory to build Tiles container with support for:
+ * - Freemarker
+ * - OGNL (as default)
+ * - EL
+ * - Wildcards
+ *
+ * If you need additional features create your own listener and factory,
+ * you can base on code from Tiles' CompleteAutoloadTilesContainerFactory
+ */
+public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     /**
-     * Wrapper factory, used to decorate the TilesRequestContext with a
-     * FreemarkerResult aware version.
-     * 
+     * The freemarker renderer name.
      */
-    class StrutsTilesContextFactory implements TilesContextFactory {
+    public static final String FREEMARKER_RENDERER_NAME = "freemarker";
 
-        private TilesContextFactory factory;
+    /**
+     * Supported pattern types
+     */
+    public static final String PATTERN_WILDCARD = "WILDCARD";
+    public static final String PATTERN_REGEXP = "REGEXP";
 
-        public StrutsTilesContextFactory(TilesContextFactory factory) {
-            this.factory = factory;
-        }
+    /**
+     * Default pattern to be used to collect Tiles definitions if user didn't configure any
+     */
+    public static final String TILES_DEFAULT_PATTERN = "tiles*.xml";
 
-        public void init(Map<String, String> map) {
-            factory.init(map);
-        }
+    @Override
+    protected BasicTilesContainer instantiateContainer(TilesApplicationContext applicationContext) {
+        CachingTilesContainer tilesContainer = new CachingTilesContainer();
+        ServletContext servletContext = (ServletContext) applicationContext.getContext();
+        ServletUtil.setContainer(servletContext, tilesContainer);
+        return tilesContainer;
+    }
 
-        public TilesApplicationContext createApplicationContext(Object context) {
-            return factory.createApplicationContext(context);
-        }
+    @Override
+    protected List<TilesRequestContextFactory> getTilesRequestContextFactoriesToBeChained(ChainedTilesRequestContextFactory parent) {
 
-        public TilesRequestContext createRequestContext(
-                TilesApplicationContext tilesApplicationContext,
-                Object... requestItems) {
-            TilesRequestContext context = factory.createRequestContext(tilesApplicationContext, requestItems);
-            return new StrutsTilesRequestContext(context);
+        List<TilesRequestContextFactory> factories = super.getTilesRequestContextFactoriesToBeChained(parent);
+
+        registerRequestContextFactory(FreeMarkerTilesRequestContextFactory.class.getName(), factories, parent);
+
+        return factories;
+    }
+
+    @Override
+    protected void registerAttributeRenderers(
+            BasicRendererFactory rendererFactory,
+            TilesApplicationContext applicationContext,
+            TilesRequestContextFactory contextFactory,
+            TilesContainer container,
+            AttributeEvaluatorFactory attributeEvaluatorFactory) {
+
+        super.registerAttributeRenderers(
+                rendererFactory,
+                applicationContext,
+                contextFactory,
+                container,
+                attributeEvaluatorFactory);
+
+        StrutsFreeMarkerAttributeRenderer freemarkerRenderer = new StrutsFreeMarkerAttributeRenderer();
+        freemarkerRenderer.setApplicationContext(applicationContext);
+        freemarkerRenderer.setAttributeEvaluatorFactory(attributeEvaluatorFactory);
+        freemarkerRenderer.setRequestContextFactory(contextFactory);
+
+        rendererFactory.registerRenderer(FREEMARKER_RENDERER_NAME, freemarkerRenderer);
+    }
+
+    @Override
+    protected AttributeRenderer createDefaultAttributeRenderer(
+            BasicRendererFactory rendererFactory,
+            TilesApplicationContext applicationContext,
+            TilesRequestContextFactory contextFactory,
+            TilesContainer container,
+            AttributeEvaluatorFactory attributeEvaluatorFactory) {
+
+        ChainedDelegateAttributeRenderer retValue = new ChainedDelegateAttributeRenderer();
+
+        retValue.addAttributeRenderer((TypeDetectingAttributeRenderer) rendererFactory
+                .getRenderer(DEFINITION_RENDERER_NAME));
+        retValue.addAttributeRenderer((TypeDetectingAttributeRenderer) rendererFactory
+                .getRenderer(FREEMARKER_RENDERER_NAME));
+        retValue.addAttributeRenderer((TypeDetectingAttributeRenderer) rendererFactory
+                .getRenderer(TEMPLATE_RENDERER_NAME));
+        retValue.addAttributeRenderer((TypeDetectingAttributeRenderer) rendererFactory
+                .getRenderer(STRING_RENDERER_NAME));
+
+        retValue.setApplicationContext(applicationContext);
+        retValue.setRequestContextFactory(contextFactory);
+        retValue.setAttributeEvaluatorFactory(attributeEvaluatorFactory);
+
+        return retValue;
+    }
+
+    @Override
+    protected AttributeEvaluatorFactory createAttributeEvaluatorFactory(
+            TilesApplicationContext applicationContext,
+            TilesRequestContextFactory contextFactory,
+            LocaleResolver resolver) {
+
+        BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator("OGNL", createOGNLEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator("EL", createELEvaluator(applicationContext));
+
+        return attributeEvaluatorFactory;
+    }
+
+    @Override
+    protected <T> PatternDefinitionResolver<T> createPatternDefinitionResolver(Class<T> customizationKeyClass) {
+
+        DefinitionPatternMatcherFactory wildcardFactory = new WildcardDefinitionPatternMatcherFactory();
+        DefinitionPatternMatcherFactory regexpFactory = new RegexpDefinitionPatternMatcherFactory();
+
+        PrefixedPatternDefinitionResolver<T> resolver = new PrefixedPatternDefinitionResolver<T>();
+        resolver.registerDefinitionPatternMatcherFactory(PATTERN_WILDCARD, wildcardFactory);
+        resolver.registerDefinitionPatternMatcherFactory(PATTERN_REGEXP, regexpFactory);
+
+        return resolver;
+    }
+
+    @Override
+    protected List<URL> getSourceURLs(TilesApplicationContext applicationContext, TilesRequestContextFactory contextFactory) {
+        try {
+            Set<URL> finalSet = applicationContext.getResources(getTilesDefinitionPattern(applicationContext.getInitParams()));
+
+            return URLUtil.getBaseTilesDefinitionURLs(finalSet);
+        } catch (IOException e) {
+            throw new DefinitionsFactoryException("Cannot load definition URLs", e);
         }
     }
+
+    protected String getTilesDefinitionPattern(Map<String, String> params) {
+        if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
+            return params.get(DefinitionsFactory.DEFINITIONS_CONFIG);
+        }
+        return TILES_DEFAULT_PATTERN;
+    }
+
+    protected ELAttributeEvaluator createELEvaluator(TilesApplicationContext applicationContext) {
+
+        ELAttributeEvaluator evaluator = new ELAttributeEvaluator();
+        evaluator.setApplicationContext(applicationContext);
+        JspExpressionFactoryFactory efFactory = new JspExpressionFactoryFactory();
+        efFactory.setApplicationContext(applicationContext);
+        evaluator.setExpressionFactory(efFactory.getExpressionFactory());
+
+        ELResolver elResolver = new CompositeELResolver() {
+            {
+                add(new TilesContextELResolver());
+                add(new TilesContextBeanELResolver());
+                add(new ArrayELResolver(false));
+                add(new ListELResolver(false));
+                add(new MapELResolver(false));
+                add(new ResourceBundleELResolver());
+                add(new BeanELResolver(false));
+            }
+        };
+
+        evaluator.setResolver(elResolver);
+
+        return evaluator;
+    }
+
+    protected OGNLAttributeEvaluator createOGNLEvaluator() {
+        try {
+            PropertyAccessor objectPropertyAccessor = OgnlRuntime.getPropertyAccessor(Object.class);
+            PropertyAccessor mapPropertyAccessor = OgnlRuntime.getPropertyAccessor(Map.class);
+            PropertyAccessor applicationContextPropertyAccessor =
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
+                            new TilesApplicationContextNestedObjectExtractor(),
+                            objectPropertyAccessor);
+            PropertyAccessor requestScopePropertyAccessor =
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
+                            new RequestScopeNestedObjectExtractor(), mapPropertyAccessor);
+            PropertyAccessor sessionScopePropertyAccessor =
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
+                            new SessionScopeNestedObjectExtractor(), mapPropertyAccessor);
+            PropertyAccessor applicationScopePropertyAccessor =
+                    new NestedObjectDelegatePropertyAccessor<TilesRequestContext>(
+                            new ApplicationScopeNestedObjectExtractor(), mapPropertyAccessor);
+            PropertyAccessorDelegateFactory<TilesRequestContext> factory =
+                    new TilesContextPropertyAccessorDelegateFactory(
+                            objectPropertyAccessor, applicationContextPropertyAccessor,
+                            requestScopePropertyAccessor, sessionScopePropertyAccessor,
+                            applicationScopePropertyAccessor);
+            PropertyAccessor tilesRequestAccessor = new DelegatePropertyAccessor<TilesRequestContext>(factory);
+            OgnlRuntime.setPropertyAccessor(TilesRequestContext.class, tilesRequestAccessor);
+            return new OGNLAttributeEvaluator();
+        } catch (OgnlException e) {
+            throw new TilesContainerFactoryException("Cannot initialize OGNL evaluator", e);
+        }
+    }
+
 }

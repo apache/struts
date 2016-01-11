@@ -61,6 +61,8 @@ import java.util.Map;
  * <p>If the request has a parameter 'struts.validateOnly' execution will return after
  * validation (action won't be executed).</p>
  *
+ * <p>If 'struts.validateOnly' is set to false you may want to use {@link JSONActionRedirectResult}.</p>
+ *
  * <p>A request parameter named 'struts.enableJSONValidation' must be set to 'true' to
  * use this interceptor</p>
  *
@@ -72,8 +74,8 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(JSONValidationInterceptor.class);
 
-    private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
-    private static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
+    static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
+    static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
     private static final String NO_ENCODING_SET_PARAM = "struts.JSONValidation.no.encoding";
 
     private static final String DEFAULT_ENCODING = "UTF-8";

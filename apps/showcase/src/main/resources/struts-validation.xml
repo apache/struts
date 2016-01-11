@@ -37,6 +37,19 @@
             <result name="input">quiz-ajax.jsp</result>
             <result>quiz-success.jsp</result>
         </action>
+
+		<!-- =========================================== -->
+		<!-- === ajax form submit                    === -->
+		<!-- =========================================== -->
+		<action name="ajaxFormSubmit" class="org.apache.struts2.showcase.validation.AjaxFormSubmitAction">
+			<interceptor-ref name="jsonValidationWorkflowStack" />
+			<result name="input">/WEB-INF/validation/ajaxFormSubmit.jsp</result>
+			<result type="jsonActionRedirect">ajaxFormSubmitSuccess</result>
+		</action>
+		<action name="ajaxFormSubmitSuccess" class="org.apache.struts2.showcase.validation.AjaxFormSubmitSuccessAction">
+			<result>/WEB-INF/validation/ajaxFormSubmitSuccess.jsp</result>
+		</action>
+		
 	</package>
 
 

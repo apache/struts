@@ -31,6 +31,7 @@
 			<s:url var="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation"/>
 			<s:url var="backToShowcase" action="showcase" namespace="/"/>
 			<s:url var="storeMessageAcrossRequestExample" namespace="/validation" action="storeErrorsAcrossRequestExample"/>
+			<s:url var="ajaxFormSubmitAction" namespace="/validation" action="ajaxFormSubmit!input"/>
 
 			<ul>
 				<li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
@@ -42,6 +43,7 @@
 				<li><s:a href="%{quizClient}">Validation (client)</s:a></li>
 				<li><s:a href="%{quizClientCss}">Validation (client using css_xhtml theme)</s:a></li>
 				<li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
+				<li><s:a href="%{ajaxFormSubmitAction}">AJAX Form Submit</s:a></li>
 			</ul>
 		</div>
 	</div>

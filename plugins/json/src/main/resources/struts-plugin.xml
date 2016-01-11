@@ -9,6 +9,7 @@
 
         <result-types>
             <result-type name="json" class="org.apache.struts2.json.JSONResult"/>
+            <result-type name="jsonActionRedirect" class="org.apache.struts2.json.JSONActionRedirectResult"/>
         </result-types>
 
         <interceptors>

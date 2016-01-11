@@ -246,7 +246,6 @@
 					</li>
 					<li><s:a value="/interactive/index.action">Interactive Demo</s:a></li>
 				</ul>
-
 				<ul class="nav pull-right">
 					<li class="dropdown last">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-flag"></i> Help<b

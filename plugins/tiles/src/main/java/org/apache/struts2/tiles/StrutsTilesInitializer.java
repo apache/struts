@@ -23,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.TilesApplicationContext;
 import org.apache.tiles.factory.AbstractTilesContainerFactory;
-import org.apache.tiles.servlet.wildcard.WildcardServletTilesApplicationContext;
 import org.apache.tiles.startup.AbstractTilesInitializer;
 
 import javax.servlet.ServletContext;
@@ -35,7 +34,7 @@ public class StrutsTilesInitializer extends AbstractTilesInitializer {
     @Override
     protected TilesApplicationContext createTilesApplicationContext(TilesApplicationContext preliminaryContext) {
         LOG.debug("Initializing Tiles wildcard support ...");
-        return new WildcardServletTilesApplicationContext((ServletContext) preliminaryContext.getContext());
+        return new StrutsWildcardServletTilesApplicationContext((ServletContext) preliminaryContext.getContext());
     }
 
     @Override

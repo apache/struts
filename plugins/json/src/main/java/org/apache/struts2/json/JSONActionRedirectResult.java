@@ -16,13 +16,12 @@ import org.apache.struts2.dispatcher.ServletActionRedirectResult;
  * don't pass them to JS handlers. So this result produces a JSON response
  * containing redirect data.
  *
- *<p>
- * To be used along with {@link JSONValidationInterceptor}.
- *</p>
- *<p>
- * Response JSON looks like this:
- * <pre>{"location": "$redirect url$"}</pre>
- *</p>
+ * <p>To be used along with {@link JSONValidationInterceptor}.</p>
+ *
+ * <p>Response JSON looks like this:
+ * 
+ *     <pre>{"location": "$redirect url$"}</pre>
+ * </p>
  *
  */
 public class JSONActionRedirectResult extends ServletActionRedirectResult {
@@ -30,7 +29,7 @@ public class JSONActionRedirectResult extends ServletActionRedirectResult {
     private static final long serialVersionUID = 3107276294073879542L;
 
     @Override
-	protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException {
+    protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException {
         if (sendJsonInsteadOfRedirect()) {
             printJson(response, finalLocation);
         } else {
@@ -45,12 +44,12 @@ public class JSONActionRedirectResult extends ServletActionRedirectResult {
      * @return true if a JSON response shall be generated, false if a redirect
      *         shall be sent.
      */
-    static boolean sendJsonInsteadOfRedirect() {
+    private boolean sendJsonInsteadOfRedirect() {
         HttpServletRequest request = ServletActionContext.getRequest();
         return isJsonEnabled(request) && !isValidateOnly(request);
     }
 
-    static void printJson(HttpServletResponse response, String finalLocation) throws IOException {
+    private void printJson(HttpServletResponse response, String finalLocation) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setHeader("Location", finalLocation);
@@ -61,11 +60,11 @@ public class JSONActionRedirectResult extends ServletActionRedirectResult {
         writer.close();
     }
 
-    private static boolean isJsonEnabled(HttpServletRequest request) {
+    private boolean isJsonEnabled(HttpServletRequest request) {
         return "true".equals(request.getParameter(JSONValidationInterceptor.VALIDATE_JSON_PARAM));
     }
 
-    private static boolean isValidateOnly(HttpServletRequest request) {
+    private boolean isValidateOnly(HttpServletRequest request) {
         return "true".equals(request.getParameter(JSONValidationInterceptor.VALIDATE_ONLY_PARAM));
     }
 }

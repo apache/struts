@@ -37,17 +37,18 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class StrutsWildcardServletTilesApplicationContext extends ServletApplicationContext {
+public class StrutsWildcardServletApplicationContext extends ServletApplicationContext {
 
-    private static final Logger LOG = LogManager.getLogger(StrutsWildcardServletTilesApplicationContext.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsWildcardServletApplicationContext.class);
 
     private ResourceFinder finder;
 
-    public StrutsWildcardServletTilesApplicationContext(ServletContext context) {
+    public StrutsWildcardServletApplicationContext(ServletContext context) {
         super(context);
 
         Set<URL> urls = new HashSet<>();
@@ -105,7 +106,7 @@ public class StrutsWildcardServletTilesApplicationContext extends ServletApplica
         for (String resource : matches.keySet()) {
             if (pattern.matcher(resource).matches()) {
                 URL url = matches.get(resource);
-                resources.add(new URLApplicationResource("", url));
+                resources.add(new URLApplicationResource(url.getPath(), url));
             }
         }
 

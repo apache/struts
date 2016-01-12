@@ -304,7 +304,7 @@ public class IteratorComponent extends ContextBean {
 
             String var = getVar();
 
-            if ((var != null) && (currentValue != null)) {
+            if ((var != null)) {
                 putInContext(currentValue);
             }
 

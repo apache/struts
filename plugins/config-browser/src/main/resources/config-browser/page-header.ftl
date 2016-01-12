@@ -49,13 +49,13 @@
 -->				<div class="toolgroup">
 					<div class="label"><strong>Configuration</strong></div>
 					<div class="body">
-						<div><@s.url id="constantsLink" action="showConstants" includeParams="none" />
+						<div><@s.url var="constantsLink" action="showConstants" includeParams="none" />
 							<a href="${constantsLink}">Constants</a>
 						</div>
-						<div><@s.url id="beansLink" action="showBeans" includeParams="none" />
+						<div><@s.url var="beansLink" action="showBeans" includeParams="none" />
 							<a href="${beansLink}">Beans</a>
 						</div>
-						<div><@s.url id="jarsLink" action="showJars" includeParams="none" />
+						<div><@s.url var="jarsLink" action="showJars" includeParams="none" />
 							<a href="${jarsLink}">Jars (requires Maven 2 data)</a>
 						</div>
 					</div>
@@ -80,7 +80,7 @@
                     <div class="label"><strong>Actions in <#if namespace == ""> default <#else> ${namespace} </#if></strong></div>
                     <#foreach name in actionNames>
                         <div>
-                            <@s.url id="actionLink" action="showConfig" includeParams="none" escapeAmp="false">
+                            <@s.url var="actionLink" action="showConfig" includeParams="none" escapeAmp="false">
                                 <@s.param name="namespace">${namespace}</@s.param>
                                 <@s.param name="actionName">${name}</@s.param>
                             </@s.url>

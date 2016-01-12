@@ -29,7 +29,7 @@
 			redirect (a new request is issue from the client), the text entered will be lost.<p/>
 
 
-			<@s.url id="url" action="viewSource" namespace="/tags/non-ui/actionPrefix" />
+			<@s.url var="url" action="viewSource" namespace="/tags/non-ui/actionPrefix" />
 			The JSP code can be read <@s.a href="%{#url}">here</@s.a>.
 
 

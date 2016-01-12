@@ -16,7 +16,7 @@
 			<s:generator var="iterator1" separator="," val="%{iteratorValue1}" />
 		    <s:generator var="iterator2" separator="," val="%{iteratorValue2}" />
 
-		    <s:append id="appendedIterator">
+		    <s:append var="appendedIterator">
 		        <s:param value="%{#attr.iterator1}" />
 		        <s:param value="%{#attr.iterator2}" />
 		    </s:append>

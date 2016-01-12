@@ -76,6 +76,8 @@ import java.util.Map;
  */
 public class PostbackResult extends StrutsResultSupport {
 
+    private static final long serialVersionUID = -2283504349296877429L;
+    
     private String actionName;
     private String namespace;
     private String method;
@@ -97,6 +99,9 @@ public class PostbackResult extends StrutsResultSupport {
             response.setDateHeader("Expires", 0); // Proxies
         }
 
+        //set contenttype @see ww-4564
+        response.setContentType("text/html");
+        
         // Render
         PrintWriter pw = new PrintWriter(response.getOutputStream());
         pw.write("<!DOCTYPE html><html><body><form action=\"" + finalLocation + "\" method=\"POST\">");

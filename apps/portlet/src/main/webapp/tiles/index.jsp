@@ -5,7 +5,7 @@
     <h4>Features</h4>
     <ul>
         <li>
-            <s:url id="freemarker" namespace="/tiles" action="processTilesFreemarkerExample" method="input" />
+            <s:url var="freemarker" namespace="/tiles" action="processTilesFreemarkerExample" method="input" />
     		<s:a href="%{freemarker}">View FreeMarker Example</s:a>
         </li>
     </ul>

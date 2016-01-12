@@ -111,6 +111,7 @@
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
+                        <descriptor>src/main/assembly/min-lib.xml</descriptor>
                         <descriptor>src/main/assembly/apps.xml</descriptor>
                         <descriptor>src/main/assembly/src.xml</descriptor>
                         <descriptor>src/main/assembly/docs.xml</descriptor>
@@ -124,6 +125,11 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>

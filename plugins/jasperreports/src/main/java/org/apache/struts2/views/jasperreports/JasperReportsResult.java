@@ -311,7 +311,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         // Fill the report and produce a print object
         try {
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(systemId);
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(systemId));
             if (conn == null) {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
             }
@@ -385,6 +385,12 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         } catch (JRException e) {
             LOG.error("Error producing {} report for uri {}", format, systemId, e);
             throw new ServletException(e.getMessage(), e);
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                LOG.warn("Could not close db connection properly", e);
+            }
         }
 
         response.setContentLength(output.size());

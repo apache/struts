@@ -12,11 +12,11 @@
 	<div class="row">
 		<div class="col-md-3">
 			<ul class="nav nav-tabs nav-stacked">
-				<s:url id="listpeopleurl" action="list-people" namespace="/person" />
+				<s:url var="listpeopleurl" action="list-people" namespace="/person" />
 				<li><s:a href="%{listpeopleurl}">List all people</s:a> </li>
-				<s:url id="editpersonurl" action="edit-person" namespace="/person" />
+				<s:url var="editpersonurl" action="edit-person" namespace="/person" />
 				<li class="active"><s:a href="%{editpersonurl}">Edit people</s:a></li>
-				<s:url id="newpersonurl" action="new-person" namespace="/person" method="input"/>
+				<s:url var="newpersonurl" action="new-person" namespace="/person" method="input"/>
 				<li><s:a href="%{newpersonurl}">Create a new person</s:a></li>
 			</ul>
 		</div>

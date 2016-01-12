@@ -85,12 +85,12 @@
     <properties>
         <currentVersion>${project.version}</currentVersion>
         <struts2.springPlatformVersion>4.1.6.RELEASE</struts2.springPlatformVersion>
-        <ognl.version>3.1.1</ognl.version>
+        <ognl.version>3.1.2</ognl.version>
         <asm.version>3.3</asm.version>
         <asm5.version>5.0.2</asm5.version>
         <tiles.version>3.0.5</tiles.version>
         <tiles-request.version>1.0.6</tiles-request.version>
-        <log4j2.version>2.3</log4j2.version>
+        <log4j2.version>2.5</log4j2.version>
 
         <!-- SCM Site Configuration -->
         <site.mainDirectory>${project.build.directory}/site</site.mainDirectory>

@@ -34,7 +34,7 @@ public class StrutsTilesInitializer extends AbstractTilesInitializer {
     @Override
     protected ApplicationContext createTilesApplicationContext(ApplicationContext preliminaryContext) {
         LOG.debug("Initializing Tiles wildcard support ...");
-        return new StrutsWildcardServletTilesApplicationContext((ServletContext) preliminaryContext.getContext());
+        return new StrutsWildcardServletApplicationContext((ServletContext) preliminaryContext.getContext());
     }
 
     @Override

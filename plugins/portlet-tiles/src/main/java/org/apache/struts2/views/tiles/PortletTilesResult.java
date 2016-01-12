@@ -22,22 +22,20 @@
 package org.apache.struts2.views.tiles;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import freemarker.template.TemplateException;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.TilesException;
 import org.apache.tiles.access.TilesAccess;
-import org.apache.tiles.portlet.context.PortletUtil;
+import org.apache.tiles.request.ApplicationContext;
+import org.apache.tiles.request.Request;
+import org.apache.tiles.request.portlet.RenderPortletRequest;
 
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.portlet.PortletContext;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import java.util.Map;
 
 /**
@@ -68,12 +66,15 @@ public class PortletTilesResult extends ServletDispatcherResult {
     protected void executeRenderResult(String location) throws TilesException {
         setLocation(location);
 
-        TilesContainer container = PortletUtil.getContainer(PortletActionContext.getPortletContext());
+        PortletContext portletContext = PortletActionContext.getPortletContext();
+        RenderRequest request = PortletActionContext.getRenderRequest();
+        RenderResponse response = PortletActionContext.getRenderResponse();
 
-        HttpServletRequest request = ServletActionContext.getRequest();
-        HttpServletResponse response = ServletActionContext.getResponse();
+        TilesContainer container = getCurrentContainer(request, portletContext);
+        ApplicationContext applicationContext = container.getApplicationContext();
+        Request currentRequest = new RenderPortletRequest(applicationContext, portletContext, request, response);
 
-        container.render(location, request, response);
+        container.render(location, currentRequest);
     }
 
     protected void executeActionResult(String location, ActionInvocation invocation) {
@@ -85,6 +86,29 @@ public class PortletTilesResult extends ServletDispatcherResult {
         sessionMap.put(PortletConstants.RENDER_DIRECT_LOCATION, location);
 
         res.setRenderParameter(PortletConstants.MODE_PARAM, PortletActionContext.getRequest().getPortletMode().toString());
+    }
+
+    protected TilesContainer getCurrentContainer(javax.portlet.PortletRequest request, PortletContext context) {
+
+        TilesContainer container = (TilesContainer) request.getAttribute(TilesAccess.CURRENT_CONTAINER_ATTRIBUTE_NAME);
+
+        if (container == null) {
+            container = getContainer(context);
+            request.setAttribute(TilesAccess.CURRENT_CONTAINER_ATTRIBUTE_NAME, container);
+        }
+
+        return container;
+    }
+
+    protected TilesContainer getContainer(PortletContext context) {
+        return getContainer(context, TilesAccess.CONTAINER_ATTRIBUTE);
+    }
+
+    protected TilesContainer getContainer(PortletContext context, String key) {
+        if (key == null) {
+            key = TilesAccess.CONTAINER_ATTRIBUTE;
+        }
+        return (TilesContainer) context.getAttribute(key);
     }
 
 }

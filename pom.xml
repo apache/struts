@@ -89,6 +89,7 @@
         <asm.version>3.3</asm.version>
         <asm5.version>5.0.2</asm5.version>
         <tiles.version>3.0.5</tiles.version>
+        <tiles-request.version>1.0.6</tiles-request.version>
         <log4j2.version>2.5</log4j2.version>
 
         <!-- SCM Site Configuration -->
@@ -620,8 +621,8 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.tiles</groupId>
-                <artifactId>tiles-portlet</artifactId>
-                <version>${tiles.version}</version>
+                <artifactId>tiles-request-portlet</artifactId>
+                <version>${tiles-request.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tiles</groupId>

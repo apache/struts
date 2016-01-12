@@ -27,6 +27,7 @@ import org.apache.tiles.TilesContainer;
 import org.apache.tiles.context.ChainedTilesRequestContextFactory;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.context.TilesRequestContextFactory;
+import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.definition.DefinitionsFactoryException;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcherFactory;
 import org.apache.tiles.definition.pattern.PatternDefinitionResolver;
@@ -59,6 +60,7 @@ import org.apache.tiles.renderer.AttributeRenderer;
 import org.apache.tiles.renderer.TypeDetectingAttributeRenderer;
 import org.apache.tiles.renderer.impl.BasicRendererFactory;
 import org.apache.tiles.renderer.impl.ChainedDelegateAttributeRenderer;
+import org.apache.tiles.servlet.context.ServletUtil;
 import org.apache.tiles.util.URLUtil;
 
 import javax.el.ArrayELResolver;
@@ -68,9 +70,9 @@ import javax.el.ELResolver;
 import javax.el.ListELResolver;
 import javax.el.MapELResolver;
 import javax.el.ResourceBundleELResolver;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,9 +100,17 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     public static final String PATTERN_WILDCARD = "WILDCARD";
     public static final String PATTERN_REGEXP = "REGEXP";
 
+    /**
+     * Default pattern to be used to collect Tiles definitions if user didn't configure any
+     */
+    public static final String TILES_DEFAULT_PATTERN = "tiles*.xml";
+
     @Override
     protected BasicTilesContainer instantiateContainer(TilesApplicationContext applicationContext) {
-        return new CachingTilesContainer();
+        CachingTilesContainer tilesContainer = new CachingTilesContainer();
+        ServletContext servletContext = (ServletContext) applicationContext.getContext();
+        ServletUtil.setContainer(servletContext, tilesContainer);
+        return tilesContainer;
     }
 
     @Override
@@ -181,7 +191,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         DefinitionPatternMatcherFactory wildcardFactory = new WildcardDefinitionPatternMatcherFactory();
         DefinitionPatternMatcherFactory regexpFactory = new RegexpDefinitionPatternMatcherFactory();
 
-        PrefixedPatternDefinitionResolver<T> resolver = new PrefixedPatternDefinitionResolver<>();
+        PrefixedPatternDefinitionResolver<T> resolver = new PrefixedPatternDefinitionResolver<T>();
         resolver.registerDefinitionPatternMatcherFactory(PATTERN_WILDCARD, wildcardFactory);
         resolver.registerDefinitionPatternMatcherFactory(PATTERN_REGEXP, regexpFactory);
 
@@ -189,24 +199,21 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     }
 
     @Override
-    protected List<URL> getSourceURLs(TilesApplicationContext applicationContext,
-                                      TilesRequestContextFactory contextFactory) {
+    protected List<URL> getSourceURLs(TilesApplicationContext applicationContext, TilesRequestContextFactory contextFactory) {
         try {
-            Set<URL> finalSet = new HashSet<>();
-            Set<URL> webINFSet = applicationContext.getResources("/WEB-INF/**/tiles*.xml");
-            Set<URL> metaINFSet = applicationContext.getResources("classpath*:META-INF/**/tiles*.xml");
-
-            if (webINFSet != null) {
-                finalSet.addAll(webINFSet);
-            }
-            if (metaINFSet != null) {
-                finalSet.addAll(metaINFSet);
-            }
+            Set<URL> finalSet = applicationContext.getResources(getTilesDefinitionPattern(applicationContext.getInitParams()));
 
             return URLUtil.getBaseTilesDefinitionURLs(finalSet);
         } catch (IOException e) {
             throw new DefinitionsFactoryException("Cannot load definition URLs", e);
         }
+    }
+
+    protected String getTilesDefinitionPattern(Map<String, String> params) {
+        if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
+            return params.get(DefinitionsFactory.DEFINITIONS_CONFIG);
+        }
+        return TILES_DEFAULT_PATTERN;
     }
 
     protected ELAttributeEvaluator createELEvaluator(TilesApplicationContext applicationContext) {

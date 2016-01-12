@@ -30,7 +30,11 @@ import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.tiles.TilesContainer;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.tiles.servlet.context.ServletUtil;
+import org.apache.tiles.access.TilesAccess;
+import org.apache.tiles.request.ApplicationContext;
+import org.apache.tiles.request.Request;
+import org.apache.tiles.request.servlet.ServletRequest;
+import org.apache.tiles.request.servlet.ServletUtil;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -99,11 +103,14 @@ public class TilesResult extends ServletDispatcherResult {
 
         ServletContext servletContext = ServletActionContext.getServletContext();
 
-        TilesContainer container = ServletUtil.getContainer(servletContext);
+        ApplicationContext applicationContext = ServletUtil.getApplicationContext(servletContext);
+        TilesContainer container = TilesAccess.getContainer(applicationContext);
 
-        HttpServletRequest request = ServletActionContext.getRequest();
-        HttpServletResponse response = ServletActionContext.getResponse();
+        HttpServletRequest httpRequest = ServletActionContext.getRequest();
+        HttpServletResponse httpResponse = ServletActionContext.getResponse();
 
-        container.render(location, request, response);
+        Request request = new ServletRequest(applicationContext, httpRequest, httpResponse);
+
+        container.render(location, request);
     }
 }

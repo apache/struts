@@ -21,8 +21,8 @@ package org.apache.struts2.tiles;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tiles.TilesApplicationContext;
 import org.apache.tiles.factory.AbstractTilesContainerFactory;
+import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.startup.AbstractTilesInitializer;
 
 import javax.servlet.ServletContext;
@@ -32,13 +32,13 @@ public class StrutsTilesInitializer extends AbstractTilesInitializer {
     private static final Logger LOG = LogManager.getLogger(StrutsTilesInitializer.class);
 
     @Override
-    protected TilesApplicationContext createTilesApplicationContext(TilesApplicationContext preliminaryContext) {
+    protected ApplicationContext createTilesApplicationContext(ApplicationContext preliminaryContext) {
         LOG.debug("Initializing Tiles wildcard support ...");
         return new StrutsWildcardServletTilesApplicationContext((ServletContext) preliminaryContext.getContext());
     }
 
     @Override
-    protected AbstractTilesContainerFactory createContainerFactory(TilesApplicationContext context) {
+    protected AbstractTilesContainerFactory createContainerFactory(ApplicationContext context) {
         LOG.trace("Creating dedicated Struts factory to create Tiles container");
         return new StrutsTilesContainerFactory();
     }

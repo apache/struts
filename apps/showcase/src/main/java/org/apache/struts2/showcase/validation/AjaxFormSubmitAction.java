@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.validator.annotations.UrlValidator;
  * <ul>
  *   <li>Depends on <code>json-plugin</code>.</li>
  *   <li>Requires <code>jsonValidationInterceptor</code> to be on stack.</li>
- *   <li>Uses a special json redirect result type.</li>
+ *   <li>Uses result type <code>jsonActionRedirect</code>.</li>
  *   <li>Uses http parameters <code>struts.enableJSONValidation=true</code> and <code>struts.validateOnly=false</code>.</li>
  *   <li>Uses a customized theme to make sure html elements required as error containers are always present and easily selectable in JS.</li>
  *   <li>Uses some custom JS code depending on jQuery to issue AJAX request and to render errors in html.</li>

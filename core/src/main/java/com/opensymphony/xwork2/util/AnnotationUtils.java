@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -41,8 +43,6 @@ public class AnnotationUtils {
 
     private static final Pattern SETTER_PATTERN = Pattern.compile("set([A-Z][A-Za-z0-9]*)$");
     private static final Pattern GETTER_PATTERN = Pattern.compile("(get|is|has)([A-Z][A-Za-z0-9]*)$");
-
-
 
     /**
      * Adds all fields with the specified Annotation of class clazz and its superclasses to allFields
@@ -122,9 +122,9 @@ public class AnnotationUtils {
         Collection<Method> toReturn = new HashSet<>();
 
         for (Method m : clazz.getMethods()) {
-            if (org.apache.commons.lang3.ArrayUtils.isNotEmpty(annotation) && isAnnotatedBy(m, annotation)) {
+            if (ArrayUtils.isNotEmpty(annotation) && isAnnotatedBy(m, annotation)) {
                 toReturn.add(m);
-            } else if (org.apache.commons.lang3.ArrayUtils.isEmpty(annotation) && org.apache.commons.lang3.ArrayUtils.isNotEmpty(m.getAnnotations())) {
+            } else if (ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(m.getAnnotations())) {
                 toReturn.add(m);
             }
 		}
@@ -140,7 +140,7 @@ public class AnnotationUtils {
 	 * @see AnnotatedElement
 	 */
 	public static boolean isAnnotatedBy(AnnotatedElement annotatedElement, Class<? extends Annotation>... annotation) {
-        if (org.apache.commons.lang3.ArrayUtils.isEmpty(annotation)) {
+        if (ArrayUtils.isEmpty(annotation)) {
             return false;
         }
 

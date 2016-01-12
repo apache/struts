@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-portlet</artifactId>
+            <artifactId>tiles-request-portlet</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

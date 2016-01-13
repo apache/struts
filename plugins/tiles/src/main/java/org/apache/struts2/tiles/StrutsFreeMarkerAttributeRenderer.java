@@ -51,7 +51,7 @@ public class StrutsFreeMarkerAttributeRenderer implements Renderer {
     @Override
     public void render(String path, Request request) throws IOException {
         if (path != null) {
-            LOG.trace("Rendering freemarker tile ...");
+            LOG.trace("Rendering freemarker tile [{}]", path);
 
             ActionContext ctx = readActionContext(request);
 
@@ -83,6 +83,8 @@ public class StrutsFreeMarkerAttributeRenderer implements Renderer {
     protected ActionContext readActionContext(Request request) {
         ActionContext ctx = null;
 
+        LOG.debug("Obtaining HttpServletRequest based on [{}]", request.getClass().getName());
+
         if (request instanceof ServletRequest) {
             HttpServletRequest httpRequest = ((ServletRequest) request).getRequest();
             ctx = ServletActionContext.getActionContext(httpRequest);
@@ -93,6 +95,7 @@ public class StrutsFreeMarkerAttributeRenderer implements Renderer {
         }
 
         if (ctx == null) {
+            LOG.error("Cannot obtain HttpServletRequest from [{}]", request.getClass().getName());
             throw new ConfigurationException("There is no ActionContext for current request!");
         }
 
@@ -101,6 +104,7 @@ public class StrutsFreeMarkerAttributeRenderer implements Renderer {
 
     @Override
     public boolean isRenderable(String path, Request request) {
+        LOG.trace("Checking if path [{}] can be rendered", path);
         return path != null && path.startsWith("/") && path.endsWith(".ftl");
     }
 

@@ -626,6 +626,21 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.tiles</groupId>
+                <artifactId>tiles-request-api</artifactId>
+                <version>${tiles-request.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tiles</groupId>
+                <artifactId>tiles-request-jsp</artifactId>
+                <version>${tiles-request.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tiles</groupId>
+                <artifactId>tiles-request-servlet</artifactId>
+                <version>${tiles-request.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tiles</groupId>
                 <artifactId>tiles-jsp</artifactId>
                 <version>${tiles.version}</version>
             </dependency>

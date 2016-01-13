@@ -36,7 +36,9 @@ import org.apache.struts2.views.freemarker.StrutsBeanWrapper;
 import org.apache.tiles.freemarker.template.TilesFMModelRepository;
 import org.apache.tiles.impl.InvalidTemplateException;
 import org.apache.tiles.request.Request;
+import org.apache.tiles.request.jsp.JspRequest;
 import org.apache.tiles.request.render.Renderer;
+import org.apache.tiles.request.servlet.ServletRequest;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -51,10 +53,7 @@ public class StrutsFreeMarkerAttributeRenderer implements Renderer {
         if (path != null) {
             LOG.trace("Rendering freemarker tile ...");
 
-            ActionContext ctx = ServletActionContext.getActionContext((HttpServletRequest) request);
-            if (ctx == null) {
-                throw new ConfigurationException("There is no ActionContext for current request!");
-            }
+            ActionContext ctx = readActionContext(request);
 
             registerTilesBeanModel(ctx);
 
@@ -75,6 +74,29 @@ public class StrutsFreeMarkerAttributeRenderer implements Renderer {
             LOG.error("Path is null, cannot render template!");
             throw new InvalidTemplateException("Cannot render a null template");
         }
+    }
+
+    /**
+     * Depending how Tiles definition was defined, request can an instance of JspRequest (for JSPs)
+     * or a ServletRequest (FreeMarker)
+     */
+    protected ActionContext readActionContext(Request request) {
+        ActionContext ctx = null;
+
+        if (request instanceof ServletRequest) {
+            HttpServletRequest httpRequest = ((ServletRequest) request).getRequest();
+            ctx = ServletActionContext.getActionContext(httpRequest);
+        }
+        if (request instanceof JspRequest) {
+            HttpServletRequest httpRequest = (HttpServletRequest) ((JspRequest) request).getPageContext().getRequest();
+            ctx = ServletActionContext.getActionContext(httpRequest);
+        }
+
+        if (ctx == null) {
+            throw new ConfigurationException("There is no ActionContext for current request!");
+        }
+
+        return ctx;
     }
 
     @Override

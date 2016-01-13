@@ -95,6 +95,10 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         return resources;
     }
 
+    public ApplicationResource getResource(ApplicationResource base, Locale locale) {
+        return base;
+    }
+
     protected Set<ApplicationResource> findResources(String path) throws IOException {
         Set<ApplicationResource> resources = new HashSet<>();
 

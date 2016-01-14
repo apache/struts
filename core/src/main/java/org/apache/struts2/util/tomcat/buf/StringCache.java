@@ -16,8 +16,8 @@
  */
 package org.apache.struts2.util.tomcat.buf;
 
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.TreeMap;
 public class StringCache {
 
 
-    private static final Logger log = LoggerFactory.getLogger(StringCache.class);
+    private static final Logger log = LogManager.getLogger(StringCache.class);
 
 
     // ------------------------------------------------------- Static Variables

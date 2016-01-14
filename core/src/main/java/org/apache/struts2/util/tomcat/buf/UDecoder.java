@@ -16,9 +16,9 @@
  */
 package org.apache.struts2.util.tomcat.buf;
 
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.opensymphony.xwork2.util.logging.Logger;
 import java.io.CharConversionException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
  */
 public final class UDecoder {
 
-    private static final Logger log = LoggerFactory.getLogger(UDecoder.class);
+    private static final Logger log = LogManager.getLogger(UDecoder.class);
 
     public static final boolean ALLOW_ENCODED_SLASH =
         Boolean.parseBoolean(System.getProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "false"));

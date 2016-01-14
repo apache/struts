@@ -36,9 +36,8 @@ import org.apache.struts2.views.freemarker.StrutsBeanWrapper;
 import org.apache.tiles.freemarker.template.TilesFMModelRepository;
 import org.apache.tiles.impl.InvalidTemplateException;
 import org.apache.tiles.request.Request;
-import org.apache.tiles.request.jsp.JspRequest;
 import org.apache.tiles.request.render.Renderer;
-import org.apache.tiles.request.servlet.ServletRequest;
+import org.apache.tiles.request.servlet.ServletUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -81,18 +80,10 @@ public class StrutsFreeMarkerAttributeRenderer implements Renderer {
      * or a ServletRequest (FreeMarker)
      */
     protected ActionContext readActionContext(Request request) {
-        ActionContext ctx = null;
-
         LOG.debug("Obtaining HttpServletRequest based on [{}]", request.getClass().getName());
 
-        if (request instanceof ServletRequest) {
-            HttpServletRequest httpRequest = ((ServletRequest) request).getRequest();
-            ctx = ServletActionContext.getActionContext(httpRequest);
-        }
-        if (request instanceof JspRequest) {
-            HttpServletRequest httpRequest = (HttpServletRequest) ((JspRequest) request).getPageContext().getRequest();
-            ctx = ServletActionContext.getActionContext(httpRequest);
-        }
+        HttpServletRequest httpRequest = ServletUtil.getServletRequest(request).getRequest();
+        ActionContext ctx = ServletActionContext.getActionContext(httpRequest);
 
         if (ctx == null) {
             LOG.error("Cannot obtain HttpServletRequest from [{}]", request.getClass().getName());

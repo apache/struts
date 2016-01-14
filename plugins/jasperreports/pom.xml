@@ -43,6 +43,13 @@
             <artifactId>jasperreports</artifactId>
             <version>6.0.3</version>
             <scope>provided</scope>
+            <exclusions>
+                <!-- This is currently not found in Maven central, yet not needed at compile time -->
+                <exclusion>
+                    <groupId>org.olap4j</groupId>
+                    <artifactId>olap4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <properties>

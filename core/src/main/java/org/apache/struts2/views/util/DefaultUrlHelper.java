@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.util.URLDecoderUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -267,15 +268,15 @@ public class DefaultUrlHelper implements UrlHelper {
 	}
 
 	/**
-	 * Decodes the URL using {@link java.net.URLDecoder#decode(String, String)} with the encoding specified in the configuration.
+	 * Decodes the URL using {@link URLDecoderUtil#decode(String, String)} with the encoding specified in the configuration.
 	 *
 	 * @param input the input to decode
 	 * @return the encoded string
 	 */
 	public String decode( String input ) {
 		try {
-			return URLDecoder.decode(input, encoding);
-		} catch (UnsupportedEncodingException e) {
+            return URLDecoderUtil.decode(input, encoding);
+		} catch (Exception e) {
     		LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
 			return input;
 		}

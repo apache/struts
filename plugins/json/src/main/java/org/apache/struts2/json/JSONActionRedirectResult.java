@@ -44,12 +44,12 @@ public class JSONActionRedirectResult extends ServletActionRedirectResult {
      * @return true if a JSON response shall be generated, false if a redirect
      *         shall be sent.
      */
-    private boolean sendJsonInsteadOfRedirect() {
+    protected boolean sendJsonInsteadOfRedirect() {
         HttpServletRequest request = ServletActionContext.getRequest();
         return isJsonEnabled(request) && !isValidateOnly(request);
     }
 
-    private void printJson(HttpServletResponse response, String finalLocation) throws IOException {
+    protected void printJson(HttpServletResponse response, String finalLocation) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setHeader("Location", finalLocation);
@@ -60,11 +60,11 @@ public class JSONActionRedirectResult extends ServletActionRedirectResult {
         writer.close();
     }
 
-    private boolean isJsonEnabled(HttpServletRequest request) {
+    protected boolean isJsonEnabled(HttpServletRequest request) {
         return "true".equals(request.getParameter(JSONValidationInterceptor.VALIDATE_JSON_PARAM));
     }
 
-    private boolean isValidateOnly(HttpServletRequest request) {
+    protected boolean isValidateOnly(HttpServletRequest request) {
         return "true".equals(request.getParameter(JSONValidationInterceptor.VALIDATE_ONLY_PARAM));
     }
 }

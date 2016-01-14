@@ -74,11 +74,11 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(JSONValidationInterceptor.class);
 
-    static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
-    static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
-    private static final String NO_ENCODING_SET_PARAM = "struts.JSONValidation.no.encoding";
+    public static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
+    public static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
+    public static final String NO_ENCODING_SET_PARAM = "struts.JSONValidation.no.encoding";
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = "UTF-8";
 
     private int validationFailedStatus = -1;
 

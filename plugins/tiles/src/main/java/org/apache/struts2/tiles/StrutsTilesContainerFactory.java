@@ -149,8 +149,8 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         DefinitionPatternMatcherFactory regexpFactory = new RegexpDefinitionPatternMatcherFactory();
         PrefixedPatternDefinitionResolver<T> resolver = new PrefixedPatternDefinitionResolver<>();
 
-        resolver.registerDefinitionPatternMatcherFactory("WILDCARD", wildcardFactory);
-        resolver.registerDefinitionPatternMatcherFactory("REGEXP", regexpFactory);
+        resolver.registerDefinitionPatternMatcherFactory(PATTERN_WILDCARD, wildcardFactory);
+        resolver.registerDefinitionPatternMatcherFactory(PATTERN_REGEXP, regexpFactory);
 
         return resolver;
     }

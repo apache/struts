@@ -97,6 +97,12 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
      */
     public static final String TILES_DEFAULT_PATTERN = "tiles*.xml";
 
+    /**
+     * Supported expression languages
+     */
+    public static final String OGNL = "OGNL";
+    public static final String EL = "EL";
+
     @Override
     public TilesContainer createDecoratedContainer(TilesContainer originalContainer, ApplicationContext applicationContext) {
         return new CachingTilesContainer(originalContainer);
@@ -137,8 +143,8 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
             LocaleResolver resolver) {
 
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator("OGNL", createOGNLEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator("EL", createELEvaluator(applicationContext));
+        attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(EL, createELEvaluator(applicationContext));
 
         return attributeEvaluatorFactory;
     }

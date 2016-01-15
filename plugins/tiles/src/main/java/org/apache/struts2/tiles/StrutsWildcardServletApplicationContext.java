@@ -26,13 +26,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.MessageFormatMessage;
 import org.apache.tiles.request.ApplicationResource;
-import org.apache.tiles.request.locale.URLApplicationResource;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
 
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -96,7 +96,16 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
     }
 
     public ApplicationResource getResource(ApplicationResource base, Locale locale) {
-        return base;
+        String localePath = base.getLocalePath(locale);
+        if (new File(localePath).exists()) {
+            try {
+                return new StrutsApplicationResource(URI.create("file://" + localePath).toURL());
+            } catch (MalformedURLException e) {
+                LOG.warn(new MessageFormatMessage("Cannot access [{}]", localePath), e);
+                return null;
+            }
+        }
+        return null;
     }
 
     protected Set<ApplicationResource> findResources(String path) throws IOException {
@@ -110,7 +119,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         for (String resource : matches.keySet()) {
             if (pattern.matcher(resource).matches()) {
                 URL url = matches.get(resource);
-                resources.add(new URLApplicationResource(url.getPath(), url));
+                resources.add(new StrutsApplicationResource(url));
             }
         }
 

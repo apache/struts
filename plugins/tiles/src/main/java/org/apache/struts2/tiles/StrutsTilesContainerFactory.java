@@ -161,6 +161,10 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         return resolver;
     }
 
+    protected LocaleResolver createLocaleResolver(ApplicationContext applicationContext) {
+        return new StrutsTilesLocaleResolver();
+    }
+
     @Override
     protected List<ApplicationResource> getSources(ApplicationContext applicationContext) {
         Collection<ApplicationResource> resources = applicationContext.getResources(getTilesDefinitionPattern(applicationContext.getInitParams()));

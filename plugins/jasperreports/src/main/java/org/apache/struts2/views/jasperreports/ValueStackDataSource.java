@@ -92,12 +92,7 @@ public class ValueStackDataSource implements JRRewindableDataSource {
         //TODO: move the code to return a ValueStackDataSource to a seperate
         //      method when and if the JRDataSource interface is updated to support
         //      this.
-        String expression = field.getDescription();
-
-        if (expression == null) {
-            //Description is optional so use the field name as a default
-            expression = field.getName();
-        }
+        String expression = field.getName();
 
         Object value = valueStack.findValue(expression);
         LOG.debug("Field [{}] = [{}]", field.getName(), value);

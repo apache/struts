@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.util.WildcardUtil;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.MessageFormatMessage;
 import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
 
@@ -89,7 +88,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         try {
             resources.addAll(findResources(path));
         } catch (IOException e) {
-            LOG.error(new MessageFormatMessage("Cannot find resources for [{}]", path), e);
+            LOG.error("Cannot find resources for [{}]", path, e);
         }
 
         return resources;
@@ -101,7 +100,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
             try {
                 return new StrutsApplicationResource(URI.create("file://" + localePath).toURL());
             } catch (MalformedURLException e) {
-                LOG.warn(new MessageFormatMessage("Cannot access [{}]", localePath), e);
+                LOG.warn("Cannot access [{}]", localePath, e);
                 return null;
             }
         }

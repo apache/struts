@@ -1,0 +1,48 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.5//EN"
+    "http://struts.apache.org/dtds/xwork-2.5.dtd"
+ >
+
+<xwork>
+    <include file="xwork-test-beans.xml" />
+    <package name="default">
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
+        </result-types>
+
+        <action name="noname">
+            <result />
+        </action>
+
+        <action name="success">
+            <result name="success" />
+        </action>
+
+        <action name="empty">
+            <result name="" />
+        </action>
+
+        <action name="comma">
+            <result name=" , " />
+        </action>
+
+        <action name="error-input">
+            <result name="error, input" />
+        </action>
+
+        <action name="error-input2">
+            <result name="error, input, " />
+        </action>
+
+        <action name="noname-error-input">
+            <result />
+            <result name="error, input" />
+        </action>
+
+        <action name="noname-error-input2">
+            <result />
+            <result name="error" />
+            <result name="input" />
+        </action>
+    </package>
+</xwork>

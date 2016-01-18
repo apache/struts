@@ -28,9 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.tiles.TilesContainer;
-import org.apache.tiles.access.TilesAccess;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.tiles.access.TilesAccess;
+import org.apache.tiles.request.ApplicationContext;
+import org.apache.tiles.request.Request;
+import org.apache.tiles.request.servlet.ServletRequest;
+import org.apache.tiles.request.servlet.ServletUtil;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -84,6 +88,7 @@ public class TilesResult extends ServletDispatcherResult {
     public TilesResult(String location) {
         super(location);
     }
+
     /**
      * Dispatches to the given location. Does its forward via a RequestDispatcher. If the
      * dispatch fails a 404 error will be sent back in the http response.
@@ -97,11 +102,17 @@ public class TilesResult extends ServletDispatcherResult {
         setLocation(location);
 
         ServletContext servletContext = ServletActionContext.getServletContext();
-        TilesContainer container = TilesAccess.getContainer(servletContext);
 
-        HttpServletRequest request = ServletActionContext.getRequest();
-        HttpServletResponse response = ServletActionContext.getResponse();
+        ApplicationContext applicationContext = ServletUtil.getApplicationContext(servletContext);
+        TilesContainer container = TilesAccess.getContainer(applicationContext);
 
-        container.render(location, request, response);
+        HttpServletRequest httpRequest = ServletActionContext.getRequest();
+        HttpServletResponse httpResponse = ServletActionContext.getResponse();
+
+        Request request = new ServletRequest(applicationContext, httpRequest, httpResponse);
+        
+        container.startContext(request);
+        container.render(location, request);
+        container.endContext(request);
     }
 }

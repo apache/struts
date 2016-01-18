@@ -21,21 +21,26 @@ package org.apache.struts2.tiles;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tiles.startup.TilesInitializer;
-import org.apache.tiles.web.startup.AbstractTilesListener;
+import org.apache.tiles.factory.AbstractTilesContainerFactory;
+import org.apache.tiles.request.ApplicationContext;
+import org.apache.tiles.startup.AbstractTilesInitializer;
 
-/**
- * Listener used to automatically tie Tiles support into Struts
- *
- * @since Struts 2.0.2
- */
-public class StrutsTilesListener extends AbstractTilesListener {
+import javax.servlet.ServletContext;
 
-    private static final Logger LOG = LogManager.getLogger(StrutsTilesListener.class);
+public class StrutsTilesInitializer extends AbstractTilesInitializer {
+
+    private static final Logger LOG = LogManager.getLogger(StrutsTilesInitializer.class);
 
     @Override
-    protected TilesInitializer createTilesInitializer() {
-        LOG.info("Starting Struts Tiles 2 integration ...");
-        return new StrutsTilesInitializer();
+    protected ApplicationContext createTilesApplicationContext(ApplicationContext preliminaryContext) {
+        LOG.debug("Initializing Tiles wildcard support ...");
+        return new StrutsWildcardServletApplicationContext((ServletContext) preliminaryContext.getContext());
     }
+
+    @Override
+    protected AbstractTilesContainerFactory createContainerFactory(ApplicationContext context) {
+        LOG.trace("Creating dedicated Struts factory to create Tiles container");
+        return new StrutsTilesContainerFactory();
+    }
+
 }

@@ -83,16 +83,9 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         try {
             setLocale(request);
             processUpload(request, saveDir);
-        } catch (FileUploadException e) {
+        } catch (FileUploadBase.SizeLimitExceededException e) {
             LOG.warn("Request exceeded size limit!", e);
-            String errorMessage = null;
-            if(e instanceof FileUploadBase.SizeLimitExceededException) {
-                FileUploadBase.SizeLimitExceededException ex = (FileUploadBase.SizeLimitExceededException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getPermittedSize(), ex.getActualSize()});
-            } else {
-                errorMessage = buildErrorMessage(e, new Object[]{});
-            }
-
+            String errorMessage = buildErrorMessage(e, new Object[]{e.getPermittedSize(), e.getActualSize()});
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
             }

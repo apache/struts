@@ -70,6 +70,7 @@ public class TilesResult extends ServletDispatcherResult {
 
         container.startContext(servletRequest);
         container.render(location, servletRequest);
+        container.endContext(servletRequest);
     }
 
     protected TilesContainer initTilesContainer(ApplicationContext applicationContext, ServletRequest servletRequest) {

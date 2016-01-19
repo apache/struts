@@ -188,6 +188,7 @@
                             <s:url var="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation"/>
                             <s:url var="storeMessageAcrossRequestExample" namespace="/validation" action="storeErrorsAcrossRequestExample"/>
                             <s:url var="beanValidationUrl" action="bean-validation" namespace="/bean-validation"/>
+                            <s:url var="ajaxFormSubmitUrl" action="ajaxFormSubmit" namespace="/validation" method="input"/>
                             <li><s:a href="%{beanValidationUrl}">Bean Validation</s:a></li>
                             <li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
                             <li><s:a href="%{clientSideValidationUrl}">Field Validators with client-side JavaScript</s:a></li>
@@ -197,6 +198,7 @@
                             <li><s:a href="%{quizClient}">Validation (client)</s:a></li>
                             <li><s:a href="%{quizClientCss}">Validation (client using css_xhtml theme)</s:a></li>
                             <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
+                            <li><s:a href="%{ajaxFormSubmitUrl}">AJAX Form Submit</s:a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

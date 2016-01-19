@@ -19,23 +19,37 @@
 
 package org.apache.struts2.tiles;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.tiles.startup.TilesInitializer;
-import org.apache.tiles.web.startup.AbstractTilesListener;
+import org.apache.tiles.request.locale.PostfixedApplicationResource;
 
-/**
- * Listener used to automatically tie Tiles support into Struts
- *
- * @since Struts 2.0.2
- */
-public class StrutsTilesListener extends AbstractTilesListener {
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-    private static final Logger LOG = LogManager.getLogger(StrutsTilesListener.class);
+public class StrutsApplicationResource extends PostfixedApplicationResource {
+
+    private final URL url;
+
+    public StrutsApplicationResource(URL url) {
+        super(url.getPath());
+        this.url = url;
+    }
 
     @Override
-    protected TilesInitializer createTilesInitializer() {
-        LOG.info("Starting Struts Tiles 2 integration ...");
-        return new StrutsTilesInitializer();
+    public InputStream getInputStream() throws IOException {
+        if (new File(url.getPath()).exists()) {
+            return url.openStream();
+        }
+        return null;
     }
+
+    @Override
+    public long getLastModified() throws IOException {
+        File file = new File(url.getPath());
+        if (file.exists()) {
+            return file.lastModified();
+        }
+        return 0;
+    }
+
 }

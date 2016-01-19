@@ -350,6 +350,7 @@ public class FreemarkerManager {
                     servletContext.setAttribute(ATTR_APPLICATION_MODEL, servletContextModel);
                 }
                 TaglibFactory taglibs = new TaglibFactory(servletContext);
+                taglibs.setObjectWrapper(wrapper);
                 servletContext.setAttribute(ATTR_JSP_TAGLIBS_MODEL, taglibs);
             }
             model.put(KEY_APPLICATION, servletContextModel);

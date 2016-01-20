@@ -183,7 +183,7 @@ public class RestActionMapperTest extends TestCase {
         req.setRequestURI("/myapp/animals/dog/fido!update;jsessionid=29fefpv23do1g");
         req.setServletPath("/animals/dog/fido");
         req.setMethod("GET");
-        
+
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/animals", mapping.getNamespace());
@@ -196,10 +196,10 @@ public class RestActionMapperTest extends TestCase {
         req.setRequestURI("/myapp/animals/dog/fido!update;jsessionid=29fefpv23do1g");
         req.setServletPath("/animals/dog/fido");
         req.setMethod("GET");
-        
+
         // allow DMI
         mapper.setAllowDynamicMethodCalls("true");
-        
+
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/animals", mapping.getNamespace());

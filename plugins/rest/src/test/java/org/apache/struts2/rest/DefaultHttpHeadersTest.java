@@ -27,6 +27,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -133,7 +135,7 @@ public class DefaultHttpHeadersTest extends TestCase {
         Date now = new Date();
         DefaultHttpHeaders headers = new DefaultHttpHeaders()
                 .lastModified(now);
-        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(now));
+        mockRequest.addHeader("If-Modified-Since", getGMTDateFormat().format(now));
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());
@@ -152,7 +154,7 @@ public class DefaultHttpHeadersTest extends TestCase {
     public void testLastModifiedSince() {
         Date now = new Date();
         DefaultHttpHeaders headers = new DefaultHttpHeaders().lastModified(now);
-        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(now));
+        mockRequest.addHeader("If-Modified-Since", getGMTDateFormat().format(now));
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());
@@ -161,7 +163,7 @@ public class DefaultHttpHeadersTest extends TestCase {
     public void testLastModifiedSinceIsOlder() {
         Date now = new Date();
         DefaultHttpHeaders headers = new DefaultHttpHeaders().lastModified(now);
-        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(new Date(now.getTime() - 1000 * 60 * 60)));
+        mockRequest.addHeader("If-Modified-Since", getGMTDateFormat().format(new Date(now.getTime() - 1000 * 60 * 60)));
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());
@@ -173,7 +175,7 @@ public class DefaultHttpHeadersTest extends TestCase {
                 .lastModified(now)
                 .withETag("asdf");
         mockRequest.addHeader("If-None-Match", "asdf");
-        mockRequest.addHeader("If-Modified-Since", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").format(now));
+        mockRequest.addHeader("If-Modified-Since", getGMTDateFormat().format(now));
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_NOT_MODIFIED, mockResponse.getStatus());
@@ -218,5 +220,11 @@ public class DefaultHttpHeadersTest extends TestCase {
         assertEquals(methods, mockResponse.getHeader(allow));
         assertEquals(SC_OK, mockResponse.getStatus());
 
+    }
+    
+    private SimpleDateFormat getGMTDateFormat() {
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return format;
     }
 }

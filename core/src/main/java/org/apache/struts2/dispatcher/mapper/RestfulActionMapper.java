@@ -25,9 +25,9 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.RequestUtils;
+import org.apache.struts2.util.URLDecoderUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -67,10 +67,10 @@ public class RestfulActionMapper implements ActionMapper {
 
             while (st.hasMoreTokens()) {
                 if (isNameTok) {
-                    paramName = URLDecoder.decode(st.nextToken(), "UTF-8");
+                    paramName = URLDecoderUtil.decode(st.nextToken(), "UTF-8");
                     isNameTok = false;
                 } else {
-                    paramValue = URLDecoder.decode(st.nextToken(), "UTF-8");
+                    paramValue = URLDecoderUtil.decode(st.nextToken(), "UTF-8");
 
                     if ((paramName != null) && (paramName.length() > 0)) {
                         parameters.put(paramName, paramValue);

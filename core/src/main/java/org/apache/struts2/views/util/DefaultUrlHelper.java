@@ -27,11 +27,11 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.util.URLDecoderUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -276,15 +276,15 @@ public class DefaultUrlHelper implements UrlHelper {
 	}
 
 	/**
-	 * Decodes the URL using {@link java.net.URLDecoder#decode(String, String)} with the encoding specified in the configuration.
+	 * Decodes the URL using {@link URLDecoderUtil#decode(String, String)} with the encoding specified in the configuration.
 	 *
 	 * @param input the input to decode
 	 * @return the encoded string
 	 */
 	public String decode( String input ) {
 		try {
-			return URLDecoder.decode(input, encoding);
-		} catch (UnsupportedEncodingException e) {
+			return URLDecoderUtil.decode(input, encoding);
+		} catch (Exception e) {
 			if (LOG.isWarnEnabled()) {
 				LOG.warn("Could not decode URL parameter '#0', returning value un-decoded", input);
 			}

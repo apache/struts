@@ -28,6 +28,9 @@ package org.apache.struts2.sitemesh;
 import com.opensymphony.module.sitemesh.*;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 import com.opensymphony.xwork2.ActionContext;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -36,12 +39,15 @@ import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
+import org.apache.velocity.tools.view.VelocityView;
+import org.apache.velocity.tools.view.VelocityViewServlet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.io.StringWriter;
 
 /**
@@ -53,6 +59,10 @@ import java.io.StringWriter;
  */
 public class VelocityDecoratorServlet extends VelocityViewServlet {
 
+    private static final Logger LOG = LogManager.getLogger(VelocityDecoratorServlet.class);
+            
+    private static final long serialVersionUID = -6731485159371716918L;
+    
     protected VelocityManager velocityManager;
     protected String defaultContentType;
 
@@ -78,17 +88,18 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         velocityManager.init(config.getServletContext());
 
         // do whatever we have to do to init Velocity
-        setVelocityEngine(velocityManager.getVelocityEngine());
-        toolboxManager = velocityManager.getToolboxManager();
+        getVelocityView().setVelocityEngine(velocityManager.getVelocityEngine());
+        //getVelocityView().getToolboxFactory(). toolboxManager = velocityManager.getToolboxManager();
 
+        
         // we can get these now that velocity is initialized
-        defaultContentType = getVelocityProperty(CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+        defaultContentType = getVelocityProperty(VelocityView.CONTENT_TYPE_KEY, VelocityView.DEFAULT_CONTENT_TYPE);
 
-        String encoding = getVelocityProperty(RuntimeConstants.OUTPUT_ENCODING, DEFAULT_OUTPUT_ENCODING);
+        String encoding = getVelocityProperty(RuntimeConstants.OUTPUT_ENCODING, VelocityView.DEFAULT_OUTPUT_ENCODING);
 
         // For non Latin-1 encodings, ensure that the charset is
         // included in the Content-Type header.
-        if (!DEFAULT_OUTPUT_ENCODING.equalsIgnoreCase(encoding)) {
+        if (!VelocityView.DEFAULT_OUTPUT_ENCODING.equalsIgnoreCase(encoding)) {
             int index = defaultContentType.lastIndexOf("charset");
             if (index < 0) {
                 // the charset specifier is not yet present in header.
@@ -96,14 +107,14 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
                 defaultContentType += "; charset=" + encoding;
             } else {
                 // The user may have configuration issues.
-                getVelocityEngine().warn("VelocityViewServlet: Charset was already " + "specified in the Content-Type property.  " + "Output encoding property will be ignored.");
+                getVelocityView().getVelocityEngine().getLog().warn("VelocityViewServlet: Charset was already " + "specified in the Content-Type property.  " + "Output encoding property will be ignored.");
             }
         }
 
-        getVelocityEngine().info("VelocityViewServlet: Default content-type is: " + defaultContentType);
+        getVelocityView().getVelocityEngine().getLog().info("VelocityViewServlet: Default content-type is: " + defaultContentType);
     }
 
-    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context) throws Exception {
+    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context) {
         HTMLPage htmlPage = (HTMLPage) request.getAttribute(RequestConstants.PAGE);
         String template;
 
@@ -119,16 +130,20 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
             context.put("head", "<!-- head -->");
             template = request.getServletPath();
         } else {
-            context.put("title", OutputConverter.convert(htmlPage.getTitle()));
-            {
-                StringWriter buffer = new StringWriter();
-                htmlPage.writeBody(OutputConverter.getWriter(buffer));
-                context.put("body", buffer.toString());
-            }
-            {
-                StringWriter buffer = new StringWriter();
-                htmlPage.writeHead(OutputConverter.getWriter(buffer));
-                context.put("head", buffer.toString());
+            try {
+                context.put("title", OutputConverter.convert(htmlPage.getTitle()));
+                {
+                    StringWriter buffer = new StringWriter();
+                    htmlPage.writeBody(OutputConverter.getWriter(buffer));
+                    context.put("body", buffer.toString());
+                }
+                {
+                    StringWriter buffer = new StringWriter();
+                    htmlPage.writeHead(OutputConverter.getWriter(buffer));
+                    context.put("head", buffer.toString());
+                }
+            } catch (IOException e) {
+                LOG.error("IOException handle request template", e);
             }
             context.put("page", htmlPage);
             DecoratorMapper decoratorMapper = getDecoratorMapper();

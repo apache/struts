@@ -30,8 +30,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 import org.apache.struts2.util.ServletContextAware;
-import org.easymock.MockControl;
+
+import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.*;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -49,8 +52,8 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     private ServletConfigInterceptor interceptor;
 
     public void testServletRequestAware() throws Exception {
-        MockControl control = MockControl.createControl(ServletRequestAware.class);
-        ServletRequestAware mock = (ServletRequestAware) control.getMock();
+        IMocksControl control = createControl();
+        ServletRequestAware mock = (ServletRequestAware) control.createMock(ServletRequestAware.class);
 
         MockHttpServletRequest req = new MockHttpServletRequest();
 
@@ -58,7 +61,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
 
         mock.setServletRequest((HttpServletRequest) req);
-        control.setVoidCallable();
+        expectLastCall();
 
         control.replay();
         interceptor.intercept(mai);
@@ -66,8 +69,8 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testServletResponseAware() throws Exception {
-        MockControl control = MockControl.createControl(ServletResponseAware.class);
-        ServletResponseAware mock = (ServletResponseAware) control.getMock();
+        IMocksControl control = createControl();
+        ServletResponseAware mock = (ServletResponseAware) control.createMock(ServletResponseAware.class);
 
         MockHttpServletResponse res = new MockHttpServletResponse();
 
@@ -75,7 +78,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         mai.getInvocationContext().put(StrutsStatics.HTTP_RESPONSE, res);
 
         mock.setServletResponse((HttpServletResponse) res);
-        control.setVoidCallable();
+        expectLastCall().times(1);
 
         control.replay();
         interceptor.intercept(mai);
@@ -83,8 +86,8 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testParameterAware() throws Exception {
-        MockControl control = MockControl.createControl(ParameterAware.class);
-        ParameterAware mock = (ParameterAware) control.getMock();
+        IMocksControl control = createControl();
+        ParameterAware mock = (ParameterAware) control.createMock(ParameterAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
 
@@ -92,7 +95,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         mai.getInvocationContext().setParameters(param);
 
         mock.setParameters((Map)param);
-        control.setVoidCallable();
+        expectLastCall().times(1);
 
         control.replay();
         interceptor.intercept(mai);
@@ -100,8 +103,8 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testSessionAware() throws Exception {
-        MockControl control = MockControl.createControl(SessionAware.class);
-        SessionAware mock = (SessionAware) control.getMock();
+        IMocksControl control = createControl();
+        SessionAware mock = (SessionAware) control.createMock(SessionAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
 
@@ -109,7 +112,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         mai.getInvocationContext().setSession(session);
 
         mock.setSession(session);
-        control.setVoidCallable();
+        expectLastCall().times(1);
 
         control.replay();
         interceptor.intercept(mai);
@@ -117,16 +120,16 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testApplicationAware() throws Exception {
-        MockControl control = MockControl.createControl(ApplicationAware.class);
-        ApplicationAware mock = (ApplicationAware) control.getMock();
+        IMocksControl control = createControl();
+        ApplicationAware mock = (ApplicationAware) control.createMock(ApplicationAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
 
         Map<String, Object> app = new HashMap<String, Object>();
         mai.getInvocationContext().setApplication(app);
-
+        
         mock.setApplication(app);
-        control.setVoidCallable();
+        expectLastCall().times(1);
 
         control.replay();
         interceptor.intercept(mai);
@@ -137,9 +140,8 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setUserPrincipal(null);
         req.setRemoteUser("Santa");
-        MockControl control = MockControl.createControl(PrincipalAware.class);
-        control.setDefaultMatcher(MockControl.ALWAYS_MATCHER); // less strick match is needed for this unit test to be conducted using mocks
-        PrincipalAware mock = (PrincipalAware) control.getMock();
+        IMocksControl control = createControl();
+        PrincipalAware mock = (PrincipalAware) control.createMock(PrincipalAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
         mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
@@ -147,9 +149,9 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockServletContext ctx = new MockServletContext();
         mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
 
-        mock.setPrincipalProxy(null); // we can do this because of ALWAYS_MATCHER
-        control.setVoidCallable();
-
+        mock.setPrincipalProxy(anyObject(ServletPrincipalProxy.class)); // less strick match is needed for this unit test to be conducted using mocks
+        expectLastCall().times(1);
+        
         control.replay();
         interceptor.intercept(mai);
         control.verify();
@@ -178,17 +180,17 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testServletContextAware() throws Exception {
-        MockControl control = MockControl.createControl(ServletContextAware.class);
-        ServletContextAware mock = (ServletContextAware) control.getMock();
+        IMocksControl control = createControl();
+        ServletContextAware mock = (ServletContextAware) control.createMock(ServletContextAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
 
         MockServletContext ctx = new MockServletContext();
         mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
-
+        
         mock.setServletContext((ServletContext) ctx);
-        control.setVoidCallable();
-
+        expectLastCall().times(1);
+        
         control.replay();
         interceptor.intercept(mai);
         control.verify();

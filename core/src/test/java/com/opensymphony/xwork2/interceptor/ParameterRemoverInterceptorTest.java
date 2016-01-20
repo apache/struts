@@ -4,7 +4,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
-import org.easymock.MockControl;
+import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 
 	protected Map<String, Object> contextMap;
 	protected ActionContext context;
-	protected MockControl actionInvocationControl;
+	protected IMocksControl actionInvocationControl;
 	protected ActionInvocation actionInvocation;
 	
 	@Override
@@ -25,11 +26,11 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		contextMap = new LinkedHashMap<>();
 		context = new ActionContext(contextMap);
 		
-		actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-		actionInvocation = (ActionInvocation) actionInvocationControl.getMock();
-		actionInvocationControl.expectAndDefaultReturn(actionInvocation.getAction(),  new SampleAction());
-		actionInvocationControl.expectAndDefaultReturn(actionInvocation.getInvocationContext(), context);
-		actionInvocationControl.expectAndDefaultReturn(actionInvocation.invoke(), "success");
+		actionInvocationControl = createControl();
+		actionInvocation = (ActionInvocation) actionInvocationControl.createMock(ActionInvocation.class);
+		expect(actionInvocation.getAction()).andStubReturn(new SampleAction());
+		expect(actionInvocation.getInvocationContext()).andStubReturn(context);
+		expect(actionInvocation.invoke()).andStubReturn("success");
 	}
 	
 	public void testInterception1() throws Exception {

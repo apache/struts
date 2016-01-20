@@ -777,12 +777,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 }
                 params.putAll(resultParams);
 
-                Set<String> resultNamesSet;
-                if (",".equals(resultName.trim())) {
-                    resultNamesSet = new HashSet<>(1);
+                Set<String> resultNamesSet = TextParseUtil.commaDelimitedStringToSet(resultName);
+                if (resultNamesSet.isEmpty()) {
                     resultNamesSet.add(resultName);
-                } else {
-                    resultNamesSet = TextParseUtil.commaDelimitedStringToSet(resultName);
                 }
 
                 for (String name : resultNamesSet) {

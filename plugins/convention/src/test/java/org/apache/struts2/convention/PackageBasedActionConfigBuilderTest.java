@@ -292,8 +292,6 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         expect(resultMapBuilder.build(GlobalResultAction.class, null, "global-result", globalResultPkg)).andReturn(results);
         expect(resultMapBuilder.build(GlobalResultOverrideAction.class, null, "global-result-override", globalResultPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "execute", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
-        expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "errorinput", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
-        expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "comma", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "noname", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
 
         /* org.apache.struts2.convention.actions.resultpath */

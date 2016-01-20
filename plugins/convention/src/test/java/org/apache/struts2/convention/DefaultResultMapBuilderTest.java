@@ -522,52 +522,6 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testActionLevelMultipleResultNamesAnnotationErrorInput() throws Exception {
-        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-
-        // Setup some mock jsps
-        Set<String> resources = new HashSet<>();
-        EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
-        EasyMock.replay(context);
-
-        PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
-
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
-        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
-        Map<String, ResultConfig> results = builder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "errorinput", Action.class), "action-level-results", packageConfig);
-        assertEquals(2, results.size());
-        assertEquals("error", results.get("error").getName());
-        assertEquals("input", results.get("input").getName());
-        assertEquals(3, results.get("error").getParams().size());
-        assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("error").getParams().get("location"));
-        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("error").getClassName());
-        assertEquals(3, results.get("input").getParams().size());
-        assertEquals("/WEB-INF/location/namespace/error.jsp", results.get("input").getParams().get("location"));
-        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get("input").getClassName());
-        EasyMock.verify(context);
-    }
-
-    public void testActionLevelMultipleResultNamesAnnotationComma() throws Exception {
-        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-
-        // Setup some mock jsps
-        Set<String> resources = new HashSet<>();
-        EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(resources);
-        EasyMock.replay(context);
-
-        PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
-
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
-        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
-        Map<String, ResultConfig> results = builder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "comma", Action.class), "action-level-results", packageConfig);
-        assertEquals(1, results.size());
-        assertEquals(" , ", results.get(" , ").getName());
-        assertEquals(3, results.get(" , ").getParams().size());
-        assertEquals("/WEB-INF/location/namespace/error.jsp", results.get(" , ").getParams().get("location"));
-        assertEquals("org.apache.struts2.result.ServletDispatcherResult", results.get(" , ").getClassName());
-        EasyMock.verify(context);
-    }
-
     public void testActionLevelMultipleResultNamesAnnotationNoName() throws Exception {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 

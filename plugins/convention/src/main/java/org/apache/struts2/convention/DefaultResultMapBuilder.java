@@ -410,15 +410,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             Class<?> actionClass, Map<String, ResultTypeConfig> resultsByExtension) {
         // Check for multiple results on the class
         for (Result result : results) {
-            Set<String> names;
-            if (",".equals(result.name().trim())) {
-                names = new HashSet<>(1);
-                names.add(result.name());
-            } else {
-                names = TextParseUtil.commaDelimitedStringToSet(result.name());
-            }
-
-            for (String name : names) {
+            for (String name : result.name()) {
                 ResultConfig config = createResultConfig(actionClass, new ResultInfo(
                         name, result, packageConfig, resultPath, actionClass,
                         resultsByExtension), packageConfig, result);
@@ -513,13 +505,6 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             } else {
                 this.location = null;
             }
-        }
-
-        public ResultInfo(Result result, PackageConfig packageConfig,
-                String resultPath, Class<?> actionClass,
-                Map<String, ResultTypeConfig> resultsByExtension) {
-            this(result.name(), result, packageConfig, resultPath, actionClass,
-                    resultsByExtension);
         }
 
         String determineType(String location, PackageConfig packageConfig,

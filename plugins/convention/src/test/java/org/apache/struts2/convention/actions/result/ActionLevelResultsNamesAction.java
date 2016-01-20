@@ -30,25 +30,11 @@ import org.apache.struts2.convention.annotation.Result;
  */
 public class ActionLevelResultsNamesAction {
     @Action(results = {
-        @Result(name="error, input", location="error.jsp"),
+        @Result(name={"error", "input"}, location="error.jsp"),
         @Result(name="success", location="/WEB-INF/location/namespace/action-success.jsp"),
         @Result(name="failure", location="/WEB-INF/location/namespace/action-failure.jsp")
     })
     public String execute() {
-        return null;
-    }
-
-    @Action(results = {
-        @Result(name="error, input, ", location="error.jsp")
-    })
-    public String errorinput() {
-        return null;
-    }
-
-    @Action(results = {
-            @Result(name=" , ", location="error.jsp")
-    })
-    public String comma() {
         return null;
     }
 

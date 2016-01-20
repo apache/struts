@@ -89,7 +89,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
 
         // do whatever we have to do to init Velocity
         getVelocityView().setVelocityEngine(velocityManager.getVelocityEngine());
-        //getVelocityView().getToolboxFactory(). toolboxManager = velocityManager.getToolboxManager();
+        // toolboxManager = velocityManager.getToolboxManager();
 
         
         // we can get these now that velocity is initialized

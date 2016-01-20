@@ -1,5 +1,7 @@
 package org.apache.struts2.portlet.test;
 
+import static net.sourceforge.jwebunit.junit.JWebUnit.*;
+
 public class Struts2PortletTest extends BasePortletTest {
 	
 	private final static String PORTLET_NAME = "StrutsPortlet";

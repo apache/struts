@@ -1,7 +1,8 @@
 package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.XWorkTestCase;
-import org.easymock.MockControl;
+import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.*;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,26 +19,26 @@ public class XmlHelperTest extends XWorkTestCase {
 
     public void testGetContent1() throws Exception {
         // set up Node
-        MockControl nodeControl = MockControl.createControl(Node.class);
-        Node mockNode = (Node) nodeControl.getMock();
+        IMocksControl nodeControl = createControl();
+        Node mockNode = (Node) nodeControl.createMock(Node.class);
 
-        nodeControl.expectAndDefaultReturn(mockNode.getNodeValue(), "testing testing 123");
-        nodeControl.expectAndDefaultReturn(mockNode.getNodeType(), Node.TEXT_NODE);
+        expect(mockNode.getNodeValue()).andStubReturn("testing testing 123");
+        expect(mockNode.getNodeType()).andStubReturn(Node.TEXT_NODE);
 
 
         // set up NodeList
-        MockControl nodeListControl = MockControl.createControl(NodeList.class);
-        NodeList mockNodeList = (NodeList) nodeListControl.getMock();
+        IMocksControl nodeListControl = createControl();
+        NodeList mockNodeList = (NodeList) nodeListControl.createMock(NodeList.class);
 
-        nodeListControl.expectAndDefaultReturn(mockNodeList.getLength(), 1);
-        nodeListControl.expectAndDefaultReturn(mockNodeList.item(0), mockNode);
+        expect(mockNodeList.getLength()).andStubReturn(1);
+        expect(mockNodeList.item(0)).andStubReturn(mockNode);
 
 
         // set up Element
-        MockControl elementControl = MockControl.createControl(Element.class);
-        Element mockElement = (Element) elementControl.getMock();
+        IMocksControl elementControl = createControl();
+        Element mockElement = (Element) elementControl.createMock(Element.class);
 
-        elementControl.expectAndDefaultReturn(mockElement.getChildNodes(), mockNodeList);
+        expect(mockElement.getChildNodes()).andStubReturn(mockNodeList);
 
         nodeControl.replay();
         nodeListControl.replay();
@@ -45,77 +46,71 @@ public class XmlHelperTest extends XWorkTestCase {
 
         String result = XmlHelper.getContent(mockElement);
 
+        assertEquals(result, "testing testing 123");
+        
         nodeControl.verify();
         nodeListControl.verify();
         elementControl.verify();
-
-        assertEquals(result, "testing testing 123");
     }
 
 
     public void testGetContent2() throws Exception {
         // set up Node
-        MockControl nodeControl1 = MockControl.createControl(Node.class);
-        Node mockNode1 = (Node) nodeControl1.getMock();
+        IMocksControl nodeControl1 = createControl();
+        Node mockNode1 = (Node) nodeControl1.createMock(Node.class);
 
-        nodeControl1.expectAndDefaultReturn(mockNode1.getNodeValue(), "testing testing 123");
-        nodeControl1.expectAndDefaultReturn(mockNode1.getNodeType(), Node.TEXT_NODE);
+        expect(mockNode1.getNodeValue()).andStubReturn("testing testing 123");
+        expect(mockNode1.getNodeType()).andStubReturn(Node.TEXT_NODE);
 
-        MockControl nodeControl2 = MockControl.createControl(Node.class);
-        Node mockNode2 = (Node) nodeControl2.getMock();
+        IMocksControl nodeControl2 = createControl();
+        Node mockNode2 = (Node) nodeControl2.createMock(Node.class);
 
-        nodeControl2.expectAndDefaultReturn(mockNode2.getNodeValue(), "comment 1");
-        nodeControl2.expectAndDefaultReturn(mockNode2.getNodeType(), Node.COMMENT_NODE);
+        expect(mockNode2.getNodeValue()).andStubReturn("comment 1");
+        expect(mockNode2.getNodeType()).andStubReturn(Node.COMMENT_NODE);
 
-        MockControl nodeControl3 = MockControl.createControl(Node.class);
-        Node mockNode3 = (Node) nodeControl3.getMock();
+        IMocksControl nodeControl3 = createControl();
+        Node mockNode3 = (Node) nodeControl3.createMock(Node.class);
 
-        nodeControl3.expectAndDefaultReturn(mockNode3.getNodeValue(), " tmjee ");
-        nodeControl3.expectAndDefaultReturn(mockNode3.getNodeType(), Node.TEXT_NODE);
+        expect(mockNode3.getNodeValue()).andStubReturn(" tmjee ");
+        expect(mockNode3.getNodeType()).andStubReturn(Node.TEXT_NODE);
 
-        MockControl nodeControl4 = MockControl.createControl(Node.class);
-        Node mockNode4 = (Node) nodeControl4.getMock();
+        IMocksControl nodeControl4 = createControl();
+        Node mockNode4 = (Node) nodeControl4.createMock(Node.class);
 
-        nodeControl4.expectAndDefaultReturn(mockNode4.getNodeValue(), " phil ");
-        nodeControl4.expectAndDefaultReturn(mockNode4.getNodeType(), Node.TEXT_NODE);
+        expect(mockNode4.getNodeValue()).andStubReturn(" phil ");
+        expect(mockNode4.getNodeType()).andStubReturn(Node.TEXT_NODE);
 
-        MockControl nodeControl5 = MockControl.createControl(Node.class);
-        Node mockNode5 = (Node) nodeControl5.getMock();
+        IMocksControl nodeControl5 = createControl();
+        Node mockNode5 = (Node) nodeControl5.createMock(Node.class);
 
-        nodeControl5.expectAndDefaultReturn(mockNode5.getNodeValue(), "comment 2");
-        nodeControl5.expectAndDefaultReturn(mockNode5.getNodeType(), Node.COMMENT_NODE);
+        expect(mockNode5.getNodeValue()).andStubReturn("comment 2");
+        expect(mockNode5.getNodeType()).andStubReturn(Node.COMMENT_NODE);
 
-        MockControl nodeControl6 = MockControl.createControl(Node.class);
-        Node mockNode6 = (Node) nodeControl6.getMock();
+        IMocksControl nodeControl6 = createControl();
+        Node mockNode6 = (Node) nodeControl6.createMock(Node.class);
 
-        nodeControl6.expectAndDefaultReturn(mockNode6.getNodeValue(), "comment 3");
-        nodeControl6.expectAndDefaultReturn(mockNode6.getNodeType(), Node.COMMENT_NODE);
+        expect(mockNode6.getNodeValue()).andStubReturn("comment 3");
+        expect(mockNode6.getNodeType()).andStubReturn(Node.COMMENT_NODE);
 
 
         // set up NodeList
-        MockControl nodeListControl = MockControl.createControl(NodeList.class);
-        NodeList mockNodeList = (NodeList) nodeListControl.getMock();
+        IMocksControl nodeListControl = createControl();
+        NodeList mockNodeList = (NodeList) nodeListControl.createMock(NodeList.class);
 
-        nodeListControl.expectAndDefaultReturn(mockNodeList.getLength(), 6);
-        mockNodeList.item(0);
-        nodeListControl.setReturnValue(mockNode1);
-        mockNodeList.item(1);
-        nodeListControl.setReturnValue(mockNode2);
-        mockNodeList.item(2);
-        nodeListControl.setDefaultReturnValue(mockNode3);
-        mockNodeList.item(3);
-        nodeListControl.setReturnValue(mockNode4);
-        mockNodeList.item(4);
-        nodeListControl.setReturnValue(mockNode5);
-        mockNodeList.item(5);
-        nodeListControl.setReturnValue(mockNode6);
-
+        expect(mockNodeList.getLength()).andStubReturn(6);
+        
+        expect(mockNodeList.item(0)).andStubReturn(mockNode1);
+        expect(mockNodeList.item(1)).andStubReturn(mockNode2);
+        expect(mockNodeList.item(2)).andStubReturn(mockNode3);
+        expect(mockNodeList.item(3)).andStubReturn(mockNode4);
+        expect(mockNodeList.item(4)).andStubReturn(mockNode5);
+        expect(mockNodeList.item(5)).andStubReturn(mockNode6);       
 
         // set up Element
-        MockControl elementControl = MockControl.createControl(Element.class);
-        Element mockElement = (Element) elementControl.getMock();
+        IMocksControl elementControl = createControl();
+        Element mockElement = (Element) elementControl.createMock(Element.class);
 
-        elementControl.expectAndDefaultReturn(mockElement.getChildNodes(), mockNodeList);
+        expect(mockElement.getChildNodes()).andStubReturn(mockNodeList);
 
         nodeControl1.replay();
         nodeControl2.replay();
@@ -128,6 +123,8 @@ public class XmlHelperTest extends XWorkTestCase {
 
         String result = XmlHelper.getContent(mockElement);
 
+        assertEquals(result, "testing testing 123tmjeephil");
+        
         nodeControl1.verify();
         nodeControl2.verify();
         nodeControl3.verify();
@@ -135,73 +132,62 @@ public class XmlHelperTest extends XWorkTestCase {
         nodeControl5.verify();
         nodeControl6.verify();
         nodeListControl.verify();
-        elementControl.verify();
-
-        assertEquals(result, "testing testing 123tmjeephil");
+        elementControl.verify();        
     }
 
 
 
     public void testGetParams() throws Exception {
         // <param name="param1">value1</param>
-            MockControl nodeControl1 = MockControl.createControl(Node.class);
-            Node mockNode1 = (Node) nodeControl1.getMock();
+            IMocksControl nodeControl1 = createControl();
+            Node mockNode1 = (Node) nodeControl1.createMock(Node.class);
 
-            nodeControl1.expectAndDefaultReturn(mockNode1.getNodeValue(), "value1");
-            nodeControl1.expectAndDefaultReturn(mockNode1.getNodeType(), Node.TEXT_NODE);
+            expect(mockNode1.getNodeValue()).andStubReturn("value1");
+            expect(mockNode1.getNodeType()).andStubReturn(Node.TEXT_NODE);
 
 
-            MockControl nodeListControl1 = MockControl.createControl(NodeList.class);
-            NodeList mockNodeList1 = (NodeList) nodeListControl1.getMock();
+            IMocksControl nodeListControl1 = createControl();
+            NodeList mockNodeList1 = (NodeList) nodeListControl1.createMock(NodeList.class);
 
-            nodeListControl1.expectAndDefaultReturn(mockNodeList1.getLength(), 1);
-            nodeListControl1.expectAndDefaultReturn(mockNodeList1.item(0), mockNode1);
+            expect(mockNodeList1.getLength()).andStubReturn(1);
+            expect(mockNodeList1.item(0)).andStubReturn(mockNode1);
 
-            MockControl paramControl1 = MockControl.createControl(Element.class);
-            Element mockParamElement1 = (Element) paramControl1.getMock();
-            mockParamElement1.getNodeName();
-            paramControl1.setReturnValue("param");
+            IMocksControl paramControl1 = createControl();
+            Element mockParamElement1 = (Element) paramControl1.createMock(Element.class);
+            expect(mockParamElement1.getNodeName()).andStubReturn("param");
 
-            mockParamElement1.getNodeType();
-            paramControl1.setReturnValue(Node.ELEMENT_NODE);
+            expect(mockParamElement1.getNodeType()).andStubReturn(Node.ELEMENT_NODE);
 
-            mockParamElement1.getAttribute("name");
-            paramControl1.setReturnValue("param1");
+            expect(mockParamElement1.getAttribute("name")).andStubReturn("param1");
 
-            mockParamElement1.getChildNodes();
-            paramControl1.setReturnValue(mockNodeList1);
+            expect(mockParamElement1.getChildNodes()).andStubReturn(mockNodeList1);
 
             nodeControl1.replay();
             nodeListControl1.replay();
             paramControl1.replay();
 
         // <param name="param2">value2</param>
-            MockControl nodeControl2 = MockControl.createControl(Node.class);
-            Node mockNode2 = (Node) nodeControl2.getMock();
+            IMocksControl nodeControl2 = createControl();
+            Node mockNode2 = (Node) nodeControl2.createMock(Node.class);
 
-            nodeControl2.expectAndDefaultReturn(mockNode2.getNodeValue(), "value2");
-            nodeControl2.expectAndDefaultReturn(mockNode2.getNodeType(), Node.TEXT_NODE);
+            expect(mockNode2.getNodeValue()).andStubReturn("value2");
+            expect(mockNode2.getNodeType()).andStubReturn(Node.TEXT_NODE);
 
 
-            MockControl nodeListControl2 = MockControl.createControl(NodeList.class);
-            NodeList mockNodeList2 = (NodeList) nodeListControl2.getMock();
+            IMocksControl nodeListControl2 = createControl();
+            NodeList mockNodeList2 = (NodeList) nodeListControl2.createMock(NodeList.class);
 
-            nodeListControl2.expectAndDefaultReturn(mockNodeList2.getLength(), 1);
-            nodeListControl2.expectAndDefaultReturn(mockNodeList2.item(0), mockNode2);
+            expect(mockNodeList2.getLength()).andStubReturn(1);
+            expect(mockNodeList2.item(0)).andStubReturn(mockNode2);
 
-            MockControl paramControl2 = MockControl.createControl(Element.class);
-            Element mockParamElement2 = (Element) paramControl2.getMock();
-            mockParamElement2.getNodeName();
-            paramControl2.setReturnValue("param");
+            IMocksControl paramControl2 = createControl();
+            Element mockParamElement2 = (Element) paramControl2.createMock(Element.class);
+            
+            expect(mockParamElement2.getNodeName()).andStubReturn("param");
+            expect(mockParamElement2.getNodeType()).andStubReturn(Node.ELEMENT_NODE);
 
-            mockParamElement2.getNodeType();
-            paramControl2.setReturnValue(Node.ELEMENT_NODE);
-
-            mockParamElement2.getAttribute("name");
-            paramControl2.setReturnValue("param2");
-
-            mockParamElement2.getChildNodes();
-            paramControl2.setReturnValue(mockNodeList2);
+            expect(mockParamElement2.getAttribute("name")).andStubReturn("param2");
+            expect(mockParamElement2.getChildNodes()).andStubReturn(mockNodeList2);
 
             nodeControl2.replay();
             nodeListControl2.replay();
@@ -211,45 +197,41 @@ public class XmlHelperTest extends XWorkTestCase {
         // <some_element>
         //   ...
         // </some_element>
-        MockControl elementNodeListControl = MockControl.createControl(NodeList.class);
-        NodeList mockElementNodeList = (NodeList) elementNodeListControl.getMock();
+        IMocksControl elementNodeListControl = createControl();
+        NodeList mockElementNodeList = (NodeList) elementNodeListControl.createMock(NodeList.class);
 
-        elementNodeListControl.expectAndDefaultReturn(mockElementNodeList.getLength(), 2);
-        mockElementNodeList.item(0);
-        elementNodeListControl.setReturnValue(mockParamElement2);
-        mockElementNodeList.item(1);
-        elementNodeListControl.setReturnValue(mockParamElement1);
+        expect(mockElementNodeList.getLength()).andStubReturn(2);
+        
+        expect(mockElementNodeList.item(0)).andStubReturn(mockParamElement2);
+        expect(mockElementNodeList.item(1)).andStubReturn(mockParamElement1);
 
-        MockControl elementControl = MockControl.createControl(Element.class);
-        Element element = (Element) elementControl.getMock();
+        IMocksControl elementControl = createControl();
+        Element element = (Element) elementControl.createMock(Element.class);
 
-        elementControl.expectAndDefaultReturn(element.getChildNodes(), mockElementNodeList);
+        expect(element.getChildNodes()).andStubReturn(mockElementNodeList);
 
 
         elementNodeListControl.replay();
         elementControl.replay();
 
-
-
         Map params = XmlHelper.getParams(element);
-
-        nodeControl1.verify();
-            nodeListControl1.verify();
-            paramControl1.verify();
-
-
-        nodeControl2.verify();
-            nodeListControl2.verify();
-            paramControl2.verify();
-
-
-        elementNodeListControl.verify();
-        elementControl.verify();
-
 
         assertNotNull(params);
         assertEquals(params.size(), 2);
         assertEquals(params.get("param1"), "value1");
         assertEquals(params.get("param2"), "value2");
+
+        nodeControl1.verify();
+        nodeListControl1.verify();
+        paramControl1.verify();
+
+
+        nodeControl2.verify();
+        nodeListControl2.verify();
+        paramControl2.verify();
+
+
+        elementNodeListControl.verify();
+        elementControl.verify();        
     }
 }

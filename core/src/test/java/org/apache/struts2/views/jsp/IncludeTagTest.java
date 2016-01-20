@@ -21,11 +21,16 @@
 
 package org.apache.struts2.views.jsp;
 
+import static org.easymock.EasyMock.*;
+
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
-import org.easymock.MockControl;
+import org.easymock.IMocksControl;
+import org.easymock.MockType;
 
 import com.mockobjects.servlet.MockRequestDispatcher;
 
@@ -35,7 +40,7 @@ import com.mockobjects.servlet.MockRequestDispatcher;
  */
 public class IncludeTagTest extends AbstractTagTest {
 
-    private MockControl controlRequestDispatcher;
+    private IMocksControl controlRequestDispatcher;
     private RequestDispatcher mockRequestDispatcher;
 
     private IncludeTag tag;
@@ -51,22 +56,29 @@ public class IncludeTagTest extends AbstractTagTest {
     }
 
     public void testIncludeNoParam() throws Exception {
-        mockRequestDispatcher.include(null, null);
-        controlRequestDispatcher.setVoidCallable();
+        
+        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
+        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
+        expectLastCall().times(1);
+        
         controlRequestDispatcher.replay();
 
         tag.setValue("person/list.jsp");
         tag.doStartTag();
         tag.doEndTag();
-
-        controlRequestDispatcher.verify();
+        
         assertEquals("/person/list.jsp", request.getRequestDispatherString());
         assertEquals("", writer.toString());
+        
+        controlRequestDispatcher.verify();
     }
 
     public void testIncludeWithParameters() throws Exception {
-        mockRequestDispatcher.include(null, null);
-        controlRequestDispatcher.setVoidCallable();
+       
+        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
+        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
+        expectLastCall().times(1);
+        
         controlRequestDispatcher.replay();
 
         tag.setValue("person/create.jsp");
@@ -76,15 +88,18 @@ public class IncludeTagTest extends AbstractTagTest {
         include.addParameter("user", "Santa Claus");
         tag.doEndTag();
 
-        controlRequestDispatcher.verify();
         assertEquals("/person/create.jsp?user=Santa+Claus", request.getRequestDispatherString());
         assertEquals("", writer.toString());
+        
+        controlRequestDispatcher.verify();
     }
 
     public void testIncludeRelative2Dots() throws Exception {
         // TODO: we should test for .. in unit test - is this test correct?
-        mockRequestDispatcher.include(null, null);
-        controlRequestDispatcher.setVoidCallable();
+        // use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
+        expectLastCall().times(1);
+        
         controlRequestDispatcher.replay();
 
         request.setupGetServletPath("app/manager");
@@ -92,9 +107,11 @@ public class IncludeTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        controlRequestDispatcher.verify();
+
         assertEquals("/car/view.jsp", request.getRequestDispatherString());
         assertEquals("", writer.toString());
+        
+        controlRequestDispatcher.verify();        
     }
 
     protected void setUp() throws Exception {
@@ -102,10 +119,10 @@ public class IncludeTagTest extends AbstractTagTest {
         request.setupGetRequestDispatcher(new MockRequestDispatcher());
         tag = new IncludeTag();
 
-        controlRequestDispatcher = MockControl.createNiceControl(RequestDispatcher.class);
-        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
-        controlRequestDispatcher.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
-        mockRequestDispatcher = (RequestDispatcher) controlRequestDispatcher.getMock();
+        controlRequestDispatcher = createControl(MockType.NICE);
+        
+
+        mockRequestDispatcher = (RequestDispatcher) controlRequestDispatcher.createMock(RequestDispatcher.class);
 
         request.setupGetRequestDispatcher(mockRequestDispatcher);
         tag.setPageContext(pageContext);

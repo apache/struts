@@ -18,7 +18,8 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import junit.framework.TestCase;
-import org.easymock.MockControl;
+import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.*;
 
 import java.lang.reflect.Method;
 
@@ -83,19 +84,18 @@ public class PrefixMethodInvocationUtilTest extends TestCase {
 		PrefixMethodInvocationUtilTest.Action1 action = new PrefixMethodInvocationUtilTest.Action1();
 		
 		// ActionProxy
-		MockControl controlActionProxy = MockControl.createControl(ActionProxy.class);
-		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.getMock();		
-		mockActionProxy.getMethod();
-		controlActionProxy.setReturnValue("save");
+		IMocksControl controlActionProxy = createControl();
+		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.createMock(ActionProxy.class);		
+		
+		expect(mockActionProxy.getMethod()).andStubReturn("save");
 		
 		
 		// ActionInvocation
-		MockControl controlActionInvocation = MockControl.createControl(ActionInvocation.class);
-		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.getMock();
-		mockActionInvocation.getAction();
-		controlActionInvocation.setReturnValue(action);
-		mockActionInvocation.getProxy();
-		controlActionInvocation.setReturnValue(mockActionProxy);
+		IMocksControl controlActionInvocation = createControl();
+		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.createMock(ActionInvocation.class);
+		
+		expect(mockActionInvocation.getAction()).andStubReturn(action);
+		expect(mockActionInvocation.getProxy()).andStubReturn(mockActionProxy);
 		
 		controlActionProxy.replay();
 		controlActionInvocation.replay();
@@ -104,33 +104,31 @@ public class PrefixMethodInvocationUtilTest extends TestCase {
 		PrefixMethodInvocationUtil.invokePrefixMethod(
 				mockActionInvocation, 
 				new String[] { "prepare", "prepareDo" });
-		
-		controlActionProxy.verify();
-		controlActionInvocation.verify();
-		
+			
 		assertTrue(action.prepareSaveInvoked);
 		assertFalse(action.prepareDoSaveInvoked);
 		assertFalse(action.prepareSubmitInvoked);
 		assertFalse(action.prepareDoCancelInvoked);
+		
+        controlActionProxy.verify();
+        controlActionInvocation.verify();
 	}
 	
 	public void testInvokePrefixMethod2() throws Exception {
 		PrefixMethodInvocationUtilTest.Action1 action = new PrefixMethodInvocationUtilTest.Action1();
 		
 		// ActionProxy
-		MockControl controlActionProxy = MockControl.createControl(ActionProxy.class);
-		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.getMock();		
-		mockActionProxy.getMethod();
-		controlActionProxy.setReturnValue("submit");
+		IMocksControl controlActionProxy = createControl();
+		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.createMock(ActionProxy.class);		
+		expect(mockActionProxy.getMethod()).andStubReturn("submit");
 		
 		
 		// ActionInvocation
-		MockControl controlActionInvocation = MockControl.createControl(ActionInvocation.class);
-		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.getMock();
-		mockActionInvocation.getAction();
-		controlActionInvocation.setReturnValue(action);
-		mockActionInvocation.getProxy();
-		controlActionInvocation.setReturnValue(mockActionProxy);
+		IMocksControl controlActionInvocation = createControl();
+		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.createMock(ActionInvocation.class);
+		
+		expect(mockActionInvocation.getAction()).andStubReturn(action);
+		expect(mockActionInvocation.getProxy()).andStubReturn(mockActionProxy);
 		
 		controlActionProxy.replay();
 		controlActionInvocation.replay();
@@ -140,32 +138,31 @@ public class PrefixMethodInvocationUtilTest extends TestCase {
 				mockActionInvocation, 
 				new String[] { "prepare", "prepareDo" });
 		
-		controlActionProxy.verify();
-		controlActionInvocation.verify();
-		
+	
 		assertFalse(action.prepareSaveInvoked);
 		assertFalse(action.prepareDoSaveInvoked);
 		assertTrue(action.prepareSubmitInvoked);
 		assertFalse(action.prepareDoCancelInvoked);
+		
+        controlActionProxy.verify();
+        controlActionInvocation.verify();		
 	}
 	
 	public void testInvokePrefixMethod3() throws Exception {
 		PrefixMethodInvocationUtilTest.Action1 action = new PrefixMethodInvocationUtilTest.Action1();
 		
 		// ActionProxy
-		MockControl controlActionProxy = MockControl.createControl(ActionProxy.class);
-		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.getMock();		
-		mockActionProxy.getMethod();
-		controlActionProxy.setReturnValue("cancel");
+		IMocksControl controlActionProxy = createControl();
+		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.createMock(ActionProxy.class);		
 		
-		
+		expect(mockActionProxy.getMethod()).andStubReturn("cancel");
+				
 		// ActionInvocation
-		MockControl controlActionInvocation = MockControl.createControl(ActionInvocation.class);
-		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.getMock();
-		mockActionInvocation.getAction();
-		controlActionInvocation.setReturnValue(action);
-		mockActionInvocation.getProxy();
-		controlActionInvocation.setReturnValue(mockActionProxy);
+		IMocksControl controlActionInvocation = createControl();
+		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.createMock(ActionInvocation.class);
+		
+        expect(mockActionInvocation.getAction()).andStubReturn(action);
+        expect(mockActionInvocation.getProxy()).andStubReturn(mockActionProxy);
 		
 		controlActionProxy.replay();
 		controlActionInvocation.replay();
@@ -175,32 +172,32 @@ public class PrefixMethodInvocationUtilTest extends TestCase {
 				mockActionInvocation, 
 				new String[] { "prepare", "prepareDo" });
 		
-		controlActionProxy.verify();
-		controlActionInvocation.verify();
-		
+
 		assertFalse(action.prepareSaveInvoked);
 		assertFalse(action.prepareDoSaveInvoked);
 		assertFalse(action.prepareSubmitInvoked);
 		assertTrue(action.prepareDoCancelInvoked);
+		
+        controlActionProxy.verify();
+        controlActionInvocation.verify();		
 	}
 		
 	public void testInvokePrefixMethod4() throws Exception {
 		PrefixMethodInvocationUtilTest.Action1 action = new PrefixMethodInvocationUtilTest.Action1();
 		
 		// ActionProxy
-		MockControl controlActionProxy = MockControl.createControl(ActionProxy.class);
-		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.getMock();		
-		mockActionProxy.getMethod();
-		controlActionProxy.setReturnValue("noSuchMethod");
+        IMocksControl controlActionProxy = createControl();
+        ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.createMock(ActionProxy.class);   
+        
+        expect(mockActionProxy.getMethod()).andStubReturn("noSuchMethod");
 		
 		
 		// ActionInvocation
-		MockControl controlActionInvocation = MockControl.createControl(ActionInvocation.class);
-		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.getMock();
-		mockActionInvocation.getAction();
-		controlActionInvocation.setReturnValue(action);
-		mockActionInvocation.getProxy();
-		controlActionInvocation.setReturnValue(mockActionProxy);
+        IMocksControl controlActionInvocation = createControl();
+        ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.createMock(ActionInvocation.class);
+        
+        expect(mockActionInvocation.getAction()).andStubReturn(action);
+        expect(mockActionInvocation.getProxy()).andStubReturn(mockActionProxy);
 		
 		controlActionProxy.replay();
 		controlActionInvocation.replay();
@@ -209,33 +206,32 @@ public class PrefixMethodInvocationUtilTest extends TestCase {
 		PrefixMethodInvocationUtil.invokePrefixMethod(
 				mockActionInvocation, 
 				new String[] { "prepare", "prepareDo" });
-		
-		controlActionProxy.verify();
-		controlActionInvocation.verify();
-		
+				
 		assertFalse(action.prepareSaveInvoked);
 		assertFalse(action.prepareDoSaveInvoked);
 		assertFalse(action.prepareSubmitInvoked);
 		assertFalse(action.prepareDoCancelInvoked);
+		
+        controlActionProxy.verify();
+        controlActionInvocation.verify();		
 	}
 		
 	public void testInvokePrefixMethod5() throws Exception {
 		PrefixMethodInvocationUtilTest.Action1 action = new PrefixMethodInvocationUtilTest.Action1();
 		
 		// ActionProxy
-		MockControl controlActionProxy = MockControl.createControl(ActionProxy.class);
-		ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.getMock();		
-		mockActionProxy.getMethod();
-		controlActionProxy.setReturnValue("save");
+        IMocksControl controlActionProxy = createControl();
+        ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.createMock(ActionProxy.class);  
+        
+		expect(mockActionProxy.getMethod()).andStubReturn("save");
 		
 		
 		// ActionInvocation
-		MockControl controlActionInvocation = MockControl.createControl(ActionInvocation.class);
-		ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.getMock();
-		mockActionInvocation.getAction();
-		controlActionInvocation.setReturnValue(action);
-		mockActionInvocation.getProxy();
-		controlActionInvocation.setReturnValue(mockActionProxy);
+        IMocksControl controlActionInvocation = createControl();
+        ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.createMock(ActionInvocation.class);
+        
+        expect(mockActionInvocation.getAction()).andStubReturn(action);
+        expect(mockActionInvocation.getProxy()).andStubReturn(mockActionProxy);
 		
 		controlActionProxy.replay();
 		controlActionInvocation.replay();
@@ -244,14 +240,14 @@ public class PrefixMethodInvocationUtilTest extends TestCase {
 		PrefixMethodInvocationUtil.invokePrefixMethod(
 				mockActionInvocation, 
 				new String[] { "noSuchPrefix", "noSuchPrefixDo" });
-		
-		controlActionProxy.verify();
-		controlActionInvocation.verify();
-		
+			
 		assertFalse(action.prepareSaveInvoked);
 		assertFalse(action.prepareDoSaveInvoked);
 		assertFalse(action.prepareSubmitInvoked);
 		assertFalse(action.prepareDoCancelInvoked);
+		
+        controlActionProxy.verify();
+        controlActionInvocation.verify();		
 	}
 	
 	

@@ -28,24 +28,25 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import org.easymock.MockControl;
+import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.*;
 
 public class ResourceUtilTest extends TestCase {
 
-    private MockControl control;
+    private IMocksControl control;
     private HttpServletRequest requestMock;
 
     public void testGetResourceBase() throws Exception {
-        control.expectAndReturn(requestMock.getServletPath(), "/mycontext/");
-        control.expectAndReturn(requestMock.getRequestURI(), "/mycontext/");
+        expect(requestMock.getServletPath()).andReturn("/mycontext/");
+        expect(requestMock.getRequestURI()).andReturn("/mycontext/");
         control.replay();
         assertEquals("/mycontext", ResourceUtil.getResourceBase(requestMock));
         control.verify();
 
         control.reset();
 
-        control.expectAndReturn(requestMock.getServletPath(), "/mycontext/test.jsp");
-        control.expectAndReturn(requestMock.getRequestURI(), "/mycontext/test.jsp");
+        expect(requestMock.getServletPath()).andReturn("/mycontext/test.jsp");
+        expect(requestMock.getRequestURI()).andReturn("/mycontext/test.jsp");
         control.replay();
         
         assertEquals("/mycontext", ResourceUtil.getResourceBase(requestMock));
@@ -55,7 +56,7 @@ public class ResourceUtilTest extends TestCase {
 
 
     protected void setUp() {
-        control = MockControl.createControl(HttpServletRequest.class);
-        requestMock = (HttpServletRequest) control.getMock();
+        control = createControl();
+        requestMock = (HttpServletRequest) control.createMock(HttpServletRequest.class);
     }
 }

@@ -54,7 +54,6 @@ plugins/portlet-tiles/target
 plugins/portlet/target
 plugins/sitegraph/target
 plugins/sitemesh/target
-plugins/tiles3/target
 plugins/javatemplates/target
 bundles/demo/target
 plugins/rest/target

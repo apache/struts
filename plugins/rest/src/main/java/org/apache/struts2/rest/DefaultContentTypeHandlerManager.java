@@ -42,9 +42,9 @@ import java.util.Set;
 public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManager {
 
     /** ContentTypeHandlers keyed by the extension */
-    Map<String,ContentTypeHandler> handlersByExtension = new HashMap<>();
+    Map<String, ContentTypeHandler> handlersByExtension = new HashMap<String, ContentTypeHandler>();
     /** ContentTypeHandlers keyed by the content-type */
-    Map<String,ContentTypeHandler> handlersByContentType = new HashMap<>();
+    Map<String, ContentTypeHandler> handlersByContentType = new HashMap<String, ContentTypeHandler>();
 
     private String defaultExtension;
 
@@ -61,7 +61,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
 
             if (handler.getExtension() != null) {
                 // Check for overriding handlers for the current extension
-                String overrideName = container.getInstance(String.class, STRUTS_REST_HANDLER_OVERRIDE_PREFIX +handler.getExtension());
+                String overrideName = container.getInstance(String.class, STRUTS_REST_HANDLER_OVERRIDE_PREFIX + handler.getExtension());
                 if (overrideName != null) {
                     if (!handlersByExtension.containsKey(handler.getExtension())) {
                         handler = container.getInstance(ContentTypeHandler.class, overrideName);
@@ -74,7 +74,15 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
             }
 
             if (handler.getContentType() != null) {
-                this.handlersByContentType.put(handler.getContentType(), handler);
+                //dont store character encoding
+                String typeOnly = handler.getContentType() ;
+                int index = handler.getContentType().indexOf(';');
+                if (index != -1)
+                {
+                    typeOnly = handler.getContentType().substring(0, index).trim();
+                }
+
+                this.handlersByContentType.put(typeOnly, handler);
             }
         }
     }
@@ -109,10 +117,40 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
      * Gets the handler for the response by looking at the extension of the request
      * @param req The request
      * @return The appropriate handler
+     *
+     * WW-4588: modified to get a handler for the response side and auto generate the response type
+     * from the Accept: header
+     *
      */
-    public ContentTypeHandler getHandlerForResponse(HttpServletRequest req, HttpServletResponse res) {
-        String extension = findExtension(req.getRequestURI());
+    public ContentTypeHandler getHandlerForResponse(HttpServletRequest request, HttpServletResponse res) {
+
+        String extension = getExtensionIfPresent(request.getRequestURI());
+        if (extension == null) {
+            extension = defaultExtension;
+            final String acceptHeader = request.getHeader("accept") ;
+            if (acceptHeader != null) {
+                final String[] types = acceptHeader.split(",");
+                for (final String type : types) {
+                    final ContentTypeHandler handler = findHandler(type);
+                    if (handler != null) {
+                        return handler;
+                    }
+                }
+            }
+        }
         return handlersByExtension.get(extension);
+    }
+
+    private ContentTypeHandler findHandler(final String type) {
+        ContentTypeHandler handler = handlersByContentType.get(type);
+        if (handler == null) {
+            // strip off encoding and search again (e.g., application/json;charset=ISO-8859-1)
+            final int index = type.indexOf(';');
+            if (index != -1) {
+                return handlersByContentType.get(type.substring(0, index).trim());
+            }
+        }
+        return handler;
     }
 
     /**
@@ -175,16 +213,31 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
     }
 
     /**
+     * Gets the extension in the url
+     *
+     * @param url The url
+     * @return The extension, or null
+     */
+    public String getExtensionIfPresent(String url) {
+        int dotPos = url.lastIndexOf('.');
+        int slashPos = url.lastIndexOf('/');
+        if (dotPos > slashPos && dotPos > -1) {
+            return url.substring(dotPos + 1);
+        }
+        return null;
+    }
+
+    /**
      * Finds the extension in the url
      * 
      * @param url The url
-     * @return The extension
+     * @return The extension, or the default extension if there is none
      */
     public String findExtension(String url) {
         int dotPos = url.lastIndexOf('.');
         int slashPos = url.lastIndexOf('/');
         if (dotPos > slashPos && dotPos > -1) {
-            return url.substring(dotPos+1);
+            return url.substring(dotPos + 1);
         }
         return defaultExtension;
     }

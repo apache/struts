@@ -5,6 +5,7 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -61,6 +62,47 @@ public class DefaultContentTypeHandlerManagerTest extends XWorkTestCase {
         // then
         assertNotNull(handler);
         assertEquals("text/html", handler.getContentType());
+        assertEquals("json", handler.getExtension());
+    }
+
+    public void testObtainingHandlerForRequestByContentType() throws Exception {
+        // given
+        DefaultContentTypeHandlerManager handlerManager = new DefaultContentTypeHandlerManager();
+        handlerManager.setContainer(new DummyContainer("application/json", ""));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setContentType("application/json;charset=UTF-8");
+        request.setRequestURI("/index");
+
+        // when
+        ContentTypeHandler handler = handlerManager.getHandlerForRequest(request);
+
+        // then
+        assertNotNull(handler);
+        assertEquals("application/json", handler.getContentType());
+        assertEquals("", handler.getExtension());
+    }
+
+    public void testObtainingHandlerForResponseByAcceptHeader() throws Exception {
+
+        // given
+        final DefaultContentTypeHandlerManager handlerManager = new DefaultContentTypeHandlerManager();
+        handlerManager.setContainer(new DummyContainer("application/json", "json"));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setContentType("application/json;charset=UTF-8");
+        request.addHeader("accept","application/json;charset=UTF-8");
+        request.setRequestURI("/index");
+
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setContentType("application/json;charset=UTF-8");
+
+        // when
+        ContentTypeHandler handler = handlerManager.getHandlerForResponse(request,response);
+
+        // then
+        assertNotNull(handler);
+        assertEquals("application/json", handler.getContentType());
         assertEquals("json", handler.getExtension());
     }
 

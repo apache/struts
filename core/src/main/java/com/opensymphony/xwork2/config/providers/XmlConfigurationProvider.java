@@ -777,11 +777,18 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 }
                 params.putAll(resultParams);
 
-                ResultConfig resultConfig = new ResultConfig.Builder(resultName, resultClass)
-                        .addParams(params)
-                        .location(DomHelper.getLocationObject(element))
-                        .build();
-                results.put(resultConfig.getName(), resultConfig);
+                Set<String> resultNamesSet = TextParseUtil.commaDelimitedStringToSet(resultName);
+                if (resultNamesSet.isEmpty()) {
+                    resultNamesSet.add(resultName);
+                }
+
+                for (String name : resultNamesSet) {
+                    ResultConfig resultConfig = new ResultConfig.Builder(name, resultClass)
+                            .addParams(params)
+                            .location(DomHelper.getLocationObject(element))
+                            .build();
+                    results.put(resultConfig.getName(), resultConfig);
+                }
             }
         }
 

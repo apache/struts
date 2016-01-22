@@ -45,4 +45,10 @@
         <put-attribute name="body" value="/WEB-INF/tiles/body.ftl"/>
     </definition>
 
+    <definition name="showcase.annotations" template="/WEB-INF/tiles/layout-annotations.jsp">
+        <put-attribute name="title" value="Tiles Annotations Showcase"/>
+        <put-attribute name="header" value=".header"/>
+        <put-attribute name="body" value=".body"/>
+    </definition>
+
 </tiles-definitions>

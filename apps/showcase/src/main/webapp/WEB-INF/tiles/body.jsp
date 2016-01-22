@@ -16,6 +16,9 @@
 					<li>
 						<a href="freemarkerLayout.action">View Example with a FreeMarker Layout</a>
 					</li>
+					<li>
+						<a href="tiles-annotations.action">View Example with tiles configuration by annotating action</a>
+					</li>
 				</ul>
 
 			</div>

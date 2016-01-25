@@ -27,6 +27,26 @@ import java.lang.annotation.Target;
 /**
  * Represents a <code>&lt;definition&gt;</code> element in <code>tiles.xml</code>.
  *
+ * <p>
+ *  With a sample layout in <code>tiles.xml</code> like this:
+ *  <pre>
+ *      &lt;definition name="layout" template="/WEB-INF/tiles/layout.jsp"&gt;
+ *          &lt;put-attribute name="header" value=".header"/&gt;
+ *          &lt;put-attribute name="body" value=".body"/&gt;
+ *      &lt;/definition&gt;
+ *  </pre>
+ * </p>
+ * <p>
+ *  You can annotate an action like that:
+ *  <pre>
+ *      @Result(name = "success", type="tiles")
+ *      @TilesDefinition(extend = "layout", putAttributes = {
+ *          @TilesPutAttribute(name = "header", value = "/WEB-INF/tiles/header.jsp"),
+ *          @TilesPutAttribute(name = "body", value = "/WEB-INF/tiles/body.ftl"), })
+ *      public class FooAction extends ActionSupport {
+ *  </pre>
+ * </p>
+ *
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE })

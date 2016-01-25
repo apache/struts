@@ -40,6 +40,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
+
 /**
  * <!-- START SNIPPET: description -->
  * Renders a view using struts-tiles.
@@ -50,7 +51,8 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * &lt;listener&gt;
  *      &lt;listener-class&gt;org.apache.struts2.tiles.StrutsTilesListener&lt;/listener-class&gt;
- * &lt;/listener&gt; * <!-- END SNIPPET: webxml -->
+ * &lt;/listener&gt;
+ * <!-- END SNIPPET: webxml -->
  *
  * <!-- START SNIPPET: strutsxml -->
  * In struts.xml, use type="tiles" on your &lt;result&gt;.
@@ -72,12 +74,12 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * &lt;/result-types&gt;
  * <!-- END SNIPPET: packageconfig -->
  *
+ *
  * <!-- START SNIPPET: tilesconfig -->
  * You have to configure tiles itself. Therefore you can add <code>tiles.xml</code> either 
  * to resources or WEB-INF. You may also use annotations like {@link TilesDefinition}.
  *
  * <!-- END SNIPPET: tilesconfig -->
- *
  *
  */
 public class TilesResult extends ServletDispatcherResult {

@@ -66,9 +66,10 @@ public class StrutsTilesAnnotationProcessor {
                         break;
                     }
                 }
-            }
-            if (tilesDefinitions.value().length > 0) {
-                tilesDefinition = tilesDefinitions.value()[0];
+            } else {
+                if (tilesDefinitions.value().length > 0) {
+                    tilesDefinition = tilesDefinitions.value()[0];
+                }
             }
         }
 

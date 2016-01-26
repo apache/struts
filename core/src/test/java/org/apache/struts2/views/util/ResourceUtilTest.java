@@ -28,35 +28,32 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import org.easymock.IMocksControl;
 import static org.easymock.EasyMock.*;
 
 public class ResourceUtilTest extends TestCase {
 
-    private IMocksControl control;
     private HttpServletRequest requestMock;
 
     public void testGetResourceBase() throws Exception {
         expect(requestMock.getServletPath()).andReturn("/mycontext/");
         expect(requestMock.getRequestURI()).andReturn("/mycontext/");
-        control.replay();
+        replay(requestMock);
         assertEquals("/mycontext", ResourceUtil.getResourceBase(requestMock));
-        control.verify();
+        verify(requestMock);
 
-        control.reset();
+        reset(requestMock);
 
         expect(requestMock.getServletPath()).andReturn("/mycontext/test.jsp");
         expect(requestMock.getRequestURI()).andReturn("/mycontext/test.jsp");
-        control.replay();
+        replay(requestMock);
         
         assertEquals("/mycontext", ResourceUtil.getResourceBase(requestMock));
-        control.verify();
+        verify(requestMock);
 
     }
 
 
     protected void setUp() {
-        control = createControl();
-        requestMock = (HttpServletRequest) control.createMock(HttpServletRequest.class);
+        requestMock = (HttpServletRequest) createMock(HttpServletRequest.class);
     }
 }

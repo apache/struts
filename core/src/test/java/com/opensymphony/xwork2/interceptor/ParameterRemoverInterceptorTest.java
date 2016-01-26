@@ -4,7 +4,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
-import org.easymock.IMocksControl;
 import static org.easymock.EasyMock.*;
 
 import java.util.LinkedHashMap;
@@ -18,7 +17,6 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 
 	protected Map<String, Object> contextMap;
 	protected ActionContext context;
-	protected IMocksControl actionInvocationControl;
 	protected ActionInvocation actionInvocation;
 	
 	@Override
@@ -26,8 +24,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		contextMap = new LinkedHashMap<>();
 		context = new ActionContext(contextMap);
 		
-		actionInvocationControl = createControl();
-		actionInvocation = (ActionInvocation) actionInvocationControl.createMock(ActionInvocation.class);
+		actionInvocation = (ActionInvocation) createMock(ActionInvocation.class);
 		expect(actionInvocation.getAction()).andStubReturn(new SampleAction());
 		expect(actionInvocation.getInvocationContext()).andStubReturn(context);
 		expect(actionInvocation.invoke()).andStubReturn("success");
@@ -44,7 +41,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 			}
 		});
 		
-		actionInvocationControl.replay();
+		replay(actionInvocation);
 		
 		ParameterRemoverInterceptor interceptor = new ParameterRemoverInterceptor();
 		interceptor.setParamNames("param1,param2");
@@ -58,7 +55,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		assertEquals(((String[])params.get("param3"))[0], "paramValue3");
 		assertEquals(((String[])params.get("param"))[0], "paramValue");
 		
-		actionInvocationControl.verify();
+		verify(actionInvocation);
 	}
 	
 	
@@ -71,7 +68,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 			}
 		});
 		
-		actionInvocationControl.replay();
+		replay(actionInvocation);
 		
 		ParameterRemoverInterceptor interceptor = new ParameterRemoverInterceptor();
 		interceptor.setParamNames("param1,param2");
@@ -81,7 +78,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		Map params = (Map) contextMap.get(ActionContext.PARAMETERS);
 		assertEquals(params.size(), 0);
 		
-		actionInvocationControl.verify();
+		verify(actionInvocation);
 	}
 	
 	
@@ -94,7 +91,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 			}
 		});
 		
-		actionInvocationControl.replay();
+		replay(actionInvocation);
 		
 		ParameterRemoverInterceptor interceptor = new ParameterRemoverInterceptor();
 		interceptor.setParamNames("param1,param2");
@@ -108,7 +105,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		assertEquals(((String[])params.get("param1"))[0], "paramValueOne");
 		assertEquals(((String[])params.get("param2"))[0], "paramValueTwo");
 		
-		actionInvocationControl.verify();
+		verify(actionInvocation);
 	}
 	
 	class SampleAction extends ActionSupport {

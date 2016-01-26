@@ -287,6 +287,7 @@ public final class StrutsConstants {
     /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions **/
     public static final String STRUTS_EXCLUDED_CLASSES = "struts.excludedClasses";
     public static final String STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS = "struts.excludedPackageNamePatterns";
+    public static final String STRUTS_EXCLUDED_PACKAGE_NAMES = "struts.excludedPackageNames";
 
     /** Dedicated services to check if passed string is excluded/accepted **/
     public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";

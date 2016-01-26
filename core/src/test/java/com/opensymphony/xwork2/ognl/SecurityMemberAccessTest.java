@@ -191,6 +191,24 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("stringField is accessible!", actual);
     }
     
+    public void testPackageNameExclusion() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        Set<String> excluded = new HashSet<String>();
+        excluded.add(FooBar.class.getPackage().getName());
+        sma.setExcludedPackageNames(excluded);
+
+        String propertyName = "stringField";
+        Member member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+
+        // when
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertFalse("stringField is accessible!", actual);
+    }
+
     public void testDefaultPackageExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
@@ -274,7 +292,7 @@ public class SecurityMemberAccessTest extends TestCase {
 
     public void testAllowStaticAccessIfClassIsNotExcluded() throws Exception {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        SecurityMemberAccess sma = new SecurityMemberAccess(true);
         sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(ClassLoader.class)));
 
         // when

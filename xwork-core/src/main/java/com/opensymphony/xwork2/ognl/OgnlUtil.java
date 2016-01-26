@@ -68,6 +68,7 @@ public class OgnlUtil {
 
     private Set<Class<?>> excludedClasses = new HashSet<Class<?>>();
     private Set<Pattern> excludedPackageNamePatterns = new HashSet<Pattern>();
+    private Set<String> excludedPackageNames = new HashSet<String>();
 
     private Container container;
     private boolean allowStaticMethodAccess;
@@ -109,11 +110,16 @@ public class OgnlUtil {
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-    public void setExcludedPackageName(String commaDelimitedPackagePatterns) {
+    public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
         for (String pattern : packagePatterns) {
-                excludedPackageNamePatterns.add(Pattern.compile(pattern));
+            excludedPackageNamePatterns.add(Pattern.compile(pattern));
         }
+    }
+
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
+    public void setExcludedPackageNames(String commaDelimitedPackageNames) {
+        excludedPackageNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
     }
 
     public Set<Class<?>> getExcludedClasses() {
@@ -122,6 +128,10 @@ public class OgnlUtil {
 
     public Set<Pattern> getExcludedPackageNamePatterns() {
         return excludedPackageNamePatterns;
+    }
+
+    public Set<String> getExcludedPackageNames() {
+        return excludedPackageNames;
     }
 
     @Inject
@@ -579,6 +589,7 @@ public class OgnlUtil {
         SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
         memberAccess.setExcludedClasses(excludedClasses);
         memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
+        memberAccess.setExcludedPackageNames(excludedPackageNames);
 
         return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
     }

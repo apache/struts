@@ -40,6 +40,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private Set<Pattern> acceptProperties = Collections.emptySet();
     private Set<Class<?>> excludedClasses = Collections.emptySet();
     private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
+    private Set<String> excludedPackageNames = Collections.emptySet();
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -134,16 +135,25 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         
         final String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
         final String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
+
         for (Pattern pattern : excludedPackageNamePatterns) {
             if (pattern.matcher(targetPackageName).matches() || pattern.matcher(memberPackageName).matches()) {
                 return true;
             }
         }
+
+        for (String packageName: excludedPackageNames) {
+            if (targetPackageName.startsWith(packageName) || targetPackageName.equals(packageName)
+                    || memberPackageName.startsWith(packageName) || memberPackageName.equals(packageName)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
-        if (clazz == Object.class) {
+        if (clazz == Object.class || (clazz == Class.class && !allowStaticMethodAccess)) {
             return true;
         }
         for (Class<?> excludedClass : excludedClasses) {
@@ -201,5 +211,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     public void setExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
         this.excludedPackageNamePatterns = excludedPackageNamePatterns;
+    }
+
+    public void setExcludedPackageNames(Set<String> excludedPackageNames) {
+        this.excludedPackageNames = excludedPackageNames;
     }
 }

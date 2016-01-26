@@ -96,6 +96,7 @@ public class LocalizedTextUtil {
     private static boolean devMode;
 
     private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<String, ResourceBundle>();
+    private static final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
     private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<MessageFormatKey, MessageFormat>();
     private static final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<Integer, ClassLoader>();
 
@@ -259,32 +260,37 @@ public class LocalizedTextUtil {
      * @return the bundle, <tt>null</tt> if not found.
      */
     public static ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
-
-        ResourceBundle bundle = null;
-
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
         String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
+
+        if (missingBundles.contains(key)) {
+            return null;
+        }
+
+        ResourceBundle bundle = null;
         try {
-            if (!bundlesMap.containsKey(key)) {
+            if (bundlesMap.containsKey(key)) {
+                bundle = bundlesMap.get(key);
+            } else {
                 bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
-            } else {
-                bundle = bundlesMap.get(key);
             }
         } catch (MissingResourceException ex) {
             if (delegatedClassLoaderMap.containsKey(classLoader.hashCode())) {
                 try {
-                    if (!bundlesMap.containsKey(key)) {
+                    if (bundlesMap.containsKey(key)) {
+                        bundle = bundlesMap.get(key);
+                    } else {
                         bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
                         bundlesMap.putIfAbsent(key, bundle);
-                    } else {
-                        bundle = bundlesMap.get(key);
                     }
                 } catch (MissingResourceException e) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Missing resource bundle [#0]!", aBundleName);
-                    }
+                    LOG.debug("Missing resource bundle [#0]!", aBundleName);
+                    missingBundles.add(key);
                 }
+            } else {
+                LOG.debug("Missing resource bundle [#0]!", aBundleName);
+                missingBundles.add(key);
             }
         }
         return bundle;

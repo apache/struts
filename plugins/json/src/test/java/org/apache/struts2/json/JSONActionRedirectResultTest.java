@@ -37,13 +37,17 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
 
         String content = response.getContentAsString();
         assertEquals("", content);
-        String location = response.getHeader("Location");
-        assertEquals("/targetAction.action", location);
-        assertEquals(302, response.getStatus());
+
+        // spring MockHttpServletResponse does not set Location-Header and status code on sendRedirect()
+//        String location = response.getHeader("Location").toString();
+//        assertEquals("/targetAction.action", location);
+//        assertEquals(302, response.getStatus());
+        String redirectedUrl = response.getRedirectedUrl();
+        assertEquals("/targetAction.action", redirectedUrl);
     }
 
     public void testJsonRedirect() throws Exception {
-        JSONActionRedirectResult result = new JSONActionRedirectResult();
+    	JSONActionRedirectResult result = new JSONActionRedirectResult();
         result.setActionName("targetAction");
         result.setActionMapper(new DefaultActionMapper());
         result.setUrlHelper(new DefaultUrlHelper());
@@ -79,9 +83,13 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
 
         String content = response.getContentAsString();
         assertEquals("", content);
-        String location = response.getHeader("Location");
-        assertEquals("/targetAction.action", location);
-        assertEquals(302, response.getStatus());
+
+        // spring MockHttpServletResponse does not set Location-Header and status code on sendRedirect()
+//      String location = response.getHeader("Location").toString();
+//      assertEquals("/targetAction.action", location);
+//      assertEquals(302, response.getStatus());
+      String redirectedUrl = response.getRedirectedUrl();
+      assertEquals("/targetAction.action", redirectedUrl);
     }
 
     @Override

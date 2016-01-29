@@ -18,6 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@org.apache.struts2.convention.annotation.AllowedMethods("home,start")
+@org.apache.struts2.convention.annotation.AllowedMethods({"home", "start"})
 package org.apache.struts2.convention.actions.allowedmethods;
 

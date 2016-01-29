@@ -744,7 +744,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (annotation == null) {
             return Collections.emptySet();
         } else {
-            return TextParseUtil.commaDelimitedStringToSet(annotation.value());
+            Set<String> methods = new HashSet<>();
+            for (String method : annotation.value()) {
+                methods.add(method);
+            }
+            return methods;
         }
     }
 

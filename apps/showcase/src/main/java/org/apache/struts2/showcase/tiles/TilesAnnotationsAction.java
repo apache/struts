@@ -12,8 +12,9 @@ import com.opensymphony.xwork2.ActionSupport;
 @ParentPackage("tiles")
 @Result(name = "success", type="tiles")
 @TilesDefinition(extend = "showcase.annotations", putAttributes = {
-        @TilesPutAttribute(name = "header", value = "/WEB-INF/tiles/header.jsp"),
-        @TilesPutAttribute(name = "body", value = "/WEB-INF/tiles/body.ftl"), })
+    @TilesPutAttribute(name = "header", value = "/WEB-INF/tiles/header.jsp"),
+    @TilesPutAttribute(name = "body", value = "/WEB-INF/tiles/body.ftl")
+})
 public class TilesAnnotationsAction extends ActionSupport {
 
     private static final long serialVersionUID = 2900509995064928866L;

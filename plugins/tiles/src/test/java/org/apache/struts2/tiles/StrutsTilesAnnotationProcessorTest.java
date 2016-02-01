@@ -109,7 +109,6 @@ public class StrutsTilesAnnotationProcessorTest {
         Assert.assertNull(definition.getExtends());
         Attribute templateAttribute = definition.getTemplateAttribute();
         Assert.assertNull(templateAttribute.getValue());
-        //Assert.assertNull(templateAttribute.getRenderer());
         Assert.assertNull(templateAttribute.getRole());
         Assert.assertNull(templateAttribute.getExpressionObject());
 

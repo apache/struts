@@ -42,7 +42,8 @@ import java.lang.annotation.Target;
  *      @Result(name = "success", type="tiles")
  *      @TilesDefinition(extend = "layout", putAttributes = {
  *          @TilesPutAttribute(name = "header", value = "/WEB-INF/tiles/header.jsp"),
- *          @TilesPutAttribute(name = "body", value = "/WEB-INF/tiles/body.ftl"), })
+ *          @TilesPutAttribute(name = "body", value = "/WEB-INF/tiles/body.ftl")
+ *      })
  *      public class FooAction extends ActionSupport {
  *  </pre>
  * </p>

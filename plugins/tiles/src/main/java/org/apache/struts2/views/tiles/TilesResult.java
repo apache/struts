@@ -115,7 +115,7 @@ public class TilesResult extends ServletDispatcherResult {
         String actionName = invocation.getInvocationContext().getName();
 
         if (StringUtils.isEmpty(location)) {
-            // location not set -> action must have one @TilesDefinition
+            LOG.trace("location not set -> action must have one @TilesDefinition");
             tilesDefinition = annotationProcessor.findAnnotation(action, null);
             String tileName = StringUtils.isNotEmpty(tilesDefinition.name()) ? tilesDefinition.name() : actionName;
             location = tileName;
@@ -142,7 +142,7 @@ public class TilesResult extends ServletDispatcherResult {
         }
         if (!definitionValid) {
             if (tilesDefinition == null) {
-                // tilesDefinition not found yet, search in action
+                LOG.trace("tilesDefinition not found yet, searching in action");
                 tilesDefinition = annotationProcessor.findAnnotation(action, location);
             }
             if (tilesDefinition != null) {

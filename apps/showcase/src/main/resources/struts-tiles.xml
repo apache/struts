@@ -20,6 +20,11 @@
             <result type="tiles">showcase.freemarkerLayout</result>
         </action>
 
+        <action name="tiles-annotations" class="org.apache.struts2.showcase.tiles.TilesAnnotationsAction">
+            <!-- note: this is not necessary when using convention-plugin -->
+            <result type="tiles"></result>
+        </action>
+
         <action name="sanity">
             <result type="redirect">/WEB-INF/tiles/layout.jsp</result>
             <result type="redirect" name="success">/tiles/layout.jsp</result>

@@ -130,7 +130,7 @@ public class TilesResult extends ServletDispatcherResult {
         boolean definitionValid = false;
         try {
             LOG.debug("checking if tiles definition exists '{}'", location);
-            definitionValid = container.isValidDefinition(location, request);
+            definitionValid = container.isValidDefinition(location, request, response);
         } catch (TilesException e) {
             LOG.warn("got TilesException while checking if definiton exists, ignoring it", e);
         }
@@ -143,7 +143,7 @@ public class TilesResult extends ServletDispatcherResult {
                 Definition definition = annotationProcessor.buildTilesDefinition(location, tilesDefinition);
                 if (container instanceof MutableTilesContainer) {
                     LOG.debug("registering tiles definition with name '{}'", definition.getName());
-                    ((MutableTilesContainer)container).register(definition, request);
+                    ((MutableTilesContainer)container).register(definition, request, response);
                 } else {
                     LOG.error("cannot register tiles definition as tiles container is not mutable!");
                 }

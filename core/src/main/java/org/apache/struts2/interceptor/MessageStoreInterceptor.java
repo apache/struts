@@ -272,41 +272,42 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
      */
     protected void after(ActionInvocation invocation, String result) throws Exception {
 
+        boolean isCommitted = ServletActionContext.getResponse().isCommitted();
+        if (isCommitted) {
+            LOG.trace("Response was already committed, cannot store messages!");
+            return;
+        }
+
+        boolean isInvalidated = ServletActionContext.getRequest().getSession(false) == null;
+        if (isInvalidated) {
+            LOG.trace("Session was invalidated or never created, cannot store messages!");
+            return;
+        }
+
+        Map<String, Object> session = invocation.getInvocationContext().getSession();
+        if (session == null) {
+            LOG.trace("Could not store action [#0] error/messages into session, because session hasn't been opened yet.", invocation.getAction());
+            return;
+        }
+
         String reqOperationMode = getRequestOperationMode(invocation);
         boolean isRedirect = invocation.getResult() instanceof ServletRedirectResult;
-        boolean isCommitted = ServletActionContext.getResponse().isCommitted();
 
         if (STORE_MODE.equalsIgnoreCase(reqOperationMode) ||
                 STORE_MODE.equalsIgnoreCase(operationMode) ||
                 (AUTOMATIC_MODE.equalsIgnoreCase(operationMode) && isRedirect)) {
 
             Object action = invocation.getAction();
-            if (action instanceof ValidationAware && !isCommitted) {
-                // store error / messages into session
-                Map<String, Object> session = invocation.getInvocationContext().getSession();
-
-                if (session == null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Could not store action ["+action+"] error/messages into session, because session hasn't been opened yet.");
-                    }
-                    return;
-                }
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("store action ["+action+"] error/messages into session ");
-                }
+            if (action instanceof ValidationAware) {
+                LOG.debug("Storing action [#0] error/messages into session ", action);
 
                 ValidationAware validationAwareAction = (ValidationAware) action;
                 session.put(actionErrorsSessionKey, validationAwareAction.getActionErrors());
                 session.put(actionMessagesSessionKey, validationAwareAction.getActionMessages());
                 session.put(fieldErrorsSessionKey, validationAwareAction.getFieldErrors());
 
-            } else if(LOG.isDebugEnabled()) {
-                if (isCommitted) {
-                    LOG.debug("Response was already committed, cannot store messages!");
-                } else {
-                    LOG.debug("Action [" + action + "] is not ValidationAware, no message / error that are storeable");
-                }
+            } else {
+                LOG.debug("Action [#0] is not ValidationAware, no message / error that are storeable", action);
             }
         }
     }

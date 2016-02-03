@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.result.ServletActionRedirectResult;
@@ -37,7 +38,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -79,6 +83,15 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         ActionContext actionContext = new ActionContext(new HashMap());
         actionContext.put(ActionContext.PARAMETERS, paramMap);
         actionContext.put(ActionContext.SESSION, sessionMap);
+
+        HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
 
         // Mock (ActionInvocation)
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
@@ -143,6 +156,15 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         ActionContext actionContext = new ActionContext(new HashMap());
         actionContext.put(ActionContext.PARAMETERS, paramMap);
 
+        HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
+
         // Mock (ActionInvocation)
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
         mockActionInvocation.getInvocationContext();
@@ -154,9 +176,6 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
 
         mockActionInvocation.getAction();
         EasyMock.expectLastCall().andReturn(action);
-
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
 
         EasyMock.replay(mockActionInvocation);
 
@@ -201,6 +220,14 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         sessionMap.put(MessageStoreInterceptor.actionMessagesSessionKey, actionMessages);
         sessionMap.put(MessageStoreInterceptor.fieldErrorsSessionKey, fieldErrors);
 
+        HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
 
         ActionContext actionContext = new ActionContext(new HashMap());
         actionContext.put(ActionContext.PARAMETERS, paramsMap);
@@ -258,6 +285,15 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         ActionContext actionContext = new ActionContext(new HashMap());
         actionContext.put(ActionContext.PARAMETERS, paramMap);
         actionContext.put(ActionContext.SESSION, sessionMap);
+
+        HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
 
         // Mock (ActionInvocation)
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
@@ -317,6 +353,14 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         sessionMap.put(MessageStoreInterceptor.actionMessagesSessionKey, actionMessages);
         sessionMap.put(MessageStoreInterceptor.fieldErrorsSessionKey, fieldErrors);
 
+        mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
 
         actionContext = new ActionContext(new HashMap());
         actionContext.put(ActionContext.PARAMETERS, paramMap);
@@ -421,5 +465,71 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
 
         EasyMock.verify(mockActionInvocation);
 
+    }
+
+    public void testSessionWasInvalidated() throws Exception {
+        // given
+        ActionContext actionContext = new ActionContext(new HashMap());
+        actionContext.put(ActionContext.PARAMETERS, new LinkedHashMap());
+
+        ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
+
+        mockActionInvocation.getInvocationContext();
+        EasyMock.expectLastCall().andReturn(actionContext);
+        EasyMock.expectLastCall().anyTimes();
+
+        mockActionInvocation.invoke();
+        EasyMock.expectLastCall().andReturn(Action.SUCCESS);
+
+        EasyMock.replay(mockActionInvocation);
+
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(null);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
+
+        // when
+        MessageStoreInterceptor msi = new MessageStoreInterceptor();
+        msi.intercept(mockActionInvocation);
+
+        // then
+        EasyMock.verify(mockActionInvocation);
+        EasyMock.verify(mockedRequest);
+    }
+
+    public void testResponseWasComitted() throws Exception {
+        // given
+        ActionContext actionContext = new ActionContext(new HashMap());
+        actionContext.put(ActionContext.PARAMETERS, new LinkedHashMap());
+
+        ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
+
+        mockActionInvocation.getInvocationContext();
+        EasyMock.expectLastCall().andReturn(actionContext);
+        EasyMock.expectLastCall().anyTimes();
+
+        mockActionInvocation.invoke();
+        EasyMock.expectLastCall().andReturn(Action.SUCCESS);
+
+        EasyMock.replay(mockActionInvocation);
+
+        HttpServletResponse mockedResponse = EasyMock.createControl().createMock(HttpServletResponse.class);
+        mockedResponse.isCommitted();
+        EasyMock.expectLastCall().andReturn(true);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setResponse(mockedResponse);
+
+        EasyMock.replay(mockedResponse);
+
+        // when
+        MessageStoreInterceptor msi = new MessageStoreInterceptor();
+        msi.intercept(mockActionInvocation);
+
+        // then
+        EasyMock.verify(mockActionInvocation);
+        EasyMock.verify(mockedResponse);
     }
 }

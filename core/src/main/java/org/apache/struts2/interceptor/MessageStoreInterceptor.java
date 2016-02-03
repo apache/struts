@@ -60,7 +60,7 @@ import java.util.Map;
  * </p>
  *
  * <p>
- * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors 
+ * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors
  * and field errors and put them back into the {@link ValidationAware} action, and after Action execution, 
  * if the {@link com.opensymphony.xwork2.Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
  * and field errors into automatically be stored in the HTTP session..
@@ -269,25 +269,34 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
      */
     protected void after(ActionInvocation invocation, String result) throws Exception {
 
+        boolean isCommitted = ServletActionContext.getResponse().isCommitted();
+        if (isCommitted) {
+            LOG.trace("Response was already committed, cannot store messages!");
+            return;
+        }
+
+        boolean isInvalidated = ServletActionContext.getRequest().getSession(false) == null;
+        if (isInvalidated) {
+            LOG.trace("Session was invalidated or never created, cannot store messages!");
+            return;
+        }
+
+        Map<String, Object> session = invocation.getInvocationContext().getSession();
+        if (session == null) {
+            LOG.trace("Could not store action [{}] error/messages into session, because session hasn't been opened yet.", invocation.getAction());
+            return;
+        }
+
         String reqOperationMode = getRequestOperationMode(invocation);
         boolean isRedirect = invocation.getResult() instanceof ServletRedirectResult;
-        boolean isCommitted = ServletActionContext.getResponse().isCommitted();
 
         if (STORE_MODE.equalsIgnoreCase(reqOperationMode) ||
                 STORE_MODE.equalsIgnoreCase(operationMode) ||
                 (AUTOMATIC_MODE.equalsIgnoreCase(operationMode) && isRedirect)) {
 
             Object action = invocation.getAction();
-            if (action instanceof ValidationAware && !isCommitted) {
-                // store error / messages into session
-                Map<String, Object> session = invocation.getInvocationContext().getSession();
-
-                if (session == null) {
-                    LOG.debug("Could not store action [{}] error/messages into session, because session hasn't been opened yet.", action);
-                    return;
-                }
-
-                LOG.debug("Store action [{}] error/messages into session.", action);
+            if (action instanceof ValidationAware) {
+                LOG.debug("Storing action [{}] error/messages into session ", action);
 
                 ValidationAware validationAwareAction = (ValidationAware) action;
                 session.put(actionErrorsSessionKey, validationAwareAction.getActionErrors());
@@ -295,11 +304,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
                 session.put(fieldErrorsSessionKey, validationAwareAction.getFieldErrors());
 
             } else {
-                if (isCommitted) {
-                    LOG.debug("Response was already committed, cannot store messages!");
-                } else {
-                    LOG.debug("Action [{}] is not ValidationAware, no message / error that are storeable", action);
-                }
+                LOG.debug("Action [{}] is not ValidationAware, no message / error that are storeable", action);
             }
         }
     }

@@ -862,7 +862,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             allowedMethods = packageContext.getGlobalAllowedMethods();
 
             if (allowedMethodsEls.getLength() > 0) {
-                allowedMethods = new HashSet<>();
                 Node n = allowedMethodsEls.item(0).getFirstChild();
                 if (n != null) {
                     String s = n.getNodeValue().trim();

@@ -1,10 +1,11 @@
 <!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.3//EN"
-    "http://struts.apache.org/dtds/xwork-2.3.dtd"
+    "-//Apache Struts//XWork 2.5//EN"
+    "http://struts.apache.org/dtds/xwork-2.5.dtd"
  >
 
 <xwork>
     <package name="default" strict-method-invocation="false">
+        <global-allowed-methods>input,cancel</global-allowed-methods>
         <action name="Default">
         </action>
 
@@ -26,6 +27,7 @@
     </package>
 
     <package name="strict" strict-method-invocation="true">
+        <global-allowed-methods>input,cancel</global-allowed-methods>
         <action name="Default">
         </action>
 

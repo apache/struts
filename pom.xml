@@ -301,6 +301,9 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>

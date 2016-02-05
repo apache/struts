@@ -469,11 +469,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 .build();
         packageContext.addActionConfig(name, actionConfig);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loaded {}{} in '{}' package: {}",
-                    StringUtils.isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
-                    name, packageContext.getName(), actionConfig);
-        }
+        LOG.debug("Loaded {}{} in '{}' package: {}",
+                StringUtils.isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
+                name, packageContext.getName(), actionConfig);
     }
 
     protected boolean verifyAction(String className, String name, Location loc) {

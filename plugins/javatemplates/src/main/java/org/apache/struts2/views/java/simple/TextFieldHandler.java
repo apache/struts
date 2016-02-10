@@ -32,7 +32,7 @@ public class TextFieldHandler extends AbstractTagHandler implements TagGenerator
         Map<String, Object> params = context.getParameters();
         Attributes attr = new Attributes();
         Object type = params.get("type");
-        attr.add("type", type == null ? "text" : (String) type)
+        attr.add("type", type == null ? "text" : type.toString())
                 .addDefaultToEmpty("name", params.get("name"))
                 .addIfExists("size", params.get("size"))
                 .addIfExists("maxlength", params.get("maxlength"))

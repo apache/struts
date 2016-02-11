@@ -171,6 +171,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
     public void setAllowRequestParameterSwitch(boolean allowRequestParameterSwitch) {
         this.allowRequestParameterSwitch = allowRequestParameterSwitch;
     }
+
     public boolean getAllowRequestParameterSwitch() {
         return this.allowRequestParameterSwitch;
     }
@@ -178,6 +179,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
     public void setRequestParameterSwitch(String requestParameterSwitch) {
         this.requestParameterSwitch = requestParameterSwitch;
     }
+
     public String getRequestParameterSwitch() {
         return this.requestParameterSwitch;
     }
@@ -185,18 +187,23 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
     public void setOperationMode(String operationMode) {
         this.operationMode = operationMode;
     }
+
     public String getOperationModel() {
         return this.operationMode;
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
+        LOG.trace("entering MessageStoreInterceptor ...");
         if (LOG.isDebugEnabled()) {
             LOG.debug("entering MessageStoreInterceptor ...");
         }
 
         before(invocation);
+
+        LOG.trace("Registering listener to store messages before result will be executed");
+        invocation.addPreResultListener(new MessageStorePreResultListener(this));
+
         String result = invocation.invoke();
-        after(invocation, result);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("exit executing MessageStoreInterceptor");
@@ -258,56 +265,6 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
                 session.remove(actionErrorsSessionKey);
                 session.remove(actionMessagesSessionKey);
                 session.remove(fieldErrorsSessionKey);
-            }
-        }
-    }
-
-    /**
-     * Handle the storing of field errors / action messages / field errors, which is
-     * done after action invocation, and the <code>operationMode</code> is in 'STORE'.
-     *
-     * @param invocation
-     * @param result
-     * @throws Exception
-     */
-    protected void after(ActionInvocation invocation, String result) throws Exception {
-
-        boolean isCommitted = ServletActionContext.getResponse().isCommitted();
-        if (isCommitted) {
-            LOG.trace("Response was already committed, cannot store messages!");
-            return;
-        }
-
-        boolean isInvalidated = ServletActionContext.getRequest().getSession(false) == null;
-        if (isInvalidated) {
-            LOG.trace("Session was invalidated or never created, cannot store messages!");
-            return;
-        }
-
-        Map<String, Object> session = invocation.getInvocationContext().getSession();
-        if (session == null) {
-            LOG.trace("Could not store action [#0] error/messages into session, because session hasn't been opened yet.", invocation.getAction());
-            return;
-        }
-
-        String reqOperationMode = getRequestOperationMode(invocation);
-        boolean isRedirect = invocation.getResult() instanceof ServletRedirectResult;
-
-        if (STORE_MODE.equalsIgnoreCase(reqOperationMode) ||
-                STORE_MODE.equalsIgnoreCase(operationMode) ||
-                (AUTOMATIC_MODE.equalsIgnoreCase(operationMode) && isRedirect)) {
-
-            Object action = invocation.getAction();
-            if (action instanceof ValidationAware) {
-                LOG.debug("Storing action [#0] error/messages into session ", action);
-
-                ValidationAware validationAwareAction = (ValidationAware) action;
-                session.put(actionErrorsSessionKey, validationAwareAction.getActionErrors());
-                session.put(actionMessagesSessionKey, validationAwareAction.getActionMessages());
-                session.put(fieldErrorsSessionKey, validationAwareAction.getFieldErrors());
-
-            } else {
-                LOG.debug("Action [#0] is not ValidationAware, no message / error that are storeable", action);
             }
         }
     }

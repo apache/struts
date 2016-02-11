@@ -179,7 +179,8 @@ public class ActionTagTest extends AbstractTagTest {
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
         assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
-        assertNull(result); // result is never executed, hence never set into invocation
+        assertNotNull(result);
+        assertFalse(result.isExecuted());
     }
 
      public void testExecuteButResetReturnSameInvocation() throws Exception {

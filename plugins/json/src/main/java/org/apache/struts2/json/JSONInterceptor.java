@@ -58,7 +58,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     private boolean enableGZIP = false;
     private boolean wrapWithComments;
     private boolean prefix;
-    private String defaultEncoding = "ISO-8859-1";
+    private String defaultEncoding = "UTF-8";
     private boolean ignoreHierarchy = true;
     private String root;
     private List<Pattern> excludeProperties;
@@ -76,7 +76,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        String contentType = request.getHeader("content-type");
+        contentType = request.getHeader("accept");
         if (contentType != null) {
             int iSemicolonIdx;
             if ((iSemicolonIdx = contentType.indexOf(";")) != -1)
@@ -181,7 +181,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
             return Action.NONE;
         } else {
-            LOG.debug("Content type must be 'application/json' or 'application/json-rpc'. Ignoring request with content type ", contentType);
+            LOG.debug("Accept header parameter must be 'application/json' or 'application/json-rpc'. Ignoring request with accept ", contentType);
         }
 
         return invocation.invoke();

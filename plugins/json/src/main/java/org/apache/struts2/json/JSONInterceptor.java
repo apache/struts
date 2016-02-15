@@ -186,6 +186,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
             return Action.NONE;
         } else {
+            
             LOG.debug("Accept header parameter must be 'application/json' or 'application/json-rpc'. Ignoring request with accept ", accept);
         }
 

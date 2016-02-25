@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
+import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
@@ -176,7 +177,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
             resultName = ((ValidationWorkflowAware) action).getInputResultName();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Changing result name from [#0] to [#1] because of processing [#2] interface applied to [#3]",
-                        currentResultName, resultName, InputConfig.class.getSimpleName(), ValidationWorkflowAware.class.getSimpleName(), action);
+                        currentResultName, resultName, ValidationWorkflowAware.class.getSimpleName(), action);
             }
         }
         return resultName;

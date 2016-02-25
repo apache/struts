@@ -394,6 +394,9 @@ public class Dispatcher {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
                     ConfigurationProvider prov = (ConfigurationProvider)cls.newInstance();
+                    if (prov instanceof ServletContextAwareConfigurationProvider) {
+                        ((ServletContextAwareConfigurationProvider)prov).initWithContext(servletContext);
+                    }
                     configurationManager.addContainerProvider(prov);
                 } catch (InstantiationException e) {
                     throw new ConfigurationException("Unable to instantiate provider: "+cname, e);

@@ -469,11 +469,9 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 .build();
         packageContext.addActionConfig(name, actionConfig);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loaded {}{} in '{}' package: {}",
-                    StringUtils.isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
-                    name, packageContext.getName(), actionConfig);
-        }
+        LOG.debug("Loaded {}{} in '{}' package: {}",
+                StringUtils.isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
+                name, packageContext.getName(), actionConfig);
     }
 
     protected boolean verifyAction(String className, String name, Location loc) {
@@ -859,7 +857,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         Set<String> allowedMethods;
         if (allowedMethodsEls.getLength() > 0) {
             // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
-            allowedMethods = packageContext.getGlobalAllowedMethods();
+            allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
 
             if (allowedMethodsEls.getLength() > 0) {
                 Node n = allowedMethodsEls.item(0).getFirstChild();
@@ -872,14 +870,14 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             }
         } else if (packageContext.isStrictMethodInvocation()) {
             // user enabled Strict DMI but didn't defined action specific 'allowed-methods' so we use 'global-allowed-methods' only
-            allowedMethods = packageContext.getGlobalAllowedMethods();
+            allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
         } else {
             // Strict DMI is disabled to any method can be called
             allowedMethods = new HashSet<>();
             allowedMethods.add(ActionConfig.REGEX_WILDCARD);
         }
 
-        return allowedMethods;
+        return Collections.unmodifiableSet(allowedMethods);
     }
 
     protected void loadDefaultInterceptorRef(PackageConfig.Builder packageContext, Element element) {

@@ -519,7 +519,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         public Set<String> getGlobalAllowedMethods() {
             Set <String> allowedMethods = target.globalAllowedMethods;
             allowedMethods.addAll(getParentsAllowedMethods(target.parents));
-            return allowedMethods;
+            return Collections.unmodifiableSet(allowedMethods);
         }
 
         public Set<String> getParentsAllowedMethods(List<PackageConfig> parents) {

@@ -199,6 +199,7 @@ public class ActionConfig extends Located implements Serializable {
         }
         sb.append(")");
         sb.append(" - ").append(location);
+        sb.append(" - ").append(allowedMethods);
         sb.append("}");
         return sb.toString();
     }

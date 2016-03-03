@@ -27,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.result.ServletActionRedirectResult;
@@ -37,7 +39,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -59,75 +64,6 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         ServletActionContext.setResponse(response);
     }
 
-    public void testStoreMessage() throws Exception {
-        MessageStoreInterceptor interceptor = new MessageStoreInterceptor();
-        interceptor.setAllowRequestParameterSwitch(true);
-        interceptor.setOperationMode(MessageStoreInterceptor.STORE_MODE);
-
-
-        Map paramMap = new LinkedHashMap();
-        Map sessionMap = new LinkedHashMap();
-
-        ActionSupport action = new ActionSupport();
-        action.addActionError("some action error 1");
-        action.addActionError("some action error 2");
-        action.addActionMessage("some action message 1");
-        action.addActionMessage("some action message 2");
-        action.addFieldError("field1", "some field error 1");
-        action.addFieldError("field2", "some field error 2");
-
-        ActionContext actionContext = new ActionContext(new HashMap());
-        actionContext.put(ActionContext.PARAMETERS, paramMap);
-        actionContext.put(ActionContext.SESSION, sessionMap);
-
-        // Mock (ActionInvocation)
-        ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
-        mockActionInvocation.getInvocationContext();
-        EasyMock.expectLastCall().andReturn(actionContext);
-        EasyMock.expectLastCall().anyTimes();
-
-        mockActionInvocation.invoke();
-        EasyMock.expectLastCall().andReturn(Action.SUCCESS);
-
-        mockActionInvocation.getAction();
-        EasyMock.expectLastCall().andReturn(action);
-        
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
-
-        EasyMock.replay(mockActionInvocation);
-
-        interceptor.init();
-        interceptor.intercept(mockActionInvocation);
-        interceptor.destroy();
-
-        assertEquals(sessionMap.size(), 3);
-        assertTrue(sessionMap.containsKey(MessageStoreInterceptor.actionErrorsSessionKey));
-        assertTrue(sessionMap.containsKey(MessageStoreInterceptor.actionMessagesSessionKey));
-        assertTrue(sessionMap.containsKey(MessageStoreInterceptor.fieldErrorsSessionKey));
-
-        List actionErrors = (List) sessionMap.get(MessageStoreInterceptor.actionErrorsSessionKey);
-        List actionMessages = (List) sessionMap.get(MessageStoreInterceptor.actionMessagesSessionKey);
-        Map fieldErrors = (Map) sessionMap.get(MessageStoreInterceptor.fieldErrorsSessionKey);
-
-        assertEquals(actionErrors.size(), 2);
-        assertEquals(actionMessages.size(), 2);
-        assertEquals(fieldErrors.size(), 2);
-
-        assertTrue(actionErrors.contains("some action error 1"));
-        assertTrue(actionErrors.contains("some action error 2"));
-        assertTrue(actionMessages.contains("some action message 1"));
-        assertTrue(actionMessages.contains("some action message 2"));
-        assertTrue(fieldErrors.containsKey("field1"));
-        assertTrue(fieldErrors.containsKey("field2"));
-        assertEquals(((List)fieldErrors.get("field1")).size(), 1);
-        assertEquals(((List)fieldErrors.get("field2")).size(), 1);
-        assertEquals(((List)fieldErrors.get("field1")).get(0), "some field error 1");
-        assertEquals(((List)fieldErrors.get("field2")).get(0), "some field error 2");
-
-        EasyMock.verify(mockActionInvocation);
-    }
-
     public void testIgnoreMessageWithoutSession() throws Exception {
         MessageStoreInterceptor interceptor = new MessageStoreInterceptor();
         interceptor.setAllowRequestParameterSwitch(true);
@@ -143,6 +79,15 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         ActionContext actionContext = new ActionContext(new HashMap());
         actionContext.put(ActionContext.PARAMETERS, paramMap);
 
+        HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
+
         // Mock (ActionInvocation)
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
         mockActionInvocation.getInvocationContext();
@@ -152,11 +97,8 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         mockActionInvocation.invoke();
         EasyMock.expectLastCall().andReturn(Action.SUCCESS);
 
-        mockActionInvocation.getAction();
-        EasyMock.expectLastCall().andReturn(action);
-
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
+        mockActionInvocation.addPreResultListener(EasyMock.<PreResultListener>anyObject());
+        EasyMock.expectLastCall();
 
         EasyMock.replay(mockActionInvocation);
 
@@ -201,6 +143,14 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         sessionMap.put(MessageStoreInterceptor.actionMessagesSessionKey, actionMessages);
         sessionMap.put(MessageStoreInterceptor.fieldErrorsSessionKey, fieldErrors);
 
+        HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
 
         ActionContext actionContext = new ActionContext(new HashMap());
         actionContext.put(ActionContext.PARAMETERS, paramsMap);
@@ -214,8 +164,8 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         EasyMock.expectLastCall().andReturn(action);
         EasyMock.expectLastCall().anyTimes();
         
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
+        mockActionInvocation.addPreResultListener(EasyMock.<PreResultListener>anyObject());
+        EasyMock.expectLastCall();
 
         EasyMock.replay(mockActionInvocation);
 
@@ -259,12 +209,24 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         actionContext.put(ActionContext.PARAMETERS, paramMap);
         actionContext.put(ActionContext.SESSION, sessionMap);
 
+        HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
+        HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
+        mockedRequest.getSession(false);
+        EasyMock.expectLastCall().andReturn(mockedSession);
+        EasyMock.expectLastCall().once();
+        ServletActionContext.setRequest(mockedRequest);
+
+        EasyMock.replay(mockedRequest);
+
         // Mock (ActionInvocation)
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
         mockActionInvocation.getInvocationContext();
         EasyMock.expectLastCall().andReturn(actionContext);
         EasyMock.expectLastCall().anyTimes();
 
+        mockActionInvocation.addPreResultListener(EasyMock.<PreResultListener>anyObject());
+        EasyMock.expectLastCall();
+
         mockActionInvocation.invoke();
         EasyMock.expectLastCall().andReturn(Action.SUCCESS);
 
@@ -272,84 +234,11 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         EasyMock.expectLastCall().andReturn(action);
         EasyMock.expectLastCall().anyTimes();
 
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
-        
         EasyMock.replay(mockActionInvocation);
 
         interceptor.init();
         interceptor.intercept(mockActionInvocation);
         interceptor.destroy();
-
-        assertEquals(3, sessionMap.size());
-        assertTrue(sessionMap.containsKey(MessageStoreInterceptor.actionErrorsSessionKey));
-        assertTrue(sessionMap.containsKey(MessageStoreInterceptor.actionMessagesSessionKey));
-        assertTrue(sessionMap.containsKey(MessageStoreInterceptor.fieldErrorsSessionKey));
-
-        List actionErrors = (List) sessionMap.get(MessageStoreInterceptor.actionErrorsSessionKey);
-        List actionMessages = (List) sessionMap.get(MessageStoreInterceptor.actionMessagesSessionKey);
-        Map fieldErrors = (Map) sessionMap.get(MessageStoreInterceptor.fieldErrorsSessionKey);
-
-        assertEquals(2, actionErrors.size());
-        assertEquals(2, actionMessages.size());
-        assertEquals(2, fieldErrors.size());
-
-        assertTrue(actionErrors.contains("some action error 1"));
-        assertTrue(actionErrors.contains("some action error 2"));
-        assertTrue(actionMessages.contains("some action message 1"));
-        assertTrue(actionMessages.contains("some action message 2"));
-        assertTrue(fieldErrors.containsKey("field1"));
-        assertTrue(fieldErrors.containsKey("field2"));
-        assertEquals(((List)fieldErrors.get("field1")).size(), 1);
-        assertEquals(((List)fieldErrors.get("field2")).size(), 1);
-        assertEquals(((List)fieldErrors.get("field1")).get(0), "some field error 1");
-        assertEquals(((List)fieldErrors.get("field2")).get(0), "some field error 2");
-
-        EasyMock.verify(mockActionInvocation);
-        
-        action = new ActionSupport();
-
-        mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
-        mockActionInvocation.invoke();
-        EasyMock.expectLastCall().andReturn(Action.SUCCESS);
-
-        sessionMap.put(MessageStoreInterceptor.actionErrorsSessionKey, actionErrors);
-        sessionMap.put(MessageStoreInterceptor.actionMessagesSessionKey, actionMessages);
-        sessionMap.put(MessageStoreInterceptor.fieldErrorsSessionKey, fieldErrors);
-
-
-        actionContext = new ActionContext(new HashMap());
-        actionContext.put(ActionContext.PARAMETERS, paramMap);
-        actionContext.put(ActionContext.SESSION, sessionMap);
-
-        mockActionInvocation.getInvocationContext();
-        EasyMock.expectLastCall().andReturn(actionContext);
-        EasyMock.expectLastCall().anyTimes();
-
-        mockActionInvocation.getAction();
-        EasyMock.expectLastCall().andReturn(action);
-        EasyMock.expectLastCall().anyTimes();
-        
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
-
-        EasyMock.replay(mockActionInvocation);
-
-        interceptor.init();
-        interceptor.intercept(mockActionInvocation);
-        interceptor.destroy();
-
-        assertEquals(action.getActionErrors().size(), 2);
-        assertEquals(action.getActionMessages().size(), 2);
-        assertEquals(action.getFieldErrors().size(), 2);
-        assertTrue(action.getActionErrors().contains("some action error 1"));
-        assertTrue(action.getActionErrors().contains("some action error 2"));
-        assertTrue(action.getActionMessages().contains("some action message 1"));
-        assertTrue(action.getActionMessages().contains("some action message 2"));
-        assertEquals(((List)action.getFieldErrors().get("field1")).size(), 1);
-        assertEquals(((List)action.getFieldErrors().get("field2")).size(), 1);
-        assertEquals(((List)action.getFieldErrors().get("field1")).get(0), "some field error 1");
-        assertEquals(((List)action.getFieldErrors().get("field2")).get(0), "some field error 2");
 
         EasyMock.verify(mockActionInvocation);
     }
@@ -422,4 +311,5 @@ public class MessageStoreInterceptorTest extends StrutsInternalTestCase {
         EasyMock.verify(mockActionInvocation);
 
     }
+
 }

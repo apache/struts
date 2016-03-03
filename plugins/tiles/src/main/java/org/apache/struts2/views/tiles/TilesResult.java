@@ -25,12 +25,20 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.result.ServletDispatcherResult;
+import org.apache.struts2.tiles.StrutsTilesAnnotationProcessor;
+import org.apache.struts2.tiles.annotation.TilesDefinition;
+import org.apache.tiles.Definition;
 import org.apache.tiles.TilesContainer;
+import org.apache.tiles.TilesException;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.tiles.access.TilesAccess;
+import org.apache.tiles.mgmt.MutableTilesContainer;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletRequest;
@@ -42,18 +50,11 @@ import org.apache.tiles.request.servlet.ServletUtil;
  * <!-- END SNIPPET: description -->
  *
  * <!-- START SNIPPET: webxml -->
- * In your web.xml file, you need to add a servlet entry for TilesServlet to load the tiles
- * definitions into the ServletContext.
+ * In your web.xml file, you need to add a TilesListener.
  *
- * &lt;servlet&gt;
- *      &lt;servlet-name&gt;tiles&lt;/servlet-name&gt;
- *      &lt;servlet-class&gt;org.apache.tiles.servlets.TilesServlet&lt;/servlet-class&gt;
- *      &lt;init-param&gt;
- *          &lt;param-name&gt;definitions-config&lt;/param-name&gt;
- *          &lt;param-value&gt;/WEB-INF/tiles-config.xml&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- * &lt;/servlet&gt;
+ * &lt;listener&gt;
+ *      &lt;listener-class&gt;org.apache.struts2.tiles.StrutsTilesListener&lt;/listener-class&gt;
+ * &lt;/listener&gt;
  * <!-- END SNIPPET: webxml -->
  *
  * <!-- START SNIPPET: strutsxml -->
@@ -76,10 +77,19 @@ import org.apache.tiles.request.servlet.ServletUtil;
  * &lt;/result-types&gt;
  * <!-- END SNIPPET: packageconfig -->
  *
+ *
+ * <!-- START SNIPPET: tilesconfig -->
+ * You have to configure tiles itself. Therefore you can add <code>tiles.xml</code> either 
+ * to resources or WEB-INF. You may also use annotations like {@link TilesDefinition}.
+ *
+ * <!-- END SNIPPET: tilesconfig -->
+ *
  */
 public class TilesResult extends ServletDispatcherResult {
 
     private static final long serialVersionUID = -3806939435493086244L;
+
+    private static final Logger LOG = LogManager.getLogger(TilesResult.class);
 
     public TilesResult() {
         super();
@@ -99,6 +109,18 @@ public class TilesResult extends ServletDispatcherResult {
      *                   HTTP request.
      */
     public void doExecute(String location, ActionInvocation invocation) throws Exception {
+        StrutsTilesAnnotationProcessor annotationProcessor = new StrutsTilesAnnotationProcessor();
+        TilesDefinition tilesDefinition = null;
+        Object action = invocation.getAction();
+        String actionName = invocation.getInvocationContext().getName();
+
+        if (StringUtils.isEmpty(location)) {
+            LOG.trace("location not set -> action must have one @TilesDefinition");
+            tilesDefinition = annotationProcessor.findAnnotation(action, null);
+            String tileName = StringUtils.isNotEmpty(tilesDefinition.name()) ? tilesDefinition.name() : actionName;
+            location = tileName;
+            LOG.debug("using new location name '{}' and @TilesDefinition '{}'", location, tilesDefinition);
+        }
         setLocation(location);
 
         ServletContext servletContext = ServletActionContext.getServletContext();
@@ -110,6 +132,31 @@ public class TilesResult extends ServletDispatcherResult {
         HttpServletResponse httpResponse = ServletActionContext.getResponse();
 
         Request request = new ServletRequest(applicationContext, httpRequest, httpResponse);
+
+        boolean definitionValid = false;
+        try {
+            LOG.debug("checking if tiles definition exists '{}'", location);
+            definitionValid = container.isValidDefinition(location, request);
+        } catch (TilesException e) {
+            LOG.warn("got TilesException while checking if definiton exists, ignoring it", e);
+        }
+        if (!definitionValid) {
+            if (tilesDefinition == null) {
+                LOG.trace("tilesDefinition not found yet, searching in action");
+                tilesDefinition = annotationProcessor.findAnnotation(action, location);
+            }
+            if (tilesDefinition != null) {
+                Definition definition = annotationProcessor.buildTilesDefinition(location, tilesDefinition);
+                if (container instanceof MutableTilesContainer) {
+                    LOG.debug("registering tiles definition with name '{}'", definition.getName());
+                    ((MutableTilesContainer)container).register(definition, request);
+                } else {
+                    LOG.error("cannot register tiles definition as tiles container is not mutable!");
+                }
+            } else {
+                LOG.warn("could not find @TilesDefinition for action: {}", actionName);
+            }
+        }
 
         container.render(location, request);
     }

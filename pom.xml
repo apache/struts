@@ -301,6 +301,9 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>
@@ -454,11 +457,6 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-gxp-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-tiles3-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

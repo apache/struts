@@ -125,13 +125,13 @@ import java.util.Map;
  *          <td>define html style attribute</td>
  *       </tr>
  *       <tr>
- *          <td>cssClass</td>
+ *          <td>cssErrorClass</td>
  *          <td>simple</td>
  *          <td>String</td>
  *          <td>error class attribute</td>
  *       </tr>
  *       <tr>
- *          <td>cssStyle</td>
+ *          <td>cssErrorStyle</td>
  *          <td>simple</td>
  *          <td>String</td>
  *          <td>error style attribute</td>

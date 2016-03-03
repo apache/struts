@@ -227,10 +227,6 @@
         <directory>../plugins/tiles/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin/apidocs</outputDirectory>
       </fileSet>
-      <fileSet>
-        <directory>../plugins/tiles3/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-tiles3-plugin/apidocs</outputDirectory>
-      </fileSet>
 
     <!-- bundles -->
     <fileSet>

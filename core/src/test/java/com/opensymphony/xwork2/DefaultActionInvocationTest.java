@@ -1,6 +1,8 @@
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
@@ -304,6 +306,7 @@ class DefaultActionInvocationTester extends DefaultActionInvocation {
         interceptors = interceptorMappings.iterator();
         MockActionProxy actionProxy = new MockActionProxy();
         actionProxy.setMethod("execute");
+        actionProxy.setConfig(new ActionConfig.Builder("foo", "bar", "clazz").addResultConfig(new ResultConfig.Builder("buzz", "fizz").build()).build());
         proxy = actionProxy;
         action = new ActionSupport();
     }

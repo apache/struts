@@ -173,11 +173,6 @@
                 <artifactId>struts2-tiles-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-tiles3-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

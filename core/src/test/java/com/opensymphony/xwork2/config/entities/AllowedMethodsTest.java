@@ -37,6 +37,21 @@ public class AllowedMethodsTest extends TestCase {
         assertFalse(allowedMethods.isAllowed("someOtherMethod"));
     }
 
+    public void testWidlcardWithStarMethods() throws Exception {
+        // given
+        String method = "cancel*";
+        Set<String> literals = new HashSet<>();
+        literals.add(method);
+
+        // when
+        AllowedMethods allowedMethods = AllowedMethods.build(literals);
+
+        // then
+        assertEquals(1, allowedMethods.list().size());
+        assertTrue(allowedMethods.isAllowed("cancelAction"));
+        assertFalse(allowedMethods.isAllowed("startEvent"));
+    }
+
     public void testRegexMethods() throws Exception {
         // given
         String method = "regex:my([a-zA-Z].*)";

@@ -29,38 +29,48 @@ public class XmlConfigurationProviderAllowedMethodsTest extends ConfigurationTes
         ActionConfig action = (ActionConfig) actionConfigs.get("Default");
         assertEquals(1, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertTrue(action.isAllowedMethod("foo"));
         assertTrue(action.isAllowedMethod("bar"));
         assertTrue(action.isAllowedMethod("baz"));
         assertTrue(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Boring");
-        assertEquals(0, action.getAllowedMethods().size());
+        assertEquals(2, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertFalse(action.isAllowedMethod("foo"));
         assertFalse(action.isAllowedMethod("bar"));
         assertFalse(action.isAllowedMethod("baz"));
         assertFalse(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Foo");
-        assertEquals(1, action.getAllowedMethods().size());
+        assertEquals(3, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertTrue(action.isAllowedMethod("foo"));
         assertFalse(action.isAllowedMethod("bar"));
         assertFalse(action.isAllowedMethod("baz"));
         assertFalse(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Bar");
-        assertEquals(2, action.getAllowedMethods().size());
+        assertEquals(4, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertTrue(action.isAllowedMethod("foo"));
         assertTrue(action.isAllowedMethod("bar"));
         assertFalse(action.isAllowedMethod("baz"));
         assertFalse(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Baz");
-        assertEquals(3, action.getAllowedMethods().size());
+        assertEquals(5, action.getAllowedMethods().size());
         assertFalse(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertTrue(action.isAllowedMethod("foo"));
         assertTrue(action.isAllowedMethod("bar"));
         assertTrue(action.isAllowedMethod("baz"));
@@ -82,40 +92,50 @@ public class XmlConfigurationProviderAllowedMethodsTest extends ConfigurationTes
         assertEquals(5, actionConfigs.size());
 
         ActionConfig action = (ActionConfig) actionConfigs.get("Default");
-        assertEquals(0, action.getAllowedMethods().size());
+        assertEquals(2, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertFalse(action.isAllowedMethod("foo"));
         assertFalse(action.isAllowedMethod("bar"));
         assertFalse(action.isAllowedMethod("baz"));
         assertFalse(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Boring");
-        assertEquals(0, action.getAllowedMethods().size());
+        assertEquals(2, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertFalse(action.isAllowedMethod("foo"));
         assertFalse(action.isAllowedMethod("bar"));
         assertFalse(action.isAllowedMethod("baz"));
         assertFalse(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Foo");
-        assertEquals(1, action.getAllowedMethods().size());
+        assertEquals(3, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertTrue(action.isAllowedMethod("foo"));
         assertFalse(action.isAllowedMethod("bar"));
         assertFalse(action.isAllowedMethod("baz"));
         assertFalse(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Bar");
-        assertEquals(2, action.getAllowedMethods().size());
+        assertEquals(4, action.getAllowedMethods().size());
         assertTrue(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertTrue(action.isAllowedMethod("foo"));
         assertTrue(action.isAllowedMethod("bar"));
         assertFalse(action.isAllowedMethod("baz"));
         assertFalse(action.isAllowedMethod("xyz"));
 
         action = (ActionConfig) actionConfigs.get("Baz");
-        assertEquals(3, action.getAllowedMethods().size());
+        assertEquals(5, action.getAllowedMethods().size());
         assertFalse(action.isAllowedMethod("execute"));
+        assertTrue(action.isAllowedMethod("input"));
+        assertTrue(action.isAllowedMethod("cancel"));
         assertTrue(action.isAllowedMethod("foo"));
         assertTrue(action.isAllowedMethod("bar"));
         assertTrue(action.isAllowedMethod("baz"));

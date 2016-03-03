@@ -103,6 +103,14 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
             "doclass_class".equals(m.getMethodName()));
     }
     
+    public void testAllowedMethods() {
+        ActionConfig m = matcher.match("addEvent!start");
+        assertTrue(m.getAllowedMethods().contains("start"));
+
+        m = matcher.match("addEvent!cancel");
+        assertTrue(m.getAllowedMethods().contains("cancel"));
+    }
+
     public void testLooseMatch() {
         configMap.put("*!*", configMap.get("bar/*/**"));
         ActionConfigMatcher matcher = new ActionConfigMatcher(new WildcardHelper(), configMap, true);
@@ -157,7 +165,13 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
                 .build();
         
         map.put("bar/*/**", config);
-        
+
+        config = new ActionConfig.Builder("package", "eventAdd!*", "bar")
+                .methodName("{1}")
+                .build();
+
+        map.put("addEvent!*", config);
+
         map.put("noWildcard", new ActionConfig.Builder("", "", "").build());
 
         return map;

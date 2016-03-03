@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -117,5 +118,58 @@ public class XmlConfigurationProviderResultsTest extends ConfigurationTestBase {
         assertEquals("chain", pkg.getDefaultResultType());
         assertEquals(chainResult, resultTypes.get("chain"));
         assertEquals(mockResult, resultTypes.get("mock"));
+    }
+
+    public void testResultNames() throws ConfigurationException {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-result-names.xml";
+        ConfigurationProvider provider = buildConfigurationProvider(filename);
+
+        // execute the configuration
+        provider.init(configuration);
+        provider.loadPackages();
+
+        PackageConfig pkg = configuration.getPackageConfig("default");
+        Map<String, ActionConfig> actionConfigs = pkg.getActionConfigs();
+        
+        // assertions
+        assertNotNull(actionConfigs);
+        
+        Map<String, ResultConfig> resultConfigs = actionConfigs.get("noname").getResults();
+        assertEquals(1, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(Action.SUCCESS));
+        
+        resultConfigs = actionConfigs.get("success").getResults();
+        assertEquals(1, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(Action.SUCCESS));
+        
+        resultConfigs = actionConfigs.get("empty").getResults();
+        assertEquals(1, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(Action.SUCCESS));
+        
+        resultConfigs = actionConfigs.get("comma").getResults();
+        assertEquals(1, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(" , "));
+        
+        resultConfigs = actionConfigs.get("error-input").getResults();
+        assertEquals(2, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(Action.ERROR));
+        assertTrue(resultConfigs.containsKey(Action.INPUT));
+        
+        resultConfigs = actionConfigs.get("error-input2").getResults();
+        assertEquals(2, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(Action.ERROR));
+        assertTrue(resultConfigs.containsKey(Action.INPUT));
+        
+        resultConfigs = actionConfigs.get("noname-error-input").getResults();
+        assertEquals(3, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(Action.SUCCESS));
+        assertTrue(resultConfigs.containsKey(Action.ERROR));
+        assertTrue(resultConfigs.containsKey(Action.INPUT));
+        
+        resultConfigs = actionConfigs.get("noname-error-input2").getResults();
+        assertEquals(3, resultConfigs.size());
+        assertTrue(resultConfigs.containsKey(Action.SUCCESS));
+        assertTrue(resultConfigs.containsKey(Action.ERROR));
+        assertTrue(resultConfigs.containsKey(Action.INPUT));
     }
 }

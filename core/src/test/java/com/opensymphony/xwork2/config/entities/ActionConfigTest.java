@@ -30,7 +30,7 @@ public class ActionConfigTest extends XWorkTestCase {
                 .build();
 
         assertTrue("Wrong toString(): "+cfg.toString(), 
-            "{ActionConfig bob (foo.Bar.execute()) - foo/xwork.xml:10:12}".equals(cfg.toString()));
+            "{ActionConfig bob (foo.Bar.execute()) - foo/xwork.xml:10:12 - allowedMethods=[LiteralAllowedMethod{allowedMethod='execute'}]}".equals(cfg.toString()));
     }
     
     public void testToStringWithNoMethod() {
@@ -39,6 +39,6 @@ public class ActionConfigTest extends XWorkTestCase {
                 .build();
         
         assertTrue("Wrong toString(): "+cfg.toString(),
-            "{ActionConfig bob (foo.Bar) - foo/xwork.xml:10:12}".equals(cfg.toString()));
+            "{ActionConfig bob (foo.Bar) - foo/xwork.xml:10:12 - allowedMethods=[]}".equals(cfg.toString()));
     }
 }

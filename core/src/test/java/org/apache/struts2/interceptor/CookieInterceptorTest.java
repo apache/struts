@@ -358,20 +358,12 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         ServletActionContext.setRequest(request);
 
         final Map<String, Boolean> excludedName = new HashMap<String, Boolean>();
-        final Map<String, Boolean> excludedValue = new HashMap<String, Boolean>();
 
         CookieInterceptor interceptor = new CookieInterceptor() {
             @Override
             protected boolean isAcceptableName(String name) {
                 boolean accepted = super.isAcceptableName(name);
                 excludedName.put(name, accepted);
-                return accepted;
-            }
-
-            @Override
-            protected boolean isAcceptableValue(String value) {
-                boolean accepted = super.isAcceptableValue(value);
-                excludedValue.put(value, accepted);
                 return accepted;
             }
         };
@@ -392,15 +384,6 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedName.get(pollution4));
         assertFalse(excludedName.get(pollution5));
         assertFalse(excludedName.get(pollution6));
-
-        assertFalse(excludedValue.get(pollution1));
-        assertFalse(excludedValue.get(pollution2));
-        assertFalse(excludedValue.get(pollution3));
-        assertFalse(excludedValue.get(pollution4));
-        assertFalse(excludedValue.get(pollution5));
-        assertFalse(excludedValue.get(pollution6));
-        
-        
     }
 
     public void testCookiesWithStrutsInternalsAccess() throws Exception {
@@ -423,20 +406,12 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         ServletActionContext.setRequest(request);
 
         final Map<String, Boolean> excludedName = new HashMap<String, Boolean>();
-        final Map<String, Boolean> excludedValue = new HashMap<String, Boolean>();
 
         CookieInterceptor interceptor = new CookieInterceptor() {
             @Override
             protected boolean isAcceptableName(String name) {
                 boolean accepted = super.isAcceptableName(name);
                 excludedName.put(name, accepted);
-                return accepted;
-            }
-
-            @Override
-            protected boolean isAcceptableValue(String value) {
-                boolean accepted = super.isAcceptableValue(value);
-                excludedValue.put(value, accepted);
                 return accepted;
             }
         };

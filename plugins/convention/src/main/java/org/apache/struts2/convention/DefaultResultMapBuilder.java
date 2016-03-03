@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
@@ -409,11 +410,13 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             Class<?> actionClass, Map<String, ResultTypeConfig> resultsByExtension) {
         // Check for multiple results on the class
         for (Result result : results) {
-            ResultConfig config = createResultConfig(actionClass,
-                new ResultInfo(result, packageConfig, resultPath, actionClass, resultsByExtension),
-                packageConfig, result);
-            if (config != null) {
-                resultConfigs.put(config.getName(), config);
+            for (String name : result.name()) {
+                ResultConfig config = createResultConfig(actionClass, new ResultInfo(
+                        name, result, packageConfig, resultPath, actionClass,
+                        resultsByExtension), packageConfig, result);
+                if (config != null) {
+                    resultConfigs.put(config.getName(), config);
+                }
             }
         }
     }
@@ -478,9 +481,10 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
             this.type = determineType(location, packageConfig, resultsByExtension);
         }
 
-        public ResultInfo(Result result, PackageConfig packageConfig, String resultPath,
-                Class<?> actionClass, Map<String, ResultTypeConfig> resultsByExtension) {
-            this.name = result.name();
+        public ResultInfo(String name, Result result, PackageConfig packageConfig,
+                String resultPath, Class<?> actionClass,
+                Map<String, ResultTypeConfig> resultsByExtension) {
+            this.name = name;
             if (StringUtils.isNotBlank(result.type())) {
                 this.type = result.type();
             } else if (StringUtils.isNotBlank(result.location())) {

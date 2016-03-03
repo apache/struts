@@ -20,6 +20,7 @@ public final class XWorkConstants {
 
     public static final String OGNL_EXCLUDED_CLASSES = "ognlExcludedClasses";
     public static final String OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS = "ognlExcludedPackageNamePatterns";
+    public static final String OGNL_EXCLUDED_PACKAGE_NAMES = "ognlExcludedPackageNames";
 
     public static final String ADDITIONAL_EXCLUDED_PATTERNS = "additionalExcludedPatterns";
     public static final String ADDITIONAL_ACCEPTED_PATTERNS = "additionalAcceptedPatterns";

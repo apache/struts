@@ -207,6 +207,45 @@ public class RestActionMapperTest extends TestCase {
         assertEquals("fido", ((String[]) mapping.getParams().get("id"))[0]);
         assertEquals("update", mapping.getMethod());
     }
+	
+    public void testMappingWithMethodAndId() throws Exception {
+        req.setRequestURI("/myapp/animals/dog/fido/test/some-id!create;jsessionid=29fefpv23do1g");
+        req.setServletPath("/animals/dog/fido/test/some-id");
+        req.setMethod("GET");
+        mapper.setAllowDynamicMethodCalls("true");
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/animals", mapping.getNamespace());
+        assertEquals("dog/fido/test", mapping.getName());
+        assertEquals("some-id", ((String[]) mapping.getParams().get("id"))[0]);
+        assertEquals("create", mapping.getMethod());
+    }
+
+    public void testMappingForStaticFiles() throws Exception {
+        req.setRequestURI("/myApp/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image!iframe");
+        req.setServletPath("/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image");
+        req.setMethod("GET");
+        mapper.setAllowDynamicMethodCalls("true");
+        final ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("", mapping.getNamespace());
+        assertEquals("custom/menu/Yosemite/Vernal_Fall", mapping.getName());
+        assertEquals("Vernal_Fall_Image", ((String[]) mapping.getParams().get("id"))[0]);
+        assertEquals("iframe", mapping.getMethod());
+    }
+
+    public void testMappingForStaticFilesWithJsessionId() throws Exception {
+        req.setRequestURI("/myApp/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image!iframe;jsessionid=29fefpv23do1g");
+        req.setServletPath("/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image");
+        req.setMethod("GET");
+        mapper.setAllowDynamicMethodCalls("true");
+        final ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("", mapping.getNamespace());
+        assertEquals("custom/menu/Yosemite/Vernal_Fall", mapping.getName());
+        assertEquals("Vernal_Fall_Image", ((String[]) mapping.getParams().get("id"))[0]);
+        assertEquals("iframe", mapping.getMethod());
+    }	
 
     public void testParseNameAndNamespace() {
         tryUri("/foo/23", "", "foo/23");

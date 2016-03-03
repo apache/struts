@@ -452,10 +452,6 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedName.get(sessionCookieName));
         assertFalse(excludedName.get(appCookieName));
         assertFalse(excludedName.get(reqCookieName));
-
-        assertFalse(excludedValue.get(sessionCookieValue));
-        assertFalse(excludedValue.get(appCookieValue));
-        assertFalse(excludedValue.get(reqCookieValue));
     }
 
     public static class MockActionWithCookieAware extends ActionSupport implements CookiesAware {

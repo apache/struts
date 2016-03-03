@@ -25,6 +25,6 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface AllowedMethods {
 
-    String value() default ActionConfig.DEFAULT_METHOD;
+    String[] value() default ActionConfig.DEFAULT_METHOD;
 
 }

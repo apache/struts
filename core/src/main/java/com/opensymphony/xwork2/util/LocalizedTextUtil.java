@@ -744,9 +744,12 @@ public class LocalizedTextUtil {
         if (bundle == null) {
             return null;
         }
+        if (valueStack != null) 
             reloadBundles(valueStack.getContext());
         try {
-            String message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
+        	String message = bundle.getString(key);
+        	if (valueStack != null) 
+        		message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException e) {

@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.RequestUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -135,6 +136,7 @@ public class PrepareOperations {
             // Wrap request first, just in case it is multipart/form-data
             // parameters might not be accessible through before encoding (ww-1278)
             request = dispatcher.wrapRequest(request);
+            ServletActionContext.setRequest(request);
         } catch (IOException e) {
             throw new ServletException("Could not wrap servlet request with MultipartRequestWrapper!", e);
         }

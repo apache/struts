@@ -27,9 +27,9 @@
     <#if parameters.listKey??>
         <#assign itemKey = stack.findValue(parameters.listKey)/>
         <#assign itemKeyStr = stack.findString(parameters.listKey)/>
-        <#else>
-            <#assign itemKey = stack.findValue('top')/>
-            <#assign itemKeyStr = stack.findString('top')>
+    <#else>
+        <#assign itemKey = stack.findValue('top')/>
+        <#assign itemKeyStr = stack.findString('top')>
     </#if>
     <#if parameters.listLabelKey??>
     <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale 

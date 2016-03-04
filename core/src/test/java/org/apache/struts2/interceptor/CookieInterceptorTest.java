@@ -384,15 +384,6 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedName.get(pollution4));
         assertFalse(excludedName.get(pollution5));
         assertFalse(excludedName.get(pollution6));
-
-        assertFalse(excludedValue.get(pollution1));
-        assertFalse(excludedValue.get(pollution2));
-        assertFalse(excludedValue.get(pollution3));
-        assertFalse(excludedValue.get(pollution4));
-        assertFalse(excludedValue.get(pollution5));
-        assertFalse(excludedValue.get(pollution6));
-        
-        
     }
 
     public void testCookiesWithStrutsInternalsAccess() throws Exception {

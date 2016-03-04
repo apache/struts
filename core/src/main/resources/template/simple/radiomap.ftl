@@ -23,10 +23,11 @@
 <@s.iterator value="parameters.list">
     <#if parameters.listKey??>
         <#assign itemKey = stack.findValue(parameters.listKey)/>
+        <#assign itemKeyStr = stack.findString(parameters.listKey)/>
     <#else>
         <#assign itemKey = stack.findValue('top')/>
+        <#assign itemKeyStr = stack.findString('top')>
     </#if>
-    <#assign itemKeyStr = itemKey.toString() />
     <#if parameters.listValueKey??>
         <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale 
              file for it's localized value.  This is then used as a label -->
@@ -64,7 +65,7 @@
  name="${parameters.name?html}"<#rt/>
 </#if>
  id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
-<#if tag.contains(parameters.nameValue!'', itemKeyStr)>
+<#if tag.contains(parameters.nameValue!'', itemKey)>
  checked="checked"<#rt/>
 </#if>
 <#if itemKey??>

@@ -26,64 +26,63 @@ package org.apache.struts2;
  *
  */
 import junit.framework.TestCase;
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 public class RequestUtilsTest extends TestCase {
 
-    private MockControl control;
     private HttpServletRequest requestMock;
 
     public void testGetServletPathWithServletPathSet() throws Exception {
-        control.expectAndReturn(requestMock.getServletPath(), "/mycontext/");
-        control.expectAndReturn(requestMock.getRequestURI(), "/mycontext/");
-        control.replay();
+        expect(requestMock.getServletPath()).andStubReturn("/mycontext/");
+        expect(requestMock.getRequestURI()).andStubReturn("/mycontext/");
+        replay(requestMock);
         assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        control.verify();
+        verify(requestMock);
     }
 
     public void testGetServletPathWithRequestURIAndEmptyContextPath() throws Exception {
-        control.expectAndReturn(requestMock.getServletPath(), null);
-        control.expectAndReturn(requestMock.getRequestURI(), "/mycontext/test.jsp");
-        control.expectAndReturn(requestMock.getContextPath(), "");
-        control.expectAndReturn(requestMock.getPathInfo(), "test.jsp");
-        control.expectAndReturn(requestMock.getPathInfo(), "test.jsp");
-        control.replay();
+        expect(requestMock.getServletPath()).andStubReturn(null);
+        expect(requestMock.getRequestURI()).andStubReturn("/mycontext/test.jsp");
+        expect(requestMock.getContextPath()).andStubReturn("");
+        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
+        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
+        replay(requestMock);
         assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        control.verify();
+        verify(requestMock);
     }
 
     public void testGetServletPathWithRequestURIAndContextPathSet() throws Exception {
-        control.expectAndReturn(requestMock.getServletPath(), null);
-        control.expectAndReturn(requestMock.getRequestURI(), "/servlet/mycontext/test.jsp");
-        control.expectAndReturn(requestMock.getContextPath(), "/servlet");
-        control.expectAndReturn(requestMock.getContextPath(), "/servlet");
-        control.expectAndReturn(requestMock.getPathInfo(), "test.jsp");
-        control.expectAndReturn(requestMock.getPathInfo(), "test.jsp");
-        control.replay();
+        expect(requestMock.getServletPath()).andStubReturn(null);
+        expect(requestMock.getRequestURI()).andStubReturn("/servlet/mycontext/test.jsp");
+        expect(requestMock.getContextPath()).andStubReturn("/servlet");
+        expect(requestMock.getContextPath()).andStubReturn("/servlet");
+        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
+        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
+        replay(requestMock);
         assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        control.verify();
+        verify(requestMock);
     }
 
     public void testGetServletPathWithRequestURIAndContextPathSetButNoPatchInfo() throws Exception {
-        control.expectAndReturn(requestMock.getServletPath(), null);
-        control.expectAndReturn(requestMock.getRequestURI(), "/servlet/mycontext/");
-        control.expectAndReturn(requestMock.getContextPath(), "/servlet");
-        control.expectAndReturn(requestMock.getContextPath(), "/servlet");
-        control.expectAndReturn(requestMock.getPathInfo(), null);
-        control.replay();
+        expect(requestMock.getServletPath()).andStubReturn(null);
+        expect(requestMock.getRequestURI()).andStubReturn("/servlet/mycontext/");
+        expect(requestMock.getContextPath()).andStubReturn("/servlet");
+        expect(requestMock.getContextPath()).andStubReturn("/servlet");
+        expect(requestMock.getPathInfo()).andStubReturn(null);
+        replay(requestMock);
         assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        control.verify();
+        verify(requestMock);
     }
     
     public void testGetServletPathWithSemicolon() throws Exception {
-        control.expectAndReturn(requestMock.getRequestURI(), "/friend/mycontext/jim;bob");
-        control.expectAndReturn(requestMock.getServletPath(), "/mycontext/jim");
-        control.replay();
+        expect(requestMock.getRequestURI()).andStubReturn("/friend/mycontext/jim;bob");
+        expect(requestMock.getServletPath()).andStubReturn("/mycontext/jim");
+        replay(requestMock);
         assertEquals("/mycontext/jim;bob", RequestUtils.getServletPath(requestMock));
-        control.verify();
+        verify(requestMock);
     }
 
     public void testParseRFC1123() {
@@ -103,8 +102,7 @@ public class RequestUtilsTest extends TestCase {
 
 
     protected void setUp() {
-        control = MockControl.createControl(HttpServletRequest.class);
-        requestMock = (HttpServletRequest) control.getMock();
+        requestMock = (HttpServletRequest) createMock(HttpServletRequest.class);
     }
 
 }

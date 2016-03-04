@@ -26,8 +26,10 @@
     <#assign itemCount = itemCount + 1/>
     <#if parameters.listKey??>
         <#assign itemKey = stack.findValue(parameters.listKey)/>
+        <#assign itemKeyStr = stack.findString(parameters.listKey)/>
         <#else>
             <#assign itemKey = stack.findValue('top')/>
+            <#assign itemKeyStr = stack.findString('top')>
     </#if>
     <#if parameters.listLabelKey??>
     <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale 
@@ -59,7 +61,6 @@
           <#assign itemTitle = ''/>
         </#if>
     </#if>
-    <#assign itemKeyStr=itemKey.toString() />
 <input type="checkbox" name="${parameters.name?html}" value="${itemKeyStr?html}"<#rt/>
     <#if parameters.id?has_content>
        id="${parameters.id?html}-${itemCount}"<#rt/>

@@ -373,7 +373,11 @@ public class Component {
      */
     protected Object findValue(String expr, Class toType) {
         if (altSyntax() && toType == String.class) {
-        	return TextParseUtil.translateVariables('%', expr, stack);
+            if (ComponentUtils.containsExpression(expr)) {
+                return TextParseUtil.translateVariables('%', expr, stack);
+            } else {
+                return expr;
+            }
         } else {
             expr = stripExpressionIfAltSyntax(expr);
 

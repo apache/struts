@@ -71,12 +71,56 @@ public class ComponentUtilsTest extends StrutsInternalTestCase {
         assertTrue(actual);
     }
 
+    public void testIsExpressionIsFalseWhenCombined() throws Exception {
+        // given
+        String anExpression = "bar%{foo}";
+
+        // when
+        boolean actual = ComponentUtils.isExpression(anExpression);
+
+        // then
+        assertFalse(actual);
+    }
+
     public void testIsExpressionIsFalse() throws Exception {
         // given
         String anExpression = "foo";
 
         // when
         boolean actual = ComponentUtils.isExpression(anExpression);
+
+        // then
+        assertFalse(actual);
+    }
+
+    public void testContainsExpressionIsTrue() throws Exception {
+        // given
+        String anExpression = "%{foo}";
+
+        // when
+        boolean actual = ComponentUtils.containsExpression(anExpression);
+
+        // then
+        assertTrue(actual);
+    }
+
+    public void testIsContainsIsTrueWhenCombined() throws Exception {
+        // given
+        String anExpression = "bar%{foo}";
+
+        // when
+        boolean actual = ComponentUtils.containsExpression(anExpression);
+
+        // then
+        assertTrue(actual);
+    }
+
+    public void testContainsExpressionIsFalse() throws Exception {
+        // given
+        String anExpression = "foo";
+
+        // when
+        boolean actual = ComponentUtils.containsExpression(anExpression);
 
         // then
         assertFalse(actual);

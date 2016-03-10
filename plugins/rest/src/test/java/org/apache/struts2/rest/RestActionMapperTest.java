@@ -63,7 +63,7 @@ public class RestActionMapperTest extends TestCase {
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
-        assertNull(mapping);
+        assertNotNull(mapping);
     }
 
     public void testGetMapping() throws Exception {

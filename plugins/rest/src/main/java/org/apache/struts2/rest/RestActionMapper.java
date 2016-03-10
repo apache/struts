@@ -283,7 +283,7 @@ public class RestActionMapper extends DefaultActionMapper {
             if (id != null) {
                 if (!"new".equals(id)) {
                     if (mapping.getParams() == null) {
-                        mapping.setParams(new HashMap());
+                        mapping.setParams(new HashMap<String, Object>());
                     }
                     mapping.getParams().put(idParameterName, new String[]{id});
                 }
@@ -291,10 +291,8 @@ public class RestActionMapper extends DefaultActionMapper {
             }
 
             mapping.setName(fullName);
-            return mapping;
         }
-        // if action name isn't specified, it can be a normal request, to static resource, return null to allow handle that case
-        return null;
+        return mapping;
     }
 
     private void handleDynamicMethodInvocation(ActionMapping mapping, String name) {

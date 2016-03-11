@@ -173,12 +173,12 @@ public class I18nInterceptorTest {
 
     @Test
     public void testCountryOnlyLocale() throws Exception {
-        params.put(I18nInterceptor.DEFAULT_PARAMETER, "DK");
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, "NL");
         interceptor.intercept(mai);
 
         assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
 
-        Locale denmark = new Locale("DK");
+        Locale denmark = new Locale("NL");
         assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
         assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
     }
@@ -197,31 +197,31 @@ public class I18nInterceptorTest {
 
     @Test
     public void testWithVariant() throws Exception {
-        params.put(I18nInterceptor.DEFAULT_PARAMETER, "fr_CA_xx");
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, "ja_JP_JP");
         interceptor.intercept(mai);
 
         assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
 
-        Locale variant = new Locale("fr", "CA", "xx");
+        Locale variant = new Locale("ja", "JP", "JP");
         Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
         assertNotNull(locale); // should be stored here
         assertEquals(variant, locale);
-        assertEquals("xx", locale.getVariant());
+        assertEquals("JP", locale.getVariant());
     }
 
     @Test
     public void testWithVariantRequestOnly() throws Exception {
-        params.put(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "fr_CA_xx");
+        params.put(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "ja_JP_JP");
         interceptor.intercept(mai);
 
         assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
 
-        Locale variant = new Locale("fr", "CA", "xx");
+        Locale variant = new Locale("ja", "JP", "JP");
         Locale locale = mai.getInvocationContext().getLocale();
         assertNotNull(locale); // should be stored here
         assertEquals(variant, locale);
-        assertEquals("xx", locale.getVariant());
+        assertEquals("JP", locale.getVariant());
     }
 
     @Test

@@ -5,7 +5,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.easymock.MockControl;
+
 import static org.easymock.EasyMock.*;
 
 import java.util.LinkedHashMap;

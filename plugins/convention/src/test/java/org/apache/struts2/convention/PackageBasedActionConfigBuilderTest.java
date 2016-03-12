@@ -291,6 +291,8 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         expect(resultMapBuilder.build(OverrideResultAction.class, getAnnotation(OverrideResultAction.class, "execute", Action.class), "override-result", resultPkg)).andReturn(results);
         expect(resultMapBuilder.build(GlobalResultAction.class, null, "global-result", globalResultPkg)).andReturn(results);
         expect(resultMapBuilder.build(GlobalResultOverrideAction.class, null, "global-result-override", globalResultPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "execute", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "noname", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
 
         /* org.apache.struts2.convention.actions.resultpath */
         expect(resultMapBuilder.build(ClassLevelResultPathAction.class, null, "class-level-result-path", resultPathPkg)).andReturn(results);
@@ -565,7 +567,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         /* org.apache.struts2.convention.actions.result */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.result#struts-default#/result");
         assertNotNull(pkgConfig);
-        assertEquals(6, pkgConfig.getActionConfigs().size());
+        assertEquals(7, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "class-level-result", ClassLevelResultAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "class-level-results", ClassLevelResultsAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action-level-result", ActionLevelResultAction.class, "execute", pkgConfig.getName());

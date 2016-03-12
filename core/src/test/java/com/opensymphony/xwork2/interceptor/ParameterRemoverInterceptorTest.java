@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.easymock.MockControl;
+import static org.easymock.EasyMock.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +19,6 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 
 	protected Map<String, Object> contextMap;
 	protected ActionContext context;
-	protected MockControl actionInvocationControl;
 	protected ActionInvocation actionInvocation;
 	
 	@Override
@@ -26,11 +26,10 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		contextMap = new LinkedHashMap<>();
 		context = new ActionContext(contextMap);
 		
-		actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-		actionInvocation = (ActionInvocation) actionInvocationControl.getMock();
-		actionInvocationControl.expectAndDefaultReturn(actionInvocation.getAction(),  new SampleAction());
-		actionInvocationControl.expectAndDefaultReturn(actionInvocation.getInvocationContext(), context);
-		actionInvocationControl.expectAndDefaultReturn(actionInvocation.invoke(), "success");
+		actionInvocation = (ActionInvocation) createMock(ActionInvocation.class);
+		expect(actionInvocation.getAction()).andStubReturn(new SampleAction());
+		expect(actionInvocation.getInvocationContext()).andStubReturn(context);
+		expect(actionInvocation.invoke()).andStubReturn("success");
 	}
 	
 	public void testInterception1() throws Exception {
@@ -43,7 +42,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 			}
 		}).build());
 		
-		actionInvocationControl.replay();
+		replay(actionInvocation);
 		
 		ParameterRemoverInterceptor interceptor = new ParameterRemoverInterceptor();
 		interceptor.setParamNames("param1,param2");
@@ -57,7 +56,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		assertEquals(params.get("param3").getValue(), "paramValue3");
 		assertEquals(params.get("param").getValue(), "paramValue");
 		
-		actionInvocationControl.verify();
+		verify(actionInvocation);
 	}
 	
 	
@@ -69,7 +68,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 			}
 		}).build());
 		
-		actionInvocationControl.replay();
+		replay(actionInvocation);
 		
 		ParameterRemoverInterceptor interceptor = new ParameterRemoverInterceptor();
 		interceptor.setParamNames("param1,param2");
@@ -79,7 +78,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
 		assertEquals(params.getNames().size(), 0);
 		
-		actionInvocationControl.verify();
+		verify(actionInvocation);
 	}
 	
 	
@@ -91,7 +90,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 			}
 		}).build());
 		
-		actionInvocationControl.replay();
+		replay(actionInvocation);
 		
 		ParameterRemoverInterceptor interceptor = new ParameterRemoverInterceptor();
 		interceptor.setParamNames("param1,param2");
@@ -105,7 +104,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		assertEquals(params.get("param1").getValue(), "paramValueOne");
 		assertEquals(params.get("param2").getValue(), "paramValueTwo");
 		
-		actionInvocationControl.verify();
+		verify(actionInvocation);
 	}
 	
 	class SampleAction extends ActionSupport {

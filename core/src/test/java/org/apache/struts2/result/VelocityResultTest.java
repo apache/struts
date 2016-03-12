@@ -134,13 +134,13 @@ public class VelocityResultTest extends StrutsInternalTestCase {
     class TestVelocityEngine extends VelocityEngine {
         public String templateName;
 
-        public Template getTemplate(String templateName) throws ResourceNotFoundException, ParseErrorException, Exception {
+        public Template getTemplate(String templateName) throws ResourceNotFoundException, ParseErrorException {
             this.templateName = templateName;
 
             return new Template();
         }
 
-        public Template getTemplate(String templateName, String charSet) throws ResourceNotFoundException, ParseErrorException, Exception {
+        public Template getTemplate(String templateName, String charSet) throws ResourceNotFoundException, ParseErrorException {
             this.templateName = templateName;
 
             return new Template();

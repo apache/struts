@@ -301,6 +301,9 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>
@@ -458,11 +461,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-tiles3-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-osgi-admin-bundle</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -515,14 +513,14 @@
             <dependency>
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity</artifactId>
-                <version>1.6.4</version>
+                <version>1.7</version>
                 <optional>true</optional>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-tools</artifactId>
-                <version>1.3</version>
+                <version>2.0</version>
                 <exclusions>
                     <exclusion>
                         <groupId>javax.servlet</groupId>
@@ -578,14 +576,7 @@
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
-                <version>2.4</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.easymock</groupId>
-                <artifactId>easymockclassextension</artifactId>
-                <version>2.4</version>
+                <version>3.4</version>
                 <scope>test</scope>
             </dependency>
 
@@ -901,7 +892,7 @@
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
-                <version>1.4.2</version>
+                <version>1.4.8</version>
             </dependency>
 
             <dependency>

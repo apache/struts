@@ -21,7 +21,8 @@ import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import junit.framework.TestCase;
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.*;
+
 
 /**
  * Unit test for PrepareInterceptor.
@@ -33,6 +34,8 @@ public class PrepareInterceptorTest extends TestCase {
 
     private Mock mock;
     private PrepareInterceptor interceptor;
+    
+    ActionInterface mockAction;
 
     public void testPrepareCalledDefault() throws Exception {
         MockActionInvocation mai = new MockActionInvocation();
@@ -102,80 +105,62 @@ public class PrepareInterceptorTest extends TestCase {
     }
     
     public void testPrefixInvocation1() throws Exception {
+ 	
+   
     	
-    	MockControl controlAction = MockControl.createControl(ActionInterface.class);
-    	ActionInterface mockAction = (ActionInterface) controlAction.getMock();
-    	mockAction.prepareSubmit();
-    	controlAction.setVoidCallable(1);
-    	mockAction.prepare();
-    	controlAction.setVoidCallable(1);
+    	ActionProxy mockActionProxy = (ActionProxy) createMock(ActionProxy.class);
     	
-    	MockControl controlActionProxy = MockControl.createControl(ActionProxy.class);
-    	ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.getMock();
-    	mockActionProxy.getMethod();
-    	controlActionProxy.setDefaultReturnValue("submit");
+    	expect(mockActionProxy.getMethod()).andStubReturn("submit");
     	
     	
-    	MockControl controlActionInvocation = MockControl.createControl(ActionInvocation.class);
-    	ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.getMock();
-    	mockActionInvocation.getAction();
-    	controlActionInvocation.setDefaultReturnValue(mockAction);
-    	mockActionInvocation.invoke();
-    	controlActionInvocation.setDefaultReturnValue("okok");
-    	mockActionInvocation.getProxy();
-    	controlActionInvocation.setDefaultReturnValue(mockActionProxy);
+    	ActionInvocation mockActionInvocation = (ActionInvocation) createMock(ActionInvocation.class);
     	
+    	expect(mockActionInvocation.getAction()).andStubReturn(mockAction);
+    	expect(mockActionInvocation.invoke()).andStubReturn("okok");
+    	expect(mockActionInvocation.getProxy()).andStubReturn(mockActionProxy);
     	
-    	controlAction.replay();
-    	controlActionProxy.replay();
-    	controlActionInvocation.replay();
+        mockAction.prepareSubmit();
+        expectLastCall().times(1);
+        mockAction.prepare();        
+        expectLastCall().times(1);
+        
+    	replay(mockAction, mockActionProxy, mockActionInvocation);
     	
     	PrepareInterceptor interceptor = new PrepareInterceptor();
     	String result = interceptor.intercept(mockActionInvocation);
     	
     	assertEquals("okok", result);
     	
-    	controlAction.verify();
-    	controlActionProxy.verify();
-    	controlActionInvocation.verify();
+    	verify(mockAction, mockActionProxy, mockActionInvocation);
     }
     
     public void testPrefixInvocation2() throws Exception {
+
     	
-    	MockControl controlAction = MockControl.createControl(ActionInterface.class);
-    	ActionInterface mockAction = (ActionInterface) controlAction.getMock();
+    	ActionProxy mockActionProxy = (ActionProxy) createMock(ActionProxy.class);   	
+    	
+    	expect(mockActionProxy.getMethod()).andStubReturn("save");
+    	
+    	
+    	ActionInvocation mockActionInvocation = (ActionInvocation) createMock(ActionInvocation.class);
+    	
+    	expect(mockActionInvocation.getAction()).andStubReturn(mockAction);
+    	expect(mockActionInvocation.invoke()).andStubReturn("okok");
+    	expect(mockActionInvocation.getProxy()).andStubReturn(mockActionProxy);       
+        
     	mockAction.prepare();
-    	controlAction.setVoidCallable(1);
+        expectLastCall().times(1);  	
     	
-    	MockControl controlActionProxy = MockControl.createControl(ActionProxy.class);
-    	ActionProxy mockActionProxy = (ActionProxy) controlActionProxy.getMock();
-    	mockActionProxy.getMethod();
-    	controlActionProxy.setDefaultReturnValue("save");
-    	
-    	
-    	MockControl controlActionInvocation = MockControl.createControl(ActionInvocation.class);
-    	ActionInvocation mockActionInvocation = (ActionInvocation) controlActionInvocation.getMock();
-    	mockActionInvocation.getAction();
-    	controlActionInvocation.setDefaultReturnValue(mockAction);
-    	mockActionInvocation.invoke();
-    	controlActionInvocation.setDefaultReturnValue("okok");
-    	mockActionInvocation.getProxy();
-    	controlActionInvocation.setDefaultReturnValue(mockActionProxy);
-    	
-    	
-    	controlAction.replay();
-    	controlActionProxy.replay();
-    	controlActionInvocation.replay();
+        replay(mockAction, mockActionProxy, mockActionInvocation);
     	
     	PrepareInterceptor interceptor = new PrepareInterceptor();
     	String result = interceptor.intercept(mockActionInvocation);
     	
     	assertEquals("okok", result);
     	
-    	controlAction.verify();
-    	controlActionProxy.verify();
-    	controlActionInvocation.verify();
+    	verify(mockAction, mockActionProxy, mockActionInvocation);
     }
+    
 
     public void testPrepareThrowException() throws Exception {
         MockActionInvocation mai = new MockActionInvocation();
@@ -200,13 +185,17 @@ public class PrepareInterceptorTest extends TestCase {
     protected void setUp() throws Exception {
         mock = new Mock(ActionInterface.class);
         interceptor = new PrepareInterceptor();
+        mockAction = (ActionInterface) createMock(ActionInterface.class);        
     }
+    
 
     @Override
     protected void tearDown() throws Exception {
+        mockAction = null;
         mock.verify();
     }
 
+    
     
     /**
      * Simple interface to test prefix action invocation 

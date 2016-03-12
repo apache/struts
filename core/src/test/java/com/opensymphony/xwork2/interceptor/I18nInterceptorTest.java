@@ -83,12 +83,12 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     public void testCountryOnlyLocale() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "DK");
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "NL");
         interceptor.intercept(mai);
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
 
-        Locale denmark = new Locale("DK");
+        Locale denmark = new Locale("NL");
         assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
         assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
     }
@@ -105,30 +105,30 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     public void testWithVariant() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "fr_CA_xx");
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "ja_JP_JP");
         interceptor.intercept(mai);
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
 
-        Locale variant = new Locale("fr", "CA", "xx");
+        Locale variant = new Locale("ja", "JP", "JP");
         Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
         assertNotNull(locale); // should be stored here
         assertEquals(variant, locale);
-        assertEquals("xx", locale.getVariant());
+        assertEquals("JP", locale.getVariant());
     }
 
     public void testWithVariantRequestOnly() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "fr_CA_xx");
+        prepare(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "ja_JP_JP");
         interceptor.intercept(mai);
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
 
-        Locale variant = new Locale("fr", "CA", "xx");
+        Locale variant = new Locale("ja", "JP", "JP");
         Locale locale = mai.getInvocationContext().getLocale();
         assertNotNull(locale); // should be stored here
         assertEquals(variant, locale);
-        assertEquals("xx", locale.getVariant());
+        assertEquals("JP", locale.getVariant());
     }
 
     public void testRealLocaleObjectInParams() throws Exception {

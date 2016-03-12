@@ -63,7 +63,7 @@
  *******************************************************************/
 
  /**
-  * Validates given form per AJAX. To be called as onSubmit handler.
+  * Validates form per AJAX. To be called as onSubmit handler.
   *
   * @param event onSubmit event
   */
@@ -141,7 +141,6 @@ function _removeValidationErrors() {
  *
  * @param form Form containing errors.
  * @param errors Errors from server.
- * @returns {Boolean} True if form can be submitted.
  */
 function _handleValidationResult(form, errors) {
     // action errors
@@ -150,7 +149,7 @@ function _handleValidationResult(form, errors) {
         var errorContainer = $('ul.errorMessage');
         $.each(errors.errors, function(index, errorMsg) {
             var li = $('<li><span></span></li>');
-            li.text(errorMsg);
+            li.text(errorMsg); // use text() for security reasons
             errorContainer.append(li);
         });
     }
@@ -161,7 +160,7 @@ function _handleValidationResult(form, errors) {
             var td = $('td[data-error-for-fieldname="' + fieldName + '"]');
             if (td) {
                 var div = $('<div class="errorMessage"></div>');
-                div.text(errorMsg);
+                div.text(errorMsg); // use text() for security reasons
                 td.append(div);
             }
         });

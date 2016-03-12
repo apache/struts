@@ -170,7 +170,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         for (String name : params.getNames()) {
             Parameter parameter = params.get(name);
-            if (isAcceptableParameter(name, action) && isAcceptableValue(parameter.getValue())) {
+            if (isAcceptableParameter(name, action)) {
                 acceptableParameters.put(name, parameter);
             }
         }
@@ -243,33 +243,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean isAcceptableParameter(String name, Object action) {
         ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware) ? (ParameterNameAware) action : null;
         return acceptableName(name) && (parameterNameAware == null || parameterNameAware.acceptableParameterName(name));
-    }
-
-    /**
-     * Checks if given value doesn't match global excluded patterns to avoid passing malicious code
-     *
-     * @param value incoming parameter's value
-     * @return true if value is safe
-     *
-     * FIXME: can be removed when parameters won't be represented as simple Strings
-     */
-    protected boolean isAcceptableValue(Object value) {
-        if (value == null) {
-            return true;
-        }
-        Object[] values;
-        if (value.getClass().isArray()) {
-            values = (Object[]) value;
-        } else {
-            values = new Object[] { value };
-        }
-        boolean result = true;
-        for (Object obj : values) {
-            if (isExcluded(String.valueOf(obj))) {
-                result = false;
-            }
-        }
-        return result;
     }
 
     /**

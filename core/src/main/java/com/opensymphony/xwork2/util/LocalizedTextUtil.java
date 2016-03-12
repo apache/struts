@@ -98,6 +98,7 @@ public class LocalizedTextUtil {
     private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
     private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
     private static final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
+    private static final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
 
     private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
     private static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
@@ -261,30 +262,37 @@ public class LocalizedTextUtil {
      * @return the bundle, <tt>null</tt> if not found.
      */
     public static ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
-
-        ResourceBundle bundle = null;
-
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
         String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
+
+        if (missingBundles.contains(key)) {
+            return null;
+        }
+
+        ResourceBundle bundle = null;
         try {
-            if (!bundlesMap.containsKey(key)) {
+            if (bundlesMap.containsKey(key)) {
+                bundle = bundlesMap.get(key);
+            } else {
                 bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
-            } else {
-                bundle = bundlesMap.get(key);
             }
         } catch (MissingResourceException ex) {
             if (delegatedClassLoaderMap.containsKey(classLoader.hashCode())) {
                 try {
-                    if (!bundlesMap.containsKey(key)) {
+                    if (bundlesMap.containsKey(key)) {
+                        bundle = bundlesMap.get(key);
+                    } else {
                         bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
                         bundlesMap.putIfAbsent(key, bundle);
-                    } else {
-                        bundle = bundlesMap.get(key);
                     }
                 } catch (MissingResourceException e) {
                     LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
+                    missingBundles.add(key);
                 }
+            } else {
+                LOG.debug("Missing resource bundle [{}]!", aBundleName);
+                missingBundles.add(key);
             }
         }
         return bundle;
@@ -736,9 +744,12 @@ public class LocalizedTextUtil {
         if (bundle == null) {
             return null;
         }
+        if (valueStack != null) 
             reloadBundles(valueStack.getContext());
         try {
-            String message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
+        	String message = bundle.getString(key);
+        	if (valueStack != null) 
+        		message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException e) {

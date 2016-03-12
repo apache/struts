@@ -224,7 +224,8 @@ public class RestActionMapper extends DefaultActionMapper {
 
                 // fun trickery to parse 'actionName/id/methodName' in the case of 'animals/dog/edit'
                 int prevSlashPos = fullName.lastIndexOf('/', lastSlashPos - 1);
-                if (prevSlashPos > -1) {
+                //WW-4589 do not overwrite explicit method name
+                if (prevSlashPos > -1 && mapping.getMethod() == null) {
                     mapping.setMethod(fullName.substring(lastSlashPos + 1));
                     fullName = fullName.substring(0, lastSlashPos);
                     lastSlashPos = prevSlashPos;
@@ -299,10 +300,8 @@ public class RestActionMapper extends DefaultActionMapper {
             }
 
             mapping.setName(fullName);
-            return mapping;
         }
-        // if action name isn't specified, it can be a normal request, to static resource, return null to allow handle that case
-        return null;
+        return mapping;
     }
 
     private void handleDynamicMethodInvocation(ActionMapping mapping, String name) {

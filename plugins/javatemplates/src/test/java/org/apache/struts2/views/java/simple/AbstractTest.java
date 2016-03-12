@@ -34,7 +34,7 @@ import org.apache.struts2.components.Component;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,32 +91,32 @@ public abstract class AbstractTest extends TestCase {
         writer = new StringWriter();
         map = new HashMap();
 
-        template = org.easymock.classextension.EasyMock.createMock(Template.class);
-        stack = EasyMock.createNiceMock(ValueStack.class);
+        template = createMock(Template.class);
+        stack = createNiceMock(ValueStack.class);
         setUpStack();
         stackContext = new HashMap();
 
         context = new TemplateRenderingContext(template, writer, stack, map, null);
         stackContext.put(Component.COMPONENT_STACK, new Stack());
 
-        request = EasyMock.createNiceMock(HttpServletRequest.class);
-        EasyMock.expect(request.getContextPath()).andReturn("/some/path").anyTimes();
-        response = EasyMock.createNiceMock(HttpServletResponse.class);
+        request = createNiceMock(HttpServletRequest.class);
+        expect(request.getContextPath()).andReturn("/some/path").anyTimes();
+        response = createNiceMock(HttpServletResponse.class);
 
-        EasyMock.expect(stack.getContext()).andReturn(stackContext).anyTimes();
+        expect(stack.getContext()).andReturn(stackContext).anyTimes();
 
-        Container container = EasyMock.createNiceMock(Container.class);
+        Container container = createNiceMock(Container.class);
         XWorkConverter converter = new ConverterEx();
-        EasyMock.expect(container.getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)).andReturn("true").anyTimes();
-        EasyMock.expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
+        expect(container.getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)).andReturn("true").anyTimes();
+        expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
         TextParser parser = new OgnlTextParser();
-        EasyMock.expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
+        expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
         stackContext.put(ActionContext.CONTAINER, container);
 
 
-        EasyMock.replay(request);
-        EasyMock.replay(stack);
-        EasyMock.replay(container);
+        replay(request);
+        replay(stack);
+        replay(container);
 
         ActionContext.setContext(new ActionContext(stackContext));
         ServletActionContext.setRequest(request);
@@ -127,13 +127,13 @@ public abstract class AbstractTest extends TestCase {
     }
 
     protected void expectFind(String expr, Class toClass, Object returnVal) {
-        EasyMock.expect(stack.findValue(expr, toClass)).andReturn(returnVal);
-        EasyMock.expect(stack.findValue(expr, toClass, false)).andReturn(returnVal);
+        expect(stack.findValue(expr, toClass)).andReturn(returnVal);
+        expect(stack.findValue(expr, toClass, false)).andReturn(returnVal);
     }
 
     protected void expectFind(String expr, Object returnVal) {
-        EasyMock.expect(stack.findValue(expr)).andReturn(returnVal).anyTimes();
-        EasyMock.expect(stack.findValue(expr, false)).andReturn(returnVal).anyTimes();
+        expect(stack.findValue(expr)).andReturn(returnVal).anyTimes();
+        expect(stack.findValue(expr, false)).andReturn(returnVal).anyTimes();
     }
 
     protected void setUpStack() {

@@ -74,7 +74,7 @@ public class VelocityTemplateEngine extends BaseTemplateEngine {
                 // try to load, and if it works, stop at the first one
                 template = velocityEngine.getTemplate(templateName);
                 break;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 if (exception == null) {
                     exception = e;
                 }

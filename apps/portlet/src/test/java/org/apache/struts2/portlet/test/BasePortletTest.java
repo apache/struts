@@ -1,14 +1,16 @@
 package org.apache.struts2.portlet.test;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
+import static net.sourceforge.jwebunit.junit.JWebUnit.*;
 import org.apache.pluto.core.PortletServlet;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.webapp.WebAppContext;
 
+import junit.framework.TestCase;
+
 import java.io.File;
 
-public abstract class BasePortletTest extends WebTestCase {
+public abstract class BasePortletTest extends TestCase {
 	
 	protected Server server;
 	

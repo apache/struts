@@ -22,8 +22,8 @@
 -->
 
 <!DOCTYPE tiles-definitions PUBLIC
-        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
-        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
 
@@ -43,6 +43,12 @@
         <put-attribute name="title" value="Tiles/Freemarker Showcase"/>
         <put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/>
         <put-attribute name="body" value="/WEB-INF/tiles/body.ftl"/>
+    </definition>
+
+    <definition name="showcase.annotations" template="/WEB-INF/tiles/layout-annotations.jsp">
+        <put-attribute name="title" value="Tiles Annotations Showcase"/>
+        <put-attribute name="header" value=".header"/>
+        <put-attribute name="body" value=".body"/>
     </definition>
 
 </tiles-definitions>

@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.result.ServletActionRedirectResult;
 import org.easymock.EasyMock;
 
@@ -96,7 +97,6 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
 
         MessageStorePreResultListener listener = new MessageStorePreResultListener(interceptor);
 
-        Map paramMap = new LinkedHashMap();
         Map sessionMap = new LinkedHashMap();
 
         ActionSupport action = new ActionSupport();
@@ -108,7 +108,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field2", "some field error 2");
 
         ActionContext actionContext = new ActionContext(new HashMap());
-        actionContext.put(ActionContext.PARAMETERS, paramMap);
+        actionContext.setParameters(HttpParameters.createEmpty().build());
         actionContext.put(ActionContext.SESSION, sessionMap);
 
         HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
@@ -172,7 +172,6 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
 
         MessageStorePreResultListener listener = new MessageStorePreResultListener(interceptor);
 
-        Map paramMap = new LinkedHashMap();
         Map sessionMap = new LinkedHashMap();
 
         ActionSupport action = new ActionSupport();
@@ -184,8 +183,8 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field2", "some field error 2");
 
         ActionContext actionContext = new ActionContext(new HashMap());
-        actionContext.put(ActionContext.PARAMETERS, paramMap);
-        actionContext.put(ActionContext.SESSION, sessionMap);
+        actionContext.setParameters(HttpParameters.createEmpty().build());
+        actionContext.setSession(sessionMap);
 
         HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
         HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);

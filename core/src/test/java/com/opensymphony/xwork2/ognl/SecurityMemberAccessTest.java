@@ -1,9 +1,11 @@
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Member;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -306,9 +308,78 @@ public class SecurityMemberAccessTest extends TestCase {
     public void testAccessPrimitiveInt() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang.,ognl,javax"));
 
         String propertyName = "intField";
         Member member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue(accessible);
+    }
+
+    public void testAccessPrimitiveDoubleWithNames() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang.,ognl,javax"));
+
+
+        Set<Class<?>> excluded = new HashSet<Class<?>>();
+        excluded.add(Object.class);
+        excluded.add(Runtime.class);
+        excluded.add(System.class);
+        excluded.add(Class.class);
+        excluded.add(ClassLoader.class);
+        sma.setExcludedClasses(excluded);
+
+        String propertyName = "doubleValue";
+        Member member = Double.class.getMethod(propertyName);
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+        // then
+        assertTrue(accessible);
+
+        // given
+        propertyName = "exit";
+        member = System.class.getMethod(propertyName, int.class);
+
+        // when
+        accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertFalse(accessible);
+
+        // given
+        propertyName = "intField";
+        member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+
+        // when
+        accessible = sma.isAccessible(context, target, member, propertyName);
+        // then
+        assertTrue(accessible);
+
+        // given
+        propertyName = "doubleField";
+        member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+
+        // when
+        accessible = sma.isAccessible(context, target, member, propertyName);
+        // then
+        assertTrue(accessible);
+    }
+
+    public void testAccessPrimitiveDoubleWithPackageRegExs() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        Set<Pattern> patterns = new HashSet<Pattern>();
+        patterns.add(Pattern.compile("^java\\.lang\\..*"));
+        sma.setExcludedPackageNamePatterns(patterns);
+
+        String propertyName = "doubleValue";
+        Member member = Double.class.getMethod(propertyName);
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -324,6 +395,8 @@ class FooBar implements FooBarInterface {
     private String stringField;
 
     private int intField;
+
+    private Double doubleField;
 
     public String getStringField() {
         return stringField;
@@ -352,6 +425,14 @@ class FooBar implements FooBarInterface {
 
     public void setIntField(int intField) {
         this.intField = intField;
+    }
+
+    public Double getDoubleField() {
+        return doubleField;
+    }
+
+    public void setDoubleField(Double doubleField) {
+        this.doubleField = doubleField;
     }
 }
 

@@ -46,10 +46,11 @@
                 java.lang.Class,
                 java.lang.ClassLoader,
                 java.lang.Shutdown,
+                java.lang.ProcessBuilder,
                 ognl.OgnlContext,
-                ognl.MemberAccess,
                 ognl.ClassResolver,
                 ognl.TypeConverter,
+                com.opensymphony.xwork2.ognl.SecurityMemberAccess,
                 com.opensymphony.xwork2.ActionContext" />
 
     <!-- this must be valid regex, each '.' in package name must be escaped! -->

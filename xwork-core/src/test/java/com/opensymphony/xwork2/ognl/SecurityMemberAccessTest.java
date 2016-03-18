@@ -339,6 +339,7 @@ public class SecurityMemberAccessTest extends TestCase {
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
         // then
         assertTrue(accessible);
 
@@ -386,6 +387,42 @@ public class SecurityMemberAccessTest extends TestCase {
 
         // then
         assertTrue(accessible);
+    }
+
+    public void testAccessMemberAccessIsAccessible() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        Set<Class<?>> excluded = new HashSet<Class<?>>();
+        excluded.add(ognl.MemberAccess.class);
+        sma.setExcludedClasses(excluded);
+
+        String propertyName = "excludedClasses";
+        String setter = "setExcludedClasses";
+        Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue(accessible);
+    }
+
+    public void testAccessMemberAccessIsBlocked() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        Set<Class<?>> excluded = new HashSet<Class<?>>();
+        excluded.add(SecurityMemberAccess.class);
+        sma.setExcludedClasses(excluded);
+
+        String propertyName = "excludedClasses";
+        String setter = "setExcludedClasses";
+        Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertFalse(accessible);
     }
 
 }

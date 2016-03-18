@@ -657,8 +657,7 @@ public class URLTagTest extends AbstractUITagTest {
 		tag.doEndTag();
 
 		Object allowMethodAccess = stack.findValue("\u0023_memberAccess['allowStaticMethodAccess']");
-		assertNotNull(allowMethodAccess);
-		assertEquals(Boolean.FALSE, allowMethodAccess);
+		assertNull(allowMethodAccess);
 
 		assertNull(session.get("foo"));
 

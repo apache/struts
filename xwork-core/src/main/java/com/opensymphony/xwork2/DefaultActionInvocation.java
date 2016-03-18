@@ -254,8 +254,6 @@ public class DefaultActionInvocation implements ActionInvocation {
             // this is needed because the result will be executed, then control will return to the Interceptor, which will
             // return above and flow through again
             if (!executed) {
-                result = createResult();
-
                 if (preResultListeners != null) {
                     LOG.trace("Executing PreResultListeners for result [#0]", result);
 
@@ -365,6 +363,8 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @throws ConfigurationException If not result can be found with the returned code
      */
     private void executeResult() throws Exception {
+        result = createResult();
+
         String timerKey = "executeResult: " + getResultCode();
         try {
             UtilTimerStack.push(timerKey);

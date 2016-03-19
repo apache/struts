@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.result.ServletRedirectResult;
 import org.easymock.EasyMock;
 
 import javax.servlet.http.HttpServletRequest;

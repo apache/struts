@@ -22,6 +22,8 @@ package org.apache.struts2.tiles;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcherFactory;
@@ -63,6 +65,7 @@ import javax.el.ELResolver;
 import javax.el.ListELResolver;
 import javax.el.MapELResolver;
 import javax.el.ResourceBundleELResolver;
+import javax.servlet.jsp.JspFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -80,6 +83,8 @@ import java.util.Map;
  * you can base on code from Tiles' CompleteAutoloadTilesContainerFactory
  */
 public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
+
+    private static final Logger LOG = LogManager.getLogger(StrutsTilesContainerFactory.class);
 
     /**
      * The freemarker renderer name.
@@ -144,7 +149,11 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator(EL, createELEvaluator(applicationContext));
+
+        ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
+        if (elEvaluator != null) {
+            attributeEvaluatorFactory.registerAttributeEvaluator(EL, elEvaluator);
+        }
 
         return attributeEvaluatorFactory;
     }
@@ -189,6 +198,12 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     }
 
     protected ELAttributeEvaluator createELEvaluator(ApplicationContext applicationContext) {
+
+        if (JspFactory.getDefaultFactory() == null) {
+            LOG.warn("JspFactory.getDefaultFactory returned null, EL support will be disabled");
+            return null;
+        }
+
         ELAttributeEvaluator evaluator = new ELAttributeEvaluator();
         JspExpressionFactoryFactory efFactory = new JspExpressionFactoryFactory();
         efFactory.setApplicationContext(applicationContext);

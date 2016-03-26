@@ -195,7 +195,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     }
 
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
-        LOG.info("Parsing configuration file [{}]", configFileName);
+        LOG.trace("Parsing configuration file [{}]", configFileName);
         Map<String, Node> loadedBeans = new HashMap<>();
         for (Document doc : documents) {
             Element rootElement = doc.getDocumentElement();

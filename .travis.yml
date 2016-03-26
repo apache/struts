@@ -4,3 +4,6 @@ sudo: false
 jdk:
   - openjdk7
   - oraclejdk8
+
+install: mvn install -DskipTests=true -DskipAssembly
+script: mvn test -DskipAssembly

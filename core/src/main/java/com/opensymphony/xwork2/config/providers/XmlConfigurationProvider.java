@@ -1024,7 +1024,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 if (errorIfMissing) {
                     throw new ConfigurationException("Could not open files of the name " + fileName, ioException);
                 } else {
-                    LOG.info("Unable to locate configuration files of the name {}, skipping", fileName);
+                    LOG.trace("Unable to locate configuration files of the name {}, skipping", fileName);
                     return docs;
                 }
             }

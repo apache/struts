@@ -1,5 +1,10 @@
 The Apache Struts web framework
 -------------------------------
+
+[![Build Status](https://travis-ci.org/apache/struts.svg?branch=master)](https://travis-ci.org/apache/struts)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.struts/struts2-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.struts/struts2-core/)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 The Apache Struts web framework is a free open-source solution for creating Java web applications.
 
 Web applications differ from conventional websites in that web applications can create a dynamic response. Many websites deliver only static pages. A web application can interact with databases and business logic engines to customize a response.

@@ -245,7 +245,7 @@ public class CookieInterceptor extends AbstractInterceptor {
                 String name = cookie.getName();
                 String value = cookie.getValue();
 
-                if (isAcceptableName(name) && isAcceptableValue(value)) {
+                if (isAcceptableName(name)) {
                     if (cookiesNameSet.contains("*")) {
                         LOG.debug("Contains cookie name [*] in configured cookies name set, cookie with name [{}] with value [{}] will be injected", name, value);
                         populateCookieValueIntoStack(name, value, cookiesMap, stack);
@@ -262,16 +262,6 @@ public class CookieInterceptor extends AbstractInterceptor {
         injectIntoCookiesAwareAction(invocation.getAction(), cookiesMap);
 
         return invocation.invoke();
-    }
-
-    /**
-     * Checks if value of Cookie doesn't contain vulnerable code
-     *
-     * @param value of Cookie
-     * @return true|false
-     */
-    protected boolean isAcceptableValue(String value) {
-        return !isExcluded(value) && isAccepted(value);
     }
 
     /**

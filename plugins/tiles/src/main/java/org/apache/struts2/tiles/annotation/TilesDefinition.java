@@ -39,10 +39,10 @@ import java.lang.annotation.Target;
  * <p>
  *  You can annotate an action like that:
  *  <pre>
- *      @Result(name = "success", type="tiles")
- *      @TilesDefinition(extend = "layout", putAttributes = {
- *          @TilesPutAttribute(name = "header", value = "/WEB-INF/tiles/header.jsp"),
- *          @TilesPutAttribute(name = "body", value = "/WEB-INF/tiles/body.ftl")
+ *      {@literal @}Result(name = "success", type="tiles")
+ *      {@literal @}TilesDefinition(extend = "layout", putAttributes = {
+ *          {@literal @}TilesPutAttribute(name = "header", value = "/WEB-INF/tiles/header.jsp"),
+ *          {@literal @}TilesPutAttribute(name = "body", value = "/WEB-INF/tiles/body.ftl")
  *      })
  *      public class FooAction extends ActionSupport {
  *  </pre>

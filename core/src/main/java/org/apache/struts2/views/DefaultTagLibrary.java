@@ -38,7 +38,6 @@ import org.apache.struts2.views.velocity.components.CheckBoxListDirective;
 import org.apache.struts2.views.velocity.components.ComboBoxDirective;
 import org.apache.struts2.views.velocity.components.ComponentDirective;
 import org.apache.struts2.views.velocity.components.DateDirective;
-import org.apache.struts2.views.velocity.components.DivDirective;
 import org.apache.struts2.views.velocity.components.DoubleSelectDirective;
 import org.apache.struts2.views.velocity.components.FieldErrorDirective;
 import org.apache.struts2.views.velocity.components.FileDirective;
@@ -87,7 +86,6 @@ public class DefaultTagLibrary implements TagLibraryDirectiveProvider, TagLibrar
             ComboBoxDirective.class,
             ComponentDirective.class,
             DateDirective.class,
-            DivDirective.class,
             DoubleSelectDirective.class,
             FileDirective.class,
             FormDirective.class,

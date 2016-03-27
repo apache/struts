@@ -97,7 +97,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
         assertEquals(1, beanCountMessages.size());
 
         String beanCountMessage = beanCountMessages.get(0);
-        assertEquals("bean: Invalid count value, must be between 1 and 100, current value -1!", beanCountMessage);
+        assertEquals("bean: Model: Count must be between 1 and 100, current value is -1.", beanCountMessage);
     }
 
     public void testCollectionValidation() throws Exception {

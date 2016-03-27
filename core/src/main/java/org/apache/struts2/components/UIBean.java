@@ -125,13 +125,13 @@ import java.util.Map;
  *          <td>define html style attribute</td>
  *       </tr>
  *       <tr>
- *          <td>cssClass</td>
+ *          <td>cssErrorClass</td>
  *          <td>simple</td>
  *          <td>String</td>
  *          <td>error class attribute</td>
  *       </tr>
  *       <tr>
- *          <td>cssStyle</td>
+ *          <td>cssErrorStyle</td>
  *          <td>simple</td>
  *          <td>String</td>
  *          <td>error style attribute</td>
@@ -179,7 +179,7 @@ import java.util.Map;
  *          <td>Form Element's field name mapping</td>
  *       </tr>
  *       <tr>
- *          <td>required</td>
+ *          <td>requiredLabel</td>
  *          <td>xhtml</td>
  *          <td>Boolean</td>
  *          <td>add * to label (true to add false otherwise)</td>

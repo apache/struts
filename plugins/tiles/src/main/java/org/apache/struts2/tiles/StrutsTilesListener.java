@@ -35,7 +35,7 @@ public class StrutsTilesListener extends AbstractTilesListener {
 
     @Override
     protected TilesInitializer createTilesInitializer() {
-        LOG.info("Starting Struts Tiles 2 integration ...");
+        LOG.info("Starting Struts Tiles 3 integration ...");
         return new StrutsTilesInitializer();
     }
 }

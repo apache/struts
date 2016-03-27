@@ -40,12 +40,15 @@ public class ComponentUtils {
     /**
      * Check if object is expression base on altSyntax
      *
-     * @param value to treat as an expression
+     * @param expr to treat as an expression
      * @return true if it is an expression
      */
-    public static boolean isExpression(Object value) {
-        String expr = value.toString();
+    public static boolean isExpression(String expr) {
         return expr.startsWith("%{") && expr.endsWith("}");
+    }
+
+    public static boolean containsExpression(String expr) {
+        return expr.contains("%{") && expr.contains("}");
     }
 
 }

@@ -30,11 +30,12 @@ import javax.servlet.http.Cookie;
 import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import static org.easymock.EasyMock.*;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -56,14 +57,12 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().getValueStack().push(action);
 
-        MockControl actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-        ActionInvocation invocation = (ActionInvocation) actionInvocationControl.getMock();
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.getAction(), action);
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.invoke(), Action.SUCCESS);
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
 
-        actionInvocationControl.replay();
+        replay(invocation);
 
         // by default the interceptor doesn't accept any cookies
         CookieInterceptor interceptor = new CookieInterceptor();
@@ -79,6 +78,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertNull(ActionContext.getContext().getValueStack().findValue("cookie1"));
         assertNull(ActionContext.getContext().getValueStack().findValue("cookie2"));
         assertNull(ActionContext.getContext().getValueStack().findValue("cookie3"));
+        
+        verify(invocation);
     }
 
     public void testInterceptAll1() throws Exception {
@@ -94,14 +95,12 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().getValueStack().push(action);
 
-        MockControl actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-        ActionInvocation invocation = (ActionInvocation) actionInvocationControl.getMock();
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.getAction(), action);
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.invoke(), Action.SUCCESS);
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
 
-        actionInvocationControl.replay();
+        replay(invocation);
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
@@ -121,6 +120,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie1"), "cookie1value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie2"), "cookie2value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie3"), "cookie3value");
+        
+        verify(invocation);
     }
 
 
@@ -137,14 +138,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().getValueStack().push(action);
 
-        MockControl actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-        ActionInvocation invocation = (ActionInvocation) actionInvocationControl.getMock();
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.getAction(), action);
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.invoke(), Action.SUCCESS);
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
 
-        actionInvocationControl.replay();
+        replay(invocation);
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
@@ -164,6 +162,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie1"), "cookie1value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie2"), "cookie2value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie3"), "cookie3value");
+        
+        verify(invocation);
     }
 
     public void testInterceptSelectedCookiesNameOnly1() throws Exception {
@@ -179,14 +179,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().getValueStack().push(action);
 
-        MockControl actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-        ActionInvocation invocation = (ActionInvocation) actionInvocationControl.getMock();
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.getAction(), action);
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.invoke(), Action.SUCCESS);
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
 
-        actionInvocationControl.replay();
+        replay(invocation);
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
@@ -206,6 +203,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie1"), "cookie1value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie2"), null);
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie3"), "cookie3value");
+        
+        verify(invocation);
     }
 
     public void testInterceptSelectedCookiesNameOnly2() throws Exception {
@@ -221,14 +220,12 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().getValueStack().push(action);
 
-        MockControl actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-        ActionInvocation invocation = (ActionInvocation) actionInvocationControl.getMock();
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.getAction(), action);
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.invoke(), Action.SUCCESS);
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
 
-        actionInvocationControl.replay();
+        replay(invocation);
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
@@ -248,6 +245,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie1"), "cookie1value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie2"), null);
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie3"), "cookie3value");
+        
+        verify(invocation);
     }
 
     public void testInterceptSelectedCookiesNameOnly3() throws Exception {
@@ -263,14 +262,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().getValueStack().push(action);
 
-        MockControl actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-        ActionInvocation invocation = (ActionInvocation) actionInvocationControl.getMock();
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.getAction(), action);
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.invoke(), Action.SUCCESS);
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
 
-        actionInvocationControl.replay();
+        replay(invocation);
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
@@ -290,6 +286,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie1"), "cookie1value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie2"), null);
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie3"), "cookie3value");
+        
+        verify(invocation);
     }
 
 
@@ -306,14 +304,11 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().getValueStack().push(action);
 
-        MockControl actionInvocationControl = MockControl.createControl(ActionInvocation.class);
-        ActionInvocation invocation = (ActionInvocation) actionInvocationControl.getMock();
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.getAction(), action);
-        actionInvocationControl.expectAndDefaultReturn(
-                                                       invocation.invoke(), Action.SUCCESS);
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
 
-        actionInvocationControl.replay();
+        replay(invocation);
 
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
@@ -333,6 +328,8 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie1"), "cookie1value");
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie2"), null);
         assertEquals(ActionContext.getContext().getValueStack().findValue("cookie3"), null);
+        
+        verify(invocation);
     }
 
     public void testCookiesWithClassPollution() throws Exception {
@@ -361,20 +358,12 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         ServletActionContext.setRequest(request);
 
         final Map<String, Boolean> excludedName = new HashMap<String, Boolean>();
-        final Map<String, Boolean> excludedValue = new HashMap<String, Boolean>();
 
         CookieInterceptor interceptor = new CookieInterceptor() {
             @Override
             protected boolean isAcceptableName(String name) {
                 boolean accepted = super.isAcceptableName(name);
                 excludedName.put(name, accepted);
-                return accepted;
-            }
-
-            @Override
-            protected boolean isAcceptableValue(String value) {
-                boolean accepted = super.isAcceptableValue(value);
-                excludedValue.put(value, accepted);
                 return accepted;
             }
         };
@@ -395,13 +384,6 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedName.get(pollution4));
         assertFalse(excludedName.get(pollution5));
         assertFalse(excludedName.get(pollution6));
-
-        assertFalse(excludedValue.get(pollution1));
-        assertFalse(excludedValue.get(pollution2));
-        assertFalse(excludedValue.get(pollution3));
-        assertFalse(excludedValue.get(pollution4));
-        assertFalse(excludedValue.get(pollution5));
-        assertFalse(excludedValue.get(pollution6));
     }
 
     public void testCookiesWithStrutsInternalsAccess() throws Exception {
@@ -424,20 +406,12 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         ServletActionContext.setRequest(request);
 
         final Map<String, Boolean> excludedName = new HashMap<String, Boolean>();
-        final Map<String, Boolean> excludedValue = new HashMap<String, Boolean>();
 
         CookieInterceptor interceptor = new CookieInterceptor() {
             @Override
             protected boolean isAcceptableName(String name) {
                 boolean accepted = super.isAcceptableName(name);
                 excludedName.put(name, accepted);
-                return accepted;
-            }
-
-            @Override
-            protected boolean isAcceptableValue(String value) {
-                boolean accepted = super.isAcceptableValue(value);
-                excludedValue.put(value, accepted);
                 return accepted;
             }
         };
@@ -453,10 +427,6 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedName.get(sessionCookieName));
         assertFalse(excludedName.get(appCookieName));
         assertFalse(excludedName.get(reqCookieName));
-
-        assertFalse(excludedValue.get(sessionCookieValue));
-        assertFalse(excludedValue.get(appCookieValue));
-        assertFalse(excludedValue.get(reqCookieValue));
     }
 
     public static class MockActionWithCookieAware extends ActionSupport implements CookiesAware {

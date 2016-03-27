@@ -42,7 +42,6 @@ public class StrutsModels {
     protected ComboBoxModel comboBox;
     protected ComponentModel component;
     protected DateModel date;
-    protected DivModel div;
     protected DoubleSelectModel doubleselect;
     protected FileModel file;
     protected FormModel form;
@@ -282,14 +281,6 @@ public class StrutsModels {
         }
 
         return a;
-    }
-
-    public DivModel getDiv() {
-        if (div == null) {
-            div = new DivModel(stack, req, res);
-        }
-
-        return div;
     }
 
     public TextModel getText() {

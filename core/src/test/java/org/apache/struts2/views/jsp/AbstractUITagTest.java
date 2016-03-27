@@ -176,9 +176,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
             tag.doStartTag();
             tag.doEndTag();
             String writerString = normalize(writer.toString(), true);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("AbstractUITagTest - [verifyGenericProperties]: Tag output is " + writerString);
-            }
+            LOG.debug("AbstractUITagTest - [verifyGenericProperties]: Tag output is {}", writerString);
 
             assertFalse("Freemarker error detected in tag output: " + writerString, writerString.contains(normalize(FREEMARKER_ERROR_EXPECTATION)));
 

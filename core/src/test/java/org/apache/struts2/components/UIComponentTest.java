@@ -28,7 +28,6 @@ import org.apache.struts2.views.jsp.ui.ActionMessageTag;
 import org.apache.struts2.views.jsp.ui.AnchorTag;
 import org.apache.struts2.views.jsp.ui.CheckboxTag;
 import org.apache.struts2.views.jsp.ui.ComboBoxTag;
-import org.apache.struts2.views.jsp.ui.DivTag;
 import org.apache.struts2.views.jsp.ui.DoubleSelectTag;
 import org.apache.struts2.views.jsp.ui.FieldErrorTag;
 import org.apache.struts2.views.jsp.ui.FileTag;
@@ -157,28 +156,6 @@ public class UIComponentTest extends AbstractUITagTest {
             tag.setName("name");
             tag.setLabel("label");
             tag.setList("{'aaa','bbb','ccc'}");
-            tag.setPageContext(pageContext);
-            tag.doStartTag();
-            assertEquals(tag.getComponent().getComponentStack().peek(), tag.getComponent());
-            tag.doEndTag();
-            assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
-
-            t.doEndTag();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            fail(e.toString());
-        }
-    }
-
-    // div
-    public void testDivComponentDisposeItselfFromComponentStack() throws Exception {
-        ActionErrorTag t = new ActionErrorTag();
-        t.setPageContext(pageContext);
-
-        try {
-            t.doStartTag();
-            DivTag tag = new DivTag();
             tag.setPageContext(pageContext);
             tag.doStartTag();
             assertEquals(tag.getComponent().getComponentStack().peek(), tag.getComponent());

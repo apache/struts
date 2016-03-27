@@ -179,7 +179,7 @@ import java.util.Map;
  *          <td>Form Element's field name mapping</td>
  *       </tr>
  *       <tr>
- *          <td>required</td>
+ *          <td>requiredLabel</td>
  *          <td>xhtml</td>
  *          <td>Boolean</td>
  *          <td>add * to label (true to add false otherwise)</td>

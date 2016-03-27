@@ -467,7 +467,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
             while (customBundles.hasMoreTokens()) {
                 String name = customBundles.nextToken();
                 try {
-              	    LOG.info("Loading global messages from [{}]", name);
+              	    LOG.trace("Loading global messages from [{}]", name);
                     LocalizedTextUtil.addDefaultResourceBundle(name);
                 } catch (Exception e) {
                     LOG.error("Could not find messages file {}.properties. Skipping", name);

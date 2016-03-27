@@ -1,2 +1,0 @@
-
-<% response.sendRedirect("orders"); %>

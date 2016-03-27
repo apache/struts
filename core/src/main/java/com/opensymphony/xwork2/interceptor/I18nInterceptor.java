@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
@@ -217,6 +218,10 @@ public class I18nInterceptor extends AbstractInterceptor {
             if (locale != null) {
                 LOG.debug("Applied request locale: {}", locale);
             }
+        }
+
+        if (locale != null && !Arrays.asList(Locale.getAvailableLocales()).contains(locale)) {
+            locale = Locale.getDefault();
         }
         return locale;
     }

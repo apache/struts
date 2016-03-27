@@ -58,8 +58,6 @@ public class SimpleTheme extends DefaultTheme {
                 put("head", new FactoryList(HeadHandler.class));
                 put("hidden", new FactoryList(HiddenHandler.class));
                 put("fielderror", new FactoryList(FieldErrorHandler.class));
-                put("div", new FactoryList(DivHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
-                put("div-close", new FactoryList(DivHandler.CloseHandler.class));
                 put("empty", new FactoryList(EmptyHandler.class));
            }
         });

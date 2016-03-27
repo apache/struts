@@ -20,6 +20,9 @@
  */
 package org.apache.struts2.dispatcher.filter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -44,6 +47,9 @@ import java.util.regex.Pattern;
  * when you don't have another filter that needs access to action context information, such as Sitemesh.
  */
 public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
+
+    private static final Logger LOG = LogManager.getLogger(StrutsPrepareAndExecuteFilter.class);
+
     protected PrepareOperations prepare;
     protected ExecuteOperations execute;
     protected List<Pattern> excludedPatterns = null;
@@ -85,21 +91,27 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         try {
+            String uri = RequestUtils.getUri(request);
             if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
+                LOG.trace("Request {} is excluded from handling by Struts, passing request to other filters", uri);
                 chain.doFilter(request, response);
             } else {
-                prepare.setEncodingAndLocale(request, response);
-                prepare.createActionContext(request, response);
-                prepare.assignDispatcherToThread();
-                request = prepare.wrapRequest(request);
-                ActionMapping mapping = prepare.findActionMapping(request, response, true);
-                if (mapping == null) {
-                    boolean handled = execute.executeStaticResourceRequest(request, response);
-                    if (!handled) {
+                LOG.trace("Checking if {} is a static resource", uri);
+                boolean handled = execute.executeStaticResourceRequest(request, response);
+                if (!handled) {
+                    LOG.trace("Assuming uri {} as a normal action", uri);
+                    prepare.setEncodingAndLocale(request, response);
+                    prepare.createActionContext(request, response);
+                    prepare.assignDispatcherToThread();
+                    request = prepare.wrapRequest(request);
+                    ActionMapping mapping = prepare.findActionMapping(request, response, true);
+                    if (mapping == null) {
+                        LOG.trace("Cannot find mapping for {}, passing to other filters", uri);
                         chain.doFilter(request, response);
+                    } else {
+                        LOG.trace("Found mapping {} for {}", mapping, uri);
+                        execute.executeAction(request, response, mapping);
                     }
-                } else {
-                    execute.executeAction(request, response, mapping);
                 }
             }
         } finally {

@@ -46,7 +46,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
     private static final Logger LOG = LogManager.getLogger(StrutsWildcardServletApplicationContext.class);
 
     private ResourceFinder finder;
-
+ 
     public StrutsWildcardServletApplicationContext(ServletContext context) {
         super(context);
 
@@ -54,8 +54,12 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
         for (Object path : context.getResourcePaths("/")) {
             try {
-                URL url = new File(context.getRealPath(String.valueOf(path))).toURI().toURL();
-                urls.add(url);
+                String filename = context.getRealPath(String.valueOf(path));
+                // protect call from NPE 
+                if (filename != null) {
+                    URL url = new File(filename).toURI().toURL();
+                    urls.add(url);
+                }
             } catch (MalformedURLException e) {
                 throw new ConfigurationException(e);
             }

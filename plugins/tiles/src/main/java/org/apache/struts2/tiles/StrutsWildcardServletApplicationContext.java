@@ -54,6 +54,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
         for (Object path : context.getResourcePaths("/")) {
             try {
+
                 URL url = context.getResource(String.valueOf(path));
                 // protect call from NPE 
                 if (url != null) {

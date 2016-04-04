@@ -100,7 +100,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     /**
      * Default pattern to be used to collect Tiles definitions if user didn't configure any
      */
-    public static final String TILES_DEFAULT_PATTERN = "tiles*.xml";
+    public static final String[] TILES_DEFAULT_PATTERN = {"**/tiles*.xml"};
 
     /**
      * Supported expression languages
@@ -176,23 +176,28 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     @Override
     protected List<ApplicationResource> getSources(ApplicationContext applicationContext) {
-        Collection<ApplicationResource> resources = applicationContext.getResources(getTilesDefinitionPattern(applicationContext.getInitParams()));
-
+        String[] tiles = getTilesDefinitionPattern(applicationContext.getInitParams());
+        Collection<ApplicationResource> resources = null;
         List<ApplicationResource> filteredResources = new ArrayList<>();
-        if (resources != null) {
-            for (ApplicationResource resource : resources) {
-                if (Locale.ROOT.equals(resource.getLocale())) {
-                    filteredResources.add(resource);
+        for (int index = 0; index < tiles.length; index++) {
+            resources = applicationContext.getResources(tiles[index]);
+            
+            if (resources != null) {
+                for (ApplicationResource resource : resources) {
+                    if (Locale.ROOT.equals(resource.getLocale())) {
+                        filteredResources.add(resource);
+                    }
                 }
             }
-        }
+        }    
+
 
         return filteredResources;
     }
 
-    protected String getTilesDefinitionPattern(Map<String, String> params) {
+    protected String[] getTilesDefinitionPattern(Map<String, String> params) {
         if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
-            return params.get(DefinitionsFactory.DEFINITIONS_CONFIG);
+            return params.get(DefinitionsFactory.DEFINITIONS_CONFIG).split(",");
         }
         return TILES_DEFAULT_PATTERN;
     }

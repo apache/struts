@@ -63,6 +63,8 @@ import org.apache.tiles.renderer.impl.ChainedDelegateAttributeRenderer;
 import org.apache.tiles.servlet.context.ServletUtil;
 import org.apache.tiles.util.URLUtil;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
+
 import javax.el.ArrayELResolver;
 import javax.el.BeanELResolver;
 import javax.el.CompositeELResolver;
@@ -73,6 +75,7 @@ import javax.el.ResourceBundleELResolver;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -201,7 +204,12 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     @Override
     protected List<URL> getSourceURLs(TilesApplicationContext applicationContext, TilesRequestContextFactory contextFactory) {
         try {
-            Set<URL> finalSet = applicationContext.getResources(getTilesDefinitionPattern(applicationContext.getInitParams()));
+            Set<URL> finalSet = new HashSet<URL>();
+
+            Set<String> definitions = getTilesDefinitions(applicationContext.getInitParams());
+            for (String definition : definitions) {
+                finalSet.addAll(applicationContext.getResources(definition));
+            }
 
             return URLUtil.getBaseTilesDefinitionURLs(finalSet);
         } catch (IOException e) {
@@ -209,11 +217,11 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         }
     }
 
-    protected String getTilesDefinitionPattern(Map<String, String> params) {
+    protected Set<String> getTilesDefinitions(Map<String, String> params) {
         if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
-            return params.get(DefinitionsFactory.DEFINITIONS_CONFIG);
+            return TextParseUtil.commaDelimitedStringToSet(params.get(DefinitionsFactory.DEFINITIONS_CONFIG));
         }
-        return TILES_DEFAULT_PATTERN;
+        return TextParseUtil.commaDelimitedStringToSet(TILES_DEFAULT_PATTERN);
     }
 
     protected ELAttributeEvaluator createELEvaluator(TilesApplicationContext applicationContext) {

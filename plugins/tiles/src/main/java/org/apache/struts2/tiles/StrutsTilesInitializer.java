@@ -22,7 +22,9 @@ package org.apache.struts2.tiles;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.tiles.TilesApplicationContext;
+import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.factory.AbstractTilesContainerFactory;
+import org.apache.tiles.servlet.context.ServletTilesApplicationContext;
 import org.apache.tiles.startup.AbstractTilesInitializer;
 
 import javax.servlet.ServletContext;
@@ -33,8 +35,15 @@ public class StrutsTilesInitializer extends AbstractTilesInitializer {
 
     @Override
     protected TilesApplicationContext createTilesApplicationContext(TilesApplicationContext preliminaryContext) {
-        LOG.debug("Initializing Tiles wildcard support ...");
-        return new StrutsWildcardServletTilesApplicationContext((ServletContext) preliminaryContext.getContext());
+        ServletContext servletContext = (ServletContext) preliminaryContext.getContext();
+
+        if (servletContext.getInitParameter(DefinitionsFactory.DEFINITIONS_CONFIG) != null) {
+            LOG.trace("Found definitions config in web.xml, using standard Servlet support ....");
+            return new ServletTilesApplicationContext(servletContext);
+        } else {
+            LOG.trace("Initializing Tiles wildcard support ...");
+            return new StrutsWildcardServletTilesApplicationContext(servletContext);
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.tiles.TilesApplicationContext;
 import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.factory.AbstractTilesContainerFactory;
+import org.apache.tiles.impl.BasicTilesContainer;
 import org.apache.tiles.servlet.context.ServletTilesApplicationContext;
 import org.apache.tiles.startup.AbstractTilesInitializer;
 
@@ -37,13 +38,18 @@ public class StrutsTilesInitializer extends AbstractTilesInitializer {
     protected TilesApplicationContext createTilesApplicationContext(TilesApplicationContext preliminaryContext) {
         ServletContext servletContext = (ServletContext) preliminaryContext.getContext();
 
-        if (servletContext.getInitParameter(DefinitionsFactory.DEFINITIONS_CONFIG) != null) {
+        if (isStaticDefinition(servletContext)) {
             LOG.trace("Found definitions config in web.xml, using standard Servlet support ....");
             return new ServletTilesApplicationContext(servletContext);
         } else {
-            LOG.trace("Initializing Tiles wildcard support ...");
+            LOG.trace("Initializing Struts Tiles wildcard support ...");
             return new StrutsWildcardServletTilesApplicationContext(servletContext);
         }
+    }
+
+    protected boolean isStaticDefinition(ServletContext servletContext) {
+        return servletContext.getInitParameter(DefinitionsFactory.DEFINITIONS_CONFIG) != null ||
+                servletContext.getInitParameter(BasicTilesContainer.DEFINITIONS_CONFIG) != null;
     }
 
     @Override

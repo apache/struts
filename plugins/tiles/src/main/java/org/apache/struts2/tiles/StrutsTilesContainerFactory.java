@@ -221,6 +221,9 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
             return TextParseUtil.commaDelimitedStringToSet(params.get(DefinitionsFactory.DEFINITIONS_CONFIG));
         }
+        if (params.containsKey(BasicTilesContainer.DEFINITIONS_CONFIG)) {
+            return TextParseUtil.commaDelimitedStringToSet(params.get(BasicTilesContainer.DEFINITIONS_CONFIG));
+        }
         return TextParseUtil.commaDelimitedStringToSet(TILES_DEFAULT_PATTERN);
     }
 

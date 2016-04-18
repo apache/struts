@@ -288,7 +288,7 @@ public class OgnlUtil {
         compileAndExecute(name, context, new OgnlTask<Void>() {
             public Void execute(Object tree) throws OgnlException {
                 if (isEvalExpression(tree, context)) {
-                    throw new OgnlException("Eval expression cannot be used as parameter name");
+                    throw new OgnlException("Eval expression/chained expressions cannot be used as parameter name");
                 }
                 Ognl.setValue(tree, context, root, value);
                 return null;
@@ -304,7 +304,7 @@ public class OgnlUtil {
             if (context!=null && context instanceof OgnlContext) {
                 ognlContext = (OgnlContext) context;
             }
-            return node.isEvalChain(ognlContext);
+            return node.isEvalChain(ognlContext) || node.isSequence(ognlContext);
         }
         return false;
     }
@@ -361,7 +361,7 @@ public class OgnlUtil {
     
     private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
         if (!enableEvalExpression && isEvalExpression(tree, context)) {
-            throw new OgnlException("Eval expressions has been disabled!");
+            throw new OgnlException("Eval expressions/chained expressions have been disabled!");
         }
     }
 

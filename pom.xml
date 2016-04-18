@@ -9,7 +9,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>2.3.20.2</version>
+    <version>2.3.20.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/</url>
@@ -31,7 +31,7 @@
         <connection>scm:git:git://git.apache.org/struts.git</connection>
         <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/struts.git</developerConnection>
         <url>http://git.apache.org/struts.git</url>
-      <tag>STRUTS_2_3_20_2</tag>
+      <tag>STRUTS_2_3_20_1</tag>
   </scm>
 
     <issueManagement>

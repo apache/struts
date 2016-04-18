@@ -50,6 +50,9 @@
                 ognl.MemberAccess,
                 ognl.ClassResolver,
                 ognl.TypeConverter,
+                ognl.MemberAccess,
+                ognl.DefaultMemberAccess,
+                com.opensymphony.xwork2.ognl.SecurityMemberAccess,
                 com.opensymphony.xwork2.ActionContext" />
     <!-- this must be valid regex, each '.' in package name must be escaped! -->
     <constant name="struts.excludedPackageNamePatterns" value="^java\.lang\..*,^ognl.*,^(?!javax\.servlet\..+)(javax\..+)" />

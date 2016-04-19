@@ -136,7 +136,7 @@ public class DefaultActionMapper implements ActionMapper {
                 put(METHOD_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         if (allowDynamicMethodCalls) {
-                            mapping.setMethod(key.substring(METHOD_PREFIX.length()));
+                            mapping.setMethod(cleanupActionName(key.substring(METHOD_PREFIX.length())));
                         }
                     }
                 });
@@ -148,7 +148,7 @@ public class DefaultActionMapper implements ActionMapper {
                             if (allowDynamicMethodCalls) {
                                 int bang = name.indexOf('!');
                                 if (bang != -1) {
-                                    String method = name.substring(bang + 1);
+                                    String method = cleanupActionName(name.substring(bang + 1));
                                     mapping.setMethod(method);
                                     name = name.substring(0, bang);
                                 }
@@ -385,7 +385,7 @@ public class DefaultActionMapper implements ActionMapper {
             return rawActionName;
         } else {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Action [#0] does not match allowed action names pattern [#1], cleaning it up!",
+                LOG.warn("Action/method [#0] does not match allowed action names pattern [#1], cleaning it up!",
                         rawActionName, allowedActionNames);
             }
             String cleanActionName = rawActionName;
@@ -393,7 +393,7 @@ public class DefaultActionMapper implements ActionMapper {
                 cleanActionName = cleanActionName.replace(chunk, "");
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Cleaned action name [#0]", cleanActionName);
+                LOG.debug("Cleaned action/method name [#0]", cleanActionName);
             }
             return cleanActionName;
         }

@@ -136,7 +136,7 @@ public class DefaultActionMapper implements ActionMapper {
                 put(METHOD_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         if (allowDynamicMethodCalls) {
-                            mapping.setMethod(key.substring(METHOD_PREFIX.length()));
+                            mapping.setMethod(cleanupActionName(key.substring(METHOD_PREFIX.length())));
                         }
                     }
                 });
@@ -148,7 +148,7 @@ public class DefaultActionMapper implements ActionMapper {
                             if (allowDynamicMethodCalls) {
                                 int bang = name.indexOf('!');
                                 if (bang != -1) {
-                                    String method = name.substring(bang + 1);
+                                    String method = cleanupActionName(name.substring(bang + 1));
                                     mapping.setMethod(method);
                                     name = name.substring(0, bang);
                                 }

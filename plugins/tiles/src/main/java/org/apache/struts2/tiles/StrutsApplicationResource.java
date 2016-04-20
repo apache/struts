@@ -52,4 +52,8 @@ public class StrutsApplicationResource extends PostfixedApplicationResource {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "Resource " + getLocalePath() + " at " + url.toString();
+    }
 }

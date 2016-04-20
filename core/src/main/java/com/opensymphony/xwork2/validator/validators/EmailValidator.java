@@ -23,7 +23,7 @@ package com.opensymphony.xwork2.validator.validators;
  * The regular expression used to validate that the string is an email address is:
  *
  * <pre>
- * \\b^['_a-z0-9-\\+]+(\\.['_a-z0-9-\\+]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tel|travel|xxx)$\\b
+ * \\b^['_a-z0-9-\\+]+(\\.['_a-z0-9-\\+]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tech|tel|travel|xxx)$\\b
  * </pre>
  *
  * You can also specify expression, caseSensitive and trim params as a OGNL expression, see the example below.
@@ -80,7 +80,7 @@ public class EmailValidator extends RegexFieldValidator {
 
 	// see XW-371 
     public static final String EMAIL_ADDRESS_PATTERN =
-    	"\\b^['_a-z0-9-\\+]+(\\.['_a-z0-9-\\+]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tel|travel|xxx|tech)$\\b";
+    	"\\b^['_a-z0-9-\\+]+(\\.['_a-z0-9-\\+]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|nato|net|org|pro|tech|tel|travel|xxx)$\\b";
 
     public EmailValidator() {
         setRegex(EMAIL_ADDRESS_PATTERN);

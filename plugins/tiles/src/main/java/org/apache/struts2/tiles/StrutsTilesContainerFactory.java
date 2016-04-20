@@ -19,6 +19,7 @@
 
 package org.apache.struts2.tiles;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -71,6 +72,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Dedicated Struts factory to build Tiles container with support for:
@@ -176,25 +178,28 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     @Override
     protected List<ApplicationResource> getSources(ApplicationContext applicationContext) {
-        Collection<ApplicationResource> resources = applicationContext.getResources(getTilesDefinitionPattern(applicationContext.getInitParams()));
+        Collection<ApplicationResource> resources = new ArrayList<>();
+
+        Set<String> definitions = getTilesDefinitions(applicationContext.getInitParams());
+        for (String definition : definitions) {
+            resources.addAll(applicationContext.getResources(definition));
+        }
 
         List<ApplicationResource> filteredResources = new ArrayList<>();
-        if (resources != null) {
-            for (ApplicationResource resource : resources) {
-                if (Locale.ROOT.equals(resource.getLocale())) {
-                    filteredResources.add(resource);
-                }
+        for (ApplicationResource resource : resources) {
+            if (Locale.ROOT.equals(resource.getLocale())) {
+                filteredResources.add(resource);
             }
         }
 
         return filteredResources;
     }
 
-    protected String getTilesDefinitionPattern(Map<String, String> params) {
+    protected Set<String> getTilesDefinitions(Map<String, String> params) {
         if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
-            return params.get(DefinitionsFactory.DEFINITIONS_CONFIG);
+            return TextParseUtil.commaDelimitedStringToSet(params.get(DefinitionsFactory.DEFINITIONS_CONFIG));
         }
-        return TILES_DEFAULT_PATTERN;
+        return TextParseUtil.commaDelimitedStringToSet(TILES_DEFAULT_PATTERN);
     }
 
     protected ELAttributeEvaluator createELEvaluator(ApplicationContext applicationContext) {

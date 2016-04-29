@@ -311,7 +311,7 @@ public class RestActionMapper extends DefaultActionMapper {
 
             mapping.setName(actionName);
             if (allowDynamicMethodCalls) {
-                mapping.setMethod(actionMethod);
+                mapping.setMethod(cleanupActionName(actionMethod));
             } else {
                 mapping.setMethod(null);
             }

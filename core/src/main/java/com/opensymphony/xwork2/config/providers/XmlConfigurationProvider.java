@@ -464,6 +464,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 .addInterceptors(interceptorList)
                 .addExceptionMappings(exceptionMappings)
                 .addParams(XmlHelper.getParams(actionElement))
+                .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
                 .addAllowedMethod(allowedMethods)
                 .location(location)
                 .build();

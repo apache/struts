@@ -14,7 +14,7 @@ public class AllowedMethodsTest extends TestCase {
         literals.add(method);
 
         // when
-        AllowedMethods allowedMethods = AllowedMethods.build(literals);
+        AllowedMethods allowedMethods = AllowedMethods.build(false, literals, ActionConfig.DEFAULT_METHOD_REGEX);
 
         // then
         assertEquals(1, allowedMethods.list().size());
@@ -22,14 +22,14 @@ public class AllowedMethodsTest extends TestCase {
         assertFalse(allowedMethods.isAllowed("someOtherMethod"));
     }
 
-    public void testWidlcardMethods() throws Exception {
+    public void testWildcardMethodsWithNoSMI() throws Exception {
         // given
         String method = "my{1}";
         Set<String> literals = new HashSet<>();
         literals.add(method);
 
         // when
-        AllowedMethods allowedMethods = AllowedMethods.build(literals);
+        AllowedMethods allowedMethods = AllowedMethods.build(false, literals, ActionConfig.DEFAULT_METHOD_REGEX);
 
         // then
         assertEquals(1, allowedMethods.list().size());
@@ -37,18 +37,50 @@ public class AllowedMethodsTest extends TestCase {
         assertFalse(allowedMethods.isAllowed("someOtherMethod"));
     }
 
-    public void testWidlcardWithStarMethods() throws Exception {
+    public void testWildcardMethodsWithSMI() throws Exception {
+        // given
+        Set<String> literals = new HashSet<>();
+        literals.add("my{1}");
+        literals.add("myMethod");
+
+        // when
+        AllowedMethods allowedMethods = AllowedMethods.build(true, literals, ActionConfig.DEFAULT_METHOD_REGEX);
+
+        // then
+        assertEquals(1, allowedMethods.list().size());
+        assertFalse(allowedMethods.isAllowed("my{1}"));
+        assertTrue(allowedMethods.isAllowed("myMethod"));
+        assertFalse(allowedMethods.isAllowed("someOtherMethod"));
+    }
+
+    public void testWildcardWithStarMethodsWithNoSMI() throws Exception {
+        // given
+        String method = "cancel*Action*";
+        Set<String> literals = new HashSet<>();
+        literals.add(method);
+
+        // when
+        AllowedMethods allowedMethods = AllowedMethods.build(false, literals, ActionConfig.DEFAULT_METHOD_REGEX);
+
+        // then
+        assertEquals(1, allowedMethods.list().size());
+        assertTrue(allowedMethods.isAllowed("cancelAction"));
+        assertFalse(allowedMethods.isAllowed("startEvent"));
+    }
+
+    public void testWildcardWithStarMethodsWithSMI() throws Exception {
         // given
         String method = "cancel*";
         Set<String> literals = new HashSet<>();
         literals.add(method);
 
         // when
-        AllowedMethods allowedMethods = AllowedMethods.build(literals);
+        AllowedMethods allowedMethods = AllowedMethods.build(true, literals, ActionConfig.DEFAULT_METHOD_REGEX);
 
         // then
         assertEquals(1, allowedMethods.list().size());
-        assertTrue(allowedMethods.isAllowed("cancelAction"));
+        assertTrue(allowedMethods.isAllowed("cancel*"));
+        assertFalse(allowedMethods.isAllowed("cancelAction"));
         assertFalse(allowedMethods.isAllowed("startEvent"));
     }
 
@@ -59,7 +91,7 @@ public class AllowedMethodsTest extends TestCase {
         literals.add(method);
 
         // when
-        AllowedMethods allowedMethods = AllowedMethods.build(literals);
+        AllowedMethods allowedMethods = AllowedMethods.build(true, literals, ActionConfig.DEFAULT_METHOD_REGEX);
 
         // then
         assertEquals(1, allowedMethods.list().size());

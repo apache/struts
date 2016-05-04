@@ -28,44 +28,51 @@ public class AllowedMethods {
     private static final Logger LOG = LogManager.getLogger(AllowedMethods.class);
 
     private Set<AllowedMethod> allowedMethods;
+    private final boolean strictMethodInvocation;
+    private String defaultRegex;
 
-    public static AllowedMethods build(Set<String> methods) {
+    public static AllowedMethods build(boolean strictMethodInvocation, Set<String> methods, String defaultRegex) {
 
         Set<AllowedMethod> allowedMethods = new HashSet<>();
         for (String method : methods) {
             boolean isPattern = false;
+            StringBuilder methodPattern = new StringBuilder();
             int len = method.length();
-            StringBuilder ret = new StringBuilder();
             char c;
             for (int x = 0; x < len; x++) {
                 c = method.charAt(x);
                 if (x < len - 2 && c == '{' && '}' == method.charAt(x + 2)) {
-                    ret.append("(.*)");
+                    methodPattern.append(defaultRegex);
                     isPattern = true;
                     x += 2;
                 } else {
-                    ret.append(c);
+                    methodPattern.append(c);
                 }
             }
-            if (isPattern && !method.startsWith("regex:")) {
-                allowedMethods.add(new PatternAllowedMethod(ret.toString(), method));
+
+            if (isPattern && !method.startsWith("regex:") && !strictMethodInvocation) {
+                allowedMethods.add(new PatternAllowedMethod(methodPattern.toString(), method));
             } else if (method.startsWith("regex:")) {
                 String pattern = method.substring(method.indexOf(":") + 1);
                 allowedMethods.add(new PatternAllowedMethod(pattern, method));
-            } else if (method.contains("*") && !method.startsWith("regex:")) {
-                String pattern = method.replaceAll("\\*", "(.*)");
+            } else if (method.contains("*") && !method.startsWith("regex:") && !strictMethodInvocation) {
+                String pattern = method.replace("*", defaultRegex);
                 allowedMethods.add(new PatternAllowedMethod(pattern, method));
+            } else if (!isPattern) {
+                allowedMethods.add(new LiteralAllowedMethod(method));
             } else {
-                allowedMethods.add(new LiteralAllowedMethod(ret.toString()));
+                LOG.trace("Ignoring method name: [{}] when SMI is set to [{}]", method, strictMethodInvocation);
             }
         }
 
         LOG.debug("Defined allowed methods: {}", allowedMethods);
 
-        return new AllowedMethods(allowedMethods);
+        return new AllowedMethods(strictMethodInvocation, allowedMethods, defaultRegex);
     }
 
-    private AllowedMethods(Set<AllowedMethod> methods) {
+    private AllowedMethods(boolean strictMethodInvocation, Set<AllowedMethod> methods, String defaultRegex) {
+        this.strictMethodInvocation = strictMethodInvocation;
+        this.defaultRegex = defaultRegex;
         this.allowedMethods = Collections.unmodifiableSet(methods);
     }
 
@@ -84,6 +91,14 @@ public class AllowedMethods {
             result.add(allowedMethod.original());
         }
         return result;
+    }
+
+    public String getDefaultRegex() {
+        return defaultRegex;
+    }
+
+    public boolean isStrictMethodInvocation() {
+        return strictMethodInvocation;
     }
 
     @Override

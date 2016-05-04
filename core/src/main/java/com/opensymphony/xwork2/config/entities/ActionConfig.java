@@ -44,6 +44,7 @@ public class ActionConfig extends Located implements Serializable {
     public static final String DEFAULT_METHOD = "execute";
     public static final String WILDCARD = "*";
     public static final String REGEX_WILDCARD = "regex:.*";
+    public static final String DEFAULT_METHOD_REGEX = "([A-Za-z0-9_$]*)";
 
     protected List<InterceptorMapping> interceptors; // a list of interceptorMapping Objects eg. List<InterceptorMapping>
     protected Map<String,String> params;
@@ -53,6 +54,7 @@ public class ActionConfig extends Located implements Serializable {
     protected String methodName;
     protected String packageName;
     protected String name;
+    protected boolean strictMethodInvocation;
     protected AllowedMethods allowedMethods;
 
     protected ActionConfig(String packageName, String name, String className) {
@@ -63,7 +65,6 @@ public class ActionConfig extends Located implements Serializable {
         results = new LinkedHashMap<>();
         interceptors = new ArrayList<>();
         exceptionMappings = new ArrayList<>();
-        allowedMethods = AllowedMethods.build(new HashSet<>(Collections.singletonList(DEFAULT_METHOD)));
     }
 
     /**
@@ -80,7 +81,7 @@ public class ActionConfig extends Located implements Serializable {
         this.interceptors = new ArrayList<>(orig.interceptors);
         this.results = new LinkedHashMap<>(orig.results);
         this.exceptionMappings = new ArrayList<>(orig.exceptionMappings);
-        this.allowedMethods = AllowedMethods.build(orig.allowedMethods.list());
+        this.allowedMethods = orig.allowedMethods;
         this.location = orig.location;
     }
 
@@ -130,6 +131,10 @@ public class ActionConfig extends Located implements Serializable {
 
     public boolean isAllowedMethod(String method) {
         return method.equals(methodName != null ? methodName : DEFAULT_METHOD) || allowedMethods.isAllowed(method);
+    }
+
+    public boolean isStrictMethodInvocation() {
+        return strictMethodInvocation;
     }
 
     @Override public boolean equals(Object o) {
@@ -328,12 +333,17 @@ public class ActionConfig extends Located implements Serializable {
             return this;
         }
 
+        public Builder setStrictMethodInvocation(boolean strictMethodInvocation) {
+            target.strictMethodInvocation = strictMethodInvocation;
+            return this;
+        }
+
         public ActionConfig build() {
             target.params = Collections.unmodifiableMap(target.params);
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);
             target.exceptionMappings = Collections.unmodifiableList(target.exceptionMappings);
-            target.allowedMethods = AllowedMethods.build(allowedMethods);
+            target.allowedMethods = AllowedMethods.build(target.strictMethodInvocation, allowedMethods, DEFAULT_METHOD_REGEX);
 
             ActionConfig result = target;
             target = new ActionConfig(target);

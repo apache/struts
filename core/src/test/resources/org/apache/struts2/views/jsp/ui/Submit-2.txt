@@ -1,3 +1,3 @@
 <tr>
-    <td colspan="2"><div class="formButton"><input type="submit" id="myname" name="myname" value="Submit" title="mytitle"/></div></td>
+    <td colspan="2"><div class="formButton"><input type="submit" value="Submit" id="myname" name="myname" title="mytitle"/></div></td>
 </tr>

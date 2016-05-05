@@ -875,7 +875,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         } else {
             // Strict DMI is disabled to any method can be called
             allowedMethods = new HashSet<>();
-            allowedMethods.add(ActionConfig.REGEX_WILDCARD);
+            allowedMethods.add(ActionConfig.WILDCARD);
         }
 
         return Collections.unmodifiableSet(allowedMethods);

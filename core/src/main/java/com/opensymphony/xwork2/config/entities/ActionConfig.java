@@ -43,7 +43,6 @@ public class ActionConfig extends Located implements Serializable {
 
     public static final String DEFAULT_METHOD = "execute";
     public static final String WILDCARD = "*";
-    public static final String REGEX_WILDCARD = "regex:.*";
     public static final String DEFAULT_METHOD_REGEX = "([A-Za-z0-9_$]*)";
 
     protected List<InterceptorMapping> interceptors; // a list of interceptorMapping Objects eg. List<InterceptorMapping>
@@ -218,6 +217,7 @@ public class ActionConfig extends Located implements Serializable {
 
         protected ActionConfig target;
         protected Set<String> allowedMethods;
+        private String methodRegex;
 
         public Builder(ActionConfig toClone) {
             target = new ActionConfig(toClone);
@@ -338,12 +338,17 @@ public class ActionConfig extends Located implements Serializable {
             return this;
         }
 
+        public Builder setDefaultMethodRegex(String methodRegex) {
+            this.methodRegex = methodRegex;
+            return this;
+        }
+
         public ActionConfig build() {
             target.params = Collections.unmodifiableMap(target.params);
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);
             target.exceptionMappings = Collections.unmodifiableList(target.exceptionMappings);
-            target.allowedMethods = AllowedMethods.build(target.strictMethodInvocation, allowedMethods, DEFAULT_METHOD_REGEX);
+            target.allowedMethods = AllowedMethods.build(target.strictMethodInvocation, allowedMethods, methodRegex != null ? methodRegex : DEFAULT_METHOD_REGEX);
 
             ActionConfig result = target;
             target = new ActionConfig(target);

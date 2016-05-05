@@ -36,6 +36,7 @@ import ognl.PropertyAccessor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.*;
 
@@ -370,11 +371,20 @@ public class DefaultConfiguration implements Configuration {
             }
         }
 
+        String methodRegex = container.getInstance(String.class, StrutsConstants.STRUTS_SMI_METHOD_REGEX);
+        if (methodRegex == null) {
+            methodRegex = ActionConfig.DEFAULT_METHOD_REGEX;
+        }
+
+        LOG.debug("Using pattern [{}] to match allowed methods when SMI is disabled!", methodRegex);
+
         return new ActionConfig.Builder(baseConfig)
             .addParams(params)
             .addResultConfigs(results)
             .defaultClassName(packageContext.getDefaultClassRef())  // fill in default if non class has been provided
             .interceptors(interceptors)
+            .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
+            .setDefaultMethodRegex(methodRegex)
             .addExceptionMappings(packageContext.getAllExceptionMappingConfigs())
             .build();
     }

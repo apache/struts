@@ -53,7 +53,7 @@ public class ActionConfig extends Located implements Serializable {
     protected String methodName;
     protected String packageName;
     protected String name;
-    protected boolean strictMethodInvocation;
+    protected boolean strictMethodInvocation = true;
     protected AllowedMethods allowedMethods;
 
     protected ActionConfig(String packageName, String name, String className) {

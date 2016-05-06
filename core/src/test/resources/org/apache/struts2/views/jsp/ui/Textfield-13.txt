@@ -1,0 +1,11 @@
+<tr>
+  <td class="tdLabel">
+    <label for="myId" class="label">
+      <span class="required">*</span>
+      mylabel:
+    </label>
+  </td>
+  <td>
+    <input type="text" name="foo" value="bar" id="myId"/>
+  </td>
+</tr>

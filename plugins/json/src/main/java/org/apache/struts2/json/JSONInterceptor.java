@@ -82,12 +82,6 @@ public class JSONInterceptor extends AbstractInterceptor {
             accept = request.getHeader("accept");
         }
         
-        if (accept != null) {
-            int iSemicolonIdx;
-            if ((iSemicolonIdx = accept.indexOf(";")) != -1)
-                accept = accept.substring(0, iSemicolonIdx);
-        }
-
         Object rootObject = null;
         final ValueStack stack = invocation.getStack();
         if (this.root != null) {

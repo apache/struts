@@ -34,6 +34,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
@@ -385,14 +386,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
-            LOG.warn("Action [{}] does not match allowed action names pattern [{}], cleaning it up!",
-                    rawActionName, allowedActionNames);
-            String cleanActionName = rawActionName;
-            for (String chunk : allowedActionNames.split(rawActionName)) {
-                cleanActionName = cleanActionName.replace(chunk, "");
-            }
-            LOG.debug("Cleaned action name [{}]", cleanActionName);
-            return cleanActionName;
+            throw new StrutsException("Action [" + rawActionName + "] does not match allowed action names pattern [" + allowedActionNames + "]!");
         }
     }
 

@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
@@ -384,18 +385,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Action/method [#0] does not match allowed action names pattern [#1], cleaning it up!",
-                        rawActionName, allowedActionNames);
-            }
-            String cleanActionName = rawActionName;
-            for (String chunk : allowedActionNames.split(rawActionName)) {
-                cleanActionName = cleanActionName.replace(chunk, "");
-            }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cleaned action/method name [#0]", cleanActionName);
-            }
-            return cleanActionName;
+            throw new StrutsException("Action [" + rawActionName + "] does not match allowed action names pattern [" + allowedActionNames + "]!");
         }
     }
 

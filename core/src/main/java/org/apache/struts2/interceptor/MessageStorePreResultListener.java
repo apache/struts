@@ -72,8 +72,7 @@ class MessageStorePreResultListener implements PreResultListener {
         try {
             ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(resultCode);
             if (resultConfig != null) {
-                isRedirect = ServletRedirectResult.class.getName().equals(resultConfig.getClassName())
-                        || ServletActionRedirectResult.class.getName().equals(resultConfig.getClassName());
+                isRedirect = ServletRedirectResult.class.isAssignableFrom(Class.forName(resultConfig.getClassName()));
             }
         } catch (Exception e) {
             LOG.warn("Cannot read result!", e);

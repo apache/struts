@@ -154,13 +154,13 @@ public class AllowedMethods {
 
             PatternAllowedMethod that = (PatternAllowedMethod) o;
 
-            return original.equals(that.original);
+            return allowedMethodPattern.pattern().equals(that.allowedMethodPattern.pattern());
 
         }
 
         @Override
         public int hashCode() {
-            return original.hashCode();
+            return allowedMethodPattern.pattern().hashCode();
         }
 
         @Override

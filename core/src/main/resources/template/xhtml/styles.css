@@ -36,7 +36,7 @@
 .tdErrorMessage {text-align:center; vertical-align:top;}
 .formButton {text-align:right;}
 
-.tdAligncenter{text-align:center;}
-.tdAlignright{text-align:right;}
-.tdAlignleft{text-align:left;}
-.tdAlignjustify{text-align:justify;}
+.tdAlign-center{text-align:center;}
+.tdAlign-right{text-align:right;}
+.tdAlign-left{text-align:left;}
+.tdAlign-justify{text-align:justify;}

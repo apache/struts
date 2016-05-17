@@ -23,6 +23,6 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl" />
     <td 
         <#if parameters.align??>
-            class="tdAlign-${parameters.align?html}"
+            class="align-${parameters.align?html}"
         </#if>
 ><#t/>

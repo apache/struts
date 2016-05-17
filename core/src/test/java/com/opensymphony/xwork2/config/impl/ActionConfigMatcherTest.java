@@ -156,18 +156,21 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
                     .build())
                 .addInterceptor(new InterceptorMapping(null, null))
                 .addResultConfig(new ResultConfig.Builder("success{1}", "foo.{2}").addParams(params).build())
+                .setStrictMethodInvocation(false)
                 .build();
         map.put("foo/*/*", config);
         
         config = new ActionConfig.Builder("package-{1}", "bar/*/**", "bar")
                 .methodName("do{1}_{1}")
                 .addParam("first", "{2}")
+                .setStrictMethodInvocation(false)
                 .build();
         
         map.put("bar/*/**", config);
 
         config = new ActionConfig.Builder("package", "eventAdd!*", "bar")
                 .methodName("{1}")
+                .setStrictMethodInvocation(false)
                 .build();
 
         map.put("addEvent!*", config);

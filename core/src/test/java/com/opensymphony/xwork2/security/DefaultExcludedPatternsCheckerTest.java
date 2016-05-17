@@ -91,7 +91,6 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
         }
 
         for (String param : params) {
-            System.out.println(param);
             // when
             ExcludedPatternsChecker.IsExcluded actual = checker.isExcluded(param);
 

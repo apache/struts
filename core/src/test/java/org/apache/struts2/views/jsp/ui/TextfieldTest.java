@@ -239,6 +239,62 @@ public class TextfieldTest extends AbstractUITagTest {
         verify(TextFieldTag.class.getResource("Textfield-9.txt"));
     }
 
+    public void testRequiredLabelPositionDefault() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setValue("bar");
+        tag.setRequiredLabel("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-12.txt"));
+    }
+
+    public void testRequiredLabelPositionRight() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setValue("bar");
+        tag.setRequiredLabel("true");
+        tag.setRequiredPosition("right");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-12.txt"));
+    }
+
+    public void testRequiredLabelPositionLeft() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setValue("bar");
+        tag.setRequiredLabel("true");
+        tag.setRequiredPosition("left");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Textfield-13.txt"));
+    }
+
     public void testErrorPositionBottomCssXhtmlTheme() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

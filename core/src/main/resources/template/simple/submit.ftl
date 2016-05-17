@@ -61,15 +61,15 @@
 </#if>
 <#else>
 <input type="submit"<#rt/>
+<#if parameters.nameValue?has_content>
+ value="<@s.property value="parameters.nameValue"/>"<#rt/>
+</#if>
 </#if>
 <#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
 <#if parameters.name?has_content>
  name="${parameters.name?html}"<#rt/>
-</#if>
-<#if parameters.nameValue?has_content>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>

@@ -21,5 +21,8 @@
  */
 -->
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl" />
-    <td
+    <td 
+        <#if parameters.align??>
+            class="tdAlign${parameters.align?html}"
+        </#if>
 ><#t/>

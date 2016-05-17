@@ -35,3 +35,8 @@
 .tdCheckboxErrorMessage {text-align:left; vertical-align:top;}
 .tdErrorMessage {text-align:center; vertical-align:top;}
 .formButton {text-align:right;}
+
+.tdAligncenter{text-align:center;}
+.tdAlignright{text-align:right;}
+.tdAlignleft{text-align:left;}
+.tdAlignjustify{text-align:justify;}

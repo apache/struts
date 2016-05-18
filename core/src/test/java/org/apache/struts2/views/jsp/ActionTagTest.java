@@ -180,9 +180,8 @@ public class ActionTagTest extends AbstractTagTest {
         TestActionTagResult result = (TestActionTagResult) component.getProxy().getInvocation().getResult();
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
-        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT) instanceof PageContext);
-        assertNotNull(result);
-        assertFalse(result.isExecuted());
+        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
+        assertNull(result); // result is never executed, hence never set into invocation
     }
 
      public void testExecuteButResetReturnSameInvocation() throws Exception {

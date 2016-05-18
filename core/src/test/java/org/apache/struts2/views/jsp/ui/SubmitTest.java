@@ -232,7 +232,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<input type=\"submit\" id=\"myname\" name=\"myname\" value=\"Submit\"/>", writer.toString().trim());
+        assertEquals("<input type=\"submit\" value=\"Submit\" id=\"myname\" name=\"myname\"/>", writer.toString().trim());
     }
 
     /**

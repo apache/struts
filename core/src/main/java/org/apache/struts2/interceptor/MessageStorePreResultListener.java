@@ -20,11 +20,13 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.result.ServletActionRedirectResult;
 import org.apache.struts2.result.ServletRedirectResult;
 
 import java.util.Map;
@@ -69,7 +71,10 @@ class MessageStorePreResultListener implements PreResultListener {
 
         boolean isRedirect = false;
         try {
-            isRedirect = invocation.getResult() instanceof ServletRedirectResult;
+            ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(resultCode);
+            if (resultConfig != null) {
+                isRedirect = ServletRedirectResult.class.isAssignableFrom(Class.forName(resultConfig.getClassName()));
+            }
         } catch (Exception e) {
             LOG.warn("Cannot read result!", e);
         }

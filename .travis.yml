@@ -1,0 +1,9 @@
+language: java
+sudo: false
+
+jdk:
+  - openjdk7
+  - oraclejdk8
+
+install: true
+script: mvn test -DskipAssembly

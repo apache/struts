@@ -19,9 +19,12 @@
 
 package org.apache.struts2.tiles;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcherFactory;
@@ -63,11 +66,13 @@ import javax.el.ELResolver;
 import javax.el.ListELResolver;
 import javax.el.MapELResolver;
 import javax.el.ResourceBundleELResolver;
+import javax.servlet.jsp.JspFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Dedicated Struts factory to build Tiles container with support for:
@@ -80,6 +85,8 @@ import java.util.Map;
  * you can base on code from Tiles' CompleteAutoloadTilesContainerFactory
  */
 public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
+
+    private static final Logger LOG = LogManager.getLogger(StrutsTilesContainerFactory.class);
 
     /**
      * The freemarker renderer name.
@@ -144,7 +151,11 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator(EL, createELEvaluator(applicationContext));
+
+        ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
+        if (elEvaluator != null) {
+            attributeEvaluatorFactory.registerAttributeEvaluator(EL, elEvaluator);
+        }
 
         return attributeEvaluatorFactory;
     }
@@ -167,28 +178,37 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     @Override
     protected List<ApplicationResource> getSources(ApplicationContext applicationContext) {
-        Collection<ApplicationResource> resources = applicationContext.getResources(getTilesDefinitionPattern(applicationContext.getInitParams()));
+        Collection<ApplicationResource> resources = new ArrayList<>();
+
+        Set<String> definitions = getTilesDefinitions(applicationContext.getInitParams());
+        for (String definition : definitions) {
+            resources.addAll(applicationContext.getResources(definition));
+        }
 
         List<ApplicationResource> filteredResources = new ArrayList<>();
-        if (resources != null) {
-            for (ApplicationResource resource : resources) {
-                if (Locale.ROOT.equals(resource.getLocale())) {
-                    filteredResources.add(resource);
-                }
+        for (ApplicationResource resource : resources) {
+            if (Locale.ROOT.equals(resource.getLocale())) {
+                filteredResources.add(resource);
             }
         }
 
         return filteredResources;
     }
 
-    protected String getTilesDefinitionPattern(Map<String, String> params) {
+    protected Set<String> getTilesDefinitions(Map<String, String> params) {
         if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
-            return params.get(DefinitionsFactory.DEFINITIONS_CONFIG);
+            return TextParseUtil.commaDelimitedStringToSet(params.get(DefinitionsFactory.DEFINITIONS_CONFIG));
         }
-        return TILES_DEFAULT_PATTERN;
+        return TextParseUtil.commaDelimitedStringToSet(TILES_DEFAULT_PATTERN);
     }
 
     protected ELAttributeEvaluator createELEvaluator(ApplicationContext applicationContext) {
+
+        if (JspFactory.getDefaultFactory() == null) {
+            LOG.warn("JspFactory.getDefaultFactory returned null, EL support will be disabled");
+            return null;
+        }
+
         ELAttributeEvaluator evaluator = new ELAttributeEvaluator();
         JspExpressionFactoryFactory efFactory = new JspExpressionFactoryFactory();
         efFactory.setApplicationContext(applicationContext);

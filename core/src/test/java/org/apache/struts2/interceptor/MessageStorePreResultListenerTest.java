@@ -4,10 +4,13 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.result.ServletActionRedirectResult;
+import org.apache.struts2.result.ServletRedirectResult;
 import org.easymock.EasyMock;
 
 import javax.servlet.http.HttpServletRequest;
@@ -138,8 +141,13 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         EasyMock.expectLastCall().andReturn(action);
         EasyMock.expectLastCall().anyTimes();
 
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
+        mockActionInvocation.getProxy();
+        MockActionProxy actionProxy = new MockActionProxy();
+        ResultConfig resultConfig = new ResultConfig.Builder(Action.SUCCESS, ServletRedirectResult.class.getName()).build();
+        ActionConfig actionConfig = new ActionConfig.Builder("", "test", action.getClass().getName()).addResultConfig(resultConfig).build();
+        actionProxy.setConfig(actionConfig);
+        EasyMock.expectLastCall().andReturn(actionProxy);
+        EasyMock.expectLastCall().anyTimes();
 
         EasyMock.replay(mockActionInvocation);
 
@@ -212,8 +220,13 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         mockActionInvocation.getAction();
         EasyMock.expectLastCall().andReturn(action);
 
-        mockActionInvocation.getResult();
-        EasyMock.expectLastCall().andReturn(new ServletActionRedirectResult());
+        mockActionInvocation.getProxy();
+        MockActionProxy actionProxy = new MockActionProxy();
+        ResultConfig resultConfig = new ResultConfig.Builder(Action.SUCCESS, ServletRedirectResult.class.getName()).build();
+        ActionConfig actionConfig = new ActionConfig.Builder("", "test", action.getClass().getName()).addResultConfig(resultConfig).build();
+        actionProxy.setConfig(actionConfig);
+        EasyMock.expectLastCall().andReturn(actionProxy);
+        EasyMock.expectLastCall().anyTimes();
 
         EasyMock.replay(mockActionInvocation);
 

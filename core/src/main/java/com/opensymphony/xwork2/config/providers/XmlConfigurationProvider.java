@@ -195,7 +195,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     }
 
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
-        LOG.info("Parsing configuration file [{}]", configFileName);
+        LOG.trace("Parsing configuration file [{}]", configFileName);
         Map<String, Node> loadedBeans = new HashMap<>();
         for (Document doc : documents) {
             Element rootElement = doc.getDocumentElement();
@@ -464,6 +464,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 .addInterceptors(interceptorList)
                 .addExceptionMappings(exceptionMappings)
                 .addParams(XmlHelper.getParams(actionElement))
+                .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
                 .addAllowedMethod(allowedMethods)
                 .location(location)
                 .build();
@@ -872,10 +873,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             // user enabled Strict DMI but didn't defined action specific 'allowed-methods' so we use 'global-allowed-methods' only
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
         } else {
-            // Strict DMI is disabled to any method can be called
+            // Strict DMI is disabled so any method can be called
             allowedMethods = new HashSet<>();
-            allowedMethods.add(ActionConfig.REGEX_WILDCARD);
+            allowedMethods.add(ActionConfig.WILDCARD);
         }
+
+        LOG.debug("Collected allowed methods: {}", allowedMethods);
 
         return Collections.unmodifiableSet(allowedMethods);
     }
@@ -1024,7 +1027,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 if (errorIfMissing) {
                     throw new ConfigurationException("Could not open files of the name " + fileName, ioException);
                 } else {
-                    LOG.info("Unable to locate configuration files of the name {}, skipping", fileName);
+                    LOG.trace("Unable to locate configuration files of the name {}, skipping", fileName);
                     return docs;
                 }
             }

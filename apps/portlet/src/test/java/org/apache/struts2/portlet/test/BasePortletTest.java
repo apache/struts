@@ -9,6 +9,8 @@ import org.mortbay.jetty.webapp.WebAppContext;
 import junit.framework.TestCase;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public abstract class BasePortletTest extends TestCase {
 	
@@ -20,17 +22,29 @@ public abstract class BasePortletTest extends TestCase {
 	
 	public void setUp() throws Exception {
 		System.setProperty("org.apache.pluto.embedded.portletIds", getPortletName());
+        System.setProperty("org.apache.jasper.compiler.disablejsr199", "false");
+
 		server = new Server(port);
 
 		WebAppContext webapp = new WebAppContext("src/main/webapp", contextPath);
 		webapp.setTempDirectory(new File("target/work"));
 		webapp.setDefaultsDescriptor("/WEB-INF/jetty-pluto-web-default.xml");
-		ServletHolder portletServlet = new ServletHolder(new PortletServlet());
+
+        // Set Classloader of Context to be sane (needed for JSTL)
+        // JSP requires a non-System classloader, this simply wraps the
+        // embedded System classloader in a way that makes it suitable
+        // for JSP to use
+        ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
+        webapp.setClassLoader(jspClassLoader);
+
+        ServletHolder portletServlet = new ServletHolder(new PortletServlet());
 		portletServlet.setInitParameter("portlet-name", getPortletName());
 		portletServlet.setInitOrder(1);
 		webapp.addServlet(portletServlet, "/PlutoInvoker/" + getPortletName());
-		server.addHandler(webapp);
-		server.start();
+
+        server.addHandler(webapp);
+
+        server.start();
 		// Retrieve the actual port that is used, in case a random, free port is
 		// picked
 		int port = server.getConnectors()[0].getLocalPort();

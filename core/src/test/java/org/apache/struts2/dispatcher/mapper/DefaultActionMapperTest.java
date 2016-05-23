@@ -163,8 +163,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetMappingWithNamespaceSlash() throws Exception {
 
-        req.setupGetRequestURI("/my.hh/abc.action");
-        req.setupGetServletPath("/my.hh/abc.action");
+        req.setupGetRequestURI("/my-hh/abc.action");
+        req.setupGetServletPath("/my-hh/abc.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
 
@@ -181,7 +181,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         mapping = mapper.getMapping(req, configManager);
 
         assertEquals("", mapping.getNamespace());
-        assertEquals("my.hh/abc", mapping.getName());
+        assertEquals("my-hh/abc", mapping.getName());
     }
 
     public void testGetMappingWithUnknownNamespace() throws Exception {
@@ -855,7 +855,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
             expected = t;
         }
         assertTrue(expected instanceof StrutsException);
-        assertEquals("Action [${action}] does not match allowed action names pattern [[a-zA-Z0-9._!/\\-]*]!", expected.getMessage());
+        assertEquals("Action [${action}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
 
         actionName = "${${%{action}}}";
         try {
@@ -865,7 +865,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
             expected = t;
         }
         assertTrue(expected instanceof StrutsException);
-        assertEquals("Action [${${%{action}}}] does not match allowed action names pattern [[a-zA-Z0-9._!/\\-]*]!", expected.getMessage());
+        assertEquals("Action [${${%{action}}}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
 
         actionName = "${#foo='action',#foo}";
         try {
@@ -875,7 +875,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
             expected = t;
         }
         assertTrue(expected instanceof StrutsException);
-        assertEquals("Action [${#foo='action',#foo}] does not match allowed action names pattern [[a-zA-Z0-9._!/\\-]*]!", expected.getMessage());
+        assertEquals("Action [${#foo='action',#foo}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
 
         actionName = "test-action";
         assertEquals("test-action", mapper.cleanupActionName(actionName));

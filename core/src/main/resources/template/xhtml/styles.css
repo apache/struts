@@ -34,6 +34,7 @@
 .tdCheckboxInput {text-align:left; vertical-align:top;}
 .tdCheckboxErrorMessage {text-align:left; vertical-align:top;}
 .tdErrorMessage {text-align:center; vertical-align:top;}
+.tdInput {text-align:left;}
 .formButton {text-align:right;}
 
 .align-center{text-align:center;}

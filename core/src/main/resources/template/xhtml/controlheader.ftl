@@ -21,5 +21,5 @@
  */
 -->
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl" />
-    <td 
+    <td
 ><#t/>

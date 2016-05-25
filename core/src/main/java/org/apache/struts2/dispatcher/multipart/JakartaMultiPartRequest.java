@@ -107,8 +107,9 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     }
 
     protected void setLocale(HttpServletRequest request) {
-        if (defaultLocale == null) {
-            defaultLocale = request.getLocale();
+        Locale requestLocale = request.getLocale();
+        if (requestLocale != null) {
+            defaultLocale = requestLocale;
         }
     }
 

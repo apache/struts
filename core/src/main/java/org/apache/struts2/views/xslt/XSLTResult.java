@@ -404,12 +404,7 @@ public class XSLTResult implements Result {
                 ServletActionContext.getServletContext());
     }
 
-    protected Templates getTemplates(String path) throws TransformerException, IOException {
-        String pathFromRequest = ServletActionContext.getRequest().getParameter("xslt.location");
-
-        if (pathFromRequest != null)
-            path = pathFromRequest;
-
+    protected Templates getTemplates(final String path) throws TransformerException, IOException {
         if (path == null)
             throw new TransformerException("Stylesheet path is null");
 

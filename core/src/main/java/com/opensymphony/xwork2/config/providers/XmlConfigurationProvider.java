@@ -464,6 +464,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 .addInterceptors(interceptorList)
                 .addExceptionMappings(exceptionMappings)
                 .addParams(XmlHelper.getParams(actionElement))
+                .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
                 .addAllowedMethod(allowedMethods)
                 .location(location)
                 .build();
@@ -872,10 +873,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             // user enabled Strict DMI but didn't defined action specific 'allowed-methods' so we use 'global-allowed-methods' only
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
         } else {
-            // Strict DMI is disabled to any method can be called
+            // Strict DMI is disabled so any method can be called
             allowedMethods = new HashSet<>();
-            allowedMethods.add(ActionConfig.REGEX_WILDCARD);
+            allowedMethods.add(ActionConfig.WILDCARD);
         }
+
+        LOG.debug("Collected allowed methods: {}", allowedMethods);
 
         return Collections.unmodifiableSet(allowedMethods);
     }

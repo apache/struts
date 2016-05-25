@@ -1,7 +1,7 @@
 <tr> <td class="tdLabel"></td> <td>
 <script type="text/javascript" src="/struts/optiontransferselect.js"></script>
 <table>
-<tr><td>
+<tr><td class="tdInput">
 <select name="myName" size="5" id="myId" multiple="multiple">
 	<option value=""></option>
     <option value="england">England</option>

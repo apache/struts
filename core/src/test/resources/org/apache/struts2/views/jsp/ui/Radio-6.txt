@@ -1,6 +1,6 @@
 <tr>
     <td class="tdLabel"></td>
-    <td>
+    <td class="tdInput">
         <input type="radio" name="myMap['name']" id="myMap_'name'_"value=""/>
         <label for="myMap_'name'_">N/A</label>
         <input type="radio" name="myMap['name']" id="myMap_'name'_Opt." value="Opt."/>

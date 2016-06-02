@@ -178,10 +178,6 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         return INPUT;
     }
 
-    public String doDefault() throws Exception {
-        return SUCCESS;
-    }
-
     /**
      * A default implementation that does nothing an returns "success".
      * <p/>

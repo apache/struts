@@ -427,13 +427,13 @@ public class DefaultActionInvocation implements ActionInvocation {
 
             Object methodResult;
             try {
-                methodResult = ognlUtil.getValue(methodName + "()", getStack().getContext(), action);
+                methodResult = ognlUtil.callMethod(methodName + "()", getStack().getContext(), action);
             } catch (MethodFailedException e) {
                 // if reason is missing method, try find version with "do" prefix
                 if (e.getReason() instanceof NoSuchMethodException) {
                     try {
                         String altMethodName = "do" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1) + "()";
-                        methodResult = ognlUtil.getValue(altMethodName, getStack().getContext(), action);
+                        methodResult = ognlUtil.callMethod(altMethodName, getStack().getContext(), action);
                     } catch (MethodFailedException e1) {
                         // if still method doesn't exist, try checking UnknownHandlers
                         if (e1.getReason() instanceof NoSuchMethodException) {

@@ -11,6 +11,9 @@
 .metadata/
 Servers/
 
+#VSCODE
+.vscode
+
 # OSX
 .DS_Store
 

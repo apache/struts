@@ -106,7 +106,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
 
         this.redirectToSlash = Boolean.parseBoolean(redirectToSlash);
 
-        allowedMethods = TextParseUtil.commaDelimitedStringToSet("execute,input,back,cancel,browse");
+        allowedMethods = TextParseUtil.commaDelimitedStringToSet("execute,input,back,cancel,browse,index");
     }
 
     public ActionConfig handleUnknownAction(String namespace, String actionName)
@@ -219,7 +219,10 @@ public class ConventionUnknownHandler implements UnknownHandler {
         results.put(Action.SUCCESS, config);
 
         return new ActionConfig.Builder(defaultParentPackageName, "execute", ActionSupport.class.getName()).
-                addInterceptors(interceptors).addResultConfigs(results).build();
+                addInterceptors(interceptors).
+                addResultConfigs(results).
+                addAllowedMethod(allowedMethods).
+                build();
     }
 
     private Result scanResultsByExtension(String ns, String actionName, String pathPrefix,

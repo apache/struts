@@ -346,6 +346,13 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         return globalExceptionMappingConfigs;
     }
 
+    /**
+     * gets the GlobalAllowedMethods local to this package
+     *
+     * @return a Set of method names allowed to be executed if strict method invocation is enabled
+     */
+    public Set<String> getGlobalAllowedMethods() { return globalAllowedMethods; }
+
     public boolean isStrictMethodInvocation() {
         return strictMethodInvocation;
     }

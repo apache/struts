@@ -221,7 +221,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
         return new ActionConfig.Builder(defaultParentPackageName, "execute", ActionSupport.class.getName()).
                 addInterceptors(interceptors).
                 addResultConfigs(results).
-                addAllowedMethod(allowedMethods).
+                addAllowedMethod(pkg.getGlobalAllowedMethods()).
                 build();
     }
 

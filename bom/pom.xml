@@ -44,11 +44,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apache.struts.xwork</groupId>
-                <artifactId>xwork-core</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-core</artifactId>
                 <version>${struts-version.version}</version>

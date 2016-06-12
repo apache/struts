@@ -194,7 +194,7 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     public static String getConversionErrorMessage(String propertyName, ValueStack stack) {
-        String defaultMessage = LocalizedTextUtil.findDefaultText(XWorkMessages.DEFAULT_INVALID_FIELDVALUE,
+        String defaultMessage = LocalizedTextUtil.findDefaultText("xwork.default.invalid.fieldvalue",
                 ActionContext.getContext().getLocale(),
                 new Object[]{
                         propertyName

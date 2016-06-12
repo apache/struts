@@ -351,7 +351,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
      *
      * @return a Set of method names allowed to be executed if strict method invocation is enabled
      */
-    public Set<String> getGlobalAllowedMethods() { return globalAllowedMethods; }
+    public Set<String> getGlobalAllowedMethods() { return Collections.unmodifiableSet(globalAllowedMethods); }
 
     public boolean isStrictMethodInvocation() {
         return strictMethodInvocation;

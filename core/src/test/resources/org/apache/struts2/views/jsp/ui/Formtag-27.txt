@@ -4,7 +4,7 @@
         <td class="tdLabelTop" colspan="2"><label class="label">label:</label></td>
     </tr>
     <tr>
-        <td><input type="text" name=""/></td>
+        <td class="tdInput"><input type="text" name=""/></td>
     </tr>
 </table>
 </form>

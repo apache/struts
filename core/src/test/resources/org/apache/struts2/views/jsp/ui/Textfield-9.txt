@@ -7,7 +7,7 @@
     <td class="tdLabel">
         <labelfor="myId" class="errorLabel">mylabel:</label>
     </td>
-    <td>
+    <td class="tdInput">
         <input type="text" name="foo" value="bar" id="myId" title="mytitle"/>
     </td>
 </tr>

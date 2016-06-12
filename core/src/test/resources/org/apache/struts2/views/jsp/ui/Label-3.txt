@@ -2,5 +2,5 @@
     <td class="tdLabelTop" colspan="2"><label for="myname" class="label">mylabel:</label></td>
 </tr>
 <tr>
-    <td><label id="myname">bar</label></td>
+    <td class="tdInput"><label id="myname">bar</label></td>
 </tr>

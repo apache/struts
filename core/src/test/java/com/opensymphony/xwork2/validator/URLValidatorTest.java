@@ -138,6 +138,7 @@ public class URLValidatorTest extends XWorkTestCase {
         assertFalse(pattern.matcher("").matches());
         assertFalse(pattern.matcher("   ").matches());
         assertFalse(pattern.matcher("no url").matches());
+		assertFalse(pattern.matcher("http://example.com////////////////////////////////////////////////////////////////////////////////////??").matches());
 
         assertTrue(pattern.matcher("http://www.opensymphony.com").matches());
         assertTrue(pattern.matcher("https://www.opensymphony.com").matches());

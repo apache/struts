@@ -1,16 +1,4 @@
 <tr>
-<<<<<<< HEAD
-  <td class="tdLabel">
-    <label for="myId" class="label">
-      mylabel
-      <span class="required">*</span>:
-    </label>
-  </td>
-  <td class="tdInput">
-    <input type="text" name="foo" value="bar" id="myId"/>
-  </td>
-=======
   <td class="tdLabel"></td>
-  <td><input type="text" name="array[1]" value="bar" id="array_1_"/></td>
->>>>>>> c84810f... Adds test to guard pre-evaulation of name attribute
+  <td class="tdInput"><input type="text" name="array[1]" value="bar" id="array_1_"/></td>
 </tr>

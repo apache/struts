@@ -349,7 +349,7 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(TextFieldTag.class.getResource("Textfield-12.txt"));
+        verify(TextFieldTag.class.getResource("Textfield-14.txt"));
     }
 
 

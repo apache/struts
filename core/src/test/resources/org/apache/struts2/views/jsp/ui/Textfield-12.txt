@@ -1,0 +1,4 @@
+<tr>
+  <td class="tdLabel"></td>
+  <td><input type="text" name="array[1]" value="bar" id="array_1_"/></td>
+</tr>

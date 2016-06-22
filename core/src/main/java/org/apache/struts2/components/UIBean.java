@@ -649,6 +649,7 @@ public abstract class UIBean extends Component {
         addParameter("themeExpansionToken", uiThemeExpansionToken);
         addParameter("expandTheme", uiThemeExpansionToken + theme);
 
+        String name = null;
         String providedLabel = null;
 
         if (this.key != null) {
@@ -665,7 +666,8 @@ public abstract class UIBean extends Component {
         }
 
         if (this.name != null) {
-            addParameter("name", findString(this.name));
+            name = findString(this.name);
+            addParameter("name", name);
         }
 
         if (label != null) {

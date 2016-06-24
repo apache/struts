@@ -13,7 +13,7 @@ import com.opensymphony.xwork2.result.ParamNameAwareResult;
 import java.util.Map;
 
 /**
- * Default implementation which uses {@link com.opensymphony.xwork2.result.ParamNameAwareResult} to accept or throwaway parameters
+ * Default implementation which uses {@link com.opensymphony.xwork2.result.ParamNameAwareResult} to accept or throw away parameters
  */
 public class StrutsResultFactory implements ResultFactory {
 

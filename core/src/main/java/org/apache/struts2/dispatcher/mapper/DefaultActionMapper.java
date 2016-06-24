@@ -120,7 +120,7 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
-    protected Pattern allowedActionNames = Pattern.compile("[a-zA-Z0-9._!/\\-]*");
+    protected Pattern allowedActionNames = Pattern.compile("^[a-zA-Z0-9_!/\\-]*((.htm[l]?)|(.action))?$");
     private boolean allowActionPrefix = false;
     private boolean allowActionCrossNamespaceAccess = false;
 

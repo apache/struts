@@ -1,6 +1,6 @@
  <tr>
      <td class="tdLabel"><label for="cb.bc" class="label">mylabel:</label></td>
-     <td>
+     <td class="tdInput">
  <script type="text/javascript">
     function autoPopulate_cb_bc(targetElement) {
         targetElement.form.elements['foo'].value=targetElement.options[targetElement.selectedIndex].value;

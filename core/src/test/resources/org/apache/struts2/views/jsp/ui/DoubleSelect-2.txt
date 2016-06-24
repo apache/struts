@@ -1,6 +1,6 @@
 <tr>
     <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
-    <td>
+    <td class="tdInput">
 <select name="foo" id="foo" onmousedown="window.status='onmousedown';" onmouseup="window.status='onmouseup';" onmouseover="window.status='onmouseover';" onmousemove="window.status='onmousemove';" onmouseout="window.status='onmouseout';" onchange="fooRedirect(this.selectedIndex)">
     <option value="BE">Belgium</option>
     <option value="FR" selected="selected">France</option>

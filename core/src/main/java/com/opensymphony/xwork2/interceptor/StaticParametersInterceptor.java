@@ -205,7 +205,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
 
     /**
      * Adds the parameters into context's ParameterMap.
-     * As default, static parameters will not overwrite existing paramaters from other sources.
+     * As default, static parameters will not overwrite existing parameters from other sources.
      * If you want the static parameters as successor over already existing parameters, set overwrite to <tt>true</tt>.
      *
      * @param ac        The action context

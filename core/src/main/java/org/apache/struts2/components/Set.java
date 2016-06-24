@@ -42,7 +42,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   <li>application - the value will be set in application scope according to servlet spec. using the name as its key</li>
  *   <li>session - the value will be set in session scope according to servlet spec. using the name as key </li>
  *   <li>request - the value will be set in request scope according to servlet spec. using the name as key </li>
- *   <li>page - the value will be set in page scope according to servlet sepc. using the name as key</li>
+ *   <li>page - the value will be set in page scope according to servlet spec. using the name as key</li>
  *   <li>action - the value will be set in the request scope and Struts' action context using the name as key</li>
  * </ul>
  *

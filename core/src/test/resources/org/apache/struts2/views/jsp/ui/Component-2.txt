@@ -2,7 +2,7 @@
 	<td class="tdLabel">
 		<label for="myFooValue" class="label">mylabel:</label>
 	</td>
-	<td>
+	<td class="tdInput">
 		<input type="text" name="myname" value="foo" id="myFooValue"/>
 	</td>
 </tr>

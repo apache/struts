@@ -1,6 +1,6 @@
 <tr>
     <td class="tdLabel"><label for="collection" class="label">mylabel:</label></td>
-    <td>
+    <td class="tdInput">
 <input type="checkbox" name="collection" value="hello" id="collection-1" checked="checked" disabled="disabled"/>
 <label for="collection-1" class="checkboxLabel">world</label>
 <input type="checkbox" name="collection" value="foo" id="collection-2" checked="checked" disabled="disabled"/>

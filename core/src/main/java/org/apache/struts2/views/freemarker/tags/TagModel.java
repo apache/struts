@@ -78,7 +78,7 @@ public abstract class TagModel implements TemplateTransformModel {
             Object value = entry.getValue();
 
             if (value != null) {
-                // the value should ALWAYS be a decendant of TemplateModel
+                // the value should ALWAYS be a descendant of TemplateModel
                 if (value instanceof TemplateModel) {
                     try {
                         map.put(entry.getKey(), objectWrapper.unwrap((TemplateModel) value));

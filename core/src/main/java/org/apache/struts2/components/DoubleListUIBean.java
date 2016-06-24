@@ -36,7 +36,7 @@ import java.util.Map;
  * <!-- START SNIPPET: javadoc -->
  * <p>
  * Note that the doublelistkey and doublelistvalue attribute will default to "key" and "value"
- * respectively only when the doublelist attribute is evaluated to a Map or its decendant.
+ * respectively only when the doublelist attribute is evaluated to a Map or its descendant.
  * Other thing else, will result in doublelistkey and doublelistvalue to be null and not used.
  * </p>
  *

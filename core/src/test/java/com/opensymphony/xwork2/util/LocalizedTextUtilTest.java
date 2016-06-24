@@ -20,10 +20,7 @@ import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.TestBean2;
-import org.apache.struts2.util.DateFormatter;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.swing.text.Style;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -134,17 +131,17 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     }
 
     public void testDefaultMessage() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText(XWorkMessages.ACTION_EXECUTION_ERROR, Locale.getDefault());
+        String message = LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Error during Action invocation", message);
     }
 
     public void testDefaultMessageOverride() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText(XWorkMessages.ACTION_EXECUTION_ERROR, Locale.getDefault());
+        String message = LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Error during Action invocation", message);
 
         LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/test");
 
-        message = LocalizedTextUtil.findDefaultText(XWorkMessages.ACTION_EXECUTION_ERROR, Locale.getDefault());
+        message = LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Testing resource bundle override", message);
     }
 
@@ -187,12 +184,12 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     }
 
     public void testParameterizedDefaultMessage() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText(XWorkMessages.MISSING_ACTION_EXCEPTION, Locale.getDefault(), new String[]{"AddUser"});
+        String message = LocalizedTextUtil.findDefaultText("xwork.exception.missing-action", Locale.getDefault(), new String[]{"AddUser"});
         assertEquals("There is no Action mapped for action name AddUser.", message);
     }
 
     public void testParameterizedDefaultMessageWithPackage() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText(XWorkMessages.MISSING_PACKAGE_ACTION_EXCEPTION, Locale.getDefault(), new String[]{"blah", "AddUser"});
+        String message = LocalizedTextUtil.findDefaultText("xwork.exception.missing-package-action", Locale.getDefault(), new String[]{"blah", "AddUser"});
         assertEquals("There is no Action mapped for namespace blah and action name AddUser.", message);
     }
 

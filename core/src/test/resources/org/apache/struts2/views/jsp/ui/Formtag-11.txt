@@ -3,7 +3,7 @@
 <form id="testAction" name="myForm" onsubmit="submitMe(); return validateForm_testAction();" action="/testAction.action" method="post" enctype="myEncType" title="mytitle" accept-charset="UTF-8" onreset="clearErrorMessages(this);clearErrorLabels(this);">
 <table class="wwFormTable"> <tr>
     <td class="tdLabel"></td>
-    <td>	<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
+    <td class="tdInput">	<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
 <table>
 <tr><td>
 <select name="myUpDownSelectTag" size="5" id="testAction_myUpDownSelectTag" multiple="multiple">

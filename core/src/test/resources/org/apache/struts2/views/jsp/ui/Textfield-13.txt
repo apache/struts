@@ -5,7 +5,7 @@
       mylabel:
     </label>
   </td>
-  <td>
+  <td class="tdInput">
     <input type="text" name="foo" value="bar" id="myId"/>
   </td>
 </tr>

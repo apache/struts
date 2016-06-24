@@ -64,7 +64,6 @@ public class ActionSupportTest extends XWorkTestCase {
         }
 
         assertEquals(Action.INPUT, as.input());
-        assertEquals(Action.SUCCESS, as.doDefault());
         assertEquals(Action.SUCCESS, as.execute());
         try {
             as.clone();
@@ -157,7 +156,7 @@ public class ActionSupportTest extends XWorkTestCase {
         ActionContext.getContext().setLocale(new Locale("da"));
         MyActionSupport mas = new MyActionSupport();
 
-        assertEquals("santa", mas.doDefault());
+        assertEquals("santa", mas.execute());
         assertNotNull(mas.getTexts());
 
         assertEquals(false, mas.hasActionMessages());
@@ -331,7 +330,7 @@ public class ActionSupportTest extends XWorkTestCase {
         private Double val;
 
         @Override
-        public String doDefault() throws Exception {
+        public String execute() throws Exception {
             return "santa";
         }
 

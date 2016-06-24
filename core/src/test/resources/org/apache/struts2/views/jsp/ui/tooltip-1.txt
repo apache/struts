@@ -8,7 +8,7 @@
 								onmouseover="domTT_activate(this,event,'content','myTooltip','delay','500','styleClass','StrutsTTClassic')"/>
 				</label>
 			</td>
-			<td>
+			<td class="tdInput">
 				<input type="text" name="" id="myId"/>
 			</td>
 		</tr>

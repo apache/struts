@@ -197,22 +197,30 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
             if (config.isAllowedMethod(method)) {
                 invocation.init(this);
             } else {
-                throw new ConfigurationException("This method: " + method + " for action " + actionName + " is not allowed!");
+                throw new ConfigurationException(prepareNotAllowedErrorMessage());
             }
         } finally {
             UtilTimerStack.pop(profileKey);
         }
     }
 
+    protected String prepareNotAllowedErrorMessage() {
+        return LocalizedTextUtil.findDefaultText(
+                "struts.exception.method-not-allowed",
+                Locale.getDefault(),
+                new String[]{method, actionName}
+        );
+    }
+
     protected String getErrorMessage() {
         if ((namespace != null) && (namespace.trim().length() > 0)) {
             return LocalizedTextUtil.findDefaultText(
-                    XWorkMessages.MISSING_PACKAGE_ACTION_EXCEPTION,
+                    "xwork.exception.missing-package-action",
                     Locale.getDefault(),
                     new String[]{namespace, actionName});
         } else {
             return LocalizedTextUtil.findDefaultText(
-                    XWorkMessages.MISSING_ACTION_EXCEPTION,
+                    "xwork.exception.missing-action",
                     Locale.getDefault(),
                     new String[]{actionName});
         }

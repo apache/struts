@@ -8,7 +8,7 @@
 								title="myTooltip" alt="myTooltip" />
 				</label>
 			</td>
-			<td>
+			<td class="tdInput">
 				<input type="text" name="" id="myId"/>
 			</td>
 		</tr>

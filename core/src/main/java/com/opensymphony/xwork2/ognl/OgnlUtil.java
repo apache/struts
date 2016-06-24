@@ -289,6 +289,9 @@ public class OgnlUtil {
                 if (isEvalExpression(tree, context)) {
                     throw new OgnlException("Eval expression/chained expressions cannot be used as parameter name");
                 }
+                if (isArithmeticExpression(tree, context)) {
+                    throw new OgnlException("Arithmetic expressions cannot be used as parameter name");
+                }
                 Ognl.setValue(tree, context, root, value);
                 return null;
             }
@@ -308,8 +311,42 @@ public class OgnlUtil {
         return false;
     }
 
+    private boolean isArithmeticExpression(Object tree, Map<String, Object> context) throws OgnlException {
+        if (tree instanceof SimpleNode) {
+            SimpleNode node = (SimpleNode) tree;
+            OgnlContext ognlContext = null;
+
+            if (context!=null && context instanceof OgnlContext) {
+                ognlContext = (OgnlContext) context;
+            }
+            return node.isOperation(ognlContext);
+        }
+        return false;
+    }
+
+    private boolean isSimpleMethod(Object tree, Map<String, Object> context) throws OgnlException {
+        if (tree instanceof SimpleNode) {
+            SimpleNode node = (SimpleNode) tree;
+            OgnlContext ognlContext = null;
+
+            if (context!=null && context instanceof OgnlContext) {
+                ognlContext = (OgnlContext) context;
+            }
+            return node.isSimpleMethod(ognlContext) && !node.isChain(ognlContext);
+        }
+        return false;
+    }
+
     public Object getValue(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
         return compileAndExecute(name, context, new OgnlTask<Object>() {
+            public Object execute(Object tree) throws OgnlException {
+                return Ognl.getValue(tree, context, root);
+            }
+        });
+    }
+
+    public Object callMethod(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
+        return compileAndExecuteMethod(name, context, new OgnlTask<Object>() {
             public Object execute(Object tree) throws OgnlException {
                 return Ognl.getValue(tree, context, root);
             }
@@ -350,6 +387,27 @@ public class OgnlUtil {
         return exec;
     }
 
+    private <T> Object compileAndExecuteMethod(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
+        Object tree;
+        if (enableExpressionCache) {
+            tree = expressions.get(expression);
+            if (tree == null) {
+                tree = Ognl.parseExpression(expression);
+                checkSimpleMethod(tree, context);
+            }
+        } else {
+            tree = Ognl.parseExpression(expression);
+            checkSimpleMethod(tree, context);
+        }
+
+        final T exec = task.execute(tree);
+        // if cache is enabled and it's a valid expression, puts it in
+        if(enableExpressionCache) {
+            expressions.putIfAbsent(expression, tree);
+        }
+        return exec;
+    }
+
     public Object compile(String expression, Map<String, Object> context) throws OgnlException {
         return compileAndExecute(expression,context,new OgnlTask<Object>() {
             public Object execute(Object tree) throws OgnlException {
@@ -361,6 +419,12 @@ public class OgnlUtil {
     private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
         if (!enableEvalExpression && isEvalExpression(tree, context)) {
             throw new OgnlException("Eval expressions/chained expressions have been disabled!");
+        }
+    }
+
+    private void checkSimpleMethod(Object tree, Map<String, Object> context) throws OgnlException {
+        if (!isSimpleMethod(tree, context)) {
+            throw new OgnlException("It isn't a simple method which can be called!");
         }
     }
 

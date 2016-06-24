@@ -184,7 +184,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
     }
 
     public static TextProvider makeTextProvider(Object object, LocaleProvider localeProvider) {
-        // the object argument passed through here will most probably be an ActionSupport decendant which does
+        // the object argument passed through here will most probably be an ActionSupport descendant which does
         // implements TextProvider.
         if (object != null && object instanceof DelegatingValidatorContext) {
             return ((DelegatingValidatorContext) object).getTextProvider();

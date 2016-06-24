@@ -36,3 +36,9 @@
 .tdErrorMessage {text-align:center; vertical-align:top;}
 .formButton {text-align:right;}
 .tdInput {text-align:left;}
+
+
+.align-center{text-align:center;}
+.align-right{text-align:right;}
+.align-left{text-align:left;}
+.align-justify{text-align:justify;}

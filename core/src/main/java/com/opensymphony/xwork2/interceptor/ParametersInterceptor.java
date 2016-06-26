@@ -57,10 +57,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected int autoGrowCollectionLimit = PARAM_NUM_LIMIT_MAX;
 
-    //@Inject(XWorkConstants.autoGrowCollectionLimit)
-    public void setAutoGrowCollectionLimit(int autoGrowCollectionLimit) {
-        this.autoGrowCollectionLimit = autoGrowCollectionLimit;
-    }
     
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -392,4 +388,12 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         excludedPatterns.setExcludedPatterns(commaDelim);
     }
 
+    /**
+     * Sets a limited list of parameters accepted.
+     * 
+     * @param autoGrowCollectionLimit max number of parameters
+     */
+    public void setAutoGrowCollectionLimit(int autoGrowCollectionLimit) {
+        this.autoGrowCollectionLimit = autoGrowCollectionLimit;
+    }
 }

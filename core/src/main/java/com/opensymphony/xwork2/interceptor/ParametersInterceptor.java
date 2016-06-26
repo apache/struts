@@ -18,8 +18,6 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.XWorkConstants;
-import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
@@ -31,7 +29,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -39,9 +39,12 @@ import java.util.TreeMap;
  */
 public class ParametersInterceptor extends MethodFilterInterceptor {
 
+    private static final long serialVersionUID = 6209926400509811782L;
+
     private static final Logger LOG = LogManager.getLogger(ParametersInterceptor.class);
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
+    protected static final int PARAM_NUM_LIMIT_MAX = 255;
 
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
     private boolean devMode = false;
@@ -52,6 +55,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
 
+    protected int autoGrowCollectionLimit = PARAM_NUM_LIMIT_MAX;
+
+    //@Inject(XWorkConstants.autoGrowCollectionLimit)
+    public void setAutoGrowCollectionLimit(int autoGrowCollectionLimit) {
+        this.autoGrowCollectionLimit = autoGrowCollectionLimit;
+    }
+    
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
@@ -169,6 +179,17 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             acceptableParameters = new TreeMap<>();
         }
 
+        Set<String> keys = params.keySet();
+        int limit = 0;
+        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            if (limit > autoGrowCollectionLimit) {                
+                LOG.warn("Parameter \"#0\" exceed max index: [#1]", key, autoGrowCollectionLimit);
+                throw new IndexOutOfBoundsException(String.format("Parameter %s exceed max index: [%d]", key, autoGrowCollectionLimit)) ;
+            }
+            limit++;
+        }
+        
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String name = entry.getKey();
             Object value = entry.getValue();

@@ -86,7 +86,7 @@
     <properties>
         <currentVersion>${project.version}</currentVersion>
         <struts2.springPlatformVersion>3.0.5.RELEASE</struts2.springPlatformVersion>
-        <ognl.version>3.0.17</ognl.version>
+        <ognl.version>3.0.18</ognl.version>
         <asm.version>3.3</asm.version>
         <asm5.version>5.0.2</asm5.version>
         <tiles.version>2.2.2</tiles.version>

@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import junit.framework.Assert;
 import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 
@@ -528,7 +529,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         boolean dirExists = pwn.exists();
         @SuppressWarnings("unused")
         boolean deleted = pwn.delete();
-        assertFalse("Remote exploit: The PWN folder has been created", dirExists);
+        Assert.assertFalse("Remote exploit: The PWN folder has been created", dirExists);
     }
 
     public void testParametersOverwriteField() throws Exception {
@@ -710,44 +711,6 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(expected, actual);
     }
 
-    public void testAutoGrowCollectionLimitParameters() throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>() {
-            {
-                put("blah", "This is blah");
-                put("name", "try_1");
-                put("(name)", "try_2");
-                put("['name']", "try_3");
-                put("['na' + 'me']", "try_4");
-                put("{name}[0]", "try_5");
-                put("(new string{'name'})[0]", "try_6");
-                put("#{key: 'name'}.key", "try_7");
-                for (int index = 0; index < 255; index++) {
-                    put("name" + index, "try_5");
-                }
-
-            }
-        };
-
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
-
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
-
-        ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
-        ParametersInterceptor pi = (ParametersInterceptor) config.getInterceptors().get(0).getInterceptor();
-        
-        try {
-            proxy.execute();
-            fail("Expected an IndexOutOfBoundsException to be thrown");
-        } catch (IndexOutOfBoundsException anIndexOutOfBoundsException) {
-            assertTrue(params.size() > 255);
-            assertTrue(anIndexOutOfBoundsException.getMessage().endsWith("exceed max index: [255]"));
-        }        
-
-        SimpleAction action = (SimpleAction) proxy.getAction();
-        assertNull(action.getName());
-    }
-    
     private ValueStack injectValueStack(Map<String, Object> actual) {
         ValueStack stack = createStubValueStack(actual);
         container.inject(stack);

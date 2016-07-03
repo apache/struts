@@ -78,8 +78,8 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         result.doExecute("helloworld", mai);
 
-        assertEquals(String.valueOf(contentLength), result.getContentLength());
-        assertEquals("text/plain", result.getContentType());
+        assertEquals(contentLength, response.getContentLength());
+        assertEquals("text/plain", response.getContentType());
         assertEquals("streamForImage", result.getInputName());
         assertEquals(1024, result.getBufferSize()); // 1024 is default
         assertEquals("inline", result.getContentDisposition());
@@ -94,7 +94,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         result.setContentCharSet("ISO-8859-1");
         result.doExecute("helloworld", mai);
 
-        assertEquals(String.valueOf(contentLength), result.getContentLength());
+        assertEquals(contentLength, response.getContentLength());
         assertEquals("text/plain", result.getContentType());
         assertEquals("streamForImage", result.getInputName());
         assertEquals(1024, result.getBufferSize()); // 1024 is default
@@ -111,8 +111,9 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         result.doExecute("helloworld", mai);
 
-        assertEquals(String.valueOf(contentLength), result.getContentLength());
+        assertEquals(contentLength, response.getContentLength());
         assertEquals("text/plain", result.getContentType());
+        assertEquals("text/plain;charset=UTF-8", response.getContentType());
         assertEquals("streamForImage", result.getInputName());
         assertEquals(1024, result.getBufferSize()); // 1024 is default
         assertEquals("inline", result.getContentDisposition());
@@ -220,6 +221,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         response = new MockHttpServletResponse();
 
         result = new StreamResult();
+        result.setContentLength("${contentLength}");
         stack = ActionContext.getContext().getValueStack();
 
         MyImageAction action = new MyImageAction();

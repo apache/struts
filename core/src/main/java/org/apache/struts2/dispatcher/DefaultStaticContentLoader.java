@@ -22,6 +22,8 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 /**
@@ -93,6 +96,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      */
     protected String encoding;
 
+    protected boolean devMode;
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
@@ -101,29 +105,34 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      *            New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)
-    public void setServeStaticContent(String val) {
-        serveStatic = "true".equals(val);
+    public void setServeStaticContent(String serveStaticContent) {
+        this.serveStatic = BooleanUtils.toBoolean(serveStaticContent);
     }
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE
      * setting.
      *
-     * @param val
+     * @param serveStaticBrowserCache
      *            New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
-    public void setServeStaticBrowserCache(String val) {
-        serveStaticBrowserCache = "true".equals(val);
+    public void setServeStaticBrowserCache(String serveStaticBrowserCache) {
+        this.serveStaticBrowserCache = BooleanUtils.toBoolean(serveStaticBrowserCache);
     }
 
     /**
      * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     * @param val New setting
+     * @param encoding New setting
      */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public void setEncoding(String val) {
-        encoding = val;
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public void setDevMode(String devMode) {
+        this.devMode = Boolean.parseBoolean(devMode);
     }
 
     /*
@@ -141,7 +150,16 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     protected String getAdditionalPackages() {
-        return "org.apache.struts2.static template org.apache.struts2.interceptor.debugging static";
+        List<String> packages = new LinkedList<String>();
+        packages.add("org.apache.struts2.static");
+        packages.add("template");
+        packages.add("static");
+
+        if (devMode) {
+            packages.add("org.apache.struts2.interceptor.debugging");
+        }
+
+        return StringUtils.join(packages.iterator(), ' ');
     }
 
     /**
@@ -273,7 +291,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * @param name resource name
      * @param packagePrefix The package prefix to use to locate the resource
      * @return full path
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException If there is a encoding problem
      */
     protected String buildPath(String name, String packagePrefix) throws UnsupportedEncodingException {
         String resourcePath;

@@ -25,15 +25,6 @@ Servers/
 
 # Maven
 core/target
-xwork-core/target
-archetypes/struts2-archetype-angularjs/target
-archetypes/struts2-archetype-blank/target
-archetypes/struts2-archetype-convention/target
-archetypes/struts2-archetype-dbportlet/target
-archetypes/struts2-archetype-plugin/target
-archetypes/struts2-archetype-portlet/target
-archetypes/struts2-archetype-starter/target
-archetypes/target
 plugins/convention/target
 plugins/embeddedjsp/target
 plugins/osgi/target

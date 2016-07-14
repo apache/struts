@@ -32,7 +32,6 @@
     <packaging>pom</packaging>
     <name>Struts 2 Webapps</name>
     <modules>
-        <module>portlet</module>
         <module>showcase</module>
         <module>rest-showcase</module>
     </modules>

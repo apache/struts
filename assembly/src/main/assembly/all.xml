@@ -80,13 +80,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../plugins/struts1/src/main/resources</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>ANTLR-LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>../plugins/oval/src/main/resources</directory>
       <outputDirectory></outputDirectory>
       <includes>
@@ -100,12 +93,6 @@
       <includes>
         <include>*.war</include>
       </includes>
-    </fileSet>
-
-    <!-- Include the XWork Javadoc in the assembly -->
-    <fileSet>
-      <directory>../xwork-core/target/apidocs</directory>
-      <outputDirectory>docs/xwork-apidocs</outputDirectory>
     </fileSet>
 
       <!-- Include the Struts 2 core Javadoc in the assembly -->
@@ -257,14 +244,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../apps/portlet</directory>
-      <outputDirectory>src/apps/portlet</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>../apps/showcase</directory>
       <outputDirectory>src/apps/showcase</outputDirectory>
       <includes>
@@ -291,14 +270,6 @@
     <fileSet>
       <directory>../core</directory>
       <outputDirectory>src/core</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../xwork-core</directory>
-      <outputDirectory>src/xwork-core</outputDirectory>
       <includes>
         <include>pom.xml</include>
         <include>src/</include>

@@ -67,14 +67,6 @@
         </includes>
       </fileSet>
       <fileSet>
-        <directory>../apps/portlet</directory>
-        <outputDirectory>src/apps/portlet</outputDirectory>
-        <includes>
-          <include>pom.xml</include>
-          <include>src/</include>
-        </includes>
-      </fileSet>
-      <fileSet>
         <directory>../apps/showcase</directory>
         <outputDirectory>src/apps/showcase</outputDirectory>
         <includes>
@@ -101,14 +93,6 @@
       <fileSet>
         <directory>../core</directory>
         <outputDirectory>src/core</outputDirectory>
-        <includes>
-          <include>pom.xml</include>
-          <include>src/</include>
-        </includes>
-      </fileSet>
-      <fileSet>
-        <directory>../xwork-core</directory>
-        <outputDirectory>src/xwork-core</outputDirectory>
         <includes>
           <include>pom.xml</include>
           <include>src/</include>

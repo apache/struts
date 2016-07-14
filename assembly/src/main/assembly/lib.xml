@@ -80,13 +80,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../plugins/struts1/src/main/resources</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>ANTLR-LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>../plugins/oval/src/main/resources</directory>
       <outputDirectory></outputDirectory>
       <includes>

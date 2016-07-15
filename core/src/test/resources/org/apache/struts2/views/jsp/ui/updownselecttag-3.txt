@@ -1,4 +1,4 @@
-<tr> <td class="tdLabel"></td> <td>
+<tr> <td class="tdLabel"></td> <td class="tdInput">
 <script type="text/javascript" src="/struts/optiontransferselect.js"></script>
 <table>
 <tr><td>

@@ -1,6 +1,6 @@
 <tr>
     <td class="tdLabel"><label for="mySelection" class="label">My Selection:</label></td>
-    <td>
+    <td class="tdInput">
 <select name="mySelection" id="mySelection" multiple="multiple">
     <option value="1">one</option>
     <option value="2" selected="selected">two</option>

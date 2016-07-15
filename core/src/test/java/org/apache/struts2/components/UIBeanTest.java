@@ -164,21 +164,4 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("12", txtFld.getTheme());
     }
 
-//    I couldn't figure out how to make this test work. Bailing for now.
-//    public void testEscapeLabel() throws Exception {
-//        ValueStack stack = ActionContext.getContext().getValueStack();
-//        MockHttpServletRequest req = new MockHttpServletRequest();
-//        MockHttpServletResponse res = new MockHttpServletResponse();
-//        stack.push(this);
-//
-//        TextField txtFld = new TextField(stack, req, res);
-//        txtFld.setKey("test['foo']");
-//        txtFld.evaluateParams();
-//        assertEquals("test_label", txtFld.getParameters().get("label"));
-//    }
-//
-//    public String getText(String key) {
-//        assertEquals("test[\\'foo\\']", key);
-//        return "test_label";
-//    }
 }

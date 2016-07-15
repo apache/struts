@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.5.1-SNAPSHOT</version>
+        <version>2.5.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-plugins</artifactId>
@@ -42,7 +42,6 @@
         <module>embeddedjsp</module>
         <module>gxp</module>
         <module>jasperreports</module>
-        <module>java8-support</module>
         <module>javatemplates</module>
         <module>jfreechart</module>
         <module>json</module>

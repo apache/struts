@@ -26,13 +26,12 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.5.1-SNAPSHOT</version>
+        <version>2.5.3-SNAPSHOT</version>
     </parent>
     <artifactId>struts2-apps</artifactId>
     <packaging>pom</packaging>
     <name>Struts 2 Webapps</name>
     <modules>
-        <module>portlet</module>
         <module>showcase</module>
         <module>rest-showcase</module>
     </modules>

@@ -119,36 +119,12 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("fooLogic() from FooInterface isn't accessible!!!", accessible);
     }
 
-    public void testMiddleOfInheritanceExclusion2() throws Exception {
-        // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(false);
-
-        String propertyName = "barLogic";
-        Member member = BarInterface.class.getMethod(propertyName);
-
-        Set<Class<?>> excluded = new HashSet<Class<?>>();
-        excluded.add(BarInterface.class);
-        sma.setExcludedClasses(excluded);
-
-        // when
-        boolean accessible = sma.isAccessible(context, target, member, propertyName);
-
-        // then
-        assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
-    }
-
     public void testMiddleOfInheritanceExclusion3() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
 
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
-
-/*
-        Set<Class<?>> excluded = new HashSet<Class<?>>();
-        excluded.add(BarInterface.class);
-        sma.setExcludedClasses(excluded);
-*/
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -256,7 +232,7 @@ public class SecurityMemberAccessTest extends TestCase {
     public void testAccessStatic() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
-        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(Class.class)));
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
@@ -269,7 +245,7 @@ public class SecurityMemberAccessTest extends TestCase {
     public void testBlockStaticAccess() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
-        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(Class.class)));
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
@@ -282,7 +258,7 @@ public class SecurityMemberAccessTest extends TestCase {
     public void testBlockStaticAccessIfClassIsExcluded() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
-        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(Class.class)));
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
 
         // when
         Member method = Class.class.getMethod("getClassLoader");
@@ -295,7 +271,7 @@ public class SecurityMemberAccessTest extends TestCase {
     public void testAllowStaticAccessIfClassIsNotExcluded() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
-        sma.setExcludedClasses(new HashSet<Class<?>>(Arrays.<Class<?>>asList(ClassLoader.class)));
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(ClassLoader.class)));
 
         // when
         Member method = Class.class.getMethod("getClassLoader");

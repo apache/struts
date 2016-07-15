@@ -22,7 +22,6 @@
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -218,15 +217,12 @@ public class StreamResult extends StrutsResultSupport {
      * @see StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
+        LOG.debug("Find the Response in context");
 
-        // Override any parameters using values on the stack
-        resolveParamsFromStack(invocation.getStack(), invocation);
-
-        // Find the Response in context
         HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
         try (OutputStream oOutput = oResponse.getOutputStream()) {
             if (inputStream == null) {
-                // Find the inputstream from the invocation variable stack
+                LOG.debug("Find the inputstream from the invocation variable stack");
                 inputStream = (InputStream) invocation.getStack().findValue(conditionalParse(inputName, invocation));
             }
 
@@ -237,18 +233,17 @@ public class StreamResult extends StrutsResultSupport {
                 throw new IllegalArgumentException(msg);
             }
 
-            // Set the content type
+            LOG.debug("Set the content type: {};charset{}", contentType, contentCharSet);
             if (contentCharSet != null && ! contentCharSet.equals("")) {
-                oResponse.setContentType(conditionalParse(contentType, invocation)+";charset="+contentCharSet);
-            }
-            else {
+                oResponse.setContentType(conditionalParse(contentType, invocation)+";charset="+conditionalParse(contentCharSet, invocation));
+            } else {
                 oResponse.setContentType(conditionalParse(contentType, invocation));
             }
 
-            // Set the content length
+            LOG.debug("Set the content length: {}", contentLength);
             if (contentLength != null) {
                 String _contentLength = conditionalParse(contentLength, invocation);
-                int _contentLengthAsInt = -1;
+                int _contentLengthAsInt;
                 try {
                     _contentLengthAsInt = Integer.parseInt(_contentLength);
                     if (_contentLengthAsInt >= 0) {
@@ -260,12 +255,12 @@ public class StreamResult extends StrutsResultSupport {
                 }
             }
 
-            // Set the content-disposition
+            LOG.debug("Set the content-disposition: {}", contentDisposition);
             if (contentDisposition != null) {
                 oResponse.addHeader("Content-Disposition", conditionalParse(contentDisposition, invocation));
             }
 
-            // Set the cache control headers if neccessary
+            LOG.debug("Set the cache control headers if necessary: {}", allowCaching);
             if (!allowCaching) {
                 oResponse.addHeader("Pragma", "no-cache");
                 oResponse.addHeader("Cache-Control", "no-cache");
@@ -274,7 +269,6 @@ public class StreamResult extends StrutsResultSupport {
             LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
                     inputName, contentType, contentLength, contentDisposition, contentCharSet);
 
-            // Copy input to output
         	LOG.debug("Streaming to output buffer +++ START +++");
             byte[] oBuff = new byte[bufferSize];
             int iSize;
@@ -286,46 +280,6 @@ public class StreamResult extends StrutsResultSupport {
 
             // Flush
             oOutput.flush();
-        }
-    }
-
-    /**
-     * Tries to lookup the parameters on the stack.  Will override any existing parameters
-     *
-     * @param stack The current value stack
-     * @param invocation the action invocation
-     */
-    protected void resolveParamsFromStack(ValueStack stack, ActionInvocation invocation) {
-        String disposition = stack.findString("contentDisposition");
-        if (disposition != null) {
-            setContentDisposition(disposition);
-        }
-
-        String contentType = stack.findString("contentType");
-        if (contentType != null) {
-            setContentType(contentType);
-        }
-
-        String inputName = stack.findString("inputName");
-        if (inputName != null) {
-            setInputName(inputName);
-        }
-
-        String contentLength = stack.findString("contentLength");
-        if (contentLength != null) {
-            setContentLength(contentLength);
-        }
-
-        Integer bufferSize = (Integer) stack.findValue("bufferSize", Integer.class);
-        if (bufferSize != null) {
-            setBufferSize(bufferSize);
-        }
-
-        if (contentCharSet != null ) {
-            contentCharSet = conditionalParse(contentCharSet, invocation);
-        }
-        else {
-            contentCharSet = stack.findString("contentCharSet");
         }
     }
 

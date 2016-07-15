@@ -42,7 +42,7 @@ import java.util.Map;
  * <!-- START SNIPPET: javadoc -->
  * <p>
  * Note that the listkey and listvalue attribute will default to "key" and "value"
- * respectively only when the list attribute is evaluated to a Map or its decendant.
+ * respectively only when the list attribute is evaluated to a Map or its descendant.
  * Everything else will result in listkey and listvalue to be null and not used.
  * </p>
  * <!-- END SNIPPET: javadoc -->

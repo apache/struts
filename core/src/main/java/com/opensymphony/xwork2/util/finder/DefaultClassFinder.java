@@ -24,9 +24,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.EmptyVisitor;
+import org.objectweb.asm.Opcodes;
 
 import java.io.File;
 import java.io.IOException;
@@ -463,17 +464,18 @@ public class DefaultClassFinder implements ClassFinder {
 
     }
 
-    public class InfoBuildingVisitor extends EmptyVisitor {
+    public class InfoBuildingVisitor extends ClassVisitor {
         private Info info;
         private ClassFinder classFinder;
 
         public InfoBuildingVisitor(ClassFinder classFinder) {
+            super(Opcodes.ASM5);
             this.classFinder = classFinder;
         }
 
         public InfoBuildingVisitor(Info info, ClassFinder classFinder) {
+            this(classFinder);
             this.info = info;
-            this.classFinder = classFinder;
         }
 
         @Override
@@ -516,7 +518,7 @@ public class DefaultClassFinder implements ClassFinder {
         }
 
         private String javaName(String name) {
-            return (name == null)? null:name.replace('/', '.');
+            return (name == null) ? null : name.replace('/', '.');
         }
 
         @Override
@@ -524,7 +526,7 @@ public class DefaultClassFinder implements ClassFinder {
             AnnotationInfo annotationInfo = new AnnotationInfo(desc);
             info.getAnnotations().add(annotationInfo);
             getAnnotationInfos(annotationInfo.getName()).add(info);
-            return new InfoBuildingVisitor(annotationInfo, classFinder);
+            return null;
         }
 
         @Override
@@ -532,7 +534,7 @@ public class DefaultClassFinder implements ClassFinder {
             ClassInfo classInfo = ((ClassInfo) info);
             FieldInfo fieldInfo = new FieldInfo(classInfo, name, desc);
             classInfo.getFields().add(fieldInfo);
-            return new InfoBuildingVisitor(fieldInfo, classFinder);
+            return null;
         }
 
         @Override
@@ -540,7 +542,28 @@ public class DefaultClassFinder implements ClassFinder {
             ClassInfo classInfo = ((ClassInfo) info);
             MethodInfo methodInfo = new MethodInfo(classInfo, name, desc);
             classInfo.getMethods().add(methodInfo);
-            return new InfoBuildingVisitor(methodInfo, classFinder);
+            return new InfoBuildingMethodVisitor(methodInfo);
+        }
+    }
+
+    public class InfoBuildingMethodVisitor extends MethodVisitor {
+        private Info info;
+
+        public InfoBuildingMethodVisitor() {
+            super(Opcodes.ASM5);
+        }
+
+        public InfoBuildingMethodVisitor(Info info) {
+            this();
+            this.info = info;
+        }
+
+        @Override
+        public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+            AnnotationInfo annotationInfo = new AnnotationInfo(desc);
+            info.getAnnotations().add(annotationInfo);
+            getAnnotationInfos(annotationInfo.getName()).add(info);
+            return null;
         }
 
         @Override
@@ -549,14 +572,9 @@ public class DefaultClassFinder implements ClassFinder {
             List<AnnotationInfo> annotationInfos = methodInfo.getParameterAnnotations(param);
             AnnotationInfo annotationInfo = new AnnotationInfo(desc);
             annotationInfos.add(annotationInfo);
-            return new InfoBuildingVisitor(annotationInfo, classFinder);
+            return null;
         }
     }
 
-    private static final class DefaultClassnameFilterImpl implements Test<String> {
-        public boolean test(String className) {
-            return true;
-        }
-    }
 }
 

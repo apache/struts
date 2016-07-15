@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -96,6 +97,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      */
     protected String encoding;
 
+    protected boolean devMode;
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
@@ -129,6 +131,11 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
         this.encoding = encoding;
     }
 
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public void setDevMode(String devMode) {
+        this.devMode = Boolean.parseBoolean(devMode);
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -144,7 +151,16 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     protected String getAdditionalPackages() {
-        return "org.apache.struts2.static template org.apache.struts2.interceptor.debugging static";
+        List<String> packages = new LinkedList<>();
+        packages.add("org.apache.struts2.static");
+        packages.add("template");
+        packages.add("static");
+
+        if (devMode) {
+            packages.add("org.apache.struts2.interceptor.debugging");
+        }
+
+        return StringUtils.join(packages.iterator(), ' ');
     }
 
     /**

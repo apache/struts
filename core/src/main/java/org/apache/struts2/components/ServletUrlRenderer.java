@@ -204,7 +204,7 @@ public class ServletUrlRenderer implements UrlRenderer {
                 LOG.warn("No configuration found for the specified action: '{}' in namespace: '{}'. Form action defaulting to 'action' attribute's literal value.", actionName, namespace);
             }
 
-            String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, null, scheme, formComponent.includeContext, true);
+            String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, actionParams, scheme, formComponent.includeContext, true);
             formComponent.addParameter("action", result);
 
             // namespace: cut out anything between the start and the last /

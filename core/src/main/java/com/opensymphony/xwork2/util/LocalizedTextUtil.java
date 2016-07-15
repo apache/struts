@@ -38,6 +38,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -141,14 +142,13 @@ public class LocalizedTextUtil {
      */
     public static void addDefaultResourceBundle(String resourceBundleName) {
         //make sure this doesn't get added more than once
-        ClassLoader ccl;
+        final ClassLoader ccl = getCurrentThreadContextClassLoader();
         synchronized (XWORK_MESSAGES_BUNDLE) {
-            ccl = getCurrentThreadContextClassLoader();
             List<String> bundles = classLoaderMap.get(ccl.hashCode());
             if (bundles == null) {
-                bundles = new ArrayList<String>();
-                classLoaderMap.put(ccl.hashCode(), bundles);
+                bundles = new CopyOnWriteArrayList<>();
                 bundles.add(XWORK_MESSAGES_BUNDLE);
+                classLoaderMap.put(ccl.hashCode(), bundles);
             }
             bundles.remove(resourceBundleName);
             bundles.add(0, resourceBundleName);

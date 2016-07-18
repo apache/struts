@@ -37,8 +37,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>5.1</version>
-            <classifier>jdk15</classifier>
+            <version>6.9.10</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

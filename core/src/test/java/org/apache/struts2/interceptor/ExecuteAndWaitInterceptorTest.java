@@ -86,7 +86,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         String result2 = proxy2.execute();
         assertEquals("wait", result2);
 
-        Thread.sleep(300);
+        Thread.sleep(500);
 
         ActionProxy proxy3 = buildProxy("action1");
         String result3 = proxy3.execute();

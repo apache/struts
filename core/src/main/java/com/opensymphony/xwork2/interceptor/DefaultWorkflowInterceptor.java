@@ -27,7 +27,8 @@ import java.lang.reflect.Method;
 /**
  * <!-- START SNIPPET: description -->
  * <p>
- * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
+ * An interceptor that makes sure there are not validation, conversion or action errors before allowing the interceptor chain to continue. 
+ * If a single FieldError or ActionError (including the ones replicated by the Message Store Interceptor in a redirection) is found, the INPUT result will be triggered.
  * <b>This interceptor does not perform any validation</b>.
  * </p>
  *

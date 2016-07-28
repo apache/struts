@@ -20,6 +20,8 @@ import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -144,6 +146,46 @@ public class URLValidatorTest extends XWorkTestCase {
         assertTrue(pattern.matcher("https://www.opensymphony.com").matches());
         assertTrue(pattern.matcher("https://www.opensymphony.com:443/login").matches());
         assertTrue(pattern.matcher("http://localhost:8080/myapp").matches());
+    }
+
+	public void testValidUrlCaseInsesitive() throws Exception {
+		// given
+		final Map<String, Object> fieldErrors = new HashMap<>();
+
+		URLValidator validator = new URLValidator() {
+			@Override
+			public String getFieldName() {
+				return "url";
+			}
+
+			@Override
+			protected Object getFieldValue(String name, Object object) throws ValidationException {
+				return object;
+			}
+
+			@Override
+			protected void addFieldError(String propertyName, Object object) {
+				fieldErrors.put(propertyName, object);
+			}
+		};
+
+		// when
+        validator.validate("http://localhost:8080/myapp");
+
+		// then
+		assertTrue(fieldErrors.isEmpty());
+
+		// when
+        validator.validate("http://LOCALHOST:8080/MYAPP");
+
+		// then
+		assertTrue(fieldErrors.isEmpty());
+
+		// when
+        validator.validate("http://www.appache.org/TEST");
+
+		// then
+		assertTrue(fieldErrors.isEmpty());
     }
 
 	@Override

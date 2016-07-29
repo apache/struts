@@ -268,6 +268,13 @@ public final class StrutsConstants {
 
     /** actions names' whitelist **/
     public static final String STRUTS_ALLOWED_ACTION_NAMES = "struts.allowed.action.names";
+    /** default action name to use when action didn't match the whitelist **/
+    public static final String STRUTS_DEFAULT_ACTION_NAME = "struts.default.action.name";
+
+    /** methods names' whitelist **/
+    public static final String STRUTS_ALLOWED_METHOD_NAMES = "struts.allowed.method.names";
+    /** default method name to use when method didn't match the whitelist **/
+    public static final String STRUTS_DEFAULT_METHOD_NAME = "struts.default.method.name";
 
     /** enables action: prefix **/
     public static final String STRUTS_MAPPER_ACTION_PREFIX_ENABLED = "struts.mapper.action.prefix.enabled";

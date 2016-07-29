@@ -121,6 +121,7 @@ public class RestActionMapper extends DefaultActionMapper {
     private boolean allowDynamicMethodCalls = false;
     
     public RestActionMapper() {
+        this.defaultMethodName = indexMethodName;
     }
     
     public String getIdParameterName() {
@@ -299,7 +300,7 @@ public class RestActionMapper extends DefaultActionMapper {
                 fullName = fullName.substring(0, lastSlashPos);
             }
 
-            mapping.setName(fullName);
+            mapping.setName(cleanupActionName(fullName));
         }
         return mapping;
     }
@@ -320,7 +321,7 @@ public class RestActionMapper extends DefaultActionMapper {
 
             mapping.setName(actionName);
             if (allowDynamicMethodCalls) {
-                mapping.setMethod(cleanupActionName(actionMethod));
+                mapping.setMethod(cleanupMethodName(actionMethod));
             } else {
                 mapping.setMethod(null);
             }

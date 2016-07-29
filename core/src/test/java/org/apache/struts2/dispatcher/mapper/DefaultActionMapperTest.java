@@ -845,37 +845,14 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         String actionName = "action";
         assertEquals(actionName, mapper.cleanupActionName(actionName));
 
-        Throwable expected = null;
-
         actionName = "${action}";
-        try {
-            mapper.cleanupActionName(actionName);
-            fail();
-        } catch (Throwable t) {
-            expected = t;
-        }
-        assertTrue(expected instanceof StrutsException);
-        assertEquals("Action [${action}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
+        assertEquals(mapper.defaultActionName, mapper.cleanupActionName(actionName));
 
         actionName = "${${%{action}}}";
-        try {
-            mapper.cleanupActionName(actionName);
-            fail();
-        } catch (Throwable t) {
-            expected = t;
-        }
-        assertTrue(expected instanceof StrutsException);
-        assertEquals("Action [${${%{action}}}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
+        assertEquals(mapper.defaultActionName, mapper.cleanupActionName(actionName));
 
         actionName = "${#foo='action',#foo}";
-        try {
-            mapper.cleanupActionName(actionName);
-            fail();
-        } catch (Throwable t) {
-            expected = t;
-        }
-        assertTrue(expected instanceof StrutsException);
-        assertEquals("Action [${#foo='action',#foo}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
+        assertEquals(mapper.defaultActionName, mapper.cleanupActionName(actionName));
 
         actionName = "test-action";
         assertEquals("test-action", mapper.cleanupActionName(actionName));
@@ -885,6 +862,21 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         actionName = "test!bar.action";
         assertEquals("test!bar.action", mapper.cleanupActionName(actionName));
+    }
+
+    public void testAllowedMethodNames() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+
+        assertEquals("", mapper.cleanupMethodName(""));
+        assertEquals("test", mapper.cleanupMethodName("test"));
+        assertEquals("test_method", mapper.cleanupMethodName("test_method"));
+        assertEquals("_test", mapper.cleanupMethodName("_test"));
+        assertEquals("test1", mapper.cleanupMethodName("test1"));
+
+        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("2test"));
+        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("%{exp}"));
+        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("${%{foo}}"));
+        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("${#foo='method',#foo}"));
     }
 
 }

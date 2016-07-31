@@ -61,11 +61,14 @@ public class CollectionConverter extends DefaultTypeConverter {
             }
         } else {
             result = createCollection(toType, memberType, -1);
-            result.add(value);
+            TypeConverter converter = getTypeConverter(context);
+            Object convertedValue = converter.convertValue(context, target, member, propertyName, value, memberType);
+            if (!TypeConverter.NO_CONVERSION_POSSIBLE.equals(convertedValue)) {
+                result.add(convertedValue);
+            }
         }
 
         return result;
-
     }
 
     private Collection createCollection(Class toType, Class memberType, int size) {

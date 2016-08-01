@@ -24,6 +24,18 @@ package org.apache.struts2.views.util;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
@@ -178,10 +190,11 @@ public class DefaultUrlHelper implements UrlHelper {
         }
 
         //if the action was not explicitly set grab the params from the request
+        //always pass encode=false here as encoding might happen for complete URL later
         if (escapeAmp) {
-            buildParametersString(params, link, AMP);
+            buildParametersString(params, link, AMP, false);
         } else {
-            buildParametersString(params, link, "&");
+            buildParametersString(params, link, "&", false);
         }
 
         String result = link.toString();
@@ -202,6 +215,10 @@ public class DefaultUrlHelper implements UrlHelper {
     }
 
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
+        buildParametersString(params, link, paramSeparator, true);
+    }
+
+    public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator, boolean encode) {
         if ((params != null) && (params.size() > 0)) {
             if (!link.toString().contains("?")) {
                 link.append("?");
@@ -219,7 +236,7 @@ public class DefaultUrlHelper implements UrlHelper {
                 if (value instanceof Iterable) {
                     for (Iterator iterator = ((Iterable) value).iterator(); iterator.hasNext();) {
                         Object paramValue = iterator.next();
-                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY));
+                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY, encode));
 
                         if (iterator.hasNext()) {
                             link.append(paramSeparator);
@@ -229,14 +246,14 @@ public class DefaultUrlHelper implements UrlHelper {
                     Object[] array = (Object[]) value;
                     for (int i = 0; i < array.length; i++) {
                         Object paramValue = array[i];
-                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY));
+                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY, encode));
 
                         if (i < array.length - 1) {
                             link.append(paramSeparator);
                         }
                     }
                 } else {
-                    link.append(buildParameterSubstring(name, value != null ? value.toString() : StringUtils.EMPTY));
+                    link.append(buildParameterSubstring(name, value != null ? value.toString() : StringUtils.EMPTY, encode));
                 }
 
                 if (iter.hasNext()) {
@@ -250,11 +267,11 @@ public class DefaultUrlHelper implements UrlHelper {
         return HTTP_PROTOCOL.equals(scheme) || HTTPS_PROTOCOL.equals(scheme);
     }
 
-    private String buildParameterSubstring(String name, String value) {
+    private String buildParameterSubstring(String name, String value, boolean encode) {
         StringBuilder builder = new StringBuilder();
-        builder.append(encode(name));
+        builder.append(encode ? encode(name) : name);
         builder.append('=');
-        builder.append(encode(value));
+        builder.append(encode ? encode(value) : value);
         return builder.toString();
     }
 

@@ -180,11 +180,10 @@ public class DefaultUrlHelper implements UrlHelper {
         }
 
         //if the action was not explicitly set grab the params from the request
-        //always pass encode=false here as encoding might happen for complete URL later
         if (escapeAmp) {
-            buildParametersString(params, link, AMP, false);
+            buildParametersString(params, link, AMP, true);
         } else {
-            buildParametersString(params, link, "&", false);
+            buildParametersString(params, link, "&", true);
         }
 
         String result = link.toString();

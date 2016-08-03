@@ -75,7 +75,7 @@ import java.util.Map;
  *
  * @author Jason Carreira
  */
-public class ConversionErrorInterceptor extends AbstractInterceptor {
+public class ConversionErrorInterceptor extends MethodFilterInterceptor {
 
     public static final String ORIGINAL_PROPERTY_OVERRIDE = "original.property.override";
 
@@ -88,7 +88,7 @@ public class ConversionErrorInterceptor extends AbstractInterceptor {
     }
 
     @Override
-    public String intercept(ActionInvocation invocation) throws Exception {
+    public String doIntercept(ActionInvocation invocation) throws Exception {
 
         ActionContext invocationContext = invocation.getInvocationContext();
         Map<String, Object> conversionErrors = invocationContext.getConversionErrors();

@@ -21,21 +21,22 @@
 
 package org.apache.struts2.views.util;
 
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.junit.Ignore;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsInternalTestCase;
+
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
 
 
 /**
@@ -127,34 +128,6 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
 
         assertEquals(
            expectedUrl, url.toString());
-    }
-
-    @Ignore
-    public void ignoreTestBuildUrlWithJavaScriptInjected() throws Exception {
-        String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2&amp;param3%22%3Cscript+type%3D%22text%2Fjavascript%22%3Ealert%281%29%3B%3C%2Fscript%3E=value3";
-
-        // there is explicit escaping for EcmaScript before URL encoding
-        String expectedUrlBeforeEncoding = "http:\\/\\/localhost:8080\\/myContext\\/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2&amp;param3\\\"<script type=\\\"text\\/javascript\\\">alert(1);<\\/script>=value3";
-
-        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
-        mockHttpServletRequest.expectAndReturn("getScheme", "http");
-        mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
-        mockHttpServletRequest.expectAndReturn("getContextPath", "/myContext");
-        mockHttpServletRequest.expectAndReturn("getServerPort", 8080);
-
-        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
-        mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrlBeforeEncoding, expectedUrl);
-
-        Map parameters = new LinkedHashMap();
-        parameters.put("param1", "value1");
-        parameters.put("param2", "value2");
-        parameters.put("param3\"<script type=\"text/javascript\">alert(1);</script>","value3");
-
-        String result = urlHelper.buildUrl("/myPage.jsp?initParam=initValue", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), parameters, "http", true, true, true);
-
-        assertEquals(
-           expectedUrl, result);
-        mockHttpServletRequest.verify();
     }
 
     public void testForceAddNullSchemeHostAndPort() throws Exception {
@@ -423,25 +396,11 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         assertEquals(result, expectedResult);
     }
 
-    @Ignore
-    public void ignoreTestDontEncode() throws Exception {
-        String expectedUrl = "http://localhost/contextPath/myAction.action?param1=value+with+spaces";
+    public void testDecodeSpacesInQueryString() throws Exception {
+        Map<String, Object> queryParameters = urlHelper.parseQueryString("name=value+with+space", false);
 
-        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
-        mockHttpServletRequest.expectAndReturn("getScheme", "http");
-        mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
-        mockHttpServletRequest.expectAndReturn("getContextPath", "/contextPath");
-        mockHttpServletRequest.expectAndReturn("getServerPort", 80);
-
-        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
-
-        Map parameters = new LinkedHashMap();
-        parameters.put("param1", "value+with+spaces");
-
-        String result = urlHelper.buildUrl("/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), parameters, "http", true, false, true);
-
-        assertEquals(
-           expectedUrl, result);
+        assertTrue(queryParameters.containsKey("name"));
+        assertEquals("value with space", queryParameters.get("name"));
     }
 
 

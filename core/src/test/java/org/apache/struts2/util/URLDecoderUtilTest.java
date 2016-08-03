@@ -68,4 +68,11 @@ public class URLDecoderUtilTest {
         assertEquals("xxxx\u00ea", result);
     }
 
+    @Test
+    public void testURLDecodePlusCharAsSpace() {
+
+        String result = URLDecoderUtil.decode("a+b", "UTF-8", true);
+        assertEquals("a b", result);
+    }
+
 }

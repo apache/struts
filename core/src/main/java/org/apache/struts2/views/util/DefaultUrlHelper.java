@@ -284,24 +284,13 @@ public class DefaultUrlHelper implements UrlHelper {
 	 * @return the encoded string
 	 */
 	public String decode( String input ) {
-        return URLDecoderUtil.decode(input, encoding, false);
+		try {
+            return URLDecoderUtil.decode(input, encoding);
+		} catch (Exception e) {
+    		LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
+			return input;
+		}
 	}
-
-    /**
-     * Decodes the URL using {@link URLDecoderUtil#decode(String, String, boolean)} with the encoding specified in the configuration.
-     *
-     * @param input the input to decode
-     * @param isQueryString whether input is a query string. If <code>true</code> other decoding rules apply.
-     * @return the encoded string
-     */
-    public String decode( String input, boolean isQueryString ) {
-        try {
-            return URLDecoderUtil.decode(input, encoding, isQueryString);
-        } catch (Exception e) {
-            LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
-        return input;
-        }
-    }
 
     public Map<String, Object> parseQueryString(String queryString, boolean forceValueArray) {
         Map<String, Object> queryParams = new LinkedHashMap<String, Object>();
@@ -319,8 +308,8 @@ public class DefaultUrlHelper implements UrlHelper {
                         paramValue = tmpParams[1];
                     }
                     if (paramName != null) {
-                        paramName = decode(paramName, true);
-                        String translatedParamValue = decode(paramValue, true);
+                        paramName = decode(paramName);
+                        String translatedParamValue = decode(paramValue);
 
                         if (queryParams.containsKey(paramName) || forceValueArray) {
                             // WW-1619 append new param value to existing value(s)

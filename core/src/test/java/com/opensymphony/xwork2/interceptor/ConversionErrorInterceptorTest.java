@@ -48,7 +48,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         stack.push(action);
         mockInvocation.matchAndReturn("getAction", action);
         assertNull(action.getFieldErrors().get("foo"));
-        interceptor.intercept(invocation);
+        interceptor.doIntercept(invocation);
         assertTrue(action.hasFieldErrors());
         assertNotNull(action.getFieldErrors().get("foo"));
     }
@@ -61,7 +61,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         stack.push(action);
         mockInvocation.matchAndReturn("getAction", action);
         assertNull(action.getFieldErrors().get(fieldName));
-        interceptor.intercept(invocation);
+        interceptor.doIntercept(invocation);
         assertTrue(action.hasFieldErrors()); // This fails!
         assertNotNull(action.getFieldErrors().get(fieldName));
     }
@@ -76,7 +76,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         assertNull(action.getFieldErrors().get("foo"));
         assertEquals(55, stack.findValue("foo"));
 
-        interceptor.intercept(mai);
+        interceptor.doIntercept(mai);
 
         assertTrue(action.hasFieldErrors());
         assertNotNull(action.getFieldErrors().get("foo"));
@@ -100,7 +100,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         assertNull(action.getFieldErrors().get("foo"));
         assertEquals(55, stack.findValue("foo"));
 
-        interceptor.intercept(mai);
+        interceptor.doIntercept(mai);
 
         assertTrue(action.hasFieldErrors());
         assertNotNull(action.getFieldErrors().get("foo"));

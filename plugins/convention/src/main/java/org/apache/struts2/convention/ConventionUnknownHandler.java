@@ -43,6 +43,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -332,27 +333,34 @@ public class ConventionUnknownHandler implements UnknownHandler {
                                 Map<String, ResultTypeConfig> resultsByExtension) {
         try {
             boolean traceEnabled = LOG.isTraceEnabled();
-            if (traceEnabled)
+            if (traceEnabled) {
                 LOG.trace("Checking ServletContext for [#0]", path);
+            }
 
-            if (servletContext.getResource(path) != null) {
-                if (traceEnabled)
-                    LOG.trace("Found");
+            URL resource = servletContext.getResource(path);
+            if (resource != null && resource.getPath().endsWith(path)) {
+                if (traceEnabled) {
+                    LOG.trace("Found resource #0", resource);
+                }
                 return buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
             }
 
-            if (traceEnabled)
-                LOG.trace("Checking ClasLoader for #0", path);
+            if (traceEnabled) {
+                LOG.trace("Checking ClassLoader for #0", path);
+            }
 
             String classLoaderPath = path.startsWith("/") ? path.substring(1, path.length()) : path;
-            if (ClassLoaderUtil.getResource(classLoaderPath, getClass()) != null) {
-                if (traceEnabled)
-                    LOG.trace("Found");
+            resource = ClassLoaderUtil.getResource(classLoaderPath, getClass());
+            if (resource != null && resource.getPath().endsWith(classLoaderPath)) {
+                if (traceEnabled) {
+                    LOG.trace("Found resource #0", resource);
+                }
                 return buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
             }
         } catch (MalformedURLException e) {
-            if (LOG.isErrorEnabled())
+            if (LOG.isErrorEnabled()) {
                 LOG.error("Unable to parse template path: [#0] skipping...", path);
+            }
         }
 
         return null;

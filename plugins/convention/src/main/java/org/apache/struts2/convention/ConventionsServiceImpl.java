@@ -107,14 +107,26 @@ public class ConventionsServiceImpl implements ConventionsService {
     public Map<String, ResultTypeConfig> getResultTypesByExtension(PackageConfig packageConfig) {
         Map<String, ResultTypeConfig> results = packageConfig.getAllResultTypeConfigs();
 
+        ResultTypeConfig dispatcher = disableParse(results.get("dispatcher"));
+        ResultTypeConfig velocity = disableParse(results.get("velocity"));
+        ResultTypeConfig freemarker = disableParse(results.get("freemarker"));
+
         Map<String, ResultTypeConfig> resultsByExtension = new HashMap<String, ResultTypeConfig>();
-        resultsByExtension.put("jsp", results.get("dispatcher"));
-        resultsByExtension.put("jspf", results.get("dispatcher"));
-        resultsByExtension.put("jspx", results.get("dispatcher"));
-        resultsByExtension.put("vm", results.get("velocity"));
-        resultsByExtension.put("ftl", results.get("freemarker"));
-        resultsByExtension.put("html", results.get("dispatcher"));
-        resultsByExtension.put("htm", results.get("dispatcher"));
+        resultsByExtension.put("jsp", dispatcher);
+        resultsByExtension.put("jspf", dispatcher);
+        resultsByExtension.put("jspx", dispatcher);
+        resultsByExtension.put("vm", velocity);
+        resultsByExtension.put("ftl", freemarker);
+        resultsByExtension.put("html", dispatcher);
+        resultsByExtension.put("htm", dispatcher);
         return resultsByExtension;
     }
+
+    private ResultTypeConfig disableParse(ResultTypeConfig resultConfig) {
+        if (resultConfig != null) {
+            return new ResultTypeConfig.Builder(resultConfig).addParam("parse", "false").build();
+        }
+        return null;
+    }
+
 }

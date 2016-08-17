@@ -69,7 +69,7 @@ public class ResultTypeConfig extends Located implements Serializable {
     }
 
     public Map<String,String> getParams() {
-        return this.params;
+        return Collections.unmodifiableMap(this.params);
     }
 
     @Override
@@ -148,14 +148,9 @@ public class ResultTypeConfig extends Located implements Serializable {
         }
 
         public ResultTypeConfig build() {
-            embalmTarget();
             ResultTypeConfig result = target;
             target = new ResultTypeConfig(target);
             return result;
-        }
-
-        protected void embalmTarget() {
-            target.params = Collections.unmodifiableMap(target.params);
         }
     }
 }

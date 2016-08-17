@@ -50,7 +50,7 @@ public class ResultTypeConfig extends Located implements Serializable {
         this.name = orig.name;
         this.className = orig.className;
         this.defaultResultParam = orig.defaultResultParam;
-        this.params = orig.params;
+        this.params = new LinkedHashMap<String, String>(orig.params);
         this.location = orig.location;
     }
 

@@ -87,7 +87,7 @@
         <ognl.version>3.1.10</ognl.version>
         <asm.version>3.3</asm.version>
         <asm5.version>5.1</asm5.version>
-        <tiles.version>3.0.5</tiles.version>
+        <tiles.version>3.0.7</tiles.version>
         <tiles-request.version>1.0.6</tiles-request.version>
         <log4j2.version>2.6.2</log4j2.version>
 

@@ -46,7 +46,7 @@ lables
 <#elseif parameters.labelposition??>
 <#assign labelpos = parameters.labelposition/>
 </#if>
-<#if labelpos!"" == 'left'>
+<#if (labelpos!"") == 'left'>
 <span <#rt/>
 <#if parameters.id??>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
 <label<#t/>

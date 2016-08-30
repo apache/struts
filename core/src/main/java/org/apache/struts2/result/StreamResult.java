@@ -219,8 +219,9 @@ public class StreamResult extends StrutsResultSupport {
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
         LOG.debug("Find the Response in context");
 
-        HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
-        try (OutputStream oOutput = oResponse.getOutputStream()) {
+        OutputStream oOutput = null;
+
+        try {
             if (inputStream == null) {
                 LOG.debug("Find the inputstream from the invocation variable stack");
                 inputStream = (InputStream) invocation.getStack().findValue(conditionalParse(inputName, invocation));
@@ -232,6 +233,9 @@ public class StreamResult extends StrutsResultSupport {
                 LOG.error(msg);
                 throw new IllegalArgumentException(msg);
             }
+
+
+            HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
 
             LOG.debug("Set the content type: {};charset{}", contentType, contentCharSet);
             if (contentCharSet != null && ! contentCharSet.equals("")) {
@@ -249,8 +253,7 @@ public class StreamResult extends StrutsResultSupport {
                     if (_contentLengthAsInt >= 0) {
                         oResponse.setContentLength(_contentLengthAsInt);
                     }
-                }
-                catch(NumberFormatException e) {
+                } catch(NumberFormatException e) {
                     LOG.warn("failed to recognize {} as a number, contentLength header will not be set", _contentLength, e);
                 }
             }
@@ -266,6 +269,8 @@ public class StreamResult extends StrutsResultSupport {
                 oResponse.addHeader("Cache-Control", "no-cache");
             }
 
+            oOutput = oResponse.getOutputStream();
+
             LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
                     inputName, contentType, contentLength, contentDisposition, contentCharSet);
 
@@ -280,6 +285,13 @@ public class StreamResult extends StrutsResultSupport {
 
             // Flush
             oOutput.flush();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (oOutput != null) {
+                oOutput.close();
+            }
         }
     }
 

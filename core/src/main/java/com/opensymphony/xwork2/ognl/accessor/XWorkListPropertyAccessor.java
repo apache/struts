@@ -45,6 +45,12 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;
     private OgnlUtil ognlUtil;
+    private int autoGrowCollectionLimit = 255;
+    
+    @Inject(value = "xwork.autoGrowCollectionLimit", required = false)
+	public void setAutoGrowCollectionLimit(String value) {
+		this.autoGrowCollectionLimit = Integer.valueOf(value);
+	}
     
     @Inject("java.util.Collection")
     public void setXWorkCollectionPropertyAccessor(PropertyAccessor acc) {
@@ -158,6 +164,9 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
             List list = (List) target;
             int listSize = list.size();
             int count = ((Number) name).intValue();
+            if(count > autoGrowCollectionLimit)
+            	throw new OgnlException("Error auto growing collection size to " + count + " which limited to "
+						+ autoGrowCollectionLimit);
             if (count >= listSize) {
                 for (int i = listSize; i <= count; i++) {
                     list.add(null);

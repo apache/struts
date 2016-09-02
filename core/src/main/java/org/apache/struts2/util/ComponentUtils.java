@@ -44,11 +44,11 @@ public class ComponentUtils {
      * @return true if it is an expression
      */
     public static boolean isExpression(String expr) {
-        return expr.startsWith("%{") && expr.endsWith("}");
+        return expr != null && expr.startsWith("%{") && expr.endsWith("}");
     }
 
     public static boolean containsExpression(String expr) {
-        return expr.contains("%{") && expr.contains("}");
+        return expr != null && expr.contains("%{") && expr.contains("}");
     }
 
 }

@@ -93,6 +93,10 @@ public class ComponentUtilsTest extends StrutsInternalTestCase {
         assertFalse(actual);
     }
 
+    public void testIsExpressionIsFalseWhenNull() throws Exception {
+        assertFalse(ComponentUtils.isExpression(null));
+    }
+
     public void testContainsExpressionIsTrue() throws Exception {
         // given
         String anExpression = "%{foo}";
@@ -124,6 +128,10 @@ public class ComponentUtilsTest extends StrutsInternalTestCase {
 
         // then
         assertFalse(actual);
+    }
+
+    public void testContainsExpressionIsFalseWhenNull() throws Exception {
+        assertFalse(ComponentUtils.containsExpression(null));
     }
 }
 

@@ -71,7 +71,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     private void tryBadJSON(String fileName) throws Exception {
         // request
         setRequestContent(fileName);
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json;encoding=UTF-8");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -92,7 +92,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDDisabledSMD() throws Exception {
         // request
         setRequestContent("smd-3.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         SMDActionTest1 action = new SMDActionTest1();
@@ -111,7 +111,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDAliasedMethodCall1() throws Exception {
         // request
         setRequestContent("smd-14.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -129,7 +129,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDAliasedMethodCall2() throws Exception {
         // request
         setRequestContent("smd-15.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -147,7 +147,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDNoMethod() throws Exception {
         // request
         setRequestContent("smd-4.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -171,7 +171,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDMethodWithoutAnnotations() throws Exception {
         // request
         setRequestContent("smd-9.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -192,7 +192,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDPrimitivesNoResult() throws Exception {
         // request
         setRequestContent("smd-6.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -227,7 +227,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDReturnObject() throws Exception {
         // request
         setRequestContent("smd-10.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -252,7 +252,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testSMDObjectsNoResult() throws Exception {
         // request
         setRequestContent("smd-7.txt");
-        this.request.addHeader("accept", "application/json-rpc, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json-rpc");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);
@@ -300,7 +300,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void testReadEmpty() throws Exception {
         // request
         setRequestContent("json-6.txt");
-        this.request.addHeader("accept", "application/json, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
         JSONInterceptor interceptor = new JSONInterceptor();
@@ -315,7 +315,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     public void test() throws Exception {
         // request
         setRequestContent("json-1.txt");
-        this.request.addHeader("accept", "application/json, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
         JSONInterceptor interceptor = new JSONInterceptor();
@@ -437,7 +437,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
 
     public void testRoot() throws Exception {
         setRequestContent("json-5.txt");
-        this.request.addHeader("accept", "application/json, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
         JSONInterceptor interceptor = new JSONInterceptor();
@@ -462,7 +462,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     
     public void testJSONArray() throws Exception {
         setRequestContent("json-12.txt");
-        this.request.addHeader("accept", "application/json, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
         JSONInterceptor interceptor = new JSONInterceptor();
@@ -488,7 +488,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
 
     public void testJSONArray2() throws Exception {
         setRequestContent("json-12.txt");
-        this.request.addHeader("accept", "application/json, text/plain, */*");
+        this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
         JSONInterceptor interceptor = new JSONInterceptor();

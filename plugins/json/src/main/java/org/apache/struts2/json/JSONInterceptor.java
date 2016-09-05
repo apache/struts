@@ -187,19 +187,25 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     protected String readContentType(HttpServletRequest request) {
         String contentType = request.getHeader("Content-Type");
+        LOG.debug("Content Type from request: {}", contentType);
+
         if (contentType != null && contentType.contains(";")) {
-            contentType = contentType.substring(0, contentType.indexOf(";"));
+            contentType = contentType.substring(0, contentType.indexOf(";")).trim();
         }
         return contentType;
     }
 
     protected String readContentTypeEncoding(HttpServletRequest request) {
         String contentTypeEncoding = request.getHeader("Content-Type");
-        if (contentTypeEncoding != null && contentTypeEncoding.contains(";encoding=")) {
-            contentTypeEncoding = contentTypeEncoding.substring(contentTypeEncoding.indexOf(";encoding=") + ";encoding=".length());
+        LOG.debug("Content Type encoding from request: {}", contentTypeEncoding);
+
+        if (contentTypeEncoding != null && contentTypeEncoding.contains(";charset=")) {
+            contentTypeEncoding = contentTypeEncoding.substring(contentTypeEncoding.indexOf(";charset=") + ";charset=".length()).trim();
         } else {
             contentTypeEncoding = defaultEncoding;
         }
+
+        LOG.debug("Content Type encoding to be used in de-serialisation: {}", contentTypeEncoding);
         return contentTypeEncoding;
     }
 

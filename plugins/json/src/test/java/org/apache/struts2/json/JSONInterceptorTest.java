@@ -71,7 +71,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
     private void tryBadJSON(String fileName) throws Exception {
         // request
         setRequestContent(fileName);
-        this.request.addHeader("Content-Type", "application/json;encoding=UTF-8");
+        this.request.addHeader("Content-Type", "application/json; charset=UTF-8");
 
         JSONInterceptor interceptor = new JSONInterceptor();
         interceptor.setEnableSMD(true);

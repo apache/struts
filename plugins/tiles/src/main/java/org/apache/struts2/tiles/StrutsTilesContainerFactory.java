@@ -83,9 +83,9 @@ import java.util.Set;
 /**
  * Dedicated Struts factory to build Tiles container with support for:
  * - Freemarker
- * - OGNL (as default)
+ * - Struts I18N & ValueStack (as default)
+ * - OGNL
  * - EL
- * - Wildcards
  *
  * If you need additional features create your own listener and factory,
  * you can base on code from Tiles' CompleteAutoloadTilesContainerFactory
@@ -107,6 +107,13 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
      * Default pattern to be used to collect Tiles definitions if user didn't configure any
      */
     public static final String TILES_DEFAULT_PATTERN = "tiles*.xml";
+
+    /**
+     * Supported expression languages
+     */
+    public static final String OGNL = "OGNL";
+    public static final String EL = "EL";
+    public static final String S2 = "S2";
 
     @Override
     protected BasicTilesContainer instantiateContainer(TilesApplicationContext applicationContext) {
@@ -182,8 +189,13 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
             LocaleResolver resolver) {
 
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator("OGNL", createOGNLEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator("EL", createELEvaluator(applicationContext));
+        attributeEvaluatorFactory.registerAttributeEvaluator(S2, createStrutsEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
+
+        ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
+        if (elEvaluator != null) {
+            attributeEvaluatorFactory.registerAttributeEvaluator(EL, elEvaluator);
+        }
 
         return attributeEvaluatorFactory;
     }
@@ -250,6 +262,10 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         evaluator.setResolver(elResolver);
 
         return evaluator;
+    }
+
+    protected StrutsAttributeEvaluator createStrutsEvaluator() {
+        return new StrutsAttributeEvaluator();
     }
 
     protected OGNLAttributeEvaluator createOGNLEvaluator() {

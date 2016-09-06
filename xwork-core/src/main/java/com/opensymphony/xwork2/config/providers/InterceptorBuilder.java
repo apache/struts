@@ -184,12 +184,14 @@ public class InterceptorBuilder {
                 Interceptor interceptor = objectFactory.buildInterceptor(cfg, map);
 
                 InterceptorMapping mapping = new InterceptorMapping(key, interceptor);
-                if (result != null && result.contains(mapping)) {
-                    // if an existing interceptor mapping exists,
-                    // we remove from the result Set, just to make sure
-                    // there's always one unique mapping.
-                    int index = result.indexOf(mapping);
-                    result.set(index, mapping);
+                if (result.contains(mapping)) {
+                    for (int index = 0; index < result.size(); index++) {
+                        InterceptorMapping interceptorMapping = result.get(index);
+                        if (interceptorMapping.getName().equals(key)) {
+                            LOG.debug("Overriding interceptor config [#0] with new mapping #1 using new params #2", key, interceptorMapping, map);
+                            result.set(index, mapping);
+                        }
+                    }
                 } else {
                     result.add(mapping);
                 }

@@ -77,9 +77,9 @@ import java.util.Set;
 /**
  * Dedicated Struts factory to build Tiles container with support for:
  * - Freemarker
- * - OGNL (as default)
+ * - Struts I18N & ValueStack (as default)
+ * - OGNL
  * - EL
- * - Wildcards
  *
  * If you need additional features create your own listener and factory,
  * you can base on code from Tiles' CompleteAutoloadTilesContainerFactory
@@ -109,6 +109,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
      */
     public static final String OGNL = "OGNL";
     public static final String EL = "EL";
+    public static final String S2 = "S2";
 
     @Override
     public TilesContainer createDecoratedContainer(TilesContainer originalContainer, ApplicationContext applicationContext) {
@@ -150,6 +151,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
             LocaleResolver resolver) {
 
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(S2, createStrutsEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
 
         ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
@@ -228,6 +230,10 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         };
         evaluator.setResolver(elResolver);
         return evaluator;
+    }
+
+    protected StrutsAttributeEvaluator createStrutsEvaluator() {
+        return new StrutsAttributeEvaluator();
     }
 
     protected OGNLAttributeEvaluator createOGNLEvaluator() {

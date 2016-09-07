@@ -77,7 +77,8 @@ import java.util.Set;
 /**
  * Dedicated Struts factory to build Tiles container with support for:
  * - Freemarker
- * - Struts I18N & ValueStack (as default)
+ * - I18N using Struts resource bundles
+ * - S2 ro access Struts' ValueStack
  * - OGNL
  * - EL
  *
@@ -110,6 +111,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     public static final String OGNL = "OGNL";
     public static final String EL = "EL";
     public static final String S2 = "S2";
+    public static final String I18N = "I18N";
 
     @Override
     public TilesContainer createDecoratedContainer(TilesContainer originalContainer, ApplicationContext applicationContext) {
@@ -152,6 +154,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(S2, createStrutsEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(I18N, createI18NEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
 
         ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
@@ -234,6 +237,10 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     protected StrutsAttributeEvaluator createStrutsEvaluator() {
         return new StrutsAttributeEvaluator();
+    }
+
+    protected I18NAttributeEvaluator createI18NEvaluator() {
+        return new I18NAttributeEvaluator();
     }
 
     protected OGNLAttributeEvaluator createOGNLEvaluator() {

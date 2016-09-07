@@ -20,6 +20,9 @@
 package org.apache.struts2.tiles;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import ognl.OgnlException;
@@ -33,32 +36,33 @@ import org.apache.tiles.request.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class StrutsAttributeEvaluator extends AbstractAttributeEvaluator {
+public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
 
-    private static final Logger LOG = LogManager.getLogger(StrutsAttributeEvaluator.class);
+    private static final Logger LOG = LogManager.getLogger(I18NAttributeEvaluator.class);
 
     @Override
     public Object evaluate(String expression, Request request) {
-        try {
-            HttpServletRequest httpRequest = ServletUtil.getServletRequest(request).getRequest();
-            ActionContext ctx = ServletActionContext.getActionContext(httpRequest);
+        Object result = expression;
 
-            if (ctx == null) {
-                LOG.error("Cannot obtain HttpServletRequest from [{}]", request.getClass().getName());
-                throw new ConfigurationException("There is no ActionContext for current request!");
-            }
+        HttpServletRequest httpRequest = ServletUtil.getServletRequest(request).getRequest();
+        ActionContext ctx = ServletActionContext.getActionContext(httpRequest);
 
-            OgnlUtil ognlUtil = ctx.getContainer().getInstance(OgnlUtil.class);
-
-            LOG.debug("Trying evaluate expression [{}] using OgnlUtil's getValue", expression);
-            Object result = ognlUtil.getValue(expression, ctx.getContextMap(), ctx.getValueStack().getRoot());
-
-            LOG.debug("Final result of evaluating expression [{}] is: {}", expression, result);
-
-            return result;
-        } catch (OgnlException e) {
-            throw new EvaluationException(e);
+        if (ctx == null) {
+            LOG.error("Cannot obtain HttpServletRequest from [{}]", request.getClass().getName());
+            throw new ConfigurationException("There is no ActionContext for current request!");
         }
+
+        TextProviderFactory tpf = new TextProviderFactory();
+        ctx.getContainer().inject(tpf);
+        LocaleProvider localeProvider = ctx.getContainer().getInstance(LocaleProvider.class);
+
+        TextProvider textProvider = tpf.createInstance(ctx.getActionInvocation().getAction().getClass(), localeProvider);
+
+        if (textProvider != null) {
+            LOG.debug("Trying find text [{}] using TextProvider {}", expression, textProvider);
+            result = textProvider.getText(expression);
+        }
+        return result;
     }
 
 }

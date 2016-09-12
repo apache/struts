@@ -95,19 +95,16 @@ public class I18nInterceptor extends AbstractInterceptor {
     public static final String DEFAULT_SESSION_ATTRIBUTE = "WW_TRANS_I18N_LOCALE";
     public static final String DEFAULT_PARAMETER = "request_locale";
     public static final String DEFAULT_REQUESTONLY_PARAMETER = "request_only_locale";
+    public static final String DEFAULT_COOKIE_ATTRIBUTE = DEFAULT_SESSION_ATTRIBUTE;
+    public static final String DEFAULT_COOKIE_PARAMETER = "request_cookie_locale";
 
     protected String parameterName = DEFAULT_PARAMETER;
     protected String requestOnlyParameterName = DEFAULT_REQUESTONLY_PARAMETER;
     protected String attributeName = DEFAULT_SESSION_ATTRIBUTE;
 
     // Request-Only = None
-    protected enum Storage { SESSION, NONE }
+    protected enum Storage { COOKIE, SESSION, NONE }
 
-    public static final String DEFAULT_COOKIE_ATTRIBUTE = DEFAULT_SESSION_ATTRIBUTE;
-
-    public static final String COOKIE_STORAGE = "cookie";
-
-    public static final String DEFAULT_COOKIE_PARAMETER = "request_cookie_locale";
     protected String requestCookieParameterName = DEFAULT_COOKIE_PARAMETER;
 
     public void setParameterName(String parameterName) {
@@ -116,6 +113,10 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     public void setRequestOnlyParameterName(String requestOnlyParameterName) {
         this.requestOnlyParameterName = requestOnlyParameterName;
+    }
+
+    public void setRequestCookieParameterName(String requestCookieParameterName) {
+        this.requestCookieParameterName = requestCookieParameterName;
     }
 
     public void setAttributeName(String attributeName) {
@@ -157,8 +158,8 @@ public class I18nInterceptor extends AbstractInterceptor {
      *
      * @return the locale
      */
-    protected Locale storeLocale(ActionInvocation invocation, Locale locale, String storage) {
-        if (COOKIE_STORAGE.equals(storage)) {
+    protected Locale storeLocale(ActionInvocation invocation, Locale locale, Storage storage) {
+        if (storage == Storage.COOKIE) {
             ActionContext ac = invocation.getInvocationContext();
             HttpServletResponse response = (HttpServletResponse) ac.get(StrutsStatics.HTTP_RESPONSE);
 
@@ -166,7 +167,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             cookie.setMaxAge(1209600); // two weeks
             response.addCookie(cookie);
 
-            storage = Storage.SESSION.toString();
+            storage = Storage.SESSION;
         }
 
         //save it in session
@@ -175,11 +176,11 @@ public class I18nInterceptor extends AbstractInterceptor {
         if (session != null) {
             synchronized (session) {
                 if (locale == null) {
-                    storage = Storage.NONE.toString();
+                    storage = Storage.NONE;
                     locale = readStoredLocale(invocation, session);
                 }
 
-                if (Storage.SESSION.toString().equals(storage)) {
+                if (Storage.SESSION == storage) {
                     session.put(attributeName, locale);
                 }
             }
@@ -277,12 +278,8 @@ public class I18nInterceptor extends AbstractInterceptor {
         invocation.getInvocationContext().setLocale(locale);
     }
 
-    public void setRequestCookieParameterName(String requestCookieParameterName) {
-        this.requestCookieParameterName = requestCookieParameterName;
-    }
-
     protected class LocaleFinder {
-        protected String storage = Storage.SESSION.toString();
+        protected Storage storage = Storage.SESSION;
         protected Parameter requestedLocale = null;
 
         protected ActionInvocation actionInvocation = null;
@@ -296,7 +293,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             //get requested locale
             HttpParameters params = actionInvocation.getInvocationContext().getParameters();
 
-            storage = Storage.SESSION.toString();
+            storage = Storage.SESSION;
 
             requestedLocale = findLocaleParameter(params, parameterName);
             if (requestedLocale.isDefined()) {
@@ -305,11 +302,11 @@ public class I18nInterceptor extends AbstractInterceptor {
 
             requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
             if (requestedLocale.isDefined()) {
-                storage = Storage.NONE.toString();
+                storage = Storage.NONE;
             }
         }
 
-        public String getStorage() {
+        public Storage getStorage() {
             return storage;
         }
 
@@ -327,7 +324,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         protected void find() {
             //get requested locale
             HttpParameters params = actionInvocation.getInvocationContext().getParameters();
-            storage = Storage.SESSION.toString();
+            storage = Storage.SESSION;
 
             requestedLocale = findLocaleParameter(params, parameterName);
 
@@ -337,13 +334,13 @@ public class I18nInterceptor extends AbstractInterceptor {
 
             requestedLocale = findLocaleParameter(params, requestCookieParameterName);
             if (requestedLocale.isDefined()) {
-                storage = COOKIE_STORAGE;
+                storage = Storage.COOKIE;
                 return;
             }
 
             requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
             if (requestedLocale.isDefined()) {
-                storage = Storage.NONE.toString();
+                storage = Storage.NONE;
             }
 
         }

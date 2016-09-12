@@ -31,7 +31,7 @@
             <interceptor name="conversionError" class="com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor"/>
             <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
             <interceptor name="exception" class="com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor"/>
-            <interceptor name="i18n" class="com.opensymphony.xwork2.interceptor.I18nInterceptor"/>
+            <interceptor name="i18n" class="org.apache.struts2.interceptor.I18nInterceptor"/>
 
             <!-- END SNIPPET: xwork2-default-interceptors -->
 

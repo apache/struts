@@ -138,6 +138,16 @@ public class UrlSet {
         return excludePaths(System.getProperty("java.endorsed.dirs", ""));
     }
 
+    /**
+     * Calls excludePaths(System.getProperty("java.ext.dirs"))
+     *
+     * @return url set
+     * @throws MalformedURLException in case if incorrect URL
+     */
+    public UrlSet excludeUserExtensionsDir() throws MalformedURLException {
+        return excludePaths(System.getProperty("java.ext.dirs", ""));
+    }
+
     public UrlSet excludeJavaHome() throws MalformedURLException {
         String path = System.getProperty("java.home");
         if (path != null) {

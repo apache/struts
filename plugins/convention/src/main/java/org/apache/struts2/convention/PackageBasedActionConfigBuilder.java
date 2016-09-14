@@ -443,8 +443,10 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         });
 
 
-        urlSet = urlSet.excludeJavaExtDirs();
-        urlSet = urlSet.excludeJavaEndorsedDirs();
+        urlSet = urlSet.excludeJavaExtDirs()
+                    .excludeJavaEndorsedDirs()
+                    .excludeUserExtensionsDir();
+
         try {
         	urlSet = urlSet.excludeJavaHome();
         } catch (NullPointerException e) {

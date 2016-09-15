@@ -154,7 +154,7 @@ public class I18nInterceptor extends AbstractInterceptor {
      *
      * @param invocation the action invocation
      * @param locale the locale to store
-     * @param storage the place to store this locale (like Storage.SESSSION.toString())
+     * @param storage the place to store this locale (like Storage.SESSSION)
      *
      * @return the locale
      */

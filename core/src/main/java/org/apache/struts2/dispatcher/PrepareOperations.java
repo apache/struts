@@ -188,7 +188,9 @@ public class PrepareOperations {
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
                 }
             } catch (Exception ex) {
-                dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+                if (dispatcher.isHandleException() || dispatcher.isDevMode()) {
+                    dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+                }
             }
         }
 

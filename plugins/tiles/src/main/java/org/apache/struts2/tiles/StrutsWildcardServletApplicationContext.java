@@ -31,7 +31,6 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -100,9 +99,10 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
     public ApplicationResource getResource(ApplicationResource base, Locale locale) {
         String localePath = base.getLocalePath(locale);
-        if (new File(localePath).exists()) {
+        File localFile = new File(localePath);
+        if (localFile.exists()) {
             try {
-                return new StrutsApplicationResource(URI.create("file://" + localePath).toURL());
+                return new StrutsApplicationResource(localFile.toURI().toURL());
             } catch (MalformedURLException e) {
                 LOG.warn("Cannot access [{}]", localePath, e);
                 return null;

@@ -24,24 +24,21 @@ import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
-import ognl.OgnlException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.evaluator.AbstractAttributeEvaluator;
-import org.apache.tiles.evaluator.EvaluationException;
-import org.apache.tiles.request.Request;
-import org.apache.tiles.request.servlet.ServletUtil;
+import org.apache.tiles.servlet.context.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
 
-    private static final Logger LOG = LogManager.getLogger(I18NAttributeEvaluator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(I18NAttributeEvaluator.class);
 
-    @Override
-    public Object evaluate(String expression, Request request) {
+    public Object evaluate(String expression, TilesRequestContext request) {
         Object result = expression;
 
         HttpServletRequest httpRequest = ServletUtil.getServletRequest(request).getRequest();
@@ -65,4 +62,6 @@ public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
         return result;
     }
 
+    public void init(Map<String, String> initParameters) {
+    }
 }

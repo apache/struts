@@ -211,7 +211,11 @@ public class Dispatcher {
      */
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
-        devMode = "true".equals(mode);
+        devMode = Boolean.parseBoolean(mode);
+    }
+
+    public boolean isDevMode() {
+        return devMode;
     }
 
     /**
@@ -263,6 +267,10 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_HANDLE_EXCEPTION)
     public void setHandleException(String handleException) {
         this.handleException = Boolean.parseBoolean(handleException);
+    }
+
+    public boolean isHandleException() {
+        return handleException;
     }
 
     @Inject

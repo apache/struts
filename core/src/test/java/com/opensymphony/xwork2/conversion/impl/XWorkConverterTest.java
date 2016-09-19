@@ -200,6 +200,8 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testFindConversionErrorMessage() {
         ModelDrivenAction action = new ModelDrivenAction();
+        container.inject(action);
+
         stack.push(action);
         stack.push(action.getModel());
 

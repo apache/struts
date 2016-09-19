@@ -82,11 +82,31 @@ public class CompositeTextProviderTest extends XWorkTestCase {
                             public Locale getLocale() {
                                 return Locale.ENGLISH;
                             }
+
+                            @Override
+                            public boolean isValidLocaleString(String localeStr) {
+                                return true;
+                            }
+
+                            @Override
+                            public boolean isValidLocale(Locale locale) {
+                                return true;
+                            }
                         }),
                 new TextProviderSupport(ResourceBundle.getBundle("com.opensymphony.xwork2.validator.CompositeTextProviderTestResourceBundle2"),
                         new LocaleProvider() {
                             public Locale getLocale() {
                                 return Locale.ENGLISH;
+                            }
+
+                            @Override
+                            public boolean isValidLocaleString(String localeStr) {
+                                return true;
+                            }
+
+                            @Override
+                            public boolean isValidLocale(Locale locale) {
+                                return true;
                             }
                         })
 

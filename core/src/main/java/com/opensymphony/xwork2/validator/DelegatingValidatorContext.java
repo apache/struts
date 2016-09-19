@@ -107,6 +107,16 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return localeProvider.getLocale();
     }
 
+    @Override
+    public boolean isValidLocaleString(String localeStr) {
+        return localeProvider.isValidLocaleString(localeStr);
+    }
+
+    @Override
+    public boolean isValidLocale(Locale locale) {
+        return localeProvider.isValidLocale(locale);
+    }
+
     public boolean hasKey(String key) {
     	return textProvider.hasKey(key);
     }
@@ -257,7 +267,17 @@ public class DelegatingValidatorContext implements ValidatorContext {
      */
     private static class ActionContextLocaleProvider implements LocaleProvider {
         public Locale getLocale() {
-            return ActionContext.getContext().getLocale();
+            return ActionContext.getContext().getInstance(LocaleProvider.class).getLocale();
+        }
+
+        @Override
+        public boolean isValidLocaleString(String localeStr) {
+            return ActionContext.getContext().getInstance(LocaleProvider.class).isValidLocaleString(localeStr);
+        }
+
+        @Override
+        public boolean isValidLocale(Locale locale) {
+            return ActionContext.getContext().getInstance(LocaleProvider.class).isValidLocale(locale);
         }
     }
 

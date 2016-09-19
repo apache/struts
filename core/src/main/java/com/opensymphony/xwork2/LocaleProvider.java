@@ -39,4 +39,20 @@ public interface LocaleProvider {
      */
     Locale getLocale();
 
+    /**
+     * Validates if provided string is a valid {@link Locale}
+     *
+     * @param localeStr a String representing locale, e.g. en_EN
+     * @return true if valid
+     */
+    boolean isValidLocaleString(String localeStr);
+
+    /**
+     * Validates if provided {@link Locale} is value
+     *
+     * @param locale instance of {@link Locale} to validate
+     * @return true if valid
+     */
+    boolean isValidLocale(Locale locale);
+
 }

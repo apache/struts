@@ -112,6 +112,16 @@ public class TextProviderSupportTest extends XWorkTestCase {
             public Locale getLocale() {
                 return Locale.ENGLISH;
             }
+
+            @Override
+            public boolean isValidLocaleString(String localeStr) {
+                return true;
+            }
+
+            @Override
+            public boolean isValidLocale(Locale locale) {
+                return true;
+            }
         });
     }
 

@@ -23,6 +23,7 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
@@ -181,8 +182,7 @@ public class I18nInterceptorTest extends TestCase {
         interceptor.intercept(mai);
 
         Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
-        assertNull(locale); // should not be stored here
-        locale = mai.getInvocationContext().getLocale();
+        assertNotNull(locale);
         assertEquals(locale1, locale);
     }
 
@@ -195,6 +195,7 @@ public class I18nInterceptorTest extends TestCase {
 
     public void setUp() throws Exception {
         interceptor = new I18nInterceptor();
+        interceptor.setLocaleProvider(new DefaultLocaleProvider());
         interceptor.init();
         session = new HashMap();
 

@@ -159,6 +159,8 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
 
     public void testFindConversionErrorMessage() {
         ModelDrivenAnnotationAction action = new ModelDrivenAnnotationAction();
+        container.inject(action);
+
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(action);
         stack.push(action.getModel());

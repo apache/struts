@@ -227,6 +227,7 @@ public class OptGroupTest extends AbstractUITagTest {
         selectTag.setListValueKey("valueKey");
 
         LocaleTestAction localeTestAction = new LocaleTestAction();
+        container.inject(localeTestAction);
         
         localeTestAction.setText("LocaleKeyValueTest.ONE","Edno");
         localeTestAction.setText("LocaleKeyValueTest.TWO","Dve");

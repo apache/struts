@@ -154,6 +154,8 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 		super.setUp();
 
         action = new InternalActionSupport();
+		container.inject(action);
+
         ValueStack valueStack = ActionContext.getContext().getValueStack();
         valueStack.push(action);
 

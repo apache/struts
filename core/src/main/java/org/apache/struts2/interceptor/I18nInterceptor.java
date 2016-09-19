@@ -22,6 +22,8 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
@@ -102,6 +104,8 @@ public class I18nInterceptor extends AbstractInterceptor {
     protected String requestOnlyParameterName = DEFAULT_REQUESTONLY_PARAMETER;
     protected String attributeName = DEFAULT_SESSION_ATTRIBUTE;
 
+    protected LocaleProvider localeProvider;
+
     // Request-Only = None
     protected enum Storage { COOKIE, SESSION, NONE }
 
@@ -121,6 +125,11 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     public void setAttributeName(String attributeName) {
         this.attributeName = attributeName;
+    }
+
+    @Inject
+    public void setLocaleProvider(LocaleProvider localeProvider) {
+        this.localeProvider = localeProvider;
     }
 
     @Override
@@ -225,17 +234,25 @@ public class I18nInterceptor extends AbstractInterceptor {
     protected Locale getLocaleFromParam(Object requestedLocale) {
         Locale locale = null;
         if (requestedLocale != null) {
-            locale = (requestedLocale instanceof Locale) ?
-                    (Locale) requestedLocale :
-                    LocalizedTextUtil.localeFromString(requestedLocale.toString(), null);
+            if (requestedLocale instanceof Locale) {
+                locale = (Locale) requestedLocale;
+            } else {
+                String localeStr = requestedLocale.toString();
+                if (localeProvider.isValidLocaleString(localeStr)) {
+                    locale = LocalizedTextUtil.localeFromString(requestedLocale.toString(), null);
+                }
+            }
             if (locale != null) {
                 LOG.debug("Applied request locale: {}", locale);
             }
         }
 
-        if (locale != null && !Arrays.asList(Locale.getAvailableLocales()).contains(locale)) {
-            locale = Locale.getDefault();
+        if (!localeProvider.isValidLocale(locale)) {
+            Locale defaultLocale = localeProvider.getLocale();
+            LOG.debug("Provided locale {} isn't valid, fallback to default locale", locale, defaultLocale);
+            locale = defaultLocale;
         }
+
         return locale;
     }
 

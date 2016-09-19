@@ -54,6 +54,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
 	
 	public void testActionGetTextWithNullObject() throws Exception {
 		MyAction action = new MyAction();
+        container.inject(action);
 		
 		Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
@@ -78,6 +79,8 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
 	
     public void testActionGetText() throws Exception {
         ModelDrivenAction2 action = new ModelDrivenAction2();
+        container.inject(action);
+
         TestBean2 bean = (TestBean2) action.getModel();
         Bar bar = new Bar();
         bean.setBarObj(bar);
@@ -100,6 +103,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/FindMe");
 
         SimpleAction action = new SimpleAction();
+        container.inject(action);
 
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);

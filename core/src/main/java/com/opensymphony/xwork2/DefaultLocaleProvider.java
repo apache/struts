@@ -1,8 +1,10 @@
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -22,4 +24,13 @@ public class DefaultLocaleProvider implements LocaleProvider {
         }
     }
 
+    @Override
+    public boolean isValidLocaleString(String localeStr) {
+        return isValidLocale(LocalizedTextUtil.localeFromString(localeStr, getLocale()));
+    }
+
+    @Override
+    public boolean isValidLocale(Locale locale) {
+        return locale != null && Arrays.asList(Locale.getAvailableLocales()).contains(locale);
+    }
 }

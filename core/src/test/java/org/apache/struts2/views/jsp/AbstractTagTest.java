@@ -86,6 +86,8 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
 
     protected void createMocks() throws Exception {
         action = this.getAction();
+        container.inject(action);
+
         stack = ActionContext.getContext().getValueStack();
         context = stack.getContext();
         stack.push(action);

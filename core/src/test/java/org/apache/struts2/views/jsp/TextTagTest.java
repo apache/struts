@@ -227,6 +227,7 @@ public class TextTagTest extends AbstractTagTest {
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
         newStack.getContext().put(ActionContext.CONTAINER, container);
         TestAction testAction = new TestAction();
+        container.inject(testAction);
         testAction.setResult("bar");
         newStack.push(testAction);
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
@@ -247,6 +248,7 @@ public class TextTagTest extends AbstractTagTest {
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
         newStack.getContext().put(ActionContext.CONTAINER, container);
         TestAction testAction = new TestAction();
+        container.inject(testAction);
         testAction.setResult("bar");
         newStack.push(testAction);
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);

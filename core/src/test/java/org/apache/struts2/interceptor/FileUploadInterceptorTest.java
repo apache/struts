@@ -307,6 +307,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertTrue(ServletFileUpload.isMultipartContent(req));
 
         MyFileupAction action = new MyFileupAction();
+        container.inject(action);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
@@ -363,6 +364,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         action = new TestAction();
+        container.inject(action);
+
         interceptor = new FileUploadInterceptor();
         container.inject(interceptor);
         tempDir = File.createTempFile("struts", "fileupload");

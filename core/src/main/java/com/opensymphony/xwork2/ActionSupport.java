@@ -63,14 +63,19 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         return validationAware.getFieldErrors();
     }
 
+    @Override
     public Locale getLocale() {
-        ActionContext ctx = ActionContext.getContext();
-        if (ctx != null) {
-            return ctx.getLocale();
-        } else {
-        	LOG.debug("Action context not initialized");
-            return null;
-        }
+        return container.getInstance(LocaleProvider.class).getLocale();
+    }
+
+    @Override
+    public boolean isValidLocaleString(String localeStr) {
+        return container.getInstance(LocaleProvider.class).isValidLocaleString(localeStr);
+    }
+
+    @Override
+    public boolean isValidLocale(Locale locale) {
+        return container.getInstance(LocaleProvider.class).isValidLocale(locale);
     }
 
     public boolean hasKey(String key) {

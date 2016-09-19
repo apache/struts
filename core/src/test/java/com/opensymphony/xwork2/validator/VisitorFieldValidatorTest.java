@@ -36,6 +36,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
         super.setUp();
 
         action = new VisitorValidatorTestAction();
+        container.inject(action);
 
         TestBean bean = action.getBean();
         Calendar cal = new GregorianCalendar(1900, 01, 01);

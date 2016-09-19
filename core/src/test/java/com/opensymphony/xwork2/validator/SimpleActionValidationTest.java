@@ -150,7 +150,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         String messageKey = "does.not.exist";
         validator.setMessageKey(messageKey);
 
-        ValidatorContext validatorContext = new DelegatingValidatorContext(new SimpleAction());
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        ValidatorContext validatorContext = new DelegatingValidatorContext(action);
         validator.setValidatorContext(validatorContext);
         validator.validate(this);
         assertTrue(validatorContext.hasActionErrors());

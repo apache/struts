@@ -182,7 +182,8 @@ public class I18nInterceptorTest extends TestCase {
         interceptor.intercept(mai);
 
         Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
-        assertNotNull(locale);
+        assertNull(locale); // should not be stored here
+        locale = mai.getInvocationContext().getLocale();
         assertEquals(locale1, locale);
     }
 

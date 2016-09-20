@@ -247,7 +247,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             }
         }
 
-        if (!localeProvider.isValidLocale(locale)) {
+        if (locale != null && !localeProvider.isValidLocale(locale)) {
             Locale defaultLocale = localeProvider.getLocale();
             LOG.debug("Provided locale {} isn't valid, fallback to default locale", locale, defaultLocale);
             locale = defaultLocale;

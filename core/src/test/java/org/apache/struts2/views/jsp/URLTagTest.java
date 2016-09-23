@@ -21,12 +21,17 @@
 
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.inject.Container;
+import java.io.File;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspWriter;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.URL;
 import org.apache.struts2.dispatcher.ApplicationMap;
@@ -37,15 +42,13 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspWriter;
-import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.mockobjects.dynamic.Mock;
+import com.mockobjects.servlet.MockBodyContent;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.DefaultActionInvocation;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * Unit test for {@link URLTag}.
@@ -674,6 +677,61 @@ public class URLTagTest extends AbstractUITagTest {
 				, writer.toString()
 		);
 	}
+
+    public void testIncludeEmptyParameters() throws Exception {
+        request.setRequestURI("/public/about");
+
+        tag.setAction("company");
+        tag.setEscapeAmp("false");
+
+        tag.doStartTag();
+
+        ParamTag param1 = new ParamTag();
+        param1.setPageContext(pageContext);
+        param1.setName("paraWithSetValue");
+        param1.setValue("");
+        param1.setSuppressEmptyParameters(false);
+        param1.doStartTag();
+        param1.doEndTag();
+
+        ParamTag param2 = new ParamTag();
+        param2.setPageContext(pageContext);
+        param2.setName("paraWithSetBody");
+        param2.setBodyContent(new MockBodyContent() {
+            @Override
+            public String getString() {
+                return "";
+            }
+        });
+        param2.setSuppressEmptyParameters(false);
+        param2.doStartTag();
+        param2.doEndTag();
+
+        ParamTag param3 = new ParamTag();
+        param3.setPageContext(pageContext);
+        param3.setName("paraWithSetValueSurpressed");
+        param3.setValue("");
+        param3.setSuppressEmptyParameters(true);
+        param3.doStartTag();
+        param3.doEndTag();
+
+        ParamTag param4 = new ParamTag();
+        param4.setPageContext(pageContext);
+        param4.setName("paraWithSetBodySurpressed");
+        param4.setBodyContent(new MockBodyContent() {
+            @Override
+            public String getString() {
+                return "";
+            }
+        });
+        param4.setSuppressEmptyParameters(true);
+        param4.doStartTag();
+        param4.doEndTag();
+
+        tag.doEndTag();
+
+        assertEquals("/company.action?paraWithSetValue=&paraWithSetBody=", writer.toString());
+    }
 
     protected void setUp() throws Exception {
         super.setUp();

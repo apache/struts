@@ -50,7 +50,7 @@ import java.io.Writer;
  * <ul>
  *      <li>name (String) - the name of the parameter</li>
  *      <li>value (Object) - the value of the parameter</li>
- *      <li>suppressEmptyParameters (boolean) - whether to suppress empty parameters</li>
+ *      <li>suppressEmptyParameters (boolean) - whether to suppress this parameter if empty</li>
  * </ul>
  * <!-- END SNIPPET: params -->
  * <p>
@@ -81,13 +81,11 @@ import java.io.Writer;
  * </p>
  *
  * <pre>
- * &lt;s:a action="eventAdd" accesskey="a"&gt;
- *   &lt;s:text name="title.heading.eventadd" /&gt;
+ * &lt;s:url action="eventAdd"&gt;
  *   &lt;s:param name="bean.searchString" value="%{bean.searchString}" /&gt;
  *   &lt;s:param name="bean.filter" value="%{bean.filter}" /&gt;
- *   &lt;s:param name="bean.pageNum" value="%{pager.pageNumber}" /&gt;
- *   &lt;s:param name="suppressEmptyParameters" value="true"/&gt;
- * &lt;/s:a&gt;
+ *   &lt;s:param name="bean.pageNum" value="%{pager.pageNumber}" suppressEmptyParameters="true" /&gt;
+ * &lt;/s:url&gt;
  * </pre>
  * <!-- END SNIPPET: example -->
  * <p>
@@ -141,6 +139,8 @@ public class Param extends Component {
                     if (value != null && StringUtils.isNotBlank(value.toString())) {
                         component.addParameter(name, value);
                     }
+                } else if (value == null || StringUtils.isBlank(value.toString())) {
+                    component.addParameter(name, "");
                 } else {
                     component.addParameter(name, value);
                 }
@@ -149,7 +149,9 @@ public class Param extends Component {
             if (component instanceof UnnamedParametric) {
                 ((UnnamedParametric) component).addParameter(body);
             } else {
-                component.addParameter(findString(name), body);
+                if (!(suppressEmptyParameters && StringUtils.isBlank(body))) {
+                    component.addParameter(findString(name), body);
+                }
             }
         }
 

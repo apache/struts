@@ -50,6 +50,7 @@ public class ShowBeansAction extends ActionNamesAction {
 
     @Inject
     public void setContainer(Container container) {
+        super.setContainer(container);
         bindings = new TreeMap<String, Set<Binding>>();
         bindings.put(ObjectFactory.class.getName(), addBindings(container, ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY));
         bindings.put(XWorkConverter.class.getName(), addBindings(container, XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER));

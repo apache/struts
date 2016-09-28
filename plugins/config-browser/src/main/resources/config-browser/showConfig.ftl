@@ -29,7 +29,7 @@
 	<tr><td>Action name:</td><td>${actionName}</td></tr>
 	<tr><td>Namespace:</td><td> ${namespace}</td></tr>
 	<tr><td>Action class:</td><td> ${config.className}</td></tr>
-	<tr><td>Action method:</td><td> <#if config.methodName?exists>${config.methodName}</#if></td></tr>
+	<tr><td>Action method:</td><td> <#if config.methodName??>${config.methodName}</#if></td></tr>
 	<tr><td>Parameters:</td><td> <#list config.params?keys as p>
 		${p}
 	</#list></td></tr>
@@ -41,9 +41,9 @@
 </table>
 
 <!-- URLTag is faulty -->
-<@s.url id="url" action="showConfig" includeParams="none">
-    <@s.param name="namespace">${namespace}</@s.param>
-    <@s.param name="actionName">${actionName}</@s.param>
+<@s.url var="url" action="showConfig" includeParams="none">
+    <@s.param name="namespace">${namespace?html}</@s.param>
+    <@s.param name="actionName">${actionName?html}</@s.param>
 </@s.url>
 <#assign url = url + "&amp;detailView=">
 <!-- Set all to false -->

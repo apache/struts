@@ -37,12 +37,6 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.apache.struts</groupId>
-                                    <artifactId>struts2-portlet</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>war</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.struts</groupId>
                                     <artifactId>struts2-showcase</artifactId>
                                     <version>${project.version}</version>
                                     <type>war</type>

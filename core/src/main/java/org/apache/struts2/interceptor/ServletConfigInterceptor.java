@@ -55,7 +55,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  *
  * <li>{@link ServletResponseAware}</li>
  *
- * <li>{@link ParameterAware}</li>
+ * <li>{@link ParameterAware} - deprecated since 2.5.4, please use {@link HttpParametersAware}</li>
  *
  * <li>{@link HttpParametersAware}</li>
  *
@@ -107,6 +107,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * @see ServletRequestAware
  * @see ServletResponseAware
  * @see ParameterAware
+ * @see HttpParametersAware
  * @see SessionAware
  * @see ApplicationAware
  * @see PrincipalAware

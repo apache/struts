@@ -21,33 +21,27 @@
 
 package org.apache.struts2.interceptor;
 
-import java.util.Map;
+import org.apache.struts2.dispatcher.HttpParameters;
+
 
 /**
  * <p>
- * This interface gives actions an alternative way of receiving input parameters. The map will
- * contain all input parameters as name/value entries. Actions that need this should simply implement it.
+ * This interface gives actions an alternative way of receiving input parameters. The parameters will
+ * contain all input parameters as implementation of {@link org.apache.struts2.dispatcher.Parameter}.
+ * Actions that need this should simply implement it.
  * </p>
  *
  * <p>
  * One common use for this is to have the action propagate parameters to internally instantiated data
  * objects.
  * </p>
- *
- * <p>
- * Note that all parameter values for a given name will be returned, so the type of the objects in
- * the map is <tt>java.lang.String[]</tt>.
- * </p>
- *
- * @deprecated please use {@link HttpParametersAware} instead
  */
-@Deprecated
-public interface ParameterAware {
+public interface HttpParametersAware {
 
     /**
-     * Sets the  map of input parameters in the implementing class.
+     * Sets the HTTP parameters in the implementing class.
      *
-     * @param parameters a Map of parameters (name/value Strings).
+     * @param parameters an instance of {@link HttpParameters}.
      */
-    public void setParameters(Map<String, String[]> parameters);
+    void setParameters(HttpParameters parameters);
 }

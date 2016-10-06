@@ -57,10 +57,10 @@ public class HttpParameters implements Cloneable {
         return HttpParameters.createEmpty().withParent(this).withExtraParams(newParams).build();
     }
 
-    public Map<String, Object> toMap() {
-        Map<String, Object> result = new HashMap<>(parameters.size());
+    public Map<String, String[]> toMap() {
+        Map<String, String[]> result = new HashMap<>(parameters.size());
         for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
-            result.put(entry.getKey(), entry.getValue().getObject());
+            result.put(entry.getKey(), entry.getValue().getMultipleValues());
         }
         return result;
     }

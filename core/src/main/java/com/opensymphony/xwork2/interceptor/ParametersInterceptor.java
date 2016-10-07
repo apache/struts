@@ -161,10 +161,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         HttpParameters params;
         Map<String, Parameter> acceptableParameters;
         if (ordered) {
-            params = HttpParameters.createEmpty().withComparator(getOrderedComparator()).withParent(parameters).build();
+            params = HttpParameters.create().withComparator(getOrderedComparator()).withParent(parameters).build();
             acceptableParameters = new TreeMap<>(getOrderedComparator());
         } else {
-            params = HttpParameters.createEmpty().withParent(parameters).build();
+            params = HttpParameters.create().withParent(parameters).build();
             acceptableParameters = new TreeMap<>();
         }
 

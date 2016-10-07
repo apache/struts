@@ -235,7 +235,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         loadConfigurationProviders(provider,  new MockConfigurationProvider());
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
-        ActionContext.getContext().setParameters(HttpParameters.createEmpty().build());
+        ActionContext.getContext().setParameters(HttpParameters.create().build());
     }
 
     @Override

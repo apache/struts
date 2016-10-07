@@ -218,7 +218,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
         HttpParameters previousParams = ac.getParameters();
 
-        HttpParameters.Builder combinedParams = HttpParameters.createEmpty();
+        HttpParameters.Builder combinedParams = HttpParameters.create();
         if (overwrite) {
             if (previousParams != null) {
                 combinedParams = combinedParams.withParent(previousParams);

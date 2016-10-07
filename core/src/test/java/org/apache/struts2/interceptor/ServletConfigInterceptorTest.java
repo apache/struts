@@ -88,7 +88,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        HttpParameters param = HttpParameters.createEmpty().build();
+        HttpParameters param = HttpParameters.create().build();
         mai.getInvocationContext().setParameters(param);
 
         mock.setParameters(param.toMap());
@@ -104,7 +104,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        HttpParameters param = HttpParameters.createEmpty().build();
+        HttpParameters param = HttpParameters.create().build();
         mai.getInvocationContext().setParameters(param);
 
         mock.setParameters(param);

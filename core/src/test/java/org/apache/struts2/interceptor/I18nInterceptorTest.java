@@ -201,7 +201,7 @@ public class I18nInterceptorTest extends TestCase {
         session = new HashMap();
 
         Map<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
+        ctx.put(ActionContext.PARAMETERS, HttpParameters.create().build());
         ctx.put(ActionContext.SESSION, session);
 
         ac = new ActionContext(ctx);

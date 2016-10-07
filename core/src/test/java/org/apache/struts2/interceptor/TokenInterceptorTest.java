@@ -113,7 +113,7 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
         params = new TreeMap<>();
         extraContext = new TreeMap<>();
         extraContext.put(ActionContext.SESSION, session);
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create().build());
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();

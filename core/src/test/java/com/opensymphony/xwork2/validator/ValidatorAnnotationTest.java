@@ -37,7 +37,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     public void testNotAnnotatedMethodSuccess2() throws Exception {
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create().build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext);
         proxy.execute();
@@ -50,7 +50,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     public void testAnnotatedMethodFailure() throws Exception {
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create().build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
         proxy.execute();

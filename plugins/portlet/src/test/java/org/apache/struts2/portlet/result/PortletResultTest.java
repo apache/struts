@@ -23,7 +23,6 @@ package org.apache.struts2.portlet.result;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.sun.net.httpserver.HttpsParameters;
 import junit.textui.TestRunner;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -74,7 +73,7 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
 
         Map<String, Object> context = new HashMap<String, Object>();
         context.put(SESSION, sessionMap);
-        context.put(PARAMETERS, HttpParameters.createEmpty().build());
+        context.put(PARAMETERS, HttpParameters.create().build());
         context.put(STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
 
         ActionContext.setContext(new ActionContext(context));

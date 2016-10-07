@@ -173,7 +173,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         params = new HashMap();
         context = new HashMap();
         context.put(ActionContext.SESSION, session);
-        context.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
+        context.put(ActionContext.PARAMETERS, HttpParameters.create().build());
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();

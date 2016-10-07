@@ -20,7 +20,7 @@ public class HttpParameters implements Cloneable {
         return new Builder(requestParameterMap);
     }
 
-    public static Builder createEmpty() {
+    public static Builder create() {
         return new Builder(new HashMap<String, Object>());
     }
 

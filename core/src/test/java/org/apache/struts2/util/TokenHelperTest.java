@@ -93,7 +93,7 @@ public class TokenHelperTest extends TestCase {
         session = new HashMap();
         Map ctxMap = new TreeMap();
         ctxMap.put(ActionContext.SESSION, session);
-        ctxMap.put(ActionContext.PARAMETERS, HttpParameters.createEmpty().build());
+        ctxMap.put(ActionContext.PARAMETERS, HttpParameters.create().build());
         ActionContext ctx = new ActionContext(ctxMap);
         ActionContext.setContext(ctx);
     }

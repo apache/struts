@@ -126,7 +126,7 @@ public class StaticParametersInterceptorTest extends XWorkTestCase {
 
         User user = new User();
         ActionContext.getContext().getValueStack().push(user);
-        ActionContext.getContext().setParameters(HttpParameters.createEmpty().build());
+        ActionContext.getContext().setParameters(HttpParameters.create().build());
         int before = ActionContext.getContext().getValueStack().size();
         interceptor.setMerge("false");
         interceptor.intercept(mai);

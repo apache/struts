@@ -201,7 +201,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        ActionContext.getContext().setParameters(HttpParameters.createEmpty().build());
+        ActionContext.getContext().setParameters(HttpParameters.create().build());
         ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
@@ -222,7 +222,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        ActionContext.getContext().setParameters(HttpParameters.createEmpty().build());
+        ActionContext.getContext().setParameters(HttpParameters.create().build());
         ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);

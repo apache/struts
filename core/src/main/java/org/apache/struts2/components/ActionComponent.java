@@ -216,7 +216,7 @@ public class ActionComponent extends ContextBean {
             parentParams = new ActionContext(getStack().getContext()).getParameters();
         }
 
-        HttpParameters.Builder builder = HttpParameters.createEmpty();
+        HttpParameters.Builder builder = HttpParameters.create();
         if (parentParams != null) {
             builder = builder.withParent(parentParams);
         }

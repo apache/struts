@@ -111,7 +111,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field2", "some field error 2");
 
         ActionContext actionContext = new ActionContext(new HashMap());
-        actionContext.setParameters(HttpParameters.createEmpty().build());
+        actionContext.setParameters(HttpParameters.create().build());
         actionContext.put(ActionContext.SESSION, sessionMap);
 
         HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
@@ -191,7 +191,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field2", "some field error 2");
 
         ActionContext actionContext = new ActionContext(new HashMap());
-        actionContext.setParameters(HttpParameters.createEmpty().build());
+        actionContext.setParameters(HttpParameters.create().build());
         actionContext.setSession(sessionMap);
 
         HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);

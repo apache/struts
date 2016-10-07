@@ -23,6 +23,7 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class MultiselectInterceptor extends AbstractInterceptor {
      */
     public String intercept(ActionInvocation ai) throws Exception {
         HttpParameters parameters = ai.getInvocationContext().getParameters();
-        Map<String, Object> newParams = new HashMap<>();
+        Map<String, Parameter> newParams = new HashMap<>();
 
         for (String name : parameters.getNames()) {
             if (name.startsWith("__multiselect_")) {
@@ -56,14 +57,14 @@ public class MultiselectInterceptor extends AbstractInterceptor {
                 // is this multi-select box submitted?
                 if (!parameters.contains(key)) {
                     // if not, let's be sure to default the value to an empty string array
-                    newParams.put(key, new String[0]);
+                    newParams.put(key, new Parameter.Request(key, new String[0]));
                 }
 
                 parameters = parameters.remove(name);
             }
         }
 
-        ai.getInvocationContext().setParameters(parameters.clone(newParams));
+        ai.getInvocationContext().getParameters().appendAll(newParams);
 
         return ai.invoke();
     }

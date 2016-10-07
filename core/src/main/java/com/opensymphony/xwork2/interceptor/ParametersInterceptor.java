@@ -203,7 +203,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             String name = entry.getKey();
             Parameter value = entry.getValue();
             try {
-                if (value.isMultiple()) {
+                if (value instanceof Parameter.File) {
+                    newStack.setParameter(name, value.getObject());
+                } else  if (value.isMultiple()) {
                     newStack.setParameter(name, value.getMultipleValues());
                 } else {
                     newStack.setParameter(name, value.getValue());

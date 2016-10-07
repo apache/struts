@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.ContentTypeMatcher;
 
@@ -294,11 +295,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         }
 
                         if (!acceptedFiles.isEmpty()) {
-                            Map<String, Object> newParams = new HashMap<>();
-                            newParams.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
-                            newParams.put(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
-                            newParams.put(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
-                            ac.setParameters(ac.getParameters().clone(newParams));
+                            Map<String, Parameter> newParams = new HashMap<>();
+                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()])));
+                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()])));
+                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()])));
+                            ac.getParameters().appendAll(newParams);
                         }
                     }
                 } else {

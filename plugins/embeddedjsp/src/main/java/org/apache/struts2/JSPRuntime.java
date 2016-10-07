@@ -22,12 +22,14 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.HttpJspPage;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -54,12 +56,14 @@ public abstract class JSPRuntime {
         int i = location.indexOf("?");
         if (i > 0) {
             //extract params from the url and add them to the request
-            HttpParameters parameters = ActionContext.getContext().getParameters();
             String query = location.substring(i + 1);
             Map<String, Object> queryParams = urlHelper.parseQueryString(query, true);
             if (queryParams != null && !queryParams.isEmpty()) {
-                parameters = parameters.clone(queryParams);
-                ActionContext.getContext().setParameters(parameters);
+                Map<String, Parameter> newParams = new HashMap<>();
+                for (Map.Entry<String, Object> entry : queryParams.entrySet()) {
+                    newParams.put(entry.getKey(), new Parameter.Request(entry.getKey(), entry.getValue()));
+                }
+                ActionContext.getContext().getParameters().appendAll(newParams);
             }
             location = location.substring(0, i);
         }

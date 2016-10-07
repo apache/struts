@@ -53,16 +53,17 @@ public class HttpParameters implements Cloneable {
         return parameters.containsKey(name);
     }
 
-    public HttpParameters clone(Map<String, ?> newParams) {
-        return HttpParameters.createEmpty().withParent(this).withExtraParams(newParams).build();
-    }
-
     public Map<String, String[]> toMap() {
         Map<String, String[]> result = new HashMap<>(parameters.size());
         for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
             result.put(entry.getKey(), entry.getValue().getMultipleValues());
         }
         return result;
+    }
+
+    public HttpParameters appendAll(Map<String, Parameter> newParams) {
+        parameters.putAll(newParams);
+        return this;
     }
 
     public static class Builder {

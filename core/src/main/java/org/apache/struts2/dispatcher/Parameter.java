@@ -3,6 +3,8 @@ package org.apache.struts2.dispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+
 public interface Parameter {
 
     String getName();
@@ -79,6 +81,12 @@ public interface Parameter {
         @Override
         public Object getObject() {
             return value;
+        }
+    }
+
+    class File extends Request {
+        public File(String name, Object value) {
+            super(name, value);
         }
     }
 

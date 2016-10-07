@@ -89,7 +89,7 @@
         <asm5.version>5.1</asm5.version>
         <tiles.version>3.0.7</tiles.version>
         <tiles-request.version>1.0.6</tiles-request.version>
-        <log4j2.version>2.6.2</log4j2.version>
+        <log4j2.version>2.7</log4j2.version>
 
         <!-- SCM Site Configuration -->
         <site.mainDirectory>${project.build.directory}/site</site.mainDirectory>

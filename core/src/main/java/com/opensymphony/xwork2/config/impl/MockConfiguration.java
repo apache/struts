@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.*;
 
@@ -51,6 +52,7 @@ public class MockConfiguration implements Configuration {
         builder.constant(XWorkConstants.DEV_MODE, "false");
         builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "true");
         builder.constant(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, "true");
+        builder.constant(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, "false");
         container = builder.create(true);
     }
 

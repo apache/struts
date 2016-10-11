@@ -87,6 +87,7 @@ import com.opensymphony.xwork2.validator.ValidatorFactory;
 import com.opensymphony.xwork2.validator.ValidatorFileParser;
 import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -181,6 +182,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(AcceptedPatternsChecker.class, DefaultAcceptedPatternsChecker.class, Scope.PROTOTYPE)
         ;
 
+        props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.DEV_MODE, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());

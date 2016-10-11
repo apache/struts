@@ -3,8 +3,10 @@ package com.opensymphony.xwork2.security;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,8 +19,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     public static final String[] EXCLUDED_PATTERNS = {
         "(^|\\%\\{)((#?)(top(\\.|\\['|\\[\")|\\[\\d\\]\\.)?)(dojo|struts|session|request|response|application|servlet(Request|Response|Context)|parameters|context|_memberAccess)(\\.|\\[).*",
-        ".*(^|\\.|\\[|\\'|\"|get)class(\\(\\.|\\[|\\'|\").*",
-        "^(action|method):.*"
+        ".*(^|\\.|\\[|\\'|\"|get)class(\\(\\.|\\[|\\'|\").*"
     };
 
     private Set<Pattern> excludedPatterns;
@@ -42,6 +43,13 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
         LOG.debug("Adding additional global patterns [{}] to excluded patterns!", excludePatterns);
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+        }
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    public void setDynamicMethodInvocation(String dmiValue) {
+        if (BooleanUtils.toBoolean(dmiValue)) {
+            setAdditionalExcludePatterns("^(action|method):.*");
         }
     }
 

@@ -36,8 +36,7 @@ public abstract class ConfigurationTestBase extends XWorkTestCase {
         container = configuration.getContainer();
 
         XmlConfigurationProvider prov = new XmlConfigurationProvider(filename, true);
-        prov.setObjectFactory(container.getInstance(ObjectFactory.class));
-        prov.setFileManagerFactory(container.getInstance(FileManagerFactory.class));
+        container.inject(prov);
         prov.init(configuration);
         prov.loadPackages();
         return prov;

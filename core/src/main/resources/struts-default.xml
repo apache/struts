@@ -173,6 +173,8 @@
     <bean type="com.opensymphony.xwork2.security.ExcludedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker" scope="prototype" />
     <bean type="com.opensymphony.xwork2.security.AcceptedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker" scope="prototype" />
 
+    <bean type="com.opensymphony.xwork2.config.providers.ValueSubstitutor" class="com.opensymphony.xwork2.config.providers.EnvsValueSubstitutor" scope="singleton"/>
+
     <package name="struts-default" abstract="true" strict-method-invocation="true">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>

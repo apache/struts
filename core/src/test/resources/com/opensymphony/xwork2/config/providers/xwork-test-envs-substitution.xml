@@ -1,0 +1,17 @@
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.5//EN"
+    "http://struts.apache.org/dtds/xwork-2.5.dtd"
+ >
+
+<xwork>
+
+    <constant name="foo" value="bar"/>
+
+    <constant name="user" value="${ENV.USER}"/>
+    <constant name="home" value="Current HOME = ${ENV.HOME}"/>
+    <constant name="os" value="Current OS = ${os.name}"/>
+    <constant name="unknown" value="Unknown = ${ENV.UNKNOWN:default}"/>
+
+    <constant name="struts.devMode" value="${ENV.STRUTS_DEV_MODE:false}"/>
+
+</xwork>

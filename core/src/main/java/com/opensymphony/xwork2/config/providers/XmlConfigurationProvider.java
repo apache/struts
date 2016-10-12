@@ -98,6 +98,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     private Map<String, Element> declaredPackages = new HashMap<>();
 
     private FileManager fileManager;
+    private ValueSubstitutor valueSubstitutor;
 
     public XmlConfigurationProvider() {
         this("xwork.xml", true);
@@ -139,6 +140,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     @Inject
     public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
         this.fileManager = fileManagerFactory.getFileManager();
+    }
+
+    @Inject(required = false)
+    public void setValueSubstitutor(ValueSubstitutor valueSubstitutor) {
+        this.valueSubstitutor = valueSubstitutor;
     }
 
     /**
@@ -270,6 +276,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     } else if ("constant".equals(nodeName)) {
                         String name = child.getAttribute("name");
                         String value = child.getAttribute("value");
+
+                        if (valueSubstitutor != null) {
+                            LOG.debug("Substituting value [{}] using [{}]", value, valueSubstitutor.getClass().getName());
+                            value = valueSubstitutor.substitute(value);
+                        }
+
                         props.setProperty(name, value, childNode);
                     } else if (nodeName.equals("unknown-handler-stack")) {
                         List<UnknownHandlerConfig> unknownHandlerStack = new ArrayList<UnknownHandlerConfig>();

@@ -180,6 +180,8 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
 
                 .factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class, Scope.PROTOTYPE)
                 .factory(AcceptedPatternsChecker.class, DefaultAcceptedPatternsChecker.class, Scope.PROTOTYPE)
+
+                .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON)
         ;
 
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());

@@ -12,6 +12,7 @@ import org.apache.commons.fileupload.util.Streams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -48,7 +49,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /**
      * Internal list of raised errors to be passed to the the Struts2 framework.
      */
-    private List<String> errors = new ArrayList<>();
+    private List<LocalizedMessage> errors = new ArrayList<>();
 
     /**
      * Internal list of non-critical messages to be passed to the Struts2 framework.
@@ -130,7 +131,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getErrors()
      */
-    public List<String> getErrors() {
+    public List<LocalizedMessage> getErrors() {
         return errors;
     }
 
@@ -239,7 +240,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
             processUpload(request, saveDir);
         } catch (Exception e) {
             LOG.warn("Error occurred during parsing of multi part request", e);
-            String errorMessage = buildErrorMessage(e, new Object[]{});
+            LocalizedMessage errorMessage = buildErrorMessage(e, new Object[]{});
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
             }
@@ -349,7 +350,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     private void addFileSkippedError(String fileName, HttpServletRequest request) {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
         FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), maxSize);
-        String message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), maxSize});
+        LocalizedMessage message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), maxSize});
         if (!errors.contains(message)) {
             errors.add(message);
         }
@@ -507,10 +508,10 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
      * @param args arguments
      * @return error message
      */
-    private String buildErrorMessage(Throwable e, Object[] args) {
+    private LocalizedMessage buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.message.upload.error." + e.getClass().getSimpleName();
         LOG.debug("Preparing error message for key: [{}]", errorKey);
-        return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
+        return new LocalizedMessage(this.getClass(), errorKey, e.getMessage(), args);
     }
 
     /**

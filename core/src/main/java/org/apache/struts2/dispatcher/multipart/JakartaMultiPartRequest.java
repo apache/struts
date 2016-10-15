@@ -34,6 +34,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -56,7 +57,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     protected Map<String, List<String>> params = new HashMap<>();
 
     // any errors while processing this request
-    protected List<String> errors = new ArrayList<>();
+    protected List<LocalizedMessage> errors = new ArrayList<>();
 
     protected long maxSize;
     private Locale defaultLocale = Locale.ENGLISH;
@@ -85,7 +86,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
             processUpload(request, saveDir);
         } catch (FileUploadException e) {
             LOG.warn("Request exceeded size limit!", e);
-            String errorMessage = null;
+            LocalizedMessage errorMessage = null;
             
             if(e instanceof FileUploadBase.SizeLimitExceededException) {
                 FileUploadBase.SizeLimitExceededException ex = (FileUploadBase.SizeLimitExceededException) e;
@@ -99,7 +100,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
             }
         } catch (Exception e) {
             LOG.warn("Unable to parse request", e);
-            String errorMessage = buildErrorMessage(e, new Object[]{});
+            LocalizedMessage errorMessage = buildErrorMessage(e, new Object[]{});
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
             }
@@ -112,10 +113,10 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         }
     }
 
-    protected String buildErrorMessage(Throwable e, Object[] args) {
+    protected LocalizedMessage buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
         LOG.debug("Preparing error message for key: [{}]", errorKey);
-        return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
+        return new LocalizedMessage(this.getClass(), errorKey, e.getMessage(), args);
     }
 
     protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
@@ -315,7 +316,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getErrors()
      */
-    public List<String> getErrors() {
+    public List<LocalizedMessage> getErrors() {
         return errors;
     }
 

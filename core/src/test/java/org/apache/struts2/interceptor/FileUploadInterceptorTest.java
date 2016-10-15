@@ -41,8 +41,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -333,6 +335,44 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertEquals(2, fileRealFilenames.length);
         assertEquals("text/html", fileContentTypes[0]);
         assertNotNull("test1.html", fileRealFilenames[0]);
+    }
+
+    public void testMultipartRequestLocalizedError() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding("text/html");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
+                "Content-Type: text/html\r\n" +
+                "\r\n" +
+                "Unit test of FileUploadInterceptor" +
+                "\r\n" +
+                "-----1234--\r\n");
+        req.setContent(content.getBytes("US-ASCII"));
+
+        MyFileupAction action = new MyFileupAction();
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext().setParameters(HttpParameters.create(param).build());
+        // set German locale
+        ActionContext.getContext().setLocale(Locale.GERMAN);
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 10));
+
+        interceptor.intercept(mai);
+
+        assertTrue(action.hasActionErrors());
+
+        Collection<String> errors = action.getActionErrors();
+        assertEquals(1, errors.size());
+        String msg = errors.iterator().next();
+        // the error message should contain at least this test
+        assertTrue(msg.startsWith("Der Request übertraf die maximal erlaubte Größe"));
     }
 
     private String encodeTextFile(String bondary, String endline, String name, String filename, String contentType, String content) {

@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +61,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 
     protected static final Logger LOG = LogManager.getLogger(MultiPartRequestWrapper.class);
 
-    private Collection<String> errors;
+    private Collection<LocalizedMessage> errors;
     private MultiPartRequest multi;
     private Locale defaultLocale = Locale.ENGLISH;
 
@@ -83,7 +84,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         setLocale(request);
         try {
             multi.parse(request, saveDir);
-            for (String error : multi.getErrors()) {
+            for (LocalizedMessage error : multi.getErrors()) {
                 addError(error);
             }
         } catch (IOException e) {
@@ -102,10 +103,10 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         }
     }
 
-    protected String buildErrorMessage(Throwable e, Object[] args) {
+    protected LocalizedMessage buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
         LOG.debug("Preparing error message for key: [{}]", errorKey);
-        return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
+        return new LocalizedMessage(this.getClass(), errorKey, e.getMessage(), args);
     }
 
     /**
@@ -234,7 +235,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      *
      * @return the error Collection.
      */
-    public Collection<String> getErrors() {
+    public Collection<LocalizedMessage> getErrors() {
         return errors;
     }
 
@@ -243,7 +244,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      *
      * @param anErrorMessage the error message to report.
      */
-    protected void addError(String anErrorMessage) {
+    protected void addError(LocalizedMessage anErrorMessage) {
         if (!errors.contains(anErrorMessage)) {
             errors.add(anErrorMessage);
         }

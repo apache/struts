@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import http.utils.multipartrequest.ServletMultipartRequest;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -131,7 +132,7 @@ public class PellMultiPartRequest implements MultiPartRequest {
         return values.toArray(new String[values.size()]);
     }
 
-    public List<String> getErrors() {
+    public List<LocalizedMessage> getErrors() {
         return Collections.emptyList();
     }
 

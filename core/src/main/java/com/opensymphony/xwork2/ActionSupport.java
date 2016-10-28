@@ -37,7 +37,8 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
     private final ValidationAwareSupport validationAware = new ValidationAwareSupport();
 
     private transient TextProvider textProvider;
-    private Container container;
+
+    protected Container container;
 
     public void setActionErrors(Collection<String> errorMessages) {
         validationAware.setActionErrors(errorMessages);

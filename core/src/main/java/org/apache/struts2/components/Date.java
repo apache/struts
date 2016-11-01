@@ -288,8 +288,10 @@ public class Date extends ContextBean {
             Object dateObject = findValue(name);
             if (dateObject instanceof java.util.Date) {
                 date = (java.util.Date) dateObject;
-            } else if(dateObject instanceof Calendar){
+            } else if (dateObject instanceof Calendar) {
                 date = ((Calendar) dateObject).getTime();
+            } else if (dateObject instanceof Long) {
+                date = new java.util.Date((long) dateObject);
             } else {
                 if (devMode) {
                     String developerNotification = LocalizedTextUtil.findText(
@@ -299,12 +301,12 @@ public class Date extends ContextBean {
                             "Developer Notification:\n{0}",
                             new Object[]{
                                     "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
-                                            + (dateObject != null ? dateObject.getClass() : "null") + ") isn't instance of java.util.Date nor java.util.Calendar!"
+                                            + (dateObject != null ? dateObject.getClass() : "null") + ") isn't instance of java.util.Date nor java.util.Calendar nor long!"
                             }
                     );
                     LOG.warn(developerNotification);
                 } else {
-                    LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
+                    LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar nor long!",
                             name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
                 }
             }

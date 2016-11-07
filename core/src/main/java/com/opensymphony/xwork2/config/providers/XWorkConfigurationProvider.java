@@ -4,6 +4,8 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
+import com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor;
+import com.opensymphony.xwork2.ognl.accessor.ParameterPropertyAccessor;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
@@ -88,6 +90,8 @@ import com.opensymphony.xwork2.validator.ValidatorFileParser;
 import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -145,10 +149,12 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(PatternMatcher.class, WildcardHelper.class, Scope.SINGLETON)
                 .factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON)
                 .factory(ReflectionContextFactory.class, OgnlReflectionContextFactory.class, Scope.SINGLETON)
+
                 .factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, Object.class.getName(), ObjectAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, Iterator.class.getName(), XWorkIteratorPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, Enumeration.class.getName(), XWorkEnumerationAccessor.class, Scope.SINGLETON)
+
                 .factory(UnknownHandlerManager.class, DefaultUnknownHandlerManager.class, Scope.SINGLETON)
 
                 // silly workarounds for ognl since there is no way to flush its caches
@@ -160,6 +166,9 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(PropertyAccessor.class, Map.class.getName(), XWorkMapPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, Collection.class.getName(), XWorkCollectionPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, ObjectProxy.class.getName(), ObjectProxyPropertyAccessor.class, Scope.SINGLETON)
+                .factory(PropertyAccessor.class, HttpParameters.class.getName(), HttpParametersPropertyAccessor.class, Scope.SINGLETON)
+                .factory(PropertyAccessor.class, Parameter.class.getName(), ParameterPropertyAccessor.class, Scope.SINGLETON)
+
                 .factory(MethodAccessor.class, Object.class.getName(), XWorkMethodAccessor.class, Scope.SINGLETON)
                 .factory(MethodAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON)
 

@@ -51,6 +51,8 @@ public class SimpleAction extends ActionSupport {
     private String aliasDest;
     private Map<String, String> protectedMap = new HashMap<>();
     private Map<String, String> existingMap = new HashMap<>();
+
+    private List<TestBean> beanList;
     
     public static boolean resultCalled;
 
@@ -260,5 +262,13 @@ public class SimpleAction extends ActionSupport {
 
     public void setShortFoo(short shortFoo) {
         this.shortFoo = shortFoo;
+    }
+
+    public List<TestBean> getBeanList() {
+        return beanList;
+    }
+
+    public void setBeanList(List<TestBean> beanList) {
+        this.beanList = beanList;
     }
 }

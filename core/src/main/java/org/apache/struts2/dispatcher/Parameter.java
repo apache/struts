@@ -82,6 +82,11 @@ public interface Parameter {
         public Object getObject() {
             return value;
         }
+
+        @Override
+        public String toString() {
+            return getValue();
+        }
     }
 
     class File extends Request {
@@ -90,11 +95,11 @@ public interface Parameter {
         }
     }
 
-    class EmptyHttpParameter implements Parameter {
+    class Empty implements Parameter {
 
         private String name;
 
-        public EmptyHttpParameter(String name) {
+        public Empty(String name) {
             this.name = name;
         }
 

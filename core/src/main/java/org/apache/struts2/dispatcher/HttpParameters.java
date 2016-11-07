@@ -28,7 +28,7 @@ public class HttpParameters implements Cloneable {
         if (parameters.containsKey(name)) {
             return parameters.get(name);
         } else {
-            return new Parameter.EmptyHttpParameter(name);
+            return new Parameter.Empty(name);
         }
     }
 

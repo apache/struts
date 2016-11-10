@@ -1,5 +1,7 @@
 package org.apache.struts2.dispatcher;
 
+import org.apache.struts2.interceptor.ParameterAware;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,6 +55,12 @@ public class HttpParameters implements Cloneable {
         return parameters.containsKey(name);
     }
 
+    /**
+     * Access to this method will be restricted with the next versiob
+     * @deprecated since 2.5.6, do not use it
+     * TODO: reduce access level to `private`
+     */
+    @Deprecated
     public Map<String, String[]> toMap() {
         Map<String, String[]> result = new HashMap<>(parameters.size());
         for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
@@ -64,6 +72,10 @@ public class HttpParameters implements Cloneable {
     public HttpParameters appendAll(Map<String, Parameter> newParams) {
         parameters.putAll(newParams);
         return this;
+    }
+
+    public void applyParameters(ParameterAware parameterAware) {
+        parameterAware.setParameters(toMap());
     }
 
     public static class Builder {

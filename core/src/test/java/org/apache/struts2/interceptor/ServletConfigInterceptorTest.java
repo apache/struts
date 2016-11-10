@@ -91,7 +91,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         HttpParameters param = HttpParameters.create().build();
         mai.getInvocationContext().setParameters(param);
 
-        mock.setParameters(param.toMap());
+        param.applyParameters(mock);
         expectLastCall().times(1);
 
         replay(mock);

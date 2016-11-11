@@ -17,7 +17,7 @@ package com.opensymphony.xwork2.mock;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

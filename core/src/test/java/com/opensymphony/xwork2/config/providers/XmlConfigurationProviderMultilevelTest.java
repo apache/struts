@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

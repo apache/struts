@@ -29,7 +29,7 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import junit.framework.Assert;
+import org.junit.Assert;
 import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 import org.apache.struts2.dispatcher.HttpParameters;

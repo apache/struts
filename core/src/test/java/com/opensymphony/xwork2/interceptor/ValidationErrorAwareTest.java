@@ -10,7 +10,7 @@ import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 

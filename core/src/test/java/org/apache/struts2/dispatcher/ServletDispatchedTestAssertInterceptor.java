@@ -21,7 +21,7 @@
 
 package org.apache.struts2.dispatcher;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.struts2.TestAction;
 

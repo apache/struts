@@ -218,10 +218,11 @@ public class TextTagTest extends AbstractTagTest {
         assertEquals(value_int, writer.toString());
     }
 
-     public void testTextTagSearchesStackByDefault() throws JspException {
+     public void testTextTagCanSearchStackToFindValue() throws JspException {
         String key = "result";
 
         tag.setName(key);
+        tag.setSearchValueStack("true");
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
@@ -238,11 +239,10 @@ public class TextTagTest extends AbstractTagTest {
         assertEquals("bar", writer.toString());
     }
 
-    public void testTextTagDoNotSearchStack() throws JspException {
+    public void testTextTagDoNotSearchStackByDefault() throws JspException {
         String key = "result";
 
         tag.setName(key);
-        tag.setSearchValueStack("false");
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();

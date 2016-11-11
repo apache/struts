@@ -51,7 +51,7 @@ import java.util.List;
  *
  * <p>
  * If the named message is not found in a property file, then the body of the
- * tag will be used as default message. If no body is used, then the stack will
+ * tag will be used as default message. If no body is used, then the stack can
  * be searched, and if a value is returned, it will written to the output.
  * If no value is found on the stack, the key of the message will be written out.
  * </p>
@@ -115,9 +115,10 @@ import java.util.List;
     tldTagClass="org.apache.struts2.views.jsp.TextTag",
     description="Render a I18n text message")
 public class Text extends ContextBean implements Param.UnnamedParametric {
+
     private static final Logger LOG = LogManager.getLogger(Text.class);
 
-    protected List values = Collections.EMPTY_LIST;
+    protected List<Object> values = Collections.emptyList();
     protected String actualName;
     protected String name;
     protected String searchStack;
@@ -131,7 +132,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="Search the stack if property is not found on resources", type = "Boolean", defaultValue = "true")
+    @StrutsTagAttribute(description="Search the stack if property is not found on resources", type = "Boolean", defaultValue = "false")
     public void setSearchValueStack(String searchStack) {
         this.searchStack = searchStack;
     }
@@ -152,8 +153,13 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
             defaultMessage = actualName;
         }
 
-        Boolean doSearchStack = searchStack != null ? (Boolean) findValue(searchStack, Boolean.class) : true;
-        String msg = TextProviderHelper.getText(actualName, defaultMessage, values, getStack(), doSearchStack == null || doSearchStack);
+        Boolean doSearchStack = false;
+        if (searchStack != null) {
+            Object value = findValue(searchStack, Boolean.class);
+            doSearchStack = value != null ? (Boolean) value : false;
+        }
+
+        String msg = TextProviderHelper.getText(actualName, defaultMessage, values, getStack(), doSearchStack);
 
         if (msg != null) {
             try {
@@ -176,7 +182,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
 
     public void addParameter(Object value) {
         if (values.isEmpty()) {
-            values = new ArrayList(4);
+            values = new ArrayList<>(4);
         }
 
         values.add(value);

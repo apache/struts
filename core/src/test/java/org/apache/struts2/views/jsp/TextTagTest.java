@@ -274,7 +274,7 @@ public class TextTagTest extends AbstractTagTest {
 
     public void testWithNoMessageAndNoDefaultKeyReturned() throws JspException {
         final String key = "key.does.not.exist";
-        tag.setName("'" + key + "'");
+        tag.setName(key);
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(key, writer.toString());

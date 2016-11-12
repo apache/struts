@@ -49,7 +49,7 @@ public class TextProviderHelper {
      * @return the message if found, otherwise the defaultMessage
      */
     public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack) {
-        return getText(key, defaultMessage, args, stack, true);
+        return getText(key, defaultMessage, args, stack, false);
     }
 
     /**

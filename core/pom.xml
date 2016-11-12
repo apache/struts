@@ -409,7 +409,6 @@
             <artifactId>testng</artifactId>
             <scope>compile</scope>
             <optional>true</optional>
-            <classifier>jdk15</classifier>
         </dependency>
 
         <!-- SLF4J support -->

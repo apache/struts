@@ -138,6 +138,8 @@ public class Param extends Component {
                 if (suppressEmptyParameters) {
                     if (value != null && StringUtils.isNotBlank(value.toString())) {
                         component.addParameter(name, value);
+                    } else {
+                        component.addParameter(name, null);
                     }
                 } else if (value == null || StringUtils.isBlank(value.toString())) {
                     component.addParameter(name, "");
@@ -151,6 +153,8 @@ public class Param extends Component {
             } else {
                 if (!(suppressEmptyParameters && StringUtils.isBlank(body))) {
                     component.addParameter(findString(name), body);
+                } else {
+                    component.addParameter(findString(name), null);
                 }
             }
         }

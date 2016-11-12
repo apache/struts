@@ -688,7 +688,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         ParamTag param1 = new ParamTag();
         param1.setPageContext(pageContext);
-        param1.setName("paraWithSetValue");
+        param1.setName("paramWithSetValue");
         param1.setValue("");
         param1.setSuppressEmptyParameters(false);
         param1.doStartTag();
@@ -696,7 +696,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         ParamTag param2 = new ParamTag();
         param2.setPageContext(pageContext);
-        param2.setName("paraWithSetBody");
+        param2.setName("paramWithSetBody");
         param2.setBodyContent(new MockBodyContent() {
             @Override
             public String getString() {
@@ -709,7 +709,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         ParamTag param3 = new ParamTag();
         param3.setPageContext(pageContext);
-        param3.setName("paraWithSetValueSurpressed");
+        param3.setName("paramWithSetValueSuppressed");
         param3.setValue("");
         param3.setSuppressEmptyParameters(true);
         param3.doStartTag();
@@ -717,7 +717,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         ParamTag param4 = new ParamTag();
         param4.setPageContext(pageContext);
-        param4.setName("paraWithSetBodySurpressed");
+        param4.setName("paramWithSetBodySuppressed");
         param4.setBodyContent(new MockBodyContent() {
             @Override
             public String getString() {
@@ -730,7 +730,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         tag.doEndTag();
 
-        assertEquals("/company.action?paraWithSetValue=&paraWithSetBody=", writer.toString());
+        assertEquals("/company.action?paramWithSetValue=&paramWithSetBody=", writer.toString());
     }
 
     protected void setUp() throws Exception {

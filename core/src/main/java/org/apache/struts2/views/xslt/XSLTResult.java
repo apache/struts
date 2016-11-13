@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -330,26 +328,7 @@ public class XSLTResult implements Result {
                 transformer = TransformerFactory.newInstance().newTransformer();
 
             transformer.setURIResolver(getURIResolver());
-            transformer.setErrorListener(new ErrorListener() {
-
-                public void error(TransformerException exception)
-                        throws TransformerException {
-                    throw new StrutsException("Error transforming result", exception);
-                }
-
-                public void fatalError(TransformerException exception)
-                        throws TransformerException {
-                    throw new StrutsException("Fatal error transforming result", exception);
-                }
-
-                public void warning(TransformerException exception)
-                        throws TransformerException {
-                    if (LOG.isWarnEnabled()) {
-                	LOG.warn(exception.getMessage(), exception);
-                    }
-                }
-                
-            });
+            transformer.setErrorListener(buildErrorListener());
 
             String mimeType;
             if (templates == null)
@@ -383,6 +362,24 @@ public class XSLTResult implements Result {
             LOG.error("Unable to render XSLT Template, '{}'", location, e);
             throw e;
         }
+    }
+
+    protected ErrorListener buildErrorListener() {
+        return new ErrorListener() {
+
+            public void error(TransformerException exception) throws TransformerException {
+                throw new StrutsException("Error transforming result", exception);
+            }
+
+            public void fatalError(TransformerException exception) throws TransformerException {
+                throw new StrutsException("Fatal error transforming result", exception);
+            }
+
+            public void warning(TransformerException exception) throws TransformerException {
+                LOG.warn(exception.getMessage(), exception);
+            }
+
+        };
     }
 
     protected AdapterFactory getAdapterFactory() {
@@ -422,6 +419,7 @@ public class XSLTResult implements Result {
 
                 TransformerFactory factory = TransformerFactory.newInstance();
                 factory.setURIResolver(getURIResolver());
+                factory.setErrorListener(buildErrorListener());
                 templates = factory.newTemplates(new StreamSource(resource.openStream()));
                 templatesCache.put(path, templates);
             }

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -184,6 +182,17 @@ public class XSLTResultTest extends StrutsInternalTestCase {
             }
         };
         result.setStylesheetLocation("XSLTResultTest4.xsl");
+        try {
+            result.execute(mai);
+            fail("Should have thrown an exception");
+        } catch (Exception ex) {
+            assertEquals("Error transforming result", ex.getMessage());
+        }
+    }
+
+    public void testTransformWithBadCharacter() throws Exception {
+        result = new XSLTResult();
+        result.setStylesheetLocation("XSLTResultTest.bad.character.xsl");
         try {
             result.execute(mai);
             fail("Should have thrown an exception");

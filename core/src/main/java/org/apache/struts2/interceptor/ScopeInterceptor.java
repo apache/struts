@@ -299,7 +299,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
                 }
             }
 
-        if (ActionContext.getContext().getParameters().get(sessionReset) != null) {
+        if (ActionContext.getContext().getParameters().get(sessionReset).isDefined()) {
             return;
         }
 

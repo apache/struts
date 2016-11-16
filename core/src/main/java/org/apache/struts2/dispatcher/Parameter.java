@@ -1,5 +1,6 @@
 package org.apache.struts2.dispatcher;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -85,13 +86,21 @@ public interface Parameter {
 
         @Override
         public String toString() {
-            return getValue();
+            return StringEscapeUtils.escapeHtml4(getValue());
         }
     }
 
     class File extends Request {
+
         public File(String name, Object value) {
             super(name, value);
+        }
+
+        @Override
+        public String toString() {
+            return "File{" +
+                    "name='" + getName() + '\'' +
+                    '}';
         }
     }
 
@@ -131,6 +140,13 @@ public interface Parameter {
         @Override
         public Object getObject() {
             return null;
+        }
+
+        @Override
+        public String toString() {
+            return "Empty{" +
+                    "name='" + name + '\'' +
+                    '}';
         }
     }
 

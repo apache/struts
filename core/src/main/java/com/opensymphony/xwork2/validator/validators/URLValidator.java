@@ -55,7 +55,7 @@ public class URLValidator extends FieldValidatorSupport {
             return;
         }
 
-        if (!(value.getClass().equals(String.class)) || !Pattern.compile(getUrlRegex(), Pattern.CASE_INSENSITIVE).matcher(String.valueOf(value)).matches()) {
+        if (!(value.getClass().equals(String.class)) || !Pattern.compile(getUrlRegex(), Pattern.CASE_INSENSITIVE).matcher(String.valueOf(value).trim()).matches()) {
             addFieldError(fieldName, object);
         }
     }

@@ -736,6 +736,11 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>1.9.2</version>
             </dependency>
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>1.5.1</version>
+            </dependency>
 
             <!-- Mocks for unit testing (by Spring) -->
             <dependency>

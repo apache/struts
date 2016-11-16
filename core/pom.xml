@@ -432,5 +432,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>

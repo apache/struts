@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -133,7 +134,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testValidUrlWithDefaultRegex() throws Exception {
 		URLValidator validator = new URLValidator();
 
-        Pattern pattern = Pattern.compile(validator.getUrlRegex());
+        Pattern pattern = Pattern.compile(validator.getUrlRegex(), Pattern.CASE_INSENSITIVE);
 
         assertFalse(pattern.matcher("myapp://test.com").matches());
         assertFalse(pattern.matcher("myap://test.com").matches());
@@ -146,9 +147,18 @@ public class URLValidatorTest extends XWorkTestCase {
         assertTrue(pattern.matcher("https://www.opensymphony.com").matches());
         assertTrue(pattern.matcher("https://www.opensymphony.com:443/login").matches());
         assertTrue(pattern.matcher("http://localhost:8080/myapp").matches());
-    }
 
-	public void testValidUrlCaseInsesitive() throws Exception {
+        assertTrue(pattern.matcher("http://www.legalspace.com/__media__/js/netsoltrademark.php?d=www.a-vos-travaux.fr%2Facheter-un-aspirateur-sans-sac-pas-cher%2F").matches());
+        assertTrue(UrlValidator.getInstance().isValid("http://www.legalspace.com/__media__/js/netsoltrademark.php?d=www.a-vos-travaux.fr%2Facheter-un-aspirateur-sans-sac-pas-cher%2F"));
+
+		assertTrue(pattern.matcher("http://www.duadmin.isaev.Infoduadmin.Isaev.info/?a%5B%5D=%3Ca%20href%3Dhttp%3A%2F%2Fwww.aspert.fr%2Fun-seche-cheveux-lisseur-est-il-vraiment-utile%2F%3Eseche%20cheveux%20dyson%20test%3C%2Fa").matches());
+		assertTrue(UrlValidator.getInstance().isValid("http://www.duadmin.isaev.Infoduadmin.Isaev.info/?a%5B%5D=%3Ca%20href%3Dhttp%3A%2F%2Fwww.aspert.fr%2Fun-seche-cheveux-lisseur-est-il-vraiment-utile%2F%3Eseche%20cheveux%20dyson%20test%3C%2Fa"));
+
+		assertTrue(pattern.matcher("http://netsol-underconstruction-page-monitor-1.com/__media__/js/netsoltrademark.php?d=www.le-soutien-scolaire.fr%2Favis-et-test-comparatifs-des-robots-multifonctions%2F").matches());
+		assertTrue(UrlValidator.getInstance().isValid("http://netsol-underconstruction-page-monitor-1.com/__media__/js/netsoltrademark.php?d=www.le-soutien-scolaire.fr%2Favis-et-test-comparatifs-des-robots-multifonctions%2F"));
+	}
+
+	public void testValidUrlCaseInsensitive() throws Exception {
 		// given
 		final Map<String, Object> fieldErrors = new HashMap<>();
 
@@ -222,7 +232,7 @@ public class URLValidatorTest extends XWorkTestCase {
 		}
 		
 		public String getTestingUrl5() {
-			return "http://yahoo.com/articles?id=123";
+			return "http://yahoo.com/articles?id=123\n";
 		}
 	}
 

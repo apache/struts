@@ -17,6 +17,8 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.regex.Pattern;
 
@@ -42,8 +44,25 @@ import java.util.regex.Pattern;
  */
 public class URLValidator extends FieldValidatorSupport {
 
-    private String urlRegex;
+    private static final Logger LOG = LogManager.getLogger(URLValidator.class);
+
+    public static final String DEFAULT_URL_REGEX = "^(https?|ftp):\\/\\/" +
+            "(([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+" +
+            "(:([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+)?" +
+            "@)?(#?" +
+            ")((([a-z0-9]\\.|[a-z0-9][a-z0-9-]*[a-z0-9]\\.)*" +
+            "[a-z][a-z0-9-]*[a-z0-9]" +
+            "|((\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])\\.){3}" +
+            "(\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])" +
+            ")(:\\d+)?" +
+            ")(((\\/{0,1}([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)*" +
+            "(\\?([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)" +
+            "?)?)?" +
+            "(#([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)?" +
+            "$";
+
     private String urlRegexExpression;
+    private Pattern urlPattern = Pattern.compile(DEFAULT_URL_REGEX, Pattern.CASE_INSENSITIVE);
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
@@ -55,9 +74,24 @@ public class URLValidator extends FieldValidatorSupport {
             return;
         }
 
-        if (!(value.getClass().equals(String.class)) || !Pattern.compile(getUrlRegex(), Pattern.CASE_INSENSITIVE).matcher(String.valueOf(value).trim()).matches()) {
+        String stringValue = String.valueOf(value).trim();
+
+        if (!(value.getClass().equals(String.class)) || !getUrlPattern().matcher(stringValue).matches()) {
             addFieldError(fieldName, object);
         }
+    }
+
+    protected Pattern getUrlPattern() {
+        if (StringUtils.isNotEmpty(urlRegexExpression)) {
+            String regex = (String) parse(urlRegexExpression, String.class);
+            if (regex == null) {
+                LOG.warn("Provided URL Regex expression [{}] was evaluated to null! Falling back to default!", urlRegexExpression);
+                urlPattern = Pattern.compile(DEFAULT_URL_REGEX, Pattern.CASE_INSENSITIVE);
+            } else {
+                urlPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+            }
+        }
+        return urlPattern;
     }
 
     /**
@@ -67,30 +101,11 @@ public class URLValidator extends FieldValidatorSupport {
      * @return regex to validate URLs
      */
     public String getUrlRegex() {
-        if (StringUtils.isNotEmpty(urlRegexExpression)) {
-            return (String) parse(urlRegexExpression, String.class);
-        } else if (StringUtils.isNotEmpty(urlRegex)) {
-            return urlRegex;
-        } else {
-            return "^(https?|ftp):\\/\\/" +
-                    "(([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+" +
-                    "(:([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+)?" +
-                    "@)?(#?" +
-                    ")((([a-z0-9]\\.|[a-z0-9][a-z0-9-]*[a-z0-9]\\.)*" +
-                    "[a-z][a-z0-9-]*[a-z0-9]" +
-                    "|((\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])\\.){3}" +
-                    "(\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])" +
-                    ")(:\\d+)?" +
-                    ")(((\\/{0,1}([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)*" +
-                    "(\\?([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)" +
-                    "?)?)?" +
-                    "(#([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)?" +
-                    "$";
-        }
+        return getUrlPattern().pattern();
     }
 
     public void setUrlRegex(String urlRegex) {
-        this.urlRegex = urlRegex;
+        urlPattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
     }
 
     public void setUrlRegexExpression(String urlRegexExpression) {

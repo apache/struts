@@ -51,6 +51,15 @@ public class StrutsTestCase extends TestNGXWorkTestCase {
         return du;
     }
 
+    /**
+     * A helper method which allows instantiate an action if this action extends
+     * {@link com.opensymphony.xwork2.ActionSupport} or any other action class
+     * that requires framework's dependencies injection.
+     */
+    protected <T> T createAction(Class<T> clazz) {
+        return container.inject(clazz);
+    }
+
     @AfterTest
     protected void tearDown() throws Exception {
         super.tearDown();

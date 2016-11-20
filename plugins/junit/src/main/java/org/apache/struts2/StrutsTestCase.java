@@ -152,6 +152,15 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         return proxy;
     }
 
+    /**
+     * A helper method which allows instantiate an action if this action extends
+     * {@link com.opensymphony.xwork2.ActionSupport} or any other action class
+     * that requires framework's dependencies injection.
+     */
+    protected <T> T createAction(Class<T> clazz) {
+        return container.inject(clazz);
+    }
+
     protected void initActionContext(ActionContext actionContext) {
         actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
         initSession(actionContext);

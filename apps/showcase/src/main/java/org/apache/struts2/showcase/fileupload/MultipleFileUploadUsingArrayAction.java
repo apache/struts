@@ -22,6 +22,7 @@
 package org.apache.struts2.showcase.fileupload;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
 import java.io.File;
 
@@ -32,7 +33,7 @@ import java.io.File;
  */
 public class MultipleFileUploadUsingArrayAction extends ActionSupport {
 
-	private File[] uploads;
+	private UploadedFile[] uploads;
 	private String[] uploadFileNames;
 	private String[] uploadContentTypes;
 
@@ -40,7 +41,7 @@ public class MultipleFileUploadUsingArrayAction extends ActionSupport {
 	public String upload() throws Exception {
 		System.out.println("\n\n upload2");
 		System.out.println("files:");
-		for (File u : uploads) {
+		for (UploadedFile u : uploads) {
 			System.out.println("*** " + u + "\t" + u.length());
 		}
 		System.out.println("filenames:");
@@ -55,11 +56,11 @@ public class MultipleFileUploadUsingArrayAction extends ActionSupport {
 		return SUCCESS;
 	}
 
-	public File[] getUpload() {
+	public UploadedFile[] getUpload() {
 		return this.uploads;
 	}
 
-	public void setUpload(File[] upload) {
+	public void setUpload(UploadedFile[] upload) {
 		this.uploads = upload;
 	}
 

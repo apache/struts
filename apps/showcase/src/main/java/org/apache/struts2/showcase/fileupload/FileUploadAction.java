@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.fileupload;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
 import java.io.File;
 
@@ -32,7 +33,7 @@ public class FileUploadAction extends ActionSupport {
 	private static final long serialVersionUID = 5156288255337069381L;
 
 	private String contentType;
-	private File upload;
+	private UploadedFile upload;
 	private String fileName;
 	private String caption;
 
@@ -68,11 +69,11 @@ public class FileUploadAction extends ActionSupport {
 
 	// since we are using <s:file name="upload" ... /> the File itself will be
 	// obtained through getter/setter of <file-tag-name>
-	public File getUpload() {
+	public UploadedFile getUpload() {
 		return upload;
 	}
 
-	public void setUpload(File upload) {
+	public void setUpload(UploadedFile upload) {
 		this.upload = upload;
 	}
 

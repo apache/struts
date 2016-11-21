@@ -147,18 +147,18 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
      */
-    public File[] getFile(String fieldName) {
+    public UploadedFile[] getFile(String fieldName) {
         List<FileInfo> infos = fileInfos.get(fieldName);
         if (infos == null) {
             return null;
         }
 
-        List<File> files = new ArrayList<>(infos.size());
+        List<UploadedFile> files = new ArrayList<>(infos.size());
         for (FileInfo fileInfo : infos) {
-            files.add(fileInfo.getFile());
+            files.add(new JakartaUploadedFile(fileInfo.getFile()));
         }
 
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new UploadedFile[files.size()]);
     }
 
     /* (non-Javadoc)

@@ -143,7 +143,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param fieldName input field name
      * @return a File[] object for files associated with the specified input field name
      */
-    public File[] getFiles(String fieldName) {
+    public UploadedFile[] getFiles(String fieldName) {
         if (multi == null) {
             return null;
         }

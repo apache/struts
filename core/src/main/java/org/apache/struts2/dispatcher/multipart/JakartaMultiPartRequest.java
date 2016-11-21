@@ -223,14 +223,14 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
      */
-    public File[] getFile(String fieldName) {
+    public UploadedFile[] getFile(String fieldName) {
         List<FileItem> items = files.get(fieldName);
 
         if (items == null) {
             return null;
         }
 
-        List<File> fileList = new ArrayList<>(items.size());
+        List<UploadedFile> fileList = new ArrayList<>(items.size());
         for (FileItem fileItem : items) {
             File storeLocation = ((DiskFileItem) fileItem).getStoreLocation();
             if (fileItem.isInMemory() && storeLocation != null && !storeLocation.exists()) {
@@ -240,10 +240,10 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
                     LOG.error("Cannot write uploaded empty file to disk: {}", storeLocation.getAbsolutePath(), e);
                 }
             }
-            fileList.add(storeLocation);
+            fileList.add(new JakartaUploadedFile(storeLocation));
         }
 
-        return fileList.toArray(new File[fileList.size()]);
+        return fileList.toArray(new UploadedFile[fileList.size()]);
     }
 
     /* (non-Javadoc)

@@ -92,8 +92,8 @@ public class PellMultiPartRequest implements MultiPartRequest {
         return new String[]{multi.getContentType(fieldName)};
     }
 
-    public File[] getFile(String fieldName) {
-        return new File[]{multi.getFile(fieldName)};
+    public UploadedFile[] getFile(String fieldName) {
+        return new UploadedFile[]{ new PellUploadedFile(multi.getFile(fieldName)) };
     }
 
     public String[] getFileNames(String fieldName) {
@@ -174,8 +174,8 @@ public class PellMultiPartRequest implements MultiPartRequest {
         Enumeration fileParameterNames = multi.getFileParameterNames();
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             String inputValue = (String) fileParameterNames.nextElement();
-            File[] files = getFile(inputValue);
-            for (File currentFile : files) {
+            UploadedFile[] files = getFile(inputValue);
+            for (UploadedFile currentFile : files) {
                 if (LOG.isInfoEnabled()) {
                     String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file", Locale.ENGLISH,
                             "no.message.found", new Object[]{inputValue, currentFile});

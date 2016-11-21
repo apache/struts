@@ -36,14 +36,14 @@ import java.util.List;
  */
 public interface MultiPartRequest {
 
-    public void parse(HttpServletRequest request, String saveDir) throws IOException;
+    void parse(HttpServletRequest request, String saveDir) throws IOException;
     
     /**
      * Returns an enumeration of the parameter names for uploaded files
      *
      * @return an enumeration of the parameter names for uploaded files
      */
-    public Enumeration<String> getFileParameterNames();
+    Enumeration<String> getFileParameterNames();
 
     /**
      * Returns the content type(s) of the file(s) associated with the specified field name
@@ -54,16 +54,16 @@ public interface MultiPartRequest {
      * @return an array of content encoding for the specified input field name or <tt>null</tt> if
      *         no content type was specified.
      */
-    public String[] getContentType(String fieldName);
+    String[] getContentType(String fieldName);
 
     /**
-     * Returns a {@link java.io.File} object for the filename specified or <tt>null</tt> if no files
+     * Returns a {@link UploadedFile} object for the filename specified or <tt>null</tt> if no files
      * are associated with the given field name.
      *
      * @param fieldName input field name
-     * @return a File[] object for files associated with the specified input field name
+     * @return a UploadedFile[] object for files associated with the specified input field name
      */
-    public File[] getFile(String fieldName);
+    UploadedFile[] getFile(String fieldName);
 
     /**
      * Returns a String[] of file names for files associated with the specified input field name
@@ -71,7 +71,7 @@ public interface MultiPartRequest {
      * @param fieldName input field name
      * @return a String[] of file names for files associated with the specified input field name
      */
-    public String[] getFileNames(String fieldName);
+    String[] getFileNames(String fieldName);
 
     /**
      * Returns the file system name(s) of files associated with the given field name or
@@ -80,7 +80,7 @@ public interface MultiPartRequest {
      * @param fieldName input field name
      * @return the file system name(s) of files associated with the given field name
      */
-    public String[] getFilesystemName(String fieldName);
+    String[] getFilesystemName(String fieldName);
 
     /**
      * Returns the specified request parameter.
@@ -88,14 +88,14 @@ public interface MultiPartRequest {
      * @param name the name of the parameter to get
      * @return the parameter or <tt>null</tt> if it was not found.
      */
-    public String getParameter(String name);
+    String getParameter(String name);
 
     /**
      * Returns an enumeration of String parameter names.
      *
      * @return an enumeration of String parameter names.
      */
-    public Enumeration<String> getParameterNames();
+    Enumeration<String> getParameterNames();
 
     /**
      * Returns a list of all parameter values associated with a parameter name. If there is only
@@ -104,7 +104,7 @@ public interface MultiPartRequest {
      * @param name the name of the parameter.
      * @return an array of all values associated with the parameter name.
      */
-    public String[] getParameterValues(String name);
+    String[] getParameterValues(String name);
 
     /**
      * Returns a list of error messages that may have occurred while processing the request.
@@ -115,11 +115,11 @@ public interface MultiPartRequest {
      *
      * @return a list of Strings that represent various errors during parsing
      */
-    public List<LocalizedMessage> getErrors();
+    List<LocalizedMessage> getErrors();
 
     /**
      * Cleans up all uploaded file, should be called at the end of request
      */
-    public void cleanUp();
+    void cleanUp();
 
 }

@@ -33,7 +33,9 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
+import org.apache.struts2.dispatcher.multipart.JakartaUploadedFile;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +55,38 @@ import java.util.Map;
  */
 public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
+    public static final UploadedFile EMPTY_FILE = new UploadedFile() {
+        @Override
+        public Long length() {
+            return 0L;
+        }
+
+        @Override
+        public String getName() {
+            return "";
+        }
+
+        @Override
+        public boolean isFile() {
+            return false;
+        }
+
+        @Override
+        public boolean delete() {
+            return false;
+        }
+
+        @Override
+        public String getAbsolutePath() {
+            return null;
+        }
+
+        @Override
+        public byte[] getContent() {
+            return new byte[0];
+        }
+    };
+
     private FileUploadInterceptor interceptor;
     private File tempDir;
     private TestAction action;
@@ -60,7 +94,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testAcceptFileWithEmptyAllowedTypesAndExtensions() throws Exception {
         // when allowed type is empty
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(action, new File(""), "filename", "text/plain", "inputName", validation);
+        boolean ok = interceptor.acceptFile(action, EMPTY_FILE, "filename", "text/plain", "inputName", validation);
 
         assertTrue(ok);
         assertTrue(validation.getFieldErrors().isEmpty());
@@ -72,7 +106,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(action, new File(""), "filename.txt", "text/plain", "inputName", validation);
+        boolean ok = interceptor.acceptFile(action, EMPTY_FILE, "filename.txt", "text/plain", "inputName", validation);
 
         assertTrue(ok);
         assertTrue(validation.getFieldErrors().isEmpty());
@@ -80,7 +114,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed types
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(action, new File(""), "filename.html", "text/html", "inputName", validation);
+        boolean notOk = interceptor.acceptFile(action, EMPTY_FILE, "filename.html", "text/html", "inputName", validation);
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());
@@ -92,7 +126,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.setAllowedTypes("text/*");
 
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(action, new File(""), "filename.txt", "text/plain", "inputName", validation);
+        boolean ok = interceptor.acceptFile(action, EMPTY_FILE, "filename.txt", "text/plain", "inputName", validation);
 
         assertTrue(ok);
         assertTrue(validation.getFieldErrors().isEmpty());
@@ -100,7 +134,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.setAllowedTypes("text/h*");
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(action, new File(""), "filename.html", "text/plain", "inputName", validation);
+        boolean notOk = interceptor.acceptFile(action, EMPTY_FILE, "filename.html", "text/plain", "inputName", validation);
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());
@@ -112,7 +146,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is of allowed extensions
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(action, new File(""), "filename.txt", "text/plain", "inputName", validation);
+        boolean ok = interceptor.acceptFile(action, EMPTY_FILE, "filename.txt", "text/plain", "inputName", validation);
 
         assertTrue(ok);
         assertTrue(validation.getFieldErrors().isEmpty());
@@ -120,7 +154,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed extensions
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(action, new File(""), "filename.html", "text/html", "inputName", validation);
+        boolean notOk = interceptor.acceptFile(action, EMPTY_FILE, "filename.html", "text/html", "inputName", validation);
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());
@@ -129,7 +163,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         //test with multiple extensions
         interceptor.setAllowedExtensions(".txt,.lol");
         validation = new ValidationAwareSupport();
-        ok = interceptor.acceptFile(action, new File(""), "filename.lol", "text/plain", "inputName", validation);
+        ok = interceptor.acceptFile(action, EMPTY_FILE, "filename.lol", "text/plain", "inputName", validation);
 
         assertTrue(ok);
         assertTrue(validation.getFieldErrors().isEmpty());
@@ -164,7 +198,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         URL url = ClassLoaderUtil.getResource("log4j2.xml", FileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
         assertTrue("log4j2.xml should be in src/test folder", file.exists());
-        boolean notOk = interceptor.acceptFile(action, file, "filename", "text/html", "inputName", validation);
+        boolean notOk = interceptor.acceptFile(action, new JakartaUploadedFile(file), "filename", "text/html", "inputName", validation);
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());
@@ -263,7 +297,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertTrue(parameters.getNames().size() == 3);
-        File[] files = (File[]) parameters.get("file").getObject();
+        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
 
@@ -323,7 +357,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertEquals(3, parameters.getNames().size());
-        File[] files = (File[]) parameters.get("file").getObject();
+        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
 

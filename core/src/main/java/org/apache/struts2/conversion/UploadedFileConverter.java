@@ -20,6 +20,8 @@
 package org.apache.struts2.conversion;
 
 import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
 import java.io.File;
@@ -29,9 +31,14 @@ import java.util.Map;
 
 public class UploadedFileConverter extends DefaultTypeConverter {
 
+    private static final Logger LOG = LogManager.getLogger(UploadedFileConverter.class);
+
     @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (File.class.equals(toType)) {
+            LOG.warn("Converting {} into {}, consider switching to {} and do not access {} directly!",
+                    File.class.getName(), UploadedFile.class.getName(), UploadedFile.class.getName(), File.class.getName());
+
             if (value.getClass().isArray() && Array.getLength(value) == 1) {
                 Object obj = Array.get(value, 0);
                 if (obj instanceof UploadedFile) {

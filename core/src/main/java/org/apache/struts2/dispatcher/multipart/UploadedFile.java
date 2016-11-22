@@ -22,7 +22,7 @@ package org.apache.struts2.dispatcher.multipart;
 /**
  * Virtual representation of a uploaded file used by {@link MultiPartRequest}
  */
-public interface UploadedFile<T> {
+public interface UploadedFile {
 
     Long length();
 
@@ -34,6 +34,6 @@ public interface UploadedFile<T> {
 
     String getAbsolutePath();
 
-    T getContent();
+    Object getContent();
 
 }

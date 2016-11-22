@@ -21,7 +21,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
 
-public class PellUploadedFile implements UploadedFile<File> {
+public class PellUploadedFile implements UploadedFile {
 
     private File file;
 

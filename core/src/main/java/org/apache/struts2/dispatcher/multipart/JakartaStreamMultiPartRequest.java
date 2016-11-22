@@ -506,19 +506,6 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
     }
 
     /**
-     * Build action message.
-     *
-     * @param e the Throwable/Exception
-     * @param args arguments
-     * @return action message
-     */
-    private String buildMessage(Throwable e, Object[] args) {
-        String messageKey = "struts.message.upload.message." + e.getClass().getSimpleName();
-        LOG.debug("Preparing message for key: [{}]", messageKey);
-        return LocalizedTextUtil.findText(this.getClass(), messageKey, defaultLocale, e.getMessage(), args);
-    }
-
-    /**
      * Internal data structure used to store a reference to information needed
      * to later pass post processing data to the <code>FileUploadInterceptor</code>.
      *

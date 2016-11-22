@@ -135,15 +135,6 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
         return errors;
     }
 
-    /**
-     * Allows interceptor to fetch non-critical messages that can be passed to the action.
-     *
-     * @return list of string messages
-     */
-    public List<String> getMesssages() {
-        return messages;
-    }
-
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
      */
@@ -155,7 +146,7 @@ public class JakartaStreamMultiPartRequest implements MultiPartRequest {
 
         List<UploadedFile> files = new ArrayList<>(infos.size());
         for (FileInfo fileInfo : infos) {
-            files.add(new JakartaUploadedFile(fileInfo.getFile()));
+            files.add(new StrutsUploadedFile(fileInfo.getFile()));
         }
 
         return files.toArray(new UploadedFile[files.size()]);

@@ -33,7 +33,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
-import org.apache.struts2.dispatcher.multipart.JakartaUploadedFile;
+import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -198,7 +198,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         URL url = ClassLoaderUtil.getResource("log4j2.xml", FileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
         assertTrue("log4j2.xml should be in src/test folder", file.exists());
-        boolean notOk = interceptor.acceptFile(action, new JakartaUploadedFile(file), "filename", "text/html", "inputName", validation);
+        boolean notOk = interceptor.acceptFile(action, new StrutsUploadedFile(file), "filename", "text/html", "inputName", validation);
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());

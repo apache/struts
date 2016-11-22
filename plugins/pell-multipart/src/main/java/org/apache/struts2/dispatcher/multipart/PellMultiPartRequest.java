@@ -93,7 +93,7 @@ public class PellMultiPartRequest implements MultiPartRequest {
     }
 
     public UploadedFile[] getFile(String fieldName) {
-        return new UploadedFile[]{ new PellUploadedFile(multi.getFile(fieldName)) };
+        return new UploadedFile[]{ new StrutsUploadedFile(multi.getFile(fieldName)) };
     }
 
     public String[] getFileNames(String fieldName) {

@@ -21,11 +21,11 @@ package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
 
-public class JakartaUploadedFile implements UploadedFile {
+public class StrutsUploadedFile implements UploadedFile {
 
     private File file;
 
-    public JakartaUploadedFile(File file) {
+    public StrutsUploadedFile(File file) {
         this.file = file;
     }
 

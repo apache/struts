@@ -240,7 +240,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
                     LOG.error("Cannot write uploaded empty file to disk: {}", storeLocation.getAbsolutePath(), e);
                 }
             }
-            fileList.add(new JakartaUploadedFile(storeLocation));
+            fileList.add(new StrutsUploadedFile(storeLocation));
         }
 
         return fileList.toArray(new UploadedFile[fileList.size()]);

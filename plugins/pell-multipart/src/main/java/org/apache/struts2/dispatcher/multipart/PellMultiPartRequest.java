@@ -21,20 +21,15 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import http.utils.multipartrequest.ServletMultipartRequest;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
@@ -44,26 +39,12 @@ import java.util.Locale;
  * Multipart form data request adapter for Jason Pell's multipart utils package.
  *
  */
-public class PellMultiPartRequest implements MultiPartRequest {
+public class PellMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(PellMultiPartRequest.class);
+
     private ServletMultipartRequest multi;
 
-    private String defaultEncoding;
-    private boolean maxSizeProvided;
-    private int maxSize;
-    
-    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public void setDefaultEncoding(String enc) {
-        this.defaultEncoding = enc;
-    }
-    
-    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
-    public void setMaxSize(String maxSize) {
-    	this.maxSizeProvided = true;
-        this.maxSize = Integer.parseInt(maxSize);
-    }
-    
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
      * multipart classes (see class description).
@@ -130,10 +111,6 @@ public class PellMultiPartRequest implements MultiPartRequest {
         }
 
         return values.toArray(new String[values.size()]);
-    }
-
-    public List<LocalizedMessage> getErrors() {
-        return Collections.emptyList();
     }
 
     /**

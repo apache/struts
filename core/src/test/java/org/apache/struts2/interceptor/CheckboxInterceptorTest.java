@@ -72,7 +72,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		interceptor.intercept(ai);
 		interceptor.destroy();
 		
-		assertEquals(1, ai.getInvocationContext().getParameters().getNames().size());
+		assertEquals(1, ai.getInvocationContext().getParameters().keySet().size());
 	}
 
 	public void testPassthroughTwo() throws Exception {
@@ -85,7 +85,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		interceptor.intercept(ai);
 		interceptor.destroy();
 		
-		assertEquals(2, ai.getInvocationContext().getParameters().getNames().size());
+		assertEquals(2, ai.getInvocationContext().getParameters().keySet().size());
 	}
 
 	public void testOneCheckboxTrue() throws Exception {
@@ -103,7 +103,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 
 		HttpParameters parameters = ai.getInvocationContext().getParameters();
 		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.getNames().size()); // should be 3 as __checkbox_ should be removed
+		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
 		assertEquals("true", parameters.get("superpower").getValue());
 	}
 
@@ -121,7 +121,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 
 		HttpParameters parameters = ai.getInvocationContext().getParameters();
 		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.getNames().size()); // should be 3 as __checkbox_ should be removed
+		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
 		assertEquals("false", parameters.get("superpower").getValue());
 	}
 
@@ -140,7 +140,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 
 		HttpParameters parameters = ai.getInvocationContext().getParameters();
 		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.getNames().size()); // should be 3 as __checkbox_ should be removed
+		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
 		assertEquals("off", parameters.get("superpower").getValue());
 	}
 
@@ -157,7 +157,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 
 		HttpParameters parameters = ai.getInvocationContext().getParameters();
 		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(2, parameters.getNames().size()); // should be 2 as __checkbox_ should be removed
+		assertEquals(2, parameters.keySet().size()); // should be 2 as __checkbox_ should be removed
 		assertFalse(parameters.get("superpower").isDefined());
     }
 
@@ -179,7 +179,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		HttpParameters parameters = ai.getInvocationContext().getParameters();
 		assertFalse(parameters.contains("__checkbox_superpower"));
 		assertFalse(parameters.contains("__checkbox_cool"));
-		assertEquals(4, parameters.getNames().size()); // should be 4 as __checkbox_ should be removed
+		assertEquals(4, parameters.keySet().size()); // should be 4 as __checkbox_ should be removed
 		assertEquals("yes", parameters.get("superpower").getValue());
 		assertEquals("false", parameters.get("cool").getValue()); // will use false as default and not 'no'
 	}
@@ -203,7 +203,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		HttpParameters parameters = ai.getInvocationContext().getParameters();
 		assertFalse(parameters.contains("__checkbox_superpower"));
 		assertFalse(parameters.contains("__checkbox_cool"));
-		assertEquals(4, parameters.getNames().size()); // should be 4 as __checkbox_ should be removed
+		assertEquals(4, parameters.keySet().size()); // should be 4 as __checkbox_ should be removed
 		assertEquals("yes", parameters.get("superpower").getValue());
 		assertEquals("no", parameters.get("cool").getValue());
 	}

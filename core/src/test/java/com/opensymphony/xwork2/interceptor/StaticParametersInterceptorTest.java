@@ -133,7 +133,7 @@ public class StaticParametersInterceptorTest extends XWorkTestCase {
 
         assertEquals(before, ActionContext.getContext().getValueStack().size());
         assertEquals("${top.hero}", user.getName());
-        assertEquals(0, ActionContext.getContext().getParameters().getNames().size());
+        assertEquals(0, ActionContext.getContext().getParameters().keySet().size());
     }
 
     public void testFewParametersParse() throws Exception {

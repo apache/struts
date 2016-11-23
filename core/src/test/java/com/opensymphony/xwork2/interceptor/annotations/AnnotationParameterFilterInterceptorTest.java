@@ -59,7 +59,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
 		interceptor.intercept(invocation);
 
 		HttpParameters parameters = invocation.getInvocationContext().getParameters();
-		assertEquals("Parameter map should contain one entry", 1, parameters.getNames().size());
+		assertEquals("Parameter map should contain one entry", 1, parameters.keySet().size());
 		assertFalse(parameters.get("job").isDefined());
 		assertTrue(parameters.get("name").isDefined());
 		
@@ -97,7 +97,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
 		interceptor.intercept(invocation);
 
 		HttpParameters parameters = invocation.getInvocationContext().getParameters();
-		assertEquals("Paramwter map should contain one entry", 1, parameters.getNames().size());
+		assertEquals("Paramwter map should contain one entry", 1, parameters.keySet().size());
 		assertTrue(parameters.get("job").isDefined());
 		assertFalse(parameters.get("name").isDefined());
 		
@@ -135,7 +135,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
 		interceptor.intercept(invocation);
 
 		HttpParameters parameters = invocation.getInvocationContext().getParameters();
-		assertEquals("Parameter map should contain two entries", 2, parameters.getNames().size());
+		assertEquals("Parameter map should contain two entries", 2, parameters.keySet().size());
 		assertFalse(parameters.get("job").isDefined());
 		assertTrue(parameters.get("name").isDefined());
 		assertTrue(parameters.get("m1").isDefined());
@@ -175,7 +175,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
 		interceptor.intercept(invocation);
 
 		HttpParameters parameters = invocation.getInvocationContext().getParameters();
-		assertEquals("Parameter map should contain two entries", 2, parameters.getNames().size());
+		assertEquals("Parameter map should contain two entries", 2, parameters.keySet().size());
 		assertTrue(parameters.get("job").isDefined());
 		assertFalse(parameters.get("name").isDefined());
 		assertFalse(parameters.get("m1").isDefined());

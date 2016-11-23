@@ -93,7 +93,7 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
 
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         assertFalse(parameters.contains("__multiselect_superpower"));
-        assertEquals(3, parameters.getNames().size()); // should be 3 as __multiselect_ should be removed
+        assertEquals(3, parameters.keySet().size()); // should be 3 as __multiselect_ should be removed
         assertEquals("robin", parameters.get("superpower").getValue());
     }
 
@@ -111,7 +111,7 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
 
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         assertFalse(parameters.contains("__multiselect_superpower"));
-        assertEquals(3, parameters.getNames().size()); // should be 3 as __multiselect_ should be removed
+        assertEquals(3, parameters.keySet().size()); // should be 3 as __multiselect_ should be removed
         assertFalse(parameters.get("superpower").isDefined());
     }
 
@@ -133,7 +133,7 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         assertFalse(parameters.contains("__multiselect_superpower"));
         assertFalse(parameters.contains("__multiselect_cool"));
-        assertEquals(4, parameters.getNames().size()); // should be 4 as __multiselect_ should be removed
+        assertEquals(4, parameters.keySet().size()); // should be 4 as __multiselect_ should be removed
         assertEquals("yes", parameters.get("superpower").getValue());
         assertFalse(parameters.get("cool").isDefined());
     }

@@ -168,7 +168,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             acceptableParameters = new TreeMap<>();
         }
 
-        for (String name : params.getNames()) {
+        for (String name : params.keySet()) {
             Parameter parameter = params.get(name);
             if (isAcceptableParameter(name, action)) {
                 acceptableParameters.put(name, parameter);
@@ -262,7 +262,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
 
         StringBuilder logEntry = new StringBuilder();
-        for (String name : parameters.getNames()) {
+        for (String name : parameters.keySet()) {
             logEntry.append(String.valueOf(name));
             logEntry.append(" => ");
             logEntry.append(parameters.get(name).getValue());

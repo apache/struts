@@ -31,6 +31,7 @@
   </formats>
   <dependencySets>
     <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
       <outputDirectory>lib</outputDirectory>
       <scope>runtime</scope>
       <excludes>

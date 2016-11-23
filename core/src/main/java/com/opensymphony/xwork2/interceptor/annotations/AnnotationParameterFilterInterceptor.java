@@ -54,7 +54,7 @@ public class AnnotationParameterFilterInterceptor extends AbstractInterceptor {
                 AnnotationUtils.addAllFields(Allowed.class, model.getClass(), annotatedFields);
             }
 
-            for (String paramName : parameters.getNames()) {
+            for (String paramName : parameters.keySet()) {
                 boolean allowed = false;
 
                 for (Field field : annotatedFields) {
@@ -76,7 +76,7 @@ public class AnnotationParameterFilterInterceptor extends AbstractInterceptor {
                 AnnotationUtils.addAllFields(Blocked.class, model.getClass(), annotatedFields);
             }
 
-            for (String paramName : parameters.getNames()) {
+            for (String paramName : parameters.keySet()) {
                 for (Field field : annotatedFields) {
                     //TODO only matches exact field names.  need to change to it matches start of ognl expression
                     //i.e take param name up to first . (period) and match against that

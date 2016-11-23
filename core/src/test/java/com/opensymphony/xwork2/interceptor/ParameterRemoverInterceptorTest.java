@@ -50,7 +50,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		interceptor.intercept(actionInvocation);
 		
 		HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
-		assertEquals(params.getNames().size(), 2);
+		assertEquals(params.keySet().size(), 2);
 		assertTrue(params.contains("param3"));
 		assertTrue(params.contains("param"));
 		assertEquals(params.get("param3").getValue(), "paramValue3");
@@ -76,7 +76,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		interceptor.intercept(actionInvocation);
 		
 		HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
-		assertEquals(params.getNames().size(), 0);
+		assertEquals(params.keySet().size(), 0);
 		
 		verify(actionInvocation);
 	}
@@ -98,7 +98,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 		interceptor.intercept(actionInvocation);
 		
 		HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
-		assertEquals(params.getNames().size(), 2);
+		assertEquals(params.keySet().size(), 2);
 		assertTrue(params.contains("param1"));
 		assertTrue(params.contains("param2"));
 		assertEquals(params.get("param1").getValue(), "paramValueOne");

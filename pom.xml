@@ -85,8 +85,7 @@
         <currentVersion>${project.version}</currentVersion>
         <struts2.springPlatformVersion>4.1.6.RELEASE</struts2.springPlatformVersion>
         <ognl.version>3.1.12</ognl.version>
-        <asm.version>3.3</asm.version>
-        <asm5.version>5.1</asm5.version>
+        <asm.version>5.1</asm.version>
         <tiles.version>3.0.7</tiles.version>
         <tiles-request.version>1.0.6</tiles-request.version>
         <log4j2.version>2.7</log4j2.version>
@@ -547,12 +546,12 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
-                <version>${asm5.version}</version>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-commons</artifactId>
-                <version>${asm5.version}</version>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

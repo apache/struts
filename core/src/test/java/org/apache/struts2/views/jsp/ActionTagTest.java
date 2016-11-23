@@ -227,7 +227,7 @@ public class ActionTagTest extends AbstractTagTest {
         // check parameters, there should be one
         ActionInvocation ai = component.getProxy().getInvocation();
         ActionContext ac = ai.getInvocationContext();
-        assertEquals(1, ac.getParameters().getNames().size());
+        assertEquals(1, ac.getParameters().keySet().size());
     }
 
     public void testIngoreContextParamsTrue() throws Exception {
@@ -252,7 +252,7 @@ public class ActionTagTest extends AbstractTagTest {
         // check parameters, there should be one
         ActionInvocation ai = component.getProxy().getInvocation();
         ActionContext ac = ai.getInvocationContext();
-        assertEquals(0, ac.getParameters().getNames().size());
+        assertEquals(0, ac.getParameters().keySet().size());
     }
 
     public void testNoNameDefined() throws Exception {

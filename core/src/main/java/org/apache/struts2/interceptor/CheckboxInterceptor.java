@@ -63,7 +63,7 @@ public class CheckboxInterceptor extends AbstractInterceptor {
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         Map<String, Parameter> extraParams = new HashMap<>();
 
-        for (String name : parameters.getNames()) {
+        for (String name : parameters.keySet()) {
             if (name.startsWith("__checkbox_")) {
                 String checkboxName = name.substring("__checkbox_".length());
 

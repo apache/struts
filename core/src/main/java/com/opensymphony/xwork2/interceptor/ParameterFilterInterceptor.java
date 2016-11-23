@@ -112,7 +112,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
 
         Map<String, Boolean> includesExcludesMap = getIncludesExcludesMap();
 
-        for (String param : parameters.getNames()) {
+        for (String param : parameters.keySet()) {
             boolean currentAllowed = !isDefaultBlock();
 
             for (String currRule : includesExcludesMap.keySet()) {

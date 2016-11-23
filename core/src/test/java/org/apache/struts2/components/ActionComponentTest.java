@@ -47,7 +47,7 @@ public class ActionComponentTest extends StrutsInternalTestCase {
         comp.addParameter("baz", new String[]{"jim", "sarah"});
         HttpParameters params = comp.createParametersForContext();
         assertNotNull(params);
-        assertEquals(2, params.getNames().size());
+        assertEquals(2, params.keySet().size());
         assertEquals("bar", params.get("foo").getValue());
         assertEquals(2, params.get("baz").getMultipleValues().length);
         mockValueStack.verify();

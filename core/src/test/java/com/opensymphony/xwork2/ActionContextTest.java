@@ -90,7 +90,7 @@ public class ActionContextTest extends XWorkTestCase {
 
     public void testParameters() {
         context.setParameters(HttpParameters.create().build());
-        assertEquals(0, context.getParameters().getNames().size());
+        assertEquals(0, context.getParameters().keySet().size());
     }
 
     public void testConversionErrors() {

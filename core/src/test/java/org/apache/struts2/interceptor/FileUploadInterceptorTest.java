@@ -262,7 +262,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertTrue(!action.hasErrors());
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
-        assertTrue(parameters.getNames().size() == 3);
+        assertTrue(parameters.keySet().size() == 3);
         File[] files = (File[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
@@ -322,7 +322,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.intercept(mai);
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
-        assertEquals(3, parameters.getNames().size());
+        assertEquals(3, parameters.keySet().size());
         File[] files = (File[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();

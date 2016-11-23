@@ -70,7 +70,7 @@ public class DateTextFieldInterceptor implements Interceptor {
         DateWord[] dateWords = DateWord.getAll();
 
         // Get all the values of date type
-        Set<String> names = parameters.getNames();
+        Set<String> names = parameters.keySet();
         for (String name : names) {
 
             for (DateWord dateWord : dateWords) {

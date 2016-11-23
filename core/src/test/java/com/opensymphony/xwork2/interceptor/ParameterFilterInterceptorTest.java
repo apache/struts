@@ -116,7 +116,7 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
     }
     
     private Collection getParameterNames() {
-        return ((HttpParameters)contextMap.get(ActionContext.PARAMETERS)).getNames();
+        return ((HttpParameters)contextMap.get(ActionContext.PARAMETERS)).keySet();
     }
     
     public void runAction() throws Exception  {

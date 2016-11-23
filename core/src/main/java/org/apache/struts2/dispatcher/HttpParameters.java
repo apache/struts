@@ -1,7 +1,28 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.interceptor.ParameterAware;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +31,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class HttpParameters implements Cloneable {
+@SuppressWarnings("unchecked")
+public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
     private Map<String, Parameter> parameters;
 
@@ -24,18 +46,6 @@ public class HttpParameters implements Cloneable {
 
     public static Builder create() {
         return new Builder(new HashMap<String, Object>());
-    }
-
-    public Parameter get(String name) {
-        if (parameters.containsKey(name)) {
-            return parameters.get(name);
-        } else {
-            return new Parameter.Empty(name);
-        }
-    }
-
-    public Set<String> getNames() {
-        return new TreeSet<>(parameters.keySet());
     }
 
     public HttpParameters remove(Set<String> paramsToRemove) {
@@ -76,6 +86,70 @@ public class HttpParameters implements Cloneable {
 
     public void applyParameters(ParameterAware parameterAware) {
         parameterAware.setParameters(toMap());
+    }
+
+    @Override
+    public int size() {
+        return parameters.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return parameters.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return parameters.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return parameters.containsValue(value);
+    }
+
+    @Override
+    public Parameter get(Object key) {
+        if (parameters.containsKey(key)) {
+            return parameters.get(key);
+        } else {
+            return new Parameter.Empty(String.valueOf(key));
+        }
+    }
+
+    @Override
+    public Parameter put(String key, Parameter value) {
+        throw new IllegalAccessError("HttpParameters are immutable, you cannot put value directly!");
+    }
+
+    @Override
+    public Parameter remove(Object key) {
+        throw new IllegalAccessError("HttpParameters are immutable, you cannot remove object directly!");
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ? extends Parameter> m) {
+        throw new IllegalAccessError("HttpParameters are immutable, you cannot put values directly!");
+    }
+
+    @Override
+    public void clear() {
+        throw new IllegalAccessError("HttpParameters are immutable, you cannot clear values directly!");
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return Collections.unmodifiableSet(new TreeSet<>(parameters.keySet()));
+    }
+
+    @Override
+    public Collection<Parameter> values() {
+        return Collections.unmodifiableCollection(parameters.values());
+    }
+
+    @Override
+    public Set<Entry<String, Parameter>> entrySet() {
+        return Collections.unmodifiableSet(parameters.entrySet());
     }
 
     public static class Builder {

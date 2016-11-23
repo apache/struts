@@ -50,7 +50,7 @@ public class MultiselectInterceptor extends AbstractInterceptor {
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         Map<String, Parameter> newParams = new HashMap<>();
 
-        for (String name : parameters.getNames()) {
+        for (String name : parameters.keySet()) {
             if (name.startsWith("__multiselect_")) {
                 String key = name.substring("__multiselect_".length());
 

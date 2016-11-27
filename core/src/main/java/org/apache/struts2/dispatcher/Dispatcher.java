@@ -690,7 +690,7 @@ public class Dispatcher {
      *
      * @return the path to save uploaded files to
      */
-    private String getSaveDir() {
+    protected String getSaveDir() {
         String saveDir = multipartSaveDir.trim();
 
         if (saveDir.equals("")) {

@@ -55,7 +55,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     protected List<Pattern> excludedPatterns = null;
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        InitOperations init = new InitOperations();
+        InitOperations init = createInitOperations();
         Dispatcher dispatcher = null;
         try {
             FilterHostConfig config = new FilterHostConfig(filterConfig);
@@ -63,8 +63,8 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
-            prepare = new PrepareOperations(dispatcher);
-            execute = new ExecuteOperations(dispatcher);
+            prepare = createPrepareOperations(dispatcher);
+            execute = createExecuteOperations(dispatcher);
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
@@ -74,6 +74,36 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             }
             init.cleanup();
         }
+    }
+
+    /**
+     * Creates a new instance of {@link InitOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link InitOperations}
+     */
+    protected InitOperations createInitOperations() {
+        return new InitOperations();
+    }
+
+    /**
+     * Creates a new instance of {@link PrepareOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link PrepareOperations}
+     */
+    protected PrepareOperations createPrepareOperations(Dispatcher dispatcher) {
+        return new PrepareOperations(dispatcher);
+    }
+
+    /**
+     * Creates a new instance of {@link ExecuteOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link ExecuteOperations}
+     */
+    protected ExecuteOperations createExecuteOperations(Dispatcher dispatcher) {
+        return new ExecuteOperations(dispatcher);
     }
 
     /**

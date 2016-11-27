@@ -109,7 +109,7 @@ public class InitOperations {
      *
      * @return The dispatcher on the thread.
      */
-    private Dispatcher createDispatcher( HostConfig filterConfig ) {
+    protected Dispatcher createDispatcher(HostConfig filterConfig) {
         Map<String, String> params = new HashMap<>();
         for ( Iterator e = filterConfig.getInitParameterNames(); e.hasNext(); ) {
             String name = (String) e.next();

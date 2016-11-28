@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>struts2-bom</artifactId>
-    <version>2.5.6</version>
+    <version>2.5.7-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Struts 2 Bill of Materials</name>
@@ -25,7 +25,7 @@
     </licenses>
 
     <properties>
-        <struts-version.version>2.5.6</struts-version.version>
+        <struts-version.version>2.5.7-SNAPSHOT</struts-version.version>
     </properties>
 
     <build>
@@ -170,8 +170,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-  <scm>
-    <tag>STRUTS_2_5_6</tag>
-  </scm>
 </project>

@@ -11,7 +11,7 @@ public class EnvsValueSubstitutorTest extends StrutsInternalTestCase {
         ValueSubstitutor substitutor = new EnvsValueSubstitutor();
 
         // when
-        String actual = substitutor.substitute("${ENV.USER}");
+        String actual = substitutor.substitute("${env.USER}");
 
         // then
         assertEquals(expected, actual);

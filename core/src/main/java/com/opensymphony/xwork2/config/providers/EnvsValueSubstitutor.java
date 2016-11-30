@@ -27,14 +27,14 @@ public class EnvsValueSubstitutor implements ValueSubstitutor {
 
     public EnvsValueSubstitutor() {
         strSubstitutor = new StrSubstitutor(System.getenv());
-        strSubstitutor.setVariablePrefix("${ENV.");
+        strSubstitutor.setVariablePrefix("${env.");
         strSubstitutor.setVariableSuffix('}');
         strSubstitutor.setValueDelimiter(":");
     }
 
     @Override
     public String substitute(String value) {
-        LOG.debug("Substituting value {} with proper ENV value", value);
+        LOG.debug("Substituting value {} with proper System variable or environment variable", value);
 
         String substituted = StrSubstitutor.replaceSystemProperties(value);
         return strSubstitutor.replace(substituted);

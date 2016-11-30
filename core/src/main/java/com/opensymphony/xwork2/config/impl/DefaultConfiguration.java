@@ -18,7 +18,9 @@ package com.opensymphony.xwork2.config.impl;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.providers.EnvsValueSubstitutor;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
+import com.opensymphony.xwork2.config.providers.ValueSubstitutor;
 import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.impl.*;
 import com.opensymphony.xwork2.factory.*;
@@ -264,6 +266,8 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
+
+        builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
 
         builder.constant(XWorkConstants.DEV_MODE, "false");
         builder.constant(XWorkConstants.LOG_MISSING_PROPERTIES, "false");

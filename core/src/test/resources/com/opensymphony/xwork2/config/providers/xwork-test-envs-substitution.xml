@@ -7,11 +7,11 @@
 
     <constant name="foo" value="bar"/>
 
-    <constant name="user" value="${ENV.USER}"/>
-    <constant name="home" value="Current HOME = ${ENV.HOME}"/>
+    <constant name="user" value="${env.USER}"/>
+    <constant name="home" value="Current HOME = ${env.HOME}"/>
     <constant name="os" value="Current OS = ${os.name}"/>
-    <constant name="unknown" value="Unknown = ${ENV.UNKNOWN:default}"/>
+    <constant name="unknown" value="Unknown = ${env.UNKNOWN:default}"/>
 
-    <constant name="struts.devMode" value="${ENV.STRUTS_DEV_MODE:false}"/>
+    <constant name="struts.devMode" value="${env.STRUTS_DEV_MODE:false}"/>
 
 </xwork>

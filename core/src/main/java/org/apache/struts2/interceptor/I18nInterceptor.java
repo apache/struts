@@ -115,16 +115,16 @@ public class I18nInterceptor extends AbstractInterceptor {
         this.parameterName = parameterName;
     }
 
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
+
     public void setRequestOnlyParameterName(String requestOnlyParameterName) {
         this.requestOnlyParameterName = requestOnlyParameterName;
     }
 
     public void setRequestCookieParameterName(String requestCookieParameterName) {
         this.requestCookieParameterName = requestCookieParameterName;
-    }
-
-    public void setAttributeName(String attributeName) {
-        this.attributeName = attributeName;
     }
 
     public void setLocaleStorage(String storageName) {
@@ -152,9 +152,9 @@ public class I18nInterceptor extends AbstractInterceptor {
                 invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
         }
 
-        LocaleFinder localeFinder = new CookieLocaleFinder(invocation);
-        Locale locale = getLocaleFromParam(localeFinder.getRequestedLocale());
-        locale = storeLocale(invocation, locale, localeFinder.getStorage());
+        RequestOnlyLocaleFinder localeFinder = getLocaleFinder(invocation);
+        Locale locale = getLocaleFromParam(localeFinder.find());
+        locale = storeLocale(invocation, locale, storage);
         saveLocale(invocation, locale);
 
         if (LOG.isDebugEnabled()) {
@@ -169,6 +169,20 @@ public class I18nInterceptor extends AbstractInterceptor {
         }
 
         return result;
+    }
+
+    protected RequestOnlyLocaleFinder getLocaleFinder(ActionInvocation invocation) {
+        RequestOnlyLocaleFinder localeFinder;
+        if (this.storage == Storage.COOKIE) {
+            localeFinder = new CookieLocaleFinder(invocation);
+        } else if (this.storage == Storage.SESSION) {
+            localeFinder = new SessionLocaleFinder(invocation);
+        } else {
+            localeFinder = new RequestOnlyLocaleFinder(invocation);
+        }
+
+        LOG.debug("Using LocaleFinder implementation {}", localeFinder.getClass().getName());
+        return localeFinder;
     }
 
     /**
@@ -308,71 +322,74 @@ public class I18nInterceptor extends AbstractInterceptor {
         invocation.getInvocationContext().setLocale(locale);
     }
 
-    protected class LocaleFinder {
-        protected Storage storage = Storage.SESSION;
-        protected Parameter requestedLocale = null;
+    protected class RequestOnlyLocaleFinder {
 
         protected ActionInvocation actionInvocation = null;
 
-        protected LocaleFinder(ActionInvocation invocation) {
+        protected RequestOnlyLocaleFinder(ActionInvocation invocation) {
             actionInvocation = invocation;
-            find();
         }
 
-        protected void find() {
-            //get requested locale
+        public String find() {
             HttpParameters params = actionInvocation.getInvocationContext().getParameters();
 
-            storage = Storage.SESSION;
-
-            requestedLocale = findLocaleParameter(params, parameterName);
-            if (requestedLocale.isDefined()) {
-                return;
-            }
-
-            requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
+            Parameter requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
             if (requestedLocale.isDefined()) {
                 storage = Storage.NONE;
+                return requestedLocale.getValue();
             }
-        }
 
-        public Storage getStorage() {
-            return storage;
-        }
-
-        public String getRequestedLocale() {
-            return requestedLocale.getValue();
+            return null;
         }
     }
 
-    protected class CookieLocaleFinder extends LocaleFinder {
+    protected class SessionLocaleFinder extends RequestOnlyLocaleFinder {
+
+        protected SessionLocaleFinder(ActionInvocation invocation) {
+            super(invocation);
+        }
+
+        public String find() {
+            String requestOnlyLocale = super.find();
+
+            if (requestOnlyLocale != null) {
+                return requestOnlyLocale;
+            }
+
+            HttpParameters params = actionInvocation.getInvocationContext().getParameters();
+
+            Parameter requestedLocale = findLocaleParameter(params, parameterName);
+            if (requestedLocale.isDefined()) {
+                return requestedLocale.getValue();
+            }
+
+            return requestedLocale.getValue();
+        }
+
+    }
+
+    protected class CookieLocaleFinder extends RequestOnlyLocaleFinder {
         protected CookieLocaleFinder(ActionInvocation invocation) {
             super(invocation);
         }
 
         @Override
-        protected void find() {
-            //get requested locale
-            HttpParameters params = actionInvocation.getInvocationContext().getParameters();
-            storage = Storage.SESSION;
+        public String find() {
+            String requestOnlySessionLocale = super.find();
 
-            requestedLocale = findLocaleParameter(params, parameterName);
-
-            if (requestedLocale.isDefined()) {
-                return;
+            if (requestOnlySessionLocale != null) {
+                return requestOnlySessionLocale;
             }
 
-            requestedLocale = findLocaleParameter(params, requestCookieParameterName);
+            HttpParameters params = actionInvocation.getInvocationContext().getParameters();
+
+            Parameter requestedLocale = findLocaleParameter(params, requestCookieParameterName);
             if (requestedLocale.isDefined()) {
                 storage = Storage.COOKIE;
-                return;
+                return requestedLocale.getValue();
             }
 
-            requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
-            if (requestedLocale.isDefined()) {
-                storage = Storage.NONE;
-            }
-
+            return null;
         }
     }
 

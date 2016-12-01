@@ -187,6 +187,27 @@ public class I18nInterceptorTest extends TestCase {
         assertEquals(locale1, locale);
     }
 
+    public void testCookieCreation() throws Exception {
+
+        prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "da_DK");
+
+        final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "da_DK");
+
+        HttpServletResponse response = EasyMock.createMock(HttpServletResponse.class);
+        response.addCookie(CookieMatcher.eqCookie(cookie));
+        EasyMock.replay(response);
+
+        ac.put(StrutsStatics.HTTP_RESPONSE, response);
+        interceptor.setLocaleStorage(I18nInterceptor.Storage.COOKIE.name());
+        interceptor.intercept(mai);
+
+        EasyMock.verify(response);
+
+        Locale denmark = new Locale("da", "DK");
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
     private void prepare(String key, Serializable value) {
         Map<String, Serializable> params = new HashMap<>();
         params.put(key, value);
@@ -255,23 +276,4 @@ public class I18nInterceptorTest extends TestCase {
         }
     }
 
-    public void testCookieCreation() throws Exception {
-
-        prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "da_DK");
-
-        final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "da_DK");
-
-        HttpServletResponse response = EasyMock.createMock(HttpServletResponse.class);
-        response.addCookie(CookieMatcher.eqCookie(cookie));
-        EasyMock.replay(response);
-
-        ac.put(StrutsStatics.HTTP_RESPONSE, response);
-        interceptor.intercept(mai);
-
-        EasyMock.verify(response);
-
-        Locale denmark = new Locale("da", "DK");
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
-    }
 }

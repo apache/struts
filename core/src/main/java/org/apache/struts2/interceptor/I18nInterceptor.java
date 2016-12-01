@@ -234,20 +234,18 @@ public class I18nInterceptor extends AbstractInterceptor {
      */
     protected Locale readStoredLocale(ActionInvocation invocation, Map<String, Object> session) {
         Locale locale = this.readStoredLocalFromSession(invocation, session);
-
         if (locale != null) {
+            LOG.debug("Found stored Locale {} in session, using it!", locale);
             return locale;
         }
 
-        Cookie[] cookies = ServletActionContext.getRequest().getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (DEFAULT_COOKIE_ATTRIBUTE.equals(cookie.getName())) {
-                    return getLocaleFromParam(cookie.getValue());
-                }
-            }
+        Locale cookie = readStoredLocaleFromCookie(invocation);
+        if (cookie != null) {
+            LOG.debug("Found stored Locale {} in cookies, using it!", locale);
+            return cookie;
         }
 
+        LOG.debug("Neither locale was in session nor in cookies, searching current Invocation context");
         return this.readStoredLocalFromCurrentInvocation(invocation);
     }
 
@@ -283,13 +281,25 @@ public class I18nInterceptor extends AbstractInterceptor {
         return locale;
     }
 
-    protected Locale readStoredLocalFromSession(ActionInvocation invocation, Map<String, Object> session) {
+    protected Locale readStoredLocalFromSession(ActionInvocation ignore, Map<String, Object> session) {
         // check session for saved locale
         Object sessionLocale = session.get(attributeName);
         if (sessionLocale != null && sessionLocale instanceof Locale) {
             Locale locale = (Locale) sessionLocale;
             LOG.debug("Applied session locale: {}", locale);
             return locale;
+        }
+        return null;
+    }
+
+    protected Locale readStoredLocaleFromCookie(ActionInvocation ignore) {
+        Cookie[] cookies = ServletActionContext.getRequest().getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (DEFAULT_COOKIE_ATTRIBUTE.equals(cookie.getName())) {
+                    return getLocaleFromParam(cookie.getValue());
+                }
+            }
         }
         return null;
     }

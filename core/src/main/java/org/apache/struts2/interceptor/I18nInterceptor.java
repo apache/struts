@@ -147,25 +147,22 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("intercept '{}/{}' {",
-                invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
-        }
+        LOG.debug("Intercept '{}/{}'",
+            invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
 
         RequestOnlyLocaleFinder localeFinder = getLocaleFinder(invocation);
         Locale locale = getLocaleFromParam(localeFinder.find());
-        locale = storeLocale(invocation, locale, storage);
-        saveLocale(invocation, locale);
+        locale = storeLocale(invocation, locale);
+        useLocale(invocation, locale);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("before Locale={}", invocation.getStack().findValue("locale"));
+            LOG.debug("Before action invocation Locale={}", invocation.getStack().findValue("locale"));
         }
 
         final String result = invocation.invoke();
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("after Locale={}", invocation.getStack().findValue("locale"));
-            LOG.debug("intercept } ");
+            LOG.debug("After action invocation Locale={}", invocation.getStack().findValue("locale"));
         }
 
         return result;
@@ -190,11 +187,10 @@ public class I18nInterceptor extends AbstractInterceptor {
      *
      * @param invocation the action invocation
      * @param locale the locale to store
-     * @param storage the place to store this locale (like Storage.SESSSION)
      *
      * @return the locale
      */
-    protected Locale storeLocale(ActionInvocation invocation, Locale locale, Storage storage) {
+    protected Locale storeLocale(ActionInvocation invocation, Locale locale) {
         if (storage == Storage.COOKIE) {
             ActionContext ac = invocation.getInvocationContext();
             HttpServletResponse response = (HttpServletResponse) ac.get(StrutsStatics.HTTP_RESPONSE);
@@ -233,7 +229,7 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @return the read locale
      */
     protected Locale readStoredLocale(ActionInvocation invocation, Map<String, Object> session) {
-        Locale locale = this.readStoredLocalFromSession(invocation, session);
+        Locale locale = readStoredLocalFromSession(invocation, session);
         if (locale != null) {
             LOG.debug("Found stored Locale {} in session, using it!", locale);
             return locale;
@@ -246,7 +242,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         }
 
         LOG.debug("Neither locale was in session nor in cookies, searching current Invocation context");
-        return this.readStoredLocalFromCurrentInvocation(invocation);
+        return readStoredLocalFromCurrentInvocation(invocation);
     }
 
     /**
@@ -328,7 +324,7 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @param invocation The ActionInvocation.
      * @param locale     The locale to save.
      */
-    protected void saveLocale(ActionInvocation invocation, Locale locale) {
+    protected void useLocale(ActionInvocation invocation, Locale locale) {
         invocation.getInvocationContext().setLocale(locale);
     }
 

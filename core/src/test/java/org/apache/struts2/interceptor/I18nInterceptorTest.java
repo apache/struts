@@ -78,7 +78,7 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     public void testDenmarkLocaleRequestOnly() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "da_DK");
+        prepare(I18nInterceptor.DEFAULT_REQUEST_ONLY_PARAMETER, "da_DK");
         interceptor.intercept(mai);
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
@@ -124,7 +124,7 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     public void testWithVariantRequestOnly() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "ja_JP_JP");
+        prepare(I18nInterceptor.DEFAULT_REQUEST_ONLY_PARAMETER, "ja_JP_JP");
         interceptor.intercept(mai);
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed

@@ -35,7 +35,6 @@ import org.apache.struts2.dispatcher.Parameter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
@@ -96,12 +95,12 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     public static final String DEFAULT_SESSION_ATTRIBUTE = "WW_TRANS_I18N_LOCALE";
     public static final String DEFAULT_PARAMETER = "request_locale";
-    public static final String DEFAULT_REQUESTONLY_PARAMETER = "request_only_locale";
+    public static final String DEFAULT_REQUEST_ONLY_PARAMETER = "request_only_locale";
     public static final String DEFAULT_COOKIE_ATTRIBUTE = DEFAULT_SESSION_ATTRIBUTE;
     public static final String DEFAULT_COOKIE_PARAMETER = "request_cookie_locale";
 
     protected String parameterName = DEFAULT_PARAMETER;
-    protected String requestOnlyParameterName = DEFAULT_REQUESTONLY_PARAMETER;
+    protected String requestOnlyParameterName = DEFAULT_REQUEST_ONLY_PARAMETER;
     protected String attributeName = DEFAULT_SESSION_ATTRIBUTE;
 
     protected LocaleProvider localeProvider;

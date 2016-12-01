@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -102,13 +103,13 @@ public class I18nInterceptor extends AbstractInterceptor {
     protected String parameterName = DEFAULT_PARAMETER;
     protected String requestOnlyParameterName = DEFAULT_REQUEST_ONLY_PARAMETER;
     protected String attributeName = DEFAULT_SESSION_ATTRIBUTE;
+    protected String requestCookieParameterName = DEFAULT_COOKIE_PARAMETER;
+    protected Storage storage = Storage.SESSION;
 
     protected LocaleProvider localeProvider;
 
     // Request-Only = None
     protected enum Storage { COOKIE, SESSION, NONE }
-
-    protected String requestCookieParameterName = DEFAULT_COOKIE_PARAMETER;
 
     public void setParameterName(String parameterName) {
         this.parameterName = parameterName;
@@ -124,6 +125,19 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     public void setAttributeName(String attributeName) {
         this.attributeName = attributeName;
+    }
+
+    public void setLocaleStorage(String storageName) {
+        if (storageName == null || "".equals(storageName)) {
+            this.storage = Storage.NONE;
+        } else {
+            try {
+                this.storage = Storage.valueOf(storageName);
+            } catch (IllegalArgumentException e) {
+                LOG.warn(new ParameterizedMessage("Wrong storage name [{{}] was defined, falling back to {}", storageName, Storage.SESSION), e);
+                this.storage = Storage.SESSION;
+            }
+        }
     }
 
     @Inject

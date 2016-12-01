@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
@@ -203,9 +204,8 @@ public class I18nInterceptorTest extends TestCase {
 
         EasyMock.verify(response);
 
-        Locale denmark = new Locale("da", "DK");
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
     }
 
     private void prepare(String key, Serializable value) {
@@ -235,9 +235,16 @@ public class I18nInterceptorTest extends TestCase {
                 return SUCCESS;
             }
         };
+
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setAction(action);
+        proxy.setNamespace("i18n");
+        proxy.setActionName("anAction");
+
         mai = new MockActionInvocation();
         ((MockActionInvocation) mai).setAction(action);
         ((MockActionInvocation) mai).setInvocationContext(ac);
+        ((MockActionInvocation) mai).setProxy(proxy);
     }
 
     public void tearDown() throws Exception {

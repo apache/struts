@@ -74,6 +74,9 @@ import java.util.Map;
   * <li>attributeName (optional) - the name of the session key to store the selected locale. By default this is
   * <b>WW_TRANS_I18N_LOCALE</b></li>
   *
+  * <li>storage (optional) - the name of storage location, it can be <b>none</b>, <b>session</b> or <b>cookie</b>.
+  * By default this is <b>session</b></li>
+  *
   * </ul>
   *
   * <!-- END SNIPPET: parameters -->
@@ -130,7 +133,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             this.storage = Storage.NONE;
         } else {
             try {
-                this.storage = Storage.valueOf(storageName);
+                this.storage = Storage.valueOf(storageName.toUpperCase());
             } catch (IllegalArgumentException e) {
                 LOG.warn(new ParameterizedMessage("Wrong storage name [{{}] was defined, falling back to {}", storageName, Storage.SESSION), e);
                 this.storage = Storage.SESSION;

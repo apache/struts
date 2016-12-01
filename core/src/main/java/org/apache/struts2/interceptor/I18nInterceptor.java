@@ -20,7 +20,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
@@ -30,7 +29,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 
@@ -191,33 +189,39 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @return the locale
      */
     protected Locale storeLocale(ActionInvocation invocation, Locale locale) {
-        if (storage == Storage.COOKIE) {
-            ActionContext ac = invocation.getInvocationContext();
-            HttpServletResponse response = (HttpServletResponse) ac.get(StrutsStatics.HTTP_RESPONSE);
-
-            Cookie cookie = new Cookie(DEFAULT_COOKIE_ATTRIBUTE, locale.toString());
-            cookie.setMaxAge(1209600); // two weeks
-            response.addCookie(cookie);
-
-            storage = Storage.SESSION;
+        if (locale == null) {
+            storage = Storage.NONE;
+            locale = readStoredLocale(invocation);
         }
 
+        if (storage == Storage.COOKIE) {
+            storeLocaleInCookie(invocation, locale);
+        }
+
+        if (Storage.SESSION == storage) {
+            storeLocaleInSession(invocation, locale);
+        }
+
+        return locale;
+    }
+
+    protected void storeLocaleInCookie(ActionInvocation ignore, Locale locale) {
+        HttpServletResponse response = ServletActionContext.getResponse();
+
+        Cookie cookie = new Cookie(DEFAULT_COOKIE_ATTRIBUTE, locale.toString());
+        cookie.setMaxAge(1209600); // two weeks
+        response.addCookie(cookie);
+    }
+
+    protected void storeLocaleInSession(ActionInvocation invocation, Locale locale) {
         //save it in session
         Map<String, Object> session = invocation.getInvocationContext().getSession();
 
         if (session != null) {
             synchronized (session) {
-                if (locale == null) {
-                    storage = Storage.NONE;
-                    locale = readStoredLocale(invocation, session);
-                }
-
-                if (Storage.SESSION == storage) {
-                    session.put(attributeName, locale);
-                }
+                session.put(attributeName, locale);
             }
         }
-        return locale;
     }
 
     /**
@@ -225,11 +229,10 @@ public class I18nInterceptor extends AbstractInterceptor {
      * current invocation (=browser)
      *
      * @param invocation the current invocation
-     * @param session the current session
      * @return the read locale
      */
-    protected Locale readStoredLocale(ActionInvocation invocation, Map<String, Object> session) {
-        Locale locale = readStoredLocalFromSession(invocation, session);
+    protected Locale readStoredLocale(ActionInvocation invocation) {
+        Locale locale = readStoredLocalFromSession(invocation);
         if (locale != null) {
             LOG.debug("Found stored Locale {} in session, using it!", locale);
             return locale;
@@ -277,13 +280,19 @@ public class I18nInterceptor extends AbstractInterceptor {
         return locale;
     }
 
-    protected Locale readStoredLocalFromSession(ActionInvocation ignore, Map<String, Object> session) {
+    protected Locale readStoredLocalFromSession(ActionInvocation invocation) {
         // check session for saved locale
-        Object sessionLocale = session.get(attributeName);
-        if (sessionLocale != null && sessionLocale instanceof Locale) {
-            Locale locale = (Locale) sessionLocale;
-            LOG.debug("Applied session locale: {}", locale);
-            return locale;
+        Map<String, Object> session = invocation.getInvocationContext().getSession();
+
+        if (session != null) {
+            synchronized (session) {
+                Object sessionLocale = session.get(attributeName);
+                if (sessionLocale != null && sessionLocale instanceof Locale) {
+                    Locale locale = (Locale) sessionLocale;
+                    LOG.debug("Applied session locale: {}", locale);
+                    return locale;
+                }
+            }
         }
         return null;
     }

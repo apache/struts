@@ -152,6 +152,11 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
         return Collections.unmodifiableSet(parameters.entrySet());
     }
 
+    @Override
+    public String toString() {
+        return parameters.toString();
+    }
+
     public static class Builder {
         private Map<String, Object> requestParameterMap;
         private HttpParameters parent;

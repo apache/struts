@@ -235,16 +235,21 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @return the read locale
      */
     protected Locale readStoredLocale(ActionInvocation invocation) {
-        Locale locale = readStoredLocalFromSession(invocation);
-        if (locale != null) {
-            LOG.debug("Found stored Locale {} in session, using it!", locale);
-            return locale;
+        Locale locale;
+        if (storage == Storage.COOKIE) {
+            locale = readStoredLocalFromSession(invocation);
+            if (locale != null) {
+                LOG.debug("Found stored Locale {} in session, using it!", locale);
+                return locale;
+            }
         }
 
-        Locale cookie = readStoredLocaleFromCookie(invocation);
-        if (cookie != null) {
-            LOG.debug("Found stored Locale {} in cookies, using it!", locale);
-            return cookie;
+        if (storage == Storage.SESSION) {
+            locale = readStoredLocaleFromCookie(invocation);
+            if (locale != null) {
+                LOG.debug("Found stored Locale {} in cookies, using it!", locale);
+                return locale;
+            }
         }
 
         LOG.debug("Neither locale was in session nor in cookies, searching current Invocation context");

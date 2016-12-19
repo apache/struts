@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.result.Redirectable;
 import org.apache.struts2.result.ServletActionRedirectResult;
 
 /**
@@ -24,7 +25,7 @@ import org.apache.struts2.result.ServletActionRedirectResult;
  * </p>
  *
  */
-public class JSONActionRedirectResult extends ServletActionRedirectResult {
+public class JSONActionRedirectResult extends ServletActionRedirectResult implements Redirectable {
 
     private static final long serialVersionUID = 3107276294073879542L;
 

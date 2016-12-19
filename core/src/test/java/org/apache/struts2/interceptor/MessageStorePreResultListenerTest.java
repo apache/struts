@@ -54,7 +54,8 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
 
         // when
         MessageStoreInterceptor msi = new MessageStoreInterceptor();
-        MessageStorePreResultListener listener = new MessageStorePreResultListener(msi);
+        MessageStorePreResultListener listener = new MessageStorePreResultListener();
+        listener.init(msi);
         listener.beforeResult(mockActionInvocation, Action.SUCCESS);
 
         // then
@@ -86,7 +87,8 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
 
         // when
         MessageStoreInterceptor msi = new MessageStoreInterceptor();
-        MessageStorePreResultListener listener = new MessageStorePreResultListener(msi);
+        MessageStorePreResultListener listener = new MessageStorePreResultListener();
+        listener.init(msi);
         listener.beforeResult(mockActionInvocation, Action.SUCCESS);
 
         // then
@@ -98,7 +100,8 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         MessageStoreInterceptor interceptor = new MessageStoreInterceptor();
         interceptor.setOperationMode(MessageStoreInterceptor.AUTOMATIC_MODE);
 
-        MessageStorePreResultListener listener = new MessageStorePreResultListener(interceptor);
+        MessageStorePreResultListener listener = new MessageStorePreResultListener();
+        listener.init(interceptor);
 
         Map sessionMap = new LinkedHashMap();
 
@@ -178,7 +181,8 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         interceptor.setAllowRequestParameterSwitch(true);
         interceptor.setOperationMode(MessageStoreInterceptor.STORE_MODE);
 
-        MessageStorePreResultListener listener = new MessageStorePreResultListener(interceptor);
+        MessageStorePreResultListener listener = new MessageStorePreResultListener();
+        listener.init(interceptor);
 
         Map sessionMap = new LinkedHashMap();
 

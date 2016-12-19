@@ -98,7 +98,7 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * </pre>
  * 
  */
-public class ServletRedirectResult extends StrutsResultSupport implements ReflectionExceptionHandler {
+public class ServletRedirectResult extends StrutsResultSupport implements ReflectionExceptionHandler, Redirectable {
 
     private static final long serialVersionUID = 6316947346435301270L;
 

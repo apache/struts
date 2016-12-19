@@ -203,13 +203,20 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
         before(invocation);
 
         LOG.trace("Registering listener to store messages before result will be executed");
-        invocation.addPreResultListener(new MessageStorePreResultListener(this));
+        MessageStorePreResultListener preResultListener = createPreResultListener(invocation);
+        preResultListener.init(this);
+
+        invocation.addPreResultListener(preResultListener);
 
         String result = invocation.invoke();
 
         LOG.debug("exit executing MessageStoreInterceptor");
 
         return result;
+    }
+
+    protected MessageStorePreResultListener createPreResultListener(ActionInvocation invocation) {
+        return new MessageStorePreResultListener();
     }
 
     /**

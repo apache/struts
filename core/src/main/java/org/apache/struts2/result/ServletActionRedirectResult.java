@@ -123,7 +123,7 @@ import java.util.List;
  *
  * @see ActionMapper
  */
-public class ServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler {
+public class ServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler, Redirectable {
 
     private static final long serialVersionUID = -9042425229314584066L;
 

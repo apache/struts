@@ -58,7 +58,8 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         synchronized (this) {
             setEncoding();
             if (maxSizeProvided){
-            	multi = new ServletMultipartRequest(servletRequest, saveDir, maxSize);
+                int intMaxSize = (maxSize >= Integer.MAX_VALUE ? Integer.MAX_VALUE : Long.valueOf(maxSize).intValue());
+            	multi = new ServletMultipartRequest(servletRequest, saveDir, intMaxSize);
             }else{
             	multi = new ServletMultipartRequest(servletRequest, saveDir);
             }

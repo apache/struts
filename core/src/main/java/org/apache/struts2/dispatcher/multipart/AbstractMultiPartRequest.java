@@ -33,7 +33,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /**
      * Specifies the maximum size of the entire request.
      */
-    protected int maxSize;
+    protected long maxSize;
     protected boolean maxSizeProvided;
 
     /**
@@ -67,7 +67,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
     public void setMaxSize(String maxSize) {
         this.maxSizeProvided = true;
-        this.maxSize = Integer.parseInt(maxSize);
+        this.maxSize = Long.parseLong(maxSize);
     }
 
     /**

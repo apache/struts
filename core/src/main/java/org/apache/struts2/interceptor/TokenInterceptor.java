@@ -26,6 +26,8 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.TokenHelper;
 
@@ -116,7 +118,7 @@ import javax.servlet.http.HttpSession;
  */
 public class TokenInterceptor extends MethodFilterInterceptor {
 
-    private static final long serialVersionUID = -6680894220590585506L;
+    private static final Logger LOG = LogManager.getLogger(TokenInterceptor.class);
 
     public static final String INVALID_TOKEN_CODE = "invalid.token";
 
@@ -135,7 +137,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
      */
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
-        log.debug("Intercepting invocation to check for valid transaction token.");
+        LOG.debug("Intercepting invocation to check for valid transaction token.");
         return handleToken(invocation);
     }
 
@@ -165,7 +167,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
         if (action instanceof ValidationAware) {
             ((ValidationAware) action).addActionError(errorMessage);
         } else {
-            log.warn(errorMessage);
+            LOG.warn(errorMessage);
         }
 
         return INVALID_TOKEN_CODE;

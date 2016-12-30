@@ -93,7 +93,8 @@ import org.apache.logging.log4j.Logger;
  * @author Claus Ibsen
  */
 public class TimerInterceptor extends AbstractInterceptor {
-    protected static final Logger LOG = LogManager.getLogger(TimerInterceptor.class);
+
+    private static final Logger LOG = LogManager.getLogger(TimerInterceptor.class);
 
     protected Logger categoryLogger;
     protected String logCategory;

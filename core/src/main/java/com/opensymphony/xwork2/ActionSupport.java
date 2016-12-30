@@ -19,20 +19,15 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.*;
-
 
 /**
  * Provides a default implementation for the most common actions.
  * See the documentation for all the interfaces this class implements for more detailed information.
  */
 public class ActionSupport implements Action, Validateable, ValidationAware, TextProvider, LocaleProvider, Serializable {
-
-    protected static Logger LOG = LogManager.getLogger(ActionSupport.class);
 
     private final ValidationAwareSupport validationAware = new ValidationAwareSupport();
 

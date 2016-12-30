@@ -129,14 +129,14 @@ import org.apache.logging.log4j.Logger;
  */
 public class ValidationInterceptor extends MethodFilterInterceptor {
 
+    private static final Logger LOG = LogManager.getLogger(ValidationInterceptor.class);
+
+    private final static String VALIDATE_PREFIX = "validate";
+    private final static String ALT_VALIDATE_PREFIX = "validateDo";
+
     private boolean validateAnnotatedMethodOnly;
     
     private ActionValidatorManager actionValidatorManager;
-    
-    private static final Logger LOG = LogManager.getLogger(ValidationInterceptor.class);
-    
-    private final static String VALIDATE_PREFIX = "validate";
-    private final static String ALT_VALIDATE_PREFIX = "validateDo";
     
     private boolean alwaysInvokeValidate = true;
     private boolean programmatic = true;
@@ -212,8 +212,8 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
         String context = this.getValidationContext(proxy);
         String method = proxy.getMethod();
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating {}/{} with method {}.", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), method);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Validating {}/{} with method {}.", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), method);
         }
         
 

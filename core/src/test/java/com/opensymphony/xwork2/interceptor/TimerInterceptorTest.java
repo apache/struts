@@ -55,21 +55,18 @@ public class TimerInterceptorTest extends XWorkTestCase {
     public void testDefault() throws Exception {
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!execute] took "));
-        assertSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testNoNamespace() throws Exception {
         ap.setNamespace(null);
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myAction!execute] took "));
-        assertSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testInputMethod() throws Exception {
         ap.setMethod("input");
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!input] took "));
-        assertSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testTraceLevel() throws Exception {
@@ -89,35 +86,30 @@ public class TimerInterceptorTest extends XWorkTestCase {
         interceptor.setLogLevel("info");
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!execute] took "));
-        assertSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testWarnLevel() throws Exception {
         interceptor.setLogLevel("warn");
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!execute] took "));
-        assertSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testErrorLevel() throws Exception {
         interceptor.setLogLevel("error");
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!execute] took "));
-        assertSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testFatalLevel() throws Exception {
         interceptor.setLogLevel("fatal");
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!execute] took "));
-        assertSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testLogCategory() throws Exception {
         interceptor.setLogCategory("com.mycompany.myapp.actiontiming");
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!execute] took "));
-        assertNotSame(interceptor.logger, TimerInterceptor.LOG);
     }
 
     public void testLogCategoryLevel() throws Exception {
@@ -125,7 +117,6 @@ public class TimerInterceptorTest extends XWorkTestCase {
         interceptor.setLogLevel("error");
         interceptor.intercept(mai);
         assertTrue(interceptor.message.startsWith("Executed action [myApp/myAction!execute] took "));
-        assertNotSame(interceptor.logger, TimerInterceptor.LOG);
         assertEquals("com.mycompany.myapp.actiontiming", interceptor.getLogCategory());
     }
 

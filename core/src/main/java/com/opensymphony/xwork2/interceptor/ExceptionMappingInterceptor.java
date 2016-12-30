@@ -153,7 +153,7 @@ import java.util.Map;
  */
 public class ExceptionMappingInterceptor extends AbstractInterceptor {
     
-    protected static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);
 
     protected Logger categoryLogger;
     protected boolean logEnabled = false;

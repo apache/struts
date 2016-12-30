@@ -70,7 +70,8 @@ import java.util.Set;
  * @see com.opensymphony.xwork2.validator.ValidationInterceptor
  */
 public abstract class MethodFilterInterceptor extends AbstractInterceptor {
-    protected transient Logger log = LogManager.getLogger(getClass());
+
+    private static final Logger LOG = LogManager.getLogger(MethodFilterInterceptor.class);
     
     protected Set<String> excludeMethods = Collections.emptySet();
     protected Set<String> includeMethods = Collections.emptySet();
@@ -104,7 +105,7 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
         // ValidationInterceptor
         boolean applyMethod = MethodFilterInterceptorUtil.applyMethod(excludeMethods, includeMethods, method);
         if (!applyMethod) {
-            log.debug("Skipping Interceptor... Method [{}] found in exclude list.", method);
+            LOG.debug("Skipping Interceptor... Method [{}] found in exclude list.", method);
         }
         return applyMethod;
     }

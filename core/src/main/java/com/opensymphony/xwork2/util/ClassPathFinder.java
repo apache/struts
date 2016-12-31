@@ -20,12 +20,16 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.XWorkException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * This class is an utility class that will search through the classpath
@@ -88,10 +92,24 @@ public class ClassPathFinder {
 			} catch (URISyntaxException e) {
 				continue;
 			}
-			File entry = new File(entryURI) ;
-			Vector<String> results = checkEntries(entry.list(), entry, "");
-			if (results != null ) {
-				matches.addAll(results);
+			File entry = new File(entryURI);
+			if (entry.isFile() && entry.toString().endsWith(".jar")) {
+				try {
+					ZipInputStream zip = new ZipInputStream(new FileInputStream(entry));
+					for (ZipEntry zipEntry = zip.getNextEntry(); zipEntry != null; zipEntry = zip.getNextEntry()) {
+						boolean doesMatch = patternMatcher.match(new HashMap<String, String>(), zipEntry.getName(), compiledPattern);
+						if (doesMatch) {
+							matches.add(zipEntry.getName());
+						}
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				Vector<String> results = checkEntries(entry.list(), entry, "");
+				if (results != null) {
+					matches.addAll(results);
+				}
 			}
 		}
 		return matches;

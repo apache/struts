@@ -6,5 +6,7 @@
 <xwork>
     <include file="xwork-test-beans.xml" />
     <include file="com/opensymphony/xwork2/config/providers/xwork-test-wildcard-*.xml" />
+    <!-- config file defined inside xwork-jar.jar -->
+    <include file="xwork-jar.xml" />
     <package name="default-wildcard" />
 </xwork>

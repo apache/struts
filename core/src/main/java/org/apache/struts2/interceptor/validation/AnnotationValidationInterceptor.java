@@ -22,10 +22,13 @@
 package org.apache.struts2.interceptor.validation;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Method;
@@ -38,19 +41,20 @@ import java.util.Collection;
  */
 public class AnnotationValidationInterceptor extends ValidationInterceptor {
 
-    /** Auto-generated serialization id */
-    private static final long serialVersionUID = 1813272797367431184L;
+    private static final Logger LOG = LogManager.getLogger(AnnotationValidationInterceptor.class);
 
     protected String doIntercept(ActionInvocation invocation) throws Exception {
 
         Object action = invocation.getAction();
         if (action != null) {
             Method method = getActionMethod(action.getClass(), invocation.getProxy().getMethod());
-            Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(action.getClass(), SkipValidation.class);
-            if (annotatedMethods.contains(method))
-                return invocation.invoke();
 
-            //check if method overwites an annotated method
+            Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(action.getClass(), SkipValidation.class);
+            if (annotatedMethods.contains(method)) {
+                return invocation.invoke();
+            }
+
+            LOG.debug("Check if method overrides an annotated method");
             Class clazz = action.getClass().getSuperclass();
             while (clazz != null) {
                 annotatedMethods = AnnotationUtils.getAnnotatedMethods(clazz, SkipValidation.class);
@@ -69,9 +73,12 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
         return super.doIntercept(invocation);
     }
 
-    // FIXME: This is copied from DefaultActionInvocation but should be exposed through the interface
-    protected Method getActionMethod(Class<?> actionClass, String methodName) throws NoSuchMethodException {
-        return actionClass.getMethod(methodName);
+    protected Method getActionMethod(Class<?> actionClass, String methodName) {
+        try {
+            return actionClass.getMethod(methodName);
+        } catch (NoSuchMethodException e) {
+            throw new ConfigurationException("Wrong method was defined as an action method: " + methodName, e);
+        }
     }
 
 }

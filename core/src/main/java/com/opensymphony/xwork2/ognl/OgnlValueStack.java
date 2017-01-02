@@ -52,19 +52,20 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     public static final String THROW_EXCEPTION_ON_FAILURE = OgnlValueStack.class.getName() + ".throwExceptionOnFailure";
 
+    private static final Logger LOG = LogManager.getLogger(OgnlValueStack.class);
+
     private static final long serialVersionUID = 370737852934925530L;
 
     private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
-    private static final Logger LOG = LogManager.getLogger(OgnlValueStack.class);
 
-    CompoundRoot root;
-    transient Map<String, Object> context;
-    Class defaultType;
-    Map<Object, Object> overrides;
-    transient OgnlUtil ognlUtil;
-    transient SecurityMemberAccess securityMemberAccess;
+    protected CompoundRoot root;
+    protected transient Map<String, Object> context;
+    protected Class defaultType;
+    protected Map<Object, Object> overrides;
+    protected transient OgnlUtil ognlUtil;
+    protected transient SecurityMemberAccess securityMemberAccess;
+
     private transient XWorkConverter converter;
-
     private boolean devMode;
     private boolean logMissingProperties;
 
@@ -189,7 +190,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         context.remove(REPORT_ERRORS_ON_NO_PROP);
     }
 
-    private void handleRuntimeException(String expr, Object value, boolean throwExceptionOnFailure, RuntimeException re) {
+    protected void handleRuntimeException(String expr, Object value, boolean throwExceptionOnFailure, RuntimeException re) {
         if (throwExceptionOnFailure) {
             String message = ErrorMessageBuilder.create()
                     .errorSettingExpressionWithValue(expr, value)
@@ -200,7 +201,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         }
     }
 
-    private void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
+    protected void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
     	boolean shouldLog = shouldLogMissingPropertyWarning(e);
     	String msg = null;
     	if (throwExceptionOnFailure || shouldLog) {
@@ -242,7 +243,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         }
     }
 
-    private void setupExceptionOnFailure(boolean throwExceptionOnFailure) {
+    protected void setupExceptionOnFailure(boolean throwExceptionOnFailure) {
         if (throwExceptionOnFailure) {
             context.put(THROW_EXCEPTION_ON_FAILURE, true);
         }
@@ -255,7 +256,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return tryFindValue(expr);
     }
 
-    private Object handleOtherException(String expr, boolean throwExceptionOnFailure, Exception e) {
+    protected Object handleOtherException(String expr, boolean throwExceptionOnFailure, Exception e) {
         logLookupFailure(expr, e);
 
         if (throwExceptionOnFailure)
@@ -322,7 +323,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return tryFindValue(expr, asType);
     }
 
-    private Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
+    protected Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
         Object ret = findInContext(expr);
         if (ret == null) {
             if (shouldLogMissingPropertyWarning(e)) {
@@ -335,7 +336,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return ret;
     }
 
-    private boolean shouldLogMissingPropertyWarning(OgnlException e) {
+    protected boolean shouldLogMissingPropertyWarning(OgnlException e) {
         return (e instanceof NoSuchPropertyException || e instanceof MethodFailedException)
         		&& devMode && logMissingProperties;
     }
@@ -359,7 +360,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return ognlUtil.getValue(expr, context, root, asType);
     }
 
-    private Object findInContext(String name) {
+    protected Object findInContext(String name) {
         return getContext().get(name);
     }
 

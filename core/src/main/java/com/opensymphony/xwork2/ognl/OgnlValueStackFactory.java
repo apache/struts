@@ -38,11 +38,11 @@ import java.util.Set;
  */
 public class OgnlValueStackFactory implements ValueStackFactory {
     
-    private XWorkConverter xworkConverter;
-    private CompoundRootAccessor compoundRootAccessor;
-    private TextProvider textProvider;
-    private Container container;
-    private boolean allowStaticMethodAccess;
+    protected XWorkConverter xworkConverter;
+    protected CompoundRootAccessor compoundRootAccessor;
+    protected TextProvider textProvider;
+    protected Container container;
+    protected boolean allowStaticMethodAccess;
 
     @Inject
     public void setXWorkConverter(XWorkConverter converter) {

@@ -31,8 +31,6 @@ import java.util.*;
  */
 public class TextParseUtil {
 
-    private static final int MAX_RECURSION = 1;
-
     /**
      * Converts all instances of ${...}, and %{...} in <code>expression</code> to the value returned
      * by a call to {@link ValueStack#findValue(java.lang.String)}. If an item cannot
@@ -108,7 +106,7 @@ public class TextParseUtil {
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char open, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator) {
-        return translateVariables(new char[]{open} , expression, stack, asType, evaluator, MAX_RECURSION);
+        return translateVariables(new char[]{open} , expression, stack, asType, evaluator, TextParser.DEFAULT_LOOP_COUNT);
     }
 
     /**
@@ -122,7 +120,7 @@ public class TextParseUtil {
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char[] openChars, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator) {
-        return translateVariables(openChars, expression, stack, asType, evaluator, MAX_RECURSION);
+        return translateVariables(openChars, expression, stack, asType, evaluator, TextParser.DEFAULT_LOOP_COUNT);
     }
 
     /**
@@ -178,7 +176,7 @@ public class TextParseUtil {
      * @return converted objects
      */
     public static Collection<String>  translateVariablesCollection(String expression, ValueStack stack, boolean excludeEmptyElements, ParsedValueEvaluator evaluator) {
-        return translateVariablesCollection(new char[]{'$', '%'}, expression, stack, excludeEmptyElements, evaluator, MAX_RECURSION);
+        return translateVariablesCollection(new char[]{'$', '%'}, expression, stack, excludeEmptyElements, evaluator, TextParser.DEFAULT_LOOP_COUNT);
     }
 
     /**

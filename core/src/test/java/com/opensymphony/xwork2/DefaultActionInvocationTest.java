@@ -3,16 +3,20 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
+import com.opensymphony.xwork2.mock.MockLazyInterceptor;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -296,6 +300,36 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         // then
         assertNotNull(result);
         assertEquals("success", result);
+    }
+
+    public void testInvokeWithLazyParams() throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("blah", "this is blah");
+
+        HashMap<String, Object> extraContext = new HashMap<>();
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext, true);
+        container.inject(defaultActionInvocation);
+
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy( "", "LazyFoo", null, extraContext);
+        defaultActionInvocation.init(actionProxy);
+        defaultActionInvocation.invoke();
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+
+        assertEquals("this is blah", action.getBlah());
+        assertEquals("this is blah", action.getName());
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        // ensure we're using the default configuration, not simple config
+        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(configurationProvider);
+        loadConfigurationProviders(configurationProvider);
     }
 
 }

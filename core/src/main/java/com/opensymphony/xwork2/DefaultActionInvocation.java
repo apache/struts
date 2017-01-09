@@ -21,7 +21,9 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.interceptor.WithLazyParams;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -67,6 +69,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected Container container;
     protected UnknownHandlerManager unknownHandlerManager;
     protected OgnlUtil ognlUtil;
+    protected WithLazyParams.LazyParamInjector lazyParamInjector;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
         this.extraContext = extraContext;
@@ -233,11 +236,15 @@ public class DefaultActionInvocation implements ActionInvocation {
             }
 
             if (interceptors.hasNext()) {
-                final InterceptorMapping interceptor = interceptors.next();
-                String interceptorMsg = "interceptor: " + interceptor.getName();
+                final InterceptorMapping interceptorMapping = interceptors.next();
+                String interceptorMsg = "interceptorMapping: " + interceptorMapping.getName();
                 UtilTimerStack.push(interceptorMsg);
                 try {
-                    resultCode = interceptor.getInterceptor().intercept(DefaultActionInvocation.this);
+                    Interceptor interceptor = interceptorMapping.getInterceptor();
+                    if (interceptor instanceof WithLazyParams) {
+                        interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
+                    }
+                    resultCode = interceptor.intercept(DefaultActionInvocation.this);
                 } finally {
                     UtilTimerStack.pop(interceptorMsg);
                 }
@@ -400,6 +407,13 @@ public class DefaultActionInvocation implements ActionInvocation {
         invocationContext.setName(proxy.getActionName());
 
         createInterceptors(proxy);
+
+        prepareLazyParamInjector(invocationContext.getValueStack());
+    }
+
+    protected void prepareLazyParamInjector(ValueStack valueStack) {
+        lazyParamInjector = new WithLazyParams.LazyParamInjector(valueStack);
+        container.inject(lazyParamInjector);
     }
 
     protected void createInterceptors(ActionProxy proxy) {

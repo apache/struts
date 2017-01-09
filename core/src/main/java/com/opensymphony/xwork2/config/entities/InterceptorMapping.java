@@ -19,6 +19,8 @@ package com.opensymphony.xwork2.config.entities;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <code>InterceptorMapping</code>
@@ -30,10 +32,16 @@ public class InterceptorMapping implements Serializable {
 
     private String name;
     private Interceptor interceptor;
+    private final Map<String, String> params;
 
     public InterceptorMapping(String name, Interceptor interceptor) {
+        this(name, interceptor, new HashMap<String, String>());
+    }
+
+    public InterceptorMapping(String name, Interceptor interceptor, Map<String, String> params) {
         this.name = name;
         this.interceptor = interceptor;
+        this.params = params;
     }
 
     public String getName() {
@@ -42,6 +50,10 @@ public class InterceptorMapping implements Serializable {
 
     public Interceptor getInterceptor() {
         return interceptor;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
     }
 
     @Override
@@ -65,7 +77,7 @@ public class InterceptorMapping implements Serializable {
 
     @Override
     public String toString() {
-        return "InterceptorMapping: [" + name + "] => [" + interceptor.getClass().getName() + ']';
+        return "InterceptorMapping: [" + name + "] => [" + interceptor.getClass().getName() + "] with params [" + params + "]" ;
     }
 
 }

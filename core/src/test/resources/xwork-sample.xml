@@ -26,6 +26,14 @@
             <interceptor-ref name="defaultStack"/>
         </action>
 
+        <action name="LazyFoo" class="com.opensymphony.xwork2.SimpleAction">
+          <result name="error" type="void" />
+          <interceptor-ref name="params"/>
+          <interceptor-ref name="lazy">
+            <param name="foo">${blah}</param>
+          </interceptor-ref>
+        </action>
+
         <action name="WildCard" class="com.opensymphony.xwork2.SimpleAction">
             <param name="foo">17</param>
             <param name="bar">23</param>

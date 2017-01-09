@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.location.Location;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,7 +43,6 @@ import java.util.Map;
 public class InterceptorBuilder {
 
     private static final Logger LOG = LogManager.getLogger(InterceptorBuilder.class);
-
 
     /**
      * Builds a list of interceptors referenced by the refName in the supplied PackageConfig (InterceptorMapping object).
@@ -67,13 +67,11 @@ public class InterceptorBuilder {
                 InterceptorConfig config = (InterceptorConfig) referencedConfig;
                 Interceptor inter;
                 try {
-
                     inter = objectFactory.buildInterceptor(config, refParams);
-                    result.add(new InterceptorMapping(refName, inter));
+                    result.add(new InterceptorMapping(refName, inter, refParams));
                 } catch (ConfigurationException ex) {
-              	    LOG.warn("Unable to load config class {} at {} probably due to a missing jar, which might be fine if you never plan to use the {} interceptor",
-                            config.getClassName(), ex.getLocation(), config.getName());
-                    LOG.error("Unable to load config class {}", config.getClassName(), ex);
+              	    LOG.warn(new ParameterizedMessage("Unable to load config class {} at {} probably due to a missing jar, which might be fine if you never plan to use the {} interceptor",
+                            config.getClassName(), ex.getLocation(), config.getName()), ex);
                 }
 
             } else if (referencedConfig instanceof InterceptorStackConfig) {

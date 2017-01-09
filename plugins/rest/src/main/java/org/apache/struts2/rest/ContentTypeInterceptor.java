@@ -24,7 +24,7 @@ package org.apache.struts2.rest;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 
@@ -35,7 +35,7 @@ import java.io.InputStreamReader;
 /**
  * Uses the content handler to apply the request body to the action
  */
-public class ContentTypeInterceptor implements Interceptor {
+public class ContentTypeInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 1L;
     ContentTypeHandlerManager selector;
@@ -45,10 +45,6 @@ public class ContentTypeInterceptor implements Interceptor {
         this.selector = sel;
     }
     
-    public void destroy() {}
-
-    public void init() {}
-
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         ContentTypeHandler handler = selector.getHandlerForRequest(request);

@@ -1,7 +1,7 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.Parameter;
@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class DateTextFieldInterceptor implements Interceptor {
+public class DateTextFieldInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(DateTextFieldInterceptor.class);
 
@@ -55,12 +55,6 @@ public class DateTextFieldInterceptor implements Interceptor {
         public static DateWord[] getAll() {
             return values();
         }
-    }
-    
-    public void destroy() {
-    }
-
-    public void init() {
     }
 
     public String intercept(ActionInvocation ai) throws Exception {

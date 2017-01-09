@@ -16,16 +16,15 @@
 package com.opensymphony.xwork2.mock;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.junit.Assert;
-
 
 /**
  * Mock for an {@link com.opensymphony.xwork2.interceptor.Interceptor}.
  *
  * @author Jason Carreira
  */
-public class MockInterceptor implements Interceptor {
+public class MockInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 2692551676567227756L;
     
@@ -55,12 +54,6 @@ public class MockInterceptor implements Interceptor {
 
     public String getFoo() {
         return foo;
-    }
-
-    /**
-     * Called to let an interceptor clean up any resources it has allocated.
-     */
-    public void destroy() {
     }
 
     @Override
@@ -99,13 +92,6 @@ public class MockInterceptor implements Interceptor {
         result = (29 * result) + (executed ? 1 : 0);
 
         return result;
-    }
-
-    /**
-     * Called after an Interceptor is created, but before any requests are processed using the intercept() methodName. This
-     * gives the Interceptor a chance to initialize any needed resources.
-     */
-    public void init() {
     }
 
     /**

@@ -221,7 +221,8 @@ public class I18nInterceptor extends AbstractInterceptor {
         Map<String, Object> session = invocation.getInvocationContext().getSession();
 
         if (session != null) {
-            synchronized (session) {
+            String sessionId = ServletActionContext.getRequest().getSession().getId();
+            synchronized (sessionId.intern()) {
                 session.put(attributeName, locale);
             }
         }
@@ -293,7 +294,8 @@ public class I18nInterceptor extends AbstractInterceptor {
         Map<String, Object> session = invocation.getInvocationContext().getSession();
 
         if (session != null) {
-            synchronized (session) {
+            String sessionId = ServletActionContext.getRequest().getSession().getId();
+            synchronized (sessionId.intern()) {
                 Object sessionLocale = session.get(attributeName);
                 if (sessionLocale != null && sessionLocale instanceof Locale) {
                     Locale locale = (Locale) sessionLocale;

@@ -135,7 +135,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             try {
                 this.storage = Storage.valueOf(storageName.toUpperCase());
             } catch (IllegalArgumentException e) {
-                LOG.warn(new ParameterizedMessage("Wrong storage name [{{}] was defined, falling back to {}", storageName, Storage.SESSION), e);
+                LOG.warn(new ParameterizedMessage("Wrong storage name [{}] was defined, falling back to {}", storageName, Storage.SESSION), e);
                 this.storage = Storage.SESSION;
             }
         }
@@ -229,15 +229,15 @@ public class I18nInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Reads the locale from the session, and if not found from the
-     * current invocation (=browser)
+     * Reads the locale from the session or from a cookie and if not found
+     * from the current invocation (=browser)
      *
      * @param invocation the current invocation
      * @return the read locale
      */
     protected Locale readStoredLocale(ActionInvocation invocation) {
         Locale locale;
-        if (storage == Storage.COOKIE) {
+        if (storage == Storage.SESSION) {
             locale = readStoredLocalFromSession(invocation);
             if (locale != null) {
                 LOG.debug("Found stored Locale {} in session, using it!", locale);
@@ -245,16 +245,16 @@ public class I18nInterceptor extends AbstractInterceptor {
             }
         }
 
-        if (storage == Storage.SESSION) {
+        if (storage == Storage.COOKIE) {
             locale = readStoredLocaleFromCookie(invocation);
             if (locale != null) {
-                LOG.debug("Found stored Locale {} in cookies, using it!", locale);
+                LOG.debug("Found stored Locale {} in cookie, using it!", locale);
                 return locale;
             }
         }
 
         LOG.debug("Neither locale was in session nor in cookies, searching current Invocation context");
-        return readStoredLocalFromCurrentInvocation(invocation);
+        return readStoredLocaleFromCurrentInvocation(invocation);
     }
 
     /**
@@ -319,7 +319,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         return null;
     }
 
-    protected Locale readStoredLocalFromCurrentInvocation(ActionInvocation invocation) {
+    protected Locale readStoredLocaleFromCurrentInvocation(ActionInvocation invocation) {
         // no overriding locale definition found, stay with current invocation (=browser) locale
         Locale locale = invocation.getInvocationContext().getLocale();
         if (locale != null) {

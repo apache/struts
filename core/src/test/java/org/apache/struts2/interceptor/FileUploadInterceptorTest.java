@@ -207,7 +207,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertEquals(1, errors.size());
         String msg = (String) errors.get(0);
         // the error message should contain at least this test
-        assertTrue(msg.startsWith("The file is to large to be uploaded"));
+        assertTrue(msg.startsWith("The file is too large to be uploaded"));
         assertTrue(msg.indexOf("inputName") > 0);
         assertTrue(msg.indexOf("log4j2.xml") > 0);
     }

@@ -171,8 +171,9 @@ public class XSLTResult implements Result {
             if (location != null) {
                 templates = getTemplates(location);
                 transformer = templates.newTransformer();
-            } else
+            } else {
                 transformer = TransformerFactory.newInstance().newTransformer();
+            }
 
             transformer.setURIResolver(getURIResolver());
             transformer.setErrorListener(buildErrorListener());
@@ -247,8 +248,7 @@ public class XSLTResult implements Result {
      * function. The default is an instance of ServletURIResolver, which operates relative to the servlet context.
      */
     protected URIResolver getURIResolver() {
-        return new ServletURIResolver(
-                ServletActionContext.getServletContext());
+        return new ServletURIResolver(ServletActionContext.getServletContext());
     }
 
     protected Templates getTemplates(final String path) throws TransformerException, IOException {

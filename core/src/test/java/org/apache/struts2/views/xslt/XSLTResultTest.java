@@ -35,6 +35,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -80,6 +81,22 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         String out = response.getContentAsString();
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
+    }
+
+    public void testSimpleTransform5() throws Exception {
+        result.setParse(false);
+        result.setStylesheetLocation("XSLTResultTest6.xsl");
+        result.execute(mai);
+
+        String out = response.getContentAsString();
+        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        assertTrue(out.contains("<title>WebWork in Action</title>"));
+        assertTrue(out.contains("<author>Patrick and Jason</author>"));
+        assertTrue(out.contains("<editions><edition value=\"I\">I</edition><edition value=\"IV\">IV</edition></editions>"));
+        assertTrue(out.contains("<book><title/><author/><editions/></book>"));
+        assertTrue(out.contains("<title>XWork not in Action</title>"));
+        assertTrue(out.contains("<author>Superman</author>"));
+        assertTrue(out.contains("<editions><edition value=\"1234\">1234</edition><edition value=\"345\">345</edition><edition value=\"6667\">6667</edition></editions>"));
     }
 
     public void testSimpleTransformParse() throws Exception {
@@ -277,9 +294,9 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         public List getBooks() {
             List list = new ArrayList();
-            list.add(new Book("WebWork in Action", "Patrick and Jason"));
+            list.add(new Book("WebWork in Action", "Patrick and Jason", Arrays.asList("I", "IV")));
             list.add(null);
-            list.add(new Book("XWork not in Action", "Superman"));
+            list.add(new Book("XWork not in Action", "Superman", Arrays.asList("1234", "345", "6667")));
             return list;
         }
 
@@ -289,10 +306,12 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         private String title;
         private String author;
+        private List<String> editions;
 
-        public Book(String title, String author) {
+        public Book(String title, String author, List<String> editions) {
             this.title = title;
             this.author = author;
+            this.editions = editions;
         }
 
         public String getTitle() {
@@ -301,6 +320,10 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         public String getAuthor() {
             return author;
+        }
+
+        public List<String> getEditions() {
+            return editions;
         }
     }
 }

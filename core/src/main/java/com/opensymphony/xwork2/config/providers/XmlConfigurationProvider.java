@@ -757,7 +757,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 {
                     // if <result ...>something</result> then we add a parameter of 'something' as this is the most used result param
                     if (resultElement.getChildNodes().getLength() >= 1) {
-                        resultParams = new LinkedHashMap<String, String>();
+                        resultParams = new LinkedHashMap<>();
 
                         String paramName = config.getDefaultResultParam();
                         if (paramName != null) {
@@ -775,7 +775,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                                 resultParams.put(paramName, val);
                             }
                         } else {
-                            LOG.warn("No default parameter defined for result [{}] of type [{}] ", config.getName(), config.getClassName());
+                            LOG.debug("No default parameter defined for result [{}] of type [{}] ", config.getName(), config.getClassName());
                         }
                     }
                 }

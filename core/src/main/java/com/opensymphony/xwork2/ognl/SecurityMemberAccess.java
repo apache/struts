@@ -53,6 +53,8 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+        LOG.debug("Checking access for [target: {}, member: {}, property: {}] is deprecated!", target, member, propertyName);
+
         if (checkEnumAccess(target, member)) {
             LOG.trace("Allowing access to enum: {}", target);
             return true;

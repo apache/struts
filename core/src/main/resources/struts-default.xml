@@ -60,7 +60,7 @@
     <!-- constant name="struts.excludedPackageNamePatterns" value="^java\.lang\..*,^ognl.*,^(?!javax\.servlet\..+)(javax\..+)" / -->
 
     <!-- this is simpler version of the above used with string comparison -->
-    <constant name="struts.excludedPackageNames" value="java.lang.,ognl,javax" />
+    <constant name="struts.excludedPackageNames" value="java.lang.,ognl,javax,freemarker.core,freemarker.template" />
 
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />

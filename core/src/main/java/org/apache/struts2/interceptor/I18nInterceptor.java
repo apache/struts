@@ -66,7 +66,7 @@ import java.util.Map;
   * in the session. By default this is <b>request_locale</b></li>
   *
   * <li>requestCookieParameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to
-  * and save in a cookien. By default this is <b>request_cookie_locale</b></li>
+  * and save in a cookie. By default this is <b>request_cookie_locale</b></li>
   *
   * <li>requestOnlyParameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to
   * for the current request only, without saving it in the session. By default this is <b>request_only_locale</b></li>
@@ -148,113 +148,53 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        LOG.debug("Intercept '{}/{}'",
-            invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
+        LOG.debug("Intercept '{}/{}'", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName());
 
-        RequestOnlyLocaleFinder localeFinder = getLocaleFinder(invocation);
-        Locale locale = getLocaleFromParam(localeFinder.find());
-        locale = storeLocale(invocation, locale);
+        LocaleHandler localeHandler = getLocaleHandler(invocation);
+        Locale locale = localeHandler.find();
+
+        if (locale == null) {
+            locale = localeHandler.read(invocation);
+        }
+
+        if (localeHandler.shouldStore()) {
+            locale = localeHandler.store(invocation, locale);
+        }
+
         useLocale(invocation, locale);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Before action invocation Locale={}", invocation.getStack().findValue("locale"));
         }
 
-        final String result = invocation.invoke();
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("After action invocation Locale={}", invocation.getStack().findValue("locale"));
+        try {
+            return invocation.invoke();
+        } finally {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("After action invocation Locale={}", invocation.getStack().findValue("locale"));
+            }
         }
-
-        return result;
     }
 
-    protected RequestOnlyLocaleFinder getLocaleFinder(ActionInvocation invocation) {
-        RequestOnlyLocaleFinder localeFinder;
+    /**
+     * Override this method to use your own implementation of {@link LocaleHandler}
+     *
+     * @param invocation current action invocation context
+     * @return instance of {@link LocaleHandler}
+     */
+    protected LocaleHandler getLocaleHandler(ActionInvocation invocation) {
+        LocaleHandler localeHandler;
+
         if (this.storage == Storage.COOKIE) {
-            localeFinder = new CookieLocaleFinder(invocation);
+            localeHandler = new CookieLocaleHandler(invocation);
         } else if (this.storage == Storage.SESSION) {
-            localeFinder = new SessionLocaleFinder(invocation);
+            localeHandler = new SessionLocaleHandler(invocation);
         } else {
-            localeFinder = new RequestOnlyLocaleFinder(invocation);
+            localeHandler = new RequestOnlyLocaleHandler(invocation);
         }
 
-        LOG.debug("Using LocaleFinder implementation {}", localeFinder.getClass().getName());
-        return localeFinder;
-    }
-
-    /**
-     * Store the locale to the chosen storage, like f. e. the session
-     *
-     * @param invocation the action invocation
-     * @param locale the locale to store
-     *
-     * @return the locale
-     */
-    protected Locale storeLocale(ActionInvocation invocation, Locale locale) {
-        if (locale == null) {
-            storage = Storage.NONE;
-            locale = readStoredLocale(invocation);
-        }
-
-        if (storage == Storage.COOKIE) {
-            storeLocaleInCookie(invocation, locale);
-        }
-
-        if (Storage.SESSION == storage) {
-            storeLocaleInSession(invocation, locale);
-        }
-
-        return locale;
-    }
-
-    protected void storeLocaleInCookie(ActionInvocation ignore, Locale locale) {
-        HttpServletResponse response = ServletActionContext.getResponse();
-
-        Cookie cookie = new Cookie(DEFAULT_COOKIE_ATTRIBUTE, locale.toString());
-        cookie.setMaxAge(1209600); // two weeks
-        response.addCookie(cookie);
-    }
-
-    protected void storeLocaleInSession(ActionInvocation invocation, Locale locale) {
-        //save it in session
-        Map<String, Object> session = invocation.getInvocationContext().getSession();
-
-        if (session != null) {
-            String sessionId = ServletActionContext.getRequest().getSession().getId();
-            synchronized (sessionId.intern()) {
-                session.put(attributeName, locale);
-            }
-        }
-    }
-
-    /**
-     * Reads the locale from the session or from a cookie and if not found
-     * from the current invocation (=browser)
-     *
-     * @param invocation the current invocation
-     * @return the read locale
-     */
-    protected Locale readStoredLocale(ActionInvocation invocation) {
-        Locale locale;
-        if (storage == Storage.SESSION) {
-            locale = readStoredLocalFromSession(invocation);
-            if (locale != null) {
-                LOG.debug("Found stored Locale {} in session, using it!", locale);
-                return locale;
-            }
-        }
-
-        if (storage == Storage.COOKIE) {
-            locale = readStoredLocaleFromCookie(invocation);
-            if (locale != null) {
-                LOG.debug("Found stored Locale {} in cookie, using it!", locale);
-                return locale;
-            }
-        }
-
-        LOG.debug("Neither locale was in session nor in cookies, searching current Invocation context");
-        return readStoredLocaleFromCurrentInvocation(invocation);
+        LOG.debug("Using LocaleFinder implementation {}", localeHandler.getClass().getName());
+        return localeHandler;
     }
 
     /**
@@ -276,7 +216,7 @@ public class I18nInterceptor extends AbstractInterceptor {
                 }
             }
             if (locale != null) {
-                LOG.debug("Applied request locale: {}", locale);
+                LOG.debug("Found locale: {}", locale);
             }
         }
 
@@ -289,46 +229,8 @@ public class I18nInterceptor extends AbstractInterceptor {
         return locale;
     }
 
-    protected Locale readStoredLocalFromSession(ActionInvocation invocation) {
-        // check session for saved locale
-        Map<String, Object> session = invocation.getInvocationContext().getSession();
-
-        if (session != null) {
-            String sessionId = ServletActionContext.getRequest().getSession().getId();
-            synchronized (sessionId.intern()) {
-                Object sessionLocale = session.get(attributeName);
-                if (sessionLocale != null && sessionLocale instanceof Locale) {
-                    Locale locale = (Locale) sessionLocale;
-                    LOG.debug("Applied session locale: {}", locale);
-                    return locale;
-                }
-            }
-        }
-        return null;
-    }
-
-    protected Locale readStoredLocaleFromCookie(ActionInvocation ignore) {
-        Cookie[] cookies = ServletActionContext.getRequest().getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (DEFAULT_COOKIE_ATTRIBUTE.equals(cookie.getName())) {
-                    return getLocaleFromParam(cookie.getValue());
-                }
-            }
-        }
-        return null;
-    }
-
-    protected Locale readStoredLocaleFromCurrentInvocation(ActionInvocation invocation) {
-        // no overriding locale definition found, stay with current invocation (=browser) locale
-        Locale locale = invocation.getInvocationContext().getLocale();
-        if (locale != null) {
-            LOG.debug("Applied invocation context locale: {}", locale);
-        }
-        return locale;
-    }
-
-    protected Parameter findLocaleParameter(HttpParameters params, String parameterName) {
+    protected Parameter findLocaleParameter(ActionInvocation invocation, String parameterName) {
+        HttpParameters params = invocation.getInvocationContext().getParameters();
         Parameter requestedLocale = params.get(parameterName);
         params.remove(parameterName);
         if (requestedLocale.isDefined()) {
@@ -347,74 +249,181 @@ public class I18nInterceptor extends AbstractInterceptor {
         invocation.getInvocationContext().setLocale(locale);
     }
 
-    protected class RequestOnlyLocaleFinder {
+    /**
+     * Uses to handle reading/storing Locale from/in different locations
+     */
+    protected interface LocaleHandler {
+        Locale find();
+        Locale read(ActionInvocation invocation);
+        Locale store(ActionInvocation invocation, Locale locale);
+        boolean shouldStore();
+    }
+
+    protected class RequestOnlyLocaleHandler implements LocaleHandler {
 
         protected ActionInvocation actionInvocation = null;
+        protected boolean shouldStore = true;
 
-        protected RequestOnlyLocaleFinder(ActionInvocation invocation) {
+        protected RequestOnlyLocaleHandler(ActionInvocation invocation) {
             actionInvocation = invocation;
         }
 
-        public String find() {
-            HttpParameters params = actionInvocation.getInvocationContext().getParameters();
+        public Locale find() {
+            LOG.debug("Searching locale in request under parameter {}", requestOnlyParameterName);
 
-            Parameter requestedLocale = findLocaleParameter(params, requestOnlyParameterName);
+            Parameter requestedLocale = findLocaleParameter(actionInvocation, requestOnlyParameterName);
             if (requestedLocale.isDefined()) {
-                storage = Storage.NONE;
-                return requestedLocale.getValue();
+                return getLocaleFromParam(requestedLocale.getValue());
             }
 
             return null;
         }
+
+        @Override
+        public Locale store(ActionInvocation invocation, Locale locale) {
+            return locale;
+        }
+
+        @Override
+        public Locale read(ActionInvocation invocation) {
+            LOG.debug("Searching current Invocation context");
+            // no overriding locale definition found, stay with current invocation (=browser) locale
+            Locale locale = invocation.getInvocationContext().getLocale();
+            if (locale != null) {
+                LOG.debug("Applied invocation context locale: {}", locale);
+            }
+            return locale;
+        }
+
+        @Override
+        public boolean shouldStore() {
+            return shouldStore;
+        }
     }
 
-    protected class SessionLocaleFinder extends RequestOnlyLocaleFinder {
+    protected class SessionLocaleHandler extends RequestOnlyLocaleHandler {
 
-        protected SessionLocaleFinder(ActionInvocation invocation) {
+        protected SessionLocaleHandler(ActionInvocation invocation) {
             super(invocation);
         }
 
-        public String find() {
-            String requestOnlyLocale = super.find();
+        public Locale find() {
+            Locale requestOnlyLocale = super.find();
 
             if (requestOnlyLocale != null) {
+                LOG.debug("Found locale under request only param, it won't be stored in session!");
+                shouldStore = false;
                 return requestOnlyLocale;
             }
 
-            HttpParameters params = actionInvocation.getInvocationContext().getParameters();
-
-            Parameter requestedLocale = findLocaleParameter(params, parameterName);
+            LOG.debug("Searching locale in request under parameter {}", parameterName);
+            Parameter requestedLocale = findLocaleParameter(actionInvocation, parameterName);
             if (requestedLocale.isDefined()) {
-                return requestedLocale.getValue();
+                return getLocaleFromParam(requestedLocale.getValue());
             }
 
-            return requestedLocale.getValue();
+            return null;
         }
 
+        @Override
+        public Locale store(ActionInvocation invocation, Locale locale) {
+            //save it in session
+            Map<String, Object> session = invocation.getInvocationContext().getSession();
+
+            if (session != null) {
+                String sessionId = ServletActionContext.getRequest().getSession().getId();
+                synchronized (sessionId.intern()) {
+                    session.put(attributeName, locale);
+                }
+            }
+            return locale;
+        }
+
+        @Override
+        public Locale read(ActionInvocation invocation) {
+            Locale locale = null;
+
+            LOG.debug("Checks session for saved locale");
+            Map<String, Object> session = invocation.getInvocationContext().getSession();
+
+            if (session != null) {
+                String sessionId = ServletActionContext.getRequest().getSession().getId();
+                synchronized (sessionId.intern()) {
+                    Object sessionLocale = session.get(attributeName);
+                    if (sessionLocale != null && sessionLocale instanceof Locale) {
+                        locale = (Locale) sessionLocale;
+                        LOG.debug("Applied session locale: {}", locale);
+                    }
+                }
+            }
+
+            if (locale == null) {
+                LOG.debug("No Locale defined in session, fetching from current request and it won't be stored in session!");
+                shouldStore = false;
+                locale = super.read(invocation);
+            } else {
+                LOG.debug("Found stored Locale {} in session, using it!", locale);
+            }
+
+            return locale;
+        }
     }
 
-    protected class CookieLocaleFinder extends RequestOnlyLocaleFinder {
-        protected CookieLocaleFinder(ActionInvocation invocation) {
+    protected class CookieLocaleHandler extends RequestOnlyLocaleHandler {
+        protected CookieLocaleHandler(ActionInvocation invocation) {
             super(invocation);
         }
 
         @Override
-        public String find() {
-            String requestOnlySessionLocale = super.find();
+        public Locale find() {
+            Locale requestOnlySessionLocale = super.find();
 
             if (requestOnlySessionLocale != null) {
+                shouldStore = false;
                 return requestOnlySessionLocale;
             }
 
-            HttpParameters params = actionInvocation.getInvocationContext().getParameters();
-
-            Parameter requestedLocale = findLocaleParameter(params, requestCookieParameterName);
+            LOG.debug("Searching locale in request under parameter {}", requestCookieParameterName);
+            Parameter requestedLocale = findLocaleParameter(actionInvocation, requestCookieParameterName);
             if (requestedLocale.isDefined()) {
-                storage = Storage.COOKIE;
-                return requestedLocale.getValue();
+                return getLocaleFromParam(requestedLocale.getValue());
             }
 
             return null;
+        }
+
+        @Override
+        public Locale store(ActionInvocation invocation, Locale locale) {
+            HttpServletResponse response = ServletActionContext.getResponse();
+
+            Cookie cookie = new Cookie(attributeName, locale.toString());
+            cookie.setMaxAge(1209600); // two weeks
+            response.addCookie(cookie);
+
+            return locale;
+        }
+
+        @Override
+        public Locale read(ActionInvocation invocation) {
+            Locale locale = null;
+
+            Cookie[] cookies = ServletActionContext.getRequest().getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (attributeName.equals(cookie.getName())) {
+                        locale = getLocaleFromParam(cookie.getValue());
+                    }
+                }
+            }
+
+            if (locale == null) {
+                LOG.debug("No Locale defined in cookie, fetching from current request and it won't be stored!");
+                shouldStore = false;
+                locale = super.read(invocation);
+            } else {
+                LOG.debug("Found stored Locale {} in cookie, using it!", locale);
+            }
+            return locale;
         }
     }
 

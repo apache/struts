@@ -38,59 +38,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * <!-- START SNIPPET: description -->
- * <p>
  * An interceptor that handles setting the locale specified in a session as the locale for the current action request.
- * In addition, this interceptor will look for a specific HTTP request parameter and set the locale to whatever value is
- * provided, it also looks for specific cookie to read locale from. This means that this interceptor can be used to allow
- * for your application to dynamically change the locale for the user's session or, alternatively, only for the current
- * request (since XWork 2.1.3).
- * This is very useful for applications that require multi-lingual support and want the user to
- * be able to set his or her language preference at any point. The locale parameter is removed during the execution of
- * this interceptor, ensuring that properties aren't set on an action (such as request_locale) that have no typical
- * corresponding setter in your action.
- * </p>
- *
- * <p>
- * For example, using the default parameter name, a request to <b>foo.action?request_locale=en_US</b>, then the
- * locale for US English is saved in the user's session and will be used for all future requests.
- * If there is no locale set (for example with the first visit), the interceptor uses the browser locale.
- * </p>
- * <!-- END SNIPPET: description -->
- *
- * <!-- START SNIPPET: parameters -->
-  *
-  * <ul>
-  *
-  * <li>parameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to and save
-  * in the session. By default this is <b>request_locale</b></li>
-  *
-  * <li>requestCookieParameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to
-  * and save in a cookie. By default this is <b>request_cookie_locale</b></li>
-  *
-  * <li>requestOnlyParameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to
-  * for the current request only, without saving it in the session. By default this is <b>request_only_locale</b></li>
-  *
-  * <li>attributeName (optional) - the name of the session key to store the selected locale. By default this is
-  * <b>WW_TRANS_I18N_LOCALE</b></li>
-  *
-  * <li>storage (optional) - the name of storage location, it can be <b>none</b>, <b>session</b> or <b>cookie</b>.
-  * By default this is <b>session</b></li>
-  *
-  * </ul>
-  *
-  * <!-- END SNIPPET: parameters -->
-  *
-  * <!-- START SNIPPET: example -->
-  * &lt;interceptor name="i18nCookie" class="org.apache.struts2.interceptor.I18nInterceptor"/&gt;
-  *
-  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
-  *     &lt;interceptor-ref name="i18nCookie"/&gt;
-  *     &lt;interceptor-ref name="basicStack"/&gt;
-  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
-  * &lt;/action&gt;
-  * <!-- END SNIPPET: example -->
-  */
+ */
 public class I18nInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(I18nInterceptor.class);

@@ -47,6 +47,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         assertTrue(verifyEmailValidity("Ferda+Mravenec@yaHoo.CoM"));
         assertTrue(verifyEmailValidity("user@domainname.tech"));
         assertTrue(verifyEmailValidity("Ferda+Mravenec@yaHoo.cat"));
+        assertTrue(verifyEmailValidity("user@domainname.swiss"));
 
         assertFalse(verifyEmailValidity("tm_jee#marry@yahoo.co.uk"));
         assertFalse(verifyEmailValidity("tm_jee@ yahoo.co.uk"));

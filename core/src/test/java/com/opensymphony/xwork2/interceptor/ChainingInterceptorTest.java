@@ -103,8 +103,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         interceptor.setCopyErrors("true");
         interceptor.setCopyMessages("true");
 
-        Collection<String> excludes = new ArrayList<>();
-        excludes.add("count");
+        String excludes = "count";
         interceptor.setExcludes(excludes);
 
         interceptor.intercept(invocation);
@@ -112,7 +111,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         assertEquals(bean.getBirth(), action.getBirth());
         assertEquals(bean.getName(), action.getName());
         assertEquals(0, action.getCount());
-        assertEquals(excludes, interceptor.getExcludes());
+        assertEquals(interceptor.getExcludes().iterator().next(), "count");
     }
 
     public void testTwoExcludesPropertiesChained() throws Exception {
@@ -125,15 +124,14 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         stack.push(bean);
         stack.push(action);
 
-        Collection<String> excludes = new ArrayList<>();
-        excludes.add("name");
-        excludes.add("count");
+        String excludes = "name,count";
         interceptor.setExcludes(excludes);
         interceptor.intercept(invocation);
         assertEquals(bean.getBirth(), action.getBirth());
         assertEquals(null, action.getName());
         assertEquals(0, action.getCount());
-        assertEquals(excludes, interceptor.getExcludes());
+        assertEquals(interceptor.getExcludes().iterator().next(), "count");
+        assertEquals(interceptor.getExcludes().iterator().next(), "name");
     }
 
     public void testNullCompoundRootElementAllowsProcessToContinue() throws Exception {

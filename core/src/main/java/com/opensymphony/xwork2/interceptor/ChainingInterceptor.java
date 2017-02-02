@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.Unchainable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -213,9 +214,18 @@ public class ChainingInterceptor extends AbstractInterceptor {
     /**
      * Sets the list of parameter names to exclude from copying (all others will be included).
      *
+     * @param excludes the excludes list as comma separated String
+     */
+    public void setExcludes(String excludes) {
+        this.excludes = TextParseUtil.commaDelimitedStringToSet(excludes);
+    }
+
+    /**
+     * Sets the list of parameter names to exclude from copying (all others will be included).
+     *
      * @param excludes the excludes list
      */
-    public void setExcludes(Collection<String> excludes) {
+    public void setExcludesCollection(Collection<String> excludes) {
         this.excludes = excludes;
     }
 
@@ -231,9 +241,19 @@ public class ChainingInterceptor extends AbstractInterceptor {
     /**
      * Sets the list of parameter names to include when copying (all others will be excluded).
      *
+     * @param includes the includes list as comma separated String
+     */
+    public void setIncludes(String includes) {
+        this.includes = TextParseUtil.commaDelimitedStringToSet(includes);
+    }
+
+
+    /**
+     * Sets the list of parameter names to include when copying (all others will be excluded).
+     *
      * @param includes the includes list
      */
-    public void setIncludes(Collection<String> includes) {
+    public void setIncludesCollection(Collection<String> includes) {
         this.includes = includes;
     }
 

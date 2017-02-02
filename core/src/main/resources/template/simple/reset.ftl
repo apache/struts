@@ -37,6 +37,9 @@
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
+<#if parameters.tabindex?has_content>
+ tabindex="${parameters.tabindex?html}"<#rt/>
+</#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
@@ -68,6 +71,9 @@
 </#if>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
+</#if>
+<#if parameters.tabindex?has_content>
+ tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />

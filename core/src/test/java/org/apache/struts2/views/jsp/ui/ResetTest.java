@@ -59,6 +59,7 @@ public class ResetTest extends AbstractUITagTest {
         tag.setLabel("mylabel");
         tag.setName("myname");
         tag.setValue("%{foo}");
+        tag.setTabindex("1");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -75,6 +76,7 @@ public class ResetTest extends AbstractUITagTest {
         tag.setType("button");
         tag.setName("myname");
         tag.setValue("%{foo}");
+        tag.setTabindex("1");
 
         tag.doStartTag();
         tag.doEndTag();

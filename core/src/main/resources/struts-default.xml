@@ -67,7 +67,8 @@
                 javax,
                 freemarker.core.,
                 freemarker.template.,
-                freemarker.ext.,
+                freemarker.ext.rhino.,
+                freemarker.ext.beans.,
                 sun.reflect.,
                 javassist." />
 

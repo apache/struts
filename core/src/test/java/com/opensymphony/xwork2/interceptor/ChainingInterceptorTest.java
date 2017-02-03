@@ -130,9 +130,9 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         assertEquals(bean.getBirth(), action.getBirth());
         assertEquals(null, action.getName());
         assertEquals(0, action.getCount());
-        Iterator<String> it = interceptor.getExcludes().iterator();
-        assertEquals(it.next(), "count");
-        assertEquals(it.next(), "name");
+        assertTrue(interceptor.getExcludes().contains("count"));
+        assertTrue(interceptor.getExcludes().contains("name"));
+        assertTrue(interceptor.getExcludes().size() == 2);
     }
 
     public void testNullCompoundRootElementAllowsProcessToContinue() throws Exception {

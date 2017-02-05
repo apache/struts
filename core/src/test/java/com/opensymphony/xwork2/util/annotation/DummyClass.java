@@ -1,7 +1,7 @@
 package com.opensymphony.xwork2.util.annotation;
 
 @MyAnnotation("class-test")
-public class DummyClass {
+public class DummyClass implements DummyInterface {
 
     public DummyClass() {
     }
@@ -10,4 +10,7 @@ public class DummyClass {
     public void methodWithAnnotation() {
     }
 
+	@Override
+	public void interfaceMethodWithAnnotation() {
+	}
 }

@@ -5,5 +5,8 @@ public final class DummyClassExt extends DummyClass {
     @MyAnnotation2
     public void anotherAnnotatedMethod() {
     }
-
+    
+	@Override
+	public void methodWithAnnotation() {
+	}
 }

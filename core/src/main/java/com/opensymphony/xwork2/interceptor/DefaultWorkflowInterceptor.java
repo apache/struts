@@ -207,7 +207,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
      */
     protected String processInputConfig(final Object action, final String method, final String currentResultName) throws Exception {
         String resultName = currentResultName;
-        InputConfig annotation = action.getClass().getMethod(method, EMPTY_CLASS_ARRAY).getAnnotation(InputConfig.class);
+        InputConfig annotation = AnnotationUtils.findAnnotation(action.getClass().getMethod(method, EMPTY_CLASS_ARRAY), InputConfig.class);
         if (annotation != null) {
             if (StringUtils.isNotEmpty(annotation.methodName())) {
                 Method m = action.getClass().getMethod(annotation.methodName());

@@ -72,6 +72,22 @@ public interface ReflectionProvider {
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      */
     void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions);
+
+    /**
+     * Copies the properties in the object "from" and sets them in the object "to"
+     * only setting properties defined in the given "editable" class (or interface)
+     * using specified type converter, or {@link com.opensymphony.xwork2.conversion.impl.XWorkConverter} if none
+     * is specified.
+     *
+     * @param from       the source object
+     * @param to         the target object
+     * @param context    the action context we're running under
+     * @param exclusions collection of method names to excluded from copying ( can be null)
+     * @param inclusions collection of method names to included copying  (can be null)
+     *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
+	 * @param editable the class (or interface) to restrict property setting to
+     */
+    void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions, Class<?> editable);
     
     /**
      * Looks for the real target with the specified property given a root Object which may be a

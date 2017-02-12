@@ -161,7 +161,20 @@ public class ChainingInterceptor extends AbstractInterceptor {
         Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
         for (Object object : list) {
             if (shouldCopy(object)) {
-                reflectionProvider.copy(object, invocation.getAction(), ctxMap, prepareExcludes(), includes);
+                String actionConfigClassName = invocation.getProxy().getConfig().getClassName();
+                Object action = invocation.getAction();
+                if (action.getClass().getName().equals(actionConfigClassName))
+                    reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, null);
+                else {	//only setting properties defined in the given config class e.g. to skip proxy properties (WW-4105)
+                    Class <?> editable;
+                    try {
+                        editable = Class.forName(actionConfigClassName);
+                    } catch (ClassNotFoundException e) {
+                        LOG.warn("An unexpected state. This may be due to a bug. Please report this: ClassNotFoundException" + actionConfigClassName, e);
+                        return;
+                    }
+                    reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
+                }            		
             }
         }
     }

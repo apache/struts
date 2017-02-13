@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.validator;
 
+import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,8 +25,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * <code>AnnotationValidationConfigurationBuilder</code>
@@ -35,9 +34,6 @@ import java.util.regex.Pattern;
  * @version $Id$
  */
 public class AnnotationValidationConfigurationBuilder {
-
-    private static final Pattern SETTER_PATTERN = Pattern.compile("set([A-Z][A-Za-z0-9]*)$");
-    private static final Pattern GETTER_PATTERN = Pattern.compile("(get|is|has)([A-Z][A-Za-z0-9]*)$");
 
     private ValidatorFactory validatorFactory;
 
@@ -61,7 +57,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (o instanceof Method) {
             Method method = (Method) o;
-            fieldName = resolvePropertyName(method);
+            fieldName = AnnotationUtils.resolvePropertyName(method);
             methodName = method.getName();
 
             annotations = method.getAnnotations();
@@ -872,30 +868,6 @@ public class AnnotationValidationConfigurationBuilder {
 
         return result;
 
-    }
-
-    /**
-     * Returns the property name for a method.
-     * This method is independant from property fields.
-     *
-     * @param method The method to get the property name for.
-     * @return the property name for given method; null if non could be resolved.
-     */
-    public String resolvePropertyName(Method method) {
-
-        Matcher matcher = SETTER_PATTERN.matcher(method.getName());
-        if (matcher.matches() && method.getParameterTypes().length == 1) {
-            String raw = matcher.group(1);
-            return raw.substring(0, 1).toLowerCase() + raw.substring(1);
-        }
-
-        matcher = GETTER_PATTERN.matcher(method.getName());
-        if (matcher.matches() && method.getParameterTypes().length == 0) {
-            String raw = matcher.group(2);
-            return raw.substring(0, 1).toLowerCase() + raw.substring(1);
-        }
-
-        return null;
     }
 
 }

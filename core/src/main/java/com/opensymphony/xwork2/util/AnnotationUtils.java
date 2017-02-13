@@ -48,8 +48,8 @@ public class AnnotationUtils {
      * Adds all fields with the specified Annotation of class clazz and its superclasses to allFields
      *
      * @param annotationClass the {@link Annotation}s to find
-     * @param clazz The {@link Class} to inspect
-     * @param allFields list of all fields
+     * @param clazz           The {@link Class} to inspect
+     * @param allFields       list of all fields
      */
     public static void addAllFields(Class<? extends Annotation> annotationClass, Class clazz, List<Field> allFields) {
 
@@ -61,7 +61,7 @@ public class AnnotationUtils {
 
         for (Field field : fields) {
             Annotation ann = field.getAnnotation(annotationClass);
-            if (ann!=null) {
+            if (ann != null) {
                 allFields.add(field);
             }
         }
@@ -72,8 +72,8 @@ public class AnnotationUtils {
      * Adds all methods with the specified Annotation of class clazz and its superclasses to allFields
      *
      * @param annotationClass the {@link Annotation}s to find
-     * @param clazz The {@link Class} to inspect
-     * @param allMethods list of all methods
+     * @param clazz           The {@link Class} to inspect
+     * @param allMethods      list of all methods
      */
     public static void addAllMethods(Class<? extends Annotation> annotationClass, Class clazz, List<Method> allMethods) {
 
@@ -85,7 +85,7 @@ public class AnnotationUtils {
 
         for (Method method : methods) {
             Annotation ann = method.getAnnotation(annotationClass);
-            if (ann!=null) {
+            if (ann != null) {
                 allMethods.add(method);
             }
         }
@@ -93,8 +93,7 @@ public class AnnotationUtils {
     }
 
     /**
-     *
-     * @param clazz The {@link Class} to inspect
+     * @param clazz         The {@link Class} to inspect
      * @param allInterfaces list of all interfaces
      */
     public static void addAllInterfaces(Class clazz, List<Class> allInterfaces) {
@@ -107,134 +106,132 @@ public class AnnotationUtils {
         addAllInterfaces(clazz.getSuperclass(), allInterfaces);
     }
 
-	/**
-	 * For the given <code>Class</code> get a collection of the the {@link AnnotatedElement}s 
-	 * that match the given <code>annotation</code>s or if no <code>annotation</code>s are 
-	 * specified then return all of the annotated elements of the given <code>Class</code>. 
-	 * Includes only the method level annotations.
-	 * 
-	 * @param clazz The {@link Class} to inspect
-	 * @param annotation the {@link Annotation}s to find
-	 * @return A {@link Collection}&lt;{@link AnnotatedElement}&gt; containing all of the
-	 *  method {@link AnnotatedElement}s matching the specified {@link Annotation}s
-	 */
-	public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation){
+    /**
+     * For the given <code>Class</code> get a collection of the the {@link AnnotatedElement}s
+     * that match the given <code>annotation</code>s or if no <code>annotation</code>s are
+     * specified then return all of the annotated elements of the given <code>Class</code>.
+     * Includes only the method level annotations.
+     *
+     * @param clazz      The {@link Class} to inspect
+     * @param annotation the {@link Annotation}s to find
+     * @return A {@link Collection}&lt;{@link AnnotatedElement}&gt; containing all of the
+     * method {@link AnnotatedElement}s matching the specified {@link Annotation}s
+     */
+    public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation) {
         Collection<Method> toReturn = new HashSet<>();
 
         for (Method m : clazz.getMethods()) {
-        	boolean found = false;
-    		for( Class<? extends Annotation> c : annotation ){
-    			if( null != findAnnotation(m, c) ){
-    				found =  true;
-    				break;
-    			}
-    		}
+            boolean found = false;
+            for (Class<? extends Annotation> c : annotation) {
+                if (null != findAnnotation(m, c)) {
+                    found = true;
+                    break;
+                }
+            }
             if (found) {
                 toReturn.add(m);
             } else if (ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(m.getAnnotations())) {
                 toReturn.add(m);
             }
-		}
-		
-		return toReturn;
-	}
+        }
 
-	/**
-	 * Find a single {@link Annotation} of {@code annotationType} from the supplied
-	 * {@link Method}, traversing its super methods (i.e., from superclasses and
-	 * interfaces) if no annotation can be found on the given method itself.
-	 * <p>Annotations on methods are not inherited by default, so we need to handle
-	 * this explicitly.
-	 * @param method the method to look for annotations on
-	 * @param annotationType the annotation type to look for
-	 * @return the annotation found, or {@code null} if none
-	 */
-	public static <A extends Annotation> A findAnnotation(Method method, Class<A> annotationType) {
-		A result = getAnnotation(method, annotationType);
-		Class<?> clazz = method.getDeclaringClass();
-		if (result == null) {
-			result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
-		}
-		while (result == null) {
-			clazz = clazz.getSuperclass();
-			if (clazz == null || clazz.equals(Object.class)) {
-				break;
-			}
-			try {
-				Method equivalentMethod = clazz.getDeclaredMethod(method.getName(), method.getParameterTypes());
-				result = getAnnotation(equivalentMethod, annotationType);
-			}
-			catch (NoSuchMethodException ex) {
-				// No equivalent method found
-			}
-			if (result == null) {
-				result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
-			}
-		}
-		return result;
-	}
+        return toReturn;
+    }
 
-	/**
-	 * Get a single {@link Annotation} of {@code annotationType} from the supplied
-	 * Method, Constructor or Field. Meta-annotations will be searched if the annotation
-	 * is not declared locally on the supplied element.
-	 * @param annotatedElement the Method, Constructor or Field from which to get the annotation
-	 * @param annotationType the annotation type to look for, both locally and as a meta-annotation
-	 * @return the matching annotation, or {@code null} if none found
-	 */
-	public static <T extends Annotation> T getAnnotation(AnnotatedElement annotatedElement, Class<T> annotationType) {
-		try {
-			T ann = annotatedElement.getAnnotation(annotationType);
-			if (ann == null) {
-				for (Annotation metaAnn : annotatedElement.getAnnotations()) {
-					ann = metaAnn.annotationType().getAnnotation(annotationType);
-					if (ann != null) {
-						break;
-					}
-				}
-			}
-			return ann;
-		}
-		catch (Exception ex) {
-			// Assuming nested Class values not resolvable within annotation attributes...
-			return null;
-		}
-	}
+    /**
+     * Find a single {@link Annotation} of {@code annotationType} from the supplied
+     * {@link Method}, traversing its super methods (i.e., from superclasses and
+     * interfaces) if no annotation can be found on the given method itself.
+     * <p>Annotations on methods are not inherited by default, so we need to handle
+     * this explicitly.
+     *
+     * @param method         the method to look for annotations on
+     * @param annotationType the annotation type to look for
+     * @return the annotation found, or {@code null} if none
+     */
+    public static <A extends Annotation> A findAnnotation(Method method, Class<A> annotationType) {
+        A result = getAnnotation(method, annotationType);
+        Class<?> clazz = method.getDeclaringClass();
+        if (result == null) {
+            result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
+        }
+        while (result == null) {
+            clazz = clazz.getSuperclass();
+            if (clazz == null || clazz.equals(Object.class)) {
+                break;
+            }
+            try {
+                Method equivalentMethod = clazz.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                result = getAnnotation(equivalentMethod, annotationType);
+            } catch (NoSuchMethodException ex) {
+                // No equivalent method found
+            }
+            if (result == null) {
+                result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
+            }
+        }
+        return result;
+    }
 
-	private static <A extends Annotation> A searchOnInterfaces(Method method, Class<A> annotationType, Class<?>... ifcs) {
-		A annotation = null;
-		for (Class<?> iface : ifcs) {
-			if (isInterfaceWithAnnotatedMethods(iface)) {
-				try {
-					Method equivalentMethod = iface.getMethod(method.getName(), method.getParameterTypes());
-					annotation = getAnnotation(equivalentMethod, annotationType);
-				}
-				catch (NoSuchMethodException ex) {
-					// Skip this interface - it doesn't have the method...
-				}
-				if (annotation != null) {
-					break;
-				}
-			}
-		}
-		return annotation;
-	}
+    /**
+     * Get a single {@link Annotation} of {@code annotationType} from the supplied
+     * Method, Constructor or Field. Meta-annotations will be searched if the annotation
+     * is not declared locally on the supplied element.
+     *
+     * @param annotatedElement the Method, Constructor or Field from which to get the annotation
+     * @param annotationType   the annotation type to look for, both locally and as a meta-annotation
+     * @return the matching annotation, or {@code null} if none found
+     */
+    public static <T extends Annotation> T getAnnotation(AnnotatedElement annotatedElement, Class<T> annotationType) {
+        try {
+            T ann = annotatedElement.getAnnotation(annotationType);
+            if (ann == null) {
+                for (Annotation metaAnn : annotatedElement.getAnnotations()) {
+                    ann = metaAnn.annotationType().getAnnotation(annotationType);
+                    if (ann != null) {
+                        break;
+                    }
+                }
+            }
+            return ann;
+        } catch (Exception ex) {
+            // Assuming nested Class values not resolvable within annotation attributes...
+            return null;
+        }
+    }
 
-	private static boolean isInterfaceWithAnnotatedMethods(Class<?> iface) {
-		boolean found = false;
-		for (Method ifcMethod : iface.getMethods()) {
-			try {
-				if (ifcMethod.getAnnotations().length > 0) {
-					found = true;
-					break;
-				}
-			}
-			catch (Exception ex) {
-				// Assuming nested Class values not resolvable within annotation attributes...
-			}
-		}
-		return found;
-	}
+    private static <A extends Annotation> A searchOnInterfaces(Method method, Class<A> annotationType, Class<?>... ifcs) {
+        A annotation = null;
+        for (Class<?> iface : ifcs) {
+            if (isInterfaceWithAnnotatedMethods(iface)) {
+                try {
+                    Method equivalentMethod = iface.getMethod(method.getName(), method.getParameterTypes());
+                    annotation = getAnnotation(equivalentMethod, annotationType);
+                } catch (NoSuchMethodException ex) {
+                    // Skip this interface - it doesn't have the method...
+                }
+                if (annotation != null) {
+                    break;
+                }
+            }
+        }
+        return annotation;
+    }
+
+    private static boolean isInterfaceWithAnnotatedMethods(Class<?> iface) {
+        boolean found = false;
+        for (Method ifcMethod : iface.getMethods()) {
+            try {
+                if (ifcMethod.getAnnotations().length > 0) {
+                    found = true;
+                    break;
+                }
+            } catch (Exception ex) {
+                // Assuming nested Class values not resolvable within annotation attributes...
+            }
+        }
+        return found;
+    }
 
     /**
      * Returns the property name for a method.
@@ -264,10 +261,10 @@ public class AnnotationUtils {
      * Returns the annotation on the given class or the package of the class. This searchs up the
      * class hierarchy and the package hierarchy for the closest match.
      *
-     * @param   <T> class type
-     * @param   clazz The class to search for the annotation.
-     * @param   annotationClass The Class of the annotation.
-     * @return  The annotation or null.
+     * @param <T>             class type
+     * @param clazz           The class to search for the annotation.
+     * @param annotationClass The Class of the annotation.
+     * @return The annotation or null.
      */
     public static <T extends Annotation> T findAnnotation(Class<?> clazz, Class<T> annotationClass) {
         T ann = clazz.getAnnotation(annotationClass);

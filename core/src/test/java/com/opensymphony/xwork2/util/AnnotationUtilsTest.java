@@ -5,8 +5,11 @@ import com.opensymphony.xwork2.util.annotation.DummyClass;
 import com.opensymphony.xwork2.util.annotation.DummyClassExt;
 import com.opensymphony.xwork2.util.annotation.MyAnnotation;
 import com.opensymphony.xwork2.util.annotation.MyAnnotation2;
+import com.opensymphony.xwork2.util.annotation.MyAnnotationI;
+
 import junit.framework.TestCase;
 
+import java.lang.annotation.Retention;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
 
@@ -15,22 +18,32 @@ import java.util.Collection;
  */
 public class AnnotationUtilsTest extends TestCase {
 
-    @SuppressWarnings("unchecked")
-    public void testIsAnnotatedByWithoutAnnotationArgsReturnsFalse() throws Exception {
-        assertFalse(AnnotationUtils.isAnnotatedBy(DummyClass.class));
-        assertFalse(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation")));
+    public void testGetAnnotationMeta() throws Exception {
+        assertNotNull(AnnotationUtils.getAnnotation(DummyClass.class.getMethod("methodWithAnnotation"), Retention.class));
+    }
+
+    public void testGetAnnotation() throws Exception {
+        assertNull(AnnotationUtils.getAnnotation(DummyClass.class.getMethod("methodWithAnnotation"), Deprecated.class));
+        assertNotNull(AnnotationUtils.getAnnotation(DummyClass.class.getMethod("methodWithAnnotation"), MyAnnotation.class));
+    }
+
+    public void testFindAnnotationFromSuperclass() throws Exception {
+        assertNotNull(AnnotationUtils.findAnnotation(DummyClassExt.class.getMethod("methodWithAnnotation"), MyAnnotation.class));
+    }
+
+    public void testFindAnnotationFromInterface() throws Exception {
+        assertNotNull(AnnotationUtils.findAnnotation(DummyClass.class.getMethod("interfaceMethodWithAnnotation"), MyAnnotationI.class));
+    }
+
+    public void testFindAnnotation() throws Exception {
+        assertNotNull(AnnotationUtils.findAnnotation(DummyClassExt.class.getMethod("anotherAnnotatedMethod"), MyAnnotation2.class));
     }
 
     @SuppressWarnings("unchecked")
-    public void testIsAnnotatedByWithSingleAnnotationArgMatchingReturnsTrue() throws Exception {
-        assertTrue(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), MyAnnotation.class));
-    }
+    public void testGetAnnotatedMethodsIncludingSuperclassAndInterface() throws Exception {
 
-    @SuppressWarnings("unchecked")
-    public void testIsAnnotatedByWithMultiAnnotationArgMatchingReturnsTrue() throws Exception {
-        assertFalse(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), Deprecated.class));
-        assertTrue(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), MyAnnotation.class, Deprecated.class));
-        assertTrue(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), Deprecated.class, MyAnnotation.class));
+        Collection<? extends AnnotatedElement> ans = AnnotationUtils.getAnnotatedMethods(DummyClassExt.class, Deprecated.class, MyAnnotation.class, MyAnnotation2.class, MyAnnotationI.class);
+        assertEquals(3, ans.size());
     }
 
     @SuppressWarnings("unchecked")

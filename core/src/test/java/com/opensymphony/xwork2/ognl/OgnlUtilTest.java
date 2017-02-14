@@ -454,7 +454,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         final ValueStack stack = ActionContext.getContext().getValueStack();
 
         Object result = Ognl.getValue(ognlUtil.compile("{\"foo\",'ruby','b','tom'}"), context, foo);
-        foo.setIncludes((Collection) result);
+        foo.setIncludesCollection((Collection) result);
 
         assertEquals(4, foo.getIncludes().size());
         assertEquals("foo", foo.getIncludes().toArray()[0]);
@@ -473,7 +473,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         result = ActionContext.getContext().getValueStack().findValue("{\"foo\",'ruby','b','tom'}");
 
-        foo.setIncludes((Collection) result);
+        foo.setIncludesCollection((Collection) result);
         assertEquals(ArrayList.class, result.getClass());
 
         assertEquals(4, foo.getIncludes().size());

@@ -17,7 +17,6 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.*;
@@ -34,15 +33,11 @@ public class ChainingInterceptorTest extends XWorkTestCase {
     ChainingInterceptor interceptor;
     Mock mockInvocation;
     ValueStack stack;
-    ActionConfig config;
-    Mock proxy;
 
 
     public void testActionErrorsCanBeAddedAfterChain() throws Exception {
         SimpleAction action1 = new SimpleAction();
         SimpleAction action2 = new SimpleAction();
-        config = new ActionConfig.Builder("", "action", action1.getClass().getName()).build();
-        proxy.matchAndReturn("getConfig", config);
         action1.addActionError("foo");
         mockInvocation.matchAndReturn("getAction", action2);
         stack.push(action1);
@@ -62,8 +57,6 @@ public class ChainingInterceptorTest extends XWorkTestCase {
     public void testActionErrorsNotCopiedAfterChain() throws Exception {
         SimpleAction action1 = new SimpleAction();
         SimpleAction action2 = new SimpleAction();
-        config = new ActionConfig.Builder("", "action", action1.getClass().getName()).build();
-        proxy.matchAndReturn("getConfig", config);
         action1.addActionError("foo");
         mockInvocation.matchAndReturn("getAction", action2);
         stack.push(action1);
@@ -82,8 +75,6 @@ public class ChainingInterceptorTest extends XWorkTestCase {
     public void testPropertiesChained() throws Exception {
         TestBean bean = new TestBean();
         TestBeanAction action = new TestBeanAction();
-        config = new ActionConfig.Builder("", "action", bean.getClass().getName()).build();
-        proxy.matchAndReturn("getConfig", config);
         mockInvocation.matchAndReturn("getAction", action);
         bean.setBirth(new Date());
         bean.setName("foo");
@@ -103,8 +94,6 @@ public class ChainingInterceptorTest extends XWorkTestCase {
     public void testExcludesPropertiesChained() throws Exception {
         TestBean bean = new TestBean();
         TestBeanAction action = new TestBeanAction();
-        config = new ActionConfig.Builder("", "action", bean.getClass().getName()).build();
-        proxy.matchAndReturn("getConfig", config);
         mockInvocation.matchAndReturn("getAction", action);
         bean.setBirth(new Date());
         bean.setName("foo");
@@ -128,8 +117,6 @@ public class ChainingInterceptorTest extends XWorkTestCase {
     public void testTwoExcludesPropertiesChained() throws Exception {
         TestBean bean = new TestBean();
         TestBeanAction action = new TestBeanAction();
-        config = new ActionConfig.Builder("", "action", bean.getClass().getName()).build();
-        proxy.matchAndReturn("getConfig", config);
         mockInvocation.matchAndReturn("getAction", action);
         bean.setBirth(new Date());
         bean.setName("foo");
@@ -159,8 +146,6 @@ public class ChainingInterceptorTest extends XWorkTestCase {
     public void testEditablePropertiesChained() throws Exception {
         TestSubBean subbean = new TestSubBean();
         TestSubBeanAction action = new TestSubBeanAction();
-        config = new ActionConfig.Builder("", "action", TestBean.class.getName()).build();
-        proxy.matchAndReturn("getConfig", config);
         mockInvocation.matchAndReturn("getAction", action);
         subbean.setBirth(new Date());
         subbean.setName("foo");
@@ -169,7 +154,9 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         stack.push(subbean);
         stack.push(action);
 
+        interceptor.setEditableClass(TestBean.class.getName());
         interceptor.intercept(invocation);
+        interceptor.setEditableClass(null);
         assertEquals(subbean.getBirth(), action.getBirth());
         assertEquals(subbean.getName(), action.getName());
         assertEquals(subbean.getCount(), action.getCount());
@@ -186,8 +173,6 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
         mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(new HashMap<String, Object>()));
         mockInvocation.expectAndReturn("getResult", new ActionChainResult());
-        proxy = new Mock(ActionProxy.class);
-        mockInvocation.matchAndReturn("getProxy", (ActionProxy) proxy.proxy());
         invocation = (ActionInvocation) mockInvocation.proxy();
         interceptor = new ChainingInterceptor();
         container.inject(interceptor);

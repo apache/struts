@@ -112,8 +112,13 @@ function ajaxFormValidation(event) {
             if (restoreFunction) {
                 restoreFunction();
             }
-            // show user an error message
-            _handleValidationResult(_form, {errors: ['Network or server error!']})
+            // struts sends status code 400 when validation errors are present
+            if (xhr.status === 400) {
+                _handleValidationResult(_form, JSON.parse(xhr.responseText))
+            } else {
+                // a real error occurred -> show user an error message
+                _handleValidationResult(_form, {errors: ['Network or server error!']})
+            }
         }
     }
 

@@ -24,12 +24,7 @@
 <#if parameters.id?has_content>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.cssClass?has_content>
- class="${parameters.cssClass?html}"<#rt/>
-</#if>
-<#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle?html}"<#rt/>
-</#if>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
 <#if parameters.title?has_content>
  title="${parameters.title?html}"<#rt/>
 </#if>

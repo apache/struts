@@ -34,6 +34,8 @@ import org.apache.struts2.dispatcher.Parameter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.util.Locale;
 import java.util.Map;
 
@@ -296,12 +298,16 @@ public class I18nInterceptor extends AbstractInterceptor {
             Map<String, Object> session = invocation.getInvocationContext().getSession();
 
             if (session != null) {
-                String sessionId = ServletActionContext.getRequest().getSession().getId();
-                synchronized (sessionId.intern()) {
-                    Object sessionLocale = session.get(attributeName);
-                    if (sessionLocale != null && sessionLocale instanceof Locale) {
-                        locale = (Locale) sessionLocale;
-                        LOG.debug("Applied session locale: {}", locale);
+                //[WW-4741] Do not force session creation while this is a read operation
+                HttpSession httpSession = ServletActionContext.getRequest().getSession(false);
+                if(null != httpSession) {
+                    String sessionId = httpSession.getId();
+                    synchronized (sessionId.intern()) {
+                        Object sessionLocale = session.get(attributeName);
+                        if (sessionLocale != null && sessionLocale instanceof Locale) {
+                            locale = (Locale) sessionLocale;
+                            LOG.debug("Applied session locale: {}", locale);
+                        }
                     }
                 }
             }

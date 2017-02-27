@@ -25,7 +25,6 @@
 <#if parameters.get("size")?has_content>
  size="${parameters.get("size")?html}"<#rt/>
 </#if>
- value=""<#rt/>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>

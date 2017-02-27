@@ -66,7 +66,7 @@ public class FileTest extends AbstractUITagTest {
         Map result = super.initializedGenericTagTestProperties();
         new PropertyHolder("accept", "someAccepted").addToMap(result);
         new PropertyHolder("size", "101").addToMap(result);
-		new PropertyHolder("value", "").addToMap(result);
+        new PropertyHolder("value", "", "").addToMap(result);
         return result;
     }
 

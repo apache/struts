@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +37,6 @@ import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.util.ContentTypeMatcher;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -258,11 +256,16 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
         MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
 
-        if (multiWrapper.hasErrors()) {
+        if (multiWrapper.hasErrors() && validation != null) {
+            TextProvider textProvider = getTextProvider(action);
             for (LocalizedMessage error : multiWrapper.getErrors()) {
-                if (validation != null) {
-                    validation.addActionError(LocalizedTextUtil.findText(error.getClazz(), error.getTextKey(), ActionContext.getContext().getLocale(), error.getDefaultMessage(), error.getArgs()));
+                String errorMessage;
+                if (textProvider.hasKey(error.getTextKey())) {
+                    errorMessage = textProvider.getText(error.getTextKey(), Arrays.asList(error.getArgs()));
+                } else {
+                    errorMessage = textProvider.getText("struts.messages.error.uploading", error.getDefaultMessage());
                 }
+                validation.addActionError(errorMessage);
             }
         }
 

@@ -231,7 +231,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         req.setContentType("text/xml"); // not a multipart contentype
         req.addHeader("Content-type", "multipart/form-data");
 
-        MyFileupAction action = new MyFileupAction();
+        MyFileupAction action = container.inject(MyFileupAction.class);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
@@ -252,7 +252,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         req.addHeader("Content-type", "multipart/form-data");
         req.setContent(null); // there is no content
 
-        MyFileupAction action = new MyFileupAction();
+        MyFileupAction action = container.inject(MyFileupAction.class);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
@@ -386,7 +386,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 "-----1234--\r\n");
         req.setContent(content.getBytes("US-ASCII"));
 
-        MyFileupAction action = new MyFileupAction();
+        MyFileupAction action = container.inject(MyFileupAction.class);
 
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
@@ -453,7 +453,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         super.tearDown();
     }
 
-    private class MyFileupAction extends ActionSupport {
+    public static class MyFileupAction extends ActionSupport {
 
         private static final long serialVersionUID = 6255238895447968889L;
 

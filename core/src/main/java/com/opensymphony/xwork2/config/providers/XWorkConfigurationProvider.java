@@ -70,6 +70,7 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
@@ -177,6 +178,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(NullHandler.class, Object.class.getName(), InstantiatingNullHandler.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, AnnotationActionValidatorManager.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, "no-annotations", DefaultActionValidatorManager.class, Scope.SINGLETON)
+                .factory(LocalizedTextUtil.class, LocalizedTextUtil.class, Scope.SINGLETON)
                 .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
                 .factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON)
                 .factory(LocaleProvider.class, DefaultLocaleProvider.class, Scope.SINGLETON)
@@ -194,6 +196,8 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
         ;
 
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());
+        props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, Boolean.FALSE.toString());
+        props.setProperty(StrutsConstants.STRUTS_DEVMODE, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.DEV_MODE, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());

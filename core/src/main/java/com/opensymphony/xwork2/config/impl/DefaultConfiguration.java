@@ -246,6 +246,8 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON);
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
 
+        builder.factory(LocalizedTextUtil.class, LocalizedTextUtil.class, Scope.SINGLETON);
+
         builder.factory(XWorkConverter.class, Scope.SINGLETON);
         builder.factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON);
@@ -270,10 +272,12 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
 
         builder.constant(XWorkConstants.DEV_MODE, "false");
+        builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
         builder.constant(XWorkConstants.LOG_MISSING_PROPERTIES, "false");
         builder.constant(XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, "false");
         builder.constant(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, "true");
         builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "false");
+        builder.constant(StrutsConstants.STRUTS_I18N_RELOAD, "false");
 
         return builder.create(true);
     }

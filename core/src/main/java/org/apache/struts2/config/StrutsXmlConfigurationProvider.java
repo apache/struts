@@ -62,10 +62,10 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * Constructs the configuration provider
      *
      * @param filename The filename to look for
-     * @param errorIfMissing If we should throw an exception if the file can't be found
+     * @param errorIfMissing If we should throw an exception if the file can't be found, @deprecated and should be dropped
      * @param ctx Our ServletContext
      */
-    public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
+    public StrutsXmlConfigurationProvider(String filename, @Deprecated boolean errorIfMissing, ServletContext ctx) {
         super(filename, errorIfMissing);
         this.servletContext = ctx;
         this.filename = filename;

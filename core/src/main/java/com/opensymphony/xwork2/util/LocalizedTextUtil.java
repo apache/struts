@@ -113,7 +113,10 @@ public class LocalizedTextUtil {
 
     /**
      * Clears the internal list of resource bundles.
+     *
+     * @deprecated used only in tests
      */
+    @Deprecated
     public static void clearDefaultResourceBundles() {
         ClassLoader ccl = getCurrentThreadContextClassLoader();
         List<String> bundles = new ArrayList<>();
@@ -121,17 +124,20 @@ public class LocalizedTextUtil {
         bundles.add(0, XWORK_MESSAGES_BUNDLE);
     }
 
+    public LocalizedTextUtil() {
+    }
+
     /**
      * Should resorce bundles be reloaded.
      *
      * @param reloadBundles reload bundles?
      */
-    @Inject(StrutsConstants.STRUTS_I18N_RELOAD)
+    @Inject(value = StrutsConstants.STRUTS_I18N_RELOAD, required = false)
     public void setReloadBundles(String reloadBundles) {
         this.reloadBundles = Boolean.parseBoolean(reloadBundles);
     }
 
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    @Inject(value = StrutsConstants.STRUTS_DEVMODE, required = false)
     public void setDevMode(String devMode) {
         this.devMode = Boolean.parseBoolean(devMode);
     }
@@ -937,8 +943,11 @@ public class LocalizedTextUtil {
 
     /**
      * Clears all the internal lists.
+     *
+     * @deprecated used only in tests
      */
-    public static void reset() {
+    @Deprecated
+    public void reset() {
         clearDefaultResourceBundles();
         bundlesMap.clear();
         messageFormats.clear();

@@ -39,10 +39,12 @@ import java.util.ResourceBundle;
  */
 public class LocalizedTextUtilTest extends XWorkTestCase {
 
+    private LocalizedTextUtil localizedTextUtil;
+    
 	public void testNpeWhenClassIsPrimitive() throws Exception {
 		ValueStack stack = ActionContext.getContext().getValueStack();
 		stack.push(new MyObject());
-		String result = LocalizedTextUtil.findText(MyObject.class, "someObj.someI18nKey", Locale.ENGLISH, "default message", null, stack);
+		String result = localizedTextUtil.findText(MyObject.class, "someObj.someI18nKey", Locale.ENGLISH, "default message", null, stack);
 		System.out.println(result);
 	}
 	
@@ -96,7 +98,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     }
 
     public void testNullKeys() {
-        LocalizedTextUtil.findText(this.getClass(), null, Locale.getDefault());
+        localizedTextUtil.findText(this.getClass(), null, Locale.getDefault());
     }
 
     public void testActionGetTextXXX() throws Exception {
@@ -118,12 +120,12 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     }
 
     public void testAddDefaultResourceBundle() {
-        String text = LocalizedTextUtil.findDefaultText("foo.range", Locale.getDefault());
+        String text = localizedTextUtil.findDefaultText("foo.range", Locale.getDefault());
         assertNull("Found message when it should not be available.", text);
 
         LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/SimpleAction");
 
-        String message = LocalizedTextUtil.findDefaultText("foo.range", Locale.US);
+        String message = localizedTextUtil.findDefaultText("foo.range", Locale.US);
         assertEquals("Foo Range Message", message);
     }
 
@@ -135,17 +137,17 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     }
 
     public void testDefaultMessage() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
+        String message = localizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Error during Action invocation", message);
     }
 
     public void testDefaultMessageOverride() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
+        String message = localizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Error during Action invocation", message);
 
         LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/test");
 
-        message = LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
+        message = localizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Testing resource bundle override", message);
     }
 
@@ -162,7 +164,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().getValueStack().push(action.getModel());
 
-        String message = LocalizedTextUtil.findText(ModelDrivenAction2.class, "invalid.fieldvalue.barObj.title", Locale.getDefault());
+        String message = localizedTextUtil.findText(ModelDrivenAction2.class, "invalid.fieldvalue.barObj.title", Locale.getDefault());
         assertEquals("Title is invalid!", message);
     }
 
@@ -172,7 +174,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         mockActionInvocation.expectAndReturn("getAction", action);
         ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
 
-        String message = LocalizedTextUtil.findText(ModelDrivenAction2.class, "test.foo", Locale.getDefault());
+        String message = localizedTextUtil.findText(ModelDrivenAction2.class, "test.foo", Locale.getDefault());
         assertEquals("Foo!", message);
     }
 
@@ -183,46 +185,46 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         mockActionInvocation.expectAndReturn("getAction", action);
         ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
 
-        String message = LocalizedTextUtil.findText(ModelDrivenAction2.class, "package.properties", Locale.getDefault());
+        String message = localizedTextUtil.findText(ModelDrivenAction2.class, "package.properties", Locale.getDefault());
         assertEquals("It works!", message);
     }
 
     public void testParameterizedDefaultMessage() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText("xwork.exception.missing-action", Locale.getDefault(), new String[]{"AddUser"});
+        String message = localizedTextUtil.findDefaultText("xwork.exception.missing-action", Locale.getDefault(), new String[]{"AddUser"});
         assertEquals("There is no Action mapped for action name AddUser.", message);
     }
 
     public void testParameterizedDefaultMessageWithPackage() throws Exception {
-        String message = LocalizedTextUtil.findDefaultText("xwork.exception.missing-package-action", Locale.getDefault(), new String[]{"blah", "AddUser"});
+        String message = localizedTextUtil.findDefaultText("xwork.exception.missing-package-action", Locale.getDefault(), new String[]{"blah", "AddUser"});
         assertEquals("There is no Action mapped for namespace blah and action name AddUser.", message);
     }
 
     public void testLocalizedDateFormatIsUsed() throws ParseException {
-        LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
+        localizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/localizedTextUtilTest");
         Date date = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US).parse("01/01/2015");
         Object[] params = new Object[]{ date };
-        String usDate = LocalizedTextUtil.findDefaultText("test.format.date", Locale.US, params);
-        String germanDate = LocalizedTextUtil.findDefaultText("test.format.date", Locale.GERMANY, params);
+        String usDate = localizedTextUtil.findDefaultText("test.format.date", Locale.US, params);
+        String germanDate = localizedTextUtil.findDefaultText("test.format.date", Locale.GERMANY, params);
         assertEquals(usDate, "1/1/15");
         assertEquals(germanDate, "01.01.15");
     }
 
     public void testXW377() {
-        LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
+        localizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/localizedTextUtilTest");
 
-        String text = LocalizedTextUtil.findText(Bar.class, "xw377", ActionContext.getContext().getLocale(), "xw377", null, ActionContext.getContext().getValueStack());
+        String text = localizedTextUtil.findText(Bar.class, "xw377", ActionContext.getContext().getLocale(), "xw377", null, ActionContext.getContext().getValueStack());
         assertEquals("xw377", text); // should not log
 
-        String text2 = LocalizedTextUtil.findText(LocalizedTextUtilTest.class, "notinbundle", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
+        String text2 = localizedTextUtil.findText(LocalizedTextUtilTest.class, "notinbundle", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
         assertEquals("hello", text2); // should log WARN
 
-        String text3 = LocalizedTextUtil.findText(LocalizedTextUtilTest.class, "notinbundle.key", ActionContext.getContext().getLocale(), "notinbundle.key", null, ActionContext.getContext().getValueStack());
+        String text3 = localizedTextUtil.findText(LocalizedTextUtilTest.class, "notinbundle.key", ActionContext.getContext().getLocale(), "notinbundle.key", null, ActionContext.getContext().getValueStack());
         assertEquals("notinbundle.key", text3); // should log WARN
 
-        String text4 = LocalizedTextUtil.findText(LocalizedTextUtilTest.class, "xw377", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
+        String text4 = localizedTextUtil.findText(LocalizedTextUtilTest.class, "xw377", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
         assertEquals("xw377", text4); // should not log
 
-        String text5 = LocalizedTextUtil.findText(LocalizedTextUtilTest.class, "username", ActionContext.getContext().getLocale(), null, null, ActionContext.getContext().getValueStack());
+        String text5 = localizedTextUtil.findText(LocalizedTextUtilTest.class, "username", ActionContext.getContext().getLocale(), null, null, ActionContext.getContext().getValueStack());
         assertEquals("Santa", text5); // should not log
     }
 
@@ -231,9 +233,9 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         // Before this fix loading the bundle for Germany failed since Italy have previously failed and thus the misses cache
         // contained a false entry
 
-        ResourceBundle rbFrance = LocalizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.FRANCE);
-        ResourceBundle rbItaly = LocalizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.ITALY);
-        ResourceBundle rbGermany = LocalizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.GERMANY);
+        ResourceBundle rbFrance = localizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.FRANCE);
+        ResourceBundle rbItaly = localizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.ITALY);
+        ResourceBundle rbGermany = localizedTextUtil.findResourceBundle("com/opensymphony/xwork2/util/XW404", Locale.GERMANY);
 
         assertNotNull(rbFrance);
         assertEquals("Bonjour", rbFrance.getString("hello"));
@@ -251,13 +253,15 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         container.inject(provider);
         loadConfigurationProviders(provider);
 
+        this.localizedTextUtil = container.inject(LocalizedTextUtil.class);
+        
         ActionContext.getContext().setLocale(Locale.US);
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        LocalizedTextUtil.clearDefaultResourceBundles();
+        localizedTextUtil.clearDefaultResourceBundles();
     }
 
 }

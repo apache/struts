@@ -55,14 +55,14 @@ import java.util.Map;
 public class DispatcherTest extends StrutsInternalTestCase {
 
     public void testDefaultResurceBundlePropertyLoaded() throws Exception {
+        LocalizedTextUtil localizedTextUtil = container.inject(LocalizedTextUtil.class);
+
         // some i18n messages from xwork-messages.properties
-        assertEquals(
-                LocalizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.US),
+        assertEquals(localizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.US),
                 "Error during Action invocation");
 
         // some i18n messages from struts-messages.properties
-        assertEquals(
-                LocalizedTextUtil.findDefaultText("struts.messages.error.uploading", Locale.US,
+        assertEquals(localizedTextUtil.findDefaultText("struts.messages.error.uploading", Locale.US,
                         new Object[] { "some error messages" }),
                 "Error uploading: some error messages");
     }

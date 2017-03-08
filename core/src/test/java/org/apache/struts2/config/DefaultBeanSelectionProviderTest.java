@@ -23,6 +23,7 @@ package org.apache.struts2.config;
 
 import java.util.Locale;
 
+import com.opensymphony.xwork2.XWorkTestCase;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -31,12 +32,15 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import junit.framework.TestCase;
 
-public class DefaultBeanSelectionProviderTest extends TestCase {
+public class DefaultBeanSelectionProviderTest extends XWorkTestCase {
 
     public void testRegister() {
         LocalizedTextUtil.clearDefaultResourceBundles();
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
-        assertEquals("The form has already been processed or no token was supplied, please try again.", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
+
+        LocalizedTextUtil localizedTextUtil = container.inject(LocalizedTextUtil.class);
+
+        assertEquals("The form has already been processed or no token was supplied, please try again.", localizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
         
         LocatableProperties props = new LocatableProperties();
         props.setProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, "testmessages,testmessages2");
@@ -44,7 +48,7 @@ public class DefaultBeanSelectionProviderTest extends TestCase {
         
         new DefaultBeanSelectionProvider().register(new ContainerBuilder(), props);
 
-        assertEquals("Replaced message for token tag", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
+        assertEquals("Replaced message for token tag", localizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
     }
 
 }

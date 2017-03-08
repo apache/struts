@@ -52,9 +52,11 @@ public class SettingsTest extends StrutsInternalTestCase {
     public void testDefaultResourceBundlesLoaded() {
         Settings settings = new DefaultSettings();
 
+        LocalizedTextUtil localizedTextUtil = container.inject(LocalizedTextUtil.class);
+
         assertEquals("testmessages,testmessages2", settings.get(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
-        assertEquals("This is a test message", LocalizedTextUtil.findDefaultText("default.testmessage", Locale.getDefault()));
-        assertEquals("This is another test message", LocalizedTextUtil.findDefaultText("default.testmessage2", Locale.getDefault()));
+        assertEquals("This is a test message", localizedTextUtil.findDefaultText("default.testmessage", Locale.getDefault()));
+        assertEquals("This is another test message", localizedTextUtil.findDefaultText("default.testmessage2", Locale.getDefault()));
     }
 
     public void testSetSettings() {

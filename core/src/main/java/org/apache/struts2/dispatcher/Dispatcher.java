@@ -442,15 +442,7 @@ public class Dispatcher {
     }
 
     private Container init_PreloadConfiguration() {
-        Container container = getContainer();
-
-        boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD));
-        LocalizedTextUtil.setReloadBundles(reloadi18n);
-
-        boolean devMode = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_DEVMODE));
-        LocalizedTextUtil.setDevMode(devMode);
-
-        return container;
+        return getContainer();
     }
 
     private void init_CheckWebLogicWorkaround(Container container) {

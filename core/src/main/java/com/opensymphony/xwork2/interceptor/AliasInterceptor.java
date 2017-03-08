@@ -94,16 +94,22 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected String aliasesKey = DEFAULT_ALIAS_KEY;
 
     protected ValueStackFactory valueStackFactory;
-    static boolean devMode = false;
+    protected LocalizedTextUtil localizedTextUtil;
+    protected boolean devMode = false;
 
     @Inject(XWorkConstants.DEV_MODE)
-    public static void setDevMode(String mode) {
-        devMode = "true".equals(mode);
+    public void setDevMode(String mode) {
+        this.devMode = Boolean.parseBoolean(mode);
     }   
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
+    }
+
+    @Inject
+    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
+        this.localizedTextUtil = localizedTextUtil;
     }
 
     /**
@@ -173,7 +179,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                             newStack.setValue(alias, value.get());
                         } catch (RuntimeException e) {
                             if (devMode) {
-                                String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                                String developerNotification = localizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                         "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                                 });
                                 LOG.error(developerNotification);

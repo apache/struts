@@ -33,6 +33,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     private Class clazz;
     private LocaleProvider localeProvider;
     private ResourceBundle bundle;
+    private LocalizedTextUtil localizedTextUtil;
 
     /**
      * Default constructor
@@ -85,6 +86,10 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
         this.localeProvider = localeProvider;
     }
 
+    @Inject
+    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
+        this.localizedTextUtil = localizedTextUtil;
+    }
 
     /**
      * Checks if a key is available in the resource bundles associated with this action.
@@ -97,9 +102,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     public boolean hasKey(String key) {
     	String message;
     	if (clazz != null) {
-            message =  LocalizedTextUtil.findText(clazz, key, getLocale(), null, new Object[0] );
+            message = localizedTextUtil.findText(clazz, key, getLocale(), null, new Object[0] );
         } else {
-            message = LocalizedTextUtil.findText(bundle, key, getLocale(), null, new Object[0]);
+            message = localizedTextUtil.findText(bundle, key, getLocale(), null, new Object[0]);
         }
     	return message != null;
     }
@@ -201,9 +206,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     public String getText(String key, String defaultValue, List<?> args) {
         Object[] argsArray = ((args != null && !args.equals(Collections.emptyList())) ? args.toArray() : null);
         if (clazz != null) {
-            return LocalizedTextUtil.findText(clazz, key, getLocale(), defaultValue, argsArray);
+            return localizedTextUtil.findText(clazz, key, getLocale(), defaultValue, argsArray);
         } else {
-            return LocalizedTextUtil.findText(bundle, key, getLocale(), defaultValue, argsArray);
+            return localizedTextUtil.findText(bundle, key, getLocale(), defaultValue, argsArray);
         }
     }
 
@@ -222,9 +227,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      */
     public String getText(String key, String defaultValue, String[] args) {
         if (clazz != null) {
-            return LocalizedTextUtil.findText(clazz, key, getLocale(), defaultValue, args);
+            return localizedTextUtil.findText(clazz, key, getLocale(), defaultValue, args);
         } else {
-            return LocalizedTextUtil.findText(bundle, key, getLocale(), defaultValue, args);
+            return localizedTextUtil.findText(bundle, key, getLocale(), defaultValue, args);
         }
     }
 
@@ -252,9 +257,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
             locale = getLocale();
         }
         if (clazz != null) {
-            return LocalizedTextUtil.findText(clazz, key, locale, defaultValue, argsArray, stack);
+            return localizedTextUtil.findText(clazz, key, locale, defaultValue, argsArray, stack);
         } else {
-            return LocalizedTextUtil.findText(bundle, key, locale, defaultValue, argsArray, stack);
+            return localizedTextUtil.findText(bundle, key, locale, defaultValue, argsArray, stack);
         }
     }
 
@@ -282,9 +287,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
             locale = getLocale();
         }
         if (clazz != null) {
-            return LocalizedTextUtil.findText(clazz, key, locale, defaultValue, args, stack);
+            return localizedTextUtil.findText(clazz, key, locale, defaultValue, args, stack);
         } else {
-            return LocalizedTextUtil.findText(bundle, key, locale, defaultValue, args, stack);
+            return localizedTextUtil.findText(bundle, key, locale, defaultValue, args, stack);
         }
 
     }
@@ -304,7 +309,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @return a resource bundle
      */
     public ResourceBundle getTexts(String aBundleName) {
-        return LocalizedTextUtil.findResourceBundle(aBundleName, getLocale());
+        return localizedTextUtil.findResourceBundle(aBundleName, getLocale());
     }
 
     /**

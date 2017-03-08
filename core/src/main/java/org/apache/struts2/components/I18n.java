@@ -121,7 +121,7 @@ public class I18n extends Component {
             ResourceBundle bundle = defaultTextProvider.getTexts(name);
 
             if (bundle == null) {
-                bundle = LocalizedTextUtil.findResourceBundle(name, localeProvider.getLocale());
+                bundle = container.getInstance(LocalizedTextUtil.class).findResourceBundle(name, localeProvider.getLocale());
             }
 
             if (bundle != null) {

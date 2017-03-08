@@ -67,7 +67,7 @@ public class StrutsActionProxy extends DefaultActionProxy {
     protected String getErrorMessage() {
         if ((namespace != null) && (namespace.trim().length() > 0)) {
             String contextPath = ServletActionContext.getRequest().getContextPath();
-            return LocalizedTextUtil.findDefaultText(
+            return localizedTextUtil.findDefaultText(
                     "struts.exception.missing-package-action.with-context",
                     Locale.getDefault(),
                     new String[]{namespace, actionName, contextPath}

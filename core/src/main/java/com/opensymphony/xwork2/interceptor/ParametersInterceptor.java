@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
@@ -218,15 +219,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected void notifyDeveloperParameterException(Object action, String property, String message) {
-        String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification",
-                ActionContext.getContext().getLocale(), "Developer Notification:\n{0}",
-                new Object[]{
-                        "Unexpected Exception caught setting '" + property + "' on '" + action.getClass() + ": " + message
-                }
-        );
+        String developerNotification = "Unexpected Exception caught setting '" + property + "' on '" + action.getClass() + ": " + message;
+        if (action instanceof TextProvider) {
+            TextProvider tp = (TextProvider) action;
+            developerNotification = tp.getText("devmode.notification",
+                    "Developer Notification:\n{0}",
+                    new String[]{ developerNotification }
+            );
+        }
+
         LOG.error(developerNotification);
-        // see https://issues.apache.org/jira/browse/WW-4066
+
         if (action instanceof ValidationAware) {
+            // see https://issues.apache.org/jira/browse/WW-4066
             Collection<String> messages = ((ValidationAware) action).getActionMessages();
             messages.add(message);
             ((ValidationAware) action).setActionMessages(messages);

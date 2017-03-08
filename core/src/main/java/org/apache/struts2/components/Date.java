@@ -294,16 +294,18 @@ public class Date extends ContextBean {
                 date = new java.util.Date((long) dateObject);
             } else {
                 if (devMode) {
-                    String developerNotification = LocalizedTextUtil.findText(
-                            Date.class,
-                            "devmode.notification",
-                            ActionContext.getContext().getLocale(),
-                            "Developer Notification:\n{0}",
-                            new Object[]{
-                                    "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
-                                            + (dateObject != null ? dateObject.getClass() : "null") + ") isn't instance of java.util.Date nor java.util.Calendar nor long!"
-                            }
-                    );
+                    TextProvider tp = findProviderInStack();
+                    String developerNotification = "";
+                    if (tp != null) {
+                        developerNotification = findProviderInStack().getText(
+                                "devmode.notification",
+                                "Developer Notification:\n{0}",
+                                new String[]{
+                                        "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
+                                                + (dateObject != null ? dateObject.getClass() : "null") + ") isn't instance of java.util.Date nor java.util.Calendar nor long!"
+                                }
+                        );
+                    }
                     LOG.warn(developerNotification);
                 } else {
                     LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar nor long!",

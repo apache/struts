@@ -188,7 +188,8 @@ public class TokenHelper {
 
         if (!token.equals(sessionToken)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
+                LocalizedTextUtil localizedTextUtil = ActionContext.getContext().getContainer().getInstance(LocalizedTextUtil.class);
+                LOG.warn(localizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
                         token, sessionToken
                 }));
             }

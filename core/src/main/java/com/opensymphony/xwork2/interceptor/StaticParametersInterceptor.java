@@ -93,6 +93,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(StaticParametersInterceptor.class);
 
     private ValueStackFactory valueStackFactory;
+    private LocalizedTextUtil localizedTextUtil;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -102,7 +103,12 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
         devMode = BooleanUtils.toBoolean(mode);
-    }    
+    }
+
+    @Inject
+    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
+        this.localizedTextUtil = localizedTextUtil;
+    }
 
     public void setParse(String value) {
         this.parse = BooleanUtils.toBoolean(value);
@@ -168,7 +174,8 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                         newStack.setValue(entry.getKey(), val);
                     } catch (RuntimeException e) {
                         if (devMode) {
-                            String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+
+                            String developerNotification = localizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                     "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                             });
                             LOG.error(developerNotification);

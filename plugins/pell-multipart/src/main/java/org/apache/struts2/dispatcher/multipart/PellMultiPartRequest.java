@@ -154,11 +154,7 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
             String inputValue = (String) fileParameterNames.nextElement();
             UploadedFile[] files = getFile(inputValue);
             for (UploadedFile currentFile : files) {
-                if (LOG.isInfoEnabled()) {
-                    String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file", Locale.ENGLISH,
-                            "no.message.found", new Object[]{inputValue, currentFile});
-                    LOG.info(msg);
-                }
+                LOG.debug("Removing file {} {}", inputValue, currentFile);
                 if ((currentFile != null) && currentFile.isFile()) {
                     if (!currentFile.delete()) {
                         LOG.warn("Resource Leaking: Could not remove uploaded file [{}]", currentFile.getAbsolutePath());

@@ -337,11 +337,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         for (String name : names) {
             List<FileItem> items = files.get(name);
             for (FileItem item : items) {
-                if (LOG.isDebugEnabled()) {
-                    String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file",
-                            Locale.ENGLISH, "no.message.found", new Object[]{name, item});
-                    LOG.debug(msg);
-                }
+                LOG.debug("Removing file {} {}", name, item );
                 if (!item.isInMemory()) {
                     item.delete();
                 }

@@ -53,6 +53,8 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     protected ActionConfig config;
     protected ActionInvocation invocation;
     protected UnknownHandlerManager unknownHandlerManager;
+    protected LocalizedTextUtil localizedTextUtil;
+
     protected String actionName;
     protected String namespace;
     protected String method;
@@ -111,6 +113,11 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     @Inject(required = false)
     public void setActionEventListener(ActionEventListener listener) {
         this.actionEventListener = listener;
+    }
+
+    @Inject
+    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
+        this.localizedTextUtil = localizedTextUtil;
     }
 
     public Object getAction() {
@@ -205,7 +212,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     }
 
     protected String prepareNotAllowedErrorMessage() {
-        return LocalizedTextUtil.findDefaultText(
+        return localizedTextUtil.findDefaultText(
                 "struts.exception.method-not-allowed",
                 Locale.getDefault(),
                 new String[]{method, actionName}
@@ -214,12 +221,12 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     protected String getErrorMessage() {
         if ((namespace != null) && (namespace.trim().length() > 0)) {
-            return LocalizedTextUtil.findDefaultText(
+            return localizedTextUtil.findDefaultText(
                     "xwork.exception.missing-package-action",
                     Locale.getDefault(),
                     new String[]{namespace, actionName});
         } else {
-            return LocalizedTextUtil.findDefaultText(
+            return localizedTextUtil.findDefaultText(
                     "xwork.exception.missing-action",
                     Locale.getDefault(),
                     new String[]{actionName});

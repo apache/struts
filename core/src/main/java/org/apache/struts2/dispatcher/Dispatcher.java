@@ -375,19 +375,11 @@ public class Dispatcher {
         String[] files = configPaths.split("\\s*[,]\\s*");
         for (String file : files) {
             if (file.endsWith(".xml")) {
-                if ("xwork.xml".equals(file)) {
-                    configurationManager.addContainerProvider(createXmlConfigurationProvider(file, false));
-                } else {
-                    configurationManager.addContainerProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
-                }
+                configurationManager.addContainerProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
             } else {
                 throw new IllegalArgumentException("Invalid configuration file name");
             }
         }
-    }
-
-    protected XmlConfigurationProvider createXmlConfigurationProvider(String filename, boolean errorIfMissing) {
-        return new XmlConfigurationProvider(filename, errorIfMissing);
     }
 
     protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {

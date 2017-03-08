@@ -51,6 +51,8 @@ import java.util.*;
  */
 public class DefaultConfiguration implements Configuration {
 
+    public static final String DEFAULT_BEAN_NAME = "struts";
+
     protected static final Logger LOG = LogManager.getLogger(DefaultConfiguration.class);
 
 
@@ -66,7 +68,7 @@ public class DefaultConfiguration implements Configuration {
     ObjectFactory objectFactory;
 
     public DefaultConfiguration() {
-        this("xwork");
+        this(DEFAULT_BEAN_NAME);
     }
 
     public DefaultConfiguration(String defaultBeanName) {

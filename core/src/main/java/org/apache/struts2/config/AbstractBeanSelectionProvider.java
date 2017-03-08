@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.BeanSelectionProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.inject.*;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
@@ -18,8 +19,6 @@ import java.util.Properties;
 public abstract class AbstractBeanSelectionProvider implements BeanSelectionProvider {
 
     private static final Logger LOG = LogManager.getLogger(AbstractBeanSelectionProvider.class);
-
-    public static final String DEFAULT_BEAN_NAME = "struts";
 
     public void destroy() {
         // NO-OP
@@ -43,7 +42,7 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
 
     protected void alias(Class type, String key, ContainerBuilder builder, Properties props, Scope scope) {
         if (!builder.contains(type)) {
-            String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
+            String foundName = props.getProperty(key, DefaultConfiguration.DEFAULT_BEAN_NAME);
             if (builder.contains(type, foundName)) {
                 LOG.trace("Choosing bean ({}) for ({})", foundName, type.getName());
                 builder.alias(type, foundName, Container.DEFAULT_NAME);
@@ -55,7 +54,7 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
                 } catch (ClassNotFoundException ex) {
                     // Perhaps a spring bean id, so we'll delegate to the object factory at runtime
                     LOG.trace("Choosing bean ({}) for ({}) to be loaded from the ObjectFactory", foundName, type.getName());
-                    if (DEFAULT_BEAN_NAME.equals(foundName)) {
+                    if (DefaultConfiguration.DEFAULT_BEAN_NAME.equals(foundName)) {
                         // Probably an optional bean, will ignore
                     } else {
                         if (ObjectFactory.class != type) {

@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -463,7 +464,7 @@ public class Dispatcher {
     public void init() {
 
     	if (configurationManager == null) {
-    		configurationManager = createConfigurationManager(DefaultBeanSelectionProvider.DEFAULT_BEAN_NAME);
+    		configurationManager = createConfigurationManager(DefaultConfiguration.DEFAULT_BEAN_NAME);
     	}
 
         try {

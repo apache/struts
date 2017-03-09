@@ -31,10 +31,13 @@ public class GenericValidatorContext extends DelegatingValidatorContext {
     private Map<String, List<String>> fieldErrors;
 
 
+    /**
+     * @deprecated Is used only in tests and will be removed
+     */
+    @Deprecated
     public GenericValidatorContext(Object object) {
         super(object);
     }
-
 
     @Override
     public synchronized void setActionErrors(Collection<String> errorMessages) {

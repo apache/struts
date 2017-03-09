@@ -56,7 +56,10 @@ public class DelegatingValidatorContext implements ValidatorContext {
      * (validation aware instance and a locale and text provider) are created based on the given action.
      *
      * @param object the object to use for validation (usually an Action).
+     *
+     * @deprecated will be removed, do not use!
      */
+    @Deprecated
     public DelegatingValidatorContext(Object object) {
         this.localeProvider = makeLocaleProvider(object);
         this.validationAware = makeValidationAware(object);
@@ -68,7 +71,10 @@ public class DelegatingValidatorContext implements ValidatorContext {
      * the validation context are created based on the class.
      *
      * @param clazz the class to initialize the context with.
+     *
+     * @deprecated will be removed, do not use!
      */
+    @Deprecated
     public DelegatingValidatorContext(Class clazz) {
         localeProvider = new ActionContextLocaleProvider();
         textProvider = new TextProviderFactory().createInstance(clazz, localeProvider);

@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.Container;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.config.DefaultBeanSelectionProvider;
@@ -71,7 +72,7 @@ public class StrutsConfigRetriever {
         File configFile = new File(configFilePath);
         try {
             ConfigurationProvider configProvider = new StrutsXmlConfigurationProvider(configFile.getCanonicalPath(), true, null);
-            cm = new ConfigurationManager();
+            cm = new ConfigurationManager(Container.DEFAULT_NAME);
             cm.addContainerProvider(new DefaultPropertiesProvider());
             cm.addContainerProvider(new StrutsXmlConfigurationProvider("struts-default.xml", false, null));
             cm.addContainerProvider(configProvider);

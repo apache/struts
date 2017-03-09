@@ -47,10 +47,6 @@ public class ConfigurationManager {
     private boolean providersChanged = false;
     private boolean reloadConfigs = true; // for the first time
 
-    public ConfigurationManager() {
-        this("xwork");
-    }
-    
     public ConfigurationManager(String name) {
         this.defaultFrameworkBeanName = name;
     }

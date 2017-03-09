@@ -29,7 +29,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 public class XWorkTestCaseHelper {
 
     public static ConfigurationManager setUp() throws Exception {
-        ConfigurationManager configurationManager = new ConfigurationManager();
+        ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
         configurationManager.addContainerProvider(new XWorkConfigurationProvider());
         Configuration config = configurationManager.getConfiguration();
         Container container = config.getContainer();
@@ -54,7 +54,7 @@ public class XWorkTestCaseHelper {
         } catch (Exception e) {
             throw new RuntimeException("Cannot clean old configuration", e);
         }
-        configurationManager = new ConfigurationManager();
+        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
         configurationManager.addContainerProvider(new ContainerProvider() {
             public void destroy() {}
             public void init(Configuration configuration) throws ConfigurationException {}

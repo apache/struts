@@ -21,6 +21,7 @@
 
 package org.apache.struts2.dispatcher.mapper;
 
+import com.opensymphony.xwork2.inject.Container;
 import org.apache.struts2.StrutsInternalTestCase;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -53,7 +54,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
             .namespace("/my").build();
         config.addPackageConfig("mvns", pkg);
         config.addPackageConfig("my", pkg2);
-        configManager = new ConfigurationManager() {
+        configManager = new ConfigurationManager(Container.DEFAULT_NAME) {
             public Configuration getConfiguration() {
                 return config;
             }

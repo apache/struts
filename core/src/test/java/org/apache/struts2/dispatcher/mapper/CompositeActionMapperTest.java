@@ -51,7 +51,7 @@ public class CompositeActionMapperTest extends TestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper3")), mapper2);
         CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2,mapper3");
         
-        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
+        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager(Container.DEFAULT_NAME));
         String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
         mockContainer.verify();
         
@@ -69,7 +69,7 @@ public class CompositeActionMapperTest extends TestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), mapper2);
         CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2");
 
-        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
+        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager(Container.DEFAULT_NAME));
         String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
         mockContainer.verify();
 

@@ -306,4 +306,6 @@ public final class StrutsConstants {
     public static final String STRUTS_CONTENT_TYPE_MATCHER = "struts.contentTypeMatcher";
 
     public static final String STRUTS_SMI_METHOD_REGEX = "struts.strictMethodInvocation.methodRegex";
+
+    public static final String STRUTS_LOCALIZED_TEXT_PROVIDER = "struts.localizedTextProvider";
 }

@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * <code>XmlConfigurationProviderGlobalResultInheritenceTest</code>
@@ -19,7 +20,7 @@ public class XmlConfigurationProviderGlobalResultInheritenceTest extends Configu
     public void testGlobalResultInheritenceTest() throws Exception {
         ConfigurationProvider provider = buildConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-global-result-inheritence.xml");
 
-        ConfigurationManager configurationManager = new ConfigurationManager();
+        ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
         configurationManager.addContainerProvider(new XWorkConfigurationProvider());
         configurationManager.addContainerProvider(provider);
         Configuration configuration = configurationManager.getConfiguration();

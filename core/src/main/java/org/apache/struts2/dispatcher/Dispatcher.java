@@ -456,7 +456,7 @@ public class Dispatcher {
     public void init() {
 
     	if (configurationManager == null) {
-    		configurationManager = createConfigurationManager(DefaultConfiguration.DEFAULT_BEAN_NAME);
+    		configurationManager = createConfigurationManager(Container.DEFAULT_NAME);
     	}
 
         try {

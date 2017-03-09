@@ -175,7 +175,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
     
     public void testConfigurationManager() {
     	Dispatcher du;
-    	final InternalConfigurationManager configurationManager = new InternalConfigurationManager();
+    	final InternalConfigurationManager configurationManager = new InternalConfigurationManager(Container.DEFAULT_NAME);
     	try {
     		du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
     		du.init();
@@ -196,7 +196,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
     public void testObjectFactoryDestroy() throws Exception {
 
         final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
-        ConfigurationManager cm = new ConfigurationManager();
+        ConfigurationManager cm = new ConfigurationManager(Container.DEFAULT_NAME);
         Dispatcher du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), cm);
         Mock mockConfiguration = new Mock(Configuration.class);
         cm.setConfiguration((Configuration)mockConfiguration.proxy());
@@ -245,7 +245,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mockConfiguration.matchAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expect("destroy");
         
-        ConfigurationManager configurationManager = new ConfigurationManager();
+        ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
         configurationManager.setConfiguration((Configuration) mockConfiguration.proxy());
         
         Dispatcher dispatcher = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
@@ -259,8 +259,12 @@ public class DispatcherTest extends StrutsInternalTestCase {
     
     class InternalConfigurationManager extends ConfigurationManager {
     	public boolean destroyConfiguration = false;
-    	
-    	@Override
+
+        public InternalConfigurationManager(String name) {
+            super(name);
+        }
+
+        @Override
     	public synchronized void destroyConfiguration() {
     		super.destroyConfiguration();
     		destroyConfiguration = true;

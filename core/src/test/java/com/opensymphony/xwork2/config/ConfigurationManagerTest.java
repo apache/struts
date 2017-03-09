@@ -22,6 +22,7 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
@@ -73,7 +74,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
     	}
     	
     	final State state = new State();
-    	ConfigurationManager configurationManager = new ConfigurationManager();
+    	ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
     	configurationManager.addContainerProvider(new ConfigurationProvider() {
 			public void destroy() { 
 				throw new RuntimeException("testing testing 123");

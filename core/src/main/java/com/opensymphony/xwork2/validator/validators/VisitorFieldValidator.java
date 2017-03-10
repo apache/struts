@@ -192,7 +192,6 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
         return new CompositeTextProvider(textProviders);
     }
 
-
     public static class AppendingValidatorContext extends DelegatingValidatorContext {
         private String field;
         private String message;

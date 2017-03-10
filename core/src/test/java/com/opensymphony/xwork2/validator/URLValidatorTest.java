@@ -42,7 +42,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testAcceptNullValueForMutualExclusionOfValidators() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
+		validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl1");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -56,7 +56,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testInvalidEmptyValue() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
+		validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl2");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -70,7 +70,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testInvalidValue() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
+		validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl3");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -85,7 +85,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testValidUrl1() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
+		validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl4");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -99,7 +99,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testValidUrl2() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
+		validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl5");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());

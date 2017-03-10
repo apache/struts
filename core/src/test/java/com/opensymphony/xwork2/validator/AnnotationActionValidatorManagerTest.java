@@ -128,7 +128,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             bean.setName("foo");
             bean.setCount(99);
 
-            ValidatorContext context = new GenericValidatorContext(bean, tpf);
+            ValidatorContext context = new DummyValidatorContext(bean, tpf);
             annotationActionValidatorManager.validate(bean, "beanMessageBundle", context);
             assertTrue(context.hasErrors());
             assertTrue(context.hasFieldErrors());
@@ -256,7 +256,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             bean.setName("foo");
             bean.setCount(150);
 
-            ValidatorContext context = new GenericValidatorContext(bean, tpf);
+            ValidatorContext context = new DummyValidatorContext(bean, tpf);
             annotationActionValidatorManager.validate(bean, "beanMessageBundle", context);
             assertTrue(context.hasErrors());
             assertTrue(context.hasFieldErrors());
@@ -294,7 +294,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("bad_email");
             user.setEmail2("bad_email");
 
-            ValidatorContext context = new GenericValidatorContext(user, tpf);
+            ValidatorContext context = new DummyValidatorContext(user, tpf);
             annotationActionValidatorManager.validate(user, null, context);
             assertTrue(context.hasFieldErrors());
 
@@ -336,7 +336,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("mark_bad_email_for_field_val@foo.com");
             user.setEmail2("mark_bad_email_for_field_val@foo.com");
 
-            ValidatorContext context = new GenericValidatorContext(user, tpf);
+            ValidatorContext context = new DummyValidatorContext(user, tpf);
             annotationActionValidatorManager.validate(user, null, context);
             assertTrue(context.hasFieldErrors());
 
@@ -374,7 +374,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
         user.setEmail("rainer_h(at)example.com");
 
 
-        ValidatorContext context = new GenericValidatorContext(user, tpf);
+        ValidatorContext context = new DummyValidatorContext(user, tpf);
         annotationActionValidatorManager.validate(user, null, context);
     	
     	// check field level errors
@@ -405,7 +405,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("mark@mycompany.com");
             user.setEmail2("mark@mycompany.com");
 
-            ValidatorContext context = new GenericValidatorContext(user, tpf);
+            ValidatorContext context = new DummyValidatorContext(user, tpf);
             annotationActionValidatorManager.validate(user, null, context);
             assertFalse(context.hasErrors());
         } catch (ValidationException ex) {

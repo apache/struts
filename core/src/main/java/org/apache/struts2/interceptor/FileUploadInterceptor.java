@@ -446,12 +446,8 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     }
 
     private TextProvider getTextProvider(Object action) {
-        TextProviderFactory tpf = new TextProviderFactory();
-        if (container != null) {
-            container.inject(tpf);
-        }
-        LocaleProvider localeProvider = getLocaleProvider(action);
-        return tpf.createInstance(action.getClass(), localeProvider);
+        TextProviderFactory tpf = container.inject(TextProviderFactory.class);
+        return tpf.createInstance(action.getClass());
     }
 
     private LocaleProvider getLocaleProvider(Object action) {

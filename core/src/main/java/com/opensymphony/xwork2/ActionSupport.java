@@ -274,11 +274,8 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      */
     private TextProvider getTextProvider() {
         if (textProvider == null) {
-            TextProviderFactory tpf = new TextProviderFactory();
-            if (container != null) {
-                container.inject(tpf);
-            }
-            textProvider = tpf.createInstance(getClass(), this);
+            TextProviderFactory tpf = container.inject(TextProviderFactory.class);
+            textProvider = tpf.createInstance(getClass());
         }
         return textProvider;
     }

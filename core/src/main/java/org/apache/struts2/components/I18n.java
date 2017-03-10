@@ -125,9 +125,8 @@ public class I18n extends Component {
             }
 
             if (bundle != null) {
-                TextProviderFactory tpf = new TextProviderFactory();
-                container.inject(tpf);
-                textProvider = tpf.createInstance(bundle, localeProvider);
+                TextProviderFactory tpf = container.inject(TextProviderFactory.class);
+                textProvider = tpf.createInstance(bundle);
                 getStack().push(textProvider);
                 pushed = true;
             }

@@ -16,6 +16,8 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.CompositeTextProvider;
+import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
@@ -24,6 +26,8 @@ import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -166,14 +170,26 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
         ValidatorContext validatorContext;
 
         if (appendPrefix) {
-            validatorContext = new AppendingValidatorContext(getValidatorContext(), o, fieldName, getMessage(o));
+            ValidatorContext parent = getValidatorContext();
+            validatorContext = new AppendingValidatorContext(parent, createTextProvider(o, parent), fieldName, getMessage(o));
         } else {
             ValidatorContext parent = getValidatorContext();
-            validatorContext = new DelegatingValidatorContext(parent, DelegatingValidatorContext.makeTextProvider(o, parent), parent);
+            CompositeTextProvider textProvider = createTextProvider(o, parent);
+            validatorContext = new DelegatingValidatorContext(parent, textProvider, parent);
         }
 
         actionValidatorManager.validate(o, visitorContext, validatorContext);
         stack.pop();
+    }
+
+    private CompositeTextProvider createTextProvider(Object o, ValidatorContext parent) {
+        List<TextProvider> textProviders = new LinkedList<>();
+        if (o instanceof TextProvider) {
+            textProviders.add((TextProvider) o);
+        }
+        textProviders.add(parent);
+
+        return new CompositeTextProvider(textProviders);
     }
 
 
@@ -182,8 +198,8 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
         private String message;
         private ValidatorContext parent;
 
-        public AppendingValidatorContext(ValidatorContext parent, Object object, String field, String message) {
-            super(parent, makeTextProvider(object, parent), parent);
+        public AppendingValidatorContext(ValidatorContext parent, TextProvider textProvider, String field, String message) {
+            super(parent, textProvider, parent);
 
             this.field = field;
             this.message = message;

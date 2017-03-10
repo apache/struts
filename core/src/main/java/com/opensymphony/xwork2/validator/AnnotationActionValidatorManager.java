@@ -52,6 +52,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     private ValidatorFileParser validatorFileParser;
     private FileManager fileManager;
     private boolean reloadingConfigs;
+    private TextProviderFactory textProviderFactory;
 
     @Inject
     public void setValidatorFactory(ValidatorFactory fac) {
@@ -71,6 +72,11 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
+    }
+
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
     }
 
     public List<Validator> getValidators(Class clazz, String context) {
@@ -116,7 +122,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     }
 
     public void validate(Object object, String context, String method) throws ValidationException {
-        ValidatorContext validatorContext = new DelegatingValidatorContext(object);
+        ValidatorContext validatorContext = new DelegatingValidatorContext(object, textProviderFactory);
         validate(object, context, validatorContext, method);
     }
 

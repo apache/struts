@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.validator;
 
+import com.opensymphony.xwork2.TextProviderFactory;
+
 import java.util.*;
 
 
@@ -31,8 +33,8 @@ public class GenericValidatorContext extends DelegatingValidatorContext {
     private Map<String, List<String>> fieldErrors;
 
 
-    public GenericValidatorContext(Object object) {
-        super(object);
+    public GenericValidatorContext(Object object, TextProviderFactory tpf) {
+        super(object, tpf);
     }
 
 

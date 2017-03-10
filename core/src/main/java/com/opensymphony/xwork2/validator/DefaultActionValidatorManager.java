@@ -85,6 +85,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }
 
+    @Inject
     public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
         this.textProviderFactory = textProviderFactory;
     }

@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
@@ -36,6 +37,13 @@ import java.util.List;
  */
 public class RegexFieldValidatorTest extends XWorkTestCase {
 
+    private TextProviderFactory tpf;
+
+    public void setUp() throws Exception {
+        super.setUp();
+        tpf = container.inject(TextProviderFactory.class);
+    }
+
     public void testMatch() throws Exception {
         MyTestPerson testPerson = new MyTestPerson();
         testPerson.setUsername("Secret");
@@ -45,7 +53,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
 
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("^Sec.*");
-        validator.setValidatorContext(new GenericValidatorContext(new Object()));
+        validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(testPerson);
@@ -66,7 +74,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setTrim(false);
         validator.setRegex("^Sec.*\\s");
-        validator.setValidatorContext(new GenericValidatorContext(new Object()));
+        validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(testPerson);
@@ -86,7 +94,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
 
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("^Sec.*");
-        validator.setValidatorContext(new GenericValidatorContext(new Object()));
+        validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(testPerson);
@@ -111,7 +119,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
 
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("^Sec.*");
-        validator.setValidatorContext(new GenericValidatorContext(new Object()));
+        validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
         validator.setFieldName(null);
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(testPerson);
@@ -144,7 +152,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
 
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("^Sec.*");
-        validator.setValidatorContext(new GenericValidatorContext(new Object()));
+        validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
         validator.setFieldName("username");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(testPerson);
@@ -164,7 +172,7 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
 
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("[0-9][0-9]");
-        validator.setValidatorContext(new GenericValidatorContext(new Object()));
+        validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
         validator.setFieldName("age");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(testPerson);

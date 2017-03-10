@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
@@ -36,11 +37,12 @@ public class URLValidatorTest extends XWorkTestCase {
 	
 	ValueStack stack;
 	ActionContext actionContext;
-	
+	private TextProviderFactory tpf;
+
 	public void testAcceptNullValueForMutualExclusionOfValidators() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object()));
+		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl1");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -54,7 +56,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testInvalidEmptyValue() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object()));
+		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl2");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -68,7 +70,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testInvalidValue() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object()));
+		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl3");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -83,7 +85,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testValidUrl1() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object()));
+		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl4");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -97,7 +99,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	public void testValidUrl2() throws Exception {
 		
 		URLValidator validator = new URLValidator();
-		validator.setValidatorContext(new GenericValidatorContext(new Object()));
+		validator.setValidatorContext(new GenericValidatorContext(new Object(), tpf));
 		validator.setFieldName("testingUrl5");
         validator.setValueStack(ActionContext.getContext().getValueStack());
         validator.validate(new MyObject());
@@ -203,6 +205,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	    super.setUp();
 		stack = ActionContext.getContext().getValueStack();
 		actionContext = ActionContext.getContext();
+		tpf = container.inject(TextProviderFactory.class);
 	}
 	
 	@Override

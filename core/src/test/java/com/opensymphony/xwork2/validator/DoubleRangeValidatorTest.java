@@ -21,6 +21,7 @@ import java.util.Map;
  */
 public class DoubleRangeValidatorTest extends XWorkTestCase {
     private DoubleRangeFieldValidator val;
+    private TextProviderFactory tpf;
 
     public void testRangeValidationWithError() throws Exception {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
@@ -107,7 +108,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         val.setMaxInclusive(10d);
         val.setFieldName("name");
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         val.setValidatorContext(context);
 
         val.validate(prod);
@@ -127,7 +128,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
         val.setFieldName("price");
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         val.setValidatorContext(context);
 
         val.setMaxInclusive(9.95d);
@@ -152,7 +153,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
         val.setFieldName("price");
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         val.setValidatorContext(context);
 
         val.setMinInclusive(9.95d);
@@ -170,7 +171,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
         val.setFieldName("price");
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         val.setValidatorContext(context);
 
         val.setMinInclusive(9.95d);
@@ -220,7 +221,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         val.setFieldName("price");
         val.setDefaultMessage("Price is wrong!");
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(action);
+        DelegatingValidatorContext context = new DelegatingValidatorContext(action, tpf);
         val.setValidatorContext(context);
 
         val.validate(action);
@@ -236,6 +237,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
         ActionContext.getContext().setParameters(HttpParameters.create().build());
+        tpf = container.inject(TextProviderFactory.class);
     }
 
     @Override

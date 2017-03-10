@@ -2,12 +2,20 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.GenericValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 
 public class RequiredStringValidatorTest extends XWorkTestCase {
+
+    private TextProviderFactory tpf;
+
+    public void setUp() throws Exception {
+        super.setUp();
+        tpf = container.inject(TextProviderFactory.class);
+    }
 
     public void testRequiredStringPass() throws Exception {
         // given
@@ -17,7 +25,7 @@ public class RequiredStringValidatorTest extends XWorkTestCase {
         action.setStringValue("a string");
         valueStack.push(action);
 
-        ValidatorContext context = new GenericValidatorContext(action);
+        ValidatorContext context = new GenericValidatorContext(action, tpf);
         RequiredStringValidator validator = new RequiredStringValidator();
         validator.setValidatorContext(context);
         validator.setFieldName("stringValue");
@@ -37,7 +45,7 @@ public class RequiredStringValidatorTest extends XWorkTestCase {
         ValidationAction action = new ValidationAction();
         valueStack.push(action);
 
-        ValidatorContext context = new GenericValidatorContext(action);
+        ValidatorContext context = new GenericValidatorContext(action, tpf);
         RequiredStringValidator validator = new RequiredStringValidator();
         validator.setValidatorContext(context);
         validator.setFieldName("stringValue");

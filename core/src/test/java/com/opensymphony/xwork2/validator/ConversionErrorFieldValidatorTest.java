@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.XWorkTestCase;
@@ -37,10 +38,8 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
 
     private static final String defaultFooMessage = "Invalid field value for field \"foo\".";
 
-
     private ConversionErrorFieldValidator validator;
     private ValidationAware validationAware;
-
 
     @Override
     public void setUp() throws Exception {
@@ -54,7 +53,7 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
         validator = new ConversionErrorFieldValidator();
         validationAware = new ValidationAwareSupport();
 
-        DelegatingValidatorContext validatorContext = new DelegatingValidatorContext(validationAware);
+        DelegatingValidatorContext validatorContext = new DelegatingValidatorContext(validationAware, container.inject(TextProviderFactory.class));
         stack.push(validatorContext);
         validator.setValidatorContext(validatorContext);
         validator.setFieldName("foo");

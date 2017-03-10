@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
@@ -28,6 +29,8 @@ import com.opensymphony.xwork2.validator.validators.EmailValidator;
  * @version $Date$ $Id$
  */
 public class EmailValidatorTest extends XWorkTestCase {
+
+    private TextProviderFactory tpf;
 
     public void testEmailValidity() throws Exception {
         assertTrue(verifyEmailValidity("TmJee@Yahoo.com"));
@@ -70,7 +73,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         };
 
         EmailValidator validator = new EmailValidator();
-        validator.setValidatorContext(new DelegatingValidatorContext(action));
+        validator.setValidatorContext(new DelegatingValidatorContext(action, tpf));
         validator.setFieldName("myEmail");
         validator.setDefaultMessage("invalid email");
         validator.setValueStack(ActionContext.getContext().getValueStack());
@@ -95,7 +98,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         valueStack.push(action);
         validator.setValueStack(valueStack);
 
-        validator.setValidatorContext(new DelegatingValidatorContext(action));
+        validator.setValidatorContext(new DelegatingValidatorContext(action, tpf));
         validator.setFieldName("myEmail");
         validator.setDefaultMessage("invalid email");
         validator.setRegexExpression("${emailExpression}");
@@ -155,4 +158,10 @@ public class EmailValidatorTest extends XWorkTestCase {
         return validator;
     }
 
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        tpf = container.inject(TextProviderFactory.class);
+    }
 }

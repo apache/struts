@@ -26,14 +26,14 @@ import java.util.*;
  * @author Mark Woon
  * @author Matthew Payne
  */
-public class GenericValidatorContext extends DelegatingValidatorContext {
+public class DummyValidatorContext extends DelegatingValidatorContext {
 
     private Collection<String> actionErrors;
     private Collection<String> actionMessages;
     private Map<String, List<String>> fieldErrors;
 
 
-    public GenericValidatorContext(Object object, TextProviderFactory tpf) {
+    public DummyValidatorContext(Object object, TextProviderFactory tpf) {
         super(object, tpf);
     }
 

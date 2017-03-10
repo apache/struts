@@ -4,7 +4,7 @@ import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.validator.GenericValidatorContext;
+import com.opensymphony.xwork2.validator.DummyValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 
 public class LongRangeFieldValidatorTest extends XWorkTestCase {
@@ -19,7 +19,7 @@ public class LongRangeFieldValidatorTest extends XWorkTestCase {
     public void testPassValidation() throws Exception {
         // given
         ValidationAction action = prepareAction(100);
-        ValidatorContext context = new GenericValidatorContext(action, tpf);
+        ValidatorContext context = new DummyValidatorContext(action, tpf);
         LongRangeFieldValidator validator = prepareValidator(action, context);
 
         // when
@@ -32,7 +32,7 @@ public class LongRangeFieldValidatorTest extends XWorkTestCase {
     public void testMinValidation() throws Exception {
         // given
         ValidationAction action = prepareAction(98);
-        ValidatorContext context = new GenericValidatorContext(action, tpf);
+        ValidatorContext context = new DummyValidatorContext(action, tpf);
         LongRangeFieldValidator validator = prepareValidator(action, context);
 
         // when
@@ -46,7 +46,7 @@ public class LongRangeFieldValidatorTest extends XWorkTestCase {
     public void testMaxValidation() throws Exception {
         // given
         ValidationAction action = prepareAction(102);
-        ValidatorContext context = new GenericValidatorContext(action, tpf);
+        ValidatorContext context = new DummyValidatorContext(action, tpf);
         LongRangeFieldValidator validator = prepareValidator(action, context);
 
         // when

@@ -5,7 +5,7 @@ import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.validator.GenericValidatorContext;
+import com.opensymphony.xwork2.validator.DummyValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 
 import java.util.Calendar;
@@ -19,7 +19,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     public void testPassValidation() throws Exception {
         // given
         ValidationAction action = prepareAction(createDate(2013, 6, 6));
-        ValidatorContext context = new GenericValidatorContext(action, tpf);
+        ValidatorContext context = new DummyValidatorContext(action, tpf);
         DateRangeFieldValidator validator = prepareValidator(action, context);
 
         // when
@@ -32,7 +32,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     public void testMinValidation() throws Exception {
         // given
         ValidationAction action = prepareAction(createDate(2012, Calendar.MARCH, 3));
-        ValidatorContext context = new GenericValidatorContext(action, tpf);
+        ValidatorContext context = new DummyValidatorContext(action, tpf);
         DateRangeFieldValidator validator = prepareValidator(action, context);
 
         // when
@@ -46,7 +46,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     public void testMaxValidation() throws Exception {
         // given
         ValidationAction action = prepareAction(createDate(2014, Calendar.APRIL, 4));
-        ValidatorContext context = new GenericValidatorContext(action, tpf);
+        ValidatorContext context = new DummyValidatorContext(action, tpf);
         DateRangeFieldValidator validator = prepareValidator(action, context);
 
         // when

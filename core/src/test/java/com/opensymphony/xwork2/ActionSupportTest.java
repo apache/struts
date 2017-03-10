@@ -252,7 +252,7 @@ public class ActionSupportTest extends XWorkTestCase {
 
     public void testGetTextsWithListAndStack() throws Exception {
         ActionContext.getContext().setLocale(new Locale("da"));
-        MyActionSupport mas = new MyActionSupport();
+        MyActionSupport mas = container.inject(MyActionSupport.class);
 
         ValueStack stack = ActionContext.getContext().getValueStack();
 
@@ -270,7 +270,7 @@ public class ActionSupportTest extends XWorkTestCase {
 
     public void testGetTextsWithArrayAndStack() throws Exception {
         ActionContext.getContext().setLocale(new Locale("da"));
-        MyActionSupport mas = new MyActionSupport();
+        MyActionSupport mas = container.inject(MyActionSupport.class);
 
         ValueStack stack = ActionContext.getContext().getValueStack();
 
@@ -313,7 +313,7 @@ public class ActionSupportTest extends XWorkTestCase {
         assertEquals("4567def", formatted);
     }
 
-    private class MyActionSupport extends ActionSupport {
+    public static class MyActionSupport extends ActionSupport {
 
         private Double val;
 

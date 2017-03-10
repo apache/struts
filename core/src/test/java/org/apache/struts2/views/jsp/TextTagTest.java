@@ -178,7 +178,7 @@ public class TextTagTest extends AbstractTagTest {
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
         newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
         newStack.getContext().put(ActionContext.CONTAINER, container);
-        newStack.push(new TestAction1());
+        newStack.push(container.inject(TestAction1.class));
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertNotSame(ActionContext.getContext().getValueStack().peek(), newStack.peek());
 
@@ -189,7 +189,7 @@ public class TextTagTest extends AbstractTagTest {
 
     public void testTextTagUsesLocaleFromValueStack() throws JspException {
         stack.pop();
-        stack.push(new TestAction1());
+        stack.push(container.inject(TestAction1.class));
 
         Locale defaultLocale = getDefaultLocale();
         Locale foreignLocale = getForeignLocale();

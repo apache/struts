@@ -16,6 +16,8 @@
 
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -108,6 +110,9 @@ public class TextProviderSupportTest extends XWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         rb = ResourceBundle.getBundle(TextProviderSupportTest.class.getName(), Locale.ENGLISH);
+
+        LocalizedTextUtil ltu = container.getInstance(LocalizedTextUtil.class);
+
         tp = new TextProviderSupport(rb, new LocaleProvider() {
             public Locale getLocale() {
                 return Locale.ENGLISH;
@@ -122,7 +127,7 @@ public class TextProviderSupportTest extends XWorkTestCase {
             public boolean isValidLocale(Locale locale) {
                 return true;
             }
-        });
+        }, ltu);
     }
 
     @Override

@@ -76,40 +76,15 @@ public class CompositeTextProviderTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        textProvider = new CompositeTextProvider(new TextProvider[] {
-                new TextProviderSupport(ResourceBundle.getBundle("com.opensymphony.xwork2.validator.CompositeTextProviderTestResourceBundle1"),
-                        new LocaleProvider() {
-                            public Locale getLocale() {
-                                return Locale.ENGLISH;
-                            }
 
-                            @Override
-                            public boolean isValidLocaleString(String localeStr) {
-                                return true;
-                            }
+        TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
+        tpf.setTextProvider(null);
 
-                            @Override
-                            public boolean isValidLocale(Locale locale) {
-                                return true;
-                            }
-                        }),
-                new TextProviderSupport(ResourceBundle.getBundle("com.opensymphony.xwork2.validator.CompositeTextProviderTestResourceBundle2"),
-                        new LocaleProvider() {
-                            public Locale getLocale() {
-                                return Locale.ENGLISH;
-                            }
+        ActionContext.getContext().setLocale(Locale.ENGLISH);
 
-                            @Override
-                            public boolean isValidLocaleString(String localeStr) {
-                                return true;
-                            }
-
-                            @Override
-                            public boolean isValidLocale(Locale locale) {
-                                return true;
-                            }
-                        })
-
+        textProvider = new CompositeTextProvider(new TextProvider[]{
+                tpf.createInstance(ResourceBundle.getBundle("com.opensymphony.xwork2.validator.CompositeTextProviderTestResourceBundle1")),
+                tpf.createInstance(ResourceBundle.getBundle("com.opensymphony.xwork2.validator.CompositeTextProviderTestResourceBundle2"))
         });
     }
 

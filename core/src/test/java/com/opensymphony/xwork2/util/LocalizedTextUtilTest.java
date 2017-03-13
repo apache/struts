@@ -200,7 +200,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     }
 
     public void testLocalizedDateFormatIsUsed() throws ParseException {
-        localizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/localizedTextUtilTest");
+        LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
         Date date = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US).parse("01/01/2015");
         Object[] params = new Object[]{ date };
         String usDate = localizedTextUtil.findDefaultText("test.format.date", Locale.US, params);
@@ -210,7 +210,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     }
 
     public void testXW377() {
-        localizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/localizedTextUtilTest");
+        LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
 
         String text = localizedTextUtil.findText(Bar.class, "xw377", ActionContext.getContext().getLocale(), "xw377", null, ActionContext.getContext().getValueStack());
         assertEquals("xw377", text); // should not log
@@ -261,7 +261,7 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        localizedTextUtil.clearDefaultResourceBundles();
+        LocalizedTextUtil.clearDefaultResourceBundles();
     }
 
 }

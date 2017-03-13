@@ -193,7 +193,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return validationAware.hasFieldErrors();
     }
 
-    public static TextProvider makeTextProvider(Object object, TextProviderFactory textProviderFactory) {
+    public TextProvider makeTextProvider(Object object, TextProviderFactory textProviderFactory) {
         // the object argument passed through here will most probably be an ActionSupport descendant which does
         // implements TextProvider.
         if (object != null && object instanceof DelegatingValidatorContext) {

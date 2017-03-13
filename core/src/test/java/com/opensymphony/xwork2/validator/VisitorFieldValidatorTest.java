@@ -35,11 +35,10 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        action = new VisitorValidatorTestAction();
-        container.inject(action);
+        action = container.inject(VisitorValidatorTestAction.class);
 
         TestBean bean = action.getBean();
-        Calendar cal = new GregorianCalendar(1900, 01, 01);
+        Calendar cal = new GregorianCalendar(1900, 1, 1);
         bean.setBirth(cal.getTime());
         bean.setCount(-1);
 
@@ -98,7 +97,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
         assertEquals(1, beanCountMessages.size());
 
         String beanCountMessage = beanCountMessages.get(0);
-        assertEquals("bean: Model: Count must be between 1 and 100, current value is -1.", beanCountMessage);
+        assertEquals("bean: TestBean model: Count must be between 1 and 100, current value is -1.", beanCountMessage);
     }
 
     public void testCollectionValidation() throws Exception {

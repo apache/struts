@@ -186,6 +186,8 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
         List<TextProvider> textProviders = new LinkedList<>();
         if (o instanceof TextProvider) {
             textProviders.add((TextProvider) o);
+        } else {
+            textProviders.add(textProviderFactory.createInstance(o.getClass()));
         }
         textProviders.add(parent);
 

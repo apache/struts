@@ -47,9 +47,10 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param clazz    a clazz to use for reading the resource bundle.
      * @param provider a locale provider.
      */
-    public TextProviderSupport(Class clazz, LocaleProvider provider) {
+    public TextProviderSupport(Class clazz, LocaleProvider provider, LocalizedTextUtil localizedTextUtil) {
         this.clazz = clazz;
         this.localeProvider = provider;
+        this.localizedTextUtil = localizedTextUtil;
     }
 
     /**
@@ -58,9 +59,10 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param bundle   the resource bundle.
      * @param provider a locale provider.
      */
-    public TextProviderSupport(ResourceBundle bundle, LocaleProvider provider) {
+    public TextProviderSupport(ResourceBundle bundle, LocaleProvider provider, LocalizedTextUtil localizedTextUtil) {
         this.bundle = bundle;
         this.localeProvider = provider;
+        this.localizedTextUtil = localizedTextUtil;
     }
 
     /**
